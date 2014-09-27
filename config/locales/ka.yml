@@ -1,0 +1,127 @@
+# encoding: utf-8
+ka:
+  activerecord:
+    models:
+      user: მომხმარებელი
+      page: ტექსტი გვერდებისთვის
+    attributes:
+      user:
+        email: ელ.ფოსტა
+        password: პაროლი
+        password_confirmation: გაიმეორეთ პაროლი
+        role: როლი
+        remember_me: დამიმახსოვრე
+        nickname: მომხმარებლის სახელი
+      page:
+        name: კონტენტის უნიკალური სახელი (არ შეცვალოთ!)
+      page_translation:
+        title: სათაური, რომელიც გამოჩნდება კონტენტის ზემოთ
+        content: კონტენტი
+    errors:
+      messages:
+        required_field: "სავალდებულო ველი"
+        already_exists: 'უკვე არსებობს მონაცემთა ბაზაში'
+  mailer:
+    closing: "პატივისცემით,"
+    signature: “ჯამპსტარტ ჯორჯია”
+    unsubscribe: დააჭირეთ და შეცვალეთ შეტყობინებების პარამეტრები
+  helpers:
+    actions: აირჩიეთ
+    links:
+      admin: ადმინისტრატორის განყოფილება
+      edit: შეცვლა
+      confirm: დარწმუნებული ხართ?
+      destroy: წაშლა
+      new: ახალი
+      list: ყველას ნახვა
+      back: ყველას ნახვა
+      cancel: გაუქმება
+      reset: საწყის კონფიგურაციაზე დაბრუნება
+      view: ნახვა
+      sign_in_facebook: Facebook-ით შესვლა
+      forgot_password: დაგავიწყდათ პაროლი?
+      change_password: პაროლის შეცვლა
+      change_password2: პაროლის შეცვლა
+      password_reset: პაროლის აღდგენა
+      sign_in2: შესვლა
+      sign_in: უკვე გაქვთ ანგარიში?      
+      sign_up2: რეგისტრაცია
+      sign_up_question: "არ გაქვთ ანგარიში?"
+      sign_up: დარეგისტრირდით
+      sign_up_title: შემოგვიერთდი “%{app_name}”
+      sign_out: გასვლა
+      sign_in_provider: "შესვლა %{provider}-ით"
+      sign_up_provider: "დარეგისტრირდით  %{provider}-ით"
+      sign_in_local_or_provider: ან შეიყვანეთ თქვენი ელ. ფოსტა და პაროლი
+      reset_or_sign_in: შედით facebook-ით ან შეცვალეთ პაროლი
+      like: მოწონება
+      likes: მოწონება
+      menu: მენიუ
+    titles:
+      edit: "შეცვლა %{model}"
+      save: "შენახვა %{model}"
+      new: "ახალი %{model}"
+      delete: "წაშლა %{model}"
+  app:
+    language:
+      en: English
+      ka: ქართული
+    buttons:
+      back: იხილეთ ყველა
+      list: იხილეთ ყველა
+      admin: ადმინისტრატორის განყოფილება
+      delete: წაშლა
+      edit: შეცვლა
+      show: ჩვენება
+      cancel: გაუქმება
+      update: განახლება
+      save: შენახვა
+      create: შექმნა
+      reset: საწყის კონფიგურაციაზე დაბრუნება
+      remove: ამოშლა
+      confirm: დარწმუნებული ხართ?
+      new: ახალი            
+    common:
+      app_name: x-Tractor
+      added_on: "დამატებულია: %{date}" 
+      jumpstart: “ჯამპსტარტ ჯორჯია”
+      js_link_title: “ჯამპსტარტ ჯორჯია” - ჩვენ გაწვდით მონაცემებს უკეთ!
+    msgs:
+      does_not_exist: თქვენ ცდილობთ ისეთი გვერდის ნახვას, რომელიც არ არსებობს.
+      not_authorized: თქვენ არ გაქვთ ამ გვერდის ნახვის უფლება.
+      success_created: "%{obj} შექმნილია."
+      success_updated: "%{obj} განახლებულია."
+  layouts:
+    application:
+      toggle: ნავიგაციის ჩართვა/გამორთვა
+    unsupported_browser:
+      title: არასათანადო ბრაუზერი
+      p1: სამწუხაროდ თქვენი ინტერნეტ ბრაუზერის მოხმარების ვადა გასულია და ვერ მოხდება ვებ-გვერდთან სრულად დაკავშირება.
+      p2: არსებობს რამდენიმე უფასო ბრაუზერი რომელის გადმოწერის შემდეგ შეძლებთ ვებ-გვერდით სარგებლობას.
+      chrome: Chrome
+      firefox: Firefox
+      ie: Internet Explorer (მხოლოდ Windows-ზე)
+      opera: Opera
+      Safari: Safari
+  admin:
+    index:
+      title: ადმინისტრატორის განყოფილება
+      users: მომხმარებლები
+      pages: საიტზე ტექსტის რედაქტირება
+    users:
+      edit:
+        title: ცვლილებების შეტანა მომხმარებლის გვერდზე
+      index:
+        title: მომხმარებლები
+      new:
+        title: ახალი მომხმარებელი
+      show:
+        title: მომხმარებლის დეტალები
+  devise:
+    mailer:
+      reset_password_instructions:
+        title: 'მოგესალმებით, %{nickname}!'
+        p1: მივიღეთ მოთხოვნა "%{app_name}" თქვენი პაროლის შეცვლის შესახებ. პაროლის შესაცვლელად, მიჰყევით შემდეგ ბმულს.
+        link_title: პაროლის შეცვლა
+        p2: "თუ თქვენ არ მოგითხოვიათ პაროლის შეცვლა, გთხოვთ, არ მიაქციოთ ყურადღება ამ შეტყობინებას."
+        p3: "თქვენი პაროლი იგივე დარჩება, სანამ არ გადახვალთ ზემოთ მითითებულ ბმულზე და შექმნით ახალ პაროლს."    

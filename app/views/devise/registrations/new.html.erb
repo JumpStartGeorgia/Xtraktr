@@ -1,0 +1,54 @@
+<%- model_class = User -%>
+<% title t('helpers.links.sign_up_title', :app_name => t('app.common.app_name')) %> 
+
+<div id="signup-form">
+  <% if @enable_omniauth %>
+    <div class="providers">
+      <%- if devise_mapping.omniauthable? %>    
+	      <%- model_class.omniauth_providers.each do |provider| %>
+	        <% if provider == :facebook %>
+          	<%= link_to  omniauth_authorize_path(resource_name, provider), :class => 'facebook signup-form' do %>
+				    	<i class="s i-facebook-w"></i><span><%= t('helpers.links.sign_up_provider', :provider => provider.to_s.titleize) %></span>
+				    <% end %>
+	        <% else %>
+				    <%= link_to t('helpers.links.sign_up_provider', :provider => provider.to_s.titleize), omniauth_authorize_path(resource_name, provider), :class => 'btn btn-primary' %>
+	        <% end %>
+	      <% end -%>
+      <% end -%>
+    </div>
+
+	  <div class="facebook_or_local"><%= t('helpers.links.sign_in_local_or_provider') %></div>
+
+  <% end %>
+
+  <%= semantic_form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html=>{:"data-form-id"=>"signup-form"}) do |f| %> 
+  	<%= f.error_messages %>
+
+	  <%= f.inputs do %>
+	    <%= f.input :email, :as => :email, :input_html => { :size => 35 , :class => "login-username" }, :placeholder => model_class.human_attribute_name(:email) , label: false %>
+	    <%#= f.input :nickname, hint: t('helpers.hints.nickname'), :input_html => { :size => 35 } %>
+
+	    <% if f.object.password_required? %>
+		    <%= f.input :password, :input_html => { :size => 35 , :class => "login-password" }, :placeholder => model_class.human_attribute_name(:password), label: false %>
+		    <%= f.input :password_confirmation, :input_html => { :size => 35 , :class => "login-password-confirmation" }, :placeholder => model_class.human_attribute_name(:password_confirmation), label: false %>
+	    <% end %>
+    <% end %>
+    
+	  <div class="control-group submit-row">
+		  <%= f.submit t('helpers.links.sign_up2'), :class => 'btn btn-default sign-up' %>
+	  </div>
+  <% end %>
+
+  <div class="control-group">
+  <%- if controller_name != 'sessions' %>
+		  <%= link_to t('helpers.links.sign_in'), new_session_path(resource_name), :class => 'sign-in-link' %>
+	  <% end -%>
+
+	  <%- if devise_mapping.recoverable? && controller_name != 'passwords' %>
+  		  <div class="forgot-box">
+		  	<%= link_to t('helpers.links.forgot_password'), new_password_path(resource_name), :class => 'forgot-link' %>
+		  </div>
+	  <% end -%>
+  </div>
+</div>
+

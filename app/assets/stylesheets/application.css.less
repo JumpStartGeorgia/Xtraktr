@@ -1,0 +1,108 @@
+/*
+ * This is a manifest file that'll automatically include all the stylesheets available in this directory
+ * and any sub-directories. You're free to add application-wide styles to this file and they'll appear at
+ * the top of the compiled file, but it's generally better to create a new file per style scope.
+
+ *= require formtastic
+ *= require formtastic-bootstrap
+ *= require jquery.ui.core
+ *= require jquery.ui.theme
+ *= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
+ *= require_tree .
+ *= require vendor
+ *= require_self
+*/
+
+/* clear floats */
+.clearfix:after, .clear:after {
+    visibility: hidden;
+    display: block;
+    content: "";
+    clear: both;
+    height: 0;
+}
+* html .clearfix, * html .clear             		{ zoom: 1; } /* IE6 */
+*:first-child+html .clearfix, *:first-child+html .clear { zoom: 1; } /* IE7 */
+
+
+/* so ie will display the correct color background */
+.navbar-fixed-top .navbar-inner, .navbar-fixed-bottom .navbar-inner {
+	filter: none; 
+}
+
+/* multilanguage form styles */
+div#form-en {
+	background-color:#ddd;
+	padding: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+div#form-ka {
+	background-color:#999;
+	padding: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+/* error message styling */
+.errorExplanation{
+  padding: 0.8em;
+  margin-bottom: 1em;
+  border: 2px solid #ddd;
+  background: #F2DEDE;
+  color: #B94A48;
+  border: 1px solid #EED3D7;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+
+  h2{
+    color: #B94A48 !important;
+  }
+
+  a{
+    color: #B94A48;
+  }
+}
+
+
+
+
+/* nested form styles */
+#nested_form_container {
+	margin: 0.5em 0;
+  padding: 1em;
+  background-color: #ddd;
+  
+  .nested_form_item {
+    background-color: #eee;
+    padding: 0.5em 1em;
+  }
+}
+
+
+.formtastic input
+{
+	padding:4px 14px !important;
+	font-size:14px !important;
+  box-sizing:content-box;
+}
+
+
+/* fix styles when using tinymce */
+.tinymce_format{
+  ul, ol, ul ul, ol ol,
+  ul ol, ol ul {
+    padding-left: 2em;
+  }
+
+  ul li {
+    list-style-type:disc;
+    line-height: 1.5;
+  }
+  ol li {
+    list-style-type:decimal;
+    line-height: 1.5;
+  }
+}
+
+

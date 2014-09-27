@@ -1,0 +1,14 @@
+<% title t('.title') %>
+
+  <% if current_user.role? User::ROLES[:admin] %>
+   <div class="col-sm-4">
+ 		<ul class="standard">
+ 			<li>
+       <%= link_to t('.users'), admin_users_path %>
+      </li>
+ 			<li>
+       <%= link_to t('.pages'), admin_pages_path %>
+      </li>
+ 		</ul>
+  </div>
+  <% end %>
