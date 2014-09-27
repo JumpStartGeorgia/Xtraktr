@@ -4,6 +4,8 @@ gem 'bundler'
 gem "rails", "3.2.18"
 gem "mongoid", "~> 3.1.6"
 
+gem 'smarter_csv' # format csv into array of hashes
+
 gem "json"
 gem "jquery-rails", '~> 3.1.0' #"~> 1.0.19" 
 gem "devise", "~> 2.0.4" # user authentication
