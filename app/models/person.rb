@@ -59,6 +59,8 @@ puts "---"
   end
 
 
+  # trying to do crosstab in one map/reduce query
+  # - not working
   def self.generate_stats3(row, col)
     # get uniq values of col
     cols = distinct(col)  
@@ -87,6 +89,75 @@ puts "---"
 puts reduce
 puts "---"
     map_reduce(map, reduce).out(inline: true)
+  end
+
+
+  # do map/reduce query for each possible col value and then put together into one result
+  def self.generate_stats4(row, col)
+    # get uniq values of col
+    cols = distinct(col).sort  
+    rows = distinct(row).sort
+
+    results = []
+    data = {}
+
+    cols.each do |c|
+      puts "--------------------"
+      puts "c = #{c}"
+      map = "
+        function() {
+          emit(this.#{row}, { #{col}: this.#{col}, count: 1 }); 
+        }  
+      "
+
+      puts map
+      puts "---"
+
+
+      reduce = "
+        function(key, values) {   
+          var result = { #{col}: '#{c}', count: 0 };
+          values.forEach(function(value) {
+            result.count += 1; 
+          });
+          return result;
+        }
+      "
+      puts reduce
+      puts "---"
+
+      results << where(col => c).map_reduce(map, reduce).out(inline: true).to_a
+
+    end
+
+    # flatten the results
+    puts "++ rseults length was = #{results.length}"
+    results.flatten!
+    puts "++ rseults length = #{results.length}"
+
+puts results
+
+    # now put it all together
+    data[:row_header] = row.titlecase
+    data[:row_answers] = rows
+    data[:column_header] = col.titlecase
+    data[:column_answers] = cols
+
+    data[:counts] = []
+    rows.each do |r|
+      data_row = []
+      cols.each do |c|
+        data_match = results.select{|x| x['_id'].to_s == r.to_s && x['value'][col].to_s == c.to_s}
+        if data_match.present?
+          data_row << data_match.map{|x| x['value']['count']}.inject(:+)
+        else
+          data_row << 0
+        end
+      end
+      data[:counts] << data_row
+    end
+
+    return data
   end
 
 end
