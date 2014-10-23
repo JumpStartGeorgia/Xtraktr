@@ -40,10 +40,19 @@ class Dataset
   end
 
 
+  ### perform a crosstab analysis between two hash keys in 
+  ### the data array
+  ### - row: name of key to put along row of crosstab
+  ### - col: name of key to put along the columns of crosstab
   def data_crosstab_analysis(row, col)
-    # get uniq values of col
-    rows = self.data.map{|x| x[row]}.uniq.sort
-    cols = self.data.map{|x| x[col]}.uniq.sort
+    puts "--------------------"
+    puts "--------------------"
+
+    # get uniq values
+    rows = self.data.select{|x| !x[row].nil?}.map{|x| x[row]}.uniq.sort
+    cols = self.data.select{|x| !x[col].nil?}.map{|x| x[col]}.uniq.sort
+    puts "unique row values = #{rows}"
+    puts "unique col values = #{cols}"
 
     results = []
     data = {}
@@ -55,10 +64,13 @@ class Dataset
       # need to make sure the row value and c value are recorded as strings
       # for if it is an int, the javascript function turns it into a decimal 
       # (2 -> 2.0) and then comparisons do not work!
+      # - use the if statement to only emit when the row has this value of c and both the row and col have a value
       map = "
         function() {
            for (var i = 0; i < this.data.length; i++) {
-            emit('#{row}', { #{col}: '#{c}', count: 1 }); 
+            if (this.data[i]['#{row}'] != null && this.data[i]['#{col}'] != null && this.data[i]['#{col}'].toString() == '#{c}'){
+              emit(this.data[i]['#{row}'].toString(), { '#{col}': '#{c}', count: 1 }); 
+            }
            }
         };
       "
@@ -66,18 +78,11 @@ class Dataset
       puts map
       puts "---"
 
-
       reduce = "
         function(rowKey, columnValues) {
-          var result = { #{col}: '#{c}', count: 0 };
-
-          for (var i = 0; i < columnValues.length; i++) {
-            result.count += 1;
-          }
-          return result;
+          return { '#{col}': '#{c}', count: columnValues.length };
         };
       "
-
 
       puts reduce
       puts "---"
@@ -90,8 +95,6 @@ class Dataset
     puts "++ results length was = #{results.length}"
     results.flatten!
     puts "++ results length = #{results.length}"
-
-puts results
 
     # now put it all together
     data[:row_header] = row.titlecase

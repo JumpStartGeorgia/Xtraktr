@@ -161,6 +161,7 @@ puts results
   end
 
 
+  # the one that works!
   def self.generate_stats5(row, col)
     # get uniq values of col
     cols = distinct(col).sort  
