@@ -49,16 +49,16 @@ module ProcessDataFile
         puts "You made it!"
 
         puts "=============================="
-        puts "reading in questions from #{file_questions} and saving to variables attribute"
+        puts "reading in questions from #{file_questions} and saving to questions attribute"
         # format: {code: text}
-        self.variables = {}
+        self.questions = {}
         if File.exists?(file_questions)
           line_number = 0
           CSV.foreach(file_questions) do |row|
             line_number += 1
             # only add if the code and text are present
             if row[0].strip.present? && row[1].strip.present?
-              self.variables[row[0].strip.gsub('.', '_')] = row[1].strip
+              self.questions[row[0].strip.gsub('.', '_')] = row[1].strip
             else
               puts "******************************"
               puts "Line #{line_number} of #{file_questions} is missing the code or text."
@@ -66,7 +66,7 @@ module ProcessDataFile
             end
           end
         end
-        puts " - added #{self.variables.keys.length} variables"
+        puts " - added #{self.questions.keys.length} questions"
 
         # before can read in data, we have to add a header row to it
         # so the SmaterCSV library that reads in the csv has the correct keys for the values
@@ -74,7 +74,7 @@ module ProcessDataFile
         puts "adding header to data csv"
         # read in data file and create new file with header
         data = CSV.read(file_data)
-        CSV.open(file_data, 'w', write_headers: true, headers: self.variables.keys) do |csv|
+        CSV.open(file_data, 'w', write_headers: true, headers: self.questions.keys) do |csv|
           data.each do |row|
             csv << row
           end
@@ -107,7 +107,12 @@ module ProcessDataFile
               if values.length == 3
                 # save for writing to csv
                 answers_complete << [values[0].strip, values[1].strip, values[2].strip]
-                self.answers[values[0].strip.gsub('.', '_')] = {value: values[1].strip, text: values[2].strip}
+
+                # save to answers attribute
+                # - if this is the first answer for this question, initialize the array
+                key = values[0].strip.gsub('.', '_')
+                self.answers[key] = [] if self.answers[key].nil?
+                self.answers[key] << {value: values[1].strip, text: values[2].strip}
               else
                 puts "******************************"
                 puts "ERROR"

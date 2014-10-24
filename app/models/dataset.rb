@@ -8,14 +8,17 @@ class Dataset
   has_mongoid_attached_file :datafile, :url => "/system/datasets/:id/original/:filename", :use_timestamp => false
 
   field :title, type: String
-  field :explanation, type: String
+  field :description, type: String
+  field :dates_gathered, type: String
+  field :date_released, type: Date
+  field :data_created_by, type: String
   # array of hashes {code1: value1, code2: value2, etc}
   field :data, type: Array
-  # hash of variable codes and text {code1: variable1, code2: variable2}
-  field :variables, type: Hash
-  # hash of variable answers (answer value and answer text) {code1: {value: value1, text: text1}, code2: {value: value2, text: text2}, }
+  # hash of questions codes and text {code1: question1, code2: question2}
+  field :questions, type: Hash
+  # hash of array of question answers (answer value and answer text) {code1: [{value: value1, text: text1}, {value: value2, text: text2}] }
   field :answers, type: Hash
-  # array of variable codes who possibly have answer values that are not in the provided list of possible answers
+  # array of question codes who possibly have answer values that are not in the provided list of possible answers
   field :questions_with_bad_answers, type: Array
 
   # Validations
@@ -23,7 +26,7 @@ class Dataset
   validates_attachment :datafile, :presence => true, 
       :content_type => { :content_type => ["application/x-spss-sav", "application/octet-stream", "text/csv"] }
 
-  attr_accessible :title, :explanation, :data, :variables, :answers, :questions_with_bad_answers, :datafile
+  attr_accessible :title, :explanation, :data, :questions, :answers, :questions_with_bad_answers, :datafile
 
   before_create :process_file
 
@@ -40,75 +43,120 @@ class Dataset
     puts "--------------------"
     puts "--------------------"
 
-    # get uniq values
-    rows = self.data.select{|x| !x[row].nil?}.map{|x| x[row]}.uniq.sort
-    cols = self.data.select{|x| !x[col].nil?}.map{|x| x[col]}.uniq.sort
-    puts "unique row values = #{rows}"
-    puts "unique col values = #{cols}"
+    result = {}
+    data = []
 
-    results = []
-    data = {}
+    # get the question/answers
+    result[:row_code] = row
+    result[:row_question] = self.questions[row]
+    result[:row_answers] = self.answers[row]
+    result[:column_code] = col
+    result[:column_question] = self.questions[col]
+    result[:column_answers] = self.answers[col]
+    result[:type] = 'crosstab'
+    result[:counts] = []
+    result[:percents] = []
+    result[:total_responses] = nil
+    result[:chart] = {}
 
-    cols.each do |c|
-      puts "--------------------"
-      puts "c = #{c}"
 
-      # need to make sure the row value and c value are recorded as strings
-      # for if it is an int, the javascript function turns it into a decimal 
-      # (2 -> 2.0) and then comparisons do not work!
-      # - use the if statement to only emit when the row has this value of c and both the row and col have a value
-      map = "
-        function() {
-           for (var i = 0; i < this.data.length; i++) {
-            if (this.data[i]['#{row}'] != null && this.data[i]['#{col}'] != null && this.data[i]['#{col}'].toString() == '#{c}'){
-              emit(this.data[i]['#{row}'].toString(), { '#{col}': '#{c}', count: 1 }); 
-            }
-           }
-        };
-      "
+    # if the row and col question/answers were found, continue
+    if result[:row_question].present? && result[:row_answers].present? && result[:column_question].present? && result[:column_answers].present?
+      # get uniq values
+      row_answers = result[:row_answers].select{|x| !x['value'].nil?}.map{|x| x['value']}.uniq.sort
+      col_answers = result[:column_answers].select{|x| !x['value'].nil?}.map{|x| x['value']}.uniq.sort
+      puts "unique row values = #{row_answers}"
+      puts "unique col values = #{col_answers}"
 
-      puts map
-      puts "---"
+      col_answers.each do |c|
+        puts "--------------------"
+        puts "c = #{c}"
 
-      reduce = "
-        function(rowKey, columnValues) {
-          return { '#{col}': '#{c}', count: columnValues.length };
-        };
-      "
+        # need to make sure the row value and c value are recorded as strings
+        # for if it is an int, the javascript function turns it into a decimal 
+        # (2 -> 2.0) and then comparisons do not work!
+        # - use the if statement to only emit when the row has this value of c and both the row and col have a value
+        map = "
+          function() {
+             for (var i = 0; i < this.data.length; i++) {
+              if (this.data[i]['#{row}'] != null && this.data[i]['#{col}'] != null && this.data[i]['#{col}'].toString() == '#{c}'){
+                emit(this.data[i]['#{row}'].toString(), { '#{col}': '#{c}', count: 1 }); 
+              }
+             }
+          };
+        "
 
-      puts reduce
-      puts "---"
+        puts map
+        puts "---"
 
-      results << Dataset.where(:id => self.id).map_reduce(map, reduce).out(inline: true).to_a
+        reduce = "
+          function(rowKey, columnValues) {
+            return { '#{col}': '#{c}', count: columnValues.length };
+          };
+        "
 
-    end
+        puts reduce
+        puts "---"
 
-    # flatten the results
-    puts "++ results length was = #{results.length}"
-    results.flatten!
-    puts "++ results length = #{results.length}"
+        data << Dataset.where(:id => self.id).map_reduce(map, reduce).out(inline: true).to_a
 
-    # now put it all together
-    data[:row_header] = row
-    data[:row_answers] = rows
-    data[:column_header] = col
-    data[:column_answers] = cols
+      end
 
-    data[:counts] = []
-    rows.each do |r|
-      data_row = []
-      cols.each do |c|
-        data_match = results.select{|x| x['_id'].to_s == r.to_s && x['value'][col].to_s == c.to_s}
-        if data_match.present?
-          data_row << data_match.map{|x| x['value']['count']}.inject(:+)
+      # flatten the data
+      puts "++ data length was = #{data.length}"
+      data.flatten!
+      puts "++ data length = #{data.length}"
+
+      # now put it all together
+      # - create counts
+      row_answers.each do |r|
+        data_row = []
+        col_answers.each do |c|
+          data_match = data.select{|x| x['_id'].to_s == r.to_s && x['value'][col].to_s == c.to_s}
+          if data_match.present?
+            data_row << data_match.map{|x| x['value']['count']}.inject(:+)
+          else
+            data_row << 0
+          end
+        end
+        result[:counts] << data_row
+      end
+
+      # - take counts and turn into percents
+      totals = []
+      result[:counts].each do |count_row|
+        total = count_row.inject(:+)
+        totals << total
+        if total > 0
+          percent_row = []
+          count_row.each do |item|
+            percent_row << (item.to_f/total*100).round(2)
+          end
+          result[:percents] << percent_row
         else
-          data_row << 0
+          result[:percents] << Array.new(count_row.length){0}
         end
       end
-      data[:counts] << data_row
+
+      # - record the total number of responses
+      result[:total_responses] = totals.inject(:+)
+
+      # - format data for charts
+      result[:chart][:labels] = result[:row_answers].map{|x| x['text']}
+      result[:chart][:data] = []
+      counts = result[:counts].transpose
+
+      (0..result[:column_answers].length-1).each do |index|
+        item = {}
+        item[:name] = result[:column_answers][index]['text']
+        item[:data] = counts[index]
+        result[:chart][:data] << item
+      end
+
+
     end
 
-    return data
+    return result
   end
 
 end
