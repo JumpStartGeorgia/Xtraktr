@@ -13,7 +13,7 @@
 #   when this occurs, the answers are dropped.
 #   that is why the 4th file is needed.
 # - currently I cannot figure out how to properly write out to csv in R, so this file is a hack.
-#   each line is formatted as: [1] "Question Code || Answer Code || Answer Text"
+#   each line is formatted as: [1] "Question Code || Answer Value || Answer Text"
 #   code will be needed to convert this to csv format
 
 

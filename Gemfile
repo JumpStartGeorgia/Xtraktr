@@ -26,6 +26,7 @@ gem "exception_notification", "~> 2.5.2" # send an email when exception occurs
 gem "useragent", :git => "https://github.com/jilion/useragent.git" # browser detection
 #gem "rails_autolink", "~> 1.0.9" # convert string to link if it is url
 #gem 'paperclip', '~> 3.4.0' # to upload files
+gem "mongoid-paperclip", :require => "mongoid_paperclip" # upload files
 #gem "has_permalink", "~> 0.1.4" # create permalink slugs for nice urls
 gem "will_paginate", "~> 3.0.5" # add paging to long lists
 #gem "kaminari", "~> 0.15.1" # paging

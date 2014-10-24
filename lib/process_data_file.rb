@@ -14,32 +14,34 @@ module ProcessDataFile
 
   #######################
   ## global variables
-  @@path = "#{Rails.root}/public/system/datasets/"
-  @@file_data = '[dataset_id]/data.csv'
-  @@file_questions = '[dataset_id]/questions.csv'
-  @@file_answers_complete = '[dataset_id]/answers_complete.csv'
-  @@file_answers_incomplete = '[dataset_id]/answers_incomplete.csv'
+  @@path = "#{Rails.root}/public/system/datasets/[dataset_id]/processed/"
+  @@file_data = 'data.csv'
+  @@file_questions = 'questions.csv'
+  @@file_answers_complete = 'answers_complete.csv'
+  @@file_answers_incomplete = 'answers_incomplete.csv'
 
 
   #######################
   # convert a spss file to csv
-  def self.from_spss(dataset_id, spss_file_path)
-
+  def process_spss
+    path = @@path.sub('[dataset_id]', self.id.to_s)
+    # file has not be saved to proper place yet, so have to get queued file path
+    file_to_process = self.datafile.queued_for_write[:original].path
     file_r = "#{Rails.root}/script/r_scripts/spss_to_csv.r"
-    file_sps = @@path + "#{dataset_id}/spss_code.sps"
-    file_data = @@path + @@file_data.sub('[dataset_id]', dataset_id.to_s)
-    file_questions = @@path + @@file_questions.sub('[dataset_id]', dataset_id.to_s)
-    file_answers_complete = @@path + @@file_answers_complete.sub('[dataset_id]', dataset_id.to_s)
-    file_answers_incomplete = @@path + @@file_answers_incomplete.sub('[dataset_id]', dataset_id.to_s)
+    file_sps = path + "spss_code.sps"
+    file_data = path + @@file_data
+    file_questions = path + @@file_questions
+    file_answers_complete = path + @@file_answers_complete
+    file_answers_incomplete = path + @@file_answers_incomplete
 
     # make sure files exists
-    if File.exists?(file_r) && File.exists?(spss_file_path)
+    if File.exists?(file_r) && File.exists?(file_to_process)
 
-      # create directory if not exist
+      # create dataset directory if not exist
       FileUtils.mkdir_p(File.dirname(file_data))
 
       # run the R script
-      result = system 'Rscript', '--default-packages=foreign,MASS', file_r, spss_file_path, file_data, file_sps, file_questions, file_answers_complete
+      result = system 'Rscript', '--default-packages=foreign,MASS', file_r, file_to_process, file_data, file_sps, file_questions, file_answers_complete
 
       if result.nil?
         puts "Error was #{$?}"
@@ -47,27 +49,75 @@ module ProcessDataFile
         puts "You made it!"
 
         puts "=============================="
-        puts "reading in answers from #{file_answers_complete} and converting to csv"
-        # format of each line of file is: [1] "Question Code || Answer Code || Answer Text"
-        answers_complete = []
-        line_number = 0
-        File.open(file_answers_complete, "r") do |f|
-          f.each_line do |line|
+        puts "reading in questions from #{file_questions} and saving to variables attribute"
+        # format: {code: text}
+        self.variables = {}
+        if File.exists?(file_questions)
+          line_number = 0
+          CSV.foreach(file_questions) do |row|
             line_number += 1
-            # take out the [1] " at the beginning and the closing "
-            answer = line.strip.gsub('[1] "', '').gsub(/\"$/, '')
-            values = answer.split(' || ')
-            if values.length == 3
-              answers_complete << [values[0].strip, values[1].strip, values[2].strip]
+            # only add if the code and text are present
+            if row[0].strip.present? && row[1].strip.present?
+              self.variables[row[0].strip] = row[1].strip
             else
               puts "******************************"
-              puts "ERROR"
-              puts "An error occurred on line #{line_number} of #{file_answers_complete} while parsing the answers."
-              puts "This line was not in the correct format of: [1] \"Question Code || Answer Code || Answer Text\""
+              puts "Line #{line_number} of #{file_questions} is missing the code or text."
               puts "******************************"
-              break
             end
           end
+        end
+        puts " - added #{self.variables.keys.length} variables"
+
+        # before can read in data, we have to add a header row to it
+        # so the SmaterCSV library that reads in the csv has the correct keys for the values
+        puts "=============================="
+        puts "adding header to data csv"
+        # read in data file and create new file with header
+        data = CSV.read(file_data)
+        CSV.open(file_data, 'w', write_headers: true, headers: self.variables.keys) do |csv|
+          data.each do |row|
+            csv << row
+          end
+        end
+
+
+        puts "=============================="
+        puts "reading in data from #{file_data} and saving to data attribute"
+        if File.exists?(file_data)
+          self.data = SmarterCSV.process(file_data, {downcase_header: false, strings_as_keys: true})
+        end
+        puts "added #{self.data.length} records"
+
+
+        puts "=============================="
+        puts "reading in answers from #{file_answers_complete} and converting to csv"
+        # format of each line of file is: [1] "Question Code || Answer Value || Answer Text"
+        answers_complete = []
+        # save to answers attribute in dataset
+        # format: answer[question code] = {value, text}
+        self.answers = {}
+        if File.exists?(file_answers_complete)
+          line_number = 0
+          File.open(file_answers_complete, "r") do |f|
+            f.each_line do |line|
+              line_number += 1
+              # take out the [1] " at the beginning and the closing "
+              answer = line.strip.gsub('[1] "', '').gsub(/\"$/, '')
+              values = answer.split(' || ')
+              if values.length == 3
+                # save for writing to csv
+                answers_complete << [values[0].strip, values[1].strip, values[2].strip]
+                self.answers[values[0].strip] = {value: values[1].strip, text: values[2].strip}
+              else
+                puts "******************************"
+                puts "ERROR"
+                puts "An error occurred on line #{line_number} of #{file_answers_complete} while parsing the answers."
+                puts "This line was not in the correct format of: [1] \"Question Code || Answer Value || Answer Text\""
+                puts "******************************"
+                break
+              end
+            end
+          end   
         end   
 
         # if answers exists, write to csv file
@@ -163,17 +213,21 @@ module ProcessDataFile
         # this will happen if the data contains values that are not in the defined list of answers
         if answers_complete.length != answers_incomplete.length
           complete_questions = answers_complete.map{|x| x[0]}.uniq    
-          bad_questions = answers_incomplete.map{|x| x[0]}.uniq
+          incomplete_questions = answers_incomplete.map{|x| x[0]}.uniq
+          # record question codes to questions_with_bad_answers attribute
+          self.questions_with_bad_answers = complete_questions - incomplete_questions
           puts "******************************"
           puts "WARNING"
-          puts "When parsing your file, we found that there are #{complete_questions.length - bad_questions.length} questions "
+          puts "When parsing your file, we found that there are #{complete_questions.length - incomplete_questions.length} questions "
           puts "that contain values that are not listed as one of the possible answers."
           puts "We suggest you review the values for these questions and fix accordingly."
-          puts "Here are the questions that had this issue:"
-          puts (complete_questions - bad_questions).map{|x| "#{x}\n"}
+#          puts "Here are the questions that had this issue:"
+#          puts (complete_questions - incomplete_questions).map{|x| "#{x}\n"}
           puts "******************************"
         end
+
       end
+
     else
       puts "******************************"
       puts "WARNING"
@@ -181,6 +235,5 @@ module ProcessDataFile
       puts "******************************"
     end
   end
-
 
 end

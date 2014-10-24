@@ -1,44 +1,35 @@
 class Dataset
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Paperclip
+  include ProcessDataFile # script in lib folder that will convert datafile to csv and then load into appropriate fields
 
-  field :title,         type: String
-  field :explanation,   type: String
-  field :data_headers,  type: Hash
-  field :data,          type: Array
+  # paperclip data file storage
+  has_mongoid_attached_file :datafile, :url => "/system/datasets/:id/original/:filename", :use_timestamp => false
+
+  field :title, type: String
+  field :explanation, type: String
+  # array of hashes {code1: value1, code2: value2, etc}
+  field :data, type: Array
+  # hash of variable codes and text {code1: variable1, code2: variable2}
+  field :variables, type: Hash
+  # hash of variable answers (answer value and answer text) {code1: {value: value1, text: text1}, code2: {value: value2, text: text2}, }
+  field :answers, type: Hash
+  # array of variable codes who possibly have answer values that are not in the provided list of possible answers
+  field :questions_with_bad_answers, type: Array
 
   # Validations
   validates_presence_of :title
+  validates_attachment :datafile, :presence => true, 
+      :content_type => { :content_type => ["application/x-spss-sav", "application/octet-stream", "text/csv"] }
 
+  attr_accessible :title, :explanation, :data, :variables, :answers, :questions_with_bad_answers, :datafile
 
+  before_create :process_file
 
-  def self.load_csv(title, explanation, file_path)
-    if File.exists?(file_path)
-      d = Dataset.new(:title => title, :explanation => explanation)
-
-      d.data = SmarterCSV.process(file_path)
-
-      if d.data.present?
-        d.data_headers = {}
-
-        # get the keys
-        keys = d.data.first.keys
-
-        # read in first line of csv to get real header names
-        CSV.foreach(file_path) do |row|
-          keys.each_with_index do |key, index|
-            d.data_headers[key] = row[index]
-          end
-
-          # only need first row, so stop
-          break
-        end
-      end
-
-      d.save
-    end
+  def process_file
+    process_spss
   end
-
 
   ### perform a crosstab analysis between two hash keys in 
   ### the data array
@@ -97,9 +88,9 @@ class Dataset
     puts "++ results length = #{results.length}"
 
     # now put it all together
-    data[:row_header] = row.titlecase
+    data[:row_header] = row
     data[:row_answers] = rows
-    data[:column_header] = col.titlecase
+    data[:column_header] = col
     data[:column_answers] = cols
 
     data[:counts] = []
