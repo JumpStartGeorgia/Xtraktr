@@ -27,6 +27,7 @@ class Dataset
 
   before_create :process_file
 
+  # process the datafile and save all of the information from it
   def process_file
     process_spss
   end
