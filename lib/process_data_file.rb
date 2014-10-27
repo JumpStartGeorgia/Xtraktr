@@ -58,7 +58,8 @@ module ProcessDataFile
             line_number += 1
             # only add if the code and text are present
             if row[0].strip.present? && row[1].strip.present?
-              self.questions[row[0].strip.gsub('.', '_')] = row[1].strip
+              # mongo does not allow '.' in key names, so replace with '|'
+              self.questions[row[0].strip.gsub('.', '|')] = {text: row[1].strip, original_code: row[0].strip}
             else
               puts "******************************"
               puts "Line #{line_number} of #{file_questions} is missing the code or text."
