@@ -14,11 +14,13 @@ class Dataset
   field :data_created_by, type: String
   # array of hashes {code1: value1, code2: value2, etc}
   field :data, type: Array
-  # hash of questions codes and text {code1: {text:question1, original_code:code1}, code2: {text:question2, original_code:code2}}
+  # hash of questions codes and text 
+  # {code1: {text:question1, original_code:code1, is_mappable: false, has_code_answers:true}, code2: {text:question2, original_code:code2, is_mappable: true}}
   # mongo key names cannot include a '.' so if there is one, it was replaced with '|'
   # - hence the need for recording the original code value
   field :questions, type: Hash
-  # hash of array of question answers (answer value and answer text) {code1: [{value: value1, text: text1}, {value: value2, text: text2}] }
+  # hash of array of question answers (answer value and answer text) 
+  # {code1: [{value: value1, text: text1, can_exclude:false}, {value: value2, text: text2}] }
   field :answers, type: Hash
   # array of question codes who possibly have answer values that are not in the provided list of possible answers
   field :questions_with_bad_answers, type: Array
@@ -108,16 +110,10 @@ class Dataset
       puts "++ data length was = #{data.length}"
       data.flatten!
       puts "++ data length = #{data.length}"
-puts "-----"
-      puts data.inspect
-puts "-----"
-puts result[:row_answers]
-puts "-----"
 
       # now put it all together
       # - create counts
       result[:row_answers].each do |row_answer|
-
         # look for match in data
         data_match = data.select{|x| x['_id'].to_s == row_answer['value'].to_s}.first
         if data_match.present?
@@ -146,6 +142,17 @@ puts "-----"
           y: result[:percents][index], 
           count: result[:counts][index], 
         }
+      end
+
+      # - if row is a mappable variable, create the map data
+      if result[:row_question]['is_mappable']
+        result[:map] = {}
+        result[:map][:data] = []
+
+        result[:row_answers].each_with_index do |row_answer, row_index|
+          # store in highmaps format: {name, value, count}
+          result[:map][:data] << {:name => row_answer['text'], :value => result[:percents][row_index], :count => result[:counts][row_index]}
+        end
       end
 
     end
@@ -227,54 +234,111 @@ puts "-----"
       puts "++ data length was = #{data.length}"
       data.flatten!
       puts "++ data length = #{data.length}"
+      puts "-----------"
+      puts data.inspect
+      puts "-----------"
 
-      # now put it all together
-      # - create counts
-      row_answers.each do |r|
-        data_row = []
-        col_answers.each do |c|
-          data_match = data.select{|x| x['_id'].to_s == r.to_s && x['value'][col].to_s == c.to_s}
-          if data_match.present?
-            data_row << data_match.map{|x| x['value']['count']}.inject(:+)
+      if data.present?
+        # now put it all together
+
+        # - create counts
+        result[:row_answers].each do |r|
+          data_row = []
+          result[:column_answers].each do |c|
+            data_match = data.select{|x| x['_id'].to_s == r['value'].to_s && x['value'][col].to_s == c['value'].to_s}
+            if data_match.present?
+              data_row << data_match.map{|x| x['value']['count']}.inject(:+)
+            else
+              data_row << 0
+            end
+          end
+          result[:counts] << data_row
+        end
+
+        # - take counts and turn into percents
+        totals = []
+        result[:counts].each do |count_row|
+          total = count_row.inject(:+)
+          totals << total
+          if total > 0
+            percent_row = []
+            count_row.each do |item|
+              percent_row << (item.to_f/total*100).round(2)
+            end
+            result[:percents] << percent_row
           else
-            data_row << 0
+            result[:percents] << Array.new(count_row.length){0}
           end
         end
-        result[:counts] << data_row
-      end
 
-      # - take counts and turn into percents
-      totals = []
-      result[:counts].each do |count_row|
-        total = count_row.inject(:+)
-        totals << total
-        if total > 0
-          percent_row = []
-          count_row.each do |item|
-            percent_row << (item.to_f/total*100).round(2)
+        # - record the total number of responses
+        result[:total_responses] = totals.inject(:+)
+
+        # - format data for charts
+        result[:chart][:labels] = result[:row_answers].map{|x| x['text']}
+        result[:chart][:data] = []
+        counts = result[:counts].transpose
+
+        (0..result[:column_answers].length-1).each do |index|
+          item = {}
+          item[:name] = result[:column_answers][index]['text']
+          item[:data] = counts[index]
+          result[:chart][:data] << item
+        end
+
+        # - if row or column is a mappable variable, create the map data
+        if result[:row_question]['is_mappable'] || result[:column_question]['is_mappable']
+          result[:map] = {}
+          result[:map][:data] = {}
+
+          # if the row is the mappable, recompute percents so columns add up to 100%
+          if result[:row_question]['is_mappable']
+            result[:map][:filter] = result[:column_question]['text']
+            result[:map][:filters] = result[:column_answers]
+
+            counts = result[:counts].transpose
+            percents = []
+            counts.each do |count_row|
+              total = count_row.inject(:+)
+              if total > 0
+                percent_row = []
+                count_row.each do |item|
+                  percent_row << (item.to_f/total*100).round(2)
+                end
+                percents << percent_row
+              else
+                percents << Array.new(count_row.length){0}
+              end
+            end
+
+            result[:column_answers].each_with_index do |col_answer, col_index|
+              # create hash to store the data for this answer
+              result[:map][:data][col_answer['value'].to_s] = []
+
+              # now store the results for each item
+              (0..result[:row_answers].length-1).each do |index|
+                # store in highmaps format: {name, value, count}
+                result[:map][:data][col_answer['value'].to_s] << {:name => result[:row_answers][index]['text'], :value => percents[col_index][index], :count => counts[col_index][index]}
+              end 
+            end
+
+          else
+            result[:map][:filter] = result[:row_question]['text']
+            result[:map][:filters] = result[:row_answers]
+
+            result[:row_answers].each_with_index do |row_answer, row_index|
+              # create hash to store the data for this answer
+              result[:map][:data][row_answer['value'].to_s] = []
+
+              # now store the results for each item
+              (0..result[:column_answers].length-1).each do |index|
+                # store in highmaps format: {name, value, count}
+                result[:map][:data][row_answer['value'].to_s] << {:name => result[:column_answers][index]['text'], :value => result[:percents][row_index][index], :count => result[:counts][row_index][index]}
+              end 
+            end
           end
-          result[:percents] << percent_row
-        else
-          result[:percents] << Array.new(count_row.length){0}
         end
       end
-
-      # - record the total number of responses
-      result[:total_responses] = totals.inject(:+)
-
-      # - format data for charts
-      result[:chart][:labels] = result[:row_answers].map{|x| x['text']}
-      result[:chart][:data] = []
-      counts = result[:counts].transpose
-
-      (0..result[:column_answers].length-1).each do |index|
-        item = {}
-        item[:name] = result[:column_answers][index]['text']
-        item[:data] = counts[index]
-        result[:chart][:data] << item
-      end
-
-
     end
 
     return result

@@ -59,7 +59,7 @@ module ProcessDataFile
             # only add if the code and text are present
             if row[0].strip.present? && row[1].strip.present?
               # mongo does not allow '.' in key names, so replace with '|'
-              self.questions[row[0].strip.gsub('.', '|')] = {text: row[1].strip, original_code: row[0].strip}
+              self.questions[row[0].strip.gsub('.', '|')] = {text: row[1].strip, original_code: row[0].strip, is_mappable: false, has_code_answers: false}
             else
               puts "******************************"
               puts "Line #{line_number} of #{file_questions} is missing the code or text."
@@ -111,9 +111,11 @@ module ProcessDataFile
 
                 # save to answers attribute
                 # - if this is the first answer for this question, initialize the array
-                key = values[0].strip.gsub('.', '_')
+                key = values[0].strip.gsub('.', '|')
                 self.answers[key] = [] if self.answers[key].nil?
-                self.answers[key] << {value: values[1].strip, text: values[2].strip}
+                self.answers[key] << {value: values[1].strip, text: values[2].strip, can_exclude: false}
+                # update question to indciate it has answers
+                self.questions[key][:has_code_answers] = true
               else
                 puts "******************************"
                 puts "ERROR"
