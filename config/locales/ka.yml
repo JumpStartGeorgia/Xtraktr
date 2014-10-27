@@ -21,6 +21,28 @@ ka:
       messages:
         required_field: "სავალდებულო ველი"
         already_exists: 'უკვე არსებობს მონაცემთა ბაზაში'
+  datatable:
+    copy: 
+      title: Copy
+      tooltip: Copy to clipboard
+    csv: 
+      title: CSV
+      tooltip: Save as CSV
+    xls: 
+      title: XLS
+      tooltip: Save as XLS
+    pdf: 
+      title: PDF
+      tooltip: Save as PDF
+    print: 
+      title: Print
+      tooltip: Print the table
+  highcharts:
+    context_title: Save this chart
+    png: PNG Image
+    jpg: JPG Image
+    pdf: PDF Document
+    svg: SVG Vector Image
   mailer:
     closing: "პატივისცემით,"
     signature: “ჯამპსტარტ ჯორჯია”
@@ -91,6 +113,8 @@ ka:
       not_authorized: თქვენ არ გაქვთ ამ გვერდის ნახვის უფლება.
       success_created: "%{obj} შექმნილია."
       success_updated: "%{obj} განახლებულია."
+    menu:
+      explore_data: Explore Data
   layouts:
     application:
       toggle: ნავიგაციის ჩართვა/გამორთვა
@@ -121,7 +145,64 @@ ka:
     mailer:
       reset_password_instructions:
         title: 'მოგესალმებით, %{nickname}!'
-        p1: მივიღეთ მოთხოვნა "%{app_name}" თქვენი პაროლის შეცვლის შესახებ. პაროლის შესაცვლელად, მიჰყევით შემდეგ ბმულს.
+        p1: 'მივიღეთ მოთხოვნა "%{app_name}" თქვენი პაროლის შეცვლის შესახებ. პაროლის შესაცვლელად, მიჰყევით შემდეგ ბმულს.'
         link_title: პაროლის შეცვლა
         p2: "თუ თქვენ არ მოგითხოვიათ პაროლის შეცვლა, გთხოვთ, არ მიაქციოთ ყურადღება ამ შეტყობინებას."
         p3: "თქვენი პაროლი იგივე დარჩება, სანამ არ გადახვალთ ზემოთ მითითებულ ბმულზე და შექმნით ახალ პაროლს."    
+  root:
+    explore_data:
+      title: Explore the Data
+      no_matches: Your selections returned no data. Please try again with a different selection.
+      no_data: Data is not on file yet - have you run rake db:seed yet?
+      hover_region: Hover over a Region
+      na: N/A
+      percent: Percent
+      instructions:
+        header: Instructions
+        p1a: This page allows you to explore one question or the interaction between two questions from the Employment-related Resarch in Georgia Survey. 
+        p1b: "You may also choose to narrow the scope of this analysis by selecting a subset of data to analyze."
+        p2: "You can explore the analysis via a map (if one variable is 'Reg'), a chart, and a table."
+      form:
+        row: Explore Question
+        col: Compared with (optional)
+        no_col: No Comparison
+        swap: Swap the Questions
+        submit: Run Analysis
+        reset: Reset 
+        filter_variable: Use Subset of Data
+        no_filter: Use Complete Data Set
+        filter_value: With Value
+        exclude_dkra: Exclude "Don't know" & "Refuse"
+      tabs:
+        map: Map
+        chart: Chart
+        table: Table
+        details: Details
+      crosstab:
+        html:
+          title: "%{row} <br /> <span class='title-highlight'>by</span> %{col}"
+          title_filter: "<br /> <span class='title-highlight'>where</span> %{variable} = %{value}"
+          title_total: "Total Responses: %{num}"
+        text:
+          title: "%{row} by %{col}"
+          title_filter: " where %{variable} = %{value}"
+      onevar:
+        html:
+          title: "%{row}"
+          title_filter: "<br /> <span class='title-highlight'>where</span> %{variable} = %{value}"
+          title_total: "Total Responses: %{num}"
+        text:
+          title: "%{row}"
+          title_filter: " where %{variable} = %{value}"
+      map:
+        filter: "Filter map by selecting an answer to '%{text}':"
+      table:
+        count: Count
+        percent: Percent
+      details:
+        variable: Variable
+        answers: Possible Answers    
+    faq:
+      title: ხშირად დასმული კითხვები (FAQ)
+      no_faqs: Sorry, at this time no FAQs have been created.
+      top: top      

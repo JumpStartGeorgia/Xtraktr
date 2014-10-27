@@ -60,6 +60,10 @@ logger.debug "////////////////////////// BROWSER = #{user_agent}"
 	def preload_global_variables
     # indicate that whether login should allow local and omniauth or just locale
 	  @enable_omniauth = false
+
+    # for loading extra css/js files    
+    @css = []
+    @js = []
   end
 
 	def initialize_gon

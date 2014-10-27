@@ -13,6 +13,7 @@ BootstrapStarter::Application.routes.draw do
 			resources :users
 		end
 
+		match '/explore_data', :to => 'root#explore_data', :as => :explore_data, :via => :get
 
 		root :to => 'root#index'
 	  match "*path", :to => redirect("/#{I18n.default_locale}") # handles /en/fake/path/whatever

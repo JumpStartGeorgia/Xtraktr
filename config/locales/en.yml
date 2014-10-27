@@ -21,6 +21,28 @@ en:
       messages:
         required_field: "is a required field."
         already_exists: 'already exists in the database.'
+  datatable:
+    copy: 
+      title: Copy
+      tooltip: Copy to clipboard
+    csv: 
+      title: CSV
+      tooltip: Save as CSV
+    xls: 
+      title: XLS
+      tooltip: Save as XLS
+    pdf: 
+      title: PDF
+      tooltip: Save as PDF
+    print: 
+      title: Print
+      tooltip: Print the table
+  highcharts:
+    context_title: Save this chart
+    png: PNG Image
+    jpg: JPG Image
+    pdf: PDF Document
+    svg: SVG Vector Image
   mailer:
     closing: "Sincerely,"
     signature: JumpStart Georgia
@@ -91,6 +113,8 @@ en:
       not_authorized: You are not authorized to view that page.
       success_created: "%{obj} was successfully created."
       success_updated: "%{obj} was successfully updated."
+    menu:
+      explore_data: Explore Data
   layouts:
     application:
       toggle: Toggle navigation
@@ -125,3 +149,65 @@ en:
         link_title: Change my password
         p2: "If you didn't request this, please ignore this email."
         p3: "Your password won't change until you access the link above and create a new one."                
+  root:
+    explore_data:
+      title: Explore the Data
+      no_matches: Your selections returned no data. Please try again with a different selection.
+      no_data: Data is not on file yet - have you run rake db:seed yet?
+      hover_region: Hover over a Region
+      na: N/A
+      percent: Percent
+      instructions:
+        header: Instructions
+        p1a: This page allows you to explore one question or the interaction between two questions from the Employment-related Resarch in Georgia Survey. 
+        p1b: "You may also choose to narrow the scope of this analysis by selecting a subset of data to analyze."
+        p2: "You can explore the analysis via a map (if one variable is 'Reg'), a chart, and a table."
+      form:
+        row: Explore Question
+        col: Compared with (optional)
+        no_col: No Comparison
+        swap: Swap the Questions
+        submit: Run Analysis
+        reset: Reset 
+        filter_variable: Use Subset of Data
+        no_filter: Use Complete Data Set
+        filter_value: With Value
+        exclude_dkra: Exclude "Don't know" & "Refuse"
+      tabs:
+        map: Map
+        chart: Chart
+        table: Table
+        details: Details
+      crosstab:
+        html:
+          title: "%{row} <br /> <span class='title-highlight'>by</span> %{col}"
+          title_filter: "<br /> <span class='title-highlight'>where</span> %{variable} = %{value}"
+          map:
+            title: "%{row} "
+            title_col: "<br /> <span class='title-highlight'>where</span> %{col} = [replace] "
+            title_filter: "<br /> <span class='title-highlight'>and</span> %{variable} = %{value}"
+        text:
+          title: "%{row} by %{col} "
+          title_filter: "where %{variable} = %{value}"
+          map:
+            title: "%{row} "
+            title_col: "where %{col} = [replace] "
+            title_filter: "and %{variable} = %{value}"
+      onevar:
+        html:
+          title: "%{row}"
+          title_filter: "<br /> <span class='title-highlight'>where</span> %{variable} = %{value}"
+        text:
+          title: "%{row}"
+          title_filter: " where %{variable} = %{value}"
+      subtitle:
+        html: "Total Responses: %{num}"
+        text: "Total Responses: %{num}"
+      map:
+        filter: "Filter map by selecting an answer to '%{text}':"
+      table:
+        count: Count
+        percent: Percent
+      details:
+        variable: Variable
+        answers: Possible Answers  
