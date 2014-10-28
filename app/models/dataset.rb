@@ -54,6 +54,14 @@ class Dataset
 
   #############################
 
+  # get the basic info about the dataset
+  # - title, description
+  def self.basic_info
+    only(:_id, :title, :description).order_by([[:title, :asc]])
+  end
+
+  #############################
+
   # process the datafile and save all of the information from it
   def process_file
     process_spss
@@ -156,7 +164,8 @@ class Dataset
         end
 
         # - record the total number of responses
-        result[:total_responses] = result[:counts].inject(:+)
+#        result[:total_responses] = result[:counts].inject(:+).to_i
+        result[:total_responses] = result[:counts].inject(:+).to_i
 
         # - format data for charts
         # pie chart requires data to be in following format:
@@ -300,7 +309,7 @@ class Dataset
         end
 
         # - record the total number of responses
-        result[:total_responses] = totals.inject(:+)
+        result[:total_responses] = totals.inject(:+).to_i
 
         # - format data for charts
         result[:chart][:labels] = result[:row_answers].map{|x| x['text']}

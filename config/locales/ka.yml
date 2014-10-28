@@ -152,11 +152,15 @@ ka:
   root:
     explore_data:
       title: Explore the Data
+      no_data: 'At this time, no datasets have been loaded into the site.'
+    explore_data_show:
+      title: Explore the Data
       no_matches: Your selections returned no data. Please try again with a different selection.
       no_data: Data is not on file yet - have you run rake db:seed yet?
       hover_region: Hover over a Region
       na: N/A
       percent: Percent
+      dataset_title: Dataset
       instructions:
         header: Instructions
         p1a: This page allows you to explore one question or the interaction between two questions from the Employment-related Resarch in Georgia Survey. 

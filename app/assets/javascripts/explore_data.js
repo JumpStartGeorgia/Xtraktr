@@ -728,6 +728,9 @@ function reset_filter_form(){
 
 $(document).ready(function() {
   if (gon.explore_data){
+    // turn on tooltip for dataset description
+    $('#dataset-description').tooltip();
+
     // due to using tabs, the map, chart and table cannot be properly drawn
     // because they may be hidden. 
     // this event catches when a tab is being shown to make sure 
