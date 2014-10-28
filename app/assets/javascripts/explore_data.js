@@ -535,7 +535,7 @@ function build_datatable(json){
     // cells per row: row answer, count/percent for each col
     for(i=0; i<json.row_answers.length; i++){
       table += "<tr>";
-      table += "<td class='var1-col'>";
+      table += "<td class='var1-col' data-order='" + json.row_answers[i].sort_order + "'>";
       table += json.row_answers[i].text;
       table += "</td>";
       for(j=0; j<json.counts[i].length; j++){
@@ -552,7 +552,7 @@ function build_datatable(json){
     // cells per row: row answer, count, percent
     for(i=0; i<json.row_answers.length; i++){
       table += "<tr>";
-      table += "<td class='var1-col'>";
+      table += "<td class='var1-col' data-order='" + json.row_answers[i].sort_order + "'>";
       table += json.row_answers[i].text;
       table += "</td><td>";
       table += json.counts[i];

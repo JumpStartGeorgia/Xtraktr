@@ -100,6 +100,8 @@ module ProcessDataFile
         if File.exists?(file_answers_complete)
           line_number = 0
           File.open(file_answers_complete, "r") do |f|
+            last_key = nil
+            sort_order = 0
             f.each_line do |line|
               line_number += 1
               # take out the [1] " at the beginning and the closing "
@@ -110,10 +112,17 @@ module ProcessDataFile
                 answers_complete << [values[0].strip, values[1].strip, values[2].strip]
 
                 # save to answers attribute
-                # - if this is the first answer for this question, initialize the array
                 key = values[0].strip.gsub('.', '|')
+                # if this is a new key (question code), reset sort variables
+                if last_key != key
+                  last_key = key.dup
+                  sort_order = 0
+                end
+                # create sort order that is based on order they are listed in data file
+                sort_order += 1
+                # - if this is the first answer for this question, initialize the array
                 self.answers[key] = [] if self.answers[key].nil?
-                self.answers[key] << {value: values[1].strip, text: values[2].strip, can_exclude: false}
+                self.answers[key] << {value: values[1].strip, text: values[2].strip, can_exclude: false, sort_order: sort_order}
                 # update question to indciate it has answers
                 self.questions[key][:has_code_answers] = true
               else

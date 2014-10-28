@@ -22,7 +22,7 @@ class Dataset
   # - hence the need for recording the original code value
   field :questions, type: Hash
   # hash of array of question answers (answer value and answer text) 
-  # {code1: [{value: value1, text: text1, can_exclude:false}, {value: value2, text: text2}] }
+  # {code1: [{value: value1, text: text1, can_exclude:false, sort_order: 1}, {value: value2, text: text2, sort_order: 2}] }
   field :answers, type: Hash
   # array of question codes who possibly have answer values that are not in the provided list of possible answers
   field :questions_with_bad_answers, type: Array
@@ -35,6 +35,7 @@ class Dataset
   index ({ :'questions.is_mappable' => 1})
   index ({ :'questions.has_code_answers' => 1})
   index ({ :'answers.can_exclude' => 1})
+  index ({ :'answers.sort_order' => 1})
 
 
   #############################
@@ -45,7 +46,7 @@ class Dataset
 
 
   #############################
-  attr_accessible :title, :explanation, :data, :questions, :answers, :questions_with_bad_answers, :datafile
+  attr_accessible :title, :description, :data, :questions, :answers, :questions_with_bad_answers, :datafile
 
   before_create :process_file
   after_destroy :delete_dataset_files
@@ -93,7 +94,7 @@ class Dataset
     result[:row_code] = row
     row_question = self.questions[row]
     result[:row_question] = row_question['text']
-    result[:row_answers] = self.answers[row]
+    result[:row_answers] = self.answers[row].sort_by{|x| x[:sort_order]}
     result[:type] = TYPE[:onevar]
     result[:counts] = []
     result[:percents] = []
