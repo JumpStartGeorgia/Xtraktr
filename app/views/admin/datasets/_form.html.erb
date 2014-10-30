@@ -1,0 +1,22 @@
+<%= tinymce_assets %>
+<%= tinymce %>
+
+<%= semantic_form_for([:admin, @dataset]) do |f| %>
+	<%= f.error_messages %>
+
+	<%= f.inputs do %>
+	  <%= f.input :title %>
+    <%= f.input :description, :as => :text, rows: 10, :input_html => { class: 'tinymce' } %>
+    <%= f.input :datafile, :as => :file, :input_html => { accept:"application/x-spss-sav, application/octet-stream, text/csv" }  %> 
+
+    <%= f.hidden_field :user_id , :value => current_user.id %>
+
+	<% end %>
+
+  <div class="form-group">
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+	  <%= f.submit t('helpers.links.reset'), :class => 'btn btn-warning', :type => :reset, :name => :reset %>
+	  <%= link_to t('helpers.links.cancel'), admin_datasets_path, :class => 'btn btn-mini btn-warning' %>
+  </div>
+<% end %>
+

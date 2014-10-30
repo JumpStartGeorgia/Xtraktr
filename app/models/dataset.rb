@@ -6,6 +6,10 @@ class Dataset
   include ProcessDataFile # script in lib folder that will convert datafile to csv and then load into appropriate fields
 
   #############################
+
+  belongs_to :user
+
+  #############################
   # paperclip data file storage
   has_mongoid_attached_file :datafile, :url => "/system/datasets/:id/original/:filename", :use_timestamp => false
 
@@ -31,6 +35,7 @@ class Dataset
   # indexes
   index ({ :title => 1})
   index ({ :released_at => 1})
+  index ({ :user_id => 1})
   index ({ :'questions.text' => 1})
   index ({ :'questions.is_mappable' => 1})
   index ({ :'questions.has_code_answers' => 1})
@@ -46,7 +51,8 @@ class Dataset
 
 
   #############################
-  attr_accessible :title, :description, :data, :questions, :answers, :questions_with_bad_answers, :datafile
+  attr_accessible :title, :description, :data, :user_id,
+      :questions, :answers, :questions_with_bad_answers, :datafile
 
   before_create :process_file
   after_destroy :delete_dataset_files

@@ -4,6 +4,7 @@ ka:
     models:
       user: მომხმარებელი
       page: ტექსტი გვერდებისთვის
+      dataset: Dataset
     attributes:
       user:
         email: ელ.ფოსტა
@@ -17,6 +18,10 @@ ka:
       page_translation:
         title: სათაური, რომელიც გამოჩნდება კონტენტის ზემოთ
         content: კონტენტი
+      dataset:
+        title: Title
+        description: Description
+        datafile: Data File
     errors:
       messages:
         required_field: "სავალდებულო ველი"
@@ -115,6 +120,7 @@ ka:
       success_updated: "%{obj} განახლებულია."
     menu:
       explore_data: Explore Data
+      datasets: Datasets
   layouts:
     application:
       toggle: ნავიგაციის ჩართვა/გამორთვა
@@ -132,6 +138,7 @@ ka:
       title: ადმინისტრატორის განყოფილება
       users: მომხმარებლები
       pages: საიტზე ტექსტის რედაქტირება
+      datasets: Datasets
     users:
       edit:
         title: ცვლილებების შეტანა მომხმარებლის გვერდზე

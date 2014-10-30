@@ -1,17 +1,20 @@
 BootstrapStarter::Application.routes.draw do
+
 	#--------------------------------
 	# all resources should be within the scope block below
 	#--------------------------------
 	scope ":locale", locale: /#{I18n.available_locales.join("|")}/ do
 
 		match '/admin', :to => 'admin#index', :as => :admin, :via => :get
-#		devise_for :users, :path_names => {:sign_in => 'login', :sign_out => 'logout'},
-#											 :controllers => {:omniauth_callbacks => "omniauth_callbacks"}
+		devise_for :users, :path_names => {:sign_in => 'login', :sign_out => 'logout'},
+											 :controllers => {:omniauth_callbacks => "omniauth_callbacks"}
 
 		namespace :admin do
+			resources :datasets
       resources :pages
 			resources :users
 		end
+
 
 		match '/explore_data', :to => 'root#explore_data', :as => :explore_data, :via => :get
 		match '/explore_data/:id', :to => 'root#explore_data_show', :as => :explore_data_show, :via => :get

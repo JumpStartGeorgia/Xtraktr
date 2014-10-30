@@ -4,6 +4,7 @@ en:
     models:
       user: User
       page: Text for Pages
+      dataset: Dataset
     attributes:
       user:
         email: Email Address
@@ -17,6 +18,10 @@ en:
       page_translation:
         title: Title to show above content
         content: Content
+      dataset:
+        title: Title
+        description: Description
+        datafile: Data File
     errors:
       messages:
         required_field: "is a required field."
@@ -115,6 +120,7 @@ en:
       success_updated: "%{obj} was successfully updated."
     menu:
       explore_data: Explore Data
+      datasets: Datasets
   layouts:
     application:
       toggle: Toggle navigation
@@ -132,6 +138,7 @@ en:
       title: Administration Section
       users: Users
       pages: Edit Text on Site
+      datasets: Datasets
     users:
       edit:
         title: Editing User

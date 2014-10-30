@@ -45,8 +45,6 @@
         <div class="collapse navbar-collapse" id="navbar-collapse">
           <ul class="nav navbar-nav navbar-right">
             <li role="menuitem"><%= link_to t('app.menu.explore_data'), explore_data_path %></li>
-<%
-=begin %>
 	          <% if user_signed_in? %>
 			        <li class="dropdown">
 			          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -64,9 +62,9 @@
 									</li>
 			          </ul>
 			        </li>
+            <% else %>
+              <li role="menuitem"><%= link_to(t('helpers.links.sign_in2'), new_user_session_path)  %></li>
 	          <% end %>
-<%
-=end %>            
 						<% I18n.available_locales.each do |locale| %>
 							<% if locale != I18n.locale %>
 								<li><%= link_to t("app.language.#{locale}"), params.merge(:locale => locale) %></li>
