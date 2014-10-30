@@ -58,5 +58,11 @@ module BootstrapStarter
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
 
+
+    config.assets.precompile += %w( explore_data.js  )    
+    config.assets.precompile += %w( explore_data.css )    
+    config.assets.precompile += %w( bootstrap-select.min.css )    
+    config.assets.precompile += %w( bootstrap-select.min.js highcharts.js highcharts-map.js highcharts-exporting.js )    
+
   end
 end

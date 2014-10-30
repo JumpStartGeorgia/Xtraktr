@@ -12,6 +12,7 @@
 <table class="table table-striped display">
   <thead>
     <tr>
+      <th></th>
       <th><%= model_class.human_attribute_name(:title) %></th>
       <th><%= model_class.human_attribute_name(:descritpion) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
@@ -20,6 +21,7 @@
   <tbody>
     <% @datasets.each do |dataset| %>
       <tr>
+        <td><%= link_to t('app.menu.explore_data'), explore_data_show_path(dataset), :class => 'btn btn-mini btn-default' %></td>
         <td><%= dataset.title %></td>
         <td><%= simple_format_no_tags(dataset.description, {}, {sanitize: false}) %></td>
         <td>

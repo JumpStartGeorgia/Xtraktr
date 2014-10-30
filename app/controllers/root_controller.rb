@@ -181,13 +181,13 @@ private
 
   def build_subtitle_html(total)
     title = "<br /> <span class='total_responses'>"
-    title << t('root.explore_data_show.subtitle.html', :num => total)
+    title << t('root.explore_data_show.subtitle.html', :num => view_context.number_with_delimiter(total))
     title << "</span>"
     return title.html_safe
   end 
 
   def build_subtitle_text(total)
-    return t('root.explore_data_show.subtitle.text', :num => total)
+    return t('root.explore_data_show.subtitle.text', :num => view_context.number_with_delimiter(total))
   end 
 
 end

@@ -103,7 +103,7 @@ function build_highmap(json, filter){
                           enabled: true,
                           color: 'white',
                           formatter: function () {
-                            return this.point.name + '<br/>' + this.point.count + '   (' + this.point.value + '%)';
+                            return this.point.name + '<br/>' + Highcharts.numberFormat(this.point.count, 0) + '   (' + this.point.value + '%)';
                           }
                         }
                       }, false);
@@ -181,7 +181,7 @@ function build_highmap(json, filter){
             allAreas: false, // if shape does not have value, do not show it so base layer above will show
             tooltip: {
                 headerFormat: '',
-                pointFormat: '<b>{point.name}:</b> {point.count} ({point.value}%)'    
+                pointFormat: '<b>{point.name}:</b> {point.count:,.0f} ({point.value}%)'    
             },
             borderColor: '#909090',
             borderWidth: 1,
@@ -196,7 +196,7 @@ function build_highmap(json, filter){
               enabled: true,
               color: 'white',
               formatter: function () {
-                return this.point.count + '   (' + this.point.value + '%)';
+                return Highcharts.numberFormat(this.point.count, 0) + '   (' + this.point.value + '%)';
               }
             }
         }],
@@ -304,7 +304,7 @@ function build_crosstab_chart(json){
             itemStyle: { "color": "#333333", "cursor": "pointer", "fontSize": "14px", "fontWeight": "bold" }
         },
         tooltip: {
-            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
+            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y:,.0f}</b> ({point.percentage:.2f}%)<br/>',
             shared: true,
             backgroundColor: 'rgba(255, 255, 255, 0.95)',
             followPointer: true
@@ -391,7 +391,7 @@ function build_pie_chart(json){
         },
         tooltip: {
             formatter: function () {
-              return '<b>' + this.key + ':</b> ' + this.point.options.count + ' (' + this.y + '%)';
+              return '<b>' + this.key + ':</b> ' + Highcharts.numberFormat(this.point.options.count,0) + ' (' + this.y + '%)';
             }
         },
         plotOptions: {
@@ -399,7 +399,9 @@ function build_pie_chart(json){
                 cursor: 'pointer',
                 dataLabels: {
                     enabled: true,
-                    format: '{point.options.count} ({point.y}%)',
+                    formatter: function(){
+                      return Highcharts.numberFormat(this.point.options.count,0) + ' (' + this.point.y + '%)';
+                    },
                     style: {
                         color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
                     }
@@ -539,8 +541,8 @@ function build_datatable(json){
       table += json.row_answers[i].text;
       table += "</td>";
       for(j=0; j<json.counts[i].length; j++){
-        table += "<td>";
-        table += json.counts[i][j];
+        table += "<td data-order='" + json.counts[i][j] + "'>";
+        table += Highcharts.numberFormat(json.counts[i][j],0);
         table += "</td>";
         table += "<td>";
         table += json.percents[i][j].toFixed(2);
@@ -554,8 +556,8 @@ function build_datatable(json){
       table += "<tr>";
       table += "<td class='var1-col' data-order='" + json.row_answers[i].sort_order + "'>";
       table += json.row_answers[i].text;
-      table += "</td><td>";
-      table += json.counts[i];
+      table += "</td><td data-order='" + json.counts[i] + "'>";
+      table += Highcharts.numberFormat(json.counts[i],0);
       table += "</td><td>";
       table += json.percents[i].toFixed(2);
       table += "%</td>";
