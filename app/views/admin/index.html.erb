@@ -1,17 +1,17 @@
 <% title t('.title') %>
 
-   <div class="col-sm-4">
- 		<ul class="standard">
-      <li>
-       <%= link_to t('.datasets'), admin_datasets_path %>
-      </li>
-      <% if current_user.role? User::ROLES[:admin] %>
+  <% if current_user.role? User::ROLES[:admin] %>
+     <div class="col-sm-4">
+   		<ul class="standard">
+        <li>
+         <%= link_to t('.datasets'), admin_datasets_path %>
+        </li>
    			<li>
          <%= link_to t('.users'), admin_users_path %>
         </li>
    			<li>
          <%= link_to t('.pages'), admin_pages_path %>
         </li>
-      <% end %>
- 		</ul>
-  </div>
+   		</ul>
+    </div>
+  <% end %>

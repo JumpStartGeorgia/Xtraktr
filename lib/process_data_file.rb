@@ -233,6 +233,7 @@ module ProcessDataFile
           incomplete_questions = answers_incomplete.map{|x| x[0]}.uniq
           # record question codes to questions_with_bad_answers attribute
           self.questions_with_bad_answers = complete_questions - incomplete_questions
+          self.has_warnings = self.questions_with_bad_answers.present?
           puts "******************************"
           puts "WARNING"
           puts "When parsing your file, we found that there are #{complete_questions.length - incomplete_questions.length} questions "

@@ -4,8 +4,7 @@
 <div class="form-group form-group-admin-buttons">
 	<%= link_to t('helpers.links.list'), admin_datasets_path,
   :class => 'btn btn-default' %>
-	<%= link_to t('helpers.links.admin'), admin_path,
-  :class => 'btn btn-default' %>
+  <%= link_to t('helpers.links.admin'), admin_path, :class => 'btn btn-default' if current_user.role? User::ROLES[:admin] %>
 </div>
 
 <%= render :partial => 'form' %>

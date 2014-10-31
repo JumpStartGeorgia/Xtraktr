@@ -1,6 +1,6 @@
 # encoding: utf-8
 en:
-  activerecord:
+  mongoid:
     models:
       user: User
       page: Text for Pages
@@ -22,6 +22,7 @@ en:
         title: Title
         description: Description
         datafile: Data File
+        has_warnings: Issues with Data
     errors:
       messages:
         required_field: "is a required field."
@@ -148,6 +149,11 @@ en:
         title: New User
       show:
         title: User Details
+    datasets:
+      warnings:
+        title: "Data Warnings for '%{title}'"
+        warning_explanation: 'The following %{number} questions contain values that were not listed as one of the possible answers. '
+        no_warnings: Congratulations! Your data file contains no issues that may effect the way the data is analyzed.
   devise:
     mailer:
       reset_password_instructions:

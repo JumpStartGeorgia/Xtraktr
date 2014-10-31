@@ -1,0 +1,25 @@
+<% title t('.title', :title => @dataset.title) %>
+
+<% if @dataset.has_warnings? %>
+
+  <p>
+    <%= t('.warning_explanation', :number => @dataset.questions_with_bad_answers.length) %>
+  </p>
+
+  <ul>
+    <% @dataset.questions_with_bad_answers.each do |bad| %>
+      <% question = @dataset.questions.select{|k,v| v['original_code'] == bad}.map{|k,v| v}.first %>
+      <% if question.present? %>
+        <li>
+          <%= "#{question['original_code']} - #{question['text']}" %>
+        </li>
+      <% end %>
+    <% end %>
+  </ul>
+<% else %>
+
+  <p>
+    <%= t('.no_warnings') %>
+  </p>
+
+<% end %>

@@ -88,4 +88,14 @@ class Admin::DatasetsController < ApplicationController
     end
   end
 
+
+  # show warnings about the data
+  def warnings
+    @dataset = Dataset.warnings.find(params[:id])
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.json { render json: @dataset }
+    end
+  end
 end

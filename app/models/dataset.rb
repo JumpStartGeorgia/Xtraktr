@@ -18,6 +18,7 @@ class Dataset
   field :dates_gathered, type: String
   field :released_at, type: Date
   field :data_created_by, type: String
+  field :has_warnings, type: Boolean, default: false
   # array of hashes {code1: value1, code2: value2, etc}
   field :data, type: Array
   # hash of questions codes and text 
@@ -52,7 +53,7 @@ class Dataset
 
   #############################
   attr_accessible :title, :description, :data, :user_id,
-      :questions, :answers, :questions_with_bad_answers, :datafile
+      :questions, :answers, :questions_with_bad_answers, :datafile, :has_warnings
 
   before_create :process_file
   after_destroy :delete_dataset_files
@@ -64,7 +65,12 @@ class Dataset
   # get the basic info about the dataset
   # - title, description
   def self.basic_info
-    only(:_id, :title, :description).order_by([[:title, :asc]])
+    only(:_id, :title, :description, :has_warnings).order_by([[:title, :asc]])
+  end
+
+  # get the questions with bad answers
+  def self.warnings
+    only(:_id, :title, :has_warnings, :questions_with_bad_answers, :questions).order_by([[:title, :asc]])
   end
 
   #############################

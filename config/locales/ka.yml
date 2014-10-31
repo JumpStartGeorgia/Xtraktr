@@ -1,6 +1,6 @@
 # encoding: utf-8
 ka:
-  activerecord:
+  mongoid:
     models:
       user: მომხმარებელი
       page: ტექსტი გვერდებისთვის
@@ -22,6 +22,7 @@ ka:
         title: Title
         description: Description
         datafile: Data File
+        has_warnings: Issues with Data
     errors:
       messages:
         required_field: "სავალდებულო ველი"
@@ -148,6 +149,11 @@ ka:
         title: ახალი მომხმარებელი
       show:
         title: მომხმარებლის დეტალები
+    datasets:
+      warnings:
+        title: "Data Warnings for '%{title}'"
+        warning_explanation: 'The following %{number} questions contain values that were not listed as one of the possible answers.' 
+        no_warnings: Congratulations! Your data file contains no issues that may effect the way the data is analyzed.
   devise:
     mailer:
       reset_password_instructions:
