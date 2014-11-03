@@ -1,5 +1,13 @@
 <% title t('.title', :title => @dataset.title) %>
 
+<div class="form-group form-group-admin-buttons">
+  <%= link_to t('.back', :default => t("helpers.links.back")),
+              admin_datasets_path, :class => 'btn btn-default'  %>
+  <%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_admin_dataset_path(@dataset), :class => 'btn btn-default' %>
+  <%= link_to t('helpers.links.admin'), admin_path, :class => 'btn btn-default' if current_user.role? User::ROLES[:admin] %>
+</div>
+
 <% if @dataset.has_warnings? %>
 
   <p>
@@ -8,10 +16,10 @@
 
   <ul>
     <% @dataset.questions_with_bad_answers.each do |bad| %>
-      <% question = @dataset.questions.select{|k,v| v['original_code'] == bad}.map{|k,v| v}.first %>
+      <% question = @dataset.questions.with_original_code(bad) %>
       <% if question.present? %>
         <li>
-          <%= "#{question['original_code']} - #{question['text']}" %>
+          <%= "#{question.original_code} - #{question.text}" %>
         </li>
       <% end %>
     <% end %>

@@ -18,25 +18,63 @@ class Dataset
   field :dates_gathered, type: String
   field :released_at, type: Date
   field :data_created_by, type: String
+  # indicate if questions_with_bad_answers has data
   field :has_warnings, type: Boolean, default: false
   # array of hashes {code1: value1, code2: value2, etc}
   field :data, type: Array
   # hash of questions codes and text 
-  # {code1: {text:question1, original_code:code1, is_mappable: false, has_code_answers:true}, code2: {text:question2, original_code:code2, is_mappable: true}}
+  # {code1: {text:question1, original_code:code1, has_code_answers:true}, code2: {text:question2, original_code:code2, has_code_answers:false}}
   # mongo key names cannot include a '.' so if there is one, it was replaced with '|'
   # - hence the need for recording the original code value
-  field :questions, type: Hash
+#  field :questions, type: Hash
   # hash of array of question answers (answer value and answer text) 
   # {code1: [{value: value1, text: text1, can_exclude:false, sort_order: 1}, {value: value2, text: text2, sort_order: 2}] }
-  field :answers, type: Hash
+#  field :answers, type: Hash
   # array of question codes who possibly have answer values that are not in the provided list of possible answers
   field :questions_with_bad_answers, type: Array
+  # indicates if any questions in this dataset have been connected to a shapeset
+  field :is_mappable, type: Boolean, default: false
+
+  embeds_many :questions do
+    # these are functions that will query the questions documents
+
+    # get the question that has the provide code
+    def with_code(code)
+      where(:code => code).first
+    end
+
+    def with_original_code(original_code)
+      where(:original_code => original_code).first
+    end
+
+    # get all of the questions with code answers
+    def with_code_answers
+      where(:has_code_answers => true).to_a
+    end
+
+    def all_answers
+      only(:code, :answers)
+    end
+
+    # get just the codes
+    def unique_codes
+      only(:code).map{|x| x.code}
+    end
+
+    # get all questions that are mappable
+    def are_mappable
+      where(:is_mappable => true)
+    end
+
+  end
+  accepts_nested_attributes_for :questions
 
   #############################
   # indexes
   index ({ :title => 1})
   index ({ :released_at => 1})
   index ({ :user_id => 1})
+  index ({ :shapeset_id => 1})
   index ({ :'questions.text' => 1})
   index ({ :'questions.is_mappable' => 1})
   index ({ :'questions.has_code_answers' => 1})
@@ -52,28 +90,20 @@ class Dataset
 
 
   #############################
-  attr_accessible :title, :description, :data, :user_id,
-      :questions, :answers, :questions_with_bad_answers, :datafile, :has_warnings
+  attr_accessible :title, :description, :data, :user_id, 
+      :questions_attributes, :questions_with_bad_answers, :datafile, :has_warnings
 
-  before_create :process_file
-  after_destroy :delete_dataset_files
 
   TYPE = {:onevar => 'onevar', :crosstab => 'crosstab'}
 
-  #############################
-
-  # get the basic info about the dataset
-  # - title, description
-  def self.basic_info
-    only(:_id, :title, :description, :has_warnings).order_by([[:title, :asc]])
-  end
-
-  # get the questions with bad answers
-  def self.warnings
-    only(:_id, :title, :has_warnings, :questions_with_bad_answers, :questions).order_by([[:title, :asc]])
-  end
+  FOLDER_PATH = "/system/datasets"
+  JS_FILE = "shapes.js"
 
   #############################
+
+  before_create :process_file
+  after_destroy :delete_dataset_files
+  before_save :update_flags
 
   # process the datafile and save all of the information from it
   def process_file
@@ -82,12 +112,70 @@ class Dataset
 
   # make sure all of the data files that were generated for this dataset are deleted
   def delete_dataset_files
-    FileUtils.rm_r("#{Rails.root}/public/system/datasets/#{self.id}")
+    FileUtils.rm_r("#{Rails.root}/public#{FOLDER_PATH}/#{self.id}")
   end
 
-  # get all of the questions with code answers
-  def question_with_code_answers
-    self.questions.select{|k,v| v['has_code_answers'] == true}
+  def update_flags
+    self.has_warnings = self.questions_with_bad_answers.present? if self.questions_with_bad_answers_changed?
+
+    return true
+  end
+
+  # this is called from an embeded question if the is_mappable value changed in that question
+  def update_mappable_flag
+    puts "==== question mappable = #{self.questions.index{|x| x.is_mappable == true}.present?}"
+    self.is_mappable = self.questions.index{|x| x.is_mappable == true}.present?
+    self.save
+
+    # if this dataset is mappable, create the js file with the geojson in it
+    # else, delete the js file
+    if self.is_mappable?
+      puts "=== creating js file"
+      # create hash of shapes in format: {code => geojson, code => geojson}
+      shapes = {}
+      self.questions.are_mappable.each do |question|
+        shapes[question.code] = question.shapeset.get_geojson
+      end
+
+      # write geojson to file
+      File.open(js_shapefile_file_path, 'w') do |f|
+        f << "var highmap_shapes = " + shapes.to_json
+      end
+    else
+      # delete js file
+      puts "==== deleting shape js file at #{js_shapefile_file_path}"
+      FileUtils.rm js_shapefile_file_path if File.exists?(js_shapefile_file_path)
+    end
+
+    return true
+  end
+
+  #############################
+
+  def self.sorted
+    order_by([[:title, :asc]])
+  end
+
+  # get the basic info about the dataset
+  # - title, description
+  def self.basic_info
+    only(:_id, :title, :description, :has_warnings, :is_mappable)
+  end
+
+  # get the questions with bad answers
+  def self.warnings
+    only(:_id, :title, :has_warnings, :questions_with_bad_answers, :questions)
+  end
+
+  #############################
+
+  # get the js shape file path
+  def js_shapefile_file_path
+    "#{Rails.root}/public#{FOLDER_PATH}/#{self.id}/#{JS_FILE}"
+  end
+
+  def js_shapefile_url_path
+    "#{FOLDER_PATH}/#{self.id}/#{JS_FILE}"
   end
 
   #############################
@@ -104,9 +192,9 @@ class Dataset
 
     # get the question/answers
     result[:row_code] = row
-    row_question = self.questions[row]
-    result[:row_question] = row_question['text']
-    result[:row_answers] = self.answers[row].sort_by{|x| x[:sort_order]}
+    row_question = self.questions.with_code(row)
+    result[:row_question] = row_question.text
+    result[:row_answers] = row_question.answers.sort_by{|x| x.sort_order}
     result[:type] = TYPE[:onevar]
     result[:counts] = []
     result[:percents] = []
@@ -116,8 +204,8 @@ class Dataset
     # if the row question/answers were found, continue
     if result[:row_question].present? && result[:row_answers].present?
       # get uniq values
-      row_answers = result[:row_answers].select{|x| !x['value'].nil?}.map{|x| x['value']}.uniq.sort
-#      puts "unique row values = #{row_answers}"
+      row_answers = result[:row_answers].map{|x| x.value}.sort
+      puts "unique row values = #{row_answers}"
 
       # get the counts of each row value
       map = "
@@ -162,7 +250,7 @@ class Dataset
         # - create counts
         result[:row_answers].each do |row_answer|
           # look for match in data
-          data_match = data.select{|x| x['_id'].to_s == row_answer['value'].to_s}.first
+          data_match = data.select{|x| x['_id'].to_s == row_answer.value.to_s}.first
           if data_match.present?
             result[:counts] << data_match['value']
           else
@@ -186,20 +274,21 @@ class Dataset
         result[:chart][:data] = []
         (0..result[:row_answers].length-1).each do |index|
           result[:chart][:data] << {
-            name: result[:row_answers][index]['text'], 
+            name: result[:row_answers][index].text, 
             y: result[:percents][index], 
             count: result[:counts][index], 
           }
         end
 
         # - if row is a mappable variable, create the map data
-        if row_question['is_mappable']
+        if row_question.is_mappable?
           result[:map] = {}
           result[:map][:data] = []
+          result[:map][:question_code] = row
 
           result[:row_answers].each_with_index do |row_answer, row_index|
             # store in highmaps format: {name, value, count}
-            result[:map][:data] << {:name => row_answer['text'], :value => result[:percents][row_index], :count => result[:counts][row_index]}
+            result[:map][:data] << {:name => row_answer.text, :value => result[:percents][row_index], :count => result[:counts][row_index]}
           end
         end
       end
@@ -221,13 +310,13 @@ class Dataset
 
     # get the question/answers
     result[:row_code] = row
-    row_question = self.questions[row]
-    result[:row_question] = row_question['text']
-    result[:row_answers] = self.answers[row]
+    row_question = self.questions.with_code(row)
+    result[:row_question] = row_question.text
+    result[:row_answers] = row_question.answers.sort_by{|x| x.sort_order}
     result[:column_code] = col
-    col_question = self.questions[col]
-    result[:column_question] = col_question['text']
-    result[:column_answers] = self.answers[col]
+    col_question = self.questions.with_code(col)
+    result[:column_question] = col_question.text
+    result[:column_answers] = col_question.answers.sort_by{|x| x.sort_order}
     result[:type] = TYPE[:crosstab]
     result[:counts] = []
     result[:percents] = []
@@ -238,10 +327,10 @@ class Dataset
     # if the row and col question/answers were found, continue
     if result[:row_question].present? && result[:row_answers].present? && result[:column_question].present? && result[:column_answers].present?
       # get uniq values
-      row_answers = result[:row_answers].select{|x| !x['value'].nil?}.map{|x| x['value']}.uniq.sort
-      col_answers = result[:column_answers].select{|x| !x['value'].nil?}.map{|x| x['value']}.uniq.sort
-#      puts "unique row values = #{row_answers}"
-#      puts "unique col values = #{col_answers}"
+      row_answers = result[:row_answers].map{|x| x.value}.sort
+      col_answers = result[:column_answers].map{|x| x.value}.sort
+      puts "unique row values = #{row_answers}"
+      puts "unique col values = #{col_answers}"
 
       col_answers.each do |c|
 #        puts "--------------------"
@@ -295,7 +384,7 @@ class Dataset
         result[:row_answers].each do |r|
           data_row = []
           result[:column_answers].each do |c|
-            data_match = data.select{|x| x['_id'].to_s == r['value'].to_s && x['value'][col].to_s == c['value'].to_s}
+            data_match = data.select{|x| x['_id'].to_s == r.value.to_s && x['value'][col].to_s == c.value.to_s}
             if data_match.present?
               data_row << data_match.map{|x| x['value']['count']}.inject(:+)
             else
@@ -325,25 +414,26 @@ class Dataset
         result[:total_responses] = totals.inject(:+).to_i
 
         # - format data for charts
-        result[:chart][:labels] = result[:row_answers].map{|x| x['text']}
+        result[:chart][:labels] = result[:row_answers].map{|x| x.text}
         result[:chart][:data] = []
         counts = result[:counts].transpose
 
         (0..result[:column_answers].length-1).each do |index|
           item = {}
-          item[:name] = result[:column_answers][index]['text']
+          item[:name] = result[:column_answers][index].text
           item[:data] = counts[index]
           result[:chart][:data] << item
         end
 
         # - if row or column is a mappable variable, create the map data
-        if row_question['is_mappable'] || col_question['is_mappable']
+        if row_question.is_mappable? || col_question.is_mappable?
           result[:map] = {}
           result[:map][:data] = {}
 
           # if the row is the mappable, recompute percents so columns add up to 100%
-          if row_question['is_mappable']
-            result[:map][:filter] = col_question['text']
+          if row_question.is_mappable?
+            result[:map][:question_code] = row
+            result[:map][:filter] = col_question.text
             result[:map][:filters] = result[:column_answers]
 
             counts = result[:counts].transpose
@@ -363,27 +453,28 @@ class Dataset
 
             result[:column_answers].each_with_index do |col_answer, col_index|
               # create hash to store the data for this answer
-              result[:map][:data][col_answer['value'].to_s] = []
+              result[:map][:data][col_answer.value.to_s] = []
 
               # now store the results for each item
               (0..result[:row_answers].length-1).each do |index|
                 # store in highmaps format: {name, value, count}
-                result[:map][:data][col_answer['value'].to_s] << {:name => result[:row_answers][index]['text'], :value => percents[col_index][index], :count => counts[col_index][index]}
+                result[:map][:data][col_answer.value.to_s] << {:name => result[:row_answers][index].text, :value => percents[col_index][index], :count => counts[col_index][index]}
               end 
             end
 
           else
-            result[:map][:filter] = row_question['text']
+            result[:map][:question_code] = col
+            result[:map][:filter] = row_question.text
             result[:map][:filters] = result[:row_answers]
 
             result[:row_answers].each_with_index do |row_answer, row_index|
               # create hash to store the data for this answer
-              result[:map][:data][row_answer['value'].to_s] = []
+              result[:map][:data][row_answer.value.to_s] = []
 
               # now store the results for each item
               (0..result[:column_answers].length-1).each do |index|
                 # store in highmaps format: {name, value, count}
-                result[:map][:data][row_answer['value'].to_s] << {:name => result[:column_answers][index]['text'], :value => result[:percents][row_index][index], :count => result[:counts][row_index][index]}
+                result[:map][:data][row_answer.value.to_s] << {:name => result[:column_answers][index].text, :value => result[:percents][row_index][index], :count => result[:counts][row_index][index]}
               end 
             end
           end

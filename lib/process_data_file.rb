@@ -50,8 +50,6 @@ module ProcessDataFile
 
         puts "=============================="
         puts "reading in questions from #{file_questions} and saving to questions attribute"
-        # format: {code: text}
-        self.questions = {}
         if File.exists?(file_questions)
           line_number = 0
           CSV.foreach(file_questions) do |row|
@@ -59,7 +57,7 @@ module ProcessDataFile
             # only add if the code and text are present
             if row[0].strip.present? && row[1].strip.present?
               # mongo does not allow '.' in key names, so replace with '|'
-              self.questions[row[0].strip.gsub('.', '|')] = {text: row[1].strip, original_code: row[0].strip, is_mappable: false, has_code_answers: false}
+              self.questions_attributes = [{code: row[0].strip.gsub('.', '|'), text: row[1].strip, original_code: row[0].strip}]
             else
               puts "******************************"
               puts "Line #{line_number} of #{file_questions} is missing the code or text."
@@ -67,7 +65,7 @@ module ProcessDataFile
             end
           end
         end
-        puts " - added #{self.questions.keys.length} questions"
+        puts " - added #{self.questions.length} questions"
 
         # before can read in data, we have to add a header row to it
         # so the SmaterCSV library that reads in the csv has the correct keys for the values
@@ -75,7 +73,7 @@ module ProcessDataFile
         puts "adding header to data csv"
         # read in data file and create new file with header
         data = CSV.read(file_data)
-        CSV.open(file_data, 'w', write_headers: true, headers: self.questions.keys) do |csv|
+        CSV.open(file_data, 'w', write_headers: true, headers: self.questions.unique_codes) do |csv|
           data.each do |row|
             csv << row
           end
@@ -94,9 +92,6 @@ module ProcessDataFile
         puts "reading in answers from #{file_answers_complete} and converting to csv"
         # format of each line of file is: [1] "Question Code || Answer Value || Answer Text"
         answers_complete = []
-        # save to answers attribute in dataset
-        # format: answer[question code] = {value, text}
-        self.answers = {}
         if File.exists?(file_answers_complete)
           line_number = 0
           File.open(file_answers_complete, "r") do |f|
@@ -111,8 +106,10 @@ module ProcessDataFile
                 # save for writing to csv
                 answers_complete << [values[0].strip, values[1].strip, values[2].strip]
 
+                # add the answer to the appropriate question
                 # save to answers attribute
                 key = values[0].strip.gsub('.', '|')
+                question = self.questions.with_code(key)
                 # if this is a new key (question code), reset sort variables
                 if last_key != key
                   last_key = key.dup
@@ -121,10 +118,9 @@ module ProcessDataFile
                 # create sort order that is based on order they are listed in data file
                 sort_order += 1
                 # - if this is the first answer for this question, initialize the array
-                self.answers[key] = [] if self.answers[key].nil?
-                self.answers[key] << {value: values[1].strip, text: values[2].strip, can_exclude: false, sort_order: sort_order}
+                question.answers_attributes  = [{value: values[1].strip, text: values[2].strip, sort_order: sort_order}]
                 # update question to indciate it has answers
-                self.questions[key][:has_code_answers] = true
+                question.has_code_answers = true
               else
                 puts "******************************"
                 puts "ERROR"

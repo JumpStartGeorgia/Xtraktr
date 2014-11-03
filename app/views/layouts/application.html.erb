@@ -16,8 +16,8 @@
 
     <%= stylesheet_link_tag  *(@css.present? ? ["application",@css].flatten : ["application"]), :media => "all" %>      
 
-    <% if @use_map %>
-      <script src="/regions.js"></script>
+    <% if @shapes_url.present? %>
+      <script src="<%= @shapes_url %>"></script>
     <% end %>
 
 		<!--[if IE 6]><%= stylesheet_link_tag 'ie6' %><![endif]-->

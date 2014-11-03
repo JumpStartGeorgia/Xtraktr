@@ -47,12 +47,12 @@
             <%= label_tag 'filter_variable', t('.form.filter_variable') %>
             <select data-live-search="true" data-hide-disabled='true' data-width="100%" class="selectpicker-filter" id="filter_variable" name="filter_variable">
               <option value=""><%= t('.form.no_filter') %></option>
-              <% @questions.keys.each do |question_key| %>
+              <% @questions.each do |question| %>
                 <% 
-                  selected = filter_variable == question_key ? 'selected=selected ' : ''
-                  disabled = @col == question_key || @row == question_key ? 'disabled=disabled ' : ''
+                  selected = filter_variable == question.code ? 'selected=selected ' : ''
+                  disabled = @col == question.code || @row == question.code ? 'disabled=disabled ' : ''
                 %>
-                <option value="<%= question_key %>" <%= selected %><%= disabled %>><%= "#{@questions[question_key]['original_code']} - #{@questions[question_key]['text']}" %></option>
+                <option value="<%= question.code %>" <%= selected %><%= disabled %>><%= "#{question.original_code} - #{question.text}" %></option>
               <% end %>
             </select>
           </div>
@@ -63,14 +63,14 @@
             <div id="filter_value_container" <%= show_filter_answers %>>
               <%= label_tag 'filter_value', t('.form.filter_value') %>
               <select data-live-search="true" data-hide-disabled='true' data-width="100%" class="selectpicker-filter" id="filter_value" name="filter_value">
-                <% @filter_answers.keys.each do |answer_key| %>
-                  <% @filter_answers[answer_key].each do |answer| %>
+                <% @questions.each do |question| %>
+                  <% question.answers.each do |answer| %>
                     <% 
-                      selected = @filter.present? && @filter[:value] == answer['value'].to_s &&
-                                  filter_variable == answer_key ? 'selected=selected ' : ''
-                      disabled = filter_variable == answer_key ? '' : 'disabled=disabled '
+                      selected = @filter.present? && @filter[:value] == answer.value.to_s &&
+                                  filter_variable == question.code.to_s ? 'selected=selected ' : ''
+                      disabled = filter_variable == question.code.to_s ? '' : 'disabled=disabled '
                     %>
-                    <option value="<%= answer['value'] %>" <%= selected %><%= disabled %> data-code="<%= answer_key %>" ><%= answer['text'] %></option>
+                    <option value="<%= answer.value %>" <%= selected %><%= disabled %> data-code="<%= question.code %>" ><%= answer.text %></option>
                   <% end %>
                 <% end %>
               </select>
@@ -82,12 +82,12 @@
           <div class="col-xs-6 col-sm-12">
             <%= label_tag 'row', t('.form.row') %>
             <select data-live-search="true" data-hide-disabled='true' data-width="100%" class="selectpicker" id="row" name="row">
-              <% @questions.keys.each_with_index do |question_key, index| %>
+              <% @questions.each_with_index do |question, index| %>
                 <% 
-                  selected = (@row.present? && @row == question_key) || (@col.blank? && index == 0) ? 'selected=selected ' : ''
-                  disabled = @col == question_key ? 'disabled=disabled ' : ''
+                  selected = (@row.present? && @row == question.code) || (@col.blank? && index == 0) ? 'selected=selected ' : ''
+                  disabled = @col == question.code ? 'disabled=disabled ' : ''
                 %>
-                <option value="<%= question_key %>" <%= selected %><%= disabled %>><%= "#{@questions[question_key]['original_code']} - #{@questions[question_key]['text']}" %></option>
+                <option value="<%= question.code %>" <%= selected %><%= disabled %>><%= "#{question.original_code} - #{question.text}" %></option>
               <% end %>
             </select>
           </div>
@@ -107,12 +107,12 @@
                 selected = @col.blank? ? 'selected=selected' : '' %>
               %>
               <option value="" <%= selected %>><%= t('.form.no_col') %></option>
-              <% @questions.keys.each_with_index do |question_key, index| %>
+              <% @questions.each_with_index do |question, index| %>
                 <% 
-                  selected = @col.present? && @col == question_key ? 'selected=selected ' : ''
-                  disabled = @row == question_key ? 'disabled=disabled ' : ''
+                  selected = @col.present? && @col == question.code ? 'selected=selected ' : ''
+                  disabled = @row == question.code ? 'disabled=disabled ' : ''
                 %>
-                <option value="<%= question_key %>" <%= selected %><%= disabled %>><%= "#{@questions[question_key]['original_code']} - #{@questions[question_key]['text']}" %></option>
+                <option value="<%= question.code %>" <%= selected %><%= disabled %>><%= "#{question.original_code} - #{question.text}" %></option>
               <% end %>
             </select>
           </div>

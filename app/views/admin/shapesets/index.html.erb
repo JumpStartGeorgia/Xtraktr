@@ -1,0 +1,40 @@
+<%- model_class = Shapeset -%>
+<% title t '.title', :default => model_class.model_name.human.pluralize %>
+
+<div class="form-group form-group-admin-buttons">
+  <%= link_to t('.new', :default => t("helpers.links.new")),
+              new_admin_shapeset_path,
+              :class => 'btn btn-primary' %>
+  <%= link_to t('helpers.links.admin'), admin_path, :class => 'btn btn-default' if current_user.role? User::ROLES[:admin] %>
+</div>
+
+<table class="table table-striped display">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:title) %></th>
+      <th><%= model_class.human_attribute_name(:descritpion) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @shapesets.each do |shapeset| %>
+      <tr>
+        <td><%= shapeset.title %></td>
+        <td><%= simple_format_no_tags(shapeset.description, {}, {sanitize: false}) %></td>
+        <td>
+          <%= link_to t('app.buttons.edit'),
+                      edit_admin_shapeset_path(shapeset), :class => 'btn btn-mini btn-default' %>
+          <%= link_to t('app.buttons.delete'),
+                      admin_shapeset_path(shapeset),
+                      :method => :delete,
+                      :data => { :confirm => I18n.t("helpers.links.confirm") },
+                      :class => 'btn btn-mini btn-danger' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+
+

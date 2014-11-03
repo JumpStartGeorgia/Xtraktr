@@ -7,7 +7,7 @@ class Admin::DatasetsController < ApplicationController
   # GET /datasets
   # GET /datasets.json
   def index
-    @datasets = Dataset.where(user_id: current_user.id).basic_info
+    @datasets = Dataset.where(user_id: current_user.id).basic_info.sorted
 
     respond_to do |format|
       format.html # index.html.erb
@@ -49,7 +49,7 @@ class Admin::DatasetsController < ApplicationController
 
     respond_to do |format|
       if @dataset.save
-        format.html { redirect_to admin_dataset_path(@dataset), notice: t('app.msgs.success_created', :obj => t('activerecord.models.dataset')) }
+        format.html { redirect_to admin_dataset_path(@dataset), notice: t('app.msgs.success_created', :obj => t('mongoid.models.dataset')) }
         format.json { render json: @dataset, status: :created, location: @dataset }
       else
         format.html { render action: "new" }
@@ -67,7 +67,7 @@ class Admin::DatasetsController < ApplicationController
 
     respond_to do |format|
       if @dataset.save
-        format.html { redirect_to admin_dataset_path(@dataset), notice: t('app.msgs.success_updated', :obj => t('activerecord.models.dataset')) }
+        format.html { redirect_to admin_dataset_path(@dataset), notice: t('app.msgs.success_updated', :obj => t('mongoid.models.dataset')) }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }

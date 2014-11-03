@@ -3,6 +3,8 @@ class Person
   field :age, type: Integer
   field :name
   field :sdate
+  embeds_many :questions
+  accepts_nested_attributes_for :questions
 
 
 

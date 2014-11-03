@@ -57,7 +57,7 @@ class Admin::PagesController < ApplicationController
 
     respond_to do |format|
       if @page.save
-        format.html { redirect_to admin_page_path(@page), notice: t('app.msgs.success_created', :obj => t('activerecord.models.page')) }
+        format.html { redirect_to admin_page_path(@page), notice: t('app.msgs.success_created', :obj => t('mongoid.models.page')) }
         format.json { render json: @page, status: :created, location: @page }
       else
         format.html { render action: "new" }
@@ -77,7 +77,7 @@ class Admin::PagesController < ApplicationController
 
     respond_to do |format|
       if @page.save
-        format.html { redirect_to admin_page_path(@page), notice: t('app.msgs.success_updated', :obj => t('activerecord.models.page')) }
+        format.html { redirect_to admin_page_path(@page), notice: t('app.msgs.success_updated', :obj => t('mongoid.models.page')) }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }

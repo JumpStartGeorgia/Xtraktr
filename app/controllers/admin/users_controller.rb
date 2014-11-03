@@ -50,7 +50,7 @@ class Admin::UsersController < ApplicationController
 
     respond_to do |format|
       if @user.save
-        format.html { redirect_to admin_users_path, notice: t('app.msgs.success_created', :obj => t('activerecord.models.user')) }
+        format.html { redirect_to admin_users_path, notice: t('app.msgs.success_created', :obj => t('mongoid.models.user')) }
         format.json { render json: @user, status: :created, location: @user }
       else
         format.html { render action: "new" }
@@ -72,7 +72,7 @@ class Admin::UsersController < ApplicationController
       end
 
       if success
-        format.html { redirect_to admin_users_path, notice: t('app.msgs.success_updated', :obj => t('activerecord.models.user')) }
+        format.html { redirect_to admin_users_path, notice: t('app.msgs.success_updated', :obj => t('mongoid.models.user')) }
         format.json { head :ok }
       else
         format.html { render action: "edit" }

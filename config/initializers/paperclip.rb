@@ -4,3 +4,9 @@
 #Paperclip.interpolates('xxx_id') do |attachment, style|
 #  attachment.instance.xxx_id
 #end
+
+
+Paperclip.options[:content_type_mappings] = {
+  :json => "text/plain",
+  :geojson => "text/plain" 
+}

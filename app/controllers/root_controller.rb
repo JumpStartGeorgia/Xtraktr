@@ -15,50 +15,50 @@ class RootController < ApplicationController
   end
   
   def explore_data_show
-    @dataset = Dataset.find(params[:id])
+    @dataset = Dataset.find_by(id: params[:id])
 
     if @dataset.blank?
       redirect_to explore_data_path, :notice => t('app.msgs.does_not_exist')
     else
       # the questions for cross tab can only be those that have code answers
-      @questions = @dataset.question_with_code_answers
-
-      @filter_answers = @dataset.answers
+      @questions = @dataset.questions.with_code_answers
 
       # initialize variables
       # start with a random question
-      @row = @questions.keys.sample
+      @row = @questions.map{|x| x.code}.sample
       @col = nil
       @filter = nil
 
       # check to make sure row and col param is in list of questions, if provided
-      if params[:row].present? && @questions.keys.index{|k| k == params[:row]}.present?
+      if params[:row].present? && @questions.index{|x| x.code == params[:row]}.present?
         @row = params[:row]
       end
-      if params[:col].present? && @questions.keys.index{|k| k == params[:col]}.present?
+      if params[:col].present? && @questions.index{|x| x.code == params[:col]}.present?
         @col = params[:col]
       end
 
       # check for valid filter values
       if params[:filter_variable].present? && params[:filter_value].present? &&
-        q_index = @questions.keys.index{|k| k == params[:filter_variable]}
-        a_index = @filter_answers.index{|k, v| k == params[:filter_variable] && v['value'].to_s == params[:filter_value]}
+        q = @questions.select{|x| x.code.to_s == params[:filter_variable]}.first
+        a = q.answers.with_value(params[:filter_value]) if q.present?
         
-        if q_index.present? && a_index.present?
-          @filter = {code: params[:filter_variable], value: params[:filter_value], name: @questions[q_index]['text'], answer: @filter_answers[a_index]['text'] }
-        end       
+        if q.present? && a.present?
+          @filter = {code: params[:filter_variable], value: params[:filter_value], name: q.text, answer: a.text }
+        end
       end
 
       respond_to do |format|
         format.html{
-          # load the region shapes
-          @use_map = true
+          # load the shapes if needed
+          if @dataset.is_mappable?
+            @shapes_url = @dataset.js_shapefile_url_path
+          end
 
           # add the required assets
           @css.push('bootstrap-select.min.css', "explore_data.css")
           @js.push('bootstrap-select.min.js', "explore_data.js", 'highcharts.js', 'highcharts-map.js', 'highcharts-exporting.js')
 
-          # record url for making ajax call
+          # record javascript variables
           gon.explore_data = true
           gon.explore_data_ajax_path = explore_data_show_path(:format => :js)
           gon.hover_region = I18n.t('root.explore_data_show.hover_region')
@@ -95,8 +95,8 @@ class RootController < ApplicationController
             @data[:title][:text] = build_crosstab_title_text(@data[:row_question], @data[:column_question], @filter, @data[:total_responses])
             # create special map titles so filter of column can be shown in title
             # test to see which variable is mappable - that one must go in as the row for the map title
-            q = @questions.select{|k,v| k == params[:row] && v['is_mappable'] == true}
-            if q.present?
+            row_index = @questions.select{|x| x.code == params[:row] && x.is_mappable?}
+            if row_index.present?
               @data[:title][:map_html] = build_crosstab_map_title_html(@data[:row_question], @data[:column_question], @filter, @data[:total_responses])
               @data[:title][:map_text] = build_crosstab_map_title_text(@data[:row_question], @data[:column_question], @filter, @data[:total_responses])
             else

@@ -154,7 +154,7 @@ function build_highmap(json, filter){
         series : [{
             // create base layer for N/A
             // will be overriden with next data series if data exists
-            data : Highcharts.geojson(highmap_shapes, 'map'),
+            data : Highcharts.geojson(highmap_shapes[json.map.question_code], 'map'),
             name: 'baseLayer',
             color: '#eeeeee',
             showInLegend: false,
@@ -176,8 +176,8 @@ function build_highmap(json, filter){
             // shape layer with data
             data : data,
             name: json.row_question,
-            mapData: highmap_shapes,
-            joinBy: ['name', 'name'],
+            mapData: highmap_shapes[json.map.question_code],
+            joinBy: ['name_en', 'name'],
             allAreas: false, // if shape does not have value, do not show it so base layer above will show
             tooltip: {
                 headerFormat: '',

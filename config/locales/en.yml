@@ -5,6 +5,7 @@ en:
       user: User
       page: Text for Pages
       dataset: Dataset
+      shapeset: Shapeset
     attributes:
       user:
         email: Email Address
@@ -23,6 +24,10 @@ en:
         description: Description
         datafile: Data File
         has_warnings: Issues with Data
+      shapeset:
+        title: Title
+        description: Description
+        shapefile: GeoJSON File
     errors:
       messages:
         required_field: "is a required field."
@@ -140,6 +145,7 @@ en:
       users: Users
       pages: Edit Text on Site
       datasets: Datasets
+      shapesets: Shapesets
     users:
       edit:
         title: Editing User
@@ -152,7 +158,7 @@ en:
     datasets:
       warnings:
         title: "Data Warnings for '%{title}'"
-        warning_explanation: 'The following %{number} questions contain values that were not listed as one of the possible answers. '
+        warning_explanation: 'The following %{number} questions contain values that were not listed as one of the possible answers. These records with the extra values will not be used during analysis.' 
         no_warnings: Congratulations! Your data file contains no issues that may effect the way the data is analyzed.
   devise:
     mailer:
