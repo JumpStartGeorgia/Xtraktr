@@ -62,7 +62,7 @@ BootstrapStarter::Application.configure do
 
 	# options for exception notification gem
 	config.middleware.use ExceptionNotifier,
-		:email_prefix => "[Bootstrap Starter App Error (#{Rails.env})] ",
+		:email_prefix => "[xtraktr App Error (#{Rails.env})] ",
 		:sender_address => ENV['APPLICATION_FROM_EMAIL'],
 		:exception_recipients => [ENV['APPLICATION_ERROR_TO_EMAIL']]
 end
