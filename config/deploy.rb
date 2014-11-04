@@ -55,7 +55,7 @@ namespace :deploy do
 
   desc "Create MongoDB indexes"
   task :mongoid_index do
-    run "cd #{current_path} && #{bundle_cmd} exec rake db:mongoid:create_indexes", :once => true
+    run "cd #{current_path} && bundle exec rake db:mongoid:create_indexes", :once => true
   end
   after "deploy:update", "deploy:mongoid_index"
 
