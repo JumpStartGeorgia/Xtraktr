@@ -40,8 +40,7 @@ namespace :deploy do
     sudo "ln -nfs #{current_path}/config/deploy/#{ngnix_conf_file_loc} /etc/nginx/sites-enabled/#{application}"
     sudo "ln -nfs #{current_path}/config/deploy/#{unicorn_init_file_loc} /etc/init.d/unicorn_#{application}"
     run "mkdir -p #{shared_path}/config"
-    upload "config/mongoid.template.yml", "#{shared_path}/mongoid.yml", :via => :scp
-#    put File.read("config/database.example.yml"), "#{shared_path}/config/database.yml"
+    put File.read("config/mongoid.template.yml"), "#{shared_path}/config/mongoid.yml"
     puts "Now edit the config files in #{shared_path}."
   end
   after "deploy:setup", "deploy:setup_config"
