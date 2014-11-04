@@ -40,18 +40,25 @@ namespace :deploy do
     sudo "ln -nfs #{current_path}/config/deploy/#{ngnix_conf_file_loc} /etc/nginx/sites-enabled/#{application}"
     sudo "ln -nfs #{current_path}/config/deploy/#{unicorn_init_file_loc} /etc/init.d/unicorn_#{application}"
     run "mkdir -p #{shared_path}/config"
-    put File.read("config/database.example.yml"), "#{shared_path}/config/database.yml"
+    upload "config/mongoid.template.yml", "#{shared_path}/mongoid.yml", :via => :scp
+#    put File.read("config/database.example.yml"), "#{shared_path}/config/database.yml"
     puts "Now edit the config files in #{shared_path}."
   end
   after "deploy:setup", "deploy:setup_config"
 
   task :symlink_config, roles: :app do
-    run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
+    run "test -f #{release_path}/config/mongoid.yml || ln -s #{shared_path}/mongoid.yml #{release_path}/config/mongoid.yml"
 		puts ">>>>>>>>>>>>>>>>>>>>>>>>>>>"
 		puts "If this is first time, be sure to run the following so app starts on server bootup: sudo update-rc.d unicorn_#{application} defaults"
 		puts ">>>>>>>>>>>>>>>>>>>>>>>>>>>"
   end
   after "deploy:finalize_update", "deploy:symlink_config"
+
+  desc "Create MongoDB indexes"
+  task :mongoid_index do
+    run "cd #{current_path} && #{bundle_cmd} exec rake db:mongoid:create_indexes", :once => true
+  end
+  after "deploy:update", "deploy:mongoid_index"
 
   desc "Make sure local git is in sync with remote."
   task :check_revision, roles: :web do
