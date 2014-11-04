@@ -115,7 +115,7 @@ en:
       confirm: Are you sure?
       new: New
     common:
-      app_name: X-Tractor
+      app_name: Xtraktr
       added_on: "Added on: %{date}" 
       jumpstart: JumpStart Georgia
       js_link_title: JumpStart Georgia - We communicate data better!
