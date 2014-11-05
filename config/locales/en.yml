@@ -157,6 +157,14 @@ en:
       show:
         title: User Details
     datasets:
+      index:
+        stats:
+          data_records: Data Records
+          good_questions: Analyzable Questions
+          no_text: No Question Text
+          bad_answers: Bad Answers
+          no_answers: No Answers
+        view_warnings: View Details
       warnings:
         title: "Data Warnings for '%{title}'"
         tab_bad_answers: Questions with Bad Answers

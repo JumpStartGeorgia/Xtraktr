@@ -11,32 +11,29 @@
 <% if @dataset.has_warnings? %>
 
   <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="#bad_answers" role="tab" data-toggle="tab"><%= t('.tab_bad_answers') %></a></li>
+    <li role="presentation" class="active"><a href="#no_text" role="tab" data-toggle="tab"><%= t('.tab_no_text') %></a></li>
     <li role="presentation"><a href="#no_answers" role="tab" data-toggle="tab"><%= t('.tab_no_answers') %></a></li>
-    <li role="presentation"><a href="#no_text" role="tab" data-toggle="tab"><%= t('.tab_no_text') %></a></li>
+    <li role="presentation"><a href="#bad_answers" role="tab" data-toggle="tab"><%= t('.tab_bad_answers') %></a></li>
   </ul>
 
   <div class="tab-content">
-    <div role="tabpanel" class="tab-pane fade in active" id="bad_answers">
-      <% if @bad_answers.present? %>
+    <div role="tabpanel" class="tab-pane fade in active" id="no_text">
+      <% if @no_text.present? %>
         <p>
-          <%= t('.bad_answers', :number => @bad_answers.length) %>
+          <%= t('.no_text', :number => @no_text.length) %>
         </p>
 
         <ul>
-          <% @bad_answers.each do |item| %>
-            <% question = @dataset.questions.with_original_code(item) %>
-            <% if question.present? %>
-              <li>
-                <%= "#{question.original_code} - #{question.text}" %>
-              </li>
-            <% end %>
+          <% @no_text.each do |item| %>
+            <li>
+              <%= item %>
+            </li>
           <% end %>
         </ul>
       <% else %>
 
         <p>
-          <%= t('.no_bad_answers') %>
+          <%= t('.no_no_text') %>
         </p>
       <% end %>
     </div>
@@ -62,26 +59,30 @@
       <% end %>
     </div>
 
-    <div role="tabpanel" class="tab-pane fade" id="no_text">
-      <% if @no_text.present? %>
+    <div role="tabpanel" class="tab-pane fade" id="bad_answers">
+      <% if @bad_answers.present? %>
         <p>
-          <%= t('.no_text', :number => @no_text.length) %>
+          <%= t('.bad_answers', :number => @bad_answers.length) %>
         </p>
 
         <ul>
-          <% @no_text.each do |item| %>
-            <li>
-              <%= item %>
-            </li>
+          <% @bad_answers.each do |item| %>
+            <% question = @dataset.questions.with_original_code(item) %>
+            <% if question.present? %>
+              <li>
+                <%= "#{question.original_code} - #{question.text}" %>
+              </li>
+            <% end %>
           <% end %>
         </ul>
       <% else %>
 
         <p>
-          <%= t('.no_no_text') %>
+          <%= t('.no_bad_answers') %>
         </p>
       <% end %>
     </div>
+
 
   </div>
 

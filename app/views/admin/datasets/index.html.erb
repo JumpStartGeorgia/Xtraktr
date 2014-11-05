@@ -24,11 +24,27 @@
         <td><%= link_to t('app.menu.explore_data'), explore_data_show_path(dataset), :class => 'btn btn-mini btn-default' %></td>
         <td><%= dataset.title %></td>
         <td>
-          Data Records: <%= number_with_delimiter(dataset.stats.data_records) %>
+          <%= t('.stats.data_records') %>: <%= number_with_delimiter(dataset.stats.data_records) %>
           <br />
-          Analyzable Questions: <%= number_with_delimiter(dataset.stats.questions_good) %>
+          <%= t('.stats.good_questions') %>: <%= number_with_delimiter(dataset.stats.questions_good) %>
         </td>
-        <td><%= link_to t('.view_warnings'), warnings_admin_dataset_path(dataset), :class => 'btn btn-mini btn-warning' if dataset.has_warnings? %></td>
+        <td>
+          <% if dataset.has_warnings? %>
+            <% if dataset.stats.questions_no_text > 0 %>
+              <%= t('.stats.no_text') %>: <%= number_with_delimiter(dataset.stats.questions_no_text) %>
+              <br />
+            <% end %>
+            <% if dataset.stats.questions_no_answers > 0 %>
+              <%= t('.stats.no_answers') %>: <%= number_with_delimiter(dataset.stats.questions_no_answers) %>
+              <br />
+            <% end %>
+            <% if dataset.stats.questions_bad_answers > 0 %>
+              <%= t('.stats.bad_answers') %>: <%= number_with_delimiter(dataset.stats.questions_bad_answers) %>
+              <br />
+            <% end %>
+            <%= link_to t('.view_warnings'), warnings_admin_dataset_path(dataset), :class => 'btn btn-mini btn-warning' %>
+          <% end %>
+        </td>
         <td>
           <%= link_to t('app.buttons.edit'),
                       edit_admin_dataset_path(dataset), :class => 'btn btn-mini btn-default' %>
