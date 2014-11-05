@@ -255,6 +255,7 @@ module ProcessDataFile
         # check if there are any issues
         self.update_flags
 
+        # create the stats
       end
 
     else

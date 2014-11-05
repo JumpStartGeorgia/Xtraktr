@@ -68,6 +68,10 @@ class Dataset
   end
   accepts_nested_attributes_for :questions
 
+  # record stats about this dataset
+  embeds_one :stats, class_name: "Stats"
+  accepts_nested_attributes_for :stats
+
   #############################
   # indexes
   index ({ :title => 1})
@@ -103,6 +107,7 @@ class Dataset
   before_create :process_file
   after_destroy :delete_dataset_files
   before_save :update_flags
+  before_save :update_stats
 
   # process the datafile and save all of the information from it
   def process_file
@@ -123,6 +128,28 @@ class Dataset
                         self.questions_with_no_text.present?
 
     puts "==== - has_warnings = #{self.has_warnings}"
+    return true
+  end
+
+  def update_stats
+    puts "==== update stats"
+    self.build_stats if self.stats.nil?
+
+    # how many questions have answers
+    self.stats.questions_good = self.questions.nil? ? 0 : self.questions.with_code_answers.length
+
+    # how many questions don't have answers
+    self.stats.questions_no_answers = self.questions.nil? ? 0 : self.questions.with_no_code_answers.length
+
+    # how many questions don't have text
+    self.stats.questions_no_text = self.questions_with_no_text.nil? ? 0 : self.questions_with_no_text.length
+
+    # how many questions have bad answers
+    self.stats.questions_bad_answers = self.questions_with_bad_answers.nil? ? 0 : self.questions_with_bad_answers.length
+
+    # how many data records
+    self.stats.data_records = self.data.nil? ? 0 : self.data.length
+
     return true
   end
 
@@ -164,12 +191,12 @@ class Dataset
   # get the basic info about the dataset
   # - title, description
   def self.basic_info
-    only(:_id, :title, :description, :has_warnings, :is_mappable)
+    only(:_id, :title, :description, :has_warnings, :is_mappable, :stats)
   end
 
   # get the questions with bad answers
   def self.warnings
-    only(:_id, :title, :has_warnings, :questions_with_bad_answers, :questions_with_no_text, :questions)
+    only(:_id, :title, :has_warnings, :questions_with_bad_answers, :questions_with_no_text, :questions, :stats)
   end
 
   #############################
