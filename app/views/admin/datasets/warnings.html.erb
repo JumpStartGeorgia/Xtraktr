@@ -13,6 +13,7 @@
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active"><a href="#bad_answers" role="tab" data-toggle="tab"><%= t('.tab_bad_answers') %></a></li>
     <li role="presentation"><a href="#no_answers" role="tab" data-toggle="tab"><%= t('.tab_no_answers') %></a></li>
+    <li role="presentation"><a href="#no_text" role="tab" data-toggle="tab"><%= t('.tab_no_text') %></a></li>
   </ul>
 
   <div class="tab-content">
@@ -23,8 +24,8 @@
         </p>
 
         <ul>
-          <% @bad_answers.each do |bad| %>
-            <% question = @dataset.questions.with_original_code(bad) %>
+          <% @bad_answers.each do |item| %>
+            <% question = @dataset.questions.with_original_code(item) %>
             <% if question.present? %>
               <li>
                 <%= "#{question.original_code} - #{question.text}" %>
@@ -47,9 +48,9 @@
         </p>
 
         <ul>
-          <% @no_answers.each do |bad| %>
+          <% @no_answers.each do |item| %>
             <li>
-              <%= "#{bad.original_code} - #{bad.text}" %>
+              <%= "#{item.original_code} - #{item.text}" %>
             </li>
           <% end %>
         </ul>
@@ -60,6 +61,28 @@
         </p>
       <% end %>
     </div>
+
+    <div role="tabpanel" class="tab-pane fade" id="no_text">
+      <% if @no_text.present? %>
+        <p>
+          <%= t('.no_text', :number => @no_text.length) %>
+        </p>
+
+        <ul>
+          <% @no_text.each do |item| %>
+            <li>
+              <%= item %>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+
+        <p>
+          <%= t('.no_no_text') %>
+        </p>
+      <% end %>
+    </div>
+
   </div>
 
 <% else %>

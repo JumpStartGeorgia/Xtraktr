@@ -59,6 +59,11 @@ module ProcessDataFile
               # mongo does not allow '.' in key names, so replace with '|'
               self.questions_attributes = [{code: row[0].strip.gsub('.', '|'), text: row[1].strip, original_code: row[0].strip}]
             else
+              # if there is question code but no question text, save this
+              if row[0].strip.present? && !row[1].strip.present?
+                self.questions_with_no_text = [] if self.questions_with_no_text.nil?
+                self.questions_with_no_text << row[0].strip
+              end
               puts "******************************"
               puts "Line #{line_number} of #{file_questions} is missing the code or text."
               puts "******************************"
@@ -72,7 +77,9 @@ module ProcessDataFile
         puts "=============================="
         puts "adding header to data csv"
         # read in data file and create new file with header
-        data = CSV.read(file_data)
+        # - need to use the quote char of \0 (null) 
+        #   - R does not put data in quotes so any quotes in file cause illegal quote error
+        data = CSV.read(file_data, :quote_char => "\0")
         CSV.open(file_data, 'w', write_headers: true, headers: self.questions.unique_codes) do |csv|
           data.each do |row|
             csv << row
@@ -110,17 +117,23 @@ module ProcessDataFile
                 # save to answers attribute
                 key = values[0].strip.gsub('.', '|')
                 question = self.questions.with_code(key)
-                # if this is a new key (question code), reset sort variables
-                if last_key != key
-                  last_key = key.dup
-                  sort_order = 0
+                if question.present?
+                  # if this is a new key (question code), reset sort variables
+                  if last_key != key
+                    last_key = key.dup
+                    sort_order = 0
+                  end
+                  # create sort order that is based on order they are listed in data file
+                  sort_order += 1
+                  # - if this is the first answer for this question, initialize the array
+                  question.answers_attributes  = [{value: values[1].strip, text: values[2].strip, sort_order: sort_order}]
+                  # update question to indciate it has answers
+                  question.has_code_answers = true
+                else
+                  puts "******************************"
+                  puts "Line #{line_number} of #{file_answers_complete} has a question code #{key} that could not be found in the list of questions."
+                  puts "******************************"
                 end
-                # create sort order that is based on order they are listed in data file
-                sort_order += 1
-                # - if this is the first answer for this question, initialize the array
-                question.answers_attributes  = [{value: values[1].strip, text: values[2].strip, sort_order: sort_order}]
-                # update question to indciate it has answers
-                question.has_code_answers = true
               else
                 puts "******************************"
                 puts "ERROR"
@@ -229,7 +242,6 @@ module ProcessDataFile
           incomplete_questions = answers_incomplete.map{|x| x[0]}.uniq
           # record question codes to questions_with_bad_answers attribute
           self.questions_with_bad_answers = complete_questions - incomplete_questions
-          self.has_warnings = self.questions_with_bad_answers.present?
           puts "******************************"
           puts "WARNING"
           puts "When parsing your file, we found that there are #{complete_questions.length - incomplete_questions.length} questions "
@@ -239,6 +251,9 @@ module ProcessDataFile
 #          puts (complete_questions - incomplete_questions).map{|x| "#{x}\n"}
           puts "******************************"
         end
+
+        # check if there are any issues
+        self.update_flags
 
       end
 

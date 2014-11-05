@@ -22,16 +22,10 @@ class Dataset
   field :has_warnings, type: Boolean, default: false
   # array of hashes {code1: value1, code2: value2, etc}
   field :data, type: Array
-  # hash of questions codes and text 
-  # {code1: {text:question1, original_code:code1, has_code_answers:true}, code2: {text:question2, original_code:code2, has_code_answers:false}}
-  # mongo key names cannot include a '.' so if there is one, it was replaced with '|'
-  # - hence the need for recording the original code value
-#  field :questions, type: Hash
-  # hash of array of question answers (answer value and answer text) 
-  # {code1: [{value: value1, text: text1, can_exclude:false, sort_order: 1}, {value: value2, text: text2, sort_order: 2}] }
-#  field :answers, type: Hash
   # array of question codes who possibly have answer values that are not in the provided list of possible answers
   field :questions_with_bad_answers, type: Array
+  # array of question codes that do not have text for question
+  field :questions_with_no_text, type: Array
   # indicates if any questions in this dataset have been connected to a shapeset
   field :is_mappable, type: Boolean, default: false
 
@@ -121,9 +115,14 @@ class Dataset
   end
 
   def update_flags
-#    self.has_warnings = self.questions_with_bad_answers.present? if self.questions_with_bad_answers_changed?
-    self.has_warnings = self.questions_with_bad_answers.present? || self.questions.with_no_code_answers.present?
+    puts "==== update_flags"
+    puts "==== - bad answers = #{self.questions_with_bad_answers.present?}; no answers = #{self.questions.with_no_code_answers.present?}; no question text = #{self.questions_with_no_text.present?}"
+    puts "==== - has_warnings was = #{self.has_warnings}"
+    self.has_warnings = self.questions_with_bad_answers.present? || 
+                        self.questions.with_no_code_answers.present? || 
+                        self.questions_with_no_text.present?
 
+    puts "==== - has_warnings = #{self.has_warnings}"
     return true
   end
 
@@ -170,7 +169,7 @@ class Dataset
 
   # get the questions with bad answers
   def self.warnings
-    only(:_id, :title, :has_warnings, :questions_with_bad_answers, :questions)
+    only(:_id, :title, :has_warnings, :questions_with_bad_answers, :questions_with_no_text, :questions)
   end
 
   #############################

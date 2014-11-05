@@ -94,6 +94,7 @@ class Admin::DatasetsController < ApplicationController
     @dataset = Dataset.warnings.find(params[:id])
     @no_answers = @dataset.questions.with_no_code_answers
     @bad_answers = @dataset.questions_with_bad_answers
+    @no_text = @dataset.questions_with_no_text
 
     respond_to do |format|
       format.html # index.html.erb
