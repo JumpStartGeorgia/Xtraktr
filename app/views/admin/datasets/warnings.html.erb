@@ -10,20 +10,58 @@
 
 <% if @dataset.has_warnings? %>
 
-  <p>
-    <%= t('.warning_explanation', :number => @dataset.questions_with_bad_answers.length) %>
-  </p>
-
-  <ul>
-    <% @dataset.questions_with_bad_answers.each do |bad| %>
-      <% question = @dataset.questions.with_original_code(bad) %>
-      <% if question.present? %>
-        <li>
-          <%= "#{question.original_code} - #{question.text}" %>
-        </li>
-      <% end %>
-    <% end %>
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#bad_answers" role="tab" data-toggle="tab"><%= t('.tab_bad_answers') %></a></li>
+    <li role="presentation"><a href="#no_answers" role="tab" data-toggle="tab"><%= t('.tab_no_answers') %></a></li>
   </ul>
+
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane fade in active" id="bad_answers">
+      <% if @bad_answers.present? %>
+        <p>
+          <%= t('.bad_answers', :number => @bad_answers.length) %>
+        </p>
+
+        <ul>
+          <% @bad_answers.each do |bad| %>
+            <% question = @dataset.questions.with_original_code(bad) %>
+            <% if question.present? %>
+              <li>
+                <%= "#{question.original_code} - #{question.text}" %>
+              </li>
+            <% end %>
+          <% end %>
+        </ul>
+      <% else %>
+
+        <p>
+          <%= t('.no_bad_answers') %>
+        </p>
+      <% end %>
+    </div>
+
+    <div role="tabpanel" class="tab-pane fade" id="no_answers">
+      <% if @no_answers.present? %>
+        <p>
+          <%= t('.no_answers', :number => @no_answers.length) %>
+        </p>
+
+        <ul>
+          <% @no_answers.each do |bad| %>
+            <li>
+              <%= "#{bad.original_code} - #{bad.text}" %>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+
+        <p>
+          <%= t('.no_no_answers') %>
+        </p>
+      <% end %>
+    </div>
+  </div>
+
 <% else %>
 
   <p>

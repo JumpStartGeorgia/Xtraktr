@@ -92,6 +92,8 @@ class Admin::DatasetsController < ApplicationController
   # show warnings about the data
   def warnings
     @dataset = Dataset.warnings.find(params[:id])
+    @no_answers = @dataset.questions.with_no_code_answers
+    @bad_answers = @dataset.questions_with_bad_answers
 
     respond_to do |format|
       format.html # index.html.erb

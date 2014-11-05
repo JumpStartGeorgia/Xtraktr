@@ -52,6 +52,11 @@ class Dataset
       where(:has_code_answers => true).to_a
     end
 
+    # get all of the questions with no code answers
+    def with_no_code_answers
+      where(:has_code_answers => false).to_a
+    end
+
     def all_answers
       only(:code, :answers)
     end
@@ -116,7 +121,8 @@ class Dataset
   end
 
   def update_flags
-    self.has_warnings = self.questions_with_bad_answers.present? if self.questions_with_bad_answers_changed?
+#    self.has_warnings = self.questions_with_bad_answers.present? if self.questions_with_bad_answers_changed?
+    self.has_warnings = self.questions_with_bad_answers.present? || self.questions.with_no_code_answers.present?
 
     return true
   end
