@@ -405,9 +405,9 @@ class Dataset
 #      puts "++ data length was = #{data.length}"
       data.flatten!
 #      puts "++ data length = #{data.length}"
-#      puts "-----------"
-#      puts data.inspect
-#      puts "-----------"
+      puts "-----------"
+      puts data.inspect
+      puts "-----------"
 
       if data.present?
         # now put it all together
@@ -428,8 +428,10 @@ class Dataset
 
         # - take counts and turn into percents
         totals = []
+        puts "counts = \n #{result[:counts]}"
         result[:counts].each do |count_row|
           total = count_row.inject(:+)
+          puts " - row total = #{total}"
           totals << total
           if total > 0
             percent_row = []
@@ -441,6 +443,9 @@ class Dataset
             result[:percents] << Array.new(count_row.length){0}
           end
         end
+        puts "----------"
+        puts " - totals = #{totals}"
+        puts " - total = #{totals.inject(:+).to_i}"
 
         # - record the total number of responses
         result[:total_responses] = totals.inject(:+).to_i

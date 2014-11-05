@@ -578,7 +578,7 @@ function build_datatable(json){
 
   // initalize the datatable
   datatable = $('#datatable').dataTable({
-    "dom": '<"top"fT>t<"clear">',
+    "dom": '<"top"fT>t<"bottom"lpi><"clear">',
     "language": {
       "url": gon.datatable_i18n_url
     },
