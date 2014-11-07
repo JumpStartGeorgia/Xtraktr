@@ -19,15 +19,24 @@ module ProcessDataFile
   @@file_questions = 'questions.csv'
   @@file_answers_complete = 'answers_complete.csv'
   @@file_answers_incomplete = 'answers_incomplete.csv'
+  @@r_file = {
+    'sav' => 'spss_to_csv.r',
+    'dta' => 'stata_to_csv.r'
+  }
 
 
   #######################
-  # convert a spss file to csv
-  def process_spss
+  # process a data file
+  def process_data_file
+    puts "$$$$$$ process_data_file"
+    
+    # if file extension does not exist, get it
+    self.file_extension = File.extname(self.datafile.url).gsub('.', '').downcase if self.file_extension.blank?
+
     path = @@path.sub('[dataset_id]', self.id.to_s)
     # file has not be saved to proper place yet, so have to get queued file path
     file_to_process = self.datafile.queued_for_write[:original].path
-    file_r = "#{Rails.root}/script/r_scripts/spss_to_csv.r"
+    file_r = "#{Rails.root}/script/r_scripts/#{@@r_file[self.file_extension]}"
     file_sps = path + "spss_code.sps"
     file_data = path + @@file_data
     file_questions = path + @@file_questions
@@ -40,12 +49,18 @@ module ProcessDataFile
       # create dataset directory if not exist
       FileUtils.mkdir_p(File.dirname(file_data))
 
-      # run the R script
-      result = system 'Rscript', '--default-packages=foreign,MASS', file_r, file_to_process, file_data, file_sps, file_questions, file_answers_complete
+      # run the r script
+      results = nil
+      case self.file_extension
+        when 'sav'
+          results = process_spss(file_to_process, file_r, file_sps, file_data, file_questions, file_answers_complete)          
+        when 'dta'
+          results = process_stata(file_to_process, file_r, file_sps, file_data, file_questions, file_answers_complete)
+      end
 
-      if result.nil?
+      if results.nil?
         puts "Error was #{$?}"
-      elsif result
+      elsif results
         puts "You made it!"
 
         puts "=============================="
@@ -55,14 +70,14 @@ module ProcessDataFile
           CSV.foreach(file_questions) do |row|
             line_number += 1
             # only add if the code and text are present
-            if row[0].strip.present? && row[1].strip.present?
+            if row[0].present? && row[0].strip.present? && row[1].present? && row[1].strip.present?
               # mongo does not allow '.' in key names, so replace with '|'
-              self.questions_attributes = [{code: row[0].strip.gsub('.', '|'), text: row[1].strip, original_code: row[0].strip}]
+              self.questions_attributes = [{code: clean_text(row[0], true), text: clean_text(row[1]), original_code: clean_text(row[0])}]
             else
               # if there is question code but no question text, save this
-              if row[0].strip.present? && !row[1].strip.present?
+              if row[0].present? && row[0].strip.present? && !(row[1].present? && row[1].strip.present?)
                 self.questions_with_no_text = [] if self.questions_with_no_text.nil?
-                self.questions_with_no_text << row[0].strip
+                self.questions_with_no_text << clean_text(row[0])
               end
               puts "******************************"
               puts "Line #{line_number} of #{file_questions} is missing the code or text."
@@ -107,15 +122,15 @@ module ProcessDataFile
             f.each_line do |line|
               line_number += 1
               # take out the [1] " at the beginning and the closing "
-              answer = line.strip.gsub('[1] "', '').gsub(/\"$/, '')
+              answer = clean_text(line).gsub('[1] "', '').gsub(/\"$/, '')
               values = answer.split(' || ')
               if values.length == 3
                 # save for writing to csv
-                answers_complete << [values[0].strip, values[1].strip, values[2].strip]
+                answers_complete << [clean_text(values[0]), clean_text(values[1]), clean_text(values[2])]
 
                 # add the answer to the appropriate question
                 # save to answers attribute
-                key = values[0].strip.gsub('.', '|')
+                key = clean_text(values[0], true)
                 question = self.questions.with_code(key)
                 if question.present?
                   # if this is a new key (question code), reset sort variables
@@ -126,7 +141,7 @@ module ProcessDataFile
                   # create sort order that is based on order they are listed in data file
                   sort_order += 1
                   # - if this is the first answer for this question, initialize the array
-                  question.answers_attributes  = [{value: values[1].strip, text: values[2].strip, sort_order: sort_order}]
+                  question.answers_attributes  = [{value: clean_text(values[1]), text: clean_text(values[2]), sort_order: sort_order}]
                   # update question to indciate it has answers
                   question.has_code_answers = true
                 else
@@ -173,11 +188,11 @@ module ProcessDataFile
             line_number += 1
       #      puts "++ line #{line_number}"
             if found_labels
-              if line.strip == '.'
+              if clean_text(line) == '.'
       #          puts "++ - found '.', stopping parsing of answers"
                 # this is the end of the list of answers so stop
                 break
-              elsif line.strip == '/'
+              elsif clean_text(line) == '/'
       #          puts "++ - found /"
                 # this is the end of a set of answers for a question
                 question_code = nil
@@ -188,13 +203,13 @@ module ProcessDataFile
                 if next_line_question
       #            puts "++ - found question: #{line}"
                   next_line_question = false
-                  question_code = line.strip
+                  question_code = clean_text(line)
                 else
                   # this is an answer, record row in format: [question_code, value, text]
                   # line is in format of: value "text"
 
                   # strip space at beginning and end of line
-                  answer = line.strip
+                  answer = clean_text(line)
                   # get index of space between value and text
                   # index will be used to pull out the answer code and answer text
       #            puts "++ -- found answer: #{line}"
@@ -213,7 +228,7 @@ module ProcessDataFile
 
                 end
               end
-            elsif line.strip == 'VALUE LABELS'
+            elsif clean_text(line) == 'VALUE LABELS'
               # found beginning of list of answers
       #        puts "++++++++++++++ found value labels on line #{line_number}"
               found_labels = true
@@ -251,11 +266,6 @@ module ProcessDataFile
 #          puts (complete_questions - incomplete_questions).map{|x| "#{x}\n"}
           puts "******************************"
         end
-
-        # check if there are any issues
-        self.update_flags
-
-        # create the stats
       end
 
     else
@@ -264,6 +274,83 @@ module ProcessDataFile
       puts "The required R script file or the data file to process do not exist"
       puts "******************************"
     end
+
+    return true
   end
 
+
+  #######################
+  # run r-script for spss file
+  def process_spss(file_to_process, file_r, file_sps, file_data, file_questions, file_answers_complete)
+    puts "$$$$$$ process_spss"
+    # run the R script
+    result = system 'Rscript', '--default-packages=foreign,MASS', file_r, file_to_process, file_data, file_sps, file_questions, file_answers_complete
+
+    return result
+  end
+
+
+  #######################
+  # run r-script for stata file
+  def process_stata(file_to_process, file_r, file_sps, file_data, file_questions, file_answers_complete)
+    puts "$$$$$$ process_spss"
+    # run the R script
+    result = system 'Rscript', '--default-packages=foreign,MASS', file_r, file_to_process, file_data, file_sps, file_questions, file_answers_complete
+
+    if result.present?
+      puts "=============================="
+      puts "reading in questions from #{file_questions} and converting to csv"
+      # format of each line of file is: [1] "Question Code || Question Text"
+      questions_formatted = []
+      if File.exists?(file_questions)
+        line_number = 0
+        File.open(file_questions, "r") do |f|
+          f.each_line do |line|
+            # take out the [1] " at the beginning and the closing "
+            question = clean_text(line).gsub('[1] "', '').gsub(/\"$/, '')
+            values = question.split(' || ')
+            if values.length.between?(1,2)
+              # save for writing to csv
+              questions_formatted << [clean_text(values[0]), values[1].present? ? clean_text(values[1]) : nil]
+            else
+              puts "******************************"
+              puts "ERROR"
+              puts "An error occurred on line #{line_number} of #{file_questions} while parsing the questions."
+              puts "This line was not in the correct format of: [1] \"Question Code || Question Text\""
+              puts "******************************"
+              break
+            end
+          end
+        end   
+      end   
+
+      # write the re-formatted questions to csv file
+      if questions_formatted.present?
+        puts "saving re-formatted questions to csv"
+        puts "++ - there were #{questions_formatted.length} total questions recorded"
+        CSV.open(file_questions, 'w') do |csv|
+          questions_formatted.each do |question|
+            csv << question
+          end
+        end
+      end
+    end
+
+    return result
+  end
+
+
+private
+
+  # strip the string and remove and bad characters
+  # - <92> = '
+  def clean_text(str, replace_dot=false)
+    if str.length > 0
+      x = str.dup.encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
+      x.gsub('.', '|') if replace_dot
+      return x.strip.gsub("<92>", "'")
+    else
+      return str
+    end
+  end 
 end

@@ -28,6 +28,8 @@ class Dataset
   field :questions_with_no_text, type: Array
   # indicates if any questions in this dataset have been connected to a shapeset
   field :is_mappable, type: Boolean, default: false
+  # record the extension of the file
+  field :file_extension, type: String
 
   embeds_many :questions do
     # these are functions that will query the questions documents
@@ -89,8 +91,8 @@ class Dataset
   # Validations
   validates_presence_of :title
   validates_attachment :datafile, :presence => true, 
-      :content_type => { :content_type => ["application/x-spss-sav", "application/octet-stream", "text/csv"] }
-
+      :content_type => { :content_type => ["application/x-spss-sav", "application/x-stata-dta", "application/octet-stream", "text/csv"] }
+  validates_attachment_file_name :datafile, :matches => [/sav\Z/i, /dta\Z/i]
 
   #############################
   attr_accessible :title, :description, :data, :user_id, 
@@ -111,7 +113,12 @@ class Dataset
 
   # process the datafile and save all of the information from it
   def process_file
-    process_spss
+    process_data_file
+
+    # udpate meta data
+    update_flags
+    update_stats
+
   end
 
   # make sure all of the data files that were generated for this dataset are deleted

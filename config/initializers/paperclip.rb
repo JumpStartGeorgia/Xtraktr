@@ -8,5 +8,6 @@
 
 Paperclip.options[:content_type_mappings] = {
   :json => "text/plain",
-  :geojson => "text/plain" 
+  :geojson => "text/plain",
+  :dta => "application/octet-stream"
 }
