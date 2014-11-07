@@ -1,3 +1,4 @@
+# encoding: utf-8
 module ProcessDataFile
   require 'csv'
   
@@ -282,7 +283,9 @@ module ProcessDataFile
   #######################
   # run r-script for spss file
   def process_spss(file_to_process, file_r, file_sps, file_data, file_questions, file_answers_complete)
+    puts "=============================="
     puts "$$$$$$ process_spss"
+    puts "=============================="
     # run the R script
     result = system 'Rscript', '--default-packages=foreign,MASS', file_r, file_to_process, file_data, file_sps, file_questions, file_answers_complete
 
@@ -293,7 +296,9 @@ module ProcessDataFile
   #######################
   # run r-script for stata file
   def process_stata(file_to_process, file_r, file_sps, file_data, file_questions, file_answers_complete)
-    puts "$$$$$$ process_spss"
+    puts "=============================="
+    puts "$$$$$$ process_stata"
+    puts "=============================="
     # run the R script
     result = system 'Rscript', '--default-packages=foreign,MASS', file_r, file_to_process, file_data, file_sps, file_questions, file_answers_complete
 
@@ -344,11 +349,12 @@ private
 
   # strip the string and remove and bad characters
   # - <92> = '
+  # - \x92 = '
   def clean_text(str, replace_dot=false)
     if str.length > 0
       x = str.dup.encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
-      x.gsub('.', '|') if replace_dot
-      return x.strip.gsub("<92>", "'")
+      x.gsub!('.', '|') if replace_dot
+      return x.gsub("<92>", "'").gsub("\\x92", "'").chomp.strip
     else
       return str
     end

@@ -299,8 +299,13 @@ class Dataset
 
         # - take counts and turn into percents
         total = result[:counts].inject(:+)
-        result[:counts].each do |count_item|
-          result[:percents] << (count_item.to_f/total*100).round(2)
+        # if total is 0, then set percent to 0
+        if total == 0
+          result[:percents] = Array.new(result[:counts].length){0}
+        else
+          result[:counts].each do |count_item|
+            result[:percents] << (count_item.to_f/total*100).round(2)
+          end
         end
 
         # - record the total number of responses
