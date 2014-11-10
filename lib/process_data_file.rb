@@ -35,8 +35,12 @@ module ProcessDataFile
     self.file_extension = File.extname(self.datafile.url).gsub('.', '').downcase if self.file_extension.blank?
 
     path = @@path.sub('[dataset_id]', self.id.to_s)
-    # file has not be saved to proper place yet, so have to get queued file path
-    file_to_process = self.datafile.queued_for_write[:original].path
+    # check if file has been saved yet
+    # if file has not be saved to proper place yet, have to get queued file path
+    file_to_process = "#{Rails.root}/public#{self.datafile.url}"
+    if !File.exists?(file_to_process) && self.datafile.queued_for_write[:original].present?
+      file_to_process = self.datafile.queued_for_write[:original].path
+    end
     file_r = "#{Rails.root}/script/r_scripts/#{@@r_file[self.file_extension]}"
     file_sps = path + "spss_code.sps"
     file_data = path + @@file_data

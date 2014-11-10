@@ -211,6 +211,8 @@ GEM
       activesupport (= 3.2.18)
       bundler (~> 1.0)
       railties (= 3.2.18)
+    rails_autolink (1.1.6)
+      rails (> 3.1)
     railties (3.2.18)
       actionpack (= 3.2.18)
       activesupport (= 3.2.18)
@@ -299,6 +301,7 @@ DEPENDENCIES
   psych (~> 2.0.5)
   rails (= 3.2.18)
   rails-dev-boost!
+  rails_autolink (~> 1.1.6)
   rb-inotify (~> 0.8.8)
   sass-rails (~> 3.2.6)
   smarter_csv

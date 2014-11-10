@@ -30,6 +30,7 @@ gem "mongoid-paperclip", :require => "mongoid_paperclip" # upload files
 #gem "has_permalink", "~> 0.1.4" # create permalink slugs for nice urls
 gem "will_paginate", "~> 3.0.5" # add paging to long lists
 #gem "kaminari", "~> 0.15.1" # paging
+gem 'rails_autolink', '~> 1.1.6' # convert string url into link
 
 # Gems used only for assets and not required
 # in production environments by default.

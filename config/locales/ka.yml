@@ -25,6 +25,13 @@ ka:
         datafile: Data File
         has_warnings: Issues with Data
         stats: Dataset Stats
+        codebook: Codebook
+        source: Source of Data
+        source_url: URL to Souce
+        released_at: Date Released
+        start_gathered_at: Date Started Gathering Data
+        end_gathered_at: Date Finished Gathering Data
+        gathered_at: Dates Gathered Data
       shapeset:
         title: Title
         description: Description

@@ -12,12 +12,15 @@ class Dataset
   #############################
   # paperclip data file storage
   has_mongoid_attached_file :datafile, :url => "/system/datasets/:id/original/:filename", :use_timestamp => false
+  has_mongoid_attached_file :codebook, :url => "/system/datasets/:id/codebook/:filename", :use_timestamp => false
 
   field :title, type: String
   field :description, type: String
-  field :dates_gathered, type: String
+  field :start_gathered_at, type: Date
+  field :end_gathered_at, type: Date
   field :released_at, type: Date
-  field :data_created_by, type: String
+  field :source, type: String
+  field :source_url, type: String
   # indicate if questions_with_bad_answers has data
   field :has_warnings, type: Boolean, default: false
   # array of hashes {code1: value1, code2: value2, etc}
@@ -89,14 +92,21 @@ class Dataset
 
   #############################
   # Validations
-  validates_presence_of :title
+  validates_presence_of :title, :source
+  validates :source_url, :format => {:with => URI::regexp(['http','https'])}, allow_blank: true
+  validates_attachment :codebook, 
+      :content_type => { :content_type => ["text/plain", "application/pdf", "application/vnd.oasis.opendocument.text", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/msword"] }
+  validates_attachment_file_name :codebook, :matches => [/txt\Z/i, /pdf\Z/i, /odt\Z/i, /doc?x\Z/i]
   validates_attachment :datafile, :presence => true, 
       :content_type => { :content_type => ["application/x-spss-sav", "application/x-stata-dta", "application/octet-stream", "text/csv"] }
   validates_attachment_file_name :datafile, :matches => [/sav\Z/i, /dta\Z/i]
 
   #############################
-  attr_accessible :title, :description, :data, :user_id, 
-      :questions_attributes, :questions_with_bad_answers, :datafile, :has_warnings
+
+  attr_accessible :title, :description, :user_id, :has_warnings, 
+      :data, :questions_attributes, :questions_with_bad_answers, 
+      :datafile, :codebook,
+      :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at
 
 
   TYPE = {:onevar => 'onevar', :crosstab => 'crosstab'}
@@ -106,7 +116,7 @@ class Dataset
 
   #############################
 
-  before_create :process_file
+#  before_create :process_file
   after_destroy :delete_dataset_files
   before_save :update_flags
   before_save :update_stats
@@ -198,7 +208,9 @@ class Dataset
   # get the basic info about the dataset
   # - title, description
   def self.basic_info
-    only(:_id, :title, :description, :has_warnings, :is_mappable, :stats)
+    only(:_id, :title, :description, :user_id, :has_warnings, :is_mappable, :stats,
+      :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at,
+      :datafile_file_name, :codebook_file_name)
   end
 
   # get the questions with bad answers

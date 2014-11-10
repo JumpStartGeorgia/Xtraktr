@@ -20,6 +20,8 @@ class Admin::DatasetsController < ApplicationController
   def show
     @dataset = Dataset.basic_info.find(params[:id])
 
+logger.debug "------- #{@dataset.datafile.exists?}"
+
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @dataset }
@@ -31,6 +33,10 @@ class Admin::DatasetsController < ApplicationController
   def new
     @dataset = Dataset.new
 
+    # add the required assets
+    @css.push("jquery.ui.datepicker.css")
+    @js.push('jquery.ui.datepicker.js', "datasets.js")
+
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @dataset }
@@ -40,6 +46,15 @@ class Admin::DatasetsController < ApplicationController
   # GET /datasets/1/edit
   def edit
     @dataset = Dataset.find(params[:id])
+
+    # set the date values for the datepicker
+    gon.start_gathered_at = @dataset.start_gathered_at.strftime('%m/%d/%Y') if @dataset.start_gathered_at.present?
+    gon.end_gathered_at = @dataset.end_gathered_at.strftime('%m/%d/%Y') if @dataset.end_gathered_at.present?
+    gon.released_at = @dataset.released_at.strftime('%m/%d/%Y') if @dataset.released_at.present?
+
+    # add the required assets
+    @css.push("jquery.ui.datepicker.css")
+    @js.push('jquery.ui.datepicker.js', "datasets.js")
   end
 
   # POST /datasets
@@ -52,6 +67,15 @@ class Admin::DatasetsController < ApplicationController
         format.html { redirect_to admin_dataset_path(@dataset), notice: t('app.msgs.success_created', :obj => t('mongoid.models.dataset')) }
         format.json { render json: @dataset, status: :created, location: @dataset }
       else
+        # set the date values for the datepicker
+        gon.start_gathered_at = @dataset.start_gathered_at.strftime('%m/%d/%Y') if @dataset.start_gathered_at.present?
+        gon.end_gathered_at = @dataset.end_gathered_at.strftime('%m/%d/%Y') if @dataset.end_gathered_at.present?
+        gon.released_at = @dataset.released_at.strftime('%m/%d/%Y') if @dataset.released_at.present?
+
+        # add the required assets
+        @css.push("jquery.ui.datepicker.css")
+        @js.push('jquery.ui.datepicker.js', "datasets.js")
+
         format.html { render action: "new" }
         format.json { render json: @dataset.errors, status: :unprocessable_entity }
       end
@@ -70,6 +94,15 @@ class Admin::DatasetsController < ApplicationController
         format.html { redirect_to admin_dataset_path(@dataset), notice: t('app.msgs.success_updated', :obj => t('mongoid.models.dataset')) }
         format.json { head :no_content }
       else
+        # set the date values for the datepicker
+        gon.start_gathered_at = @dataset.start_gathered_at.strftime('%m/%d/%Y') if @dataset.start_gathered_at.present?
+        gon.end_gathered_at = @dataset.end_gathered_at.strftime('%m/%d/%Y') if @dataset.end_gathered_at.present?
+        gon.released_at = @dataset.released_at.strftime('%m/%d/%Y') if @dataset.released_at.present?
+
+        # add the required assets
+        @css.push("jquery.ui.datepicker.css")
+        @js.push('jquery.ui.datepicker.js', "datasets.js")
+
         format.html { render action: "edit" }
         format.json { render json: @dataset.errors, status: :unprocessable_entity }
       end

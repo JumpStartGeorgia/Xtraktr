@@ -6,10 +6,19 @@
 
 	<%= f.inputs do %>
 	  <%= f.input :title %>
+    <%= f.input :source %>
+    <%= f.input :source_url, as: :url %>
+    <%= f.input :start_gathered_at, :as => :string, :input_html => { :size => 20 } %>
+    <%= f.input :end_gathered_at, :as => :string, :input_html => { :size => 20 } %>
+    <%= f.input :released_at, :as => :string, :input_html => { :size => 20 } %>
     <%= f.input :description, :as => :text, rows: 10, :input_html => { class: 'tinymce' } %>
+    <%= f.input :codebook, :as => :file, :input_html => { 
+        accept:"text/plain, application/pdf, application/vnd.oasis.opendocument.text, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/msword"
+      }  %> 
     <%= f.input :datafile, :as => :file, :input_html => { 
         accept:"application/x-spss-sav, application/octet-stream, text/csv, application/x-stata-dta"
       }  %> 
+
 
     <%= f.hidden_field :user_id , :value => current_user.id %>
 
