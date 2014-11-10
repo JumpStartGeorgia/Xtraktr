@@ -22,7 +22,7 @@
     <% @datasets.each do |dataset| %>
       <tr>
         <td><%= link_to t('app.menu.explore_data'), explore_data_show_path(dataset), :class => 'btn btn-mini btn-default' %></td>
-        <td><%= dataset.title %></td>
+        <td><%= link_to dataset.title, admin_dataset_path(dataset) %></td>
         <td>
           <%= t('.stats.data_records') %>: <%= number_with_delimiter(dataset.stats.data_records) %>
           <br />
