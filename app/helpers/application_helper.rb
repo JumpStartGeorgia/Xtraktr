@@ -5,6 +5,7 @@ module ApplicationHelper
 
 	def flash_translation(level)
     case level
+    when :info then "alert-warning"
     when :notice then "alert-info"
     when :success then "alert-success"
     when :error then "alert-danger"

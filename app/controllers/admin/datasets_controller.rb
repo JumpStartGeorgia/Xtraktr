@@ -18,13 +18,17 @@ class Admin::DatasetsController < ApplicationController
   # GET /datasets/1
   # GET /datasets/1.json
   def show
-    @dataset = Dataset.basic_info.find(params[:id])
+    @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).basic_info.first
 
-logger.debug "------- #{@dataset.datafile.exists?}"
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @dataset }
+    if @dataset.present?
+      respond_to do |format|
+        format.html # show.html.erb
+        format.json { render json: @dataset }
+      end
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to admin_datasets_path(:locale => I18n.locale)
+      return
     end
   end
 
@@ -45,16 +49,22 @@ logger.debug "------- #{@dataset.datafile.exists?}"
 
   # GET /datasets/1/edit
   def edit
-    @dataset = Dataset.find(params[:id])
+    @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).first
 
-    # set the date values for the datepicker
-    gon.start_gathered_at = @dataset.start_gathered_at.strftime('%m/%d/%Y') if @dataset.start_gathered_at.present?
-    gon.end_gathered_at = @dataset.end_gathered_at.strftime('%m/%d/%Y') if @dataset.end_gathered_at.present?
-    gon.released_at = @dataset.released_at.strftime('%m/%d/%Y') if @dataset.released_at.present?
+    if @dataset.present?
+      # set the date values for the datepicker
+      gon.start_gathered_at = @dataset.start_gathered_at.strftime('%m/%d/%Y') if @dataset.start_gathered_at.present?
+      gon.end_gathered_at = @dataset.end_gathered_at.strftime('%m/%d/%Y') if @dataset.end_gathered_at.present?
+      gon.released_at = @dataset.released_at.strftime('%m/%d/%Y') if @dataset.released_at.present?
 
-    # add the required assets
-    @css.push("jquery.ui.datepicker.css")
-    @js.push('jquery.ui.datepicker.js', "datasets.js")
+      # add the required assets
+      @css.push("jquery.ui.datepicker.css")
+      @js.push('jquery.ui.datepicker.js', "datasets.js")
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to admin_datasets_path(:locale => I18n.locale)
+      return
+    end
   end
 
   # POST /datasets
@@ -85,53 +95,72 @@ logger.debug "------- #{@dataset.datafile.exists?}"
   # PUT /datasets/1
   # PUT /datasets/1.json
   def update
-    @dataset = Dataset.find(params[:id])
+    @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).first
 
-    @dataset.assign_attributes(params[:dataset])
+    if @dataset.present?
+      @dataset.assign_attributes(params[:dataset])
 
-    respond_to do |format|
-      if @dataset.save
-        format.html { redirect_to admin_dataset_path(@dataset), notice: t('app.msgs.success_updated', :obj => t('mongoid.models.dataset')) }
-        format.json { head :no_content }
-      else
-        # set the date values for the datepicker
-        gon.start_gathered_at = @dataset.start_gathered_at.strftime('%m/%d/%Y') if @dataset.start_gathered_at.present?
-        gon.end_gathered_at = @dataset.end_gathered_at.strftime('%m/%d/%Y') if @dataset.end_gathered_at.present?
-        gon.released_at = @dataset.released_at.strftime('%m/%d/%Y') if @dataset.released_at.present?
+      respond_to do |format|
+        if @dataset.save
+          format.html { redirect_to admin_dataset_path(@dataset), notice: t('app.msgs.success_updated', :obj => t('mongoid.models.dataset')) }
+          format.json { head :no_content }
+        else
+          # set the date values for the datepicker
+          gon.start_gathered_at = @dataset.start_gathered_at.strftime('%m/%d/%Y') if @dataset.start_gathered_at.present?
+          gon.end_gathered_at = @dataset.end_gathered_at.strftime('%m/%d/%Y') if @dataset.end_gathered_at.present?
+          gon.released_at = @dataset.released_at.strftime('%m/%d/%Y') if @dataset.released_at.present?
 
-        # add the required assets
-        @css.push("jquery.ui.datepicker.css")
-        @js.push('jquery.ui.datepicker.js', "datasets.js")
+          # add the required assets
+          @css.push("jquery.ui.datepicker.css")
+          @js.push('jquery.ui.datepicker.js', "datasets.js")
 
-        format.html { render action: "edit" }
-        format.json { render json: @dataset.errors, status: :unprocessable_entity }
+          format.html { render action: "edit" }
+          format.json { render json: @dataset.errors, status: :unprocessable_entity }
+        end
       end
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to admin_datasets_path(:locale => I18n.locale)
+      return
     end
   end
 
   # DELETE /datasets/1
   # DELETE /datasets/1.json
   def destroy
-    @dataset = Dataset.find(params[:id])
-    @dataset.destroy
+    @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).first
+    if @dataset.present?
+      @dataset.destroy
 
-    respond_to do |format|
-      format.html { redirect_to admin_datasets_url }
-      format.json { head :no_content }
+      respond_to do |format|
+        format.html { redirect_to admin_datasets_url }
+        format.json { head :no_content }
+      end
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to admin_datasets_path(:locale => I18n.locale)
+      return
     end
   end
 
 
   # show warnings about the data
   def warnings
-    @dataset = Dataset.warnings.find(params[:id])
-    @no_answers = @dataset.questions.with_no_code_answers
-    @bad_answers = @dataset.questions_with_bad_answers
-    @no_text = @dataset.questions_with_no_text
+    @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).warnings.first
 
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @dataset }
+    if @dataset.present?
+      @no_answers = @dataset.questions.with_no_code_answers
+      @bad_answers = @dataset.questions_with_bad_answers
+      @no_text = @dataset.questions_with_no_text
+
+      respond_to do |format|
+        format.html # index.html.erb
+        format.json { render json: @dataset }
+      end
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to admin_datasets_path(:locale => I18n.locale)
+      return
     end
   end
 end
