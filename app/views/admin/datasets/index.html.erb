@@ -13,6 +13,7 @@
     <tr>
       <th></th>
       <th><%= model_class.human_attribute_name(:title) %></th>
+      <th><%= model_class.human_attribute_name(:public) %></th>
       <th><%= model_class.human_attribute_name(:stats) %></th>
       <th><%= model_class.human_attribute_name(:has_warnings) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
@@ -23,6 +24,7 @@
       <tr>
         <td><%= link_to t('app.menu.explore_data'), explore_data_show_path(dataset), :class => 'btn btn-mini btn-default' %></td>
         <td><%= link_to dataset.title, admin_dataset_path(dataset) %></td>
+        <td><%= format_dataset_public_status(dataset.public) %></td>
         <td>
           <%= t('.stats.data_records') %>: <%= number_with_delimiter(dataset.stats.data_records) %>
           <br />

@@ -9,6 +9,8 @@ class Admin::DatasetsController < ApplicationController
   def index
     @datasets = Dataset.where(user_id: current_user.id).basic_info.sorted
 
+    @css.push("datasets.css")
+
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @datasets }
@@ -19,6 +21,8 @@ class Admin::DatasetsController < ApplicationController
   # GET /datasets/1.json
   def show
     @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).basic_info.first
+
+    @css.push("datasets.css")
 
     if @dataset.present?
       respond_to do |format|

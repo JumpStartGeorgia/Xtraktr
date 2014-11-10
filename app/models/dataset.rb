@@ -21,6 +21,8 @@ class Dataset
   field :released_at, type: Date
   field :source, type: String
   field :source_url, type: String
+  # whether or not dataset can be shown to public
+  field :public, type: Boolean, default: false
   # indicate if questions_with_bad_answers has data
   field :has_warnings, type: Boolean, default: false
   # array of hashes {code1: value1, code2: value2, etc}
@@ -105,7 +107,7 @@ class Dataset
 
   attr_accessible :title, :description, :user_id, :has_warnings, 
       :data, :questions_attributes, :questions_with_bad_answers, 
-      :datafile, :codebook,
+      :datafile, :codebook, :public,
       :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at
 
 
@@ -205,12 +207,16 @@ class Dataset
     order_by([[:title, :asc]])
   end
 
+  def self.is_public
+    where(public: true)
+  end
+
   # get the basic info about the dataset
   # - title, description
   def self.basic_info
     only(:_id, :title, :description, :user_id, :has_warnings, :is_mappable, :stats,
       :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at,
-      :datafile_file_name, :codebook_file_name)
+      :datafile_file_name, :codebook_file_name, :public)
   end
 
   # get the questions with bad answers

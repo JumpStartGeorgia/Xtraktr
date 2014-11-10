@@ -32,6 +32,7 @@ en:
         start_gathered_at: Date Started Gathering Data
         end_gathered_at: Date Finished Gathering Data
         gathered_at: Dates Gathered Data
+        public: Make Available to Public
       shapeset:
         title: Title
         description: Description
