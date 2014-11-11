@@ -92,6 +92,33 @@ module ProcessDataFile
         end
         puts " - added #{self.questions.length} questions"
 
+
+
+        puts "=============================="
+        puts "saving data from #{file_data} and saving to data_items attribute"
+        data = CSV.read(file_data, :quote_char => "\0")
+        # only conintue if the # of cols match the # of quesiton codes
+        # - have to subtract 1 from cols because csv file has ',' after last item
+        if data.first.length-1 == self.questions.unique_codes.length
+          self.questions.unique_codes.each_with_index do |code, code_index|
+            code_data = data.map{|x| x[code_index]}
+            if code_data.present?
+              self.data_items_attributes = [{code: code, data: code_data}]
+            else
+              puts "******************************"
+              puts "Column #{code_index} (supposed to be #{code}) of #{file_questions} does not exist."
+              puts "******************************"
+            end
+          end
+        else
+          puts "******************************"
+          puts "ERROR"
+          puts "The number of columns in #{file_data} (#{data.first.length} does not match the number of question codes #{self.questions.unique_codes.length}"
+          puts "******************************"
+        end
+        puts "added #{self.data_items.length} columns worth of data"
+=begin
+
         # before can read in data, we have to add a header row to it
         # so the SmaterCSV library that reads in the csv has the correct keys for the values
         puts "=============================="
@@ -110,10 +137,9 @@ module ProcessDataFile
         puts "=============================="
         puts "reading in data from #{file_data} and saving to data attribute"
         if File.exists?(file_data)
-          self.data = SmarterCSV.process(file_data, {downcase_header: false, strings_as_keys: true})
-        end
+          self.data = SmarterCSV.process(file_data, {downcase_header: false, strings_as_keys: true})        end
         puts "added #{self.data.length} records"
-
+=end
 
         puts "=============================="
         puts "reading in answers from #{file_answers_complete} and converting to csv"
