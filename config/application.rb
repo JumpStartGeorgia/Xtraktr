@@ -59,8 +59,8 @@ module BootstrapStarter
     config.assets.version = '1.0'
 
 
-    config.assets.precompile += %w( explore_data.js  )    
-    config.assets.precompile += %w( explore_data.css )    
+    config.assets.precompile += %w( datasets.js explore_data.js  )    
+    config.assets.precompile += %w( datasets.css explore_data.css )    
     config.assets.precompile += %w( bootstrap-select.min.css )    
     config.assets.precompile += %w( bootstrap-select.min.js highcharts.js highcharts-map.js highcharts-exporting.js )    
 

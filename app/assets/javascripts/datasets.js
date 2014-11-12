@@ -1,5 +1,4 @@
 $(function() {
-
   // when start/end date changes, set the max/min date of the opposite date
   function customRange(dates) { 
     if (this.id == 'dataset_start_gathered_at') { 
