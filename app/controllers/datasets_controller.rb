@@ -22,17 +22,18 @@ class DatasetsController < ApplicationController
   def show
     @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).first
 
-    @css.push("datasets.css")
-
-    if @dataset.present?
-      respond_to do |format|
-        format.html # show.html.erb
-        format.json { render json: @dataset }
-      end
-    else
+    if @dataset.blank?
       flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to admin_datasets_path(:locale => I18n.locale)
+      redirect_to datasets_path(:locale => I18n.locale)
       return
+    else
+      gon.explore_data = true
+      gon.explore_data_ajax_path = dataset_path(:format => :js)
+
+      # this method is in application_controller
+      # and gets all of the required information
+      # and responds appropriately to html or js
+      explore_data_generator(@dataset)
     end
   end
 
@@ -66,7 +67,7 @@ class DatasetsController < ApplicationController
       @js.push('jquery.ui.datepicker.js', "datasets.js")
     else
       flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to admin_datasets_path(:locale => I18n.locale)
+      redirect_to datasets_path(:locale => I18n.locale)
       return
     end
   end
@@ -78,7 +79,7 @@ class DatasetsController < ApplicationController
 
     respond_to do |format|
       if @dataset.save
-        format.html { redirect_to admin_dataset_path(@dataset), notice: t('app.msgs.success_created', :obj => t('mongoid.models.dataset')) }
+        format.html { redirect_to dataset_path(@dataset), notice: t('app.msgs.success_created', :obj => t('mongoid.models.dataset')) }
         format.json { render json: @dataset, status: :created, location: @dataset }
       else
         # set the date values for the datepicker
@@ -106,7 +107,7 @@ class DatasetsController < ApplicationController
 
       respond_to do |format|
         if @dataset.save
-          format.html { redirect_to admin_dataset_path(@dataset), notice: t('app.msgs.success_updated', :obj => t('mongoid.models.dataset')) }
+          format.html { redirect_to dataset_path(@dataset), notice: t('app.msgs.success_updated', :obj => t('mongoid.models.dataset')) }
           format.json { head :no_content }
         else
           # set the date values for the datepicker
@@ -124,7 +125,7 @@ class DatasetsController < ApplicationController
       end
     else
       flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to admin_datasets_path(:locale => I18n.locale)
+      redirect_to datasets_path(:locale => I18n.locale)
       return
     end
   end
@@ -137,12 +138,12 @@ class DatasetsController < ApplicationController
       @dataset.destroy
 
       respond_to do |format|
-        format.html { redirect_to admin_datasets_url }
+        format.html { redirect_to datasets_url }
         format.json { head :no_content }
       end
     else
       flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to admin_datasets_path(:locale => I18n.locale)
+      redirect_to datasets_path(:locale => I18n.locale)
       return
     end
   end
@@ -163,7 +164,7 @@ class DatasetsController < ApplicationController
       end
     else
       flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to admin_datasets_path(:locale => I18n.locale)
+      redirect_to datasets_path(:locale => I18n.locale)
       return
     end
   end

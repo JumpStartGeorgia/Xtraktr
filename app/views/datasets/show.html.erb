@@ -1,5 +1,5 @@
 <%- model_class = Dataset -%>
-<% title t '.title', :default => model_class.model_name.human %>
+<% title @dataset.title %>
 
 
 <div class="form-group form-group-admin-buttons">
@@ -14,6 +14,11 @@
               :class => 'btn btn-danger' %>
 </div>
 
+
+<%= render :partial => 'shared/explore_data', :locals => {:is_admin => true} %>
+
+
+<!--
 <p><strong><%= model_class.human_attribute_name(:title) %>:</strong>
 <%= @dataset.title %></p>
 
@@ -49,5 +54,5 @@
 
 <p><strong><%= model_class.human_attribute_name(:public) %>:</strong>
 <%= format_dataset_public_status(@dataset.public) %></p>
-
+-->
 
