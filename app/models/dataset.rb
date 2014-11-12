@@ -35,6 +35,8 @@ class Dataset
   field :is_mappable, type: Boolean, default: false
   # record the extension of the file
   field :file_extension, type: String
+  # key to access dataset that is not public
+  field :private_share_key, type: String
 
   embeds_many :questions do
     # these are functions that will query the questions documents
@@ -111,6 +113,7 @@ class Dataset
   index ({ :'questions.has_code_answers' => 1})
   index ({ :'answers.can_exclude' => 1})
   index ({ :'answers.sort_order' => 1})
+  index ({ :private_share_key => 1})
 
 
   #############################
@@ -128,7 +131,7 @@ class Dataset
 
   attr_accessible :title, :description, :user_id, :has_warnings, 
       :data_items_attributes, :questions_attributes, :questions_with_bad_answers, 
-      :datafile, :codebook, :public, 
+      :datafile, :codebook, :public, :private_share_key, 
       :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at #   ,:data 
 
 
@@ -140,6 +143,7 @@ class Dataset
   #############################
 
   before_create :process_file
+  before_create :create_private_share_key
   after_destroy :delete_dataset_files
   before_save :update_flags
   before_save :update_stats
@@ -152,6 +156,14 @@ class Dataset
     update_flags
     update_stats
 
+  end
+
+  # create private share key that allows people to access this dataset if it is not public
+  def create_private_share_key
+    if self.private_share_key.blank?
+      self.private_share_key = SecureRandom.hex
+    end
+    return true
   end
 
   # make sure all of the data files that were generated for this dataset are deleted
@@ -231,6 +243,10 @@ class Dataset
 
   def self.is_public
     where(public: true)
+  end
+
+  def self.by_private_key(key)
+    where(private_share_key: key).first
   end
 
   #############################

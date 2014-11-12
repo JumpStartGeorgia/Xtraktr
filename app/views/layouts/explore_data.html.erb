@@ -25,7 +25,7 @@
               <li class="dropdown" role="menuitem">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                   <span class="glyphicon glyphicon-pencil"></span>
-                  Configuration Options
+                  <%= t('app.menu.admin_dataset.heading') %>
                   <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu" role="menu">
@@ -41,6 +41,14 @@
                       <%= t('app.menu.admin_dataset.warnings') %>
                     <% end %>
                   </li>
+                  <% if !@dataset.public? %>
+                    <li role="menuitem">
+                      <%= link_to '#private-share', :'data-toggle' => "modal"  do %>
+                        <span class="glyphicon glyphicon-lock"></span>
+                        <%= t('app.menu.admin_dataset.private_share') %>
+                      <% end %>
+                    </li>
+                  <% end %>
                   <li class="divider"></li>
                   <li role="menuitem">
                     <%= link_to '#' do %>
@@ -111,12 +119,12 @@
     <%= render :partial => 'layouts/footer' %>
 
 
-    <div class="modal fade" id="dataset-about" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="dataset-about" tabindex="-1" role="dialog" aria-labelledby="dataset-about-header" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"><%= t('helpers.links.close') %></span></button>
-            <h4 class="modal-title" id="myModalLabel"><%= @dataset.title %></h4>
+            <h4 class="modal-title" id="dataset-about-header"><%= @dataset.title %></h4>
           </div>
           <div class="modal-body">
             <p><strong><%= model_class.human_attribute_name(:source) %>:</strong>
@@ -160,6 +168,33 @@
         </div>
       </div>
     </div>
+
+    <% if @is_admin %>
+      <div class="modal fade" id="private-share" tabindex="-1" role="dialog" aria-labelledby="private-share-header" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"><%= t('helpers.links.close') %></span></button>
+              <h4 class="modal-title" id="private-share-header">
+                <%= t('.private_share_header', title: @dataset.title) %>
+              </h4>
+            </div>
+            <div class="modal-body">
+              <p>
+                <%= t('.private_share_explanation', title: @dataset.title) %>
+              </p>
+              <p>
+                <%= link_to private_share_url(@dataset.private_share_key), 
+                    private_share_url(@dataset.private_share_key) %>
+              </p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
 
     <!-- Javascripts
     ================================================== -->

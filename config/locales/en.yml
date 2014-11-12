@@ -143,15 +143,20 @@ en:
       about_dataset: About 
       all_datasets: All Datasets
       admin_dataset:
+        heading: Configuration Options
         settings: Settings
         warnings: Warnings
         mappable: Make Mappable
         exlucde_answers: Answers Can Be Excluded
         ignore_questions: Not Include Questions
         delete: Delete
+        private_share: Share Private Dataset
   layouts:
-    application:
+    nav:
       toggle: Toggle navigation
+    explore_data:
+      private_share_header: "Privately Share '%{title}'"
+      private_share_explanation: "You can copy and share the following URL with whomever you want to view '%{title}' even though your dataset is not shared with the public. These people will have the ability to explore your data, but not edit it."
     unsupported_browser:
       title: Unsupported Browser
       p1: We are sorry to report that your browser is out of date and will not properly render the content from this website.
