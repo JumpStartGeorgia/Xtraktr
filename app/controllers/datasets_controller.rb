@@ -4,6 +4,8 @@ class DatasetsController < ApplicationController
     controller_instance.send(:valid_role?, User::ROLES[:user])
   end
 
+  layout "explore_data", only: [:show, :new, :edit, :warnings]
+
   # GET /datasets
   # GET /datasets.json
   def index
@@ -27,6 +29,8 @@ class DatasetsController < ApplicationController
       redirect_to datasets_path(:locale => I18n.locale)
       return
     else
+      @is_admin = true
+      @dataset_url = dataset_path(@dataset)
       gon.explore_data = true
       gon.explore_data_ajax_path = dataset_path(:format => :js)
 
@@ -43,9 +47,12 @@ class DatasetsController < ApplicationController
     @dataset = Dataset.new
 
     # add the required assets
-    @css.push("jquery.ui.datepicker.css")
+    @css.push("jquery.ui.datepicker.css", "datasets.css")
     @js.push('jquery.ui.datepicker.js', "datasets.js")
 
+    @show_title = true
+    @is_admin = true
+    
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @dataset }
@@ -63,8 +70,12 @@ class DatasetsController < ApplicationController
       gon.released_at = @dataset.released_at.strftime('%m/%d/%Y') if @dataset.released_at.present?
 
       # add the required assets
-      @css.push("jquery.ui.datepicker.css")
+      @css.push("jquery.ui.datepicker.css", "datasets.css")
       @js.push('jquery.ui.datepicker.js', "datasets.js")
+
+      @is_admin = true
+      @show_title = true
+      @dataset_url = dataset_path(@dataset)
     else
       flash[:info] =  t('app.msgs.does_not_exist')
       redirect_to datasets_path(:locale => I18n.locale)
@@ -157,6 +168,11 @@ class DatasetsController < ApplicationController
       @no_answers = @dataset.questions.with_no_code_answers
       @bad_answers = @dataset.questions_with_bad_answers
       @no_text = @dataset.questions_with_no_text
+
+      @css.push("datasets.css")
+      @is_admin = true
+      @show_title = true
+      @dataset_url = dataset_path(@dataset)
 
       respond_to do |format|
         format.html # index.html.erb

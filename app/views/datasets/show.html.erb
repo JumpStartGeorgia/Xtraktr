@@ -2,6 +2,7 @@
 <% title @dataset.title %>
 
 
+<!--
 <div class="form-group form-group-admin-buttons">
   <%= link_to t('.back', :default => t("helpers.links.back")),
               datasets_path, :class => 'btn btn-default'  %>
@@ -13,9 +14,9 @@
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm")) },
               :class => 'btn btn-danger' %>
 </div>
+-->
 
-
-<%= render :partial => 'shared/explore_data', :locals => {:is_admin => true} %>
+<%= render :partial => 'shared/explore_data' %>
 
 
 <!--

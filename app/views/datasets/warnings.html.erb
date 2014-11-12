@@ -1,12 +1,5 @@
 <% title t('.title', :title => @dataset.title) %>
 
-<div class="form-group form-group-admin-buttons">
-  <%= link_to t('.back', :default => t("helpers.links.back")),
-              datasets_path, :class => 'btn btn-default'  %>
-  <%= link_to t('.edit', :default => t("helpers.links.edit")),
-              edit_dataset_path(@dataset), :class => 'btn btn-default' %>
-</div>
-
 <% if @dataset.has_warnings? %>
 
   <ul class="nav nav-tabs" role="tablist">

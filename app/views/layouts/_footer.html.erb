@@ -1,0 +1,12 @@
+    <footer class="clear">
+      <div id="left">&copy; <%= Time.now.year %></div>
+      <div id="middle">
+        <ul class="list-unstyled">
+          <li role="menuitem"><%= link_to t('app.menu.explore_data'), explore_data_path %></li>
+        </ul>
+      </div>
+      <div id="right" class="clear">
+        <%= link_to(image_tag("jumpstart-logo.png"), "http://www.jumpstart.ge", :target => "_blank",
+            :title => t('app.common.js_link_title') ) %>
+      </div>
+    </footer>

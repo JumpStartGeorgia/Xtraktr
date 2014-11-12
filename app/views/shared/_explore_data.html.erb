@@ -1,7 +1,3 @@
-<%
-  is_admin ||= false
-%>
-
 <div id="explore-data" class="row">
   <% if @questions.present? %>
     <div class="col-sm-3">
@@ -27,15 +23,6 @@
             </div>
           </div>
         </div>
-      </div>
-
-      <div id="dataset-info">
-        <label for="dataset-title"><%= t('.dataset_title') %></label>
-        <span id="dataset-title"><%= @dataset.title %></span>
-        <% if @dataset.description.present? %>
-          <span class="glyphicon glyphicon-info-sign pull-right" id="dataset-description" data-toggle="tooltip" data-placement="right" 
-            title="<%= @dataset.description %>"></span>
-        <% end %>
       </div>
 
       <%= form_tag(explore_data_path, :id => 'form-explore-data') do %>

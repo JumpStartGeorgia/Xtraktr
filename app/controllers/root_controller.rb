@@ -1,5 +1,7 @@
 class RootController < ApplicationController
 
+  layout "explore_data", only: [:explore_data_show]
+
   def index
     respond_to do |format|
       format.html # index.html.erb
@@ -20,6 +22,8 @@ class RootController < ApplicationController
     if @dataset.blank?
       redirect_to explore_data_path, :notice => t('app.msgs.does_not_exist')
     else
+      @is_admin = false
+      @dataset_url = explore_data_show_path(@dataset)
       gon.explore_data = true
       gon.explore_data_ajax_path = explore_data_show_path(:format => :js)
 

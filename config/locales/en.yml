@@ -102,6 +102,7 @@ en:
       like: Like   
       likes: Likes      
       menu: Menu
+      close: Close
     titles:
       edit: "Edit %{model}"
       save: "Save %{model}"
@@ -139,6 +140,15 @@ en:
     menu:
       explore_data: Explore Data
       datasets: Datasets
+      about_dataset: About 
+      all_datasets: All Datasets
+      admin_dataset:
+        settings: Settings
+        warnings: Warnings
+        mappable: Make Mappable
+        exlucde_answers: Answers Can Be Excluded
+        ignore_questions: Not Include Questions
+        delete: Delete
   layouts:
     application:
       toggle: Toggle navigation
@@ -191,7 +201,7 @@ en:
         no_answers: No Answers
       view_warnings: View Details
     warnings:
-      title: "Data Warnings for '%{title}'"
+      title: "Warnings"
       tab_bad_answers: Questions with Bad Answers
       tab_no_answers: Questions with No Answers
       tab_no_text: Questions with No Text

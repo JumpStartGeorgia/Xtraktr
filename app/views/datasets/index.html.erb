@@ -10,7 +10,6 @@
 <table class="table table-striped display">
   <thead>
     <tr>
-      <th></th>
       <th><%= model_class.human_attribute_name(:title) %></th>
       <th><%= model_class.human_attribute_name(:public) %></th>
       <th><%= model_class.human_attribute_name(:stats) %></th>
@@ -21,7 +20,6 @@
   <tbody>
     <% @datasets.each do |dataset| %>
       <tr>
-        <td><%= link_to t('app.menu.explore_data'), explore_data_show_path(dataset), :class => 'btn btn-mini btn-default' %></td>
         <td><%= link_to dataset.title, dataset_path(dataset) %></td>
         <td><%= format_dataset_public_status(dataset.public) %></td>
         <td>
