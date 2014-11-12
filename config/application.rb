@@ -61,8 +61,10 @@ module BootstrapStarter
 
     config.assets.precompile += %w( datasets.js explore_data.js  )    
     config.assets.precompile += %w( datasets.css explore_data.css )    
-    config.assets.precompile += %w( bootstrap-select.min.css )    
     config.assets.precompile += %w( bootstrap-select.min.js highcharts.js highcharts-map.js highcharts-exporting.js )    
+    config.assets.precompile += %w( bootstrap-select.min.css )    
 
+    config.assets.precompile += %w( jquery.ui.datepicker.js )    
+    config.assets.precompile += %w( jquery.ui.datepicker.css )    
   end
 end
