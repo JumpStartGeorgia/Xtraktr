@@ -2,10 +2,9 @@
 
 <div class="form-group form-group-admin-buttons">
   <%= link_to t('.back', :default => t("helpers.links.back")),
-              admin_datasets_path, :class => 'btn btn-default'  %>
+              datasets_path, :class => 'btn btn-default'  %>
   <%= link_to t('.edit', :default => t("helpers.links.edit")),
-              edit_admin_dataset_path(@dataset), :class => 'btn btn-default' %>
-  <%= link_to t('helpers.links.admin'), admin_path, :class => 'btn btn-default' if current_user.role? User::ROLES[:admin] %>
+              edit_dataset_path(@dataset), :class => 'btn btn-default' %>
 </div>
 
 <% if @dataset.has_warnings? %>

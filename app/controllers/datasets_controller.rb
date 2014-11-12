@@ -1,4 +1,4 @@
-class Admin::DatasetsController < ApplicationController
+class DatasetsController < ApplicationController
   before_filter :authenticate_user!
   before_filter do |controller_instance|
     controller_instance.send(:valid_role?, User::ROLES[:user])
@@ -150,7 +150,7 @@ class Admin::DatasetsController < ApplicationController
 
   # show warnings about the data
   def warnings
-    @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).warnings.first
+    @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).first
 
     if @dataset.present?
       @no_answers = @dataset.questions.with_no_code_answers

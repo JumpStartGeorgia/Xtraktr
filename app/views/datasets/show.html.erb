@@ -4,15 +4,14 @@
 
 <div class="form-group form-group-admin-buttons">
   <%= link_to t('.back', :default => t("helpers.links.back")),
-              admin_datasets_path, :class => 'btn btn-default'  %>
+              datasets_path, :class => 'btn btn-default'  %>
   <%= link_to t('.edit', :default => t("helpers.links.edit")),
-              edit_admin_dataset_path(@dataset), :class => 'btn btn-default' %>
+              edit_dataset_path(@dataset), :class => 'btn btn-default' %>
   <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-              admin_dataset_path(@dataset),
+              dataset_path(@dataset),
               :method => 'delete',
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm")) },
               :class => 'btn btn-danger' %>
-	<%= link_to t('helpers.links.admin'), admin_path, :class => 'btn btn-default' if current_user.role? User::ROLES[:admin] %>
 </div>
 
 <p><strong><%= model_class.human_attribute_name(:title) %>:</strong>

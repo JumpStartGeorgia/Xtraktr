@@ -1,7 +1,5 @@
 BootstrapStarter::Application.routes.draw do
 
-
-
 	#--------------------------------
 	# all resources should be within the scope block below
 	#--------------------------------
@@ -13,16 +11,17 @@ BootstrapStarter::Application.routes.draw do
 
 		namespace :admin do
       resources :shapesets
-			resources :datasets do
-        member do
-          get 'warnings'
-        end
-			end
       resources :pages
 			resources :users
 		end
 
+    resources :datasets do
+      member do
+        get 'warnings'
+      end
+    end
 
+    # root pages
 		match '/explore_data', :to => 'root#explore_data', :as => :explore_data, :via => :get
 		match '/explore_data/:id', :to => 'root#explore_data_show', :as => :explore_data_show, :via => :get
 

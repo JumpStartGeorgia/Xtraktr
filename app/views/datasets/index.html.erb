@@ -3,9 +3,8 @@
 
 <div class="form-group form-group-admin-buttons">
   <%= link_to t('.new', :default => t("helpers.links.new")),
-              new_admin_dataset_path,
+              new_dataset_path,
               :class => 'btn btn-primary' %>
-  <%= link_to t('helpers.links.admin'), admin_path, :class => 'btn btn-default' if current_user.role? User::ROLES[:admin] %>
 </div>
 
 <table class="table table-striped display">
@@ -23,7 +22,7 @@
     <% @datasets.each do |dataset| %>
       <tr>
         <td><%= link_to t('app.menu.explore_data'), explore_data_show_path(dataset), :class => 'btn btn-mini btn-default' %></td>
-        <td><%= link_to dataset.title, admin_dataset_path(dataset) %></td>
+        <td><%= link_to dataset.title, dataset_path(dataset) %></td>
         <td><%= format_dataset_public_status(dataset.public) %></td>
         <td>
           <%= t('.stats.data_records') %>: <%= number_with_delimiter(dataset.stats.data_records) %>
@@ -44,14 +43,14 @@
               <%= t('.stats.bad_answers') %>: <%= number_with_delimiter(dataset.stats.questions_bad_answers) %>
               <br />
             <% end %>
-            <%= link_to t('.view_warnings'), warnings_admin_dataset_path(dataset), :class => 'btn btn-mini btn-warning' %>
+            <%= link_to t('.view_warnings'), warnings_dataset_path(dataset), :class => 'btn btn-mini btn-warning' %>
           <% end %>
         </td>
         <td>
           <%= link_to t('app.buttons.edit'),
-                      edit_admin_dataset_path(dataset), :class => 'btn btn-mini btn-default' %>
+                      edit_dataset_path(dataset), :class => 'btn btn-mini btn-default' %>
           <%= link_to t('app.buttons.delete'),
-                      admin_dataset_path(dataset),
+                      dataset_path(dataset),
                       :method => :delete,
                       :data => { :confirm => I18n.t("helpers.links.confirm") },
                       :class => 'btn btn-mini btn-danger' %>

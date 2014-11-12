@@ -32,7 +32,7 @@ en:
         start_gathered_at: Date Started Gathering Data
         end_gathered_at: Date Finished Gathering Data
         gathered_at: Dates Gathered Data
-        public: Make Available to Public
+        public: Make Available to the Public
       shapeset:
         title: Title
         description: Description
@@ -41,6 +41,9 @@ en:
       messages:
         required_field: "is a required field."
         already_exists: 'already exists in the database.'
+  dataset_status:
+    public: Public
+    private: Private
   datatable:
     copy: 
       title: Copy
@@ -164,27 +167,6 @@ en:
         title: New User
       show:
         title: User Details
-    datasets:
-      index:
-        stats:
-          data_records: Data Records
-          good_questions: Analyzable Questions
-          no_text: No Question Text
-          bad_answers: Bad Answers
-          no_answers: No Answers
-        view_warnings: View Details
-      warnings:
-        title: "Data Warnings for '%{title}'"
-        tab_bad_answers: Questions with Bad Answers
-        tab_no_answers: Questions with No Answers
-        tab_no_text: Questions with No Text
-        bad_answers: 'The following %{number} questions contain values that were not listed as one of the possible answers. These records with the extra values will not be used during analysis.' 
-        no_answers: 'The following %{number} questions do not have a list of possible answers. These questions will not be available for analysis unless a list of possible answers are provided.' 
-        no_text: 'The following %{number} questions do not have text. These questions will not be available for analysis unless text is provided.' 
-        no_bad_answers: Congratulations! All of the data file data contains valid answers.
-        no_no_answers: Congratulations! All of the data file questions have answers.
-        no_no_text: Congratulations! All of the data file questions have text.
-        no_warnings: Congratulations! Your data file contains no issues that may effect the way the data is analyzed.
   devise:
     mailer:
       reset_password_instructions:
@@ -259,3 +241,25 @@ en:
       details:
         variable: Variable
         answers: Possible Answers  
+  datasets:
+    index:
+      stats:
+        data_records: Data Records
+        good_questions: Analyzable Questions
+        no_text: No Question Text
+        bad_answers: Bad Answers
+        no_answers: No Answers
+      view_warnings: View Details
+    warnings:
+      title: "Data Warnings for '%{title}'"
+      tab_bad_answers: Questions with Bad Answers
+      tab_no_answers: Questions with No Answers
+      tab_no_text: Questions with No Text
+      bad_answers: 'The following %{number} questions contain values that were not listed as one of the possible answers. These records with the extra values will not be used during analysis.' 
+      no_answers: 'The following %{number} questions do not have a list of possible answers. These questions will not be available for analysis unless a list of possible answers are provided.' 
+      no_text: 'The following %{number} questions do not have text. These questions will not be available for analysis unless text is provided.' 
+      no_bad_answers: Congratulations! All of the data file data contains valid answers.
+      no_no_answers: Congratulations! All of the data file questions have answers.
+      no_no_text: Congratulations! All of the data file questions have text.
+      no_warnings: Congratulations! Your data file contains no issues that may effect the way the data is analyzed.
+        

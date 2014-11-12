@@ -1,7 +1,7 @@
 <%= tinymce_assets %>
 <%= tinymce %>
 
-<%= semantic_form_for([:admin, @dataset]) do |f| %>
+<%= semantic_form_for @dataset do |f| %>
 	<%= f.error_messages %>
 
 	<%= f.inputs do %>
@@ -29,7 +29,7 @@
   <div class="form-group">
     <%= f.submit nil, :class => 'btn btn-primary' %>
 	  <%= f.submit t('helpers.links.reset'), :class => 'btn btn-warning', :type => :reset, :name => :reset %>
-	  <%= link_to t('helpers.links.cancel'), admin_datasets_path, :class => 'btn btn-mini btn-warning' %>
+	  <%= link_to t('helpers.links.cancel'), datasets_path, :class => 'btn btn-mini btn-warning' %>
   </div>
 <% end %>
 

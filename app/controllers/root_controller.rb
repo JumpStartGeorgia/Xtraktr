@@ -15,7 +15,7 @@ class RootController < ApplicationController
   end
   
   def explore_data_show
-    @dataset = Dataset.find_by(id: params[:id])
+    @dataset = Dataset.is_public.find_by(id: params[:id])
 
     if @dataset.blank?
       redirect_to explore_data_path, :notice => t('app.msgs.does_not_exist')
