@@ -169,7 +169,7 @@
       </div>
     </div>
 
-    <% if @is_admin %>
+    <% if @is_admin && @dataset.created_at.present? %>
       <div class="modal fade" id="private-share" tabindex="-1" role="dialog" aria-labelledby="private-share-header" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">

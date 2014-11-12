@@ -85,7 +85,7 @@ module ProcessDataFile
             # only add if the code and text are present
             if row[0].present? && row[0].strip.present? && row[1].present? && row[1].strip.present?
               # mongo does not allow '.' in key names, so replace with '|'
-              self.questions_attributes = [{code: clean_text(row[0], true), text: clean_text(row[1]), original_code: clean_text(row[0])}]
+              self.questions_attributes = [{code: clean_text(row[0], format_code: true), original_code: clean_text(row[0]), text: clean_text(row[1])}]
             else
               # if there is question code but no question text, save this
               if row[0].present? && row[0].strip.present? && !(row[1].present? && row[1].strip.present?)
@@ -111,7 +111,7 @@ module ProcessDataFile
           question_codes.each_with_index do |code, code_index|
             code_data = data.map{|x| x[code_index]}
             if code_data.present?
-              self.data_items_attributes = [{code: clean_text(code, true), original_code: clean_text(code), data: code_data}]
+              self.data_items_attributes = [{code: clean_text(code, format_code: true), original_code: clean_text(code), data: code_data}]
             else
               puts "******************************"
               puts "Column #{code_index} (supposed to be #{code}) of #{file_questions} does not exist."
@@ -170,7 +170,7 @@ module ProcessDataFile
 
                 # add the answer to the appropriate question
                 # save to answers attribute
-                key = clean_text(values[0], true)
+                key = clean_text(values[0], format_code: true)
                 question = self.questions.with_code(key)
                 if question.present?
                   # if this is a new key (question code), reset sort variables
@@ -389,10 +389,15 @@ private
   # strip the string and remove and bad characters
   # - <92> = '
   # - \x92 = '
-  def clean_text(str, replace_dot=false)
+  def clean_text(str, options={})
+    options[:format_code] = false if options[:format_code].nil?
+
     if str.length > 0
       x = str.dup.encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
-      x.gsub!('.', '|') if replace_dot
+      if options[:format_code] == true
+        x.gsub!('.', '|')
+        x.downcase! 
+      end
       return x.gsub("<92>", "'").gsub("\\x92", "'").chomp.strip
     else
       return str

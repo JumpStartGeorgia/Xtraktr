@@ -141,27 +141,30 @@ logger.debug "////////////////////////// BROWSER = #{user_agent}"
     # the questions for cross tab can only be those that have code answers
     @questions = dataset.questions.with_code_answers
 
-    # initialize variables
-    # start with a random question
-    @row = @questions.map{|x| x.code}.sample
-    @col = nil
-    @filter = nil
+    if @questions.present?
 
-    # check to make sure row and col param is in list of questions, if provided
-    if params[:row].present? && @questions.index{|x| x.code == params[:row]}.present?
-      @row = params[:row]
-    end
-    if params[:col].present? && @questions.index{|x| x.code == params[:col]}.present?
-      @col = params[:col]
-    end
+      # initialize variables
+      # start with a random question
+      @row = @questions.map{|x| x.code}.sample
+      @col = nil
+      @filter = nil
 
-    # check for valid filter values
-    if params[:filter_variable].present? && params[:filter_value].present? &&
-      q = @questions.select{|x| x.code.to_s == params[:filter_variable]}.first
-      a = q.answers.with_value(params[:filter_value]) if q.present?
-      
-      if q.present? && a.present?
-        @filter = {code: params[:filter_variable], value: params[:filter_value], name: q.text, answer: a.text }
+      # check to make sure row and col param is in list of questions, if provided
+      if params[:row].present? && @questions.index{|x| x.code == params[:row]}.present?
+        @row = params[:row]
+      end
+      if params[:col].present? && @questions.index{|x| x.code == params[:col]}.present?
+        @col = params[:col]
+      end
+
+      # check for valid filter values
+      if params[:filter_variable].present? && params[:filter_value].present? &&
+        q = @questions.select{|x| x.code.to_s == params[:filter_variable]}.first
+        a = q.answers.with_value(params[:filter_value]) if q.present?
+        
+        if q.present? && a.present?
+          @filter = {code: params[:filter_variable], value: params[:filter_value], name: q.text, answer: a.text }
+        end
       end
     end
 
@@ -202,34 +205,39 @@ logger.debug "////////////////////////// BROWSER = #{user_agent}"
         options[:filter] = @filter if @filter.present?
         options[:exclude_dkra] = params[:exclude_dkra].to_bool if params[:exclude_dkra].present?
 
-        # if @col has data, then this is a crosstab,
-        # else this is just a single variable lookup
-        if @col.present?
-          @data = dataset.data_crosstab_analysis(@row, @col, options)
-          @data[:title] = {}
-          @data[:title][:html] = build_crosstab_title_html(@data[:row_question], @data[:column_question], @filter, @data[:total_responses])
-          @data[:title][:text] = build_crosstab_title_text(@data[:row_question], @data[:column_question], @filter, @data[:total_responses])
-          # create special map titles so filter of column can be shown in title
-          # test to see which variable is mappable - that one must go in as the row for the map title
-          row_index = @questions.select{|x| x.code == params[:row] && x.is_mappable?}
-          if row_index.present?
-            @data[:title][:map_html] = build_crosstab_map_title_html(@data[:row_question], @data[:column_question], @filter, @data[:total_responses])
-            @data[:title][:map_text] = build_crosstab_map_title_text(@data[:row_question], @data[:column_question], @filter, @data[:total_responses])
+        @data = nil
+        if @questions.present?
+          # if @col has data, then this is a crosstab,
+          # else this is just a single variable lookup
+          if @col.present?
+            @data = dataset.data_crosstab_analysis(@row, @col, options)
+
+            @data[:title] = {}
+            @data[:title][:html] = build_crosstab_title_html(@data[:row_question], @data[:column_question], @filter, @data[:total_responses])
+            @data[:title][:text] = build_crosstab_title_text(@data[:row_question], @data[:column_question], @filter, @data[:total_responses])
+            # create special map titles so filter of column can be shown in title
+            # test to see which variable is mappable - that one must go in as the row for the map title
+            row_index = @questions.select{|x| x.code == params[:row] && x.is_mappable?}
+            if row_index.present?
+              @data[:title][:map_html] = build_crosstab_map_title_html(@data[:row_question], @data[:column_question], @filter, @data[:total_responses])
+              @data[:title][:map_text] = build_crosstab_map_title_text(@data[:row_question], @data[:column_question], @filter, @data[:total_responses])
+            else
+              @data[:title][:map_html] = build_crosstab_map_title_html(@data[:column_question], @data[:row_question], @filter, @data[:total_responses])
+              @data[:title][:map_text] = build_crosstab_map_title_text(@data[:column_question], @data[:row_question], @filter, @data[:total_responses])
+            end
           else
-            @data[:title][:map_html] = build_crosstab_map_title_html(@data[:column_question], @data[:row_question], @filter, @data[:total_responses])
-            @data[:title][:map_text] = build_crosstab_map_title_text(@data[:column_question], @data[:row_question], @filter, @data[:total_responses])
+            @data = dataset.data_onevar_analysis(@row, options)
+            
+            @data[:title] = {}
+            @data[:title][:html] = build_onevar_title_html(@data[:row_question], @filter, @data[:total_responses])
+            @data[:title][:text] = build_onevar_title_text(@data[:row_question], @filter, @data[:total_responses])
+            @data[:title][:map_html] = @data[:title][:html]
+            @data[:title][:map_text] = @data[:title][:text]
           end
-        else
-          @data = dataset.data_onevar_analysis(@row, options)
-          @data[:title] = {}
-          @data[:title][:html] = build_onevar_title_html(@data[:row_question], @filter, @data[:total_responses])
-          @data[:title][:text] = build_onevar_title_text(@data[:row_question], @filter, @data[:total_responses])
-          @data[:title][:map_html] = @data[:title][:html]
-          @data[:title][:map_text] = @data[:title][:text]
+          @data[:subtitle] = {}
+          @data[:subtitle][:html] = build_subtitle_html(@data[:total_responses])
+          @data[:subtitle][:text] = build_subtitle_text(@data[:total_responses])
         end
-        @data[:subtitle] = {}
-        @data[:subtitle][:html] = build_subtitle_html(@data[:total_responses])
-        @data[:subtitle][:text] = build_subtitle_text(@data[:total_responses])
 
 #        logger.debug "/////////////////////////// #{@data}"
 

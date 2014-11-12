@@ -43,7 +43,7 @@ class Dataset
 
     # get the question that has the provide code
     def with_code(code)
-      where(:code => code).first
+      where(:code => code.downcase).first
     end
 
     def with_original_code(original_code)
@@ -83,12 +83,12 @@ class Dataset
 
     # get the data item with this code
     def with_code(code)
-      where(:code => code).first
+      where(:code => code.downcase).first
     end
 
     # get the data array for the provided code
     def code_data(code)
-      x = where(:code => code).first
+      x = where(:code => code.downcase).first
       if x.present?
         return x.data
       else

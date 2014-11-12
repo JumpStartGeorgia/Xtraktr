@@ -7,9 +7,11 @@ class Question
 
   #############################
 
+
+  # all codes are downcased and '.' are replaced with '|'
   field :code, type: String
-  field :text, type: String
   field :original_code, type: String
+  field :text, type: String
   field :has_code_answers, type: Boolean, default: false
   field :is_mappable, type: Boolean, default: false
 

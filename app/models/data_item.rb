@@ -3,6 +3,10 @@ class DataItem
 
   belongs_to :person
   belongs_to :dataset
+
+  #############################
+
+  # all codes are downcased and '.' are replaced with '|'
   field :code, type: String
   field :original_code, type: String
   field :data, type: Array

@@ -143,7 +143,7 @@ en:
       about_dataset: About 
       all_datasets: All Datasets
       admin_dataset:
-        heading: Configuration Options
+        heading: Dataset Options
         settings: Settings
         warnings: Warnings
         mappable: Make Mappable
@@ -220,7 +220,7 @@ en:
   shared:
     explore_data:
       no_matches: Your selections returned no data. Please try again with a different selection.
-      no_data: Data is not on file yet - have you run rake db:seed yet?
+      no_data: "'%{title}' does not have any data that is analyzable at this time."
       hover_region: Hover over a Region
       na: N/A
       percent: Percent
