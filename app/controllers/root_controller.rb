@@ -7,7 +7,7 @@ class RootController < ApplicationController
   end
 
   def explore_data
-    @datasets = Dataset.is_public.basic_info
+    @datasets = Dataset.is_public.basic_info.sorted
 
     respond_to do |format|
       format.html # index.html.erb

@@ -70,10 +70,18 @@ module ProcessDataFile
 
         puts "=============================="
         puts "reading in questions from #{file_questions} and saving to questions attribute"
+        question_codes = [] # record the question codes from the questions file
         if File.exists?(file_questions)
           line_number = 0
           CSV.foreach(file_questions) do |row|
             line_number += 1
+
+            # record the question code even if it is missing text
+            # - need this for when pulling in data in the next section
+            if row[0].present? && row[0].strip.present?
+              question_codes << row[0].strip
+            end
+
             # only add if the code and text are present
             if row[0].present? && row[0].strip.present? && row[1].present? && row[1].strip.present?
               # mongo does not allow '.' in key names, so replace with '|'
@@ -99,8 +107,8 @@ module ProcessDataFile
         data = CSV.read(file_data, :quote_char => "\0")
         # only conintue if the # of cols match the # of quesiton codes
         # - have to subtract 1 from cols because csv file has ',' after last item
-        if data.first.length-1 == self.questions.unique_codes.length
-          self.questions.unique_codes.each_with_index do |code, code_index|
+        if data.first.length-1 == question_codes.length
+          question_codes.each_with_index do |code, code_index|
             code_data = data.map{|x| x[code_index]}
             if code_data.present?
               self.data_items_attributes = [{code: code, data: code_data}]
@@ -117,8 +125,8 @@ module ProcessDataFile
           puts "******************************"
         end
         puts "added #{self.data_items.length} columns worth of data"
-=begin
 
+=begin
         # before can read in data, we have to add a header row to it
         # so the SmaterCSV library that reads in the csv has the correct keys for the values
         puts "=============================="
@@ -139,6 +147,7 @@ module ProcessDataFile
         if File.exists?(file_data)
           self.data = SmarterCSV.process(file_data, {downcase_header: false, strings_as_keys: true})        end
         puts "added #{self.data.length} records"
+
 =end
 
         puts "=============================="

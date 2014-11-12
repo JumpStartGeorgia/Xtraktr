@@ -26,7 +26,7 @@ class Dataset
   # indicate if questions_with_bad_answers has data
   field :has_warnings, type: Boolean, default: false
   # array of hashes {code1: value1, code2: value2, etc}
-#  field :data, type: Array
+  field :data, type: Array
   # array of question codes who possibly have answer values that are not in the provided list of possible answers
   field :questions_with_bad_answers, type: Array
   # array of question codes that do not have text for question
@@ -128,8 +128,7 @@ class Dataset
   attr_accessible :title, :description, :user_id, :has_warnings, 
       :data_items_attributes, :questions_attributes, :questions_with_bad_answers, 
       :datafile, :codebook, :public, 
-      :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at
-      #:data, 
+      :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at    ,:data 
 
 
   TYPE = {:onevar => 'onevar', :crosstab => 'crosstab'}
@@ -536,6 +535,7 @@ class Dataset
   ### the data array
   ### - row: name of key to put along row of crosstab
   def data_onevar_analysis1(row, options={})
+    start = Time.now
 #    puts "--------------------"
 #    puts "--------------------"
 
@@ -597,6 +597,8 @@ class Dataset
       data.flatten!
 #      puts "++ data length = #{data.length}"
 
+      puts "== total time to get data = #{(Time.now - start)*1000} ms"
+
       if data.present?
         # now put it all together
         # - create counts
@@ -650,6 +652,8 @@ class Dataset
         end
       end
     end
+
+    puts "== total time = #{(Time.now - start)*1000} ms"
 
     return result
   end
@@ -729,7 +733,6 @@ class Dataset
 
       end
 
-        puts "== total time = #{(Time.now - start)*1000} ms"
 
       # flatten the data
 #      puts "++ data length was = #{data.length}"
@@ -738,6 +741,8 @@ class Dataset
       puts "-----------"
       puts data.inspect
       puts "-----------"
+
+      puts "== total time to get data = #{(Time.now - start)*1000} ms"
 
       if data.present?
         # now put it all together
@@ -849,6 +854,7 @@ class Dataset
       end
     end
 
+    puts "== total time = #{(Time.now - start)*1000} ms"
     return result
   end
 
