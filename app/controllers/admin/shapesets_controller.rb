@@ -7,7 +7,7 @@ class Admin::ShapesetsController < ApplicationController
   # GET /shapesets
   # GET /shapesets.json
   def index
-    @shapesets = Shapeset.basic_info.sorted
+    @shapesets = Shapeset.sorted
 
     respond_to do |format|
       format.html # index.html.erb
@@ -18,7 +18,7 @@ class Admin::ShapesetsController < ApplicationController
   # GET /shapesets/1
   # GET /shapesets/1.json
   def show
-    @shapeset = Shapeset.basic_info.find(params[:id])
+    @shapeset = Shapeset.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb

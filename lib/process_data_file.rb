@@ -111,7 +111,7 @@ module ProcessDataFile
           question_codes.each_with_index do |code, code_index|
             code_data = data.map{|x| x[code_index]}
             if code_data.present?
-              self.data_items_attributes = [{code: code, data: code_data}]
+              self.data_items_attributes = [{code: clean_text(code, true), original_code: clean_text(code), data: code_data}]
             else
               puts "******************************"
               puts "Column #{code_index} (supposed to be #{code}) of #{file_questions} does not exist."

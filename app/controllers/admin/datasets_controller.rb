@@ -7,7 +7,7 @@ class Admin::DatasetsController < ApplicationController
   # GET /datasets
   # GET /datasets.json
   def index
-    @datasets = Dataset.where(user_id: current_user.id).basic_info.sorted
+    @datasets = Dataset.where(user_id: current_user.id).sorted
 
     @css.push("datasets.css")
 
@@ -20,7 +20,7 @@ class Admin::DatasetsController < ApplicationController
   # GET /datasets/1
   # GET /datasets/1.json
   def show
-    @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).basic_info.first
+    @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).first
 
     @css.push("datasets.css")
 

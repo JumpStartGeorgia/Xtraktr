@@ -64,11 +64,6 @@ class Shapeset
     order_by([[:title, :asc]])
   end
 
-  # only get title and description
-  def self.basic_info
-    only(:_id, :title, :description)
-  end
-
   # get url to file
   def self.get_url(shapeset_id)
     find_by(id: shapeset_id).shapefile.url

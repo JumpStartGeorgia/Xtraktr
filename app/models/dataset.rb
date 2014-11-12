@@ -26,7 +26,7 @@ class Dataset
   # indicate if questions_with_bad_answers has data
   field :has_warnings, type: Boolean, default: false
   # array of hashes {code1: value1, code2: value2, etc}
-  field :data, type: Array
+#  field :data, type: Array
   # array of question codes who possibly have answer values that are not in the provided list of possible answers
   field :questions_with_bad_answers, type: Array
   # array of question codes that do not have text for question
@@ -79,11 +79,12 @@ class Dataset
   has_many :data_items, dependent: :destroy do
     # these are functions that will query the data_items documents
 
-    # get the data for the provided code
+    # get the data item with this code
     def with_code(code)
       where(:code => code).first
     end
 
+    # get the data array for the provided code
     def code_data(code)
       x = where(:code => code).first
       if x.present?
@@ -128,7 +129,7 @@ class Dataset
   attr_accessible :title, :description, :user_id, :has_warnings, 
       :data_items_attributes, :questions_attributes, :questions_with_bad_answers, 
       :datafile, :codebook, :public, 
-      :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at    ,:data 
+      :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at #   ,:data 
 
 
   TYPE = {:onevar => 'onevar', :crosstab => 'crosstab'}
@@ -230,19 +231,6 @@ class Dataset
 
   def self.is_public
     where(public: true)
-  end
-
-  # get the basic info about the dataset
-  # - title, description
-  def self.basic_info
-    only(:_id, :title, :description, :user_id, :has_warnings, :is_mappable, :stats,
-      :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at,
-      :datafile_file_name, :codebook_file_name, :public)
-  end
-
-  # get the questions with bad answers
-  def self.warnings
-    only(:_id, :title, :has_warnings, :questions_with_bad_answers, :questions_with_no_text, :questions, :stats)
   end
 
   #############################
