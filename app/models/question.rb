@@ -34,10 +34,10 @@ class Question
 
   #############################
   # indexes
-  index ({ :code => 1})
-  index ({ :text => 1})
-  index ({ :has_code_answers => 1})
-  index ({ :is_mappable => 1})
+  # index ({ :code => 1})
+  # index ({ :text => 1})
+  # index ({ :has_code_answers => 1})
+  # index ({ :is_mappable => 1})
 
   #############################
   # Validations

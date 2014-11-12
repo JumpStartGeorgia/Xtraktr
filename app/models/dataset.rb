@@ -108,11 +108,13 @@ class Dataset
   index ({ :released_at => 1})
   index ({ :user_id => 1})
   index ({ :shapeset_id => 1})
+  index ({ :'questions.code' => 1})
+  index ({ :'questions.original_code' => 1})
   index ({ :'questions.text' => 1})
   index ({ :'questions.is_mappable' => 1})
   index ({ :'questions.has_code_answers' => 1})
-  index ({ :'answers.can_exclude' => 1})
-  index ({ :'answers.sort_order' => 1})
+  index ({ :'questions.answers.can_exclude' => 1})
+  index ({ :'questions.answers.sort_order' => 1})
   index ({ :private_share_key => 1})
 
 

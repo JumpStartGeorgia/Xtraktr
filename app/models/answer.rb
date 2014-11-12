@@ -10,8 +10,8 @@ class Answer
 
   #############################
   # indexes
-  index ({ :can_exclude => 1})
-  index ({ :sort_order => 1})
+  # index ({ :can_exclude => 1})
+  # index ({ :sort_order => 1})
 
   #############################
   # Validations
