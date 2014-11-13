@@ -268,8 +268,16 @@ class Dataset
   ### perform a summary analysis of one question_code in 
   ### the data_items
   ### - question_code: code of question to analyze and put along row of crosstab
+  # - options:
+  #   - filter: if provided, indicates a field and value to filter the data by
+  #           format: {code: ____, value: ______}
+  #   - exclude_dkra: flag indicating if don't know/refuse to answer answers should be ignored
   def data_onevar_analysis(question_code, options={})
     start = Time.now
+
+    filter = options[:filter]
+    exclude_dkra = options[:exclude_dkra] == true
+    logger.debug "//////////// data_onevar_analysis - question_code: #{question_code}, filter: #{filter}, exclude_dkra: #{exclude_dkra}"
 
     result = {}
 
@@ -277,7 +285,8 @@ class Dataset
     result[:row_code] = question_code
     row_question = self.questions.with_code(question_code)
     result[:row_question] = row_question.text
-    result[:row_answers] = row_question.answers.sort_by{|x| x.sort_order}
+    # if exclude_dkra is true, only get use the answers that cannot be excluded
+    result[:row_answers] = (exclude_dkra == true ? row_question.answers.must_include : row_question.answers).sort_by{|x| x.sort_order}
     result[:type] = TYPE[:onevar]
     result[:counts] = []
     result[:percents] = []
@@ -287,8 +296,20 @@ class Dataset
     # if the row question/answers were found, continue
     if result[:row_question].present? && result[:row_answers].present?
 
-      # get the data for this codes
+      # get the data for this code
       data = self.data_items.code_data(question_code)
+
+      # if filter provided, then get data for filter
+      # and then only pull out the code data that matches
+       if filter.present?
+        filter_data = self.data_items.code_data(filter[:code])
+        if filter_data.present?
+          # merge the data and filter
+          # and then pull out the data that has the corresponding filter value
+          merged_data = filter_data.zip(data)
+          data = merged_data.select{|x| x[0].to_s == filter[:value].to_s}.map{|x| x[1]}
+        end
+      end
 
       if data.present?
         # do not want to count nil values
@@ -362,17 +383,23 @@ class Dataset
   def data_crosstab_analysis(question_code1, question_code2, options={})
     start = Time.now
 
+    filter = options[:filter]
+    exclude_dkra = options[:exclude_dkra] == true
+    logger.debug "//////////// data_crosstab_analysis - question_code1: #{question_code1}, question_code2: #{question_code2}, filter: #{filter}, exclude_dkra: #{exclude_dkra}"
+
     result = {}
 
     # get the question/answers
     result[:row_code] = question_code1
     row_question = self.questions.with_code(question_code1)
     result[:row_question] = row_question.text
-    result[:row_answers] = row_question.answers.sort_by{|x| x.sort_order}
+    # if exclude_dkra is true, only get use the answers that cannot be excluded
+    result[:row_answers] = (exclude_dkra == true ? row_question.answers.must_include : row_question.answers).sort_by{|x| x.sort_order}
     result[:column_code] = question_code2
     col_question = self.questions.with_code(question_code2)
     result[:column_question] = col_question.text
-    result[:column_answers] = col_question.answers.sort_by{|x| x.sort_order}
+    # if exclude_dkra is true, only get use the answers that cannot be excluded
+    result[:column_answers] = (exclude_dkra == true ? col_question.answers.must_include : col_question.answers).sort_by{|x| x.sort_order}
     result[:type] = TYPE[:crosstab]
     result[:counts] = []
     result[:percents] = []
@@ -400,6 +427,18 @@ class Dataset
       # merge the data arrays into one array that 
       # has nested arrays
       data = data1.zip(data2)
+
+     # if filter provided, then get data for filter
+      # and then only pull out the code data that matches
+       if filter.present?
+        filter_data = self.data_items.code_data(filter[:code])
+        if filter_data.present?
+          # merge the data and filter
+          # and then pull out the data that has the corresponding filter value
+          merged_data = filter_data.zip(data)
+          data = merged_data.select{|x| x[0].to_s == filter[:value].to_s}.map{|x| x[1]}
+        end
+      end
 
       counts = {}
 
@@ -536,6 +575,7 @@ class Dataset
     return result
   end
 
+=begin old methods for use with data attribute
 
   ### perform a summary analysis of one hash key in 
   ### the data array
@@ -863,5 +903,5 @@ class Dataset
     puts "== total time = #{(Time.now - start)*1000} ms"
     return result
   end
-
+=end
 end

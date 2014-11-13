@@ -29,6 +29,11 @@ class Question
       where(:value => value).first
     end
 
+    # ignore the answers that can be excluded
+    def must_include
+      where(:can_exclude => false).to_a
+    end
+
   end
   accepts_nested_attributes_for :answers
 
