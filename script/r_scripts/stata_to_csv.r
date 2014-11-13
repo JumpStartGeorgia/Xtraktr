@@ -63,9 +63,7 @@ for (i in 1:length(table)){
   # only continue if the question has answers
   if (length(unlist(table[i])) != 0){
     # for each answer in this question
-    # the answers are ordered backwards,
-    # so go through the answers backwards to get them in the correct order
-    for (j in length(unlist(table[i])):1){
+    for (j in 1:length(unlist(table[i]))){
       # the answer text has the question code appended to it, so take it off using sub
       print(paste(c(names(table[i]), unlist(table[i])[j], sub(paste(c(names(table[i]), '.'), collapse=''), '', names(unlist(table[i])[j]))), collapse=" || "))
     }
