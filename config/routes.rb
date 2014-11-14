@@ -18,6 +18,8 @@ BootstrapStarter::Application.routes.draw do
     resources :datasets do
       member do
         get 'warnings'
+        get 'exclude_questions'
+        post 'exclude_questions'
       end
     end
 

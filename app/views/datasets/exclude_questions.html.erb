@@ -1,0 +1,70 @@
+<%- model_class = Question -%>
+<% title t('.title') %>
+
+<% if @dataset.questions.present? %>
+
+  <%= form_tag exclude_questions_dataset_path(@dataset), id: 'frm-dataset-exclude-questions' do %>
+
+    <p>
+      <%= t('.explanation') %>
+    </p>
+
+    <div class="dataset-exclude-questions-save">
+      <%= submit_tag t('app.buttons.save_settings'), class: 'btn btn-success' %>
+    </div>
+
+    <table id='dataset-exclude-questions' class="table table-striped table-hover table-nonfluid">
+      <thead>
+        <tr>
+          <th>
+            <%= link_to '#', class: 'btn btn-default btn-xs btn-select-all' do %>
+              <span class="glyphicon glyphicon-check" title="<%= t('helpers.links.select_all') %>"></span>
+            <% end %>
+            <%= link_to '#', class: 'btn btn-default btn-xs btn-select-none' do %>
+              <span class="glyphicon glyphicon-unchecked"title="<%= t('helpers.links.select_none') %>"></span>
+            <% end %>
+          </th>
+          <th><%= model_class.human_attribute_name(:code) %></th>
+          <th><%= model_class.human_attribute_name(:text) %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @dataset.questions.each_with_index do |question, question_index| %>
+          <tr>
+            <td>
+              <%
+              check_id = "dataset_questions_attributes_#{question_index}_exclude" 
+              %>
+              <input id="<%= "dataset_questions_attributes_#{question_index}_id" %>" 
+                    name="<%= "dataset[questions_attributes][#{question_index}][id]" %>" 
+                    type="hidden" value="<%= question.id %>">
+              <input id="<%= check_id %>" 
+                    name="<%= "dataset[questions_attributes][#{question_index}][exclude]" %>" 
+                    type="checkbox" value="true" <%= question.exclude == true ? 'checked=checked' : ''%>>
+            </td>
+            <td>
+              <label for="<%= check_id%>">
+                <%= question.original_code %>
+              </label>
+            </td>
+            <td>
+              <label for="<%= check_id%>">
+                <%= question.text %>
+              </label>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <div class="dataset-exclude-questions-save">
+      <%= submit_tag t('app.buttons.save_settings'), class: 'btn btn-success' %>
+    </div>
+
+  <% end %>
+
+<% else %>
+  <p>
+    <%= t('.no_questions') %>
+  </p>
+<% end %>

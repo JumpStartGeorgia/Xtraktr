@@ -1,0 +1,15 @@
+ $(document).ready(function(){
+  var type="success";
+  var msg = '<%= @msg %>';
+  if (<%= @success %> == false){
+    type="error";
+  }
+
+  var html = '<div class="alert alert-'+ type +' fade in">' +
+          '<a href="#" data-dismiss="alert" class="close">×</a>' +
+           msg +
+          '</div>';
+
+  $('#flash-message').html(html);
+
+});

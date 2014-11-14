@@ -50,6 +50,11 @@ class Dataset
       where(:original_code => original_code).first
     end
 
+    # get questions that are not excluded and have code answers
+    def for_analysis
+      where(:exclude => false, :has_code_answers => true).to_a
+    end
+    
     # get all of the questions with code answers
     def with_code_answers
       where(:has_code_answers => true).to_a
@@ -72,6 +77,27 @@ class Dataset
     # get all questions that are mappable
     def are_mappable
       where(:is_mappable => true)
+    end
+
+    # get questions that are not excluded
+    def not_excluded
+      where(:exlucde => false)
+    end
+
+    # for the ids provided, mark the exclude flag as true
+    def add_exclude(ids)
+      where(:_id.in => ids).each do |q|
+        q.exclude = true
+      end
+      return nil
+    end
+
+    # for the ids provided, mark the exclude flag as false
+    def remove_exclude(ids)
+      where(:_id.in => ids).each do |q|
+        q.exclude = false
+      end
+      return nil
     end
 
   end
@@ -113,6 +139,7 @@ class Dataset
   index ({ :'questions.text' => 1})
   index ({ :'questions.is_mappable' => 1})
   index ({ :'questions.has_code_answers' => 1})
+  index ({ :'questions.exclude' => 1})
   index ({ :'questions.answers.can_exclude' => 1})
   index ({ :'questions.answers.sort_order' => 1})
   index ({ :private_share_key => 1})

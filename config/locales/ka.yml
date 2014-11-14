@@ -33,6 +33,11 @@ ka:
         end_gathered_at: Date Finished Gathering Data
         gathered_at: Dates Gathered Data
         public: Make Available to Public
+      question:
+        code: Question Code
+        original_code: Question Code
+        text: Question Text
+        exclude: Exclude Question from Analysis
       shapeset:
         title: Title
         description: Description
@@ -103,6 +108,8 @@ ka:
       likes: მოწონება
       menu: მენიუ
       close: Close
+      select_all: Select All
+      select_none: Select None
     titles:
       edit: "შეცვლა %{model}"
       save: "შენახვა %{model}"
@@ -127,6 +134,7 @@ ka:
       remove: ამოშლა
       confirm: დარწმუნებული ხართ?
       new: ახალი            
+      save_settings: Save Settings
     common:
       app_name: Xtraktr
       added_on: "დამატებულია: %{date}" 
@@ -137,6 +145,7 @@ ka:
       not_authorized: თქვენ არ გაქვთ ამ გვერდის ნახვის უფლება.
       success_created: "%{obj} შექმნილია."
       success_updated: "%{obj} განახლებულია."
+      question_exclude_saved: "Exclude question selections were saved."
     menu:
       explore_data: Explore Data
       datasets: Datasets
@@ -148,7 +157,7 @@ ka:
         warnings: Warnings
         mappable: Make Mappable
         exlucde_answers: Answers Can Be Excluded
-        ignore_questions: Not Include Questions
+        exclude_questions: Exclude Questions
         delete: Delete
         private_share: Share Private Dataset
   layouts:
@@ -217,6 +226,9 @@ ka:
       no_no_answers: Congratulations! All of the data file questions have answers.
       no_no_text: Congratulations! All of the data file questions have text.
       no_warnings: Congratulations! Your data file contains no issues that may effect the way the data is analyzed.
+    exclude_questions:
+      title: "Questions to Exclude from Analysis"
+      explanation: "If you do not want questions to be available to be analyzed, simply select them below."
   shared:
     explore_data:
       no_matches: Your selections returned no data. Please try again with a different selection.

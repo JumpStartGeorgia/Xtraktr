@@ -138,8 +138,8 @@ logger.debug "////////////////////////// BROWSER = #{user_agent}"
   ## get data for explore view
   #######################
   def explore_data_generator(dataset)
-    # the questions for cross tab can only be those that have code answers
-    @questions = dataset.questions.with_code_answers
+    # the questions for cross tab can only be those that have code answers and are not excluded
+    @questions = dataset.questions.for_analysis
 
     if @questions.present?
 

@@ -4,7 +4,7 @@ class DatasetsController < ApplicationController
     controller_instance.send(:valid_role?, User::ROLES[:user])
   end
 
-  layout "explore_data", only: [:show, :new, :edit, :warnings]
+  layout "explore_data", only: [:show, :new, :edit, :warnings, :exclude_questions]
 
   # GET /datasets
   # GET /datasets.json
@@ -114,6 +114,7 @@ class DatasetsController < ApplicationController
     @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).first
 
     if @dataset.present?
+
       @dataset.assign_attributes(params[:dataset])
 
       respond_to do |format|
@@ -177,6 +178,50 @@ class DatasetsController < ApplicationController
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @dataset }
+      end
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to datasets_path(:locale => I18n.locale)
+      return
+    end
+  end
+
+  # mark which questions to not include in the analysis
+  def exclude_questions
+    @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).first
+
+    if @dataset.present?
+
+      respond_to do |format|
+        format.html {
+          @js.push("exclude_questions.js")
+          @css.push("exclude_questions.css")
+
+          @css.push("datasets.css")
+          @is_admin = true
+          @show_title = true
+          @dataset_url = dataset_path(@dataset)
+
+        }
+        format.js { 
+          # cannot use simple update_attributes for if value was checked but is not now, 
+          # no value exists in params and so no changes take place
+          # -> get ids that are true and set them to true
+          # -> set rest to false
+          true_ids = params[:dataset][:questions_attributes].select{|k,v| v[:exclude] == 'true'}.map{|k,v| v[:id]}
+          false_ids = params[:dataset][:questions_attributes].select{|k,v| v[:exclude].nil?}.map{|k,v| v[:id]}
+
+          @dataset.questions.add_exclude(true_ids)
+          @dataset.questions.remove_exclude(false_ids)
+
+          @msg = t('app.msgs.question_exclude_saved')
+          @success = true
+          if !@dataset.save
+            @msg = @dataset.errors.full_messages
+            @success = false
+          end
+
+        }
       end
     else
       flash[:info] =  t('app.msgs.does_not_exist')

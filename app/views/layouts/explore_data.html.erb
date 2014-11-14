@@ -51,9 +51,9 @@
                   <% end %>
                   <li class="divider"></li>
                   <li role="menuitem">
-                    <%= link_to '#' do %>
+                    <%= link_to exclude_questions_dataset_path(@dataset) do %>
                       <span class="glyphicon glyphicon-ban-circle"></span>
-                      <%= t('app.menu.admin_dataset.ignore_questions') %>
+                      <%= t('app.menu.admin_dataset.exclude_questions') %>
                     <% end %>
                   </li>
                   <li role="menuitem">
@@ -98,13 +98,15 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-12">
-          <% flash.each do |key, msg| %>
-            <div class="alert <%= flash_translation(key) %> fade in">
-              <a href="#" data-dismiss="alert" class="close">×</a>
-              <%= msg %>
-            </div>
-          <% end %>
-
+          <div id="flash-message">
+            <% flash.each do |key, msg| %>
+              <div class="alert <%= flash_translation(key) %> fade in">
+                <a href="#" data-dismiss="alert" class="close">×</a>
+                <%= msg %>
+              </div>
+            <% end %>
+          </div>
+          
           <% if @show_title == true && content_for?(:title) %>
             <div class="page-header">
               <h1><%= yield(:title) %></h1>

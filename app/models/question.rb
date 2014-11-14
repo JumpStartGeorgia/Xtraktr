@@ -14,6 +14,8 @@ class Question
   field :text, type: String
   field :has_code_answers, type: Boolean, default: false
   field :is_mappable, type: Boolean, default: false
+  # indicate whether or not the question should not be included in the analysis
+  field :exclude, type: Boolean, default: false
 
   embedded_in :dataset
   embeds_many :answers do
@@ -49,7 +51,7 @@ class Question
   validates_presence_of :code, :text, :original_code
 
   #############################
-  attr_accessible :code, :text, :original_code, :has_code_answers, :is_mappable, :answers_attributes
+  attr_accessible :code, :text, :original_code, :has_code_answers, :is_mappable, :answers_attributes, :exclude
 
   #############################
 
