@@ -11,7 +11,7 @@ $(document).ready(function(){
 
   // catch form submit and pull out all form values from the datatable
   // the post will return will a status message
-  $('form#frm-dataset-exclude-questions').submit( function() {
+  $('form#frm-dataset-exclude-answers').submit( function() {
     var form_data = datatable.$('input').serialize();
 
     $.ajax({
@@ -24,11 +24,12 @@ $(document).ready(function(){
     return false;
   });
 
-  // datatable for exclude questions page
-  var datatable = $('#dataset-exclude-questions').dataTable({
+  // datatable for exclude answers page
+  var datatable = $('#dataset-exclude-answers').dataTable({
     "dom": '<"top"f>t<"bottom"lpi><"clear">',
     "columns": [
       { "orderDataType": "dom-checkbox" },
+      null,
       null,
       null
     ],
@@ -39,18 +40,18 @@ $(document).ready(function(){
   });
 
 
-  // select all questions
+  // select all answers
   $('a.btn-select-all').click(function(){
-//    $('#dataset-exclude-questions tr td input[type="checkbox"]').prop('checked', true);
+//    $('#dataset-exclude-answers tr td input[type="checkbox"]').prop('checked', true);
     $(datatable.fnGetNodes()).find(':checkbox').each(function () {
       $(this).prop('checked', true);
     });
     return false;
   });
 
-  // de-select all questions
+  // de-select all answers
   $('a.btn-select-none').click(function(){
-//    $('#dataset-exclude-questions tr td input[type="checkbox"]').prop('checked', false);
+//    $('#dataset-exclude-answers tr td input[type="checkbox"]').prop('checked', false);
 
     $(datatable.fnGetNodes()).find(':checkbox').each(function () {
       $(this).prop('checked', false);

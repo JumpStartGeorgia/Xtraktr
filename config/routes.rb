@@ -20,6 +20,8 @@ BootstrapStarter::Application.routes.draw do
         get 'warnings'
         get 'exclude_questions'
         post 'exclude_questions'
+        get 'exclude_answers'
+        post 'exclude_answers'
       end
     end
 

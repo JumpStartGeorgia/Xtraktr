@@ -22,9 +22,6 @@ class ApplicationController < ActionController::Base
     rescue_from Mongoid::Errors::DocumentNotFound,
                 :with => :render_not_found
 
-    rescue_from CanCan::AccessDenied do |exception|
-      redirect_to root_url, :alert => exception.message
-    end
 	end
 
 	Browser = Struct.new(:browser, :version)

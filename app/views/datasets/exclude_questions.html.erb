@@ -1,7 +1,8 @@
 <%- model_class = Question -%>
 <% title t('.title') %>
 
-<% if @dataset.questions.present? %>
+<% questions = @dataset.questions.with_code_answers %>
+<% if questions.present? %>
 
   <%= form_tag exclude_questions_dataset_path(@dataset), id: 'frm-dataset-exclude-questions' do %>
 
@@ -29,7 +30,7 @@
         </tr>
       </thead>
       <tbody>
-        <% @dataset.questions.each_with_index do |question, question_index| %>
+        <% questions.each_with_index do |question, question_index| %>
           <tr>
             <td>
               <%
@@ -43,12 +44,12 @@
                     type="checkbox" value="true" <%= question.exclude == true ? 'checked=checked' : ''%>>
             </td>
             <td>
-              <label for="<%= check_id%>">
+              <label for="<%= check_id %>">
                 <%= question.original_code %>
               </label>
             </td>
             <td>
-              <label for="<%= check_id%>">
+              <label for="<%= check_id %>">
                 <%= question.text %>
               </label>
             </td>

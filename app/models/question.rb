@@ -31,9 +31,14 @@ class Question
       where(:value => value).first
     end
 
-    # ignore the answers that can be excluded
-    def must_include
-      where(:can_exclude => false).to_a
+    # get answers that are not excluded
+    def all_for_analysis
+      where(:exclude => false).to_a
+    end
+
+    # get answers that must be included for analysis
+    def must_include_for_analysis
+      where(:can_exclude => false, :exclude => false).to_a
     end
 
   end

@@ -84,7 +84,7 @@ class Dataset
       where(:exlucde => false)
     end
 
-    # for the ids provided, mark the exclude flag as true
+    # mark the question exclude flag as true for the ids provided
     def add_exclude(ids)
       where(:_id.in => ids).each do |q|
         q.exclude = true
@@ -92,10 +92,26 @@ class Dataset
       return nil
     end
 
-    # for the ids provided, mark the exclude flag as false
+    # mark the question exclude flag as false for the ids provided
     def remove_exclude(ids)
       where(:_id.in => ids).each do |q|
         q.exclude = false
+      end
+      return nil
+    end
+
+    # mark the answer exclude flag as true for the ids provided
+    def add_answer_exclude(ids)
+      map{|x| x.answers}.flatten.select{|x| ids.index(x.id.to_s).present?}.each do |a|
+        a.exclude = true
+      end
+      return nil
+    end
+
+    # mark the answer exclude flag as false for the ids provided
+    def remove_answer_exclude(ids)
+      map{|x| x.answers}.flatten.select{|x| ids.index(x.id.to_s).present?}.each do |a|
+        a.exclude = false
       end
       return nil
     end
@@ -142,6 +158,7 @@ class Dataset
   index ({ :'questions.exclude' => 1})
   index ({ :'questions.answers.can_exclude' => 1})
   index ({ :'questions.answers.sort_order' => 1})
+  index ({ :'questions.answers.exclude' => 1})
   index ({ :private_share_key => 1})
 
 
@@ -313,7 +330,7 @@ class Dataset
     row_question = self.questions.with_code(question_code)
     result[:row_question] = row_question.text
     # if exclude_dkra is true, only get use the answers that cannot be excluded
-    result[:row_answers] = (exclude_dkra == true ? row_question.answers.must_include : row_question.answers).sort_by{|x| x.sort_order}
+    result[:row_answers] = (exclude_dkra == true ? row_question.answers.must_include_for_analysis : row_question.answers.all_for_analysis).sort_by{|x| x.sort_order}
     result[:type] = TYPE[:onevar]
     result[:counts] = []
     result[:percents] = []
@@ -421,12 +438,12 @@ class Dataset
     row_question = self.questions.with_code(question_code1)
     result[:row_question] = row_question.text
     # if exclude_dkra is true, only get use the answers that cannot be excluded
-    result[:row_answers] = (exclude_dkra == true ? row_question.answers.must_include : row_question.answers).sort_by{|x| x.sort_order}
+    result[:row_answers] = (exclude_dkra == true ? row_question.answers.must_include_for_analysis : row_question.answers.all_for_analysis).sort_by{|x| x.sort_order}
     result[:column_code] = question_code2
     col_question = self.questions.with_code(question_code2)
     result[:column_question] = col_question.text
     # if exclude_dkra is true, only get use the answers that cannot be excluded
-    result[:column_answers] = (exclude_dkra == true ? col_question.answers.must_include : col_question.answers).sort_by{|x| x.sort_order}
+    result[:column_answers] = (exclude_dkra == true ? col_question.answers.must_include_for_analysis : col_question.answers.all_for_analysis).sort_by{|x| x.sort_order}
     result[:type] = TYPE[:crosstab]
     result[:counts] = []
     result[:percents] = []

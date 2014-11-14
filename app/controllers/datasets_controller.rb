@@ -4,7 +4,7 @@ class DatasetsController < ApplicationController
     controller_instance.send(:valid_role?, User::ROLES[:user])
   end
 
-  layout "explore_data", only: [:show, :new, :edit, :warnings, :exclude_questions]
+  layout "explore_data", only: [:show, :new, :edit, :warnings, :exclude_questions, :exclude_answers]
 
   # GET /datasets
   # GET /datasets.json
@@ -204,21 +204,87 @@ class DatasetsController < ApplicationController
 
         }
         format.js { 
-          # cannot use simple update_attributes for if value was checked but is not now, 
-          # no value exists in params and so no changes take place
-          # -> get ids that are true and set them to true
-          # -> set rest to false
-          true_ids = params[:dataset][:questions_attributes].select{|k,v| v[:exclude] == 'true'}.map{|k,v| v[:id]}
-          false_ids = params[:dataset][:questions_attributes].select{|k,v| v[:exclude].nil?}.map{|k,v| v[:id]}
+          begin
+            # cannot use simple update_attributes for if value was checked but is not now, 
+            # no value exists in params and so no changes take place
+            # -> get ids that are true and set them to true
+            # -> set rest to false
+            true_ids = params[:dataset][:questions_attributes].select{|k,v| v[:exclude] == 'true'}.map{|k,v| v[:id]}
+            false_ids = params[:dataset][:questions_attributes].select{|k,v| v[:exclude] != 'true'}.map{|k,v| v[:id]}
 
-          @dataset.questions.add_exclude(true_ids)
-          @dataset.questions.remove_exclude(false_ids)
+            @dataset.questions.add_exclude(true_ids)
+            @dataset.questions.remove_exclude(false_ids)
 
-          @msg = t('app.msgs.question_exclude_saved')
-          @success = true
-          if !@dataset.save
-            @msg = @dataset.errors.full_messages
+            @msg = t('app.msgs.question_exclude_saved')
+            @success = true
+            if !@dataset.save
+              @msg = @dataset.errors.full_messages
+              @success = false
+            end
+          rescue Exception => e 
+            @msg = t('app.msgs.question_exclude_not_saved')
             @success = false
+
+            # send the error notification
+            ExceptionNotifier::Notifier
+              .exception_notification(request.env, e)
+              .deliver
+          end
+
+        }
+      end
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to datasets_path(:locale => I18n.locale)
+      return
+    end
+  end
+
+
+  # mark which answers to not include in the analysis
+  def exclude_answers
+    @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).first
+
+    if @dataset.present?
+
+      respond_to do |format|
+        format.html {
+          @js.push("exclude_answers.js")
+          @css.push("exclude_answers.css")
+
+          @css.push("datasets.css")
+          @is_admin = true
+          @show_title = true
+          @dataset_url = dataset_path(@dataset)
+
+        }
+        format.js { 
+          @msg = t('app.msgs.answer_exclude_saved')
+          @success = true
+          begin
+            # cannot use simple update_attributes for if value was checked but is not now, 
+            # no value exists in params and so no changes take place
+            # -> get ids that are true and set them to true
+            # -> set rest to false
+            answers = params[:dataset][:questions_attributes].map{|kq,vq| vq[:answers_attributes]}
+            true_ids = answers.map{|x| x.values}.flatten.select{|x| x[:exclude] == 'true'}.map{|x| x[:id]}
+            false_ids = answers.map{|x| x.values}.flatten.select{|x| x[:exclude] != 'true'}.map{|x| x[:id]}
+
+            @dataset.questions.add_answer_exclude(true_ids)
+            @dataset.questions.remove_answer_exclude(false_ids)
+
+            if !@dataset.save
+              @msg = @dataset.errors.full_messages
+              @success = false
+            end
+          rescue Exception => e 
+            @msg = t('app.msgs.question_exclude_not_saved')
+            @success = false
+
+            # send the error notification
+            ExceptionNotifier::Notifier
+              .exception_notification(request.env, e)
+              .deliver
           end
 
         }

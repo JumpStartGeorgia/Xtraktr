@@ -5,6 +5,7 @@ class Answer
   field :text, type: String
   field :can_exclude, type: Boolean, default: false
   field :sort_order, type: Integer, default: 1
+  field :exclude, type: Boolean, default: false
 
   embedded_in :question
 

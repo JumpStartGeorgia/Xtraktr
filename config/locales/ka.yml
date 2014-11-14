@@ -36,8 +36,16 @@ ka:
       question:
         code: Question Code
         original_code: Question Code
-        text: Question Text
+        text: Question
         exclude: Exclude Question from Analysis
+        no_questions: There are no questions on file for this dataset.
+      answer:
+        code: Question Code
+        value: Value
+        text: Answer
+        exclude: Exclude Answer from Analysis
+        can_exclude: Can Exclude During Analysis
+        no_questions: There are no questions on file for this dataset.
       shapeset:
         title: Title
         description: Description
@@ -146,6 +154,9 @@ ka:
       success_created: "%{obj} შექმნილია."
       success_updated: "%{obj} განახლებულია."
       question_exclude_saved: "Exclude question selections were saved."
+      question_exclude_not_saved: "An error occurred while saving the exclude question selections."
+      answer_exclude_saved: "Exclude answer selections were saved."
+      answer_exclude_not_saved: "An error occurred while saving the exclude answer selections."
     menu:
       explore_data: Explore Data
       datasets: Datasets
@@ -229,6 +240,9 @@ ka:
     exclude_questions:
       title: "Questions to Exclude from Analysis"
       explanation: "If you do not want questions to be available to be analyzed, simply select them below."
+    exclude_answers:
+      title: "Answers to Exclude from Analysis"
+      explanation: "If you do not want answers to be available to be analyzed, simply select them below."
   shared:
     explore_data:
       no_matches: Your selections returned no data. Please try again with a different selection.
