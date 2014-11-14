@@ -40,23 +40,22 @@ $(document).ready(function(){
   });
 
 
-  // select all answers
+  // select all questions that match the current filter
+  // - if not filter -> then all questions are selected
   $('a.btn-select-all').click(function(){
-//    $('#dataset-exclude-answers tr td input[type="checkbox"]').prop('checked', true);
-    $(datatable.fnGetNodes()).find(':checkbox').each(function () {
+    $(datatable.$('tr', {"filter": "applied"})).find(':checkbox').each(function () {
       $(this).prop('checked', true);
     });
+
     return false;
   });
 
-  // de-select all answers
+  // deselect all questions that match the current filter
+  // - if not filter -> then all questions are deselected
   $('a.btn-select-none').click(function(){
-//    $('#dataset-exclude-answers tr td input[type="checkbox"]').prop('checked', false);
-
-    $(datatable.fnGetNodes()).find(':checkbox').each(function () {
+    $(datatable.$('tr', {"filter": "applied"})).find(':checkbox').each(function () {
       $(this).prop('checked', false);
     });
-
 
     return false;
   });

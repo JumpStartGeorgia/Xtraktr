@@ -1,3 +1,4 @@
+var datatable;
 $(document).ready(function(){
 
   /* Create an array with the values of all the checkboxes in a column */
@@ -25,7 +26,7 @@ $(document).ready(function(){
   });
 
   // datatable for exclude questions page
-  var datatable = $('#dataset-exclude-questions').dataTable({
+  datatable = $('#dataset-exclude-questions').dataTable({
     "dom": '<"top"f>t<"bottom"lpi><"clear">',
     "columns": [
       { "orderDataType": "dom-checkbox" },
@@ -39,23 +40,22 @@ $(document).ready(function(){
   });
 
 
-  // select all questions
+  // select all questions that match the current filter
+  // - if not filter -> then all questions are selected
   $('a.btn-select-all').click(function(){
-//    $('#dataset-exclude-questions tr td input[type="checkbox"]').prop('checked', true);
-    $(datatable.fnGetNodes()).find(':checkbox').each(function () {
+    $(datatable.$('tr', {"filter": "applied"})).find(':checkbox').each(function () {
       $(this).prop('checked', true);
     });
+
     return false;
   });
 
-  // de-select all questions
+  // deselect all questions that match the current filter
+  // - if not filter -> then all questions are deselected
   $('a.btn-select-none').click(function(){
-//    $('#dataset-exclude-questions tr td input[type="checkbox"]').prop('checked', false);
-
-    $(datatable.fnGetNodes()).find(':checkbox').each(function () {
+    $(datatable.$('tr', {"filter": "applied"})).find(':checkbox').each(function () {
       $(this).prop('checked', false);
     });
-
 
     return false;
   });
