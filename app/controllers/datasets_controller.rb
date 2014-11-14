@@ -4,7 +4,7 @@ class DatasetsController < ApplicationController
     controller_instance.send(:valid_role?, User::ROLES[:user])
   end
 
-  layout "explore_data", only: [:show, :new, :edit, :warnings, :exclude_questions, :exclude_answers]
+  layout "explore_data", only: [:show, :new, :edit, :warnings, :exclude_questions, :exclude_answers, :can_exclude_answers]
 
   # GET /datasets
   # GET /datasets.json
@@ -295,4 +295,60 @@ class DatasetsController < ApplicationController
       return
     end
   end
+
+  # mark which answers users can select to not include in the analysis
+  # during analysis
+  def can_exclude_answers
+    @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).first
+
+    if @dataset.present?
+
+      respond_to do |format|
+        format.html {
+          @js.push("exclude_answers.js")
+          @css.push("exclude_answers.css")
+
+          @css.push("datasets.css")
+          @is_admin = true
+          @show_title = true
+          @dataset_url = dataset_path(@dataset)
+
+        }
+        format.js { 
+          @msg = t('app.msgs.answer_can_exclude_saved')
+          @success = true
+          begin
+            # cannot use simple update_attributes for if value was checked but is not now, 
+            # no value exists in params and so no changes take place
+            # -> get ids that are true and set them to true
+            # -> set rest to false
+            answers = params[:dataset][:questions_attributes].map{|kq,vq| vq[:answers_attributes]}
+            true_ids = answers.map{|x| x.values}.flatten.select{|x| x[:can_exclude] == 'true'}.map{|x| x[:id]}
+            false_ids = answers.map{|x| x.values}.flatten.select{|x| x[:can_exclude] != 'true'}.map{|x| x[:id]}
+
+            @dataset.questions.add_answer_can_exclude(true_ids)
+            @dataset.questions.remove_answer_can_exclude(false_ids)
+
+            if !@dataset.save
+              @msg = @dataset.errors.full_messages
+              @success = false
+            end
+          rescue Exception => e 
+            @msg = t('app.msgs.question_can_exclude_not_saved')
+            @success = false
+
+            # send the error notification
+            ExceptionNotifier::Notifier
+              .exception_notification(request.env, e)
+              .deliver
+          end
+
+        }
+      end
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to datasets_path(:locale => I18n.locale)
+      return
+    end
+  end  
 end

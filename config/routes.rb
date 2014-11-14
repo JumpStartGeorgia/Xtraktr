@@ -22,6 +22,8 @@ BootstrapStarter::Application.routes.draw do
         post 'exclude_questions'
         get 'exclude_answers'
         post 'exclude_answers'
+        get 'can_exclude_answers'
+        post 'can_exclude_answers'
       end
     end
 

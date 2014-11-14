@@ -58,8 +58,14 @@
                   </li>
                   <li role="menuitem">
                     <%= link_to exclude_answers_dataset_path(@dataset) do %>
-                      <span class="glyphicon glyphicon-ok"></span>
+                      <span class="glyphicon glyphicon-ban-circle"></span>
                       <%= t('app.menu.admin_dataset.exlucde_answers') %>
+                    <% end %>
+                  </li>
+                  <li role="menuitem">
+                    <%= link_to can_exclude_answers_dataset_path(@dataset) do %>
+                      <span class="glyphicon glyphicon-ok"></span>
+                      <%= t('app.menu.admin_dataset.can_exlucde_answers') %>
                     <% end %>
                   </li>
                   <li role="menuitem">

@@ -157,6 +157,8 @@ ka:
       question_exclude_not_saved: "An error occurred while saving the exclude question selections."
       answer_exclude_saved: "Exclude answer selections were saved."
       answer_exclude_not_saved: "An error occurred while saving the exclude answer selections."
+      answer_can_exclude_saved: "Can exclude answer selections were saved."
+      answer_can_exclude_not_saved: "An error occurred while saving the can exclude answer selections."
     menu:
       explore_data: Explore Data
       datasets: Datasets
@@ -167,7 +169,8 @@ ka:
         settings: Settings
         warnings: Warnings
         mappable: Make Mappable
-        exlucde_answers: Answers Can Be Excluded
+        can_exlucde_answers: Answers Can Be Excluded
+        exlucde_answers: Exclude Answers
         exclude_questions: Exclude Questions
         delete: Delete
         private_share: Share Private Dataset
@@ -239,10 +242,13 @@ ka:
       no_warnings: Congratulations! Your data file contains no issues that may effect the way the data is analyzed.
     exclude_questions:
       title: "Questions to Exclude from Analysis"
-      explanation: "If you do not want questions to be available to be analyzed, simply select them below."
+      explanation: "Use this page to indicate which questions should not be included during analysis."
     exclude_answers:
       title: "Answers to Exclude from Analysis"
-      explanation: "If you do not want answers to be available to be analyzed, simply select them below."
+      explanation: "Use this page to indicate which answers should not be included during analysis."
+    can_exclude_answers:
+      title: "Answers That Can Be Excluded During Analysis"
+      explanation: "Use this page to indicate which answers can be included during analysis, but have the ability to be excluded (e.g., answers like: Don't Know, Refuse to Answer, etc) ."
   shared:
     explore_data:
       no_matches: Your selections returned no data. Please try again with a different selection.

@@ -116,6 +116,23 @@ class Dataset
       return nil
     end
 
+    # mark the answer can_exclude flag as true for the ids provided
+    def add_answer_can_exclude(ids)
+      map{|x| x.answers}.flatten.select{|x| ids.index(x.id.to_s).present?}.each do |a|
+        a.can_exclude = true
+      end
+      return nil
+    end
+
+    # mark the answer can_exclude flag as false for the ids provided
+    def remove_answer_can_exclude(ids)
+      map{|x| x.answers}.flatten.select{|x| ids.index(x.id.to_s).present?}.each do |a|
+        a.can_exclude = false
+      end
+      return nil
+    end
+
+
   end
   accepts_nested_attributes_for :questions
 
