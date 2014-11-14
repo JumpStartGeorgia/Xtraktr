@@ -10,6 +10,8 @@
            msg +
           '</div>';
 
-  $('#flash-message').html(html);
+  $('#flash-message').fadeOut(300, function(){
+    $('#flash-message').html(html).fadeIn(300);
+  });
 
 });
