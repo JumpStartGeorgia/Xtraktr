@@ -6,9 +6,12 @@
 
   <div id="mappable-matching">
 
-    <h2 data-orig="<%= t('.matching_header') %>"></h2>
+    <h2>
+      <%= t('.matching_header', question: @question.text, shapeset: @shapeset.title) %>
+    </h2>
 
-    <p data-orig="<%= t('.matching_explanation') %>">
+    <p>
+      <%= t('.matching_explanation', question: @question.text, shapeset: @shapeset.title) %>
     </p>
 
     <div id="mappable-matching-items">

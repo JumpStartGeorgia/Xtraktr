@@ -297,6 +297,10 @@ en:
       shapeset_label: Map to use
       matching_header: "Mapping '[question]' to '[shapeset]'"
       matching_explanation: "For each answer to '[question]', select the matching map shape from '[shapeset]'."
+    mappable_form_edit:
+      title: "Mappable Question Form"
+      matching_header: "Mapping '%{question}' to '%{shapeset}'"
+      matching_explanation: "For each answer to '%{question}', select the matching map shape from '%{shapeset}'."
   shared:
     explore_data:
       no_matches: Your selections returned no data. Please try again with a different selection.
