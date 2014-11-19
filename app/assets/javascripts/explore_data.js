@@ -103,7 +103,7 @@ function build_highmap(json, filter){
                           enabled: true,
                           color: 'white',
                           formatter: function () {
-                            return this.point.display_name + '<br/>' + Highcharts.numberFormat(this.point.count, 0) + '   (' + this.point.value + '%)';
+                            return this.point.properties.display_name + '<br/>' + Highcharts.numberFormat(this.point.count, 0) + '   (' + this.point.value + '%)';
                           }
                         }
                       }, false);
@@ -160,7 +160,8 @@ function build_highmap(json, filter){
             showInLegend: false,
             tooltip: {
                 headerFormat: '',
-                pointFormat: '{point.display_name}: ' + gon.na
+                pointFormat: '<b>{point.properties.name_en}:</b> ' + gon.na
+                // using name_en in case shape has no data and therefore no display_name
             },
             borderColor: '#909090',
             borderWidth: 1,
