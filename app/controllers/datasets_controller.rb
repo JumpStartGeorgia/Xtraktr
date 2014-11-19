@@ -4,7 +4,7 @@ class DatasetsController < ApplicationController
     controller_instance.send(:valid_role?, User::ROLES[:user])
   end
 
-  layout "explore_data", only: [:show, :new, :edit, :warnings, :exclude_questions, :exclude_answers, :can_exclude_answers]
+  layout "explore_data", except: [:index]
 
   # GET /datasets
   # GET /datasets.json
@@ -29,8 +29,8 @@ class DatasetsController < ApplicationController
       redirect_to datasets_path(:locale => I18n.locale)
       return
     else
-      @is_admin = true
-      @dataset_url = dataset_path(@dataset)
+      add_nav_options(show_title: false)
+
       gon.explore_data = true
       gon.explore_data_ajax_path = dataset_path(:format => :js)
 
@@ -47,11 +47,10 @@ class DatasetsController < ApplicationController
     @dataset = Dataset.new
 
     # add the required assets
-    @css.push("jquery.ui.datepicker.css", "datasets.css")
+    @css.push("jquery.ui.datepicker.css")
     @js.push('jquery.ui.datepicker.js', "datasets.js")
 
-    @show_title = true
-    @is_admin = true
+    add_nav_options(set_url: false)
     
     respond_to do |format|
       format.html # new.html.erb
@@ -73,9 +72,7 @@ class DatasetsController < ApplicationController
       @css.push("jquery.ui.datepicker.css", "datasets.css")
       @js.push('jquery.ui.datepicker.js', "datasets.js")
 
-      @is_admin = true
-      @show_title = true
-      @dataset_url = dataset_path(@dataset)
+      add_nav_options()
     else
       flash[:info] =  t('app.msgs.does_not_exist')
       redirect_to datasets_path(:locale => I18n.locale)
@@ -101,6 +98,8 @@ class DatasetsController < ApplicationController
         # add the required assets
         @css.push("jquery.ui.datepicker.css")
         @js.push('jquery.ui.datepicker.js', "datasets.js")
+
+        add_nav_options()
 
         format.html { render action: "new" }
         format.json { render json: @dataset.errors, status: :unprocessable_entity }
@@ -130,6 +129,8 @@ class DatasetsController < ApplicationController
           # add the required assets
           @css.push("jquery.ui.datepicker.css")
           @js.push('jquery.ui.datepicker.js', "datasets.js")
+
+          add_nav_options()
 
           format.html { render action: "edit" }
           format.json { render json: @dataset.errors, status: :unprocessable_entity }
@@ -170,10 +171,7 @@ class DatasetsController < ApplicationController
       @bad_answers = @dataset.questions_with_bad_answers
       @no_text = @dataset.questions_with_no_text
 
-      @css.push("datasets.css")
-      @is_admin = true
-      @show_title = true
-      @dataset_url = dataset_path(@dataset)
+      add_nav_options()
 
       respond_to do |format|
         format.html # index.html.erb
@@ -197,10 +195,7 @@ class DatasetsController < ApplicationController
           @js.push("exclude_questions.js")
           @css.push("exclude_questions.css")
 
-          @css.push("datasets.css")
-          @is_admin = true
-          @show_title = true
-          @dataset_url = dataset_path(@dataset)
+          add_nav_options()
 
         }
         format.js { 
@@ -252,10 +247,7 @@ class DatasetsController < ApplicationController
           @js.push("exclude_answers.js")
           @css.push("exclude_answers.css")
 
-          @css.push("datasets.css")
-          @is_admin = true
-          @show_title = true
-          @dataset_url = dataset_path(@dataset)
+          add_nav_options()
 
         }
         format.js { 
@@ -308,10 +300,7 @@ class DatasetsController < ApplicationController
           @js.push("exclude_answers.js")
           @css.push("exclude_answers.css")
 
-          @css.push("datasets.css")
-          @is_admin = true
-          @show_title = true
-          @dataset_url = dataset_path(@dataset)
+          add_nav_options()
 
         }
         format.js { 
@@ -351,4 +340,160 @@ class DatasetsController < ApplicationController
       return
     end
   end  
+
+  # show which questions are assign to shape sets
+  def mappable
+    @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).first
+
+    if @dataset.present?
+      @shapeset_count = Shapeset.count
+
+      @mappable = @dataset.questions.mappable
+
+      add_nav_options()
+
+      respond_to do |format|
+        format.html # index.html.erb
+        format.json { render json: @dataset }
+      end
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to datasets_path(:locale => I18n.locale)
+      return
+    end
+  end  
+
+  # assign questions to shape sets
+  def mappable_form
+    @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).first
+
+    if @dataset.present?
+
+      if request.post? && params['map']['answer'].present? && params['map']['answer'].length == params['map']['shapeset'].length
+        mappings = params['map']['answer'].zip(params['map']['shapeset'])
+
+        # assign the shape to the question
+        if @dataset.map_question_to_shape(params['question'], params['shapeset'], mappings)
+          flash[:success] =  t('app.msgs.mapping_saved')
+          redirect_to mappable_dataset_path(@dataset)
+          return
+        else
+          flash[:warning] =  t('app.msgs.mapping_not_saved')
+        end
+
+      end
+
+      @shapesets = Shapeset.sorted
+      gon.shapesets = []
+      @shapesets.each do |shape|
+        gon.shapesets << {id: shape.id, names: shape.names.sort}
+      end
+
+      @not_mappable = @dataset.questions.not_mappable
+      gon.questions = []
+      @not_mappable.each do |question|
+        gon.questions << {id: question.id, answers: question.answers.map{|x| {id: x.id, text: x.text}}.sort_by{|x| x[:text]} }
+      end
+
+      add_nav_options()
+
+      @css.push('bootstrap-select.min.css', 'mappable_form.css')
+      @js.push('bootstrap-select.min.js', 'mappable_form.js')
+
+      respond_to do |format|
+        format.html # index.html.erb
+        format.json { render json: @dataset }
+      end
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to datasets_path(:locale => I18n.locale)
+      return
+    end
+  end  
+
+  # edit an existing question mapping
+  def mappable_form_edit
+    @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).first
+
+    if @dataset.present? && params[:question_id].present?
+
+      if request.post? && params['map']['answer'].present? && params['map']['answer'].length == params['map']['shapeset'].length
+        mappings = params['map']['answer'].zip(params['map']['shapeset'])
+
+        # assign the shape to the question
+        if @dataset.map_question_to_shape(params['question_id'], params['shapeset_id'], mappings)
+          flash[:success] =  t('app.msgs.mapping_saved')
+          redirect_to mappable_dataset_path(@dataset)
+          return
+        else
+          flash[:warning] =  t('app.msgs.mapping_not_saved')
+        end
+
+      end
+
+      @question = @dataset.questions.find_by(id: params[:question_id])
+
+      if @question.present? && @question.is_mappable?
+        @shapeset = @question.shapeset
+
+        gon.mappable_form_edit = true
+
+        add_nav_options()
+
+        @css.push('bootstrap-select.min.css', 'mappable_form.css')
+        @js.push('bootstrap-select.min.js', 'mappable_form.js')
+
+        respond_to do |format|
+          format.html # index.html.erb
+          format.json { render json: @dataset }
+        end
+      else
+        flash[:info] =  t('app.msgs.does_not_exist')
+        redirect_to mappable_dataset_path(@dataset)
+        return
+      end
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to datasets_path(:locale => I18n.locale)
+      return
+    end
+  end  
+
+  # DELETE /datasets/1
+  # DELETE /datasets/1.json
+  def remove_mapping
+    @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).first
+    if @dataset.present?
+      if @dataset.remove_question_shape_mapping(params[:question_id])
+        flash[:success] =  t('app.msgs.mapping_deleted')
+      else
+        flash[:warning] =  t('app.msgs.mapping_not_deleted')
+      end
+      respond_to do |format|
+        format.html { redirect_to mappable_dataset_path(@dataset) }
+        format.json { head :no_content }
+      end
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to datasets_path(:locale => I18n.locale)
+      return
+    end
+  end
+
+
+private
+
+  # add options to show the dataset nav bar
+  def add_nav_options(options={})
+    show_title = options[:show_title].nil? ? true : options[:show_title]
+    set_url = options[:set_url].nil? ? true : options[:set_url]
+
+    @css.push("datasets.css")
+    @dataset_url = dataset_path(@dataset) if set_url
+    @is_admin = true
+    
+    @show_title = show_title
+    
+
+  end
 end

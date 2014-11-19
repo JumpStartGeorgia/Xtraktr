@@ -6,6 +6,7 @@ ka:
       page: ტექსტი გვერდებისთვის
       dataset: Dataset
       shapeset: Shapeset
+      question: Question
     attributes:
       user:
         email: ელ.ფოსტა
@@ -159,6 +160,10 @@ ka:
       answer_exclude_not_saved: "An error occurred while saving the exclude answer selections."
       answer_can_exclude_saved: "Can exclude answer selections were saved."
       answer_can_exclude_not_saved: "An error occurred while saving the can exclude answer selections."
+      mapping_saved: "The question was successfully made mappable."
+      mapping_not_save: "An error occurred while making the question mappable."
+      mapping_deleted: "The question is no longer mappable."
+      mapping_not_deleted: "The question mapping could not be deleted."
     menu:
       explore_data: Explore Data
       datasets: Datasets
@@ -249,6 +254,20 @@ ka:
     can_exclude_answers:
       title: "Answers That Can Be Excluded During Analysis"
       explanation: "Use this page to indicate which answers can be included during analysis, but have the ability to be excluded (e.g., answers like: Don't Know, Refuse to Answer, etc) ."
+    mappable:
+      title: "Make Questions Mappable"
+      explanation: "Use this page to indicate which questions are geographic in nature so that the analysis screen can include a map."
+      no_shapes: "Sorry, at this time there are no pre-defined maps on file that you can use."
+      add_shapes: Add Map Shapes
+      add_map_question: Add Mappable Question 
+    mappable_form:
+      title: "Mappable Question Form"
+      no_questions: "There are no questions available in '%{title}' to be made mappable."
+      no_shapes: "Sorry, at this time there are no pre-defined maps on file that you can use."
+      question_label: Question to make mappable
+      shapeset_label: Map to use
+      matching_header: "Mapping '[question]' to '[shapeset]'"
+      matching_explanation: "For each answer to '[question]', select the matching map shape from '[shapeset]'."
   shared:
     explore_data:
       no_matches: Your selections returned no data. Please try again with a different selection.

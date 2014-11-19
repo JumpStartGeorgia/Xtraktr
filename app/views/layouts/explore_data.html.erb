@@ -23,68 +23,7 @@
           <ul class="nav navbar-nav navbar-right">
             <% if @is_admin && @dataset.created_at.present? %>
               <li class="dropdown" role="menuitem">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  <span class="glyphicon glyphicon-pencil"></span>
-                  <%= t('app.menu.admin_dataset.heading') %>
-                  <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu" role="menu">
-                  <li role="menuitem">
-                    <%= link_to edit_dataset_path(@dataset) do %>
-                      <span class="glyphicon glyphicon-cog"></span>
-                      <%= t('app.menu.admin_dataset.settings') %>
-                    <% end %>
-                  </li>
-                  <li role="menuitem">
-                    <%= link_to warnings_dataset_path(@dataset) do %>
-                      <span class="glyphicon glyphicon-exclamation-sign"></span>
-                      <%= t('app.menu.admin_dataset.warnings') %>
-                    <% end %>
-                  </li>
-                  <% if !@dataset.public? %>
-                    <li role="menuitem">
-                      <%= link_to '#private-share', :'data-toggle' => "modal"  do %>
-                        <span class="glyphicon glyphicon-lock"></span>
-                        <%= t('app.menu.admin_dataset.private_share') %>
-                      <% end %>
-                    </li>
-                  <% end %>
-                  <li class="divider"></li>
-                  <li role="menuitem">
-                    <%= link_to exclude_questions_dataset_path(@dataset) do %>
-                      <span class="glyphicon glyphicon-ban-circle"></span>
-                      <%= t('app.menu.admin_dataset.exclude_questions') %>
-                    <% end %>
-                  </li>
-                  <li role="menuitem">
-                    <%= link_to exclude_answers_dataset_path(@dataset) do %>
-                      <span class="glyphicon glyphicon-ban-circle"></span>
-                      <%= t('app.menu.admin_dataset.exlucde_answers') %>
-                    <% end %>
-                  </li>
-                  <li role="menuitem">
-                    <%= link_to can_exclude_answers_dataset_path(@dataset) do %>
-                      <span class="glyphicon glyphicon-ok"></span>
-                      <%= t('app.menu.admin_dataset.can_exlucde_answers') %>
-                    <% end %>
-                  </li>
-                  <li role="menuitem">
-                    <%= link_to '#' do %>
-                      <span class="glyphicon glyphicon-map-marker"></span>
-                      <%= t('app.menu.admin_dataset.mappable') %>
-                    <% end %>
-                  </li>
-                  <li class="divider"></li>
-                  <li role="menuitem">
-                    <%= link_to dataset_path(@dataset),
-                        :method => 'delete',
-                        :data => { :confirm => t("helpers.links.confirm") } do %>
-  
-                      <span class="glyphicon glyphicon-remove-circle"></span>
-                      <%= t('app.menu.admin_dataset.delete') %>
-                    <% end %>
-                  </li>
-                </ul>
+                <%= render partial: 'layouts/dataset_menu', locals: {dataset: @dataset} %>
               </li>
             <% end %>
             <li role="menuitem">

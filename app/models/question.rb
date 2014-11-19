@@ -12,10 +12,12 @@ class Question
   field :code, type: String
   field :original_code, type: String
   field :text, type: String
+  # whether or not the questions has answers
   field :has_code_answers, type: Boolean, default: false
-  field :is_mappable, type: Boolean, default: false
-  # indicate whether or not the question should not be included in the analysis
+  # whether or not the question should not be included in the analysis
   field :exclude, type: Boolean, default: false
+  # whether or not the question is tied to a shapeset
+  field :is_mappable, type: Boolean, default: false
 
   embedded_in :dataset
   embeds_many :answers do

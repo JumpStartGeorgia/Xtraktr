@@ -132,6 +132,15 @@ class Dataset
       return nil
     end
 
+    # get questions that are mappable
+    def mappable
+      where(:is_mappable => true, :has_code_answers => true)
+    end
+
+    # get questions that are not mappable
+    def not_mappable
+      where(:is_mappable => false, :has_code_answers => true)
+    end
 
   end
   accepts_nested_attributes_for :questions
@@ -325,6 +334,68 @@ class Dataset
 
   #############################
 
+  # assign a question to a shapeset
+  # - question_id - id of question to update
+  # - shapeset_id - id of shapeset to assign 
+  # - mappings - array of arrays containing answer id and shape name
+  #   - [ [id, name], [id, name], ... ]
+  def map_question_to_shape(question_id, shapeset_id, mappings)
+    logger.debug "====== map_question_to_shape start"
+    success = false
+    # get the question
+    q = self.questions.find_by(id: question_id)
+
+    if q.present?
+      logger.debug "====== found question"
+      # set the shapeset
+      q.shapeset_id = shapeset_id
+
+      # set the shape name for each answer
+      logger.debug "====== #{mappings.length} mappings"
+      mappings.each do |mapping|
+        logger.debug "====== mapping = #{mapping}"
+        # find answer
+        a = q.answers.find_by(id: mapping[0])
+
+        logger.debug "====== found answer = #{a.present?}"
+
+        # assign name
+        a.shape_name = mapping[1] if a.present?
+      end
+
+      # save
+      success = q.save
+    end
+
+    logger.debug "====== success = #{success}"
+
+    return success
+  end
+
+  # remove all map settings for this question
+  def remove_question_shape_mapping(question_id)
+    success = false
+    # get the question
+    q = self.questions.find_by(id: question_id)
+
+    if q.present?
+      # reset shape id
+      q.shapeset_id = nil
+
+      # reset shape name for each answer
+      q.answers.each do |answer|
+        answer.shape_name = nil
+      end
+
+      # save
+      success = q.save
+    end
+
+    return success
+  end
+
+  #############################
+
 
   ### perform a summary analysis of one question_code in 
   ### the data_items
@@ -425,8 +496,8 @@ class Dataset
           result[:map][:question_code] = question_code
 
           result[:row_answers].each_with_index do |row_answer, row_index|
-            # store in highmaps format: {name, value, count}
-            result[:map][:data] << {:name => row_answer.text, :value => result[:percents][row_index], :count => result[:counts][row_index]}
+            # store in highmaps format: {shape_name, display_name, value, count}
+            result[:map][:data] << {:shape_name => row_answer.shape_name, :display_name => row_answer.text, :value => result[:percents][row_index], :count => result[:counts][row_index]}
           end
         end
 
@@ -582,7 +653,7 @@ class Dataset
 
           # if the row is the mappable, recompute percents so columns add up to 100%
           if row_question.is_mappable?
-            result[:map][:question_code] = row
+            result[:map][:question_code] = question_code1
             result[:map][:filter] = col_question.text
             result[:map][:filters] = result[:column_answers]
 
@@ -608,12 +679,12 @@ class Dataset
               # now store the results for each item
               (0..result[:row_answers].length-1).each do |index|
                 # store in highmaps format: {name, value, count}
-                result[:map][:data][col_answer.value.to_s] << {:name => result[:row_answers][index].text, :value => percents[col_index][index], :count => counts[col_index][index]}
+                result[:map][:data][col_answer.value.to_s] << {:shape_name => result[:row_answers][index].shape_name, :display_name => result[:row_answers][index].text, :value => percents[col_index][index], :count => counts[col_index][index]}
               end 
             end
 
           else
-            result[:map][:question_code] = col
+            result[:map][:question_code] = question_code2
             result[:map][:filter] = row_question.text
             result[:map][:filters] = result[:row_answers]
 
@@ -623,8 +694,8 @@ class Dataset
 
               # now store the results for each item
               (0..result[:column_answers].length-1).each do |index|
-                # store in highmaps format: {name, value, count}
-                result[:map][:data][row_answer.value.to_s] << {:name => result[:column_answers][index].text, :value => result[:percents][row_index][index], :count => result[:counts][row_index][index]}
+                # store in highmaps format: {shape_name, display_name, value, count}
+                result[:map][:data][row_answer.value.to_s] << {:shape_name => result[:column_answers][index].shape_name, :display_name => result[:column_answers][index].text, :value => result[:percents][row_index][index], :count => result[:counts][row_index][index]}
               end 
             end
           end

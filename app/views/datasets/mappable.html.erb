@@ -1,0 +1,50 @@
+<% title t('.title') %>
+
+<% if @shapeset_count > 0 %>
+
+  <div>
+    <%= link_to t('.add_map_question'), mappable_form_dataset_path(@dataset), :class => 'btn btn-success' %>
+  </div>
+
+  <% if @mappable.present? %>
+
+    <table class="table table-striped display">
+      <thead>
+        <tr>
+          <th><%= Question.model_name.human %></th>
+          <th><%= Shapeset.model_name.human %></th>
+          <th><%=t '.actions', :default => t("helpers.actions") %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @mappable.each do |question| %>
+          <tr>
+            <td><%= question.text %></td>
+            <td><%= question.shapeset.title %></td>
+            <td>
+              <%= link_to t('app.buttons.edit'),
+                          mappable_form_edit_dataset_path(:id => @dataset, :question_id => question.id), :class => 'btn btn-mini btn-default' %>
+              <%= link_to t('app.buttons.delete'),
+                          remove_mapping_dataset_path(:id => @dataset, :question_id => question.id),
+                          :method => :delete,
+                          :data => { :confirm => I18n.t("helpers.links.confirm") },
+                          :class => 'btn btn-mini btn-danger' %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+
+
+
+<% else %>
+
+  <p>
+    <%= t('.no_shapes') %>
+    <% if current_user.role?(User::ROLES[:admin]) %>
+      <%= link_to t('.add_shapes'), admin_shapesets_path %>
+    <% end %>
+  </p>
+
+<% end %>

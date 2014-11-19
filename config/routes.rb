@@ -24,6 +24,12 @@ BootstrapStarter::Application.routes.draw do
         post 'exclude_answers'
         get 'can_exclude_answers'
         post 'can_exclude_answers'
+        get 'mappable'
+        get 'mappable_form'
+        post 'mappable_form'
+        get 'mappable_form_edit'
+        post 'mappable_form_edit'
+        delete 'remove_mapping'
       end
     end
 

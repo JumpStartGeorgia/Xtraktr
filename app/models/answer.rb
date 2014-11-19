@@ -6,6 +6,9 @@ class Answer
   field :can_exclude, type: Boolean, default: false
   field :sort_order, type: Integer, default: 1
   field :exclude, type: Boolean, default: false
+  # name of the shape that this answer maps to
+  # - only populated if the question is mappable
+  field :shape_name, type: String
 
   embedded_in :question
 

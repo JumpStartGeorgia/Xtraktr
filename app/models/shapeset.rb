@@ -15,7 +15,7 @@ class Shapeset
   field :description, type: String
   # hold the names of the shapes for each locale
   # format: {en: [name1, name2, ], ka: [name1, name2, ]}
-  field :names, type: Array, localize: true
+  field :names, type: Array, default: [], localize: true
 
   #############################
   # indexes
@@ -49,9 +49,8 @@ class Shapeset
         keys = json['features'].first['properties'].keys.select{|x| x.match(/name_?/)}
         if keys.present?
           locales = keys.map{|x| x.gsub(KEY_NAME, '')}
-          self.names = {}
           locales.each do |locale|
-            self.names[locale] = json['features'].map{|x| x['properties'][KEY_NAME + locale]}
+            self.names_translations[locale] = json['features'].map{|x| x['properties'][KEY_NAME + locale]}
           end
         end
       end

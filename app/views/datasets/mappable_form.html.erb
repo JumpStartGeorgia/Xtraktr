@@ -1,0 +1,52 @@
+<% title t('.title') %>
+
+<% if @not_mappable.present? %>
+  <% if @shapesets.present? %>
+
+    <%= form_tag mappable_form_dataset_path(@dataset), id: 'frm-mappable-question' do %>
+
+      <div id="mappable-select" class="row">
+        <div class="col-sm-6">
+          <%= label_tag :question, t('.question_label') %>
+          <%= select_tag :question, options_from_collection_for_select(@not_mappable, "id", "text"),
+            :class => 'selectpicker-mappable', :'data-width' => '100%', :'data-live-search' => true %>
+        </div>
+        <div class="col-sm-6">
+          <%= label_tag :shapeset, t('.shapeset_label') %>
+          <%= select_tag :shapeset, options_from_collection_for_select(@shapesets, "id", "title"),
+            :class => 'selectpicker-mappable', :'data-width' => '100%', :'data-live-search' => true %>
+        </div>
+      </div>
+
+      <div id="mappable-matching">
+        <hr />
+
+        <h2 data-orig="<%= t('.matching_header') %>"></h2>
+
+        <p data-orig="<%= t('.matching_explanation') %>">
+        </p>
+
+        <div id="mappable-matching-items">
+        </div>
+
+        <div class="form-group">
+          <%= submit_tag nil, :class => 'btn btn-primary' %> 
+          <%= link_to t('helpers.links.cancel'), mappable_dataset_path(@dataset), :class => 'btn btn-mini btn-warning' %>
+        </div>
+      </div>
+
+    <% end %>
+  <% else %>
+
+    <p>
+      <%= t('.no_shapes') %>
+    </p>
+
+  <% end %>
+<% else %>
+
+  <p>
+    <%= t('.no_questions', title: @dataset.title) %>
+  </p>
+
+<% end %>

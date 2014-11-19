@@ -103,7 +103,7 @@ function build_highmap(json, filter){
                           enabled: true,
                           color: 'white',
                           formatter: function () {
-                            return this.point.name + '<br/>' + Highcharts.numberFormat(this.point.count, 0) + '   (' + this.point.value + '%)';
+                            return this.point.display_name + '<br/>' + Highcharts.numberFormat(this.point.count, 0) + '   (' + this.point.value + '%)';
                           }
                         }
                       }, false);
@@ -160,7 +160,7 @@ function build_highmap(json, filter){
             showInLegend: false,
             tooltip: {
                 headerFormat: '',
-                pointFormat: '{point.name}: ' + gon.na
+                pointFormat: '{point.display_name}: ' + gon.na
             },
             borderColor: '#909090',
             borderWidth: 1,
@@ -177,11 +177,11 @@ function build_highmap(json, filter){
             data : data,
             name: json.row_question,
             mapData: highmap_shapes[json.map.question_code],
-            joinBy: ['name_en', 'name'],
+            joinBy: ['name_en', 'shape_name'],
             allAreas: false, // if shape does not have value, do not show it so base layer above will show
             tooltip: {
                 headerFormat: '',
-                pointFormat: '<b>{point.name}:</b> {point.count:,.0f} ({point.value}%)'    
+                pointFormat: '<b>{point.display_name}:</b> {point.count:,.0f} ({point.value}%)'    
             },
             borderColor: '#909090',
             borderWidth: 1,
@@ -989,6 +989,6 @@ $(document).ready(function() {
         get_explore_data(true);
       });
     });  
-}
+  }
 });
 
