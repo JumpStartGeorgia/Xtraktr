@@ -33,15 +33,33 @@ print(paste('spss file for codes = ', args[3]))
 print(paste('csv file for questions labels = ', args[4]))
 print(paste('text file for answers labels = ', args[5]))
 
+#############################
+# first, read in the data using value labels so can generate sps file with answers in them
+#############################
 # read in spss
 # - need value.label to be true so that label values are available on export
-data <- read.spss(args[1], use.value.label=T, to.data.frame=F)
+data <- read.spss(args[1], use.value.labels=T, to.data.frame=F)
 
 # basic spss export
 # canont use: write.foreign(data, 'out.csv', 'code.sps', package="SPSS")
 # for may get error: cannot abbreviate the variable names to eight or fewer letters
 # so use the following instead:
-foreign:::writeForeignSPSS(data, args[2], args[3], varnames=names(data))
+foreign:::writeForeignSPSS(data, gsub('.csv$','_bad.csv',args[2]), args[3], varnames=names(data))
+#foreign:::writeForeignSPSS(data, args[2], args[3], varnames=attr(data, 'variable.labels'))
+
+
+#############################
+# now, read in the data not using value labels so can generate all other files without the code values being changed
+#############################
+# read in spss
+# - need value.label to be true so that label values are available on export
+data <- read.spss(args[1], use.value.labels=F, to.data.frame=F)
+
+# basic spss export
+# canont use: write.foreign(data, 'out.csv', 'code.sps', package="SPSS")
+# for may get error: cannot abbreviate the variable names to eight or fewer letters
+# so use the following instead:
+foreign:::writeForeignSPSS(data, args[2], gsub('.sps$','_bad.sps',args[3]), varnames=names(data))
 #foreign:::writeForeignSPSS(data, args[2], args[3], varnames=attr(data, 'variable.labels'))
 
 # write out the question labels

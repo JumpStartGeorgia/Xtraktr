@@ -34,6 +34,9 @@ print(paste('spss file for codes = ', args[3]))
 print(paste('csv file for questions labels = ', args[4]))
 print(paste('text file for answers labels = ', args[5]))
 
+#############################
+# first, read in the data using factors so can generate sps file with answers in them
+#############################
 # read in dta
 # - need value.label to be true so that label values are available on export
 data <- read.dta(args[1], convert.factors = T)
@@ -42,7 +45,20 @@ data <- read.dta(args[1], convert.factors = T)
 # canont use: write.foreign(data, 'out.csv', 'code.sps', package="SPSS")
 # for may get error: cannot abbreviate the variable names to eight or fewer letters
 # so use the following instead:
-foreign:::writeForeignSPSS(data, args[2], args[3], varnames=names(data))
+foreign:::writeForeignSPSS(data, gsub('.csv$','_bad.csv',args[2]), args[3], varnames=names(data))
+
+#############################
+# now, read in the data not using factors so can generate all other files without the code values being changed
+#############################
+# read in dta
+# - need value.label to be true so that label values are available on export
+data <- read.dta(args[1], convert.factors = F)
+
+# basic spss export
+# canont use: write.foreign(data, 'out.csv', 'code.sps', package="SPSS")
+# for may get error: cannot abbreviate the variable names to eight or fewer letters
+# so use the following instead:
+foreign:::writeForeignSPSS(data, args[2], gsub('.sps$','_bad.sps',args[3]), varnames=names(data))
 
 # write out the question labels
 # dta does not include the codes in var.labels, so have to combine them by hand
@@ -59,7 +75,8 @@ sink()
 table <- attr(data, 'label.table')
 sink(args[5])
 # for each question
-for (i in 1:length(table)){
+# - questions are in reverse order, so go backwards
+for (i in length(table):1){
   # only continue if the question has answers
   if (length(unlist(table[i])) != 0){
     # for each answer in this question
