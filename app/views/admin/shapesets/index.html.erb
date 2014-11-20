@@ -12,6 +12,7 @@
   <thead>
     <tr>
       <th><%= model_class.human_attribute_name(:title) %></th>
+      <th><%= model_class.human_attribute_name(:source) %></th>
       <th><%= model_class.human_attribute_name(:descritpion) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
@@ -20,6 +21,7 @@
     <% @shapesets.each do |shapeset| %>
       <tr>
         <td><%= shapeset.title %></td>
+        <td><%= shapeset.source %></td>
         <td><%= simple_format_no_tags(shapeset.description, {}, {sanitize: false}) %></td>
         <td>
           <%= link_to t('app.buttons.edit'),

@@ -51,6 +51,8 @@ ka:
         title: Title
         description: Description
         shapefile: GeoJSON File
+        source: Source of Shapeset
+        source_url: URL to Souce
     errors:
       messages:
         required_field: "სავალდებულო ველი"

@@ -18,6 +18,13 @@
 <p><strong><%= model_class.human_attribute_name(:title) %>:</strong>
 <%= @shapeset.title %></p>
 
+<p><strong><%= model_class.human_attribute_name(:source) %>:</strong>
+<%= @shapeset.source %></p>
+
+<p><strong><%= model_class.human_attribute_name(:source_url) %>:</strong>
+  <%= auto_link(@shapeset.source_url, :html => { :target => '_blank' }) if @shapeset.source_url.present? %>
+</p>
+
 <p><strong><%= model_class.human_attribute_name(:description) %>:</strong></p>
 <div class="tinymce_format">
   <%= simple_format_no_tags(@shapeset.description, {}, {sanitize: false}) %>

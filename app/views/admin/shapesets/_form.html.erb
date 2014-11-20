@@ -6,6 +6,8 @@
 
   <%= f.inputs do %>
     <%= f.input :title %>
+    <%= f.input :source %>
+    <%= f.input :source_url, as: :url %>
     <%= f.input :description, :as => :text, rows: 10, :input_html => { class: 'tinymce' } %>
     <%= f.input :shapefile, :as => :file, :input_html => { accept:"text/plain, application/json, application/octet-stream" }  %> 
 

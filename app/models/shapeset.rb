@@ -13,6 +13,8 @@ class Shapeset
 
   field :title, type: String
   field :description, type: String
+  field :source, type: String
+  field :source_url, type: String
   # hold the names of the shapes for each locale
   # format: {en: [name1, name2, ], ka: [name1, name2, ]}
   field :names, type: Array, default: [], localize: true
@@ -24,14 +26,15 @@ class Shapeset
 
   #############################
   # Validations
-  validates_presence_of :title
+  validates_presence_of :title, :source
   validates_attachment :shapefile, :presence => true, 
       :content_type => { :content_type => ["text/plain", "application/json", "application/octet-stream"] }
   validates_attachment_file_name :shapefile, :matches => [/geojson\Z/, /json\Z/]
+  validates :source_url, :format => {:with => URI::regexp(['http','https'])}, allow_blank: true
 
   #############################
   
-  attr_accessible :title, :description, :shapefile, :names, :user_id
+  attr_accessible :title, :description, :shapefile, :names, :user_id, :source, :source_url
 
   KEY_NAME = 'name_'
 
