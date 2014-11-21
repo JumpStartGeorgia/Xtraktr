@@ -471,6 +471,7 @@ private
   # strip the string and remove and bad characters
   # - <92> = '
   # - \x92 = '
+  # - \xa0 = space
   def clean_text(str, options={})
     options[:format_code] = false if options[:format_code].nil?
 
@@ -480,7 +481,7 @@ private
         x.gsub!('.', '|')
         x.downcase! 
       end
-      return x.gsub("<92>", "'").gsub("\\x92", "'").chomp.strip
+      return x.gsub("<92>", "'").gsub("\\x92", "'").gsub("\\xa0", " ").chomp.strip
     else
       return str
     end
