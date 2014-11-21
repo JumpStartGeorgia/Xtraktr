@@ -342,10 +342,13 @@ module ProcessDataFile
     result = system 'Rscript', '--default-packages=foreign,MASS', file_r, file_to_process, file_data, file_sps, file_questions, file_answers_complete
 
     if result.present?
+      # the questions need to be put into a csv format like is returned from spss so can use the common processing code above
+
       puts "=============================="
       puts "reading in questions from #{file_questions} and converting to csv"
-      # format of each line of file is: [1] "Question Code || Question Text"
+      # format of each line of file is: [1] "Question Code || Question Text || Variable Code"
       questions_formatted = []
+      has_var_questions = false
       if File.exists?(file_questions)
         line_number = 0
         File.open(file_questions, "r") do |f|
@@ -353,9 +356,12 @@ module ProcessDataFile
             # take out the [1] " at the beginning and the closing "
             question = clean_text(line).gsub('[1] "', '').gsub(/\"$/, '')
             values = question.split(' || ')
-            if values.length.between?(1,2)
+            if values.length.between?(1,3)
+              # record that there are variables being used in this dataset
+              has_var_questions = true if values.length == 3 && has_var_questions == false
+
               # save for writing to csv
-              questions_formatted << [clean_text(values[0]), values[1].present? ? clean_text(values[1]) : nil]
+              questions_formatted << [clean_text(values[0]), values[1].present? ? clean_text(values[1]) : nil, values[2].present? ? clean_text(values[2]) : nil]
             else
               puts "******************************"
               puts "ERROR"
@@ -378,6 +384,82 @@ module ProcessDataFile
           end
         end
       end
+
+      puts "=============================="
+      # STATA files might use variables to define the answers so the variable answer set can easily be re-used
+      # if this file is using variables, then create the answers file using the correct code values
+      # if not, make a copy of the answer file with the proper name
+      temp_file = file_answers_complete.gsub(/.csv$/, '_temp.csv')
+
+      if has_var_questions
+        puts "--- the file IS using variables for the answers so NEED to re-process the answer file"
+
+        puts "reading in answers with variables from #{temp_file} and re-creating using correct question codes"
+        # format of each line of file is: [1] "Variable Code || Answer Value || Answer Text"
+        # need format to be: [1] "Question Code || Answer Value || Answer Text"
+        temp_answers_formatted = []
+        if File.exists?(temp_file)
+          line_number = 0
+          File.open(temp_file, "r") do |f|
+            f.each_line do |line|
+              # take out the [1] " at the beginning and the closing "
+              answer = clean_text(line).gsub('[1] "', '').gsub(/\"$/, '')
+              values = answer.split(' || ')
+              if values.length == 3
+                temp_answers_formatted << [clean_text(values[0]), clean_text(values[1]), clean_text(values[2])]
+              else
+                puts "******************************"
+                puts "ERROR"
+                puts "An error occurred on line #{line_number} of #{temp_file} while parsing the questions."
+                puts "This line was not in the correct format of: [1] \"Question Code || Answer Value || Answer Text\""
+                puts "******************************"
+                break
+              end
+            end
+          end   
+        end   
+
+        if temp_answers_formatted.present?
+          # now have answers
+          # build correct answer file by going through each question and seeing if it has answers
+          # if so, add to array that will be used to write out to file
+          # correct format is: [1] "Question Code || Answer Value || Answer Text"
+          # - this format is needed so common processing code above will read it and process it properly
+          answers_formatted = []
+          questions_formatted.each do |question|
+            code = question[0]
+            code = question[2] if question[2].present?
+
+            matches = temp_answers_formatted.select{|x| x[0].downcase == code.downcase}
+
+            if matches.present?
+              # found answers for this question
+              answers_formatted << matches.map{|match| "#{question[0]} || #{match[1]} || #{match[2]}"}
+            end
+          end
+
+          # get rid of the nested arrays
+          answers_formatted.flatten!
+
+          # write the re-formatted answers to csv file
+          if answers_formatted.present?
+            puts "saving re-formatted answers with correct question code to csv"
+            puts "++ - there were #{answers_formatted.length} total answers recorded"
+            # correct format is: [1] "Question Code || Answer Value || Answer Text"
+            File.open(file_answers_complete, 'w') do |f|
+              answers_formatted.each do |answer|
+                f << %Q{[1] "#{answer}"}
+                f << "\n"
+              end
+            end
+          end
+        end
+      else
+        puts "--- the file is not using variables for the answers so no need to re-process the answer file"
+        # just make a copy of the file using the correct name
+        FileUtils.cp temp_file file_answers_complete
+      end
+
     end
 
     return result

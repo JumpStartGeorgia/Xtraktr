@@ -63,17 +63,19 @@ foreign:::writeForeignSPSS(data, args[2], gsub('.sps$','_bad.sps',args[3]), varn
 # write out the question labels
 # dta does not include the codes in var.labels, so have to combine them by hand
 # using hack of: code || text
+var <- attr(data, 'var.labels')
+val <- attr(data, 'val.labels')
 sink(args[4])
 # for each question
 for (i in 1:length(names(data))){
-  # write to file as code || text
-  print(paste(c(names(data)[i], attr(data, 'var.labels')[i]), collapse=" || "))
+  # write to file as code || text || var code
+  print(paste(c(names(data)[i], var[i], val[i]), collapse=" || "))
 }
 sink()
 
 # write out the full list of questions that have answers
 table <- attr(data, 'label.table')
-sink(args[5])
+sink(gsub('.csv$','_temp.csv',args[5]))
 # for each question
 # - questions are in reverse order, so go backwards
 for (i in length(table):1){
