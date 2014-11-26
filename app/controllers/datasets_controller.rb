@@ -99,7 +99,7 @@ class DatasetsController < ApplicationController
         @css.push("jquery.ui.datepicker.css")
         @js.push('jquery.ui.datepicker.js', "datasets.js")
 
-        add_nav_options()
+        add_nav_options({show_title: false, set_url: false})
 
         format.html { render action: "new" }
         format.json { render json: @dataset.errors, status: :unprocessable_entity }
