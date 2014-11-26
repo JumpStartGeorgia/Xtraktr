@@ -12,6 +12,12 @@
                 </a>
                 <ul class="dropdown-menu" role="menu">
                   <li role="menuitem">
+                    <%= link_to dataset_path(dataset) do %>
+                      <span class="glyphicon glyphicon-search"></span>
+                      <%= t('app.menu.admin_dataset.explore_data') %>
+                    <% end %>
+                  </li>
+                  <li role="menuitem">
                     <%= link_to edit_dataset_path(dataset) do %>
                       <span class="glyphicon glyphicon-cog"></span>
                       <%= t('app.menu.admin_dataset.settings') %>

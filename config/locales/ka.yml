@@ -201,6 +201,7 @@ ka:
       about_dataset: About 
       all_datasets: All Datasets
       admin_dataset:
+        explore_data: Explore Data
         heading: Dataset Options
         settings: Settings
         warnings: Warnings
