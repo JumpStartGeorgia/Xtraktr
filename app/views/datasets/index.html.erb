@@ -11,6 +11,7 @@
   <thead>
     <tr>
       <th><%= model_class.human_attribute_name(:title) %></th>
+      <th><%= model_class.human_attribute_name(:source) %></th>
       <th><%= model_class.human_attribute_name(:public) %></th>
       <th><%= model_class.human_attribute_name(:stats) %></th>
       <th><%= model_class.human_attribute_name(:has_warnings) %></th>
@@ -21,6 +22,7 @@
     <% @datasets.each do |dataset| %>
       <tr>
         <td><%= link_to dataset.title, dataset_path(dataset) %></td>
+        <td><%= dataset.source %></td>
         <td><%= format_dataset_public_status(dataset.public) %></td>
         <td>
           <%= t('.stats.data_records') %>: <%= number_with_delimiter(dataset.stats.data_records) %>

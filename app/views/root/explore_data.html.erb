@@ -1,20 +1,34 @@
+<%- model_class = Dataset -%>
+
 <% title t('.title') %>
 
 <% if @datasets.present? %>
-  <% @datasets.each do |dataset| %>
-
-    <div class="col-sm-4">
-      <h2><%= dataset.title %></h2>
-      <% if dataset.description.present? %>
-        <div class="tinymce_format">
-          <%= simple_format_no_tags(dataset.description, {}, {sanitize: false}) %>
+  <% @datasets.each_with_index do |dataset, index| %>
+    <% if index == 0 || index%3 == 0 %>
+      <% if index != 0 %>
         </div>
       <% end %>
-      <div class="pull-right">
-        <%= link_to 'view data', explore_data_show_path(dataset), :class => 'btn btn-default' %>
-      </div>
-    </div>
+      <div class="row">
+    <% end %>
 
+      <div class="col-sm-4">
+        <h2><%= dataset.title %></h2>
+        <% if dataset.description.present? %>
+          <div class="tinymce_format">
+            <%= simple_format_no_tags(dataset.description, {}, {sanitize: false}) %>
+          </div>
+        <% end %>
+        <div class="pull-left">
+          <%= "#{model_class.human_attribute_name(:source)}: #{dataset.source}" %>
+        </div>
+        <div class="pull-right">
+          <%= link_to 'view data', explore_data_show_path(dataset), :class => 'btn btn-default' %>
+        </div>
+      </div>
+
+    <% if index == @datasets.length-1 %>
+      </div>
+    <% end %>
   <% end %>
 <% else %>
   <p>
