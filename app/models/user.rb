@@ -64,14 +64,12 @@ class User
   index({ :email => 1}, { background: true, unique: true })
   index({ :role => 1}, {background: true})
   index({ :provider => 1, :role => 1}, {background: true})
-  index({ :reset_password_token => 1}, { background: true, unique: true })
+  index({ :reset_password_token => 1}, { background: true, unique: true, sparse: true })
 
   #############################
 
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :role,
-                  :provider, :uid, :nickname, :avatar
-
-  validates :role, :presence => true
+  attr_accessible :email, :password, :password_confirmation, :remember_me, 
+                  :role, :provider, :uid, :nickname, :avatar
 
   ####################
 
@@ -79,6 +77,8 @@ class User
 
   def create_nickname
     self.nickname = self.email.split('@')[0] if self.nickname.blank? && self.email.present?
+
+    return true
   end
 
   #############################
