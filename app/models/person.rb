@@ -1,7 +1,7 @@
-class Person
+class Person < CustomTranslation
   include Mongoid::Document
   field :age, type: Integer
-  field :name
+  field :name, localize: true
   field :sdate
   embeds_many :questions
   accepts_nested_attributes_for :questions
@@ -24,6 +24,24 @@ class Person
     end
   end
   accepts_nested_attributes_for :data_items
+
+
+  def name
+    get_translation(self.name_translations, 'es')
+  end
+
+  # def get_translations(obj, locale, default_locale=I18n.default_locale)
+  #   orig_locale = I18n.locale
+  #   I18n.locale = locale.to_sym
+
+  #   puts "locale = #{I18n.locale}"
+  #   text = obj[I18n.locale.to_s]
+  #   text = obj[default_locale.to_s] if text.blank?
+
+  #   I18n.locale = orig_locale
+
+  #   return text
+  # end
 
   def test(code)
     x = self.data_items.select{|x| x.code == code}.first

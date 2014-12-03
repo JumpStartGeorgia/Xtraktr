@@ -30,6 +30,7 @@ class Admin::ShapesetsController < ApplicationController
   # GET /shapesets/new.json
   def new
     @shapeset = Shapeset.new
+    @languages = Language.sorted
 
     respond_to do |format|
       format.html # new.html.erb
@@ -40,6 +41,7 @@ class Admin::ShapesetsController < ApplicationController
   # GET /shapesets/1/edit
   def edit
     @shapeset = Shapeset.find(params[:id])
+    @languages = Language.sorted
   end
 
   # POST /shapesets
@@ -52,6 +54,7 @@ class Admin::ShapesetsController < ApplicationController
         format.html { redirect_to admin_shapeset_path(@shapeset), notice: t('app.msgs.success_created', :obj => t('mongoid.models.shapeset')) }
         format.json { render json: @shapeset, status: :created, location: @shapeset }
       else
+        @languages = Language.sorted
         format.html { render action: "new" }
         format.json { render json: @shapeset.errors, status: :unprocessable_entity }
       end
@@ -70,6 +73,7 @@ class Admin::ShapesetsController < ApplicationController
         format.html { redirect_to admin_shapeset_path(@shapeset), notice: t('app.msgs.success_updated', :obj => t('mongoid.models.shapeset')) }
         format.json { head :no_content }
       else
+        @languages = Language.sorted
         format.html { render action: "edit" }
         format.json { render json: @shapeset.errors, status: :unprocessable_entity }
       end

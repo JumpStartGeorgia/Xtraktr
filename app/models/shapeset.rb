@@ -1,4 +1,4 @@
-class Shapeset
+class Shapeset < CustomTranslation
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::Paperclip
@@ -11,13 +11,13 @@ class Shapeset
   # paperclip data file storage
   has_mongoid_attached_file :shapefile, :url => "/system/shapesets/:id/original/:filename", :use_timestamp => false
 
-  field :title, type: String
-  field :description, type: String
-  field :source, type: String
-  field :source_url, type: String
-  # hold the names of the shapes for each locale
-  # format: {en: [name1, name2, ], ka: [name1, name2, ]}
+  field :title, type: String, localize: true
+  field :description, type: String, localize: true
+  field :source, type: String, localize: true
+  field :source_url, type: String, localize: true
   field :names, type: Array, default: [], localize: true
+  field :languages, type: Array
+  field :primary_language, type: String
 
   #############################
   # indexes
@@ -26,15 +26,25 @@ class Shapeset
 
   #############################
   # Validations
-  validates_presence_of :title, :source
+  validates_presence_of :title, :source#, :primary_language, :languages
   validates_attachment :shapefile, :presence => true, 
       :content_type => { :content_type => ["text/plain", "application/json", "application/octet-stream"] }
   validates_attachment_file_name :shapefile, :matches => [/geojson\Z/, /json\Z/]
-  validates :source_url, :format => {:with => URI::regexp(['http','https'])}, allow_blank: true
+  validate :url_validation
+
+  # have to do custom url validation because validate format with does not work on localized fields
+  def url_validation
+    self.source_url_translations.keys.each do |key|
+      if self.source_url_translations[key].present? && (self.source_url_translations[key] =~ URI::regexp(['http','https'])).nil?
+        errors.add(:source_url, I18n.t('errors.messages.invalid'))
+        return
+      end
+    end
+  end
 
   #############################
   
-  attr_accessible :title, :description, :shapefile, :names, :user_id, :source, :source_url
+  attr_accessible :title, :description, :shapefile, :names, :user_id, :source, :source_url, :languages, :primary_language
 
   KEY_NAME = 'name_'
 
@@ -83,4 +93,19 @@ class Shapeset
     return JSON.parse(geojson)
   end
 
+
+  #############################
+  ## override get methods for fields that are localized
+  def title
+    get_translation(self.title_translations)
+  end
+  def description
+    get_translation(self.description_translations)
+  end
+  def source
+    get_translation(self.source_translations)
+  end
+  def source_url
+    get_translation(self.source_url_translations)
+  end
 end

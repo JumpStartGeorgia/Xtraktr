@@ -34,7 +34,7 @@ module BootstrapStarter
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     config.time_zone = 'Tbilisi'
 
-    config.i18n.enforce_available_locales = true
+    config.i18n.enforce_available_locales = false
 
     config.i18n.available_locales = [:en, :ka]
 

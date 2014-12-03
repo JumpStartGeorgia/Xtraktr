@@ -6,6 +6,8 @@
 
   <%= f.inputs do %>
     <%= f.input :title %>
+    <%= f.input :languages, as: :select, :collection => @languages.map{|x| [x.name, x.locale]}, :input_html => {multiple: true} %>
+    <%= f.input :primary_language %>
     <%= f.input :source %>
     <%= f.input :source_url, as: :url %>
     <%= f.input :description, :as => :text, rows: 10, :input_html => { class: 'tinymce' } %>
