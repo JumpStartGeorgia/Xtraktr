@@ -25,28 +25,67 @@ class Shapeset < CustomTranslation
   index ({ :user_id => 1})
 
   #############################
+  
+  attr_accessible :title, :description, :shapefile, :names, :user_id, :source, :source_url, :languages, :primary_language,
+    :title_translations, :description_translations, :source_translations, :source_url_translations
+
+  KEY_NAME = 'name_'
+
+  #############################
   # Validations
-  validates_presence_of :title, :source#, :primary_language, :languages
+  validates_presence_of :languages
   validates_attachment :shapefile, :presence => true, 
       :content_type => { :content_type => ["text/plain", "application/json", "application/octet-stream"] }
   validates_attachment_file_name :shapefile, :matches => [/geojson\Z/, /json\Z/]
-  validate :url_validation
+  validate :validate_url
+  validate :validate_languages
+  validate :validate_translations
+
+  # validate that at least one item in languages exists
+  def validate_languages
+    # first remove any empty items
+    self.languages.delete("")
+    logger.debug "***** validates languages: #{self.languages.blank?}"
+    if self.languages.blank?
+      errors.add(:languages, I18n.t('errors.messages.blank'))
+    end
+  end
+
+  # validate the translation fields
+  # only primary language field needs to be validated for presence
+  def validate_translations
+    logger.debug "***** validates translations"
+    if self.primary_language.present?
+      logger.debug "***** - primary is present; title = #{self.title_translations[self.primary_language]}; source = #{self.source_translations[self.primary_language]}"
+      if self.title_translations[self.primary_language].blank?
+        Title of the primary language english cannot be blank
+
+        errors.add(:base, I18n.t('errors.messages.translation_default_lang', 
+            field_name: self.class.human_attribute_name('title'),
+            language: Language.get_name(self.primary_language),
+            msg: I18n.t('errors.messages.blank')) )
+      end
+      if self.source_translations[self.primary_language].blank?
+        errors.add(:base, I18n.t('errors.messages.translation_default_lang', 
+            field_name: self.class.human_attribute_name('source'),
+            language: Language.get_name(self.primary_language),
+            msg: I18n.t('errors.messages.blank')) )
+      end
+    end
+  end 
 
   # have to do custom url validation because validate format with does not work on localized fields
-  def url_validation
+  def validate_url
     self.source_url_translations.keys.each do |key|
       if self.source_url_translations[key].present? && (self.source_url_translations[key] =~ URI::regexp(['http','https'])).nil?
-        errors.add(:source_url, I18n.t('errors.messages.invalid'))
+        errors.add(:base, I18n.t('errors.messages.translation_any_lang', 
+            field_name: self.class.human_attribute_name('source_url'),
+            language: Language.get_name(key),
+            msg: I18n.t('errors.messages.invalid')) )
         return
       end
     end
   end
-
-  #############################
-  
-  attr_accessible :title, :description, :shapefile, :names, :user_id, :source, :source_url, :languages, :primary_language
-
-  KEY_NAME = 'name_'
 
   #############################
 
@@ -82,6 +121,7 @@ class Shapeset < CustomTranslation
   end
 
   #############################
+
   # read in the geojson from the file
   def get_geojson
     path = "#{Rails.root}/public#{self.shapefile.url}"
@@ -93,6 +133,15 @@ class Shapeset < CustomTranslation
     return JSON.parse(geojson)
   end
 
+
+  # get the languages sorted with primary first
+  def languages_sorted
+    langs = self.languages.dup
+    if self.primary_language.present?
+      langs.rotate!(langs.index(self.primary_language))
+    end
+    langs
+  end
 
   #############################
   ## override get methods for fields that are localized

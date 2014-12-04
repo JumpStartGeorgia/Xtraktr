@@ -53,10 +53,14 @@ en:
         shapefile: GeoJSON File
         source: Source of Shapeset
         source_url: URL to Souce
-    errors:
-      messages:
-        required_field: "is a required field."
-        already_exists: 'already exists in the database.'
+        languages: Languages of Shapeset
+        primary_language: Default Language
+  errors:
+    messages:
+      required_field: "is a required field."
+      already_exists: 'already exists in the database.'
+      translation_default_lang: "%{field_name} for Default Language '%{language}' %{msg}"
+      translation_any_lang: "%{field_name} for Language '%{language}' %{msg}"
   dataset_status:
     public: Public
     private: Private

@@ -28,8 +28,10 @@ class CustomTranslation
   after_find :set_current_locale
   after_initialize :set_current_locale
 
+
+  # if the current locale is in the list of languages or there is no primary language, use current locale, else default to primary
   def set_current_locale
-    self.current_locale = self.primary_language.present? ? self.primary_language : I18n.locale.to_s
+    self.current_locale = ((self.languages.present? && self.languages.include?(I18n.locale.to_s)) || self.primary_language.blank?) ? I18n.locale.to_s : self.primary_language
   end
 
   ###########################################
@@ -52,6 +54,5 @@ class CustomTranslation
 
     return text
   end
-
 
 end

@@ -43,4 +43,10 @@ class Language
     return sorted
   end
 
+
+  # for the provided locale, get the name of the language
+  def self.get_name(locale)
+    x = only(:name).where(:locale => locale).first
+    return x.name if x.present?
+  end
 end

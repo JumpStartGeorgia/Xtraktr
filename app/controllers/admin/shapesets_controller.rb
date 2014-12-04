@@ -30,7 +30,8 @@ class Admin::ShapesetsController < ApplicationController
   # GET /shapesets/new.json
   def new
     @shapeset = Shapeset.new
-    @languages = Language.sorted
+    
+    set_form_settings
 
     respond_to do |format|
       format.html # new.html.erb
@@ -41,7 +42,8 @@ class Admin::ShapesetsController < ApplicationController
   # GET /shapesets/1/edit
   def edit
     @shapeset = Shapeset.find(params[:id])
-    @languages = Language.sorted
+    
+    set_form_settings
   end
 
   # POST /shapesets
@@ -54,7 +56,7 @@ class Admin::ShapesetsController < ApplicationController
         format.html { redirect_to admin_shapeset_path(@shapeset), notice: t('app.msgs.success_created', :obj => t('mongoid.models.shapeset')) }
         format.json { render json: @shapeset, status: :created, location: @shapeset }
       else
-        @languages = Language.sorted
+        set_form_settings
         format.html { render action: "new" }
         format.json { render json: @shapeset.errors, status: :unprocessable_entity }
       end
@@ -73,7 +75,7 @@ class Admin::ShapesetsController < ApplicationController
         format.html { redirect_to admin_shapeset_path(@shapeset), notice: t('app.msgs.success_updated', :obj => t('mongoid.models.shapeset')) }
         format.json { head :no_content }
       else
-        @languages = Language.sorted
+        set_form_settings
         format.html { render action: "edit" }
         format.json { render json: @shapeset.errors, status: :unprocessable_entity }
       end
@@ -91,4 +93,15 @@ class Admin::ShapesetsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+private
+
+  def set_form_settings
+    @languages = Language.sorted
+    @css.push('bootstrap-select.min.css', 'shapesets.css', 'select2.css')
+    @js.push('bootstrap-select.min.js', 'shapesets.js', 'select2/select2.min.js')
+    gon.tinymce_options = Hash[TinyMCE::Rails.configuration['default'].options.map{|(k,v)| [k.to_s,v.class == Array ? v.join(',') : v]}]
+  end
 end
+
+

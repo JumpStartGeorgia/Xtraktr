@@ -1,20 +1,105 @@
-<%= tinymce_assets %>
-<%= tinymce %>
+<%- model_class = Shapeset -%>
 
-<%= semantic_form_for([:admin, @shapeset]) do |f| %>
+<%= semantic_form_for([:admin, @shapeset], html: {:multipart => true}) do |f| %>
   <%= f.error_messages %>
 
   <%= f.inputs do %>
-    <%= f.input :title %>
-    <%= f.input :languages, as: :select, :collection => @languages.map{|x| [x.name, x.locale]}, :input_html => {multiple: true} %>
-    <%= f.input :primary_language %>
-    <%= f.input :source %>
-    <%= f.input :source_url, as: :url %>
-    <%= f.input :description, :as => :text, rows: 10, :input_html => { class: 'tinymce' } %>
-    <%= f.input :shapefile, :as => :file, :input_html => { accept:"text/plain, application/json, application/octet-stream" }  %> 
-
     <%= f.hidden_field :user_id , :value => current_user.id %>
+
+    <div class="file input optional form-group" id="shapeset_shapefile_input">
+      <label class="" for="shapeset_shapefile"><%= model_class.human_attribute_name(:shapefile) %></label>
+      <% if @shapeset.shapefile.exists? %>
+        <p>
+          <%= link_to t('helpers.links.view'), @shapeset.shapefile.url, :target => :blank, :class => 'btn btn-default' %>
+        </p>
+      <% end %>
+      <input accept="text/plain, application/json, application/octet-stream" id="shapeset_shapefile" name="shapeset[shapefile]" type="file">
+    </div>
+
+    <%= f.input :languages, as: :select, :collection => @languages.map{|x| [x.name, x.locale]}, multiple: true,
+          :input_html => {class: 'selectpicker-language', 
+            :'data-live-search' => "true", :'data-selected-text-format' => "count>3", :'data-size' => "7",
+            :'data-width' => "72%"} %>
+
+    <% 
+      primaries = nil
+      if @shapeset.languages.present?
+        primaries = @languages.select{|x| @shapeset.languages.include?(x.locale)}
+      end
+    %>
+   
+    <div class="select input optional form-group" id="shapeset_primary_language_input">
+      <label class="" for="shapeset_primary_language">
+        <%= model_class.human_attribute_name(:primary_language) %><abbr title="required">*</abbr>
+      </label>
+      <select class="selectpicker-language form-control" data-live-search="true" data-selected-text-format="count>3" data-size="7" data-width="72%" 
+              id="shapeset_primary_language" name="shapeset[primary_language]">
+        <% if @languages.present? %>
+          <% @languages.each do |lang| %>
+            <%
+              selected = ''
+              hide = 'class=hide'
+              if primaries.present? && primaries.include?(lang.locale)
+                hide = ''
+              end
+              if lang.locale == @shapeset.primary_language
+                selected="selected=selected"
+              end
+            %>
+            <option value="<%= lang.locale %>" <%= hide %> <%= selected %> ><%= lang.name %></option>
+          <% end %>
+        <% end %>
+      </select>
+    </div>
   <% end %>
+
+  <hr />
+
+  <div role="tabpanel">
+    <% 
+      locales = [I18n.locale] 
+      locales = @shapeset.languages_sorted if @shapeset.languages.present?
+    %>
+    <ul class="nav nav-tabs" role="tablist">
+      <% locales.each_with_index do |locale, index| %>
+        <%
+          cls = ''
+          cls = 'class=active' if index == 0
+        %>
+        <li role="presentation" <%= cls %> data-locale="<%= locale %>">
+          <a href="#<%= locale %>" aria-controls="home" role="tab" data-toggle="tab">
+            <% lang = @languages.select{|x| x.locale == locale.to_s}.first %>
+            <%= lang.present? ? lang.name : locale %>
+          </a>
+        </li>
+      <% end %>
+    </ul>
+
+    <div class="tab-content">
+      <% locales.each_with_index do |locale, index| %>
+        <%
+          cls = ''
+          cls = 'in active' if index == 0
+        %>
+        <div role="tabpanel" class="tab-pane fade <%= cls %>" id="<%= locale %>" data-locale="<%= locale %>">
+          <%= f.fields_for :title_translations, OpenStruct.new(f.object.title_translations) do |translation| %>
+            <%= translation.input locale, label: model_class.human_attribute_name(:title) %>
+          <% end %>
+          <%= f.fields_for :source_translations, OpenStruct.new(f.object.source_translations) do |translation| %>
+            <%= translation.input locale, label: model_class.human_attribute_name(:source) %>
+          <% end %>
+          <%= f.fields_for :source_url_translations, OpenStruct.new(f.object.source_url_translations) do |translation| %>
+            <%= translation.input locale, as: :url, required: false, label: model_class.human_attribute_name(:source_url) %>
+          <% end %>
+          <%= f.fields_for :description_translations, OpenStruct.new(f.object.description_translations) do |translation| %>
+            <%= translation.input locale, :as => :text, required: false, rows: 10, label: model_class.human_attribute_name(:description), 
+                :input_html => { class: "tinymce tinymce-#{locale}" } %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+  </div>
 
   <div class="form-group">
     <%= f.submit nil, :class => 'btn btn-primary' %>
@@ -22,3 +107,9 @@
     <%= link_to t('helpers.links.cancel'), admin_shapesets_path, :class => 'btn btn-mini btn-warning' %>
   </div>
 <% end %>
+
+
+
+<%= tinymce_assets %>
+<%# tinymce %>
+
