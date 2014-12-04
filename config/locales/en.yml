@@ -121,6 +121,7 @@ en:
     unsubscribe: Click here to change your notification settings
   helpers:
     actions: Actions
+    default_language: This is the default language that will show
     links:
       admin: Admin Section
       edit: Edit
@@ -184,6 +185,7 @@ en:
       added_on: "Added on: %{date}" 
       jumpstart: JumpStart Georgia
       js_link_title: JumpStart Georgia - We communicate data better!
+
     msgs:
       does_not_exist: You tried to access a page that does not exist.
       not_authorized: You are not authorized to view that page.

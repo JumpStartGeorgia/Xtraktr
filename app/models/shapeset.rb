@@ -17,7 +17,7 @@ class Shapeset < CustomTranslation
   field :source_url, type: String, localize: true
   field :names, type: Array, default: [], localize: true
   field :languages, type: Array
-  field :primary_language, type: String
+  field :default_language, type: String
 
   #############################
   # indexes
@@ -26,7 +26,7 @@ class Shapeset < CustomTranslation
 
   #############################
   
-  attr_accessible :title, :description, :shapefile, :names, :user_id, :source, :source_url, :languages, :primary_language,
+  attr_accessible :title, :description, :shapefile, :names, :user_id, :source, :source_url, :languages, :default_language,
     :title_translations, :description_translations, :source_translations, :source_url_translations
 
   KEY_NAME = 'name_'
@@ -55,20 +55,20 @@ class Shapeset < CustomTranslation
   # only primary language field needs to be validated for presence
   def validate_translations
     logger.debug "***** validates translations"
-    if self.primary_language.present?
-      logger.debug "***** - primary is present; title = #{self.title_translations[self.primary_language]}; source = #{self.source_translations[self.primary_language]}"
-      if self.title_translations[self.primary_language].blank?
+    if self.default_language.present?
+      logger.debug "***** - primary is present; title = #{self.title_translations[self.default_language]}; source = #{self.source_translations[self.default_language]}"
+      if self.title_translations[self.default_language].blank?
         Title of the primary language english cannot be blank
 
         errors.add(:base, I18n.t('errors.messages.translation_default_lang', 
             field_name: self.class.human_attribute_name('title'),
-            language: Language.get_name(self.primary_language),
+            language: Language.get_name(self.default_language),
             msg: I18n.t('errors.messages.blank')) )
       end
-      if self.source_translations[self.primary_language].blank?
+      if self.source_translations[self.default_language].blank?
         errors.add(:base, I18n.t('errors.messages.translation_default_lang', 
             field_name: self.class.human_attribute_name('source'),
-            language: Language.get_name(self.primary_language),
+            language: Language.get_name(self.default_language),
             msg: I18n.t('errors.messages.blank')) )
       end
     end
@@ -137,8 +137,8 @@ class Shapeset < CustomTranslation
   # get the languages sorted with primary first
   def languages_sorted
     langs = self.languages.dup
-    if self.primary_language.present?
-      langs.rotate!(langs.index(self.primary_language))
+    if self.default_language.present?
+      langs.rotate!(langs.index(self.default_language))
     end
     langs
   end

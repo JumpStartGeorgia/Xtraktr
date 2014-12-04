@@ -121,6 +121,7 @@ ka:
     unsubscribe: დააჭირეთ და შეცვალეთ შეტყობინებების პარამეტრები
   helpers:
     actions: აირჩიეთ
+    default_language: This is the default language that will show
     links:
       admin: ადმინისტრატორის განყოფილება
       edit: შეცვლა

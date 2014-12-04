@@ -1,6 +1,6 @@
 <%- model_class = Shapeset -%>
 
-<%= semantic_form_for([:admin, @shapeset], html: {:multipart => true}) do |f| %>
+<%= semantic_form_for([:admin, @shapeset], html: {:multipart => true, class: 'translations-form'}) do |f| %>
   <%= f.error_messages %>
 
   <%= f.inputs do %>
@@ -17,7 +17,7 @@
     </div>
 
     <%= f.input :languages, as: :select, :collection => @languages.map{|x| [x.name, x.locale]}, multiple: true,
-          :input_html => {class: 'selectpicker-language', 
+          :input_html => {class: 'selectpicker-language languages', 
             :'data-live-search' => "true", :'data-selected-text-format' => "count>3", :'data-size' => "7",
             :'data-width' => "72%"} %>
 
@@ -28,12 +28,12 @@
       end
     %>
    
-    <div class="select input optional form-group" id="shapeset_primary_language_input">
-      <label class="" for="shapeset_primary_language">
-        <%= model_class.human_attribute_name(:primary_language) %><abbr title="required">*</abbr>
+    <div class="select input optional form-group" id="shapeset_default_language_input">
+      <label class="" for="shapeset_default_language">
+        <%= model_class.human_attribute_name(:default_language) %><abbr title="required">*</abbr>
       </label>
-      <select class="selectpicker-language form-control" data-live-search="true" data-selected-text-format="count>3" data-size="7" data-width="72%" 
-              id="shapeset_primary_language" name="shapeset[primary_language]">
+      <select class="selectpicker-language form-control default-language" data-live-search="true" data-selected-text-format="count>3" data-size="7" data-width="72%" 
+              id="shapeset_default_language" name="shapeset[default_language]">
         <% if @languages.present? %>
           <% @languages.each do |lang| %>
             <%
@@ -42,7 +42,7 @@
               if primaries.present? && primaries.include?(lang.locale)
                 hide = ''
               end
-              if lang.locale == @shapeset.primary_language
+              if lang.locale == @shapeset.default_language
                 selected="selected=selected"
               end
             %>
@@ -55,12 +55,14 @@
 
   <hr />
 
-  <div role="tabpanel">
+  <div role="tabpanel" class="translation-fields">
     <% 
       locales = [I18n.locale] 
       locales = @shapeset.languages_sorted if @shapeset.languages.present?
     %>
-    <ul class="nav nav-tabs" role="tablist">
+
+    <ul class="nav nav-tabs" role="tablist" 
+        data-default-language-icon="<span class='glyphicon glyphicon-star' title='<%= t('helpers.default_language') %>'></span>">
       <% locales.each_with_index do |locale, index| %>
         <%
           cls = ''
@@ -93,7 +95,7 @@
           <% end %>
           <%= f.fields_for :description_translations, OpenStruct.new(f.object.description_translations) do |translation| %>
             <%= translation.input locale, :as => :text, required: false, rows: 10, label: model_class.human_attribute_name(:description), 
-                :input_html => { class: "tinymce tinymce-#{locale}" } %>
+                :input_html => { class: "tinymce" } %>
           <% end %>
         </div>
       <% end %>

@@ -1,48 +1,24 @@
-/* for bootstrap select min */
-.bootstrap-select.btn-group {
-  display: block !important;
-  .btn .filter-option{
-    padding: 4px 14px;
-  } 
-}
-
-/* fix padding in bootstrap dropdown-menu that is made big by formtastic */
-.dropdown-menu input{
-  padding: 0 0 0 5px !important;
-}
-
-.formtastic 
-{
-  .input, .inputs
-  {
-    overflow:visible !important;
+form.translations-form{
+  .tab-content .tab-pane{
+    marign-bottom: 20px;
+    padding: 10px 15px 0;
+    border-left: 1px solid #dddddd;
   }
-  .select select 
-  {
+
+  fieldset > div.input:last-of-type{
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .select2-container{
+    display: block !important;
+  }
+
+  select {
     max-width: 72%;
-  }
-}
-
-.tab-content .tab-pane{
-  marign-bottom: 20px;
-  padding: 10px 15px 0;
-  border-left: 1px solid #dddddd;
-}
-
-/*.bootstrap-select.btn-group .dropdown-menu li.disabled{
-  display: none;
-}*/
-
-div#shapeset_primary_language_input{
-  margin-bottom: 0;
-  padding-bottom: 0;
-}
-
-.select2-container{
-  display: block !important;
-}
-select.selectpicker-language {
-  option.hide{
-    display: none;
+    /* hide options that are not needed */
+    option.hide{
+      display: none;
+    }
   }
 }

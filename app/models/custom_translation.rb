@@ -24,14 +24,14 @@ class CustomTranslation
 
   ###########################################
 
-  # when the record is initialized, set the current_locale to the primary language, or the current locale if non-set
+  # when the record is initialized, set the current_locale to the default language, or the current locale if non-set
   after_find :set_current_locale
   after_initialize :set_current_locale
 
 
-  # if the current locale is in the list of languages or there is no primary language, use current locale, else default to primary
+  # if the current locale is in the list of languages or there is no default language, use current locale, else default to default language
   def set_current_locale
-    self.current_locale = ((self.languages.present? && self.languages.include?(I18n.locale.to_s)) || self.primary_language.blank?) ? I18n.locale.to_s : self.primary_language
+    self.current_locale = ((self.languages.present? && self.languages.include?(I18n.locale.to_s)) || self.default_language.blank?) ? I18n.locale.to_s : self.default_language
   end
 
   ###########################################
@@ -40,7 +40,7 @@ class CustomTranslation
   # - object: reference to the mongoid field that has translations (e.g., self.title_translations)
   # - locale: what locale to get translation for; defaults to self.current_locale
   # - fallback_locale: indicates which fallback locale should be used in case the locale param does not have a translation value
-  def get_translation(object, locale=self.current_locale, fallback_locale=self.primary_language)
+  def get_translation(object, locale=self.current_locale, fallback_locale=self.default_language)
     fallback_locale ||= I18n.default_locale
 
     orig_locale = I18n.locale
