@@ -98,8 +98,8 @@ private
 
   def set_form_settings
     @languages = Language.sorted
-    @css.push('bootstrap-select.min.css', 'shapesets.css', 'select2.css')
-    @js.push('bootstrap-select.min.js', 'shapesets.js', 'select2/select2.min.js')
+    @css.push('translation_form.css', 'select2.css')
+    @js.push('translation_form.js', 'select2/select2.min.js')
     gon.tinymce_options = Hash[TinyMCE::Rails.configuration['default'].options.map{|(k,v)| [k.to_s,v.class == Array ? v.join(',') : v]}]
   end
 end

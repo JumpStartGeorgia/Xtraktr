@@ -34,6 +34,8 @@ ka:
         end_gathered_at: Date Finished Gathering Data
         gathered_at: Dates Gathered Data
         public: Make Available to Public
+        languages: Languages of Dataset
+        default_language: Default Language
       question:
         code: Question Code
         original_code: Question Code
@@ -54,7 +56,7 @@ ka:
         source: Source of Shapeset
         source_url: URL to Souce
         languages: Languages of Shapeset
-        primary_language: Default Language
+        default_language: Default Language
   errors:
     messages:
       required_field: "სავალდებულო ველი"

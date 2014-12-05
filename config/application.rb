@@ -61,10 +61,10 @@ module BootstrapStarter
     config.assets.version = '1.0'
 
 
-    config.assets.precompile += %w( datasets.js explore_data.js exclude_answers.js exclude_questions.js mappable_form.js )    
-    config.assets.precompile += %w( datasets.css explore_data.css exclude_answers.css exclude_questions.css mappable_form.css )    
-    config.assets.precompile += %w( bootstrap-select.min.js highcharts.js highcharts-map.js highcharts-exporting.js )    
-    config.assets.precompile += %w( bootstrap-select.min.css )    
+    config.assets.precompile += %w( datasets.js explore_data.js exclude_answers.js exclude_questions.js mappable_form.js translation_form.js )    
+    config.assets.precompile += %w( datasets.css explore_data.css exclude_answers.css exclude_questions.css mappable_form.css translation_form.css )    
+    config.assets.precompile += %w( bootstrap-select.min.js highcharts.js highcharts-map.js highcharts-exporting.js select2/select2.min.js )    
+    config.assets.precompile += %w( bootstrap-select.min.css select2.css select2-bootstrap.css )    
 
     config.assets.precompile += %w( jquery.ui.datepicker.js )    
     config.assets.precompile += %w( jquery.ui.datepicker.css )    
