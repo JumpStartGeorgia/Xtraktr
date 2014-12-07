@@ -70,48 +70,59 @@
           <% if @question.has_code_answers? %>
             <h3><%= t('.header_answers') %></h3>
             <p><%= t('.explanation_answers', lang: default_lang) %></p>
-            <% answers.each_with_index do |ans, aindex| %>
-              <%= f.fields_for :answers, ans do |answer| %>
 
-                <div class="answer-fields">
-                  <%#= answer.fields_for :text_translations, OpenStruct.new(answer.object.text_translations) do |a_translation| %>
-                    <%#= a_translation.input locale, label: model_class_a.human_attribute_name(:text) %>
-                  <%# end %>
-
-                  <div class="string input required stringish form-group" id="question_answers_attributes_<%= aindex %>_text_translations_<%= locale %>_input">
-                    <label class="" for="question_answers_attributes_<%= aindex %>_text_translations_<%= locale %>">
-                      <% 
-                        label = model_class_a.human_attribute_name(:text)
-                        if index > 0
-                          label << show_default_text(answers[aindex].text_translations[default_locale])
-                        end
-                      %>
-                      <%= label.html_safe %><abbr title="required">*</abbr>
-                    </label>
-                    <input class="form-control" id="question_answers_attributes_<%= aindex %>_text_translations_<%= locale %>" name="question[answers_attributes][<%= aindex %>][text_translations][<%= locale %>]" type="text" value="<%= ans.text_translations[locale] %>">
-                  </div>
-
-
+            <table id='dataset-answers' class="table table-striped table-hover table-nonfluid">
+              <thead>
+                <tr>
                   <% if index == 0 %>
-                    <div class="row">
-                      <div class="col-sm-3">
-                        <%= answer.input :value, as: :string, :input_html => {:size =>5} %>
-                      </div>
-                      <div class="col-sm-3">
-                        <%= answer.input :sort_order, as: :string, :input_html => {:size =>5} %>
-                      </div>
-                      <div class="col-sm-3">
-                        <%= answer.input :exclude, :as => :radio %>
-                      </div>
-                      <div class="col-sm-3">
-                        <%= answer.input :can_exclude, :as => :radio %>
-                      </div>
-                    </div>
+                    <th><%= model_class_a.human_attribute_name(:text) %></th>
+                    <th><%= model_class_a.human_attribute_name(:value) %></th>
+                    <th><%= model_class_a.human_attribute_name(:sort_order) %></th>
+                    <th><%= model_class_a.human_attribute_name(:exclude) %></th>
+                    <th><%= model_class_a.human_attribute_name(:can_exclude) %></th>
+                  <% else %>
+                    <th><%= model_class_a.human_attribute_name(:text) %></th>
+                    <th><%= t('tabbed_translation_form.default_text') %></th>
                   <% end %>
-                </div>
-
-              <% end %>
-            <% end %>
+                </tr>
+              </thead>
+              <tbody>
+                <% answers.each_with_index do |ans, aindex| %>
+                  <%= f.fields_for :answers, ans do |answer| %>
+                    <tr>
+                      <% if index == 0 %>
+                        <td>
+                          <div class="string input required stringish form-group" id="question_answers_attributes_<%= aindex %>_text_translations_<%= locale %>_input">
+                            <input class="form-control" id="question_answers_attributes_<%= aindex %>_text_translations_<%= locale %>" name="question[answers_attributes][<%= aindex %>][text_translations][<%= locale %>]" type="text" value="<%= ans.text_translations[locale] %>">
+                          </div>
+                        </td>
+                        <td>
+                          <%= answer.input :value, as: :string, :input_html => {:size =>3}, :label => false %>
+                        </td>
+                        <td>
+                          <%= answer.input :sort_order, as: :string, :input_html => {:size =>3}, :label => false %>
+                        </td>
+                        <td>
+                          <%= answer.input :exclude, :as => :radio, :label => false %>
+                        </td>
+                        <td>
+                          <%= answer.input :can_exclude, :as => :radio, :label => false %>
+                        </td>
+                      <% else %>
+                        <td>
+                          <div class="string input required stringish form-group" id="question_answers_attributes_<%= aindex %>_text_translations_<%= locale %>_input">
+                            <input class="form-control" id="question_answers_attributes_<%= aindex %>_text_translations_<%= locale %>" name="question[answers_attributes][<%= aindex %>][text_translations][<%= locale %>]" type="text" value="<%= ans.text_translations[locale] %>">
+                          </div>
+                        </td>
+                        <td>
+                          <%= answers[aindex].text_translations[default_locale] %>
+                        </td>
+                      <% end %>
+                    </tr>
+                  <% end %>
+                <% end %>
+              </tbody>
+            </table>                  
           <% end %>
 
         </div>
