@@ -7,4 +7,5 @@ module DatasetsHelper
       return "<div class='dataset-public-status dataset-not-public'>#{t('dataset_status.private')}</div>".html_safe
     end
   end
+
 end

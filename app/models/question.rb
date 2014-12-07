@@ -43,6 +43,10 @@ class Question < CustomTranslation
       where(:can_exclude => false, :exclude => false).to_a
     end
 
+    def sorted
+      order_by([[:sort_order, :asc], [:text, :asc]])
+    end
+
   end
   accepts_nested_attributes_for :answers
 

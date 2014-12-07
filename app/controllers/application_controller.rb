@@ -131,6 +131,18 @@ logger.debug "////////////////////////// BROWSER = #{user_agent}"
     end
   end
 
+  # add options to show the dataset nav bar
+  def add_dataset_nav_options(options={})
+    show_title = options[:show_title].nil? ? true : options[:show_title]
+    set_url = options[:set_url].nil? ? true : options[:set_url]
+
+    @css.push("datasets.css")
+    @dataset_url = dataset_path(@dataset) if set_url
+    @is_admin = true
+    
+    @show_title = show_title
+  end
+
 
   # set variables need for the tabbed translation forms
   def set_tabbed_translation_form_settings

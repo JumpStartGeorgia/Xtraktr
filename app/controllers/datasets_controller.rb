@@ -29,7 +29,7 @@ class DatasetsController < ApplicationController
       redirect_to datasets_path(:locale => I18n.locale)
       return
     else
-      add_nav_options(show_title: false)
+      add_dataset_nav_options(show_title: false)
 
       gon.explore_data = true
       gon.explore_data_ajax_path = dataset_path(:format => :js)
@@ -50,7 +50,7 @@ class DatasetsController < ApplicationController
     @css.push("jquery.ui.datepicker.css")
     @js.push('jquery.ui.datepicker.js', "datasets.js")
 
-    add_nav_options(set_url: false)
+    add_dataset_nav_options(set_url: false)
 
     set_tabbed_translation_form_settings
     
@@ -74,7 +74,7 @@ class DatasetsController < ApplicationController
       @css.push("jquery.ui.datepicker.css", "datasets.css")
       @js.push('jquery.ui.datepicker.js', "datasets.js")
 
-      add_nav_options()
+      add_dataset_nav_options()
 
       set_tabbed_translation_form_settings
     else
@@ -103,7 +103,7 @@ class DatasetsController < ApplicationController
         @css.push("jquery.ui.datepicker.css")
         @js.push('jquery.ui.datepicker.js', "datasets.js")
 
-        add_nav_options({show_title: false, set_url: false})
+        add_dataset_nav_options({show_title: false, set_url: false})
 
         set_tabbed_translation_form_settings
 
@@ -136,7 +136,7 @@ class DatasetsController < ApplicationController
           @css.push("jquery.ui.datepicker.css")
           @js.push('jquery.ui.datepicker.js', "datasets.js")
 
-          add_nav_options()
+          add_dataset_nav_options()
 
           set_tabbed_translation_form_settings
 
@@ -179,7 +179,7 @@ class DatasetsController < ApplicationController
       @bad_answers = @dataset.questions_with_bad_answers
       @no_text = @dataset.questions_with_no_text
 
-      add_nav_options()
+      add_dataset_nav_options()
 
       respond_to do |format|
         format.html # index.html.erb
@@ -192,6 +192,7 @@ class DatasetsController < ApplicationController
     end
   end
 
+
   # mark which questions to not include in the analysis
   def exclude_questions
     @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).first
@@ -203,7 +204,7 @@ class DatasetsController < ApplicationController
           @js.push("exclude_questions.js")
           @css.push("exclude_questions.css")
 
-          add_nav_options()
+          add_dataset_nav_options()
 
         }
         format.js { 
@@ -255,7 +256,7 @@ class DatasetsController < ApplicationController
           @js.push("exclude_answers.js")
           @css.push("exclude_answers.css")
 
-          add_nav_options()
+          add_dataset_nav_options()
 
         }
         format.js { 
@@ -308,7 +309,7 @@ class DatasetsController < ApplicationController
           @js.push("exclude_answers.js")
           @css.push("exclude_answers.css")
 
-          add_nav_options()
+          add_dataset_nav_options()
 
         }
         format.js { 
@@ -358,7 +359,7 @@ class DatasetsController < ApplicationController
 
       @mappable = @dataset.questions.mappable
 
-      add_nav_options()
+      add_dataset_nav_options()
 
       respond_to do |format|
         format.html # index.html.erb
@@ -403,7 +404,7 @@ class DatasetsController < ApplicationController
         gon.questions << {id: question.id, answers: question.answers.map{|x| {id: x.id, text: x.text}}.sort_by{|x| x[:text]} }
       end
 
-      add_nav_options()
+      add_dataset_nav_options()
 
       @css.push('bootstrap-select.min.css', 'mappable_form.css')
       @js.push('bootstrap-select.min.js', 'mappable_form.js')
@@ -446,7 +447,7 @@ class DatasetsController < ApplicationController
 
         gon.mappable_form_edit = true
 
-        add_nav_options()
+        add_dataset_nav_options()
 
         @css.push('bootstrap-select.min.css', 'mappable_form.css')
         @js.push('bootstrap-select.min.js', 'mappable_form.js')
@@ -489,19 +490,4 @@ class DatasetsController < ApplicationController
   end
 
 
-private
-
-  # add options to show the dataset nav bar
-  def add_nav_options(options={})
-    show_title = options[:show_title].nil? ? true : options[:show_title]
-    set_url = options[:set_url].nil? ? true : options[:set_url]
-
-    @css.push("datasets.css")
-    @dataset_url = dataset_path(@dataset) if set_url
-    @is_admin = true
-    
-    @show_title = show_title
-    
-
-  end
 end

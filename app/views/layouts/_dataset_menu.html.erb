@@ -24,6 +24,12 @@
                     <% end %>
                   </li>
                   <li role="menuitem">
+                    <%= link_to dataset_questions_path(dataset) do %>
+                      <span class="glyphicon glyphicon-question-sign"></span>
+                      <%= t('app.menu.admin_dataset.qa') %>
+                    <% end %>
+                  </li>
+                  <li role="menuitem">
                     <%= link_to warnings_dataset_path(dataset) do %>
                       <span class="glyphicon glyphicon-exclamation-sign"></span>
                       <%= t('app.menu.admin_dataset.warnings') %>

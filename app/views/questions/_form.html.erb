@@ -1,0 +1,129 @@
+<%- model_class = Question -%>
+<%- model_class_a = Answer -%>
+
+<%= semantic_form_for([@dataset, @question], html: {class: 'tabbed-translation-form'}) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <strong><%= model_class.human_attribute_name(:code) %>:</strong>
+    <br />
+    <%= @question.original_code %>
+  </p>
+
+  <%= f.inputs do %>
+    <%= f.input :exclude, as: :radio %>
+  <% end %>
+
+  <hr />
+
+  <div role="tabpanel" class="tabbed-translation-fields">
+    <% 
+      locales = [I18n.locale] 
+      locales = @dataset.languages_sorted if @dataset.languages.present?
+    %>
+
+    <ul class="nav nav-tabs" role="tablist">
+      <%
+        default_locale = I18n.locale.to_s 
+        default_lang = '' 
+      %>
+      <% locales.each_with_index do |locale, index| %>
+        <%
+          lang = @languages.select{|x| x.locale == locale.to_s}.first
+          cls = ''
+          if index == 0
+            cls = 'class=active' 
+            default_locale = locale
+            default_lang = lang.present? ? lang.name : locale 
+          end
+        %>
+        <li role="presentation" <%= cls %> data-locale="<%= locale %>">
+          <a href="#<%= locale %>" aria-controls="home" role="tab" data-toggle="tab">
+            <% if index == 0 %>
+              <span class='glyphicon glyphicon-star' title='<%= t('helpers.default_language') %>'></span>
+            <% end %>
+            <%= lang.present? ? lang.name : locale %>
+          </a>
+        </li>
+      <% end %>
+    </ul>
+
+    <div class="tab-content">
+      <% answers = @question.answers.sorted %>
+      <% locales.each_with_index do |locale, index| %>
+        <%
+          cls = ''
+          cls = 'in active' if index == 0
+        %>
+
+        <div role="tabpanel" class="tab-pane fade <%= cls %>" id="<%= locale %>" data-locale="<%= locale %>">
+          <%= f.fields_for :text_translations, OpenStruct.new(f.object.text_translations) do |translation| %>
+            <% 
+              label = model_class.human_attribute_name(:text)
+              if index > 0
+                label << show_default_text(@question.text_translations[default_locale])
+              end
+            %>
+            <%= translation.input locale, label: label.html_safe %>
+          <% end %>
+
+          <% if @question.has_code_answers? %>
+            <h3><%= t('.header_answers') %></h3>
+            <p><%= t('.explanation_answers', lang: default_lang) %></p>
+            <% answers.each_with_index do |ans, aindex| %>
+              <%= f.fields_for :answers, ans do |answer| %>
+
+                <div class="answer-fields">
+                  <%#= answer.fields_for :text_translations, OpenStruct.new(answer.object.text_translations) do |a_translation| %>
+                    <%#= a_translation.input locale, label: model_class_a.human_attribute_name(:text) %>
+                  <%# end %>
+
+                  <div class="string input required stringish form-group" id="question_answers_attributes_<%= aindex %>_text_translations_<%= locale %>_input">
+                    <label class="" for="question_answers_attributes_<%= aindex %>_text_translations_<%= locale %>">
+                      <% 
+                        label = model_class_a.human_attribute_name(:text)
+                        if index > 0
+                          label << show_default_text(answers[aindex].text_translations[default_locale])
+                        end
+                      %>
+                      <%= label.html_safe %><abbr title="required">*</abbr>
+                    </label>
+                    <input class="form-control" id="question_answers_attributes_<%= aindex %>_text_translations_<%= locale %>" name="question[answers_attributes][<%= aindex %>][text_translations][<%= locale %>]" type="text" value="<%= ans.text_translations[locale] %>">
+                  </div>
+
+
+                  <% if index == 0 %>
+                    <div class="row">
+                      <div class="col-sm-3">
+                        <%= answer.input :value, as: :string, :input_html => {:size =>5} %>
+                      </div>
+                      <div class="col-sm-3">
+                        <%= answer.input :sort_order, as: :string, :input_html => {:size =>5} %>
+                      </div>
+                      <div class="col-sm-3">
+                        <%= answer.input :exclude, :as => :radio %>
+                      </div>
+                      <div class="col-sm-3">
+                        <%= answer.input :can_exclude, :as => :radio %>
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+
+              <% end %>
+            <% end %>
+          <% end %>
+
+        </div>
+      <% end %>
+    </div>
+
+  </div>
+
+  <div class="form-group">
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= f.submit t('helpers.links.reset'), :class => 'btn btn-warning', :type => :reset, :name => :reset %>
+    <%= link_to t('helpers.links.cancel'), dataset_questions_path, :class => 'btn btn-mini btn-warning' %>
+  </div>
+<% end %>
+

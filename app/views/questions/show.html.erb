@@ -1,0 +1,123 @@
+<%- model_class = Question -%>
+<%- model_class_a = Answer -%>
+<% title t '.title', question: @question.text %>
+
+
+<div class="form-group form-group-admin-buttons">
+  <%= link_to t('.back', :default => t("helpers.links.back")),
+              dataset_questions_path, :class => 'btn btn-default'  %>
+  <%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_dataset_question_path(@dataset, @question), :class => 'btn btn-default' %>
+</div>
+
+<div class="tabbed-translation-show">
+  <ul class="row list-unstyled">
+    <li class="col-sm-3">
+      <strong><%= model_class.human_attribute_name(:code) %>:</strong>
+      <br />
+      <%= @question.original_code %>  
+    </li>
+    <li class="col-sm-3">
+      <strong><%= model_class.human_attribute_name(:has_code_answers) %>:</strong>
+      <br />
+      <%= format_boolean_flag(@question.has_code_answers) %>  
+    </li>
+    <li class="col-sm-3">
+      <strong><%= model_class.human_attribute_name(:exclude) %>:</strong>
+      <br />
+      <%= format_boolean_flag(@question.exclude) %>  
+    </li>
+    <li class="col-sm-3">
+      <strong><%= model_class.human_attribute_name(:is_mappable) %>:</strong>
+      <br />
+      <%= format_boolean_flag(@question.is_mappable) %>  
+    </li>
+  </ul>
+
+  <hr />
+
+  <div role="tabpanel" class="tabbed-translation-fields">
+    <% 
+      locales = [I18n.locale] 
+      locales = @dataset.languages_sorted if @dataset.languages.present?
+    %>
+
+    <ul class="nav nav-tabs" role="tablist">
+      <% locales.each_with_index do |locale, index| %>
+        <%
+          cls = ''
+          cls = 'class=active' if index == 0
+        %>
+        <li role="presentation" <%= cls %> data-locale="<%= locale %>">
+          <a href="#<%= locale %>" aria-controls="home" role="tab" data-toggle="tab">
+            <% if index == 0 %>
+              <span class='glyphicon glyphicon-star' title='<%= t('helpers.default_language') %>'></span>
+            <% end %>
+            <% lang = @languages.select{|x| x.locale == locale.to_s}.first %>
+            <%= lang.present? ? lang.name : locale %>
+          </a>
+        </li>
+      <% end %>
+    </ul>
+
+    <div class="tab-content">
+      <% locales.each_with_index do |locale, index| %>
+        <%
+          cls = ''
+          cls = 'in active' if index == 0
+        %>
+
+        <% @dataset.current_locale = locale %>
+
+        <div role="tabpanel" class="tab-pane fade <%= cls %>" id="<%= locale %>" data-locale="<%= locale %>">
+          <p><strong><%= model_class.human_attribute_name(:text) %>:</strong>
+          <%= @question.text %></p>
+
+          <h3><%= t('.header_answers') %></h3>
+          <% if @question.has_code_answers? %>
+            <table id='dataset-answers' class="table table-striped table-hover table-nonfluid">
+              <thead>
+                <tr>
+                  <th><%= model_class_a.human_attribute_name(:text) %></th>
+                  <th><%= model_class_a.human_attribute_name(:value) %></th>
+                  <th><%= model_class_a.human_attribute_name(:sort_order) %></th>
+                  <th><%= model_class_a.human_attribute_name(:exclude) %></th>
+                  <th><%= model_class_a.human_attribute_name(:can_exclude) %></th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @question.answers.sorted.each do |answer| %>
+                  <tr>
+                    <td>
+                      <%= answer.text %>
+                    </td>
+                    <td>
+                      <%= answer.value %>
+                    </td>
+                    <td>
+                      <%= answer.sort_order %>
+                    </td>
+                    <td>
+                      <%= format_boolean_flag(answer.exclude) %>
+                    </td>
+                    <td>
+                      <%= format_boolean_flag(answer.can_exclude) %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          <% else %>
+            <p>
+              <%= t('.no_answers') %>
+            </p>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+
+
+

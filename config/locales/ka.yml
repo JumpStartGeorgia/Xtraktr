@@ -211,6 +211,7 @@ ka:
         explore_data: Explore Data
         heading: Dataset Options
         settings: Settings
+        qa: Edit Questions/Answers
         warnings: Warnings
         mappable: Make Mappable
         can_exlucde_answers: Answers Can Be Excluded
@@ -287,12 +288,15 @@ ka:
     exclude_questions:
       title: "Questions to Exclude from Analysis"
       explanation: "Use this page to indicate which questions should not be included during analysis."
+      no_questions: There are no questions on file for this dataset.
     exclude_answers:
       title: "Answers to Exclude from Analysis"
       explanation: "Use this page to indicate which answers should not be included during analysis."
+      no_questions: There are no questions on file for this dataset.
     can_exclude_answers:
       title: "Answers That Can Be Excluded During Analysis"
       explanation: "Use this page to indicate which answers can be included during analysis, but have the ability to be excluded (e.g., answers like: Don't Know, Refuse to Answer, etc) ."
+      no_questions: There are no questions on file for this dataset.
     mappable:
       title: "Make Questions Mappable"
       explanation: "Use this page to indicate which questions are geographic in nature so that the analysis screen can include a map."
@@ -311,6 +315,19 @@ ka:
       title: "Mappable Question Form"
       matching_header: "Mapping '%{question}' to '%{shapeset}'"
       matching_explanation: "For each answer to '%{question}', select the matching map shape from '%{shapeset}'."
+  questions:
+    index:
+      title: "Edit Questions and their Answers"
+      explanation: "Use this page to select a question to edit it and/or it's answers."
+      no_questions: There are no questions on file for this dataset.
+    show:
+      title: "Question: %{question}"
+      header_answers: Answers
+      no_answers: There are no pre-defined list of answers for this question.
+    form: 
+      header_answers: Answers
+      explanation_answers: "The answer settings fields (value, sort order, etc) are only shown in the '%{lang}' tab."
+      default_text: Default Text
   shared:
     explore_data:
       no_matches: Your selections returned no data. Please try again with a different selection.

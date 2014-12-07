@@ -16,6 +16,7 @@ BootstrapStarter::Application.routes.draw do
 		end
 
     resources :datasets do
+      resources :questions, :only => [:index, :show, :edit, :update]
       member do
         get 'warnings'
         get 'exclude_questions'

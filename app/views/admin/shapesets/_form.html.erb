@@ -63,14 +63,22 @@
 
     <ul class="nav nav-tabs" role="tablist" 
         data-default-language-icon="<span class='glyphicon glyphicon-star' title='<%= t('helpers.default_language') %>'></span>">
+      <%
+        default_locale = I18n.locale.to_s 
+        default_lang = '' 
+      %>
       <% locales.each_with_index do |locale, index| %>
         <%
+          lang = @languages.select{|x| x.locale == locale.to_s}.first
           cls = ''
-          cls = 'class=active' if index == 0
+          if index == 0
+            cls = 'class=active' 
+            default_locale = locale
+            default_lang = lang.present? ? lang.name : locale 
+          end
         %>
         <li role="presentation" <%= cls %> data-locale="<%= locale %>">
           <a href="#<%= locale %>" aria-controls="home" role="tab" data-toggle="tab">
-            <% lang = @languages.select{|x| x.locale == locale.to_s}.first %>
             <%= lang.present? ? lang.name : locale %>
           </a>
         </li>
@@ -85,16 +93,40 @@
         %>
         <div role="tabpanel" class="tab-pane fade <%= cls %>" id="<%= locale %>" data-locale="<%= locale %>">
           <%= f.fields_for :title_translations, OpenStruct.new(f.object.title_translations) do |translation| %>
-            <%= translation.input locale, label: model_class.human_attribute_name(:title) %>
+            <% 
+              label = model_class.human_attribute_name(:title)
+              if index > 0
+                label << show_default_text(@shapeset.title_translations[default_locale])
+              end
+            %>
+            <%= translation.input locale, label: label.html_safe %>
           <% end %>
           <%= f.fields_for :source_translations, OpenStruct.new(f.object.source_translations) do |translation| %>
-            <%= translation.input locale, label: model_class.human_attribute_name(:source) %>
+            <% 
+              label = model_class.human_attribute_name(:source)
+              if index > 0
+                label << show_default_text(@shapeset.source_translations[default_locale])
+              end
+            %>
+            <%= translation.input locale, label: label.html_safe %>
           <% end %>
           <%= f.fields_for :source_url_translations, OpenStruct.new(f.object.source_url_translations) do |translation| %>
-            <%= translation.input locale, as: :url, required: false, label: model_class.human_attribute_name(:source_url) %>
+            <% 
+              label = model_class.human_attribute_name(:source_url)
+              if index > 0
+                label << show_default_text(@shapeset.source_url_translations[default_locale], 'url')
+              end
+            %>
+            <%= translation.input locale, as: :url, required: false, label: label.html_safe %>
           <% end %>
           <%= f.fields_for :description_translations, OpenStruct.new(f.object.description_translations) do |translation| %>
-            <%= translation.input locale, :as => :text, required: false, rows: 10, label: model_class.human_attribute_name(:description), 
+            <% 
+              label = model_class.human_attribute_name(:description)
+              if index > 0
+                label << show_default_text(@shapeset.description_translations[default_locale])
+              end
+            %>
+            <%= translation.input locale, :as => :text, required: false, rows: 10, label: label.html_safe, 
                 :input_html => { class: "tinymce" } %>
           <% end %>
         </div>
