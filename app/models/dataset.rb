@@ -1,4 +1,4 @@
-class Dataset
+class Dataset < CustomTranslation
   require 'process_data_file'
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -14,13 +14,13 @@ class Dataset
   has_mongoid_attached_file :datafile, :url => "/system/datasets/:id/original/:filename", :use_timestamp => false
   has_mongoid_attached_file :codebook, :url => "/system/datasets/:id/codebook/:filename", :use_timestamp => false
 
-  field :title, type: String
-  field :description, type: String
+  field :title, type: String, localize: true
+  field :description, type: String, localize: true
+  field :source, type: String, localize: true
+  field :source_url, type: String, localize: true
   field :start_gathered_at, type: Date
   field :end_gathered_at, type: Date
   field :released_at, type: Date
-  field :source, type: String
-  field :source_url, type: String
   # whether or not dataset can be shown to public
   field :public, type: Boolean, default: false
   # indicate if questions_with_bad_answers has data
@@ -37,6 +37,8 @@ class Dataset
   field :file_extension, type: String
   # key to access dataset that is not public
   field :private_share_key, type: String
+  field :languages, type: Array
+  field :default_language, type: String
 
   embeds_many :questions do
     # these are functions that will query the questions documents
@@ -171,6 +173,20 @@ class Dataset
   accepts_nested_attributes_for :stats
 
   #############################
+
+  attr_accessible :title, :description, :user_id, :has_warnings, 
+      :data_items_attributes, :questions_attributes, :questions_with_bad_answers, 
+      :datafile, :codebook, :public, :private_share_key, 
+      :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at,
+      :languages, :default_language,
+      :title_translations, :description_translations, :source_translations, :source_url_translations
+
+  TYPE = {:onevar => 'onevar', :crosstab => 'crosstab'}
+
+  FOLDER_PATH = "/system/datasets"
+  JS_FILE = "shapes.js"
+
+  #############################
   # indexes
   index ({ :title => 1})
   index ({ :released_at => 1})
@@ -190,27 +206,78 @@ class Dataset
 
   #############################
   # Validations
-  validates_presence_of :title, :source
-  validates :source_url, :format => {:with => URI::regexp(['http','https'])}, allow_blank: true
+  validates_presence_of :default_language
   validates_attachment :codebook, 
       :content_type => { :content_type => ["text/plain", "application/pdf", "application/vnd.oasis.opendocument.text", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/msword"] }
   validates_attachment_file_name :codebook, :matches => [/txt\Z/i, /pdf\Z/i, /odt\Z/i, /doc?x\Z/i]
   validates_attachment :datafile, :presence => true, 
       :content_type => { :content_type => ["application/x-spss-sav", "application/x-stata-dta", "application/octet-stream", "text/csv"] }
   validates_attachment_file_name :datafile, :matches => [/sav\Z/i, /dta\Z/i]
+  validate :validate_languages
+  validate :validate_translations
+  validate :validate_url
+
+  # validate that at least one item in languages exists
+  def validate_languages
+    # first remove any empty items
+    self.languages.delete("")
+    logger.debug "***** validates languages: #{self.languages.blank?}"
+    if self.languages.blank?
+      errors.add(:languages, I18n.t('errors.messages.blank'))
+    end
+  end
+
+  # validate the translation fields
+  # title and, source field need to be validated for presence
+  def validate_translations
+    logger.debug "***** validates dataset translations"
+    if self.default_language.present?
+      logger.debug "***** - default is present; title = #{self.title_translations[self.default_language]}; source = #{self.source_translations[self.default_language]}"
+      if self.title_translations[self.default_language].blank?
+        logger.debug "***** -- title not present!"
+        errors.add(:base, I18n.t('errors.messages.translation_default_lang', 
+            field_name: self.class.human_attribute_name('title'),
+            language: Language.get_name(self.default_language),
+            msg: I18n.t('errors.messages.blank')) )
+      end
+      if self.source_translations[self.default_language].blank?
+        logger.debug "***** -- source not present!"
+        errors.add(:base, I18n.t('errors.messages.translation_default_lang', 
+            field_name: self.class.human_attribute_name('source'),
+            language: Language.get_name(self.default_language),
+            msg: I18n.t('errors.messages.blank')) )
+      end
+    end
+  end 
+
+  # have to do custom url validation because validate format with does not work on localized fields
+  def validate_url
+    self.source_url_translations.keys.each do |key|
+      if self.source_url_translations[key].present? && (self.source_url_translations[key] =~ URI::regexp(['http','https'])).nil?
+        errors.add(:base, I18n.t('errors.messages.translation_any_lang', 
+            field_name: self.class.human_attribute_name('source_url'),
+            language: Language.get_name(key),
+            msg: I18n.t('errors.messages.invalid')) )
+        return
+      end
+    end
+  end
 
   #############################
+  ## override get methods for fields that are localized
+  def title
+    get_translation(self.title_translations)
+  end
+  def description
+    get_translation(self.description_translations)
+  end
+  def source
+    get_translation(self.source_translations)
+  end
+  def source_url
+    get_translation(self.source_url_translations)
+  end
 
-  attr_accessible :title, :description, :user_id, :has_warnings, 
-      :data_items_attributes, :questions_attributes, :questions_with_bad_answers, 
-      :datafile, :codebook, :public, :private_share_key, 
-      :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at #   ,:data 
-
-
-  TYPE = {:onevar => 'onevar', :crosstab => 'crosstab'}
-
-  FOLDER_PATH = "/system/datasets"
-  JS_FILE = "shapes.js"
 
   #############################
 
@@ -245,19 +312,19 @@ class Dataset
   end
 
   def update_flags
-    puts "==== update_flags"
-    puts "==== - bad answers = #{self.questions_with_bad_answers.present?}; no answers = #{self.questions.with_no_code_answers.present?}; no question text = #{self.questions_with_no_text.present?}"
-    puts "==== - has_warnings was = #{self.has_warnings}"
+    logger.debug "==== update_flags"
+    logger.debug "==== - bad answers = #{self.questions_with_bad_answers.present?}; no answers = #{self.questions.with_no_code_answers.present?}; no question text = #{self.questions_with_no_text.present?}"
+    logger.debug "==== - has_warnings was = #{self.has_warnings}"
     self.has_warnings = self.questions_with_bad_answers.present? || 
                         self.questions.with_no_code_answers.present? || 
                         self.questions_with_no_text.present?
 
-    puts "==== - has_warnings = #{self.has_warnings}"
+    logger.debug "==== - has_warnings = #{self.has_warnings}"
     return true
   end
 
   def update_stats
-    puts "==== update stats"
+    logger.debug "==== update stats"
     self.build_stats if self.stats.nil?
 
     # how many questions have answers
@@ -280,14 +347,14 @@ class Dataset
 
   # this is called from an embeded question if the is_mappable value changed in that question
   def update_mappable_flag
-    puts "==== question mappable = #{self.questions.index{|x| x.is_mappable == true}.present?}"
+    logger.debug "==== question mappable = #{self.questions.index{|x| x.is_mappable == true}.present?}"
     self.is_mappable = self.questions.index{|x| x.is_mappable == true}.present?
     self.save
 
     # if this dataset is mappable, create the js file with the geojson in it
     # else, delete the js file
     if self.is_mappable?
-      puts "=== creating js file"
+      logger.debug "=== creating js file"
       # create hash of shapes in format: {code => geojson, code => geojson}
       shapes = {}
       self.questions.are_mappable.each do |question|
@@ -300,7 +367,7 @@ class Dataset
       end
     else
       # delete js file
-      puts "==== deleting shape js file at #{js_shapefile_file_path}"
+      logger.debug "==== deleting shape js file at #{js_shapefile_file_path}"
       FileUtils.rm js_shapefile_file_path if File.exists?(js_shapefile_file_path)
     end
 
@@ -448,7 +515,7 @@ class Dataset
         counts =  data.select{|x| x.present?}
                   .each_with_object(Hash.new(0)) { |item,counts| counts[item.to_s] += 1 }
 
-        puts "== total time to get counts = #{(Time.now - start)*1000} ms"
+        logger.debug "== total time to get counts = #{(Time.now - start)*1000} ms"
 
         # now put it all together
 
@@ -504,7 +571,7 @@ class Dataset
       end
     end
 
-    puts "== total time = #{(Time.now - start)*1000} ms"
+    logger.debug "== total time = #{(Time.now - start)*1000} ms"
     return result
   end
 
@@ -543,8 +610,8 @@ class Dataset
       # get uniq values
       row_answers = result[:row_answers].map{|x| x.value}.sort
       col_answers = result[:column_answers].map{|x| x.value}.sort
-      puts "unique row answers = #{row_answers}"
-      puts "unique col answers = #{col_answers}"
+      logger.debug "unique row answers = #{row_answers}"
+      logger.debug "unique col answers = #{col_answers}"
 
       # get the values for the codes from the data
       data1 = self.data_items.code_data(question_code1)
@@ -553,8 +620,8 @@ class Dataset
       row_items = data1.uniq
       col_items = data2.uniq
 
-      puts "uniq row items = #{row_items}"
-      puts "uniq col items = #{col_items}"
+      logger.debug "uniq row items = #{row_items}"
+      logger.debug "uniq col items = #{col_items}"
 
       # merge the data arrays into one array that 
       # has nested arrays
@@ -586,7 +653,7 @@ class Dataset
         end
       end
 
-      puts "== total time to get data = #{(Time.now - start)*1000} ms"
+      logger.debug "== total time to get data = #{(Time.now - start)*1000} ms"
 
       if counts.present?
         # now put it all together
@@ -612,10 +679,10 @@ class Dataset
 
         # - take counts and turn into percents
         totals = []
-        puts "counts = \n #{result[:counts]}"
+        logger.debug "counts = \n #{result[:counts]}"
         result[:counts].each do |count_row|
           total = count_row.inject(:+)
-          puts " - row total = #{total}"
+          logger.debug " - row total = #{total}"
           totals << total
           if total > 0
             percent_row = []
@@ -627,9 +694,9 @@ class Dataset
             result[:percents] << Array.new(count_row.length){0}
           end
         end
-        puts "----------"
-        puts " - totals = #{totals}"
-        puts " - total = #{totals.inject(:+).to_i}"
+        logger.debug "----------"
+        logger.debug " - totals = #{totals}"
+        logger.debug " - total = #{totals.inject(:+).to_i}"
 
         # - record the total number of responses
         result[:total_responses] = totals.inject(:+).to_i
@@ -703,7 +770,7 @@ class Dataset
       end
     end
 
-    puts "== total time = #{(Time.now - start)*1000} ms"
+    logger.debug "== total time = #{(Time.now - start)*1000} ms"
     return result
   end
 
@@ -714,8 +781,8 @@ class Dataset
   ### - row: name of key to put along row of crosstab
   def data_onevar_analysis1(row, options={})
     start = Time.now
-#    puts "--------------------"
-#    puts "--------------------"
+#    logger.debug "--------------------"
+#    logger.debug "--------------------"
 
     result = {}
     data = []
@@ -735,7 +802,7 @@ class Dataset
     if result[:row_question].present? && result[:row_answers].present?
       # get uniq values
       row_answers = result[:row_answers].map{|x| x.value}.sort
-      puts "unique row values = #{row_answers}"
+      logger.debug "unique row values = #{row_answers}"
 
       # get the counts of each row value
       map = "
@@ -753,8 +820,8 @@ class Dataset
         }
       "
 
-#      puts map
-#      puts "---"
+#      logger.debug map
+#      logger.debug "---"
 
       # countRowValue will be an array of ones from the map function above
       # for the total number of times that the row value appears in data
@@ -765,17 +832,17 @@ class Dataset
         };
       "
 
-#      puts reduce
-#      puts "---"
+#      logger.debug reduce
+#      logger.debug "---"
 
       data << Dataset.where(:id => self.id).map_reduce(map, reduce).out(inline: true).to_a
 
       # flatten the data
-#      puts "++ data length was = #{data.length}"
+#      logger.debug "++ data length was = #{data.length}"
       data.flatten!
-#      puts "++ data length = #{data.length}"
+#      logger.debug "++ data length = #{data.length}"
 
-      puts "== total time to get data = #{(Time.now - start)*1000} ms"
+      logger.debug "== total time to get data = #{(Time.now - start)*1000} ms"
 
       if data.present?
         # now put it all together
@@ -831,7 +898,7 @@ class Dataset
       end
     end
 
-    puts "== total time = #{(Time.now - start)*1000} ms"
+    logger.debug "== total time = #{(Time.now - start)*1000} ms"
 
     return result
   end
@@ -842,8 +909,8 @@ class Dataset
   ### - col: name of key to put along the columns of crosstab
   def data_crosstab_analysis1(row, col, options={})
     start = Time.now
-#    puts "--------------------"
-#    puts "--------------------"
+#    logger.debug "--------------------"
+#    logger.debug "--------------------"
 
     result = {}
     data = []
@@ -870,12 +937,12 @@ class Dataset
       # get uniq values
       row_answers = result[:row_answers].map{|x| x.value}.sort
       col_answers = result[:column_answers].map{|x| x.value}.sort
-      puts "unique row values = #{row_answers}"
-      puts "unique col values = #{col_answers}"
+      logger.debug "unique row values = #{row_answers}"
+      logger.debug "unique col values = #{col_answers}"
 
       col_answers.each do |c|
-#        puts "--------------------"
-#        puts "c = #{c}"
+#        logger.debug "--------------------"
+#        logger.debug "c = #{c}"
 
         # need to make sure the row value and c value are recorded as strings
         # for if it is an int, the javascript function turns it into a decimal 
@@ -894,8 +961,8 @@ class Dataset
           };
         "
 
-#        puts map
-#        puts "---"
+#        logger.debug map
+#        logger.debug "---"
 
         reduce = "
           function(rowKey, columnValues) {
@@ -903,8 +970,8 @@ class Dataset
           };
         "
 
-#        puts reduce
-#        puts "---"
+#        logger.debug reduce
+#        logger.debug "---"
 
         data << Dataset.where(:id => self.id).map_reduce(map, reduce).out(inline: true).to_a
 
@@ -913,14 +980,14 @@ class Dataset
 
 
       # flatten the data
-#      puts "++ data length was = #{data.length}"
+#      logger.debug "++ data length was = #{data.length}"
       data.flatten!
-#      puts "++ data length = #{data.length}"
-      puts "-----------"
-      puts data.inspect
-      puts "-----------"
+#      logger.debug "++ data length = #{data.length}"
+      logger.debug "-----------"
+      logger.debug data.inspect
+      logger.debug "-----------"
 
-      puts "== total time to get data = #{(Time.now - start)*1000} ms"
+      logger.debug "== total time to get data = #{(Time.now - start)*1000} ms"
 
       if data.present?
         # now put it all together
@@ -941,10 +1008,10 @@ class Dataset
 
         # - take counts and turn into percents
         totals = []
-        puts "counts = \n #{result[:counts]}"
+        logger.debug "counts = \n #{result[:counts]}"
         result[:counts].each do |count_row|
           total = count_row.inject(:+)
-          puts " - row total = #{total}"
+          logger.debug " - row total = #{total}"
           totals << total
           if total > 0
             percent_row = []
@@ -956,9 +1023,9 @@ class Dataset
             result[:percents] << Array.new(count_row.length){0}
           end
         end
-        puts "----------"
-        puts " - totals = #{totals}"
-        puts " - total = #{totals.inject(:+).to_i}"
+        logger.debug "----------"
+        logger.debug " - totals = #{totals}"
+        logger.debug " - total = #{totals.inject(:+).to_i}"
 
         # - record the total number of responses
         result[:total_responses] = totals.inject(:+).to_i
@@ -1032,7 +1099,7 @@ class Dataset
       end
     end
 
-    puts "== total time = #{(Time.now - start)*1000} ms"
+    logger.debug "== total time = #{(Time.now - start)*1000} ms"
     return result
   end
 =end

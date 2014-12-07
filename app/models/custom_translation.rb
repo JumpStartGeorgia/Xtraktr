@@ -17,21 +17,41 @@ class CustomTranslation
   # end
 
 
+  # ###########################################
+  # # if the object has translations but is an embeded document, it should not be using callbacks
+  # # so set this to false if you do not want callbacks working
+  # def initialize(options={use_callbacks: true})
+  #   @use_callbacks = use_callbacks
+  #   puts "--> initialize, use_callbacks = #{use_callbacks}"
+  # end
+
   ###########################################
 
-  # save a reference to the locale that should be used to get translations for
-  attr_accessor :current_locale
+  # current_locale: save a reference to the locale that should be used to get translations for
+  # languages: optional variable array to hold list of required locales that should be overriden with a field in the inheriting class
+  # default_language: optional variable to hold default locale that should be overriden with a field in the inheriting class  
+  attr_accessor :current_locale, :languages, :default_language
 
   ###########################################
 
   # when the record is initialized, set the current_locale to the default language, or the current locale if non-set
-  after_find :set_current_locale
   after_initialize :set_current_locale
+  after_initialize :set_languages
 
 
   # if the current locale is in the list of languages or there is no default language, use current locale, else default to default language
   def set_current_locale
+    puts "--> setting current locale"
     self.current_locale = ((self.languages.present? && self.languages.include?(I18n.locale.to_s)) || self.default_language.blank?) ? I18n.locale.to_s : self.default_language
+    puts "--> self.current_locale = #{self.current_locale}"
+  end
+
+  # if this is a new record and languages does not exist, initialize it to the current locale
+  def set_languages
+    puts "--> setting languages"
+    self.languages = [I18n.locale.to_s] if self.languages.blank?
+    self.default_language = I18n.locale.to_s if self.default_language.blank?
+    puts "--> self.languages = #{self.languages}"
   end
 
   ###########################################
@@ -46,7 +66,7 @@ class CustomTranslation
     orig_locale = I18n.locale
     I18n.locale = locale.to_sym
 
-    logger.debug "---> for #{caller_locations(1,1)[0].label}, locale = #{I18n.locale}, fallback = #{fallback_locale}"
+    puts "---> for #{caller_locations(1,1)[0].label}, locale = #{I18n.locale}, fallback = #{fallback_locale}"
     text = object[I18n.locale.to_s]
     text = object[fallback_locale.to_s] if text.blank?
 
@@ -54,5 +74,16 @@ class CustomTranslation
 
     return text
   end
+
+
+  # get the languages sorted with default first
+  def languages_sorted
+    langs = self.languages.dup
+    if self.default_language.present?
+      langs.rotate!(langs.index(self.default_language))
+    end
+    langs
+  end
+
 
 end

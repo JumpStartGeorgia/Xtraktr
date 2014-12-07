@@ -15,7 +15,7 @@ class Shapeset < CustomTranslation
   field :description, type: String, localize: true
   field :source, type: String, localize: true
   field :source_url, type: String, localize: true
-  field :names, type: Array, default: [], localize: true
+  field :names, type: Array, localize: true
   field :languages, type: Array
   field :default_language, type: String
 
@@ -26,14 +26,15 @@ class Shapeset < CustomTranslation
 
   #############################
   
-  attr_accessible :title, :description, :shapefile, :names, :user_id, :source, :source_url, :languages, :default_language,
+  attr_accessible :title, :description, :shapefile, :names, :user_id, :source, :source_url, 
+    :languages, :default_language,
     :title_translations, :description_translations, :source_translations, :source_url_translations
 
   KEY_NAME = 'name_'
 
   #############################
   # Validations
-  validates_presence_of :languages
+  validates_presence_of :default_language
   validates_attachment :shapefile, :presence => true, 
       :content_type => { :content_type => ["text/plain", "application/json", "application/octet-stream"] }
   validates_attachment_file_name :shapefile, :matches => [/geojson\Z/, /json\Z/]
@@ -52,14 +53,12 @@ class Shapeset < CustomTranslation
   end
 
   # validate the translation fields
-  # only primary language field needs to be validated for presence
+  # title and source need to be validated for presence
   def validate_translations
     logger.debug "***** validates translations"
     if self.default_language.present?
-      logger.debug "***** - primary is present; title = #{self.title_translations[self.default_language]}; source = #{self.source_translations[self.default_language]}"
+      logger.debug "***** - default is present; title = #{self.title_translations[self.default_language]}; source = #{self.source_translations[self.default_language]}"
       if self.title_translations[self.default_language].blank?
-        Title of the primary language english cannot be blank
-
         errors.add(:base, I18n.t('errors.messages.translation_default_lang', 
             field_name: self.class.human_attribute_name('title'),
             language: Language.get_name(self.default_language),
@@ -133,15 +132,6 @@ class Shapeset < CustomTranslation
     return JSON.parse(geojson)
   end
 
-
-  # get the languages sorted with primary first
-  def languages_sorted
-    langs = self.languages.dup
-    if self.default_language.present?
-      langs.rotate!(langs.index(self.default_language))
-    end
-    langs
-  end
 
   #############################
   ## override get methods for fields that are localized

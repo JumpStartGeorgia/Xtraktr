@@ -51,6 +51,8 @@ class DatasetsController < ApplicationController
     @js.push('jquery.ui.datepicker.js', "datasets.js")
 
     add_nav_options(set_url: false)
+
+    set_tabbed_translation_form_settings
     
     respond_to do |format|
       format.html # new.html.erb
@@ -73,6 +75,8 @@ class DatasetsController < ApplicationController
       @js.push('jquery.ui.datepicker.js', "datasets.js")
 
       add_nav_options()
+
+      set_tabbed_translation_form_settings
     else
       flash[:info] =  t('app.msgs.does_not_exist')
       redirect_to datasets_path(:locale => I18n.locale)
@@ -100,6 +104,8 @@ class DatasetsController < ApplicationController
         @js.push('jquery.ui.datepicker.js', "datasets.js")
 
         add_nav_options({show_title: false, set_url: false})
+
+        set_tabbed_translation_form_settings
 
         format.html { render action: "new" }
         format.json { render json: @dataset.errors, status: :unprocessable_entity }
@@ -131,6 +137,8 @@ class DatasetsController < ApplicationController
           @js.push('jquery.ui.datepicker.js', "datasets.js")
 
           add_nav_options()
+
+          set_tabbed_translation_form_settings
 
           format.html { render action: "edit" }
           format.json { render json: @dataset.errors, status: :unprocessable_entity }

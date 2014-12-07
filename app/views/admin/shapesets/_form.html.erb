@@ -1,6 +1,6 @@
 <%- model_class = Shapeset -%>
 
-<%= semantic_form_for([:admin, @shapeset], html: {:multipart => true, class: 'translations-form'}) do |f| %>
+<%= semantic_form_for([:admin, @shapeset], html: {:multipart => true, class: 'tabbed-translation-form'}) do |f| %>
   <%= f.error_messages %>
 
   <%= f.inputs do %>
@@ -16,7 +16,7 @@
       <input accept="text/plain, application/json, application/octet-stream" id="shapeset_shapefile" name="shapeset[shapefile]" type="file">
     </div>
 
-    <%= f.input :languages, as: :select, :collection => @languages.map{|x| [x.name, x.locale]}, multiple: true,
+    <%= f.input :languages, as: :select, :collection => @languages.map{|x| [x.name, x.locale]}, multiple: true, required: true,
           :input_html => {class: 'selectpicker-language languages', 
             :'data-live-search' => "true", :'data-selected-text-format' => "count>3", :'data-size' => "7",
             :'data-width' => "72%"} %>
@@ -55,7 +55,7 @@
 
   <hr />
 
-  <div role="tabpanel" class="translation-fields">
+  <div role="tabpanel" class="tabbed-translation-fields">
     <% 
       locales = [I18n.locale] 
       locales = @shapeset.languages_sorted if @shapeset.languages.present?
@@ -113,5 +113,3 @@
 
 
 <%= tinymce_assets %>
-<%# tinymce %>
-

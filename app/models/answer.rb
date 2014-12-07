@@ -1,14 +1,16 @@
-class Answer
+class Answer < CustomTranslation
   include Mongoid::Document
 
+  #############################
+
   field :value, type: String
-  field :text, type: String
+  field :text, type: String, localize: true
   field :can_exclude, type: Boolean, default: false
   field :sort_order, type: Integer, default: 1
   field :exclude, type: Boolean, default: false
   # name of the shape that this answer maps to
   # - only populated if the question is mappable
-  field :shape_name, type: String
+  field :shape_name, type: String, localize: true
 
   embedded_in :question
 
@@ -18,11 +20,37 @@ class Answer
   # index ({ :sort_order => 1})
 
   #############################
-  # Validations
-  validates_presence_of :value, :text
+  attr_accessible :value, :text, :can_exclude, :sort_order, :text_translations
 
   #############################
-  attr_accessible :value, :text, :can_exclude, :sort_order
+  # Validations
+  validates_presence_of :value
+  validate :validate_translations
+
+  # validate the translation fields
+  # text field needs to be validated for presence
+  def validate_translations
+    logger.debug "***** validates answer translations"
+    if self.question.dataset.default_language.present?
+      logger.debug "***** - default is present; text = #{self.text_translations[self.question.dataset.default_language]}"
+      if self.text_translations[self.question.dataset.default_language].blank?
+        logger.debug "***** -- text not present!"
+        errors.add(:base, I18n.t('errors.messages.translation_default_lang', 
+            field_name: self.class.human_attribute_name('text'),
+            language: Language.get_name(self.question.dataset.default_language),
+            msg: I18n.t('errors.messages.blank')) )
+      end
+    end
+  end 
+
+  #############################
+  ## override get methods for fields that are localized
+  def text
+    get_translation(self.text_translations, self.question.dataset.current_locale, self.question.dataset.default_language)
+  end
+  def shape_name
+    get_translation(self.shape_name_translations, self.question.dataset.current_locale, self.question.dataset.default_language)
+  end
 
   #############################
 

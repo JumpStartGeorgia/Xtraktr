@@ -31,7 +31,7 @@ class Admin::ShapesetsController < ApplicationController
   def new
     @shapeset = Shapeset.new
     
-    set_form_settings
+    set_tabbed_translation_form_settings
 
     respond_to do |format|
       format.html # new.html.erb
@@ -43,7 +43,7 @@ class Admin::ShapesetsController < ApplicationController
   def edit
     @shapeset = Shapeset.find(params[:id])
     
-    set_form_settings
+    set_tabbed_translation_form_settings
   end
 
   # POST /shapesets
@@ -56,7 +56,7 @@ class Admin::ShapesetsController < ApplicationController
         format.html { redirect_to admin_shapeset_path(@shapeset), notice: t('app.msgs.success_created', :obj => t('mongoid.models.shapeset')) }
         format.json { render json: @shapeset, status: :created, location: @shapeset }
       else
-        set_form_settings
+        set_tabbed_translation_form_settings
         format.html { render action: "new" }
         format.json { render json: @shapeset.errors, status: :unprocessable_entity }
       end
@@ -75,7 +75,7 @@ class Admin::ShapesetsController < ApplicationController
         format.html { redirect_to admin_shapeset_path(@shapeset), notice: t('app.msgs.success_updated', :obj => t('mongoid.models.shapeset')) }
         format.json { head :no_content }
       else
-        set_form_settings
+        set_tabbed_translation_form_settings
         format.html { render action: "edit" }
         format.json { render json: @shapeset.errors, status: :unprocessable_entity }
       end
@@ -94,14 +94,6 @@ class Admin::ShapesetsController < ApplicationController
     end
   end
 
-private
-
-  def set_form_settings
-    @languages = Language.sorted
-    @css.push('translation_form.css', 'select2.css')
-    @js.push('translation_form.js', 'select2/select2.min.js')
-    gon.tinymce_options = Hash[TinyMCE::Rails.configuration['default'].options.map{|(k,v)| [k.to_s,v.class == Array ? v.join(',') : v]}]
-  end
 end
 
 

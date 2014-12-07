@@ -85,7 +85,10 @@ module ProcessDataFile
             # only add if the code and text are present
             if row[0].present? && row[0].strip.present? && row[1].present? && row[1].strip.present?
               # mongo does not allow '.' in key names, so replace with '|'
-              self.questions_attributes = [{code: clean_text(row[0], format_code: true), original_code: clean_text(row[0]), text: clean_text(row[1])}]
+              self.questions_attributes = [{code: clean_text(row[0], format_code: true), 
+                                            original_code: clean_text(row[0]), 
+                                            text_translations: {self.default_language => clean_text(row[1])}
+                                          }]
             else
               # if there is question code but no question text, save this
               if row[0].present? && row[0].strip.present? && !(row[1].present? && row[1].strip.present?)
@@ -111,7 +114,10 @@ module ProcessDataFile
           question_codes.each_with_index do |code, code_index|
             code_data = data.map{|x| x[code_index]}
             if code_data.present?
-              self.data_items_attributes = [{code: clean_text(code, format_code: true), original_code: clean_text(code), data: code_data}]
+              self.data_items_attributes = [{code: clean_text(code, format_code: true), 
+                                            original_code: clean_text(code), 
+                                            data: code_data
+                                          }]
             else
               puts "******************************"
               puts "Column #{code_index} (supposed to be #{code}) of #{file_questions} does not exist."
@@ -181,7 +187,10 @@ module ProcessDataFile
                   # create sort order that is based on order they are listed in data file
                   sort_order += 1
                   # - if this is the first answer for this question, initialize the array
-                  question.answers_attributes  = [{value: clean_text(values[1]), text: clean_text(values[2]), sort_order: sort_order}]
+                  question.answers_attributes  = [{value: clean_text(values[1]), 
+                                                  text_translations: { self.default_language => clean_text(values[2]) }, 
+                                                  sort_order: sort_order
+                                                }]
                   # update question to indciate it has answers
                   question.has_code_answers = true
                 else

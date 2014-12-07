@@ -1,4 +1,4 @@
-class Question
+class Question < CustomTranslation
   include Mongoid::Document
 
   #############################
@@ -11,7 +11,7 @@ class Question
   # all codes are downcased and '.' are replaced with '|'
   field :code, type: String
   field :original_code, type: String
-  field :text, type: String
+  field :text, type: String, localize: true
   # whether or not the questions has answers
   field :has_code_answers, type: Boolean, default: false
   # whether or not the question should not be included in the analysis
@@ -54,11 +54,35 @@ class Question
   # index ({ :is_mappable => 1})
 
   #############################
-  # Validations
-  validates_presence_of :code, :text, :original_code
+  attr_accessible :code, :text, :original_code, :has_code_answers, :is_mappable, :answers_attributes, :exclude, :text_translations
 
   #############################
-  attr_accessible :code, :text, :original_code, :has_code_answers, :is_mappable, :answers_attributes, :exclude
+  # Validations
+  validates_presence_of :code, :original_code
+  validate :validate_translations
+
+  # validate the translation fields
+  # text field needs to be validated for presence
+  def validate_translations
+    logger.debug "***** validates question translations"
+    if self.dataset.default_language.present?
+      logger.debug "***** - default is present; text = #{self.text_translations[self.dataset.default_language]}"
+      if self.text_translations[self.dataset.default_language].blank?
+        logger.debug "***** -- text not present!"
+        errors.add(:base, I18n.t('errors.messages.translation_default_lang', 
+            field_name: self.class.human_attribute_name('text'),
+            language: Language.get_name(self.dataset.default_language),
+            msg: I18n.t('errors.messages.blank')) )
+      end
+    end
+  end 
+
+
+  #############################
+  ## override get methods for fields that are localized
+  def text
+    get_translation(self.text_translations, self.dataset.current_locale, self.dataset.default_language)
+  end
 
   #############################
 
@@ -66,7 +90,7 @@ class Question
   before_save :check_mappable
 
   def update_flags
-    puts "updating question flags for #{self.code}"
+    logger.debug "updating question flags for #{self.code}"
     self.has_code_answers = self.answers.present?
 
     return true
