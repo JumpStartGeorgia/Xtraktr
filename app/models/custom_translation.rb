@@ -41,17 +41,17 @@ class CustomTranslation
 
   # if the current locale is in the list of languages or there is no default language, use current locale, else default to default language
   def set_current_locale
-    puts "--> setting current locale"
+#    puts "--> setting current locale"
     self.current_locale = ((self.languages.present? && self.languages.include?(I18n.locale.to_s)) || self.default_language.blank?) ? I18n.locale.to_s : self.default_language
-    puts "--> self.current_locale = #{self.current_locale}"
+#    puts "--> self.current_locale = #{self.current_locale}"
   end
 
   # if this is a new record and languages does not exist, initialize it to the current locale
   def set_languages
-    puts "--> setting languages"
+#    puts "--> setting languages"
     self.languages = [I18n.locale.to_s] if self.languages.blank?
     self.default_language = I18n.locale.to_s if self.default_language.blank?
-    puts "--> self.languages = #{self.languages}"
+#    puts "--> self.languages = #{self.languages}"
   end
 
   ###########################################

@@ -8,7 +8,7 @@
       <div id="mappable-select" class="row">
         <div class="col-sm-6">
           <%= label_tag :question, t('.question_label') %>
-          <%= select_tag :question, options_from_collection_for_select(@not_mappable, "id", "text"),
+          <%= select_tag :question, options_from_collection_for_select(@not_mappable, "id", "text", params[:question_id]),
             :class => 'selectpicker-mappable', :'data-width' => '100%', :'data-live-search' => true %>
         </div>
         <div class="col-sm-6">

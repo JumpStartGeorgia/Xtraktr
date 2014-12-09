@@ -23,12 +23,12 @@ ka:
       dataset:
         title: Title
         description: Description
+        source: Source of Data
+        source_url: URL to Souce
         datafile: Data File
         has_warnings: Issues with Data
         stats: Dataset Stats
         codebook: Codebook
-        source: Source of Data
-        source_url: URL to Souce
         released_at: Date Released
         start_gathered_at: Date Started Gathering Data
         end_gathered_at: Date Finished Gathering Data
@@ -36,25 +36,29 @@ ka:
         public: Make Available to Public
         languages: Languages of Dataset
         default_language: Default Language
+        is_mappable: Has questions have been setup to show answers on a map
       question:
         code: Question Code
         original_code: Question Code
         text: Question
         exclude: Exclude Question from Analysis
         no_questions: There are no questions on file for this dataset.
+        is_mappable: Question has been setup to show answers on a map
+        has_code_answers: Has defined list of answers
       answer:
-        code: Question Code
         value: Value
         text: Answer
         exclude: Exclude Answer from Analysis
         can_exclude: Can Exclude During Analysis
         no_questions: There are no questions on file for this dataset.
+        sort_order: Sort Order
+        shape_name: Name of Shape
       shapeset:
         title: Title
         description: Description
-        shapefile: GeoJSON File
         source: Source of Shapeset
         source_url: URL to Souce
+        shapefile: GeoJSON File
         languages: Languages of Shapeset
         default_language: Default Language
   errors:
@@ -66,6 +70,9 @@ ka:
   dataset_status:
     public: Public
     private: Private
+  tabbed_translation_form:
+    default_text: Default Text
+    default_url: Default URL
   explore_data:
     hover_region: Hover over a Region
     na: N/A
@@ -157,6 +164,7 @@ ka:
       close: Close
       select_all: Select All
       select_none: Select None
+      make_mappable: Make Mappable
     titles:
       edit: "შეცვლა %{model}"
       save: "შენახვა %{model}"

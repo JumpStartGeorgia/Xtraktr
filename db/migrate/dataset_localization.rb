@@ -22,6 +22,7 @@ Dataset.all.each do |dataset|
     # go through each answer
     question.answers.each do |answer|
       answer.text_translations = {locale => answer[:text]} if !answer[:text].nil?
+      answer.shape_name_translations = {locale => answer[:shape_name]} if !answer[:shape_name].nil?
     end
   end
 

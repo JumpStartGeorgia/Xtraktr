@@ -5,7 +5,7 @@
   <%= f.error_messages %>
 
   <p>
-    <strong><%= model_class.human_attribute_name(:code) %>:</strong>
+    <strong><%= model_class.human_attribute_name(:code) %></strong>
     <br />
     <%= @question.original_code %>
   </p>
@@ -13,6 +13,20 @@
   <%= f.inputs do %>
     <%= f.input :exclude, as: :radio %>
   <% end %>
+
+  <p>
+    <strong><%= model_class.human_attribute_name(:is_mappable) %></strong>
+    <br />
+    <% if @question.is_mappable? %>
+      <%= t('formtastic.yes') %>
+      <%= link_to t('helpers.links.edit'), mappable_form_edit_dataset_path(:id => @dataset, :question_id => @question.id), 
+            target: :blank, class: 'btn btn-sm btn-default' %>
+    <% else %>
+      <%= t('formtastic.no') %>
+      <%= link_to t('helpers.links.make_mappable'), mappable_form_dataset_path(:id => @dataset, :question_id => @question.id), 
+            target: :blank, class: 'btn btn-xs btn-default' %>
+    <% end %>
+  </p>
 
   <hr />
 
