@@ -12,7 +12,7 @@ class UsersDatatable
     {
       draw: params[:draw].to_i,
       recordsTotal: user_query.count,
-      recordsFiltered: users.total_entries,
+      recordsFiltered: users.total_count,
       data: data
     }
   end
@@ -58,8 +58,8 @@ private
   end
 
   def fetch_users
-    users = user_query.order("#{sort_column} #{sort_direction}")
-    users = users.page(page).per_page(per_page)
+    users = user_query.order_by([[sort_column, :sort_direction]])
+    users = users.page(page).per(per_page)
     if params[:search].present? && params[:search][:value].present?
       users = users.where("users.email like :search", search: "%#{params[:search][:value]}%")
     end

@@ -133,6 +133,9 @@ GEM
       railties (>= 3.1.0)
     json (1.8.1)
     jwt (1.0.0)
+    kaminari (0.16.1)
+      actionpack (>= 3.0.0)
+      activesupport (>= 3.0.0)
     kgio (2.9.2)
     less (2.5.1)
       commonjs (~> 0.2.7)
@@ -268,7 +271,6 @@ GEM
       raindrops (~> 0.7)
     warden (1.1.1)
       rack (>= 1.0)
-    will_paginate (3.0.7)
 
 PLATFORMS
   ruby
@@ -289,6 +291,7 @@ DEPENDENCIES
   jquery-rails (~> 3.1.0)
   jquery-ui-rails (~> 4.1.2)
   json
+  kaminari (~> 0.16.1)
   less-rails!
   mailcatcher (= 0.5.12)
   mongoid (~> 3.1.6)
@@ -307,4 +310,3 @@ DEPENDENCIES
   uglifier (>= 1.0.3)
   unicorn (~> 4.8.3)
   useragent!
-  will_paginate (~> 3.0.5)

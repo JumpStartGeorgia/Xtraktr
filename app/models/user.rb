@@ -61,7 +61,7 @@ class User
   #############################
 
   # indexes
-  index({ :email => 1}, { background: true, unique: true })
+  index({ :email => 1}, { background: true})
   index({ :role => 1}, {background: true})
   index({ :provider => 1, :role => 1}, {background: true})
   index({ :reset_password_token => 1}, { background: true, unique: true, sparse: true })
@@ -109,6 +109,7 @@ class User
   end
 
   def self.find_for_facebook_oauth(auth, signed_in_resource=nil)
+    logger.debug "+++++++++++++ #{auth.inspect}"
     user = User.where(:provider => auth.provider, :uid => auth.uid).first
     unless user
       user = User.create(  nickname: auth.info.nickname,
@@ -127,7 +128,7 @@ class User
   # this helps load them into the new user registration url
   def self.new_with_session(params, session)
     super.tap do |user|
-      if data = session["devise.facebook_data"] && session["devise.facebook_data"]["extra"]["raw_info"]
+      if data = session["devise.facebook_data"]# && session["devise.facebook_data"]["extra"]["raw_info"]
         user.email = data["email"] if user.email.blank?
       end
     end
