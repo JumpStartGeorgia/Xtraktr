@@ -12,6 +12,7 @@ class DatasetsController < ApplicationController
     @datasets = Dataset.where(user_id: current_user.id).sorted
 
     @css.push("datasets.css")
+    @js.push("search.js")
 
     respond_to do |format|
       format.html # index.html.erb

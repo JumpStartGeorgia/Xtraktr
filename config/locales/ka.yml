@@ -37,6 +37,7 @@ ka:
         languages: Languages of Dataset
         default_language: Default Language
         is_mappable: Has questions have been setup to show answers on a map
+        created_at: Added On
       question:
         code: Question Code
         original_code: Question Code
@@ -61,12 +62,14 @@ ka:
         shapefile: GeoJSON File
         languages: Languages of Shapeset
         default_language: Default Language
+        created_at: Added On
   errors:
     messages:
       required_field: "სავალდებულო ველი"
       already_exists: 'უკვე არსებობს მონაცემთა ბაზაში'
       translation_default_lang: "%{field_name} for Default Language '%{language}' %{msg}"
       translation_any_lang: "%{field_name} for Language '%{language}' %{msg}"
+      invalid_language: "'%{lang_locale}' is not a valid language locale"
   dataset_status:
     public: Public
     private: Private

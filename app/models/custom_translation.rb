@@ -85,5 +85,22 @@ class CustomTranslation
     langs
   end
 
+  # return array of language objects for each locale in languages
+  def language_objects
+    langs = []
+
+    if self.languages.present?
+      self.languages_sorted.each do |locale|
+        l = Language.where(:locale => locale).to_a
+
+        if l.present?
+          langs << l.first
+        end
+      end
+    end
+
+    return langs
+  end
+
 
 end

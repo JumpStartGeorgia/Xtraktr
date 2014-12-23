@@ -8,12 +8,14 @@
   <%= link_to t('helpers.links.admin'), admin_path, :class => 'btn btn-default' if current_user.role? User::ROLES[:admin] %>
 </div>
 
-<table class="table table-striped display">
+<table id="shapeset-datatable" class="table table-striped display">
   <thead>
     <tr>
       <th><%= model_class.human_attribute_name(:title) %></th>
       <th><%= model_class.human_attribute_name(:source) %></th>
+      <th><%= model_class.human_attribute_name(:languages) %></th>
       <th><%= model_class.human_attribute_name(:descritpion) %></th>
+      <th><%= model_class.human_attribute_name(:created_at) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
@@ -22,7 +24,9 @@
       <tr>
         <td><%= shapeset.title %></td>
         <td><%= shapeset.source %></td>
+        <td><%= format_languages(shapeset) %></td>
         <td><%= simple_format_no_tags(shapeset.description, {}, {sanitize: false}) %></td>
+        <td><%= l shapeset.created_at, format: :date_only %></td>
         <td>
           <%= link_to t('app.buttons.edit'),
                       edit_admin_shapeset_path(shapeset), :class => 'btn btn-mini btn-default' %>

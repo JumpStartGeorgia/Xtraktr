@@ -7,14 +7,16 @@
               :class => 'btn btn-primary' %>
 </div>
 
-<table class="table table-striped display">
+<table id="dataset-datatable" class="table table-striped display">
   <thead>
     <tr>
       <th><%= model_class.human_attribute_name(:title) %></th>
       <th><%= model_class.human_attribute_name(:source) %></th>
+      <th><%= model_class.human_attribute_name(:languages) %></th>
       <th><%= model_class.human_attribute_name(:public) %></th>
       <th><%= model_class.human_attribute_name(:stats) %></th>
       <th><%= model_class.human_attribute_name(:has_warnings) %></th>
+      <th><%= model_class.human_attribute_name(:created_at) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
@@ -23,8 +25,9 @@
       <tr>
         <td><%= link_to dataset.title, dataset_path(dataset) %></td>
         <td><%= dataset.source %></td>
+        <td><%= format_languages(dataset) %></td>
         <td><%= format_dataset_public_status(dataset.public) %></td>
-        <td>
+        <td data-order="<%= dataset.stats.data_records %>">
           <%= t('.stats.data_records') %>: <%= number_with_delimiter(dataset.stats.data_records) %>
           <br />
           <%= t('.stats.good_questions') %>: <%= number_with_delimiter(dataset.stats.questions_good) %>
@@ -46,6 +49,7 @@
             <%= link_to t('.view_warnings'), warnings_dataset_path(dataset), :class => 'btn btn-mini btn-warning' %>
           <% end %>
         </td>
+        <td><%= l dataset.created_at, format: :date_only %></td>
         <td class="dropdown">
           <%= render partial: 'layouts/dataset_menu', locals: {dataset: dataset, include_parent_div: true} %>
         </td>

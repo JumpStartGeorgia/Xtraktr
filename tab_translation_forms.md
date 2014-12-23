@@ -33,6 +33,13 @@ There is a file at `app/model/custom_translation.rb` that is the base class for 
         self.languages.delete("")
         if self.languages.blank?
           errors.add(:languages, I18n.t('errors.messages.blank'))
+        else
+          # make sure each locale in languages is in Language
+          self.languages.each do |locale|
+            if Language.where(:locale => locale).count == 0
+              errors.add(:languages, I18n.t('errors.messages.invalid_language', locale: locale))
+            end
+          end
         end
   end
   ````

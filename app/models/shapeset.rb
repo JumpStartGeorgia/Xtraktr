@@ -49,6 +49,13 @@ class Shapeset < CustomTranslation
     logger.debug "***** validates languages: #{self.languages.blank?}"
     if self.languages.blank?
       errors.add(:languages, I18n.t('errors.messages.blank'))
+    else
+      # make sure each locale in languages is in Language
+      self.languages.each do |locale|
+        if Language.where(:locale => locale).count == 0
+          errors.add(:languages, I18n.t('errors.messages.invalid_language', lang_locale: locale))
+        end
+      end
     end
   end
 

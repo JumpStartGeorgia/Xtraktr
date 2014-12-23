@@ -9,6 +9,8 @@ class Admin::ShapesetsController < ApplicationController
   def index
     @shapesets = Shapeset.sorted
 
+    @js.push("search.js")
+
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @shapesets }

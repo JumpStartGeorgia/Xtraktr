@@ -8,4 +8,8 @@ module DatasetsHelper
     end
   end
 
+  def format_languages(object)
+    object.language_objects.map{|x| x.name}.join('<br /> ').html_safe
+  end
+
 end
