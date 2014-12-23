@@ -20,21 +20,24 @@
         </div>
 
         <div class="collapse navbar-collapse" id="navbar-collapse">
+          <ul class="nav navbar-nav navbar-left">
+            <li role="menuitem">
+              <%= link_to t('app.menu.about_dataset'), '#dataset-about', :'data-toggle' => "modal"  if @dataset.created_at.present? %>
+            </li>
+          </ul>
           <ul class="nav navbar-nav navbar-right">
             <% if @is_admin && @dataset.created_at.present? %>
               <li class="dropdown" role="menuitem">
                 <%= render partial: 'layouts/dataset_menu', locals: {dataset: @dataset} %>
               </li>
             <% end %>
-            <li role="menuitem">
-              <%= link_to t('app.menu.about_dataset'), '#dataset-about', :'data-toggle' => "modal"  if @dataset.created_at.present? %>
-            </li>
             <% if @is_admin %>
               <li role="menuitem">
                 <%= link_to t('app.menu.all_datasets'), datasets_path %>
               </li>
             <% end %>
           </ul>
+
         </div><!--/.nav-collapse -->
       </div><!-- /.container-fluid -->
     </nav>
@@ -103,6 +106,15 @@
 
             <p><strong><%= model_class.human_attribute_name(:datafile) %>:</strong>
             <%= link_to t('helpers.links.view'), @dataset.datafile.url, class: 'btn btn-default', target: :blank if @dataset.datafile.exists? %></p>
+
+            <p><strong><%= model_class.human_attribute_name(:languages) %>:</strong></p>
+            <ul class="list-inline">
+            <% @dataset.language_objects.each do |lang| %>
+              <li>
+                <%= link_to lang.name, params.merge(language: lang.locale), class: 'btn btn-default' %>
+              </li>
+            <% end %>
+            </ul>
 
             <% if @is_admin %>
               <p><strong><%= model_class.human_attribute_name(:public) %>:</strong>

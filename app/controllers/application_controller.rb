@@ -155,6 +155,11 @@ logger.debug "////////////////////////// BROWSER = #{user_agent}"
   ## get data for explore view
   #######################
   def explore_data_generator(dataset)
+    # if the language parameter exists and it is valid, use it instead of the default current_locale
+    if params[:language].present? && dataset.languages.include?(params[:language])
+      dataset.current_locale = params[:language]
+    end
+
     # the questions for cross tab can only be those that have code answers and are not excluded
     @questions = dataset.questions.for_analysis
 
