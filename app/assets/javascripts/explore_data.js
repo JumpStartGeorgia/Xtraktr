@@ -675,6 +675,12 @@ function get_explore_data(is_back_button){
     }
   } else{
     querystring = $("form#form-explore-data select, form#form-explore-data input:not([type=hidden])").serialize();
+
+    // add language param from url query string, if it exists
+    params = queryStringToJSON(window.location.href);
+    if (params.language != undefined){
+      querystring += "&language=" + params.language;
+    }
   }
 
   // call ajax
