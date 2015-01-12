@@ -52,13 +52,27 @@
           <%= t('.no_answers', :number => @no_answers.length) %>
         </p>
 
-        <ul>
-          <% @no_answers.each do |item| %>
-            <li>
-              <%= "#{item.original_code} - #{item.text}" %>
-            </li>
-          <% end %>
-        </ul>
+        <table class="table table-striped table-hover table-nonfluid">
+          <thead>
+            <tr>
+              <th><%= model_class.human_attribute_name(:code) %></th>
+              <th><%= model_class.human_attribute_name(:text) %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @no_answers.each do |question| %>
+              <tr>
+                <td>
+                  <%= question.original_code %>
+                </td>
+                <td>
+                  <%= question.text %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+
       <% else %>
 
         <p>
@@ -73,16 +87,28 @@
           <%= t('.bad_answers', :number => @bad_answers.length) %>
         </p>
 
-        <ul>
-          <% @bad_answers.each do |item| %>
-            <% question = @dataset.questions.with_original_code(item) %>
-            <% if question.present? %>
-              <li>
-                <%= "#{question.original_code} - #{question.text}" %>
-              </li>
+        <table class="table table-striped table-hover table-nonfluid">
+          <thead>
+            <tr>
+              <th><%= model_class.human_attribute_name(:code) %></th>
+              <th><%= model_class.human_attribute_name(:text) %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @bad_answers.each do |item| %>
+              <% question = @dataset.questions.with_original_code(item) %>
+              <tr>
+                <td>
+                  <%= question.original_code %>
+                </td>
+                <td>
+                  <%= question.text %>
+                </td>
+              </tr>
             <% end %>
-          <% end %>
-        </ul>
+          </tbody>
+        </table>
+
       <% else %>
 
         <p>
