@@ -82,22 +82,22 @@ module ProcessDataFile
               question_codes << row[0].strip
             end
 
-            # only add if the code and text are present
-            if row[0].present? && row[0].strip.present? && row[1].present? && row[1].strip.present?
+            # only add if the code is presetn ## and text are present
+            if row[0].present? && row[0].strip.present?# && row[1].present? && row[1].strip.present?
               # mongo does not allow '.' in key names, so replace with '|'
               self.questions_attributes = [{code: clean_text(row[0], format_code: true), 
                                             original_code: clean_text(row[0]), 
                                             text_translations: {self.default_language => clean_text(row[1])}
                                           }]
-            else
-              # if there is question code but no question text, save this
-              if row[0].present? && row[0].strip.present? && !(row[1].present? && row[1].strip.present?)
-                self.questions_with_no_text = [] if self.questions_with_no_text.nil?
-                self.questions_with_no_text << clean_text(row[0])
-              end
-              puts "******************************"
-              puts "Line #{line_number} of #{file_questions} is missing the code or text."
-              puts "******************************"
+            # else
+            #   # if there is question code but no question text, save this
+            #   if row[0].present? && row[0].strip.present? && !(row[1].present? && row[1].strip.present?)
+            #     self.questions_with_no_text = [] if self.questions_with_no_text.nil?
+            #     self.questions_with_no_text << clean_text(row[0])
+            #   end
+            #   puts "******************************"
+            #   puts "Line #{line_number} of #{file_questions} is missing the code or text."
+            #   puts "******************************"
             end
           end
         end
@@ -484,7 +484,7 @@ private
   def clean_text(str, options={})
     options[:format_code] = false if options[:format_code].nil?
 
-    if str.length > 0
+    if !str.nil? && str.length > 0
       x = str.dup.encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
       if options[:format_code] == true
         x.gsub!('.', '|')

@@ -168,6 +168,7 @@ en:
       select_all: Select All
       select_none: Select None
       make_mappable: Make Mappable
+      add_question_text: Add Question Text
     titles:
       edit: "Edit %{model}"
       save: "Save %{model}"

@@ -30,7 +30,7 @@ class Dataset < CustomTranslation
   # array of question codes who possibly have answer values that are not in the provided list of possible answers
   field :questions_with_bad_answers, type: Array
   # array of question codes that do not have text for question
-  field :questions_with_no_text, type: Array
+#  field :questions_with_no_text, type: Array
   # indicates if any questions in this dataset have been connected to a shapeset
   field :is_mappable, type: Boolean, default: false
   # record the extension of the file
@@ -320,11 +320,11 @@ class Dataset < CustomTranslation
 
   def update_flags
     logger.debug "==== update_flags"
-    logger.debug "==== - bad answers = #{self.questions_with_bad_answers.present?}; no answers = #{self.questions.with_no_code_answers.present?}; no question text = #{self.questions_with_no_text.present?}"
+    logger.debug "==== - bad answers = #{self.questions_with_bad_answers.present?}; no answers = #{self.questions.with_no_code_answers.present?}; no question text = #{self.no_question_text_count}"
     logger.debug "==== - has_warnings was = #{self.has_warnings}"
     self.has_warnings = self.questions_with_bad_answers.present? || 
                         self.questions.with_no_code_answers.present? || 
-                        self.questions_with_no_text.present?
+                        self.no_question_text_count > 0
 
     logger.debug "==== - has_warnings = #{self.has_warnings}"
     return true
@@ -341,7 +341,7 @@ class Dataset < CustomTranslation
     self.stats.questions_no_answers = self.questions.nil? ? 0 : self.questions.with_no_code_answers.length
 
     # how many questions don't have text
-    self.stats.questions_no_text = self.questions_with_no_text.nil? ? 0 : self.questions_with_no_text.length
+    self.stats.questions_no_text = self.no_question_text_count
 
     # how many questions have bad answers
     self.stats.questions_bad_answers = self.questions_with_bad_answers.nil? ? 0 : self.questions_with_bad_answers.length
@@ -405,6 +405,21 @@ class Dataset < CustomTranslation
   def js_shapefile_url_path
     "#{FOLDER_PATH}/#{self.id}/#{JS_FILE}"
   end
+
+  #############################
+
+
+  # get list of quesitons with no text
+  def questions_with_no_text
+    self.questions.select{|x| x.text_translations[self.default_language] == nil}
+  end
+
+  # get count of quesitons with no text
+  def no_question_text_count
+    questions_with_no_text.length
+  end
+
+
 
   #############################
 
