@@ -169,6 +169,9 @@ ka:
       select_none: Select None
       make_mappable: Make Mappable
       add_question_text: Add Question Text
+      add_answer: Add Answer
+      add_answers: Add Answers
+      edit_answers: Edit Answers
     titles:
       edit: "შეცვლა %{model}"
       save: "შენახვა %{model}"

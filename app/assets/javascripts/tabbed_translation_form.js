@@ -23,9 +23,11 @@
 $(document).ready(function(){
   // load tinymce
   // set the width and height so even the tabs that are not showing still have the correct size
-  gon.tinymce_options.height = $('form.tabbed-translation-form .tab-content .tab-pane:first textarea').height();
-  gon.tinymce_options.width = $('form.tabbed-translation-form .tab-content .tab-pane:first textarea').width();
-  tinyMCE.init(gon.tinymce_options);
+  if (typeof tinyMCE !== "undefined"){
+    gon.tinymce_options.height = $('form.tabbed-translation-form .tab-content .tab-pane:first textarea').height();
+    gon.tinymce_options.width = $('form.tabbed-translation-form .tab-content .tab-pane:first textarea').width();
+    tinyMCE.init(gon.tinymce_options);
+  }
 
 
   // update the default language drop down

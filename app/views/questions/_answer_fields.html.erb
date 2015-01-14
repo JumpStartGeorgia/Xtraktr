@@ -1,0 +1,55 @@
+<% 
+  answer ||= nil
+  answers ||= nil
+  # if the aindex is not provided, default to 'new_answers' so the cocoon gem can replace it with a random index number
+  aindex ||= 'new_answers'
+  is_new_answer = aindex == 'new_answers'
+  text = is_new_answer == false ? answer.text_translations[locale] : nil 
+  original_text = is_new_answer == false ? answers[aindex].text_translations[default_locale] : nil
+  # if this is a new answer, do not show a default sort order
+  default_sort_order = is_new_answer == false ? answer.sort_order : nil
+%>
+
+                    <tr>
+                      <% if language_index == 0 %>
+                        <td>
+                          <div class="string input required stringish form-group" id="question_answers_attributes_<%= aindex %>_text_translations_<%= locale %>_input">
+                            <input class="form-control" id="question_answers_attributes_<%= aindex %>_text_translations_<%= locale %>" name="question[answers_attributes][<%= aindex %>][text_translations][<%= locale %>]" type="text" value="<%= text %>">
+                          </div>
+                        </td>
+                        <td>
+                          <%= f.input :value, as: :string, :input_html => {:size =>3}, :label => false %>
+                        </td>
+                        <td>
+                          <%= f.input :sort_order, as: :string, :input_html => {:size =>3, :value => default_sort_order}, :label => false %>
+                        </td>
+                        <td>
+                          <%= f.input :exclude, :as => :radio, :label => false %>
+                        </td>
+                        <td>
+                          <%= f.input :can_exclude, :as => :radio, :label => false %>
+                        </td>
+
+                        <% if is_new_answer %>
+                          <td id="new-answer-other-language-<%= aindex %>" style="display:none;" data-locale="<%= locale %>">
+                            <div class="new-answer-input">
+                              <div class="string input required stringish form-group" id="question_answers_attributes_<%= aindex %>_text_translations_<%= locale %>_input">
+                                <input class="form-control" id="question_answers_attributes_<%= aindex %>_text_translations_<%= locale %>" name="question[answers_attributes][<%= aindex %>][text_translations][<%= locale %>]" type="text" value="<%= text %>">
+                              </div>
+                            </div>
+                            <div class="new-answer-default-text">
+                              <%= original_text %>
+                            </div>
+                          </td>
+                        <% end %>
+                      <% else %>
+                        <td>
+                          <div class="string input required stringish form-group" id="question_answers_attributes_<%= aindex %>_text_translations_<%= locale %>_input">
+                            <input class="form-control" id="question_answers_attributes_<%= aindex %>_text_translations_<%= locale %>" name="question[answers_attributes][<%= aindex %>][text_translations][<%= locale %>]" type="text" value="<%= text %>">
+                          </div>
+                        </td>
+                        <td>
+                          <%= original_text %>
+                        </td>
+                      <% end %>
+                    </tr>

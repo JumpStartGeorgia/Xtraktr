@@ -16,6 +16,7 @@ gem "formtastic", "~> 2.2.1" # create forms easier
 gem "formtastic-bootstrap", :git => "https://github.com/mjbellantoni/formtastic-bootstrap.git", :branch => "bootstrap3_and_rails4"
 gem 'tinymce-rails', "~> 3.5.8", :branch => "tinymce-3" #tinymce editor https://github.com/spohlenz/tinymce-rails/tree/tinymce-4
 #gem "nested_form", "~> 0.1.1", :git => "https://github.com/davidray/nested_form.git" # easily build nested model forms with ajax links
+gem 'cocoon', '~> 1.1.2' # nested forms
 gem 'globalize', '~> 3.1.0' # internationalization
 gem 'psych', '~> 2.0.5' # yaml parser - default psych in rails has issues
 gem 'gon', '~> 5.0.4' # push data into js

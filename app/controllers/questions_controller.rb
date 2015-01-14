@@ -37,7 +37,7 @@ class QuestionsController < ApplicationController
       @question = @dataset.questions.find(params[:id])
 
       add_common_options
-      set_tabbed_translation_form_settings
+      #set_tabbed_translation_form_settings
 
       respond_to do |format|
         format.html 
@@ -69,7 +69,7 @@ class QuestionsController < ApplicationController
       @question = @dataset.questions.find(params[:id])
 
       add_common_options
-      set_tabbed_translation_form_settings
+      #set_tabbed_translation_form_settings
     else
       flash[:info] =  t('app.msgs.does_not_exist')
       redirect_to dataset_questions_path(:locale => I18n.locale)
@@ -108,7 +108,7 @@ class QuestionsController < ApplicationController
             format.json { head :no_content }
           else
             add_common_options
-            set_tabbed_translation_form_settings
+            #set_tabbed_translation_form_settings
 
             format.html { render action: "edit" }
             format.json { render json: @question.errors, status: :unprocessable_entity }
@@ -141,9 +141,11 @@ class QuestionsController < ApplicationController
 
 private 
   def add_common_options
-    @css.push("questions.css")
-    @js.push("questions.js")
+    @css.push('tabbed_translation_form.css', "questions.css")
+    @js.push('cocoon.js', "questions.js")
 
     add_dataset_nav_options()
+
+    @languages = Language.sorted
   end
 end

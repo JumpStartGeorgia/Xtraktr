@@ -81,63 +81,45 @@
             <%= translation.input locale, label: label.html_safe %>
           <% end %>
 
-          <% if @question.has_code_answers? %>
-            <h3><%= t('.header_answers') %></h3>
-            <p><%= t('.explanation_answers', lang: default_lang) %></p>
+          <h3><%= t('.header_answers') %></h3>
+          <p><%= t('.explanation_answers', lang: default_lang) %></p>
 
-            <table id='dataset-answers' class="table table-striped table-hover table-nonfluid">
-              <thead>
-                <tr>
-                  <% if index == 0 %>
-                    <th><%= model_class_a.human_attribute_name(:text) %></th>
-                    <th><%= model_class_a.human_attribute_name(:value) %></th>
-                    <th><%= model_class_a.human_attribute_name(:sort_order) %></th>
-                    <th><%= model_class_a.human_attribute_name(:exclude) %></th>
-                    <th><%= model_class_a.human_attribute_name(:can_exclude) %></th>
-                  <% else %>
-                    <th><%= model_class_a.human_attribute_name(:text) %></th>
-                    <th><%= t('tabbed_translation_form.default_text') %></th>
-                  <% end %>
-                </tr>
-              </thead>
-              <tbody>
-                <% answers.each_with_index do |ans, aindex| %>
-                  <%= f.fields_for :answers, ans do |answer| %>
-                    <tr>
-                      <% if index == 0 %>
-                        <td>
-                          <div class="string input required stringish form-group" id="question_answers_attributes_<%= aindex %>_text_translations_<%= locale %>_input">
-                            <input class="form-control" id="question_answers_attributes_<%= aindex %>_text_translations_<%= locale %>" name="question[answers_attributes][<%= aindex %>][text_translations][<%= locale %>]" type="text" value="<%= ans.text_translations[locale] %>">
-                          </div>
-                        </td>
-                        <td>
-                          <%= answer.input :value, as: :string, :input_html => {:size =>3}, :label => false %>
-                        </td>
-                        <td>
-                          <%= answer.input :sort_order, as: :string, :input_html => {:size =>3}, :label => false %>
-                        </td>
-                        <td>
-                          <%= answer.input :exclude, :as => :radio, :label => false %>
-                        </td>
-                        <td>
-                          <%= answer.input :can_exclude, :as => :radio, :label => false %>
-                        </td>
-                      <% else %>
-                        <td>
-                          <div class="string input required stringish form-group" id="question_answers_attributes_<%= aindex %>_text_translations_<%= locale %>_input">
-                            <input class="form-control" id="question_answers_attributes_<%= aindex %>_text_translations_<%= locale %>" name="question[answers_attributes][<%= aindex %>][text_translations][<%= locale %>]" type="text" value="<%= ans.text_translations[locale] %>">
-                          </div>
-                        </td>
-                        <td>
-                          <%= answers[aindex].text_translations[default_locale] %>
-                        </td>
-                      <% end %>
-                    </tr>
-                  <% end %>
+          <table id='dataset-answers' class="table table-striped table-hover table-nonfluid">
+            <thead>
+              <tr>
+                <% if index == 0 %>
+                  <th><%= model_class_a.human_attribute_name(:text) %></th>
+                  <th><%= model_class_a.human_attribute_name(:value) %></th>
+                  <th><%= model_class_a.human_attribute_name(:sort_order) %></th>
+                  <th><%= model_class_a.human_attribute_name(:exclude) %></th>
+                  <th><%= model_class_a.human_attribute_name(:can_exclude) %></th>
+                <% else %>
+                  <th><%= model_class_a.human_attribute_name(:text) %></th>
+                  <th><%= t('tabbed_translation_form.default_text') %></th>
                 <% end %>
-              </tbody>
-            </table>                  
-          <% end %>
+              </tr>
+            </thead>
+            <tbody>
+              <% answers.each_with_index do |ans, aindex| %>
+                <%= f.semantic_fields_for :answers, ans do |answer| %>
+                  <%= render partial: 'answer_fields', :locals => {:f => answer, :answer => ans, :language_index => index, :aindex => aindex, :locale => locale, :default_locale => default_locale, :answers => answers} %>
+                <% end %>
+              <% end %>
+            </tbody>
+            <% if index == 0 %>
+              <tfoot>
+                <tr>
+                  <td colspan="5">
+                    <%= link_to_add_association t('helpers.links.add_answer'), f, :answers, 
+                        :class => 'btn btn-success',
+                        :'data-association-insertion-node' => '.tab-content .tab-pane:first #dataset-answers tbody',
+                        :'data-association-insertion-method' => 'append',
+                        :render_options => {:locals => {:language_index => index, :locale => locale, :default_locale => default_locale }} %>
+                  </td>
+                </tr>
+              </tfoot>
+            <% end %>
+          </table>                  
 
         </div>
       <% end %>

@@ -48,7 +48,7 @@ class Question < CustomTranslation
     end
 
   end
-  accepts_nested_attributes_for :answers
+  accepts_nested_attributes_for :answers#, :reject_if => lambda { |x| (x[:text].blank? || x[:text][x[:default_language]].blank?) || x[:value].blank? }, :allow_destroy => true
 
   #############################
   # indexes

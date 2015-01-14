@@ -57,6 +57,7 @@
             <tr>
               <th><%= model_class.human_attribute_name(:code) %></th>
               <th><%= model_class.human_attribute_name(:text) %></th>
+              <th><%=t '.actions', :default => t("helpers.actions") %></th>
             </tr>
           </thead>
           <tbody>
@@ -67,6 +68,10 @@
                 </td>
                 <td>
                   <%= question.text %>
+                </td>
+                <td>
+                  <%= link_to t('helpers.links.add_answers'),
+                            edit_dataset_question_path(@dataset, question), :class => 'btn btn-mini btn-default' %>
                 </td>
               </tr>
             <% end %>
@@ -92,6 +97,7 @@
             <tr>
               <th><%= model_class.human_attribute_name(:code) %></th>
               <th><%= model_class.human_attribute_name(:text) %></th>
+              <th><%=t '.actions', :default => t("helpers.actions") %></th>
             </tr>
           </thead>
           <tbody>
@@ -103,6 +109,10 @@
                 </td>
                 <td>
                   <%= question.text %>
+                </td>
+                <td>
+                  <%= link_to t('helpers.links.edit_answers'),
+                            edit_dataset_question_path(@dataset, question), :class => 'btn btn-mini btn-default' %>
                 </td>
               </tr>
             <% end %>

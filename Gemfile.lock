@@ -83,6 +83,7 @@ GEM
       activesupport (>= 3.0)
     cocaine (0.5.4)
       climate_control (>= 0.0.3, < 1.0)
+    cocoon (1.1.2)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
       railties (~> 3.2.0)
@@ -278,6 +279,7 @@ PLATFORMS
 DEPENDENCIES
   bundler
   capistrano (~> 2.12.0)
+  cocoon (~> 1.1.2)
   coffee-rails (~> 3.2.2)
   devise (~> 2.0.4)
   dynamic_form (~> 1.1.4)
