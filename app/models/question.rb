@@ -25,7 +25,7 @@ class Question < CustomTranslation
 
     # get the unique answer values
     def unique_values
-      only(:values).map{|x| x.values}
+      only(:values).map{|x| x.value}
     end
 
     # get the answer that has the provide value
@@ -113,6 +113,11 @@ class Question < CustomTranslation
   end
 
   #############################
+
+  # create a list of values that are in the data but not an answer value
+  def missing_answers
+    self.dataset.data_items.unique_code_data(self.code) - self.answers.unique_values
+  end
 
 
 end

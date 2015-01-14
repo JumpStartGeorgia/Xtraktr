@@ -165,6 +165,16 @@ class Dataset < CustomTranslation
         return nil
       end
     end
+
+    # get the unique data answers for the provided code
+    def unique_code_data(code)
+      x = code_data(code)
+      if x.present?
+        return x.uniq
+      else
+        return nil
+      end
+    end
   end
   accepts_nested_attributes_for :data_items
 

@@ -343,6 +343,8 @@ ka:
       header_answers: Answers
       explanation_answers: "The answer settings fields (value, sort order, etc) are only shown in the '%{lang}' tab."
       default_text: Default Text
+      header_add_answer: Add a new answer for this question
+      header_add_missing_answer: The following values are in the data but are not provided as one of the answers. <br/>Select a value to add it as an answer and have it included in the analysis.
   shared:
     explore_data:
       no_matches: Your selections returned no data. Please try again with a different selection.

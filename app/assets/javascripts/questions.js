@@ -50,4 +50,18 @@ $(document).ready(function(){
     $('form.question .tab-content .tab-pane:first table#dataset-answers tbody tr:last td:last').remove();
   });
 
+  // when a missing value is added as an answer
+  // trigger, the add answer button and then add the value that was selected
+  $('form.question .tab-content .tab-pane:first table#dataset-answers select#missing_answers').on('change', function(){
+    // add an answer
+    $(this).parent().closest('tfoot').find('a.add_fields').trigger('click');
+
+    // add the value
+    $($('form.question .tab-content .tab-pane:first table#dataset-answers tbody tr:last td')[1]).find('input').val($(this).val());
+
+    // remove value from the list
+    $(this).parent().find('option[value="' + $(this).val() + '"]').remove();
+    $(this).parent().val('');
+  });
+
 });

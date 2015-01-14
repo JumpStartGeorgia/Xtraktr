@@ -108,8 +108,20 @@
             </tbody>
             <% if index == 0 %>
               <tfoot>
+                <% 
+                  missing_answers = @question.missing_answers
+                  if missing_answers.present? 
+                %>
+                  <tr>
+                    <td colspan="3"><%= t('.header_add_missing_answer').html_safe %></td>
+                    <td colspan="2">
+                      <%= select_tag 'missing_answers', options_for_select(missing_answers.sort), include_blank: true %>
+                    </td>
+                  </tr>
+                <% end %>
                 <tr>
-                  <td colspan="5">
+                  <td colspan="3"><%= t('.header_add_answer') %></td>
+                  <td colspan="2">
                     <%= link_to_add_association t('helpers.links.add_answer'), f, :answers, 
                         :class => 'btn btn-success',
                         :'data-association-insertion-node' => '.tab-content .tab-pane:first #dataset-answers tbody',
