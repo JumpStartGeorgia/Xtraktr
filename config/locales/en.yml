@@ -49,6 +49,8 @@ en:
         no_questions: There are no questions on file for this dataset.
         is_mappable: Question has been setup to show answers on a map
         has_code_answers: Has defined list of answers
+        possible_answers: Possible Answer Values
+        data_answers: Answer Values in Data
       answer:
         value: Value
         text: Answer
