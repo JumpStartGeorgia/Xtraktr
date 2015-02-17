@@ -3,20 +3,24 @@ $(document).ready(function(){
       "sWrapper": "dataTables_wrapper form-inline"
   });
 
-
   $('#users-datatable').dataTable({
     "dom": '<"top"f>t<"bottom"lpi><"clear">',
+    "processing": true,
     "serverSide": true,
     "ajax": $('#users-datatable').data('source'),
-    "order": [[2, 'desc']],
+    "order": [[4, 'desc']],
     "language": {
-      "url": gon.datatable_i18n_url
-    }
+     "url": gon.datatable_i18n_url
+    },
+    "columnDefs": [
+      { orderable: false, targets: [-1] }
+    ]
   });
 
 
   $('#dataset-datatable').dataTable({
     "dom": '<"top"f>t<"bottom"lpi><"clear">',
+    "processing": true,
     "language": {
       "url": gon.datatable_i18n_url
     },
@@ -27,6 +31,7 @@ $(document).ready(function(){
 
   $('#shapeset-datatable').dataTable({
     "dom": '<"top"f>t<"bottom"lpi><"clear">',
+    "processing": true,
     "language": {
       "url": gon.datatable_i18n_url
     },

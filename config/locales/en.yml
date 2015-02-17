@@ -15,6 +15,9 @@ en:
         role: Role
         remember_me: Remeber Me
         nickname: Nickname
+        sign_in_count: Number of Times Logged In
+        created_at: Date Created
+        current_sign_in_at: Date Last Logged In
       page:
         name: Unique name for content (do not change!)
       page_translation:

@@ -15,6 +15,9 @@ ka:
         role: როლი
         remember_me: დამიმახსოვრე
         nickname: მომხმარებლის სახელი
+        sign_in_count: "შემოსვლის რაოდენობა"
+        created_at: "შექმნის თარიღი"
+        current_sign_in_at: "ბოლო შემოსვლის თარიღი"
       page:
         name: კონტენტის უნიკალური სახელი (არ შეცვალოთ!)
       page_translation:

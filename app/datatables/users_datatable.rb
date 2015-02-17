@@ -22,8 +22,12 @@ private
   def data
     users.map do |user|
       [
+        user.nickname,
         user.email,
         user.role_name.humanize,
+        I18n.l(user.created_at, :format => :file),
+        user.current_sign_in_at.present? ? I18n.l(user.current_sign_in_at, :format => :file) : nil,
+        user.sign_in_count,
         action_links(user)
       ]
     end
@@ -43,10 +47,7 @@ private
                       :method => :delete,
 											:data => { :confirm => I18n.t("helpers.links.confirm") },
                       :class => 'btn btn-xs btn-danger')
-    x << "<br /><br />"
-    x << I18n.t('app.common.added_on', :date => I18n.l(user.created_at, :format => :short))
     return x.html_safe
-    return x
   end
 
   def user_query
@@ -58,7 +59,7 @@ private
   end
 
   def fetch_users
-    users = user_query.order_by([[sort_column, :sort_direction]])
+    users = user_query.order_by([[sort_column, sort_direction]])
     users = users.page(page).per(per_page)
     if params[:search].present? && params[:search][:value].present?
       users = users.where("users.email like :search", search: "%#{params[:search][:value]}%")
@@ -75,7 +76,7 @@ private
   end
 
   def sort_column
-    columns = %w[users.email users.role users.created_at]
+    columns = %w[nickname email role created_at current_sign_in_at sign_in_count]
     columns[params[:order]['0'][:column].to_i]
   end
 
