@@ -23,7 +23,7 @@
       <% @dataset.questions.each do |question| %>
         <tr>
           <td>
-            <%= link_to t('helpers.links.view'), dataset_question_path(@dataset, question), class: 'btn btn-xs btn-default' %>
+            <%= link_to t('helpers.links.view'), dataset_question_path(@dataset, question), class: 'btn btn-default' %>
           </td>
           <td>
             <%= question.original_code %>
@@ -42,7 +42,7 @@
           </td>
           <td>
             <%= link_to t('app.buttons.edit'),
-                      edit_dataset_question_path(@dataset, question), :class => 'btn btn-xs btn-default' %>
+                      edit_dataset_question_path(@dataset, question), :class => 'btn btn-default' %>
           </td>
         </tr>
       <% end %>
