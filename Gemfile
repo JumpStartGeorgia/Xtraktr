@@ -43,7 +43,7 @@ group :assets do
   gem "therubyracer"
   gem 'less-rails', git: 'git://github.com/metaskills/less-rails.git'
   gem 'twitter-bootstrap-rails', :git => 'git://github.com/seyhunak/twitter-bootstrap-rails.git'  , branch: 'bootstrap3'
-  gem 'jquery-datatables-rails', '~> 2.2.3'
+  gem 'jquery-datatables-rails', '~> 3.1.1'
   gem "jquery-ui-rails" , "~> 4.1.2"  
 end
 
