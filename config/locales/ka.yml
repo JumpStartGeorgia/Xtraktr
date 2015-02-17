@@ -177,6 +177,7 @@ ka:
       add_answer: Add Answer
       add_answers: Add Answers
       edit_answers: Edit Answers
+      download: Download
     titles:
       edit: "შეცვლა %{model}"
       save: "შენახვა %{model}"

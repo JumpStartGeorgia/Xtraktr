@@ -177,6 +177,7 @@ en:
       add_answer: Add Answer
       add_answers: Add Answers
       edit_answers: Edit Answers
+      download: Download
     titles:
       edit: "Edit %{model}"
       save: "Save %{model}"

@@ -10,7 +10,7 @@
       <label class="" for="shapeset_shapefile"><%= model_class.human_attribute_name(:shapefile) %></label>
       <% if @shapeset.shapefile.exists? %>
         <p>
-          <%= link_to t('helpers.links.view'), @shapeset.shapefile.url, :target => :blank, :class => 'btn btn-default' %>
+          <%= link_to t('helpers.links.download'), @shapeset.shapefile.url, :target => :blank, :class => 'btn btn-default' %>
         </p>
       <% end %>
       <input accept="text/plain, application/json, application/octet-stream" id="shapeset_shapefile" name="shapeset[shapefile]" type="file">
@@ -138,7 +138,7 @@
   <div class="form-group">
     <%= f.submit nil, :class => 'btn btn-primary' %>
     <%= f.submit t('helpers.links.reset'), :class => 'btn btn-warning', :type => :reset, :name => :reset %>
-    <%= link_to t('helpers.links.cancel'), admin_shapesets_path, :class => 'btn btn-mini btn-warning' %>
+    <%= link_to t('helpers.links.cancel'), admin_shapesets_path, :class => 'btn btn-xs btn-warning' %>
   </div>
 <% end %>
 
