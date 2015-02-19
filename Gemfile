@@ -33,6 +33,9 @@ gem "mongoid-paperclip", :require => "mongoid_paperclip" # upload files
 #gem "will_paginate_mongoid" # pagination with mongoid
 gem "kaminari", "~> 0.16.1" # paging
 gem 'rails_autolink', '~> 1.1.6' # convert string url into link
+#gem 'simple-spreadsheet', '~> 0.3.1' # read in spreadsheet format
+gem 'spreadsheet', '~> 1.0.1' # read in spreadsheet format
+gem 'roo', '~> 1.13.2' # read in spreadsheet format
 
 # Gems used only for assets and not required
 # in production environments by default.

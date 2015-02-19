@@ -1,7 +1,7 @@
 # encoding: utf-8
 module ProcessDataFile
   require 'csv'
-  
+
   #######################
   #######################
   ##
@@ -72,8 +72,8 @@ module ProcessDataFile
           results = process_spss(file_to_process, file_r, file_sps, file_data, file_questions, file_answers_complete)          
         when 'dta'
           results = process_stata(file_to_process, file_r, file_sps, file_data, file_questions, file_answers_complete)
-        when 'csv'
-          results = process_csv(file_to_process, file_data, file_questions, file_answers_complete)
+        when 'csv', 'xls', 'xlsx', 'ods'
+          results = process_spreadsheet(file_to_process, file_data, file_questions, file_answers_complete)
       end
 
       if results.nil?
@@ -527,6 +527,88 @@ private
 
 
   #######################
+  # pull data out of spreadsheet and into new files
+  def process_spreadsheet(file_to_process, file_data, file_questions, file_answers_complete)
+    puts "=============================="
+    puts "$$$$$$ process_spreadsheet"
+    puts "=============================="
+    result = nil
+
+    data = nil
+    case self.file_extension
+      when 'csv'
+        data = Roo::CSV.new(file_to_process)
+      when 'xls'
+        data = Roo::Spreadsheet.open(file_to_process)
+      when 'xlsx'
+        data = Roo::Excelx.new(file_to_process)
+      when 'ods'
+        data = Roo::OpenOffice.new(file_to_process)
+    end
+
+    if !data.nil?
+      questions = [] # array of [code, question]
+      answers = [] # array of [code, answer value, answer text]
+      data_items = []
+
+      # remove \N from data
+      # if field is '', replace with nil
+      puts "- cleaning data"
+      (1..data.last_row).each do |index|
+        data_items << data.row(index).map{|cell| cell == '\\N' ? nil : cell}
+      end
+
+      # get headers
+      headers = data_items.shift
+
+      # get the questions
+      puts "- getting questions"
+      headers.each_with_index{|x, i| questions << ["#{@@spreadsheet_question_code}#{i}", x]}
+
+      # get the answers
+      puts "- getting answers"
+      (0..headers.length-1).each do |index|
+        code = questions[index][0]
+        # only add answer if it exists
+        data_items.map{|x| x[index]}.select{|x| x.present?}.uniq.sort.each do |uniq_answer| 
+          answers << [code, uniq_answer, uniq_answer]
+        end
+      end
+
+
+      # now save the files
+      # questions
+      puts "- writing question file"
+      CSV.open(file_questions, 'w') do |csv|
+        questions.each do |row|
+          csv << row
+        end
+      end
+
+      # answers
+      puts "- writing answer file"
+      CSV.open(file_answers_complete, 'w') do |csv|
+        answers.each do |row|
+          csv << row
+        end
+      end
+
+      # data
+      puts "- writing data file"
+      CSV.open(file_data, 'w') do |csv|
+        (2..data.last_row).each do |index|
+          csv << data.row(index)
+        end
+      end
+
+      result = true
+
+    end
+
+    return result
+  end
+
+  #######################
   # pull data out of csv and into new files
   def process_csv(file_to_process, file_data, file_questions, file_answers_complete)
     puts "=============================="
@@ -590,6 +672,7 @@ private
   # - <92> = '
   # - \x92 = '
   # - \xa0 = space
+  # if string = '' or '\\N' turn into nil
   def clean_text(str, options={})
     options[:format_code] = false if options[:format_code].nil?
 
@@ -599,7 +682,9 @@ private
         x.gsub!('.', '|')
         x.downcase! 
       end
-      return x.gsub("<92>", "'").gsub("\\x92", "'").gsub("\\xa0", " ").chomp.strip
+      y = x.gsub("<92>", "'").gsub("\\x92", "'").gsub("\\xa0", " ").chomp.strip
+      y = nil if y.empty? || y == "\\N"
+      return y
     else
       return str
     end

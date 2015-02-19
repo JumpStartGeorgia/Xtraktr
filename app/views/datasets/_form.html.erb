@@ -1,4 +1,7 @@
-<%- model_class = Dataset -%>
+<%- 
+  label_key = "mongoid.attributes.dataset."
+  hint_key = "mongoid.hints.dataset."
+-%>
 
 <%= semantic_form_for @dataset, html: {:multipart => true, class: 'tabbed-translation-form'} do |f| %>
 	<%= f.error_messages %>
@@ -9,8 +12,8 @@
     <div class="row">
       <div class="col-sm-4">
         <div class="file input required form-group" id="dataset_datafile_input">
-          <label class="" for="dataset_datafile">
-            <%= model_class.human_attribute_name(:datafile) %><abbr title="required">*</abbr>
+          <label class="control-label" for="dataset_datafile">
+            <%= t(label_key + 'datafile') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(hint_key + 'datafile') %>"><div>?</div></div>
           </label>
           <% if @dataset.datafile.exists? %>
             <p>
@@ -22,7 +25,8 @@
       </div>
       <div class="col-sm-4">
         <div class="file input optional form-group" id="dataset_codebook_input">
-          <label class="" for="dataset_codebook"><%= model_class.human_attribute_name(:codebook) %></label>
+          <label class="" for="dataset_codebook"><%= t(label_key + 'codebook') %><div class="help-inline" original-title="<%= t(hint_key + 'codebook') %>"><div>?</div></div>
+          </label>
           <% if @dataset.codebook.exists? %>
             <p>
               <%= link_to t('helpers.links.download'), @dataset.codebook.url, :target => :blank, :class => 'btn btn-default' %>
@@ -32,26 +36,44 @@
         </div>
       </div>
       <div class="col-sm-4">
-        <%= f.input :public, as: :radio, inline: true %>
+        <div class="radio_buttons input optional form-group" id="dataset_public_input">
+          <label class="  control-label" for="dataset_public"><%= t(label_key + 'public') %><div class="help-inline" original-title="<%= t(hint_key + 'public') %>"><div>?</div></div>
+          </label>
+          <div class="radio">
+            <label class="choice" for="dataset_public_true">
+              <% checked = @dataset.public? ? 'checked=checked' : '' %>
+              <input <%= checked %> id="dataset_public_true" name="dataset[public]" type="radio" value="true" />
+              <%= t('formtastic.yes') %>
+            </label>
+          </div>
+          <div class="radio">
+            <label class="choice" for="dataset_public_false">
+              <% checked = @dataset.public? ? '' : 'checked=checked' %>
+              <input <%= checked %> id="dataset_public_false" name="dataset[public]" type="radio" value="false" />
+              <%= t('formtastic.no') %>
+            </label>
+          </div>
+        </div>
       </div>
     </div>
 
 
     <div class="row">
       <div class="col-sm-4">
-        <%= f.input :start_gathered_at, :as => :string, :input_html => { :size => 20 } %>
+        <%= f.input :start_gathered_at, :as => :string, hint: t(hint_key + 'start_gathered_at'), :input_html => { :size => 20 } %>
       </div>
       <div class="col-sm-4">
-        <%= f.input :end_gathered_at, :as => :string, :input_html => { :size => 20 } %>
+        <%= f.input :end_gathered_at, :as => :string, hint: t(hint_key + 'end_gathered_at'), :input_html => { :size => 20 } %>
       </div>
       <div class="col-sm-4">
-        <%= f.input :released_at, :as => :string, :input_html => { :size => 20 } %>
+        <%= f.input :released_at, :as => :string, hint: t(hint_key + 'released_at'), :input_html => { :size => 20 } %>
       </div>
     </div>
 
     <div class="row">
       <div class="col-sm-6">
-        <%= f.input :languages, as: :select, :collection => @languages.map{|x| [x.name, x.locale]}, multiple: true, required: true,
+        <%= f.input :languages, as: :select, hint: t(hint_key + 'languages'), 
+              :collection => @languages.map{|x| [x.name, x.locale]}, multiple: true, required: true,
               :input_html => {class: 'selectpicker-language languages', 
                 :'data-live-search' => "true", :'data-selected-text-format' => "count>3", :'data-size' => "7",
                 :'data-width' => "72%"} %>
@@ -65,8 +87,8 @@
         %>
        
         <div class="select input required form-group" id="dataset_default_language_input">
-          <label class="" for="dataset_default_language">
-            <%= model_class.human_attribute_name(:default_language) %><abbr title="required">*</abbr>
+          <label class="control-label" for="dataset_default_language">
+            <%= t(label_key + 'default_language') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(hint_key + 'default_language') %>"><div>?</div></div>
           </label>
           <select class="selectpicker-language form-control default-language" data-live-search="true" data-selected-text-format="count>3" data-size="7" data-width="72%" 
                   id="dataset_default_language" name="dataset[default_language]">
@@ -135,39 +157,43 @@
         <div role="tabpanel" class="tab-pane fade <%= cls %>" id="<%= locale %>" data-locale="<%= locale %>">
           <%= f.fields_for :title_translations, OpenStruct.new(f.object.title_translations) do |translation| %>
             <% 
-              label = model_class.human_attribute_name(:title)
+              label = t(label_key + 'title')
+              hint = t(hint_key + 'title')
               if index > 0
                 label << show_default_text(@dataset.title_translations[default_locale])
               end
             %>
-            <%= translation.input locale, label: label.html_safe %>
+            <%= translation.input locale, hint: hint, label: label.html_safe %>
           <% end %>
           <%= f.fields_for :source_translations, OpenStruct.new(f.object.source_translations) do |translation| %>
             <% 
-              label = model_class.human_attribute_name(:source)
+              label = t(label_key + 'source')
+              hint = t(hint_key + 'source')
               if index > 0
                 label << show_default_text(@dataset.source_translations[default_locale])
               end
             %>
-            <%= translation.input locale, label: label.html_safe %>
+            <%= translation.input locale, hint: hint, label: label.html_safe %>
           <% end %>
           <%= f.fields_for :source_url_translations, OpenStruct.new(f.object.source_url_translations) do |translation| %>
             <% 
-              label = model_class.human_attribute_name(:source_url)
+              label = t(label_key + 'source_url')
+              hint = t(hint_key + 'source_url')
               if index > 0
                 label << show_default_text(@dataset.source_url_translations[default_locale], 'url')
               end
             %>
-            <%= translation.input locale, as: :url, required: false, label: label.html_safe %>
+            <%= translation.input locale, as: :url, required: false, hint: hint, label: label.html_safe %>
           <% end %>
           <%= f.fields_for :description_translations, OpenStruct.new(f.object.description_translations) do |translation| %>
             <% 
-              label = model_class.human_attribute_name(:description)
+              label = t(label_key + 'description')
+              hint = t(hint_key + 'description')
               if index > 0
                 label << show_default_text(@dataset.description_translations[default_locale])
               end
             %>
-            <%= translation.input locale, :as => :text, required: false, rows: 10, label: label.html_safe, 
+            <%= translation.input locale, :as => :text, required: false, rows: 10, hint: hint, label: label.html_safe, 
                 :input_html => { class: "tinymce" } %>
           <% end %>
         </div>

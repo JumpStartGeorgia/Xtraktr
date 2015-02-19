@@ -68,6 +68,20 @@ en:
         languages: Languages of Shapeset
         default_language: Default Language
         created_at: Added On
+    hints:
+      dataset:
+        title: The title of your dataset
+        description: Explain what your dataset is about
+        source: Who collected this data
+        source_url: "URL to the Source's website. Please include the http as part of the url (e.g., http://source.com)"
+        datafile: "Only sav, dta, csv, xls, xlsx formats are allowed"
+        codebook: "Only txt, pdf, doc, docx formats are allowed"
+        released_at: Date the dataset was released to the public
+        start_gathered_at: Date the data gathering process began
+        end_gathered_at: Date the data gathering process finished
+        public: "Select 'Yes' to make your dataset available to the world"
+        languages: "Even though your dataset may be in one language, you can use these forms to translate all of the questions and answers into any language you desire."
+        default_language: The dataset language that is shown by default if no specific language is requested by user
   errors:
     messages:
       required_field: "is a required field."

@@ -10,6 +10,7 @@
 //= require jquery_ujs
 //= require jquery.ui.core
 //= require jquery.ui.effect
+//= require jquery.tipsy
 //= require twitter/bootstrap
 //= require dataTables/jquery.dataTables
 //= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
@@ -26,5 +27,10 @@ $(document).ready(function(){
 	$('body')
 		.off('click.dropdown touchstart.dropdown.data-api', '.dropdown')
 		.on('click.dropdown touchstart.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() });
+
+
+  if ($('form div.help-inline,form div.help-block, form label abbr').length > 0){ 
+    $('form div.help-inline,form div.help-block, form label abbr').tipsy({gravity: 'sw', fade: true});
+  }
 
 });
