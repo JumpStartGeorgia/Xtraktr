@@ -40,22 +40,22 @@ $(document).ready(function(){
   });
 
 
-  // select all questions that match the current filter
+  // if data-state = all, select all questions that match the current filter
   // - if not filter -> then all questions are selected
-  $('a.btn-select-all').click(function(){
-    $(datatable.$('tr', {"filter": "applied"})).find(':checkbox').each(function () {
-      $(this).prop('checked', true);
-    });
-
-    return false;
-  });
-
-  // deselect all questions that match the current filter
+  // else, desfelect all questions that match the current filter
   // - if not filter -> then all questions are deselected
-  $('a.btn-select-none').click(function(){
-    $(datatable.$('tr', {"filter": "applied"})).find(':checkbox').each(function () {
-      $(this).prop('checked', false);
-    });
+  $('a.btn-select-all').click(function(){
+    if ($(this).attr('data-state') == 'all'){
+      $(datatable.$('tr', {"filter": "applied"})).find(':checkbox').each(function () {
+        $(this).prop('checked', true);
+      });
+      $(this).attr('data-state', 'none');
+    }else{
+      $(datatable.$('tr', {"filter": "applied"})).find(':checkbox').each(function () {
+        $(this).prop('checked', false);
+      });
+      $(this).attr('data-state', 'all');
+    }
 
     return false;
   });

@@ -18,11 +18,8 @@
       <thead>
         <tr>
           <th>
-            <%= link_to '#', class: 'btn btn-default btn-xs btn-select-all' do %>
+            <%= link_to '#', class: 'btn btn-default btn-xs btn-select-all', :'data-state' => 'all' do %>
               <span class="glyphicon glyphicon-check" title="<%= t('helpers.links.select_all') %>"></span>
-            <% end %>
-            <%= link_to '#', class: 'btn btn-default btn-xs btn-select-none' do %>
-              <span class="glyphicon glyphicon-unchecked"title="<%= t('helpers.links.select_none') %>"></span>
             <% end %>
           </th>
           <th><%= model_class.human_attribute_name(:code) %></th>
