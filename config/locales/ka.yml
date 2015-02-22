@@ -68,6 +68,42 @@ ka:
         languages: Languages of Shapeset
         default_language: Default Language
         created_at: Added On
+    hints:
+      dataset:
+        title: The title of your dataset
+        description: Explain what your dataset is about
+        source: Who collected this data
+        source_url: "URL to the Source's website. Please include the http as part of the url (e.g., http://source.com)"
+        datafile: "Only sav, dta, csv, xls, xlsx formats are allowed"
+        codebook: "Only txt, pdf, doc, docx formats are allowed"
+        released_at: Date the dataset was released to the public
+        start_gathered_at: Date the data gathering process began
+        end_gathered_at: Date the data gathering process finished
+        public: "Select 'Yes' to make your dataset available to the world"
+        languages: "Even though your dataset may be in one language, you can use these forms to translate all of the questions and answers into any language you desire."
+        default_language: The dataset language that is shown by default if no specific language is requested by user
+      shapeset:
+        title: The title of your shapeset
+        description: Short summary of what is in the shapeset
+        source: Who put the shapeset together
+        source_url: "URL to the Source's website. Please include the http as part of the url (e.g., http://source.com)"
+        shapefile:  "Only json and geojson formats are allowed"
+        languages: "Even though your shapeset may be in one language, you can use this form to translate all of the shapeset into any language you desire."
+        default_language: The shapeset language that is used by default if no specific language is requested
+      question:
+        text: The text of the question
+        exclude: "If selected, this question will not be available during analysis."
+        is_mappable: "If the question is mappable in nature, you can match the question to a shapeset and be able to analyize the question on a map."
+      answer:
+        value: The value of the answer
+        text: The text of the answer
+        exclude: "If selected, this answer will not be available during analysis."
+        can_exclude: "If selected, this answer will be available during analysis, but can be turned off if desired by the user."
+        sort_order: "The order the answers should appear"
+        default_text: "This is the answer text from the default language which is provided to make it easier to complete the translation"
+      mappable:
+        question: Select the question that you want to have the answers appear on a map during analysis.
+        shapeset: Select the shapeset to use for this question.
   errors:
     messages:
       required_field: "სავალდებულო ველი"

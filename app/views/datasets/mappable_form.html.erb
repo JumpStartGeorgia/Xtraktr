@@ -1,18 +1,26 @@
 <% title t('.title') %>
+<%- 
+  hint_key = "mongoid.hints.mappable."
+-%>
+
 
 <% if @not_mappable.present? %>
   <% if @shapesets.present? %>
 
-    <%= form_tag mappable_form_dataset_path(@dataset), id: 'frm-mappable-question' do %>
+    <%= form_tag mappable_form_dataset_path(@dataset), id: 'frm-mappable-question', class: 'formtastic' do %>
 
       <div id="mappable-select" class="row">
-        <div class="col-sm-6">
-          <%= label_tag :question, t('.question_label') %>
+        <div class="col-sm-6 input">
+          <%= label_tag :question, class: 'control-label' do %>
+            <%= t('.question_label') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(hint_key + 'question') %>"><div>?</div></div>
+          <% end %>
           <%= select_tag :question, options_from_collection_for_select(@not_mappable, "id", "text", params[:question_id]),
             :class => 'selectpicker-mappable', :'data-width' => '100%', :'data-live-search' => true %>
         </div>
         <div class="col-sm-6">
-          <%= label_tag :shapeset, t('.shapeset_label') %>
+          <%= label_tag :shapeset, class: 'control-label' do %>
+            <%= t('.shapeset_label') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(hint_key + 'shapeset') %>"><div>?</div></div>
+          <% end %>
           <%= select_tag :shapeset, options_from_collection_for_select(@shapesets, "id", "title"),
             :class => 'selectpicker-mappable', :'data-width' => '100%', :'data-live-search' => true %>
         </div>

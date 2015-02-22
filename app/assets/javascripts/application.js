@@ -29,6 +29,7 @@ $(document).ready(function(){
 		.on('click.dropdown touchstart.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() });
 
 
+  // add nice tooltips for form help
   if ($('form div.help-inline,form div.help-block, form label abbr').length > 0){ 
     $('form div.help-inline,form div.help-block, form label abbr').tipsy({gravity: 'sw', fade: true});
   }

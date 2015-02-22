@@ -1,22 +1,43 @@
-<%- model_class = Question -%>
-<%- model_class_a = Answer -%>
+<%- 
+  label_key = "mongoid.attributes.question."
+  hint_key = "mongoid.hints.question."
+  a_label_key = "mongoid.attributes.answer."
+  a_hint_key = "mongoid.hints.answer."
+-%>
 
 <%= semantic_form_for([@dataset, @question], html: {class: 'tabbed-translation-form'}) do |f| %>
   <%= f.error_messages %>
 
   <p>
-    <strong><%= model_class.human_attribute_name(:code) %></strong>
+    <strong><%= t(label_key + 'code') %></strong>
     <br />
     <%= @question.original_code %>
   </p>
 
-  <%= f.inputs do %>
-    <%= f.input :exclude, as: :radio %>
-  <% end %>
+  <div class="radio_buttons input optional form-group" id="question_exclude_input">
+    <label class="control-label" for="question_exclude"><%= t(label_key + 'exclude') %><div class="help-inline" original-title="<%= t(hint_key + 'exclude') %>"><div>?</div></div>
+    </label>
+    <div class="radio">
+      <label class="choice" for="question_exclude_true">
+        <% checked = @question.exclude? ? 'checked=checked' : '' %>
+        <input <%= checked %> id="question_exclude_true" name="question[exclude]" type="radio" value="true" />
+        <%= t('formtastic.yes') %>
+      </label>
+    </div>
+    <div class="radio">
+      <label class="choice" for="question_exclude_false">
+        <% checked = @question.exclude? ? '' : 'checked=checked' %>
+        <input <%= checked %> id="question_exclude_false" name="question[exclude]" type="radio" value="false" />
+        <%= t('formtastic.no') %>
+      </label>
+    </div>
+  </div>
 
-  <p>
-    <strong><%= model_class.human_attribute_name(:is_mappable) %></strong>
-    <br />
+
+  <div class="input">
+    <label class="control-label">
+      <%= t(label_key + 'is_mappable') %><div class="help-inline" original-title="<%= t(hint_key + 'is_mappable') %>"><div>?</div></div>
+    </label>
     <% if @question.is_mappable? %>
       <%= t('formtastic.yes') %>
       <%= link_to t('helpers.links.edit'), mappable_form_edit_dataset_path(:id => @dataset, :question_id => @question.id), 
@@ -26,7 +47,7 @@
       <%= link_to t('helpers.links.make_mappable'), mappable_form_dataset_path(:id => @dataset, :question_id => @question.id), 
             target: :blank, class: 'btn btn-default' %>
     <% end %>
-  </p>
+  </div>
 
   <hr />
 
@@ -73,12 +94,13 @@
         <div role="tabpanel" class="tab-pane fade <%= cls %>" id="<%= locale %>" data-locale="<%= locale %>">
           <%= f.fields_for :text_translations, OpenStruct.new(f.object.text_translations) do |translation| %>
             <% 
-              label = model_class.human_attribute_name(:text)
+              label = t(label_key + 'text')
+              hint = t(hint_key + 'text')
               if index > 0
                 label << show_default_text(@question.text_translations[default_locale])
               end
             %>
-            <%= translation.input locale, label: label.html_safe %>
+            <%= translation.input locale, hint: hint, label: label.html_safe %>
           <% end %>
 
           <h3><%= t('.header_answers') %></h3>
@@ -88,14 +110,14 @@
             <thead>
               <tr>
                 <% if index == 0 %>
-                  <th><%= model_class_a.human_attribute_name(:text) %></th>
-                  <th><%= model_class_a.human_attribute_name(:value) %></th>
-                  <th><%= model_class_a.human_attribute_name(:sort_order) %></th>
-                  <th><%= model_class_a.human_attribute_name(:exclude) %></th>
-                  <th><%= model_class_a.human_attribute_name(:can_exclude) %></th>
+                  <th><%= t(a_label_key + 'text') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(a_hint_key + 'text') %>"><div>?</div></div></th>
+                  <th><%= t(a_label_key + 'value') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(a_hint_key + 'value') %>"><div>?</div></div></th>
+                  <th><%= t(a_label_key + 'sort_order') %><div class="help-inline" original-title="<%= t(a_hint_key + 'sort_order') %>"><div>?</div></div></th>
+                  <th><%= t(a_label_key + 'exclude') %><div class="help-inline" original-title="<%= t(a_hint_key + 'exclude') %>"><div>?</div></div></th>
+                  <th><%= t(a_label_key + 'can_exclude') %><div class="help-inline" original-title="<%= t(a_hint_key + 'can_exclude') %>"><div>?</div></div></th>
                 <% else %>
-                  <th><%= model_class_a.human_attribute_name(:text) %></th>
-                  <th><%= t('tabbed_translation_form.default_text') %></th>
+                  <th><%= t(a_label_key + 'text') %><div class="help-inline" original-title="<%= t(a_hint_key + 'text') %>"><div>?</div></div></th>
+                  <th><%= t('tabbed_translation_form.default_text') %><div class="help-inline" original-title="<%= t(a_hint_key + 'default_text') %>"><div>?</div></div></th>
                 <% end %>
               </tr>
             </thead>

@@ -1,4 +1,7 @@
-<%- model_class = Shapeset -%>
+<%- 
+  label_key = "mongoid.attributes.shapeset."
+  hint_key = "mongoid.hints.shapeset."
+-%>
 
 <%= semantic_form_for([:admin, @shapeset], html: {:multipart => true, class: 'tabbed-translation-form'}) do |f| %>
   <%= f.error_messages %>
@@ -7,7 +10,9 @@
     <%= f.hidden_field :user_id , :value => current_user.id %>
 
     <div class="file input optional form-group" id="shapeset_shapefile_input">
-      <label class="" for="shapeset_shapefile"><%= model_class.human_attribute_name(:shapefile) %></label>
+      <label class="control-label" for="shapeset_shapefile">
+        <%= t(label_key + 'shapefile') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(hint_key + 'shapefile') %>"><div>?</div></div>
+      </label>
       <% if @shapeset.shapefile.exists? %>
         <p>
           <%= link_to t('helpers.links.download'), @shapeset.shapefile.url, :target => :blank, :class => 'btn btn-default' %>
@@ -17,6 +22,7 @@
     </div>
 
     <%= f.input :languages, as: :select, :collection => @languages.map{|x| [x.name, x.locale]}, multiple: true, required: true,
+          hint: t(hint_key + 'languages'), 
           :input_html => {class: 'selectpicker-language languages', 
             :'data-live-search' => "true", :'data-selected-text-format' => "count>3", :'data-size' => "7",
             :'data-width' => "72%"} %>
@@ -30,7 +36,7 @@
    
     <div class="select input optional form-group" id="shapeset_default_language_input">
       <label class="control-label" for="shapeset_default_language">
-        <%= model_class.human_attribute_name(:default_language) %><abbr title="required">*</abbr>
+        <%= t(label_key + 'default_language') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(hint_key + 'default_language') %>"><div>?</div></div>
       </label>
       <select class="selectpicker-language form-control default-language" data-live-search="true" data-selected-text-format="count>3" data-size="7" data-width="72%" 
               id="shapeset_default_language" name="shapeset[default_language]">
@@ -94,39 +100,43 @@
         <div role="tabpanel" class="tab-pane fade <%= cls %>" id="<%= locale %>" data-locale="<%= locale %>">
           <%= f.fields_for :title_translations, OpenStruct.new(f.object.title_translations) do |translation| %>
             <% 
-              label = model_class.human_attribute_name(:title)
+              label = t(label_key + 'title')
+              hint = t(hint_key + 'title')
               if index > 0
                 label << show_default_text(@shapeset.title_translations[default_locale])
               end
             %>
-            <%= translation.input locale, label: label.html_safe %>
+            <%= translation.input locale, hint: hint, label: label.html_safe %>
           <% end %>
           <%= f.fields_for :source_translations, OpenStruct.new(f.object.source_translations) do |translation| %>
             <% 
-              label = model_class.human_attribute_name(:source)
+              label = t(label_key + 'source')
+              hint = t(hint_key + 'source')
               if index > 0
                 label << show_default_text(@shapeset.source_translations[default_locale])
               end
             %>
-            <%= translation.input locale, label: label.html_safe %>
+            <%= translation.input locale, hint: hint, label: label.html_safe %>
           <% end %>
           <%= f.fields_for :source_url_translations, OpenStruct.new(f.object.source_url_translations) do |translation| %>
             <% 
-              label = model_class.human_attribute_name(:source_url)
+              label = t(label_key + 'source_url')
+              hint = t(hint_key + 'source_url')
               if index > 0
                 label << show_default_text(@shapeset.source_url_translations[default_locale], 'url')
               end
             %>
-            <%= translation.input locale, as: :url, required: false, label: label.html_safe %>
+            <%= translation.input locale, as: :url, hint: hint, required: false, label: label.html_safe %>
           <% end %>
           <%= f.fields_for :description_translations, OpenStruct.new(f.object.description_translations) do |translation| %>
             <% 
-              label = model_class.human_attribute_name(:description)
+              label = t(label_key + 'description')
+              hint = t(hint_key + 'description')
               if index > 0
                 label << show_default_text(@shapeset.description_translations[default_locale])
               end
             %>
-            <%= translation.input locale, :as => :text, required: false, rows: 10, label: label.html_safe, 
+            <%= translation.input locale, :as => :text, hint: hint, required: false, rows: 10, label: label.html_safe, 
                 :input_html => { class: "tinymce" } %>
           <% end %>
         </div>
