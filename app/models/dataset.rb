@@ -43,7 +43,7 @@ class Dataset < CustomTranslation
   embeds_many :questions do
     # these are functions that will query the questions documents
 
-    # get the question that has the provide code
+    # get the question that has the provided code
     def with_code(code)
       where(:code => code.downcase).first
     end
@@ -578,13 +578,14 @@ class Dataset < CustomTranslation
 
         # - format data for charts
         # pie chart requires data to be in following format:
-        # [ {name, y, count}, {name, y, count}, ...]
+        # [ {name, y, count, answer_value}, {name, y, count, answer_value}, ...]
         result[:chart][:data] = []
         (0..result[:row_answers].length-1).each do |index|
           result[:chart][:data] << {
             name: result[:row_answers][index].text, 
             y: result[:percents][index], 
             count: result[:counts][index], 
+            answer_value: result[:row_answers][index].value
           }
         end
 

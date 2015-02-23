@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  time_series_id: 1
+  dataset_id: 1
+  title: MyString
+  order: 1
+
+two:
+  time_series_id: 1
+  dataset_id: 1
+  title: MyString
+  order: 1
