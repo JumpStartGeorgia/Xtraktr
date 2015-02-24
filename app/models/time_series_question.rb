@@ -8,10 +8,20 @@ class TimeSeriesQuestion < CustomTranslation
   #############################
 
   field :code, type: String
+  field :original_code, type: String
   field :text, type: String, localize: true
+  # whether or not the questions has answers
+  field :has_code_answers, type: Boolean, default: false
+  # whether or not the question should not be included in the analysis
+  field :exclude, type: Boolean, default: false
 
   embeds_many :dataset_questions, class_name: 'TimeSeriesDatasetQuestion'
   embeds_many :answers, class_name: 'TimeSeriesAnswer' do
+    # get the answer that has the provide value
+    def with_value(value)
+      where(:value => value).first
+    end
+
     # get answers that are not excluded
     def all_for_analysis
       where(:exclude => false).to_a
@@ -32,7 +42,10 @@ class TimeSeriesQuestion < CustomTranslation
   accepts_nested_attributes_for :dataset_questions
   accepts_nested_attributes_for :answers
 
-  attr_accessible :code, :text, :dataset_questions_attributes, :answers_attributes
+  attr_accessible :code, :text, :original_code, :has_code_answers, :answers_attributes, :exclude, :text_translations, :dataset_questions_attributes
 
+  #############################
+  # Validations
+  validates_presence_of :code, :original_code
 
 end

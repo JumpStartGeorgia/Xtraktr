@@ -202,6 +202,7 @@ class Dataset < CustomTranslation
   index ({ :released_at => 1})
   index ({ :user_id => 1})
   index ({ :shapeset_id => 1})
+  index ({ :public => 1})
   index ({ :'questions.code' => 1})
   index ({ :'questions.original_code' => 1})
   index ({ :'questions.text' => 1})
@@ -297,7 +298,8 @@ class Dataset < CustomTranslation
 
 
   #############################
-
+  # Callbacks
+  
   before_create :process_file
   before_create :create_private_share_key
   after_destroy :delete_dataset_files
@@ -392,6 +394,7 @@ class Dataset < CustomTranslation
   end
 
   #############################
+  # Scopes
 
   def self.sorted
     order_by([[:title, :asc]])

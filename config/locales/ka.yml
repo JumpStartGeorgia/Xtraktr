@@ -7,6 +7,7 @@ ka:
       dataset: Dataset
       shapeset: Shapeset
       question: Question
+      time_series: Time Series
     attributes:
       user:
         email: ელ.ფოსტა
@@ -59,6 +60,13 @@ ka:
         no_questions: There are no questions on file for this dataset.
         sort_order: Sort Order
         shape_name: Name of Shape
+      time_series:
+        title: Title
+        description: Description
+        source: Source of Data
+        source_url: URL to Souce
+        public: Make Available to the Public
+        created_at: Added On
       shapeset:
         title: Title
         description: Description
@@ -117,6 +125,19 @@ ka:
   tabbed_translation_form:
     default_text: Default Text
     default_url: Default URL
+  explore_time_series:
+    na: N/A
+    percent: Percent
+    onevar:
+      html:
+        title: "%{row}"
+        title_filter: "<br /> <span class='title-highlight'>where</span> %{variable} = %{value}"
+      text:
+        title: "%{row}"
+        title_filter: " where %{variable} = %{value}"
+    subtitle:
+      html: "Total Responses: %{num}"
+      text: "Total Responses: %{num}"
   explore_data:
     hover_region: Hover over a Region
     na: N/A
@@ -214,6 +235,7 @@ ka:
       add_answers: Add Answers
       edit_answers: Edit Answers
       download: Download
+      view_data: View Data
     titles:
       edit: "შეცვლა %{model}"
       save: "შენახვა %{model}"
@@ -321,6 +343,11 @@ ka:
       no_data: 'At this time, no datasets have been loaded into the site.'
     explore_data_show:
       title: Explore the Data
+    explore_time_series:
+      title: Explore Time Series Data
+      no_data: 'At this time, no time series have been created in the site.'
+    explore_data_show:
+      title: Explore Time Series Data
   datasets:
     index:
       stats:
@@ -397,7 +424,7 @@ ka:
       dataset_title: Dataset
       instructions:
         header: Instructions
-        p1a: This page allows you to explore one question or the interaction between two questions from the Employment-related Resarch in Georgia Survey. 
+        p1a: This page allows you to explore one question or the interaction between two questions. 
         p1b: "You may also choose to narrow the scope of this analysis by selecting a subset of data to analyze."
         p2: "You can explore the analysis via a map (if one variable is 'Reg'), a chart, and a table."
       form:
@@ -418,6 +445,34 @@ ka:
         details: Details
       map:
         filter: "Filter map by selecting an answer to '%{text}':"
+      table:
+        count: Count
+        percent: Percent
+      details:
+        variable: Variable
+        answers: Possible Answers    
+    explore_time_series:
+      no_matches: Your selections returned no data. Please try again with a different selection.
+      no_data: "'%{title}' does not have any data that is analyzable at this time."
+      na: N/A
+      percent: Percent
+      time_series_title: Time Series
+      instructions:
+        header: Instructions
+        p1a: This page allows you to explore one question over a series of surveys. 
+        p1b: "You may also choose to narrow the scope of this analysis by selecting a subset of data to analyze."
+      form:
+        row: Explore Question
+        submit: Run Analysis
+        reset: Reset 
+        filter_variable: Use Subset of Data
+        no_filter: Use Complete Data Set
+        filter_value: With Value
+        exclude_dkra: Exclude "Don't know" & "Refuse"
+      tabs:
+        chart: Chart
+        table: Table
+        details: Details
       table:
         count: Count
         percent: Percent

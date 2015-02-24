@@ -1,0 +1,37 @@
+<%- model_class = TimeSeries -%>
+
+<% title t('.title') %>
+
+<% if @time_series.present? %>
+  <% @time_series.each_with_index do |time, index| %>
+    <% if index == 0 || index%3 == 0 %>
+      <% if index != 0 %>
+        </div>
+      <% end %>
+      <div class="row">
+    <% end %>
+
+      <div class="col-sm-4">
+        <h2><%= time.title %></h2>
+        <% if time.description.present? %>
+          <div class="tinymce_format">
+            <%= simple_format_no_tags(time.description, {}, {sanitize: false}) %>
+          </div>
+        <% end %>
+        <div class="pull-left">
+          <%= "#{model_class.human_attribute_name(:source)}: #{time.source}" %>
+        </div>
+        <div class="pull-right">
+          <%= link_to t('helpers.links.view_data'), explore_time_series_show_path(time), :class => 'btn btn-default' %>
+        </div>
+      </div>
+
+    <% if index == @time_series.length-1 %>
+      </div>
+    <% end %>
+  <% end %>
+<% else %>
+  <p>
+    <%= t('.no_data') %>
+  </p>
+<% end %>

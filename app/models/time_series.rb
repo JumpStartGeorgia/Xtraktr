@@ -6,6 +6,12 @@ class TimeSeries < CustomTranslation
 
   field :title, type: String, localize: true
   field :description, type: String, localize: true
+  field :source, type: String, localize: true
+  field :source_url, type: String, localize: true
+  # whether or not dataset can be shown to public
+  field :public, type: Boolean, default: false
+  # key to access dataset that is not public
+  field :private_share_key, type: String
 
   embeds_many :datasets, class_name: 'TimeSeriesDataset' do
     def sorted
@@ -23,7 +29,13 @@ class TimeSeries < CustomTranslation
     def dataset_questions_in_code(code)
       with_code(code).dataset_questions
     end
-  end
+  
+      # get questions that are not excluded and have code answers
+    def for_analysis
+      where(:exclude => false, :has_code_answers => true).to_a
+    end
+    
+end
 
   #############################
 
@@ -36,14 +48,32 @@ class TimeSeries < CustomTranslation
   #############################
   # indexes
   index ({ :title => 1})
+  index ({ :public => 1})
   index ({ :'questions.code' => 1})
   index ({ :'questions.text' => 1})
+  index ({ :'questions.has_code_answers' => 1})
+  index ({ :'questions.exclude' => 1})
   index ({ :'datasets.sort_order' => 1})
   index ({ :'datasets.dataset_id' => 1})
 
   #############################
   # Validations
   validates_presence_of :title
+
+  #############################
+  # Scopes
+
+  def self.sorted
+    order_by([[:title, :asc]])
+  end
+
+  def self.is_public
+    where(public: true)
+  end
+
+  def self.by_private_key(key)
+    where(private_share_key: key).first
+  end
 
   #############################
 
