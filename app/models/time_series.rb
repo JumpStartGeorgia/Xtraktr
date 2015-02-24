@@ -98,7 +98,7 @@ class TimeSeries < CustomTranslation
               # get index of answer in results so can pull out data
               result_answer = results[:results][:chart][:data].select{|x| x[:answer_value] == answer.value}.first
               if result_answer.present?
-                answer_data[:data] << result_answer[:count]
+                answer_data[:data] << {y: result_answer[:y], count: result_answer[:count]}
               end
             end
           end
