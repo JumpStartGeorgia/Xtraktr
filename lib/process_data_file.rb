@@ -52,7 +52,7 @@ module ProcessDataFile
     if !File.exists?(file_to_process) && self.datafile.queued_for_write[:original].present?
       file_to_process = self.datafile.queued_for_write[:original].path
     end
-    file_r = "#{Rails.root}/script/r_scripts/#{@@r_file[self.file_extension]}" if is_spreadsheet
+    file_r = "#{Rails.root}/script/r_scripts/#{@@r_file[self.file_extension]}" if !is_spreadsheet
     file_sps = path + "spss_code.sps"
     file_data = path + @@file_data
     file_questions = path + @@file_questions
