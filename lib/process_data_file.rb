@@ -52,7 +52,7 @@ module ProcessDataFile
     if !File.exists?(file_to_process) && self.datafile.queued_for_write[:original].present?
       file_to_process = self.datafile.queued_for_write[:original].path
     end
-    file_r = "#{Rails.root}/script/r_scripts/#{@@r_file[self.file_extension]}" if is_spreadsheet
+    file_r = "#{Rails.root}/script/r_scripts/#{@@r_file[self.file_extension]}" if !is_spreadsheet
     file_sps = path + "spss_code.sps"
     file_data = path + @@file_data
     file_questions = path + @@file_questions
@@ -517,7 +517,7 @@ private
       else
         puts "--- the file is not using variables for the answers so no need to re-process the answer file"
         # just make a copy of the file using the correct name
-        FileUtils.cp temp_file file_answers_complete
+        #FileUtils.cp temp_file file_answers_complete
       end
 
     end
@@ -608,63 +608,66 @@ private
     return result
   end
 
-  #######################
-  # pull data out of csv and into new files
-  def process_csv(file_to_process, file_data, file_questions, file_answers_complete)
-    puts "=============================="
-    puts "$$$$$$ process_csv"
-    puts "=============================="
-    result = nil
 
-    data = CSV.read(File.open(file_to_process))
-    if data.present?
-      # get headers and remove from csv data
-      headers = data.shift
-      questions = [] # array of [code, question]
-      answers = [] # array of [code, answer value, answer text]
+  #### OLD
 
-      # clean up data and remove \N
-      data.select{|row| row.select{|cell| cell.include?('\N')}.each{|x| x.replace('')}}
+  # #######################
+  # # pull data out of csv and into new files
+  # def process_csv(file_to_process, file_data, file_questions, file_answers_complete)
+  #   puts "=============================="
+  #   puts "$$$$$$ process_csv"
+  #   puts "=============================="
+  #   result = nil
 
-      # get the questions
-      headers.each_with_index{|x, i| questions << ["#{@@spreadsheet_question_code}#{i}", x]}
-      # get the answers
-      (0..headers.length-1).each do |index|
-        code = questions[index][0]
-        data.map{|x| x[index]}.uniq.sort.each do |uniq_answer| 
-          # only add answer if it exists
-          if uniq_answer.strip.present?
-            answers << [code, uniq_answer, uniq_answer]
-          end
-        end
-      end
+  #   data = CSV.read(File.open(file_to_process))
+  #   if data.present?
+  #     # get headers and remove from csv data
+  #     headers = data.shift
+  #     questions = [] # array of [code, question]
+  #     answers = [] # array of [code, answer value, answer text]
 
-      # now save the files
-      # questions
-      CSV.open(file_questions, 'w') do |csv|
-        questions.each do |row|
-          csv << row
-        end
-      end
+  #     # clean up data and remove \N
+  #     data.select{|row| row.select{|cell| cell.include?('\N')}.each{|x| x.replace('')}}
 
-      # answers
-      CSV.open(file_answers_complete, 'w') do |csv|
-        answers.each do |row|
-          csv << row
-        end
-      end
+  #     # get the questions
+  #     headers.each_with_index{|x, i| questions << ["#{@@spreadsheet_question_code}#{i}", x]}
+  #     # get the answers
+  #     (0..headers.length-1).each do |index|
+  #       code = questions[index][0]
+  #       data.map{|x| x[index]}.uniq.sort.each do |uniq_answer| 
+  #         # only add answer if it exists
+  #         if uniq_answer.strip.present?
+  #           answers << [code, uniq_answer, uniq_answer]
+  #         end
+  #       end
+  #     end
 
-      # data
-      CSV.open(file_data, 'w') do |csv|
-        data.each do |row|
-          csv << row
-        end
-      end
+  #     # now save the files
+  #     # questions
+  #     CSV.open(file_questions, 'w') do |csv|
+  #       questions.each do |row|
+  #         csv << row
+  #       end
+  #     end
 
-      result = true
-    end
-    return result
-  end
+  #     # answers
+  #     CSV.open(file_answers_complete, 'w') do |csv|
+  #       answers.each do |row|
+  #         csv << row
+  #       end
+  #     end
+
+  #     # data
+  #     CSV.open(file_data, 'w') do |csv|
+  #       data.each do |row|
+  #         csv << row
+  #       end
+  #     end
+
+  #     result = true
+  #   end
+  #   return result
+  # end
 
 
 

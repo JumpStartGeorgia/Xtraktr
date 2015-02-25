@@ -66,7 +66,7 @@ class CustomTranslation
     orig_locale = I18n.locale
     I18n.locale = locale.to_sym
 
-    puts "---> for #{caller_locations(1,1)[0].label}, locale = #{I18n.locale}, fallback = #{fallback_locale}"
+    # puts "---> for #{caller_locations(1,1)[0].label}, locale = #{I18n.locale}, fallback = #{fallback_locale}"
     text = object[I18n.locale.to_s]
     text = object[fallback_locale.to_s] if text.blank?
 
