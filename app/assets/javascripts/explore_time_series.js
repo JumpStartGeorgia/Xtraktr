@@ -44,7 +44,8 @@ function build_time_series_chart(json){
           }]
       },
       tooltip: {
-          pointFormat: '<span style="color:{series.color}">{series.name}</span>: {point.count:,.0f} ({point.y:.2f}%)<br/>',
+          headerFormat: '<span style="font-size: 13px; font-style: italic; font-weight: bold;">{point.key}</span><br/>',
+          pointFormat: '<span style="font-weight: bold;">{series.name}</span>: {point.count:,.0f} ({point.y:.2f}%)<br/>',
       },
       legend: {
           symbolHeight: 14,
