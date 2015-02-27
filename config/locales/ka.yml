@@ -304,6 +304,7 @@ ka:
       mapping_not_save: "An error occurred while making the question mappable."
       mapping_deleted: "The question is no longer mappable."
       mapping_not_deleted: "The question mapping could not be deleted."
+      time_series_automatic_match: "%{count} questions were added to your time series."
     menu:
       explore_data: Explore Data
       explore_time_series: Explore Time Series
@@ -456,8 +457,12 @@ ka:
   time_series_questions:
     index:
       title: "Edit Time Series Questions and their Answers"
-      explanation: "Use this page to select a question to edit it and/or it's answers."
+      explanation: "Use this page to add questions to the time series or edit questions already in the time series."
       no_questions: There are no questions on file for this time series yet.
+      btn_add_question: Add a Question
+      btn_add_question_hint: Match a question from each dataset and add the question to the time series.
+      btn_automatic: Automatically Assign Matching Questions
+      btn_automatic_hint: Questions with the same Question Code in each dataset will automatically be added to the time series. This will take a few seconds to complete.
       header_dataset_question: "%{title} Question"
   shared:
     explore_data:

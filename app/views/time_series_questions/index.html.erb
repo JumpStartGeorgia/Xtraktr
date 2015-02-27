@@ -1,16 +1,17 @@
 <%- model_class = TimeSeriesQuestion -%>
 <% title t('.title') %>
 
-<% if @questions.present? %>
-
   <p>
     <%= t('.explanation') %>
   </p>
 
   <div id="add-links">
-    <%= link_to 'add question', '#', class: 'btn btn-primary' %>
-    <%= link_to 'automatically assign matches', '#', class: 'btn btn-primary' %>
+    <%= link_to t('.btn_add_question'), '#', class: 'btn btn-primary', title: t('.btn_add_question_hint') %>
+    <%= link_to t('.btn_automatic'), automatically_assign_questions_time_series_path(@time_series), class: 'btn btn-primary', title: t('.btn_automatic_hint') %>
   </div>
+
+
+<% if @questions.present? %>
 
   <table id='time-series-questions' class="table table-striped table-hover table-nonfluid">
     <thead>
@@ -40,10 +41,9 @@
             <td>
             <%
               dq = question.dataset_questions.by_dataset_id(dataset.dataset_id)
-              q = dq.dataset.questions.with_code(dq.code) if dq.present?
-              if q.present?
+              if dq.present?
             %>
-              <%= q.text %>
+              <%= dq.text %>
             <% end %>
             </td>
           <% end %>
@@ -58,7 +58,7 @@
 
 
 <% else %>
-  <p>
+  <p class="alert alert-warning">
     <%= t('.no_questions') %>
   </p>
 <% end %>

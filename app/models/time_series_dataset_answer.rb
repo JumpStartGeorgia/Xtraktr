@@ -10,9 +10,10 @@ class TimeSeriesDatasetAnswer
 
   field :dataset_id, type: String
   field :value, type: String
+  field :text, type: String, localize: true
 
   #############################
 
-  attr_accessible :value, :dataset_id
+  attr_accessible :value, :dataset_id, :text, :text_translations
 
 end

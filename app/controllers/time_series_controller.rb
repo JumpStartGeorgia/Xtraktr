@@ -159,4 +159,22 @@ end
     end
   end
 
+
+
+  # automatically assign matching questions
+  def automatically_assign_questions
+    @time_series = TimeSeries.by_id_for_user(params[:id], current_user.id)
+    if @time_series.present?
+      count = @time_series.automatically_assign_questions
+
+      respond_to do |format|
+        format.html { redirect_to time_series_questions_path(@time_series), notice: t('app.msgs.time_series_automatic_match', :count => count) }
+        format.json { head :no_content }
+      end
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to datasets_path(:locale => I18n.locale)
+      return
+    end
+  end
 end

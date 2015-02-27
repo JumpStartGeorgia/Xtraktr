@@ -36,6 +36,9 @@ BootstrapStarter::Application.routes.draw do
 
     resources :time_series do
       resources :time_series_questions, :only => [:index, :show, :edit, :update], :path => 'questions', :as => 'questions'
+      member do
+        get 'automatically_assign_questions'
+      end
     end
 
     # root pages

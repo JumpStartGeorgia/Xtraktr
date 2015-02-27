@@ -1,11 +1,12 @@
 <%- model_class = Question -%>
 <% title t('.title') %>
 
-<% if @questions.present? %>
-
   <p>
     <%= t('.explanation') %>
   </p>
+
+
+<% if @questions.present? %>
 
   <table id='dataset-questions' class="table table-striped table-hover table-nonfluid">
     <thead>
@@ -51,7 +52,7 @@
 
 
 <% else %>
-  <p>
+  <p class="alert alert-warning">
     <%= t('.no_questions') %>
   </p>
 <% end %>

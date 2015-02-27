@@ -234,8 +234,10 @@ class TimeSeries < CustomTranslation
   #############################
 
   # automatically assign match questions from all the datasets
-  def automatically_assign
+  # returns the number of questions that were matched
+  def automatically_assign_questions
     start = Time.now
+    count = 0
 
     # get datasets
     dataset_ids = self.datasets.sorted.map{|x| x.dataset_id}
@@ -274,58 +276,66 @@ class TimeSeries < CustomTranslation
     puts "- found #{matches.length} matches"
 
     # create record for each match
-    count = 0
     matches.each do |code|
-      question = datasets[dataset_ids.first].questions.with_code(code)
-      if question.present?
-        # create question
-        q = self.questions.build(code: question.code, original_code: question.original_code, text_translations: question.text_translations)
-        dataset_ids.each do |dataset_id|
-          q.dataset_questions.build(code: question.code, dataset_id: dataset_id)
+      # create question
+      q = self.questions.build
+      dataset_ids.each do |dataset_id|
+        question = datasets[dataset_id].questions.with_code(code)
+        if question.present?
+          # if the q record has not been populated, do it
+          if q.code.nil?
+            q.code = question.code
+            q.original_code = question.original_code
+            q.text_translations = question.text_translations
+          end
+
+          q.dataset_questions.build(code: question.code, text_translations: question.text_translations, dataset_id: dataset_id)
         end
 
-        # create answers
+      end
 
-        # get unique list of answer values
-        values = []
-        question_answers = {}
+      # create answers
+
+      # get unique list of answer values
+      values = []
+      question_answers = {}
+      dataset_ids.each do |dataset_id|
+        question_answers[dataset_id] = datasets[dataset_id].questions.with_code(code).answers.all_for_analysis
+        values << question_answers[dataset_id].map{|x| x.value}
+        puts "- dataset #{dataset_id} has #{question_answers[dataset_id].length} answers"
+      end
+      # get unique values
+      values.flatten!.uniq!.sort!
+
+      # for each value, create a record
+      values.each do |value|
+        a = q.answers.build
         dataset_ids.each do |dataset_id|
-          question_answers[dataset_id] = datasets[dataset_id].questions.with_code(code).answers.all_for_analysis
-          values << question_answers[dataset_id].map{|x| x.value}
-          puts "- dataset #{dataset_id} has #{question_answers[dataset_id].length} answers"
-        end
-        # get unique values
-        values.flatten!.uniq!.sort!
+          dataset_answer = question_answers[dataset_id].select{|x| x.value == value}.first
 
-        # for each value, create a record
-        values.each do |value|
-          a = q.answers.build
-          dataset_ids.each do |dataset_id|
-            dataset_answer = question_answers[dataset_id].select{|x| x.value == value}.first
-
-            # create dataset answer record
-            if dataset_answer.present?
-              # if this is the first found answer, use it to create the answer record 
-              if a.value.blank?
-                a.value = dataset_answer.value
-                a.text = dataset_answer.text
-                a.sort_order = dataset_answer.sort_order
-              end
-
-              a.dataset_answers.build(value: dataset_answer.value)
+          # create dataset answer record
+          if dataset_answer.present?
+            # if this is the first found answer, use it to create the answer record 
+            if a.value.blank?
+              a.value = dataset_answer.value
+              a.text = dataset_answer.text
+              a.sort_order = dataset_answer.sort_order
             end
+
+            a.dataset_answers.build(value: dataset_answer.value, text_translations: dataset_answer.text_translations, dataset_id: dataset_id)
           end
         end
-
-
-        q.save
-        count+=1
       end
+
+      q.save
+      count+=1
     end
 
     puts "added #{count} questions"
 
     puts "== total time = #{(Time.now - start)} seconds"
+
+    return count
   end
 
 
