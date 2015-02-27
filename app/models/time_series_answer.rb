@@ -9,13 +9,21 @@ class TimeSeriesAnswer < CustomTranslation
 
   field :value, type: String
   field :text, type: String, localize: true
-  field :can_exclude, type: Boolean, default: false
   field :sort_order, type: Integer, default: 1
-  field :exclude, type: Boolean, default: false
+
+  embeds_many :dataset_answers, class_name: 'TimeSeriesDatasetAnswer' do
+    # get the record for a dataset
+    def by_dataset_id(dataset_id)
+      where(dataset_id: dataset_id).first
+    end
+  end
+
 
   #############################
 
-  attr_accessible :value, :text, :can_exclude, :sort_order, :text_translations, :exclude
+  accepts_nested_attributes_for :dataset_answers
+
+  attr_accessible :value, :text, :sort_order, :text_translations, :dataset_answers_attributes
 
 
 end

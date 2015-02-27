@@ -1,4 +1,4 @@
-var geojson, datatable, i, j, json_data;
+var datatable, i, j, json_data;
 
 ////////////////////////////////////////////////
 // build time series line chart

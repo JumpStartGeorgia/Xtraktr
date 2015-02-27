@@ -48,6 +48,10 @@ class Dataset < CustomTranslation
       where(:code => code.downcase).first
     end
 
+    def with_codes(codes)
+      where(:code => codes) 
+    end
+
     def with_original_code(original_code)
       where(:original_code => original_code).first
     end
@@ -74,6 +78,11 @@ class Dataset < CustomTranslation
     # get just the codes
     def unique_codes
       only(:code).map{|x| x.code}
+    end
+
+    # get just the codes that can be analyzed
+    def unique_codes_for_analysis
+      where(:exclude => false, :has_code_answers => true).only(:code).map{|x| x.code}
     end
 
     # get all questions that are mappable

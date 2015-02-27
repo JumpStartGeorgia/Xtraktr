@@ -354,7 +354,7 @@ logger.debug "////////////////////////// BROWSER = #{user_agent}"
     end
 
     # the questions for cross tab can only be those that have code answers and are not excluded
-    @questions = time_series.questions.for_analysis
+    @questions = time_series.questions
 
     if @questions.present?
 

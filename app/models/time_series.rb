@@ -34,15 +34,15 @@ class TimeSeries < CustomTranslation
       with_code(code).dataset_questions
     end
   
-      # get questions that are not excluded and have code answers
-    def for_analysis
-      where(:exclude => false, :has_code_answers => true).to_a
-    end
-    
     def sorted
       order_by([[:code, :asc]])
     end
-end
+
+    # get all of the questions codes in this time series for a dataset
+    def codes_for_dataset(dataset_id)
+      map{|x| x.dataset_questions}.flatten.select{|x| x.dataset_id == dataset_id}.map{|x| x.code}
+    end    
+  end
 
   #############################
 
@@ -62,7 +62,6 @@ end
   index ({ :'questions.code' => 1})
   index ({ :'questions.text' => 1})
   index ({ :'questions.has_code_answers' => 1})
-  index ({ :'questions.exclude' => 1})
   index ({ :'datasets.sort_order' => 1})
   index ({ :'datasets.dataset_id' => 1})
 
@@ -182,8 +181,7 @@ end
     result[:row_code] = question_code
     row_question = self.questions.with_code(question_code)
     result[:row_question] = row_question.text
-    # if exclude_dkra is true, only get use the answers that cannot be excluded
-    result[:row_answers] = (exclude_dkra == true ? row_question.answers.must_include_for_analysis : row_question.answers.all_for_analysis).sort_by{|x| x.sort_order}
+    result[:row_answers] = row_question.answers.sorted
     result[:type] = 'time_series'
     result[:chart] = {}
 
@@ -231,4 +229,104 @@ end
     logger.debug "== total time = #{(Time.now - start)*1000} ms"
     return result
   end
+
+
+  #############################
+
+  # automatically assign match questions from all the datasets
+  def automatically_assign
+    start = Time.now
+
+    # get datasets
+    dataset_ids = self.datasets.sorted.map{|x| x.dataset_id}
+
+    # get datasets
+    datasets = {}
+    dataset_ids.each do |dataset_id|
+      datasets[dataset_id] = Dataset.find(dataset_id)
+    end
+
+
+    # get existing time series codes for each dataset
+    existing = {}
+    dataset_ids.each do |dataset_id|
+      existing[dataset_id] = self.questions.codes_for_dataset(dataset_id)
+      puts "- dataset #{dataset_id} has #{existing[dataset_id].length} codes already on file" 
+    end
+
+
+    # get all codes for each dataset
+    all_codes = {}
+    dataset_ids.each do |dataset_id|
+      all_codes[dataset_id] = datasets[dataset_id].questions.unique_codes_for_analysis
+      puts "- dataset #{dataset_id} has #{all_codes[dataset_id].length} codes for analysis" 
+    end
+
+    # remove codes that are already matched
+    to_compare = {}
+    dataset_ids.each do |dataset_id|
+      to_compare[dataset_id] = all_codes[dataset_id] - existing[dataset_id]
+      puts "- dataset #{dataset_id} has #{to_compare[dataset_id].length} codes to try to match"
+    end
+
+    # find matches
+    matches = to_compare.values.flatten.group_by{|x| x}.select{|k, v| v.size == dataset_ids.length}.keys
+    puts "- found #{matches.length} matches"
+
+    # create record for each match
+    count = 0
+    matches.each do |code|
+      question = datasets[dataset_ids.first].questions.with_code(code)
+      if question.present?
+        # create question
+        q = self.questions.build(code: question.code, original_code: question.original_code, text_translations: question.text_translations)
+        dataset_ids.each do |dataset_id|
+          q.dataset_questions.build(code: question.code, dataset_id: dataset_id)
+        end
+
+        # create answers
+
+        # get unique list of answer values
+        values = []
+        question_answers = {}
+        dataset_ids.each do |dataset_id|
+          question_answers[dataset_id] = datasets[dataset_id].questions.with_code(code).answers.all_for_analysis
+          values << question_answers[dataset_id].map{|x| x.value}
+          puts "- dataset #{dataset_id} has #{question_answers[dataset_id].length} answers"
+        end
+        # get unique values
+        values.flatten!.uniq!.sort!
+
+        # for each value, create a record
+        values.each do |value|
+          a = q.answers.build
+          dataset_ids.each do |dataset_id|
+            dataset_answer = question_answers[dataset_id].select{|x| x.value == value}.first
+
+            # create dataset answer record
+            if dataset_answer.present?
+              # if this is the first found answer, use it to create the answer record 
+              if a.value.blank?
+                a.value = dataset_answer.value
+                a.text = dataset_answer.text
+                a.sort_order = dataset_answer.sort_order
+              end
+
+              a.dataset_answers.build(value: dataset_answer.value)
+            end
+          end
+        end
+
+
+        q.save
+        count+=1
+      end
+    end
+
+    puts "added #{count} questions"
+
+    puts "== total time = #{(Time.now - start)} seconds"
+  end
+
+
 end
