@@ -20,4 +20,8 @@ class TimeSeriesDataset
 
   attr_accessible :dataset_id, :title, :sort_order#, :time_series_dataset_questions_attributes
 
+  #############################
+  # Validations
+  validates_presence_of :dataset_id, :title, :sort_order
+
 end

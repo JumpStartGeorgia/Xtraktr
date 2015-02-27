@@ -29,7 +29,7 @@
             <% end %>
             <% if @is_admin %>
               <li role="menuitem">
-                <%= link_to t('app.menu.all_time_seriess'), time_seriess_path %>
+                <%= link_to t('app.menu.all_time_series'), time_series_index_path %>
               </li>
             <% end %>
           </ul>
@@ -73,12 +73,6 @@
             <h4 class="modal-title" id="time-series-about-header"><%= @time_series.title %></h4>
           </div>
           <div class="modal-body">
-            <p><strong><%= model_class.human_attribute_name(:source) %>:</strong>
-            <%= @time_series.source %></p>
-
-            <p><strong><%= model_class.human_attribute_name(:source_url) %>:</strong>
-            <%= auto_link(@time_series.source_url, :html => { :target => '_blank' }) %></p>
-
             <p><strong><%= model_class.human_attribute_name(:description) %>:</strong></p>
             <div class="tinymce_format">
               <%= simple_format_no_tags(@time_series.description, {}, {sanitize: false}) %>

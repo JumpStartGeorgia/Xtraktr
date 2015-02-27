@@ -10,7 +10,7 @@ class QuestionsController < ApplicationController
   # GET /questions
   # GET /questions.json
   def index
-    @dataset = Dataset.where(user_id: current_user.id, id: params[:dataset_id]).first
+    @dataset = Dataset.by_id_for_user(params[:dataset_id], current_user.id)
 
     if @dataset.present?
       @questions = @dataset.questions
@@ -31,7 +31,7 @@ class QuestionsController < ApplicationController
   # GET /questions/1
   # GET /questions/1.json
   def show
-    @dataset = Dataset.where(user_id: current_user.id, id: params[:dataset_id]).first
+    @dataset = Dataset.by_id_for_user(params[:dataset_id], current_user.id)
 
     if @dataset.present?
       @question = @dataset.questions.find(params[:id])
@@ -63,7 +63,7 @@ class QuestionsController < ApplicationController
 
   # GET /questions/1/edit
   def edit
-    @dataset = Dataset.where(user_id: current_user.id, id: params[:dataset_id]).first
+    @dataset = Dataset.by_id_for_user(params[:dataset_id], current_user.id)
 
     if @dataset.present?
       @question = @dataset.questions.find(params[:id])
@@ -96,7 +96,7 @@ class QuestionsController < ApplicationController
   # PUT /questions/1
   # PUT /questions/1.json
   def update
-    @dataset = Dataset.where(user_id: current_user.id, id: params[:dataset_id]).first
+    @dataset = Dataset.by_id_for_user(params[:dataset_id], current_user.id)
 
     if @dataset.present?
       @question = @dataset.questions.find(params[:id])

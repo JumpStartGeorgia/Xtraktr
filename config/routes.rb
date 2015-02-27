@@ -9,11 +9,11 @@ BootstrapStarter::Application.routes.draw do
 		devise_for :users, :path_names => {:sign_in => 'login', :sign_out => 'logout'},
 											 :controllers => {:omniauth_callbacks => "omniauth_callbacks"}
 
-		namespace :admin do
+    namespace :admin do
       resources :shapesets
       resources :pages
-			resources :users
-		end
+      resources :users
+    end
 
     resources :datasets do
       resources :questions, :only => [:index, :show, :edit, :update]
@@ -32,6 +32,10 @@ BootstrapStarter::Application.routes.draw do
         post 'mappable_form_edit'
         delete 'remove_mapping'
       end
+    end
+
+    resources :time_series do
+      resources :time_series_questions, :only => [:index, :show, :edit, :update], :path => 'questions', :as => 'questions'
     end
 
     # root pages

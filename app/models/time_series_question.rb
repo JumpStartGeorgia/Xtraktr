@@ -15,7 +15,13 @@ class TimeSeriesQuestion < CustomTranslation
   # whether or not the question should not be included in the analysis
   field :exclude, type: Boolean, default: false
 
-  embeds_many :dataset_questions, class_name: 'TimeSeriesDatasetQuestion'
+  embeds_many :dataset_questions, class_name: 'TimeSeriesDatasetQuestion' do
+    # get the record for a dataset
+    def by_dataset_id(dataset_id)
+      where(dataset_id: dataset_id).first
+    end
+  end
+
   embeds_many :answers, class_name: 'TimeSeriesAnswer' do
     # get the answer that has the provide value
     def with_value(value)

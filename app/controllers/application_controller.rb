@@ -142,6 +142,18 @@ logger.debug "////////////////////////// BROWSER = #{user_agent}"
     @show_title = show_title
   end
 
+  # add options to show the time series nav bar
+  def add_time_series_nav_options(options={})
+    show_title = options[:show_title].nil? ? true : options[:show_title]
+    set_url = options[:set_url].nil? ? true : options[:set_url]
+
+    @css.push("time_series.css")
+    @time_series_url = time_series_path(@time_series) if set_url
+    @is_admin = true
+    
+    @show_title = show_title
+  end
+
 
   # set variables need for the tabbed translation forms
   def set_tabbed_translation_form_settings

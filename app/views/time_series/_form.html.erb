@@ -1,0 +1,189 @@
+<%- 
+  label_key = "mongoid.attributes.time_series."
+  hint_key = "mongoid.hints.time_series."
+  d_label_key = "mongoid.attributes.time_series_dataset."
+  d_hint_key = "mongoid.hints.time_series_dataset."
+-%>
+
+<%= semantic_form_for @time_series, html: {:multipart => true, class: 'tabbed-translation-form'} do |f| %>
+  <%= f.error_messages %>
+
+  <%= f.inputs do %>
+    <%= f.hidden_field :user_id , :value => current_user.id %>
+
+    <div id="dataset-container">
+      <table id='time_series_datasets' class="table table-striped table-hover table-nonfluid">
+        <thead>
+          <tr>
+            <th><%= t(d_label_key + 'dataset_id') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(d_hint_key + 'dataset_id') %>"><div>?</div></div></th>
+            <th><%= t(d_label_key + 'title') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(d_hint_key + 'title') %>"><div>?</div></div></th>
+            <th><%= t(d_label_key + 'sort_order') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(d_hint_key + 'sort_order') %>"><div>?</div></div></th>
+            <th><%= t('helpers.actions') %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @time_series.datasets.sorted.each_with_index do |dataset, dindex| %>
+            <%= f.semantic_fields_for :datasets, dataset do |f_dataset| %>
+              <%= render partial: 'dataset_fields', :locals => {:f => f_dataset, :dataset => dataset, :index => dindex} %>
+            <% end %>
+          <% end %>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4">
+              <%= link_to_add_association t('helpers.links.add_dataset'), f, :datasets, 
+                  :class => 'btn btn-success',
+                  :title => t('.header_add_dataset'),
+                  :'data-association-insertion-node' => 'table#time_series_datasets tbody',
+                  :'data-association-insertion-method' => 'append'%>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-6">
+        <%= f.input :languages, as: :select, hint: t(hint_key + 'languages'), 
+              :collection => @languages.map{|x| [x.name, x.locale]}, multiple: true, required: true,
+              :input_html => {class: 'selectpicker-language-disabled languages', 
+                :'data-live-search' => "true", :'data-selected-text-format' => "count>3", :'data-size' => "7",
+                :'data-width' => "72%"} %>
+      </div>
+      <div class="col-sm-6">
+        <% 
+          primaries = nil
+          if @time_series.languages.present?
+            primaries = @languages.select{|x| @time_series.languages.include?(x.locale)}
+          end
+        %>
+       
+        <div class="select input required form-group" id="time_series_default_language_input">
+          <label class="control-label" for="time_series_default_language">
+            <%= t(label_key + 'default_language') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(hint_key + 'default_language') %>"><div>?</div></div>
+          </label>
+          <select class="selectpicker-language form-control default-language" data-live-search="true" data-selected-text-format="count>3" data-size="7" data-width="72%" 
+                  id="time_series_default_language" name="time_series[default_language]">
+            <% if @languages.present? %>
+              <% @languages.each do |lang| %>
+                <%
+                  selected = ''
+                  hide = 'class=hide'
+                  if primaries.present? && primaries.include?(lang.locale)
+                    hide = ''
+                  end
+                  if lang.locale == @time_series.default_language
+                    selected="selected=selected"
+                  end
+                %>
+                <option value="<%= lang.locale %>" <%= hide %> <%= selected %> ><%= lang.name %></option>
+              <% end %>
+            <% end %>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-4">
+        <div class="radio_buttons input optional form-group" id="time_series_public_input">
+          <label class="  control-label" for="time_series_public"><%= t(label_key + 'public') %><div class="help-inline" original-title="<%= t(hint_key + 'public') %>"><div>?</div></div>
+          </label>
+          <div class="radio">
+            <label class="choice" for="time_series_public_true">
+              <% checked = @time_series.public? ? 'checked=checked' : '' %>
+              <input <%= checked %> id="time_series_public_true" name="time_series[public]" type="radio" value="true" />
+              <%= t('formtastic.yes') %>
+            </label>
+          </div>
+          <div class="radio">
+            <label class="choice" for="time_series_public_false">
+              <% checked = @time_series.public? ? '' : 'checked=checked' %>
+              <input <%= checked %> id="time_series_public_false" name="time_series[public]" type="radio" value="false" />
+              <%= t('formtastic.no') %>
+            </label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  <% end %>
+
+  <hr />
+
+  <div role="tabpanel" class="tabbed-translation-fields">
+    <% 
+      locales = [I18n.locale] 
+      locales = @time_series.languages_sorted if @time_series.languages.present?
+    %>
+
+    <ul class="nav nav-tabs" role="tablist" 
+        data-default-language-icon="<span class='glyphicon glyphicon-star' title='<%= t('helpers.default_language') %>'></span>">
+      <%
+        default_locale = I18n.locale.to_s 
+        default_lang = '' 
+      %>
+      <% locales.each_with_index do |locale, index| %>
+        <% 
+          lang = @languages.select{|x| x.locale == locale.to_s}.first
+          cls = ''
+          if index == 0
+            cls = 'class=active' 
+            default_locale = locale
+            default_lang = lang.present? ? lang.name : locale 
+          end
+        %>
+        <li role="presentation" <%= cls %> data-locale="<%= locale %>">
+          <a href="#<%= locale %>" aria-controls="home" role="tab" data-toggle="tab">
+            <%= lang.present? ? lang.name : locale %>
+          </a>
+        </li>
+      <% end %>
+    </ul>
+
+    <div class="tab-content">
+      <% locales.each_with_index do |locale, index| %>
+        <%
+          cls = ''
+          cls = 'in active' if index == 0
+        %>
+
+        <div role="tabpanel" class="tab-pane fade <%= cls %>" id="<%= locale %>" data-locale="<%= locale %>">
+          <%= f.fields_for :title_translations, OpenStruct.new(f.object.title_translations) do |translation| %>
+            <% 
+              label = t(label_key + 'title')
+              hint = t(hint_key + 'title')
+              if index > 0
+                label << show_default_text(@time_series.title_translations[default_locale])
+              end
+            %>
+            <%= translation.input locale, hint: hint, label: label.html_safe %>
+          <% end %>
+          <%= f.fields_for :description_translations, OpenStruct.new(f.object.description_translations) do |translation| %>
+            <% 
+              label = t(label_key + 'description')
+              hint = t(hint_key + 'description')
+              if index > 0
+                label << show_default_text(@time_series.description_translations[default_locale])
+              end
+            %>
+            <%= translation.input locale, :as => :text, required: false, rows: 10, hint: hint, label: label.html_safe, 
+                :input_html => { class: "tinymce" } %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+  </div>
+
+
+  <div class="form-group">
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= f.submit t('helpers.links.reset'), :class => 'btn btn-warning', :type => :reset, :name => :reset %>
+    <%= link_to t('helpers.links.cancel'), time_series_index_path, :class => 'btn btn-warning' %>
+  </div>
+<% end %>
+
+<%= tinymce_assets %>
+

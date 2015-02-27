@@ -50,20 +50,10 @@ module ApplicationHelper
     return x
 	end
 
-	# put the default locale first and then sort the remaining locales
-	def create_sorted_translation_objects(trans)
-	  if trans.present?
-      # sort
-      trans.sort!{|x,y| x.locale <=> y.locale}
+  def format_languages(object)
+    object.language_objects.map{|x| x.name}.join('<br /> ').html_safe
+  end
 
-      # move default locale to first position
-      default = trans.index{|x| x.locale == I18n.default_locale.to_s}
-      if default.present? && default > 0
-        trans.unshift(trans[default])
-        trans.delete_at(default+1)
-      end
-	  end
-    return trans
-	end
+
 
 end

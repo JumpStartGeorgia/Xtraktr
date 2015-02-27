@@ -408,6 +408,19 @@ class Dataset < CustomTranslation
     where(private_share_key: key).first
   end
 
+  def self.by_user(user_id)
+    where(user_id: user_id)
+  end
+
+  # get the record if the user is the owner
+  def self.by_id_for_user(id, user_id)
+    where(id: id).by_user(user_id).first
+  end
+
+  def self.only_id_title_languages
+    only(:id, :title, :languages)
+  end
+
   #############################
 
   # get the js shape file path

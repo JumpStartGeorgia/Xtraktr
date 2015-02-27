@@ -1,7 +1,7 @@
 <%- model_class = Question -%>
 <% title t('.title') %>
 
-<% if @dataset.questions.present? %>
+<% if @questions.present? %>
 
   <p>
     <%= t('.explanation') %>
@@ -20,7 +20,7 @@
       </tr>
     </thead>
     <tbody>
-      <% @dataset.questions.each do |question| %>
+      <% @questions.each do |question| %>
         <tr>
           <td>
             <%= link_to t('helpers.links.view'), dataset_question_path(@dataset, question), class: 'btn btn-default' %>

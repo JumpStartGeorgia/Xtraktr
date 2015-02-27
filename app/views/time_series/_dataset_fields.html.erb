@@ -1,0 +1,28 @@
+<% 
+  answer ||= nil
+  answers ||= nil
+  # if the aindex is not provided, default to 'new_time_series_datasets' so the cocoon gem can replace it with a random index number
+  index ||= 'new_time_series_datasets'
+  is_new_dataset = index == 'new_time_series_datasets'
+  # if this is a new dataset, do not show a default sort order
+  default_sort_order = is_new_dataset == false ? dataset.sort_order : nil
+%>
+
+
+
+                    <tr class="nested-fields">
+                      <td>
+                        <%= f.input :dataset_id, as: :select, collection: @datasets.map{|x| [x.title, x.id, {'data-languages' => x.languages.join(',')}]}, :label => false, 
+                          :input_html => {class: 'selectpicker-dataset',
+                          :'data-live-search' => "true", :'data-size' => "7", :'data-width' => "72%"} %>
+                      </td>
+                      <td>
+                        <%= f.input :title, as: :string, :input_html => {:size =>35}, :label => false %>
+                      </td>
+                      <td>
+                        <%= f.input :sort_order, as: :string, :input_html => {:size =>3, :value => default_sort_order}, :label => false %>
+                      </td>
+                      <td>
+                        <%= link_to_remove_association t('helpers.links.remove_dataset'), f, class: 'btn btn-danger' %>
+                      </td>
+                    </tr>
