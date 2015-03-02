@@ -1,0 +1,43 @@
+<%- model_class = TimeSeries -%>
+<% title t '.title', :default => model_class.model_name.human.pluralize %>
+
+<div class="form-group form-group-admin-buttons">
+  <%= link_to t('.new', :default => t("helpers.links.new")),
+              new_time_series_path,
+              :class => 'btn btn-primary' %>
+</div>
+
+<table id="time-series-datatable" class="table table-striped display">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:title) %></th>
+      <th><%= model_class.human_attribute_name(:datasets) %></th>
+      <th><%= model_class.human_attribute_name(:languages) %></th>
+      <th><%= model_class.human_attribute_name(:public) %></th>
+      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @time_series.each do |time_series| %>
+      <tr>
+        <td><%= link_to time_series.title, time_series_path(time_series) %></td>
+        <td>
+          <ul>
+          <% time_series.datasets.sorted.each do |dataset| %>
+            <li>
+              <%= "#{dataset.title} (#{dataset.dataset.title})" %>
+            </li>
+          <% end %>
+          </li>
+        </td>
+        <td><%= format_languages(time_series) %></td>
+        <td><%= format_time_series_public_status(time_series.public) %></td>
+        <td><%= l time_series.created_at, format: :date_only %></td>
+        <td class="dropdown">
+          <%= render partial: 'layouts/time_series_menu', locals: {time_series: time_series, include_parent_div: true} %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

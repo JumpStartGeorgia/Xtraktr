@@ -299,6 +299,8 @@ $(document).ready(function(){
 
   // initalize the fancy select boxes
   $('form.tabbed-translation-form select.selectpicker-language').select2({width:'element', allowClear:true});
+  $('form.tabbed-translation-form select.selectpicker-language-disabled').select2({width:'element'});
+  $('form.tabbed-translation-form select.selectpicker-language-disabled').select2('readonly', true);
   // remove class that causes conflicting styles
   $('form.tabbed-translation-form .select2-container').removeClass('form-control');
 

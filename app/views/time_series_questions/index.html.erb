@@ -1,0 +1,64 @@
+<%- model_class = TimeSeriesQuestion -%>
+<% title t('.title') %>
+
+  <p>
+    <%= t('.explanation') %>
+  </p>
+
+  <div id="add-links">
+    <%= link_to t('.btn_add_question'), '#', class: 'btn btn-primary', title: t('.btn_add_question_hint') %>
+    <%= link_to t('.btn_automatic'), automatically_assign_questions_time_series_path(@time_series), class: 'btn btn-primary', title: t('.btn_automatic_hint') %>
+  </div>
+
+
+<% if @questions.present? %>
+
+  <table id='time-series-questions' class="table table-striped table-hover table-nonfluid">
+    <thead>
+      <tr>
+        <th></th>
+        <th><%= model_class.human_attribute_name(:code) %></th>
+        <th><%= model_class.human_attribute_name(:text) %></th>
+        <% @datasets.each do |dataset| %>
+          <th><%= t('.header_dataset_question', title: dataset.title) %></th>
+        <% end %>
+        <th><%=t '.actions', :default => t("helpers.actions") %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @questions.each do |question| %>
+        <tr>
+          <td>
+            <%= link_to t('helpers.links.view'), time_series_question_path(@time_series, question), class: 'btn btn-default' %>
+          </td>
+          <td>
+            <%= question.original_code %>
+          </td>
+          <td>
+            <%= question.text %>
+          </td>
+          <% @datasets.each do |dataset| %>
+            <td>
+            <%
+              dq = question.dataset_questions.by_dataset_id(dataset.dataset_id)
+              if dq.present?
+            %>
+              <%= dq.text %>
+            <% end %>
+            </td>
+          <% end %>
+          <td>
+            <%= link_to t('app.buttons.edit'),
+                      edit_time_series_question_path(@time_series, question), :class => 'btn btn-default' %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+
+<% else %>
+  <p class="alert alert-warning">
+    <%= t('.no_questions') %>
+  </p>
+<% end %>

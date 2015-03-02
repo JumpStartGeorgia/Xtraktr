@@ -1,6 +1,7 @@
 class RootController < ApplicationController
 
   layout "explore_data", only: [:explore_data_show, :private_share]
+  layout "explore_time_series", only: [:explore_time_series_show]
 
   def index
     respond_to do |format|
@@ -34,6 +35,33 @@ class RootController < ApplicationController
     end
   end
   
+  def explore_time_series
+    @time_series = TimeSeries.is_public.sorted
+
+    respond_to do |format|
+      format.html # index.html.erb
+    end
+  end
+  
+  def explore_time_series_show
+    @time_series = TimeSeries.is_public.find_by(id: params[:id])
+
+    if @time_series.blank?
+      redirect_to explore_time_series_path, :notice => t('app.msgs.does_not_exist')
+    else
+      @is_admin = false
+      @time_series_url = explore_time_series_show_path(@time_series)
+      gon.explore_time_series = true
+      gon.explore_ime_series_ajax_path = explore_time_series_show_path(:format => :js)
+
+      # this method is in application_controller
+      # and gets all of the required information
+      # and responds appropriately to html or js
+      explore_time_series_generator(@time_series)
+    end
+  end
+  
+
   def private_share
     @dataset = Dataset.by_private_key(params[:id])
 

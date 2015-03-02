@@ -9,7 +9,7 @@ class DatasetsController < ApplicationController
   # GET /datasets
   # GET /datasets.json
   def index
-    @datasets = Dataset.where(user_id: current_user.id).sorted
+    @datasets = Dataset.by_user(current_user.id).sorted
 
     @css.push("datasets.css")
     @js.push("search.js")
@@ -23,7 +23,7 @@ class DatasetsController < ApplicationController
   # GET /datasets/1
   # GET /datasets/1.json
   def show
-    @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).first
+    @dataset = Dataset.by_id_for_user(params[:id], current_user.id)
 
     if @dataset.blank?
       flash[:info] =  t('app.msgs.does_not_exist')
@@ -63,7 +63,7 @@ class DatasetsController < ApplicationController
 
   # GET /datasets/1/edit
   def edit
-    @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).first
+    @dataset = Dataset.by_id_for_user(params[:id], current_user.id)
 
     if @dataset.present?
       # set the date values for the datepicker
@@ -117,7 +117,7 @@ class DatasetsController < ApplicationController
   # PUT /datasets/1
   # PUT /datasets/1.json
   def update
-    @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).first
+    @dataset = Dataset.by_id_for_user(params[:id], current_user.id)
 
     if @dataset.present?
 
@@ -155,7 +155,7 @@ class DatasetsController < ApplicationController
   # DELETE /datasets/1
   # DELETE /datasets/1.json
   def destroy
-    @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).first
+    @dataset = Dataset.by_id_for_user(params[:id], current_user.id)
     if @dataset.present?
       @dataset.destroy
 
@@ -173,7 +173,7 @@ class DatasetsController < ApplicationController
 
   # show warnings about the data
   def warnings
-    @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).first
+    @dataset = Dataset.by_id_for_user(params[:id], current_user.id)
 
     if @dataset.present?
       @no_answers = @dataset.questions.with_no_code_answers
@@ -196,7 +196,7 @@ class DatasetsController < ApplicationController
 
   # mark which questions to not include in the analysis
   def exclude_questions
-    @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).first
+    @dataset = Dataset.by_id_for_user(params[:id], current_user.id)
 
     if @dataset.present?
 
@@ -248,7 +248,7 @@ class DatasetsController < ApplicationController
 
   # mark which answers to not include in the analysis
   def exclude_answers
-    @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).first
+    @dataset = Dataset.by_id_for_user(params[:id], current_user.id)
 
     if @dataset.present?
 
@@ -301,7 +301,7 @@ class DatasetsController < ApplicationController
   # mark which answers users can select to not include in the analysis
   # during analysis
   def can_exclude_answers
-    @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).first
+    @dataset = Dataset.by_id_for_user(params[:id], current_user.id)
 
     if @dataset.present?
 
@@ -353,7 +353,7 @@ class DatasetsController < ApplicationController
 
   # show which questions are assign to shape sets
   def mappable
-    @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).first
+    @dataset = Dataset.by_id_for_user(params[:id], current_user.id)
 
     if @dataset.present?
       @shapeset_count = Shapeset.count
@@ -375,7 +375,7 @@ class DatasetsController < ApplicationController
 
   # assign questions to shape sets
   def mappable_form
-    @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).first
+    @dataset = Dataset.by_id_for_user(params[:id], current_user.id)
 
     if @dataset.present?
 
@@ -423,7 +423,7 @@ class DatasetsController < ApplicationController
 
   # edit an existing question mapping
   def mappable_form_edit
-    @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).first
+    @dataset = Dataset.by_id_for_user(params[:id], current_user.id)
 
     if @dataset.present? && params[:question_id].present?
 
@@ -472,7 +472,7 @@ class DatasetsController < ApplicationController
   # DELETE /datasets/1
   # DELETE /datasets/1.json
   def remove_mapping
-    @dataset = Dataset.where(user_id: current_user.id, id: params[:id]).first
+    @dataset = Dataset.by_id_for_user(params[:id], current_user.id)
     if @dataset.present?
       if @dataset.remove_question_shape_mapping(params[:question_id])
         flash[:success] =  t('app.msgs.mapping_deleted')

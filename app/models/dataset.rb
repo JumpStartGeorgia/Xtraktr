@@ -43,9 +43,13 @@ class Dataset < CustomTranslation
   embeds_many :questions do
     # these are functions that will query the questions documents
 
-    # get the question that has the provide code
+    # get the question that has the provided code
     def with_code(code)
       where(:code => code.downcase).first
+    end
+
+    def with_codes(codes)
+      where(:code => codes) 
     end
 
     def with_original_code(original_code)
@@ -74,6 +78,11 @@ class Dataset < CustomTranslation
     # get just the codes
     def unique_codes
       only(:code).map{|x| x.code}
+    end
+
+    # get just the codes that can be analyzed
+    def unique_codes_for_analysis
+      where(:exclude => false, :has_code_answers => true).only(:code).map{|x| x.code}
     end
 
     # get all questions that are mappable
@@ -202,6 +211,7 @@ class Dataset < CustomTranslation
   index ({ :released_at => 1})
   index ({ :user_id => 1})
   index ({ :shapeset_id => 1})
+  index ({ :public => 1})
   index ({ :'questions.code' => 1})
   index ({ :'questions.original_code' => 1})
   index ({ :'questions.text' => 1})
@@ -297,7 +307,8 @@ class Dataset < CustomTranslation
 
 
   #############################
-
+  # Callbacks
+  
   before_create :process_file
   before_create :create_private_share_key
   after_destroy :delete_dataset_files
@@ -392,6 +403,7 @@ class Dataset < CustomTranslation
   end
 
   #############################
+  # Scopes
 
   def self.sorted
     order_by([[:title, :asc]])
@@ -403,6 +415,19 @@ class Dataset < CustomTranslation
 
   def self.by_private_key(key)
     where(private_share_key: key).first
+  end
+
+  def self.by_user(user_id)
+    where(user_id: user_id)
+  end
+
+  # get the record if the user is the owner
+  def self.by_id_for_user(id, user_id)
+    where(id: id).by_user(user_id).first
+  end
+
+  def self.only_id_title_languages
+    only(:id, :title, :languages)
   end
 
   #############################
@@ -578,13 +603,14 @@ class Dataset < CustomTranslation
 
         # - format data for charts
         # pie chart requires data to be in following format:
-        # [ {name, y, count}, {name, y, count}, ...]
+        # [ {name, y, count, answer_value}, {name, y, count, answer_value}, ...]
         result[:chart][:data] = []
         (0..result[:row_answers].length-1).each do |index|
           result[:chart][:data] << {
             name: result[:row_answers][index].text, 
             y: result[:percents][index], 
             count: result[:counts][index], 
+            answer_value: result[:row_answers][index].value
           }
         end
 

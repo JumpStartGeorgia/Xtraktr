@@ -517,7 +517,7 @@ private
       else
         puts "--- the file is not using variables for the answers so no need to re-process the answer file"
         # just make a copy of the file using the correct name
-        FileUtils.cp temp_file file_answers_complete
+        #FileUtils.cp temp_file file_answers_complete
       end
 
     end
@@ -608,81 +608,101 @@ private
     return result
   end
 
-  #######################
-  # pull data out of csv and into new files
-  def process_csv(file_to_process, file_data, file_questions, file_answers_complete)
-    puts "=============================="
-    puts "$$$$$$ process_csv"
-    puts "=============================="
-    result = nil
 
-    data = CSV.read(File.open(file_to_process))
-    if data.present?
-      # get headers and remove from csv data
-      headers = data.shift
-      questions = [] # array of [code, question]
-      answers = [] # array of [code, answer value, answer text]
+  #### OLD
 
-      # clean up data and remove \N
-      data.select{|row| row.select{|cell| cell.include?('\N')}.each{|x| x.replace('')}}
+  # #######################
+  # # pull data out of csv and into new files
+  # def process_csv(file_to_process, file_data, file_questions, file_answers_complete)
+  #   puts "=============================="
+  #   puts "$$$$$$ process_csv"
+  #   puts "=============================="
+  #   result = nil
 
-      # get the questions
-      headers.each_with_index{|x, i| questions << ["#{@@spreadsheet_question_code}#{i}", x]}
-      # get the answers
-      (0..headers.length-1).each do |index|
-        code = questions[index][0]
-        data.map{|x| x[index]}.uniq.sort.each do |uniq_answer| 
-          # only add answer if it exists
-          if uniq_answer.strip.present?
-            answers << [code, uniq_answer, uniq_answer]
-          end
-        end
-      end
+  #   data = CSV.read(File.open(file_to_process))
+  #   if data.present?
+  #     # get headers and remove from csv data
+  #     headers = data.shift
+  #     questions = [] # array of [code, question]
+  #     answers = [] # array of [code, answer value, answer text]
 
-      # now save the files
-      # questions
-      CSV.open(file_questions, 'w') do |csv|
-        questions.each do |row|
-          csv << row
-        end
-      end
+  #     # clean up data and remove \N
+  #     data.select{|row| row.select{|cell| cell.include?('\N')}.each{|x| x.replace('')}}
 
-      # answers
-      CSV.open(file_answers_complete, 'w') do |csv|
-        answers.each do |row|
-          csv << row
-        end
-      end
+  #     # get the questions
+  #     headers.each_with_index{|x, i| questions << ["#{@@spreadsheet_question_code}#{i}", x]}
+  #     # get the answers
+  #     (0..headers.length-1).each do |index|
+  #       code = questions[index][0]
+  #       data.map{|x| x[index]}.uniq.sort.each do |uniq_answer| 
+  #         # only add answer if it exists
+  #         if uniq_answer.strip.present?
+  #           answers << [code, uniq_answer, uniq_answer]
+  #         end
+  #       end
+  #     end
 
-      # data
-      CSV.open(file_data, 'w') do |csv|
-        data.each do |row|
-          csv << row
-        end
-      end
+  #     # now save the files
+  #     # questions
+  #     CSV.open(file_questions, 'w') do |csv|
+  #       questions.each do |row|
+  #         csv << row
+  #       end
+  #     end
 
-      result = true
-    end
-    return result
-  end
+  #     # answers
+  #     CSV.open(file_answers_complete, 'w') do |csv|
+  #       answers.each do |row|
+  #         csv << row
+  #       end
+  #     end
+
+  #     # data
+  #     CSV.open(file_data, 'w') do |csv|
+  #       data.each do |row|
+  #         csv << row
+  #       end
+  #     end
+
+  #     result = true
+  #   end
+  #   return result
+  # end
 
 
 
-  # strip the string and remove and bad characters
-  # - <92> = '
-  # - \x92 = '
+  # strip the string and fix any bad characters
+  # some text is in microsoft ansi encoding and needs to be fixed
+  # reference: https://msdn.microsoft.com/en-us/library/cc195054.aspx
+  # - <91> = ‘
+  # - <92> = ’
+  # - <93> = “
+  # - <94> = ”
+  # - <97> = —
   # - \xa0 = space
-  # if string = '' or '\\N' turn into nil
+  # if string = '' or '\\N' return nil
   def clean_text(str, options={})
     options[:format_code] = false if options[:format_code].nil?
+    single_quote = "'"
+    double_quote = '"'
+    dash = "-"
+    space = " "
 
     if !str.nil? && str.length > 0
       x = str.dup.encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
+      
       if options[:format_code] == true
         x.gsub!('.', '|')
         x.downcase! 
       end
-      y = x.gsub("<92>", "'").gsub("\\x92", "'").gsub("\\xa0", " ").chomp.strip
+
+      y = x.gsub("<91>", single_quote).gsub("\\x91", single_quote)
+            .gsub("<92>", single_quote).gsub("\\x92", single_quote)
+            .gsub("<93>", double_quote).gsub("\\x93", double_quote)
+            .gsub("<94>", double_quote).gsub("\\x94", double_quote)
+            .gsub("<97>", dash).gsub("\\x97", dash)
+            .gsub("\\xa0", space).chomp.strip
+
       y = nil if y.empty? || y == "\\N"
       return y
     else

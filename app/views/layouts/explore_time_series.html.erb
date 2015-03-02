@@ -1,0 +1,136 @@
+<%- model_class = TimeSeries -%>
+<!DOCTYPE html>
+<html lang="<%= I18n.locale %>">
+  <head>
+    <%= render :partial => 'layouts/head' %>
+
+  </head>
+  <body>
+
+    <%= render :partial => 'layouts/nav' %>
+
+    <nav id="time-series-navbar" class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+        <%= link_to @time_series.title, @time_series_url,:class=>"navbar-brand" if @time_series.created_at.present? %>
+        </div>
+
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+          <ul class="nav navbar-nav navbar-left">
+            <li role="menuitem">
+              <%= link_to t('app.menu.about_time_series'), '#time-series-about', :'data-toggle' => "modal"  if @time_series.created_at.present? %>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <% if @is_admin && @time_series.created_at.present? %>
+              <li class="dropdown" role="menuitem">
+                <%= render partial: 'layouts/time_series_menu', locals: {time_series: @time_series} %>
+              </li>
+            <% end %>
+            <% if @is_admin %>
+              <li role="menuitem">
+                <%= link_to t('app.menu.all_time_series'), time_series_index_path %>
+              </li>
+            <% end %>
+          </ul>
+
+        </div><!--/.nav-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div id="flash-message">
+            <% flash.each do |key, msg| %>
+              <div class="alert <%= flash_translation(key) %> fade in">
+                <a href="#" data-dismiss="alert" class="close">×</a>
+                <%= msg %>
+              </div>
+            <% end %>
+          </div>
+          
+          <% if @show_title == true && content_for?(:title) %>
+            <div class="page-header">
+              <h1><%= yield(:title) %></h1>
+            </div>
+          <% end %>
+
+          <%= yield %>
+        </div><!--/span-->
+      </div><!--/row-->
+    </div> <!-- /container -->
+
+    <%= render :partial => 'layouts/footer' %>
+
+
+    <div class="modal fade" id="time-series-about" tabindex="-1" role="dialog" aria-labelledby="time-series-about-header" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"><%= t('helpers.links.close') %></span></button>
+            <h4 class="modal-title" id="time-series-about-header"><%= @time_series.title %></h4>
+          </div>
+          <div class="modal-body">
+            <p><strong><%= model_class.human_attribute_name(:description) %>:</strong></p>
+            <div class="tinymce_format">
+              <%= simple_format_no_tags(@time_series.description, {}, {sanitize: false}) %>
+            </div>
+
+            <% if @is_admin %>
+              <p><strong><%= model_class.human_attribute_name(:public) %>:</strong>
+              <%= format_time_series_public_status(@time_series.public) %></p>
+            <% end %>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <% if @is_admin && @time_series.created_at.present? %>
+      <div class="modal fade" id="private-share" tabindex="-1" role="dialog" aria-labelledby="private-share-header" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"><%= t('helpers.links.close') %></span></button>
+              <h4 class="modal-title" id="private-share-header">
+                <%= t('.private_share_header', title: @time_series.title) %>
+              </h4>
+            </div>
+            <div class="modal-body">
+              <p>
+                <%= t('.private_share_explanation', title: @time_series.title) %>
+              </p>
+              <p>
+                <%= link_to private_share_url(@time_series.private_share_key), 
+                    private_share_url(@time_series.private_share_key) %>
+              </p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Javascripts
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <%= javascript_include_tag  *(@js.present? ? ["application", @js].flatten : ["application"]), :media => "all" %>      
+    <script type="text/javascript">
+      I18n.defaultLocale = "<%= I18n.default_locale %>";
+      I18n.locale = "<%= I18n.locale %>";
+    </script>
+
+    <% if Rails.env.production? %>
+      <!-- insert google analytics for production site here -->
+    <% elsif Rails.env.staging? %>
+      <!-- insert google analytics for staging site here -->
+    <% end %>
+
+  </body>
+</html>

@@ -29,6 +29,17 @@ $(document).ready(function(){
     ]
   });
 
+  $('#time-series-datatable').dataTable({
+    "dom": '<"top"f>t<"bottom"lpi><"clear">',
+    "processing": true,
+    "language": {
+      "url": gon.datatable_i18n_url
+    },
+    "columnDefs": [
+      { orderable: false, "targets": [1,5] }
+    ]
+  });
+
   $('#shapeset-datatable').dataTable({
     "dom": '<"top"f>t<"bottom"lpi><"clear">',
     "processing": true,

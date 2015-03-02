@@ -2,58 +2,5 @@
 <% title @dataset.title %>
 
 
-<!--
-<div class="form-group form-group-admin-buttons">
-  <%= link_to t('.back', :default => t("helpers.links.back")),
-              datasets_path, :class => 'btn btn-default'  %>
-  <%= link_to t('.edit', :default => t("helpers.links.edit")),
-              edit_dataset_path(@dataset), :class => 'btn btn-default' %>
-  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-              dataset_path(@dataset),
-              :method => 'delete',
-              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm")) },
-              :class => 'btn btn-danger' %>
-</div>
--->
-
 <%= render :partial => 'shared/explore_data' %>
-
-
-<!--
-<p><strong><%= model_class.human_attribute_name(:title) %>:</strong>
-<%= @dataset.title %></p>
-
-<p><strong><%= model_class.human_attribute_name(:source) %>:</strong>
-<%= @dataset.source %></p>
-
-<p><strong><%= model_class.human_attribute_name(:source_url) %>:</strong>
-<%= auto_link(@dataset.source_url, :html => { :target => '_blank' }) %></p>
-
-<p><strong><%= model_class.human_attribute_name(:gathered_at) %>:</strong>
-<% if @dataset.start_gathered_at.present? && @dataset.end_gathered_at.present? %>
-  <%= "#{l @dataset.start_gathered_at} - #{l @dataset.end_gathered_at}" %>
-<% elsif @dataset.start_gathered_at.present? %>
-  <%= l @dataset.start_gathered_at %>
-<% elsif @dataset.end_gathered_at.present? %>
-  <%= l @dataset.end_gathered_at %>
-<% end %>
-</p>
-
-<p><strong><%= model_class.human_attribute_name(:released_at) %>:</strong>
-<%= l @dataset.released_at if@dataset.released_at.present? %></p>
-
-<p><strong><%= model_class.human_attribute_name(:description) %>:</strong></p>
-<div class="tinymce_format">
-  <%= simple_format_no_tags(@dataset.description, {}, {sanitize: false}) %>
-</div>
-
-<p><strong><%= model_class.human_attribute_name(:codebook) %>:</strong>
-<%= link_to t('helpers.links.download'), @dataset.codebook.url, class: 'btn btn-default', target: :blank if @dataset.codebook.exists? %></p>
-
-<p><strong><%= model_class.human_attribute_name(:datafile) %>:</strong>
-<%= link_to t('helpers.links.download'), @dataset.datafile.url, class: 'btn btn-default', target: :blank if @dataset.datafile.exists? %></p>
-
-<p><strong><%= model_class.human_attribute_name(:public) %>:</strong>
-<%= format_dataset_public_status(@dataset.public) %></p>
--->
 

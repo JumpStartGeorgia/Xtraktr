@@ -7,6 +7,8 @@ ka:
       dataset: Dataset
       shapeset: Shapeset
       question: Question
+      time_series: Time Series
+      time_series_question: Question
     attributes:
       user:
         email: ელ.ფოსტა
@@ -59,6 +61,22 @@ ka:
         no_questions: There are no questions on file for this dataset.
         sort_order: Sort Order
         shape_name: Name of Shape
+      time_series:
+        title: Title
+        description: Description
+        source: Source of Data
+        source_url: URL to Souce
+        public: Make Available to the Public
+        created_at: Added On
+        datasets: Datasets
+      time_series_dataset:
+        dataset_id: Dataset
+        title: Label
+        sort_order: Sort Order
+      time_series_question:
+        code: Time Series Question Code
+        original_code: Time Series Question Code
+        text: Time Series Question
       shapeset:
         title: Title
         description: Description
@@ -104,6 +122,16 @@ ka:
       mappable:
         question: Select the question that you want to have the answers appear on a map during analysis.
         shapeset: Select the shapeset to use for this question.
+      time_series:
+        title: The title of your time series
+        description: Explain what your time series is about
+        public: "Select 'Yes' to make your time series available to the world"
+        languages: "The languages of your time series are automatically determined by the languages of the datasets"
+        default_language: The time series language that is shown by default if no specific language is requested by user
+      time_series_dataset:
+        dataset_id: Select the dataset to add to this time series
+        title: "The text that will represent this data set in the time series, most likely a time indicator. For example, if your dataset is from 2015, you could enter 2015; or if it is from January 2015, you can enter January 2015."
+        sort_order: The order the data sets should appear in the time series
   errors:
     messages:
       required_field: "სავალდებულო ველი"
@@ -111,12 +139,26 @@ ka:
       translation_default_lang: "%{field_name} for Default Language '%{language}' %{msg}"
       translation_any_lang: "%{field_name} for Language '%{language}' %{msg}"
       invalid_language: "'%{lang_locale}' is not a valid language locale"
-  dataset_status:
+      dataset_length: "At least two datasets are needed for a time series to be saved."
+  publish_status:
     public: Public
     private: Private
   tabbed_translation_form:
     default_text: Default Text
     default_url: Default URL
+  explore_time_series:
+    na: N/A
+    percent: Percent (%)
+    onevar:
+      html:
+        title: "%{row}"
+        title_filter: "<br /> <span class='title-highlight'>where</span> %{variable} = %{value}"
+      text:
+        title: "%{row}"
+        title_filter: " where %{variable} = %{value}"
+    subtitle:
+      html: "Total Responses: %{num}"
+      text: "Total Responses: %{num}"
   explore_data:
     hover_region: Hover over a Region
     na: N/A
@@ -214,6 +256,9 @@ ka:
       add_answers: Add Answers
       edit_answers: Edit Answers
       download: Download
+      view_data: View Data
+      add_dataset: Add Dataset
+      remove_dataset: Remove Dataset
     titles:
       edit: "შეცვლა %{model}"
       save: "შენახვა %{model}"
@@ -259,11 +304,16 @@ ka:
       mapping_not_save: "An error occurred while making the question mappable."
       mapping_deleted: "The question is no longer mappable."
       mapping_not_deleted: "The question mapping could not be deleted."
+      time_series_automatic_match: "%{count} questions were added to your time series."
     menu:
       explore_data: Explore Data
+      explore_time_series: Explore Time Series
       datasets: Datasets
+      time_series: Time Series
       about_dataset: About 
+      about_time_series: About 
       all_datasets: All Datasets
+      all_time_series: All Time Series
       admin_dataset:
         explore_data: Explore Data
         heading: Dataset Options
@@ -276,6 +326,14 @@ ka:
         exclude_questions: Exclude Questions
         delete: Delete
         private_share: Share Private Dataset
+      admin_time_series:
+        explore_data: Explore Data
+        heading: Time Series Options
+        settings: Settings
+        qa: Edit Questions/Answers
+        warnings: Warnings
+        delete: Delete
+        private_share: Share Private Time Series
   layouts:
     nav:
       toggle: ნავიგაციის ჩართვა/გამორთვა
@@ -321,6 +379,11 @@ ka:
       no_data: 'At this time, no datasets have been loaded into the site.'
     explore_data_show:
       title: Explore the Data
+    explore_time_series:
+      title: Explore Time Series Data
+      no_data: 'At this time, no time series have been created in the site.'
+    explore_data_show:
+      title: Explore Time Series Data
   datasets:
     index:
       stats:
@@ -387,6 +450,20 @@ ka:
       default_text: Default Text
       header_add_answer: Add a new answer for this question
       header_add_missing_answer: The following values are in the data but are not provided as one of the answers. <br/>Select a value to add it as an answer and have it included in the analysis.
+  time_series:
+    form: 
+      header_datasets: Datasets
+      header_add_dataset: Add a new dataset to this time series
+  time_series_questions:
+    index:
+      title: "Edit Time Series Questions and their Answers"
+      explanation: "Use this page to add questions to the time series or edit questions already in the time series."
+      no_questions: There are no questions on file for this time series yet.
+      btn_add_question: Add a Question
+      btn_add_question_hint: Match a question from each dataset and add the question to the time series.
+      btn_automatic: Automatically Assign Matching Questions
+      btn_automatic_hint: Questions with the same Question Code in each dataset will automatically be added to the time series. This will take a few seconds to complete.
+      header_dataset_question: "%{title} Question"
   shared:
     explore_data:
       no_matches: Your selections returned no data. Please try again with a different selection.
@@ -397,7 +474,7 @@ ka:
       dataset_title: Dataset
       instructions:
         header: Instructions
-        p1a: This page allows you to explore one question or the interaction between two questions from the Employment-related Resarch in Georgia Survey. 
+        p1a: This page allows you to explore one question or the interaction between two questions. 
         p1b: "You may also choose to narrow the scope of this analysis by selecting a subset of data to analyze."
         p2: "You can explore the analysis via a map (if one variable is 'Reg'), a chart, and a table."
       form:
@@ -418,6 +495,34 @@ ka:
         details: Details
       map:
         filter: "Filter map by selecting an answer to '%{text}':"
+      table:
+        count: Count
+        percent: Percent
+      details:
+        variable: Variable
+        answers: Possible Answers    
+    explore_time_series:
+      no_matches: Your selections returned no data. Please try again with a different selection.
+      no_data: "'%{title}' does not have any data that is analyzable at this time."
+      na: N/A
+      percent: Percent
+      time_series_title: Time Series
+      instructions:
+        header: Instructions
+        p1a: This page allows you to explore one question over a series of surveys. 
+        p1b: "You may also choose to narrow the scope of this analysis by selecting a subset of data to analyze."
+      form:
+        row: Explore Question
+        submit: Run Analysis
+        reset: Reset 
+        filter_variable: Use Subset of Data
+        no_filter: Use Complete Data Set
+        filter_value: With Value
+        exclude_dkra: Exclude "Don't know" & "Refuse"
+      tabs:
+        chart: Chart
+        table: Table
+        details: Details
       table:
         count: Count
         percent: Percent

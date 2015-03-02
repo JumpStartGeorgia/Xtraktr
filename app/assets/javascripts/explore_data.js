@@ -1,25 +1,5 @@
 var geojson, datatable, i, j, json_data, highmap;
 
-////////////////////////////////////////////////
-// convert the querystring variables into json
-function queryStringToJSON(url) {
-  if (url === ''){
-    return '';    
-  }
-  var u = url.split('?');
-  if (u.length != 2){
-    return '';
-  }
-  var pairs = u[1].split('&');
-  var result = {};
-  for (var idx in pairs) {
-    var pair = pairs[idx].split('=');
-    if (!!pair[0])
-      result[pair[0].toLowerCase()] = decodeURIComponent(pair[1] || '');
-  }
-  return result;
-}
-
 
 ////////////////////////////////////////////////
 ////////////////////////////////////////////////
