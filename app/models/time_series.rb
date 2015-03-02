@@ -59,9 +59,13 @@ class TimeSeries < CustomTranslation
   # indexes
   index ({ :title => 1})
   index ({ :public => 1})
+  index ({ :private_share_key => 1})
+  index ({ :user_id => 1})
   index ({ :'questions.code' => 1})
+  index ({ :'questions.original_code' => 1})
   index ({ :'questions.text' => 1})
-  index ({ :'questions.has_code_answers' => 1})
+  index ({ :'questions.answers.can_exclude' => 1})
+  index ({ :'questions.answers.sort_order' => 1})
   index ({ :'datasets.sort_order' => 1})
   index ({ :'datasets.dataset_id' => 1})
 
@@ -181,7 +185,7 @@ class TimeSeries < CustomTranslation
     result[:row_code] = question_code
     row_question = self.questions.with_code(question_code)
     result[:row_question] = row_question.text
-    result[:row_answers] = row_question.answers.sorted.map{|x| {text: x.text, value: x.value, sort_order: x.sort_order}}
+    result[:row_answers] = (exclude_dkra == true ? row_question.answers.must_include_for_analysis : row_question.answers).sort_by{|x| x.sort_order}.map{|x| {text: x.text, value: x.value, sort_order: x.sort_order}}
     result[:type] = 'time_series'
     result[:counts] = []
     result[:percents] = []
@@ -345,6 +349,7 @@ class TimeSeries < CustomTranslation
               a.value = dataset_answer.value
               a.text = dataset_answer.text
               a.sort_order = dataset_answer.sort_order
+              a.can_exclude = dataset_answer.can_exclude
             end
 
             a.dataset_answers.build(value: dataset_answer.value, text_translations: dataset_answer.text_translations, dataset_id: dataset_id)

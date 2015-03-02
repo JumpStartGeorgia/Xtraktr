@@ -24,6 +24,11 @@ class TimeSeriesQuestion < CustomTranslation
       where(:value => value).first
     end
 
+    # get answers that must be included for analysis
+    def must_include_for_analysis
+      where(:can_exclude => false).to_a
+    end
+
     def sorted
       order_by([[:sort_order, :asc], [:text, :asc]])
     end

@@ -10,6 +10,7 @@ class TimeSeriesAnswer < CustomTranslation
   field :value, type: String
   field :text, type: String, localize: true
   field :sort_order, type: Integer, default: 1
+  field :can_exclude, type: Boolean, default: false
 
   embeds_many :dataset_answers, class_name: 'TimeSeriesDatasetAnswer' do
     # get the record for a dataset
@@ -23,7 +24,7 @@ class TimeSeriesAnswer < CustomTranslation
 
   accepts_nested_attributes_for :dataset_answers
 
-  attr_accessible :value, :text, :sort_order, :text_translations, :dataset_answers_attributes
+  attr_accessible :value, :text, :sort_order, :text_translations, :dataset_answers_attributes, :can_exclude
 
 
 end
