@@ -421,11 +421,11 @@ logger.debug "////////////////////////// BROWSER = #{user_agent}"
           @data[:title][:map_text] = @data[:title][:text]
 
           @data[:subtitle] = {}
-          @data[:subtitle][:html] = build_time_series_subtitle_html(@data[:total_responses])
-          @data[:subtitle][:text] = build_time_series_subtitle_text(@data[:total_responses])
+          @data[:subtitle][:html] = build_time_series_subtitle_html(@data[:column_answers], @data[:total_responses])
+          @data[:subtitle][:text] = build_time_series_subtitle_text(@data[:column_answers], @data[:total_responses])
         end
 
-#        logger.debug "/////////////////////////// #{@data}"
+        logger.debug "/////////////////////////// #{@data}"
 
         status = @data.present? ? :ok : :unprocessable_entity
         render json: @data.to_json, status: :ok
@@ -450,15 +450,23 @@ logger.debug "////////////////////////// BROWSER = #{user_agent}"
     return title
   end 
 
-  def build_time_series_subtitle_html(total)
+  def build_time_series_subtitle_html(datasets, totals)
     title = "<br /> <span class='total_responses'>"
-    title << t('explore_data.subtitle.html', :num => view_context.number_with_delimiter(total))
+    num = []
+    (0..datasets.length-1).each do |index|
+      num << "#{datasets[index]}: #{view_context.number_with_delimiter(totals[index])}"
+    end
+    title << t('explore_data.subtitle.html', :num => num.join('; '))
     title << "</span>"
     return title.html_safe
   end 
 
-  def build_time_series_subtitle_text(total)
-    return t('explore_data.subtitle.text', :num => view_context.number_with_delimiter(total))
+  def build_time_series_subtitle_text(datasets, totals)
+    num = []
+    (0..datasets.length-1).each do |index|
+      num << "#{datasets[index]}: #{view_context.number_with_delimiter(totals[index])}"
+    end
+    return t('explore_data.subtitle.text', :num => num.join('; '))
   end 
 
 

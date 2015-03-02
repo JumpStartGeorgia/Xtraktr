@@ -36,7 +36,7 @@
               <% @questions.each do |question| %>
                 <% 
                   selected = filter_variable == question.code ? 'selected=selected ' : ''
-                  disabled = @col == question.code || @row == question.code ? 'disabled=disabled ' : ''
+                  disabled = @row == question.code ? 'disabled=disabled ' : ''
                 %>
                 <option value="<%= question.code %>" <%= selected %><%= disabled %>><%= "#{question.original_code} - #{question.text}" %></option>
               <% end %>
@@ -70,10 +70,9 @@
             <select data-live-search="true" data-hide-disabled='true' data-width="100%" class="selectpicker" id="row" name="row">
               <% @questions.each_with_index do |question, index| %>
                 <% 
-                  selected = (@row.present? && @row == question.code) || (@col.blank? && index == 0) ? 'selected=selected ' : ''
-                  disabled = @col == question.code ? 'disabled=disabled ' : ''
+                  selected = (@row.present? && @row == question.code) ? 'selected=selected ' : ''
                 %>
-                <option value="<%= question.code %>" <%= selected %><%= disabled %>><%= "#{question.original_code} - #{question.text}" %></option>
+                <option value="<%= question.code %>" <%= selected %> ><%= "#{question.original_code} - #{question.text}" %></option>
               <% end %>
             </select>
           </div>

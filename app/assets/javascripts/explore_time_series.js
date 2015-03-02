@@ -29,11 +29,11 @@ function build_time_series_chart(json){
           style: {'text-align': 'center', 'margin-top': '-15px'}
       },
       xAxis: {
-          categories: json.datasets
+          categories: json.column_answers
       },
       yAxis: {
           title: {
-              text: '%'
+              text: gon.percent
           },
           max: 100,
           min: 0,
@@ -119,31 +119,52 @@ function build_datatable(json){
 
   // build head
   table += "<thead>";
-  // 1 header of: row question, count, percent
+  // 3 headers of:
+  //                col question
+  //                col answers .....
+
+  // row question   count percent count percent .....
   table += "<tr class='th-center'>";
+  table += "<th class='var1-col'></th>";
+  for(i=0; i<json.column_answers.length;i++){
+    table += "<th colspan='2'>";
+    table += json.column_answers[i].toString();
+    table += "</th>"
+  }
+  table += "</tr>";
+  table += "<tr>";
   table += "<th class='var1-col'>";
   table += json.row_question;
-  table += "</th><th>";
-  table += $('#datatable').data('count');
-  table += "</th><th>";
-  table += $('#datatable').data('percent');
-  table += "</th></tr>";
+  table += "</th>";
+  for(i=0; i<json.column_answers.length;i++){
+    table += "<th>";
+    table += $('#datatable').data('count');
+    table += "</th>"
+    table += "<th>";
+    table += $('#datatable').data('percent');
+    table += "</th>"
+  }
+  table += "</tr>";
   table += "</thead>";
 
   // build body
   table += "<tbody>";
-  // cells per row: row answer, count, percent
-  // for(i=0; i<json.row_answers.length; i++){
-  //   table += "<tr>";
-  //   table += "<td class='var1-col' data-order='" + json.row_answers[i].sort_order + "'>";
-  //   table += json.row_answers[i].text;
-  //   table += "</td><td data-order='" + json.counts[i] + "'>";
-  //   table += Highcharts.numberFormat(json.counts[i],0);
-  //   table += "</td><td>";
-  //   table += json.percents[i].toFixed(2);
-  //   table += "%</td>";
-  //   table += "</tr>";
-  // }
+  // cells per row: row answer, count/percent for each col
+  for(i=0; i<json.row_answers.length; i++){
+    table += "<tr>";
+    table += "<td class='var1-col' data-order='" + json.row_answers[i].sort_order + "'>";
+    table += json.row_answers[i].text;
+    table += "</td>";
+    for(j=0; j<json.counts[i].length; j++){
+      table += "<td data-order='" + json.counts[i][j] + "'>";
+      table += Highcharts.numberFormat(json.counts[i][j],0);
+      table += "</td>";
+      table += "<td>";
+      table += json.percents[i][j].toFixed(2);
+      table += "%</td>";
+    }
+    table += "</tr>";
+  }
 
   table += "</tbody>";
 

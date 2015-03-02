@@ -181,13 +181,16 @@ class TimeSeries < CustomTranslation
     result[:row_code] = question_code
     row_question = self.questions.with_code(question_code)
     result[:row_question] = row_question.text
-    result[:row_answers] = row_question.answers.sorted
+    result[:row_answers] = row_question.answers.sorted.map{|x| {text: x.text, value: x.value, sort_order: x.sort_order}}
     result[:type] = 'time_series'
+    result[:counts] = []
+    result[:percents] = []
+    result[:total_responses] = []
     result[:chart] = {}
 
     dataset_questions = self.questions.dataset_questions_in_code(question_code)
     datasets = self.datasets.sorted
-    result[:datasets] = datasets.map{|x| x.title}
+    result[:column_answers] = datasets.map{|x| x.title}
 
     # if the row question/answers were found, continue
     if result[:row_question].present? && datasets.present? && dataset_questions.present? && result[:row_answers].present?
@@ -204,22 +207,44 @@ class TimeSeries < CustomTranslation
         # chart data = [{name: '', data: []}, ...]
         result[:chart][:data] = []
         result[:row_answers].each do |answer|
-          answer_data = {name: answer.text, data:[]}
+          answer_data = {name: answer[:text], data:[]}
+          data_row_counts = []
+          data_row_percents = []
           datasets.each do |dataset|
             # see if this dataset had results
             results = individual_results.select{|x| x[:dataset_id] == dataset.dataset_id}.first
             if results.present?
               # get index of answer in results so can pull out data
-              result_answer = results[:results][:chart][:data].select{|x| x[:answer_value] == answer.value}.first
-              if result_answer.present?
+              result_answer_index = results[:results][:chart][:data].index{|x| x[:answer_value] == answer[:value]}
+              if result_answer_index.present?
+                result_answer = results[:results][:chart][:data][result_answer_index]
                 answer_data[:data] << {y: result_answer[:y], count: result_answer[:count]}
+
+                # add in the counts/percents
+                data_row_counts << results[:results][:counts][result_answer_index]
+                data_row_percents << results[:results][:percents][result_answer_index]
+              else
+                # no match found so just set to 0
+                data_row_counts << 0
+                data_row_percents << 0
               end
+            else
+              # no match found so just set to 0
+              data_row_counts << 0
+              data_row_percents << 0
             end
           end
 
           if answer_data[:data].present?
             result[:chart][:data] << answer_data
+            result[:counts] << data_row_counts
+            result[:percents] << data_row_percents
           end
+        end
+
+        # get total responses for each dataset
+        individual_results.each do |individual_result|
+          result[:total_responses] << individual_result[:results][:total_responses]
         end
 
       end

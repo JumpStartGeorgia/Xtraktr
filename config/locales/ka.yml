@@ -148,7 +148,7 @@ ka:
     default_url: Default URL
   explore_time_series:
     na: N/A
-    percent: Percent
+    percent: Percent (%)
     onevar:
       html:
         title: "%{row}"
