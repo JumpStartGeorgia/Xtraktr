@@ -249,6 +249,13 @@ function build_crosstab_chart(json){
       }
     });
 
+    // if there are a lot of answers, scale the height accordingly
+    if (json.row_answers.length + json.column_answers.length < 10){
+      $('#chart').height(500);
+    }else{
+      $('#chart').height(330 + json.row_answers.length*26.125 + json.column_answers.length*21);
+    }
+
     $('#chart').highcharts({
         chart: {
             type: 'bar'
@@ -354,6 +361,13 @@ function build_pie_chart(json){
         contextButtonTitle: gon.highcharts_context_title
       }
     });
+
+    // if there are a lot of answers, scale the height accordingly
+    if (json.row_answers.length < 5){
+      $('#chart').height(500);
+    }else{
+      $('#chart').height(425 + json.row_answers.length*21);
+    }
 
     $('#chart').highcharts({
         chart: {

@@ -11,6 +11,13 @@ function build_time_series_chart(json){
       }
     });
 
+    // if there are a lot of answers, scale the height accordingly
+    if (json.row_answers.length < 5){
+      $('#chart').height(500);
+    }else{
+      $('#chart').height(425 + json.row_answers.length*21);
+    }
+
 
     $('#chart').highcharts({
       chart: {
