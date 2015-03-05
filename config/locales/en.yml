@@ -152,7 +152,7 @@ en:
     onevar:
       html:
         title: "%{row}"
-        title_filter: "<br /> <span class='title-highlight'>where</span> %{variable} = %{value}"
+        title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> %{variable} = %{value}"
       text:
         title: "%{row}"
         title_filter: " where %{variable} = %{value}"
@@ -165,28 +165,28 @@ en:
     percent: Percent
     crosstab:
       html:
-        title: "%{row} <br /> <span class='title-highlight'>by</span> %{col}"
-        title_filter: "<br /> <span class='title-highlight'>where</span> %{variable} = %{value}"
+        title: "<span class='title-highlight'>Answers to:</span> <br /> %{row} <br /> <span class='title-highlight'>broken down by:</span> <br /> %{col}"
+        title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> %{variable} = %{value}"
         map:
           title: "%{row} "
-          title_col: "<br /> <span class='title-highlight'>where</span> %{col} = [replace] "
+          title_col: "<br /> <span class='title-highlight'>filtered by:</span> %{col} = [replace] "
           title_filter: "<br /> <span class='title-highlight'>and</span> %{variable} = %{value}"
       text:
-        title: "%{row} by %{col} "
-        title_filter: "where %{variable} = %{value}"
+        title: "Answers to: %{row} broken down by: %{col} "
+        title_filter: "filtered by: %{variable} = %{value}"
         map:
           title: "%{row} "
-          title_col: "where %{col} = [replace] "
+          title_col: "filtered by: %{col} = [replace] "
           title_filter: "and %{variable} = %{value}"
     onevar:
       html:
         title: "%{row}"
-        title_filter: "<br /> <span class='title-highlight'>where</span> %{variable} = %{value}"
+        title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> %{variable} = %{value}"
       text:
-        title: "%{row}"
-        title_filter: " where %{variable} = %{value}"
+        title: "%{row} "
+        title_filter: "filtered by: %{variable} = %{value}"
     subtitle:
-      html: "Total Responses: %{num}"
+      html: "Total Responses: <span class='number'>%{num}</span>"
       text: "Total Responses: %{num}"
   datatable:
     copy: 
@@ -473,21 +473,22 @@ en:
       percent: Percent
       dataset_title: Dataset
       instructions:
-        header: Instructions
+        header: Description
         p1a: This page allows you to explore one question or the interaction between two questions. 
         p1b: "You may also choose to narrow the scope of this analysis by selecting a subset of data to analyze."
         p2: "You can explore the analysis via a map (if one variable is 'Reg'), a chart, and a table."
       form:
-        row: Explore Question
-        col: Compared with (optional)
+        row: Explore Answers To
+        col: Broken Down By (optional)
         no_col: No Comparison
         swap: Swap the Questions
-        submit: Run Analysis
+        submit: Generate
         reset: Reset 
-        filter_variable: Use Subset of Data
-        no_filter: Use Complete Data Set
+        filter_variable: Filtered By
+        no_filter: No Filter
         filter_value: With Value
         exclude_dkra: Exclude "Don't know" & "Refuse"
+        exclude_dkra_hint: Remove answers like "Don't know" & "Refuse" from the analysis
       tabs:
         map: Map
         chart: Chart
@@ -508,17 +509,18 @@ en:
       percent: Percent
       time_series_title: Time Series
       instructions:
-        header: Instructions
+        header: Description
         p1a: This page allows you to explore one question over a series of surveys. 
         p1b: "You may also choose to narrow the scope of this analysis by selecting a subset of data to analyze."
       form:
-        row: Explore Question
-        submit: Run Analysis
+        row: Explore Answers To
+        submit: Generate
         reset: Reset 
-        filter_variable: Use Subset of Data
-        no_filter: Use Complete Data Set
+        filter_variable: Filtered By
+        no_filter: No Filter
         filter_value: With Value
         exclude_dkra: Exclude "Don't know" & "Refuse"
+        exclude_dkra_hint: Remove answers like "Don't know" & "Refuse" from the analysis
       tabs:
         chart: Chart
         table: Table

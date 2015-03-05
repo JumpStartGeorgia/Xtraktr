@@ -2,70 +2,12 @@
   <% if @questions.present? %>
     <div class="col-sm-3">
 
-      <div class="panel-group" id="panel-instructions">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 class="panel-title">
-              <a data-toggle="collapse" data-parent="#panel-instructions" href="#instructions">
-                <%= t('.instructions.header') %>
-              </a>
-            </h4>
-          </div>
-          <div id="instructions" class="panel-collapse collapse">
-            <div class="panel-body">
-              <p>
-                <%= t('.instructions.p1a') %>
-                <%= t('.instructions.p1b') %>
-              </p>
-              <p>
-                <%= t('.instructions.p2') %>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <%= form_tag(explore_data_path, :id => 'form-explore-data') do %>
 
         <%
           filter_variable = @filter.present? ? @filter[:code] : ''
         %>
-
-        <div class="row">
-          <div class="col-xs-6 col-sm-12">
-            <%= label_tag 'filter_variable', t('.form.filter_variable') %>
-            <select data-live-search="true" data-hide-disabled='true' data-width="100%" class="selectpicker-filter" id="filter_variable" name="filter_variable">
-              <option value=""><%= t('.form.no_filter') %></option>
-              <% @questions.each do |question| %>
-                <% 
-                  selected = filter_variable == question.code ? 'selected=selected ' : ''
-                  disabled = @col == question.code || @row == question.code ? 'disabled=disabled ' : ''
-                %>
-                <option value="<%= question.code %>" <%= selected %><%= disabled %>><%= "#{question.original_code} - #{question.text}" %></option>
-              <% end %>
-            </select>
-          </div>
-          <%
-            show_filter_answers = filter_variable.blank? ? 'style=display:none;' : ''
-          %>
-          <div class="col-xs-6 col-sm-12">
-            <div id="filter_value_container" <%= show_filter_answers %>>
-              <%= label_tag 'filter_value', t('.form.filter_value') %>
-              <select data-live-search="true" data-hide-disabled='true' data-width="100%" class="selectpicker-filter" id="filter_value" name="filter_value">
-                <% @questions.each do |question| %>
-                  <% question.answers.each do |answer| %>
-                    <% 
-                      selected = @filter.present? && @filter[:value] == answer.value.to_s &&
-                                  filter_variable == question.code.to_s ? 'selected=selected ' : ''
-                      disabled = filter_variable == question.code.to_s ? '' : 'disabled=disabled '
-                    %>
-                    <option value="<%= answer.value %>" <%= selected %><%= disabled %> data-code="<%= question.code %>" ><%= answer.text %></option>
-                  <% end %>
-                <% end %>
-              </select>
-            </div>
-          </div>
-        </div>
 
         <div class="row">
           <div class="col-xs-6 col-sm-12">
@@ -109,7 +51,43 @@
 
         <div class="row">
           <div class="col-xs-6 col-sm-12">
-            <%= label_tag 'exclude_dkra', :id => 'lbl_exclude_dkra' do %>
+            <%= label_tag 'filter_variable', t('.form.filter_variable') %>
+            <select data-live-search="true" data-hide-disabled='true' data-width="100%" class="selectpicker-filter" id="filter_variable" name="filter_variable">
+              <option value=""><%= t('.form.no_filter') %></option>
+              <% @questions.each do |question| %>
+                <% 
+                  selected = filter_variable == question.code ? 'selected=selected ' : ''
+                  disabled = @col == question.code || @row == question.code ? 'disabled=disabled ' : ''
+                %>
+                <option value="<%= question.code %>" <%= selected %><%= disabled %>><%= "#{question.original_code} - #{question.text}" %></option>
+              <% end %>
+            </select>
+          </div>
+          <%
+            show_filter_answers = filter_variable.blank? ? 'style=display:none;' : ''
+          %>
+          <div class="col-xs-6 col-sm-12">
+            <div id="filter_value_container" <%= show_filter_answers %>>
+              <%= label_tag 'filter_value', t('.form.filter_value') %>
+              <select data-live-search="true" data-hide-disabled='true' data-width="100%" class="selectpicker-filter" id="filter_value" name="filter_value">
+                <% @questions.each do |question| %>
+                  <% question.answers.each do |answer| %>
+                    <% 
+                      selected = @filter.present? && @filter[:value] == answer.value.to_s &&
+                                  filter_variable == question.code.to_s ? 'selected=selected ' : ''
+                      disabled = filter_variable == question.code.to_s ? '' : 'disabled=disabled '
+                    %>
+                    <option value="<%= answer.value %>" <%= selected %><%= disabled %> data-code="<%= question.code %>" ><%= answer.text %></option>
+                  <% end %>
+                <% end %>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-6 col-sm-12">
+            <%= label_tag 'exclude_dkra', :id => 'lbl_exclude_dkra', :title => t('.form.exclude_dkra_hint') do %>
               <%= check_box_tag 'exclude_dkra', true, params[:exclude_dkra].present? ? params[:exclude_dkra].to_bool : false %>
               <%= t('.form.exclude_dkra') %>
             <% end %>
@@ -120,6 +98,30 @@
           </div>
         </div>
       <% end %> 
+
+      <div class="panel-group" id="panel-instructions" style="margin-top: 20px;">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#panel-instructions" href="#instructions">
+                <%= t('.instructions.header') %>
+              </a>
+            </h4>
+          </div>
+          <div id="instructions" class="panel-collapse collapse">
+            <div class="panel-body">
+              <p>
+                <%= t('.instructions.p1a') %>
+                <%= t('.instructions.p1b') %>
+              </p>
+              <p>
+                <%= t('.instructions.p2') %>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <div id="explore-data-content" class="col-sm-9">

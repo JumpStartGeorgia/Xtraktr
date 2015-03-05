@@ -435,17 +435,17 @@ logger.debug "////////////////////////// BROWSER = #{user_agent}"
   end
 
   def build_time_series_onevar_title_html(row, filter, total)
-    title = t('explore_data.onevar.html.title', :row => row)
+    title = t('explore_time_series.onevar.html.title', :row => row)
     if filter.present?
-      title << t('explore_data.onevar.html.title_filter', :variable => filter[:name], :value => filter[:answer] )
+      title << t('explore_time_series.onevar.html.title_filter', :variable => filter[:name], :value => filter[:answer] )
     end
     return title.html_safe
   end 
 
   def build_time_series_onevar_title_text(row, filter, total)
-    title = t('explore_data.onevar.text.title', :row => row)
+    title = t('explore_time_series.onevar.text.title', :row => row)
     if filter.present?
-      title << t('explore_data.onevar.text.title_filter', :variable => filter[:name], :value => filter[:answer] )
+      title << t('explore_time_series.onevar.text.title_filter', :variable => filter[:name], :value => filter[:answer] )
     end
     return title
   end 
@@ -454,9 +454,9 @@ logger.debug "////////////////////////// BROWSER = #{user_agent}"
     title = "<br /> <span class='total_responses'>"
     num = []
     (0..datasets.length-1).each do |index|
-      num << "#{datasets[index]}: #{view_context.number_with_delimiter(totals[index])}"
+      num << "#{datasets[index]}: <span class='number'>#{view_context.number_with_delimiter(totals[index])}</span>"
     end
-    title << t('explore_data.subtitle.html', :num => num.join('; '))
+    title << t('explore_time_series.subtitle.html', :num => num.join('; '))
     title << "</span>"
     return title.html_safe
   end 
@@ -466,7 +466,7 @@ logger.debug "////////////////////////// BROWSER = #{user_agent}"
     (0..datasets.length-1).each do |index|
       num << "#{datasets[index]}: #{view_context.number_with_delimiter(totals[index])}"
     end
-    return t('explore_data.subtitle.text', :num => num.join('; '))
+    return t('explore_time_series.subtitle.text', :num => num.join('; '))
   end 
 
 

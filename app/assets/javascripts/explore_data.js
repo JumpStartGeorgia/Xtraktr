@@ -97,7 +97,7 @@ function build_highmap(json, filter){
         title: {
             text: title_html,
             useHTML: true,
-            style: {'text-align': 'center'}
+            style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
         },
         subtitle: {
             text: json.subtitle.html,
@@ -256,7 +256,7 @@ function build_crosstab_chart(json){
         title: {
             text: json.title.html,
             useHTML: true,
-            style: {'text-align': 'center'}
+            style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
         },
         subtitle: {
             text: json.subtitle.html,
@@ -279,6 +279,7 @@ function build_crosstab_chart(json){
             title: {
                 text: json.column_question
             },
+            layout: 'vertical',
             reversed: true,
             symbolHeight: 14,
             itemMarginBottom: 5,
@@ -286,7 +287,7 @@ function build_crosstab_chart(json){
         },
         tooltip: {
             pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y:,.0f}</b> ({point.percentage:.2f}%)<br/>',
-            shared: true,
+            //shared: true,
             backgroundColor: 'rgba(255, 255, 255, 0.95)',
             followPointer: true
         },
@@ -363,7 +364,7 @@ function build_pie_chart(json){
         title: {
             text: json.title.html,
             useHTML: true,
-            style: {'text-align': 'center'}
+            style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
         },
         subtitle: {
             text: json.subtitle.html,
@@ -379,18 +380,14 @@ function build_pie_chart(json){
             pie: {
                 cursor: 'pointer',
                 dataLabels: {
-                    enabled: true,
-                    formatter: function(){
-                      return Highcharts.numberFormat(this.point.options.count,0) + ' (' + this.point.y + '%)';
-                    },
-                    style: {
-                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                    }
+                    enabled: false
                 },
                 showInLegend: true
             }
         },
         legend: {
+            align: 'center',
+            layout: 'vertical',
             symbolHeight: 14,
             itemMarginBottom: 5,
             itemStyle: { "color": "#333333", "cursor": "pointer", "fontSize": "14px", "fontWeight": "bold" }

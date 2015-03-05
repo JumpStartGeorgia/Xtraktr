@@ -21,7 +21,7 @@ function build_time_series_chart(json){
       title: {
           text: json.title.html,
           useHTML: true,
-          style: {'text-align': 'center'}
+          style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
       },
       subtitle: {
           text: json.subtitle.html,
@@ -48,6 +48,7 @@ function build_time_series_chart(json){
           pointFormat: '<span style="font-weight: bold;">{series.name}</span>: {point.count:,.0f} ({point.y:.2f}%)<br/>',
       },
       legend: {
+          layout: 'vertical',
           symbolHeight: 14,
           itemMarginBottom: 5,
           itemStyle: { "color": "#333333", "cursor": "pointer", "fontSize": "14px", "fontWeight": "bold" }

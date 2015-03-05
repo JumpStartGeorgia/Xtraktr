@@ -2,31 +2,25 @@
   <% if @questions.present? %>
     <div class="col-sm-3">
 
-      <div class="panel-group" id="panel-instructions">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 class="panel-title">
-              <a data-toggle="collapse" data-parent="#panel-instructions" href="#instructions">
-                <%= t('.instructions.header') %>
-              </a>
-            </h4>
-          </div>
-          <div id="instructions" class="panel-collapse collapse">
-            <div class="panel-body">
-              <p>
-                <%= t('.instructions.p1a') %>
-                <%= t('.instructions.p1b') %>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <%= form_tag(explore_time_series_path, :id => 'form-explore-time-series') do %>
 
         <%
           filter_variable = @filter.present? ? @filter[:code] : ''
         %>
+
+        <div class="row">
+          <div class="col-xs-6 col-sm-12">
+            <%= label_tag 'row', t('.form.row') %>
+            <select data-live-search="true" data-hide-disabled='true' data-width="100%" class="selectpicker" id="row" name="row">
+              <% @questions.each_with_index do |question, index| %>
+                <% 
+                  selected = (@row.present? && @row == question.code) ? 'selected=selected ' : ''
+                %>
+                <option value="<%= question.code %>" <%= selected %> ><%= "#{question.original_code} - #{question.text}" %></option>
+              <% end %>
+            </select>
+          </div>
+        </div>
 
         <div class="row">
           <div class="col-xs-6 col-sm-12">
@@ -66,21 +60,7 @@
 
         <div class="row">
           <div class="col-xs-6 col-sm-12">
-            <%= label_tag 'row', t('.form.row') %>
-            <select data-live-search="true" data-hide-disabled='true' data-width="100%" class="selectpicker" id="row" name="row">
-              <% @questions.each_with_index do |question, index| %>
-                <% 
-                  selected = (@row.present? && @row == question.code) ? 'selected=selected ' : ''
-                %>
-                <option value="<%= question.code %>" <%= selected %> ><%= "#{question.original_code} - #{question.text}" %></option>
-              <% end %>
-            </select>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-xs-6 col-sm-12">
-            <%= label_tag 'exclude_dkra', :id => 'lbl_exclude_dkra' do %>
+            <%= label_tag 'exclude_dkra', :id => 'lbl_exclude_dkra', :title => t('.form.exclude_dkra_hint') do %>
               <%= check_box_tag 'exclude_dkra', true, params[:exclude_dkra].present? ? params[:exclude_dkra].to_bool : false %>
               <%= t('.form.exclude_dkra') %>
             <% end %>
@@ -91,6 +71,28 @@
           </div>
         </div>
       <% end %> 
+
+      <div class="panel-group" id="panel-instructions" style="margin-top: 20px;">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#panel-instructions" href="#instructions">
+                <%= t('.instructions.header') %>
+              </a>
+            </h4>
+          </div>
+          <div id="instructions" class="panel-collapse collapse">
+            <div class="panel-body">
+              <p>
+                <%= t('.instructions.p1a') %>
+                <%= t('.instructions.p1b') %>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
     </div>
 
     <div id="explore-time-series-content" class="col-sm-9">
