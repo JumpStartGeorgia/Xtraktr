@@ -1,8 +1,151 @@
-<%= semantic_form_for @time_series_question do |f| %>
-  <%= f.inputs do %>
-  <% end %>
+<%- 
+  label_key = "mongoid.attributes.time_series_question."
+  hint_key = "mongoid.hints.time_series_question."
+  a_label_key = "mongoid.attributes.time_series_answer."
+  a_hint_key = "mongoid.hints.time_series_answer."
+  tsq_label_key = "mongoid.attributes.time_series_dataset_question."
+  tsq_hint_key = "mongoid.hints.time_series_dataset_question."
+-%>
 
-  <%= f.actions do %>
-    <%= f.action :submit, :as => :input %>
-  <% end %>
+<%= semantic_form_for [@time_series, @time_series_question], url: @is_new == true ? time_series_questions_path : time_series_question_path, html: {class: 'tabbed-translation-form'} do |f| %>
+  <%= f.error_messages %>
+
+  <table id='time-series-answers' class="table table-striped table-hover table-nonfluid">
+    <thead>
+      <tr>
+        <th><%= t(tsq_label_key + 'dataset') %></th>
+        <th><%= t(tsq_label_key + 'text') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(tsq_hint_key + 'text') %>"><div>?</div></div></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @time_series_question.dataset_questions.each_with_index do |dataset_question, index| %>
+        <%= f.semantic_fields_for :dataset_questions, dataset_question do |f_dataset_question| %>
+          <%= render partial: 'dataset_question_fields', :locals => {f: f_dataset_question, 
+              ts_dataset: @datasets.select{|x| x.dataset_id == dataset_question.dataset_id}.first, 
+              questions: @questions[dataset_question.dataset_id]} %>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>                  
+
+  <hr />
+
+  <div role="tabpanel" class="tabbed-translation-fields">
+    <% 
+      locales = [I18n.locale] 
+      locales = @time_series.languages_sorted if @time_series.languages.present?
+    %>
+
+    <ul class="nav nav-tabs" role="tablist">
+      <%
+        default_locale = I18n.locale.to_s 
+        default_lang = '' 
+      %>
+      <% locales.each_with_index do |locale, index| %>
+        <%
+          lang = @languages.select{|x| x.locale == locale.to_s}.first
+          cls = ''
+          if index == 0
+            cls = 'class=active' 
+            default_locale = locale
+            default_lang = lang.present? ? lang.name : locale 
+          end
+        %>
+        <li role="presentation" <%= cls %> data-locale="<%= locale %>">
+          <a href="#<%= locale %>" aria-controls="home" role="tab" data-toggle="tab">
+            <% if index == 0 %>
+              <span class='glyphicon glyphicon-star' title='<%= t('helpers.default_language') %>'></span>
+            <% end %>
+            <%= lang.present? ? lang.name : locale %>
+          </a>
+        </li>
+      <% end %>
+    </ul>
+
+    <div class="tab-content">
+      <% answers = @time_series_question.answers.sorted %>
+      <% locales.each_with_index do |locale, index| %>
+        <%
+          cls = ''
+          cls = 'in active' if index == 0
+        %>
+
+        <div role="tabpanel" class="tab-pane fade <%= cls %>" id="<%= locale %>" data-locale="<%= locale %>">
+          <% if index == 0 %>
+            <%= f.input :code, as: :string, :input_html => {:size =>10}, hint: t(hint_key + 'code') %>
+          <% else %>
+            <div class="string input required stringish form-group" id="time_series_question_code_input">
+              <label class="  control-label" for="time_series_question_code"><%= t(label_key + 'code') %></label>
+              <span class="form-wrapper">
+                <%= @time_series_question.code %>
+              </span>
+            </div>
+          <% end %>
+
+          <%= f.fields_for :text_translations, OpenStruct.new(f.object.text_translations) do |translation| %>
+            <% 
+              label = t(label_key + 'text')
+              hint = t(hint_key + 'text')
+              if index > 0
+                label << show_default_text(@question.text_translations[default_locale])
+              end
+            %>
+            <%= translation.input locale, hint: hint, label: label.html_safe %>
+          <% end %>
+
+          <h3><%= t('.header_answers') %></h3>
+          <p><%= t('.explanation_answers', lang: default_lang) %></p>
+
+          <table id='time-series-answers' class="table table-striped table-hover table-nonfluid">
+            <thead>
+              <tr>
+                <% if index == 0 %>
+                  <th><%= t(a_label_key + 'text') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(a_hint_key + 'text') %>"><div>?</div></div></th>
+                  <th><%= t(a_label_key + 'value') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(a_hint_key + 'value') %>"><div>?</div></div></th>
+                  <th><%= t(a_label_key + 'sort_order') %><div class="help-inline" original-title="<%= t(a_hint_key + 'sort_order') %>"><div>?</div></div></th>
+                  <th><%= t(a_label_key + 'can_exclude') %><div class="help-inline" original-title="<%= t(a_hint_key + 'can_exclude') %>"><div>?</div></div></th>
+                  <% @datasets.each do |dataset| %>
+                    <th><%= dataset.title %><div class="help-inline" original-title="<%= t(a_hint_key + 'dataset') %>"><div>?</div></div></th>
+                  <% end %>
+                <% else %>
+                  <th><%= t(a_label_key + 'text') %><div class="help-inline" original-title="<%= t(a_hint_key + 'text') %>"><div>?</div></div></th>
+                  <th><%= t('tabbed_translation_form.default_text') %><div class="help-inline" original-title="<%= t(a_hint_key + 'default_text') %>"><div>?</div></div></th>
+                <% end %>
+              </tr>
+            </thead>
+            <tbody>
+              <% answers.each_with_index do |ans, aindex| %>
+                <%= f.semantic_fields_for :answers, ans do |answer| %>
+                  <%= render partial: 'answer_fields', :locals => {:f => answer, :answer => ans, :language_index => index, :aindex => aindex, :locale => locale, :default_locale => default_locale, :answers => answers, :datasets => @datasets} %>
+                <% end %>
+              <% end %>
+            </tbody>
+            <% if index == 0 %>
+              <tfoot>
+                <tr>
+                  <td colspan="3"><%= t('.header_add_answer') %></td>
+                  <td colspan="<%= 1 + @datasets.length %>">
+                    <%= link_to_add_association t('helpers.links.add_answer'), f, :answers, 
+                        :class => 'btn btn-success',
+                        :'data-association-insertion-node' => '.tab-content .tab-pane:first #time-series-answers tbody',
+                        :'data-association-insertion-method' => 'append',
+                        :render_options => {:locals => {:language_index => index, :locale => locale, :default_locale => default_locale, :datasets => @datasets }} %>
+                  </td>
+                </tr>
+              </tfoot>
+            <% end %>
+          </table>                  
+
+        </div>
+      <% end %>
+    </div>
+
+  </div>
+
+  <div class="form-group">
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= f.submit t('helpers.links.reset'), :class => 'btn btn-warning', :type => :reset, :name => :reset %>
+    <%= link_to t('helpers.links.cancel'), time_series_questions_path, :class => 'btn btn-warning' %>
+  </div>
+
 <% end %>

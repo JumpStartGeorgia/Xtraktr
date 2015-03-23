@@ -6,7 +6,7 @@
   </p>
 
   <div id="add-links">
-    <%= link_to t('.btn_add_question'), '#', class: 'btn btn-primary', title: t('.btn_add_question_hint') %>
+    <%= link_to t('.btn_add_question'), new_time_series_question_path(@time_series), class: 'btn btn-primary', title: t('.btn_add_question_hint') %>
     <%= link_to t('.btn_automatic'), automatically_assign_questions_time_series_path(@time_series), class: 'btn btn-primary', title: t('.btn_automatic_hint') %>
   </div>
 

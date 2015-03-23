@@ -1,0 +1,59 @@
+<% 
+  answer ||= nil
+  answers ||= TimeSeriesAnswer.new
+  datasets ||= nil
+  # if the aindex is not provided, default to 'new_answers' so the cocoon gem can replace it with a random index number
+  aindex ||= 'new_answers'
+  is_new_answer = aindex == 'new_answers'
+  text = is_new_answer == false ? answer.text_translations[locale] : nil 
+  original_text = is_new_answer == false ? answers[aindex].text_translations[default_locale] : nil
+  # if this is a new answer, do not show a default sort order
+  default_sort_order = is_new_answer == false ? answer.sort_order : nil
+%>
+
+                    <tr>
+                      <% if language_index == 0 %>
+                        <td>
+                          <div class="string input required stringish form-group" id="time_series_question_answers_attributes_<%= aindex %>_text_translations_<%= locale %>_input">
+                            <input class="form-control" id="time_series_question_answers_attributes_<%= aindex %>_text_translations_<%= locale %>" name="time_series_question[answers_attributes][<%= aindex %>][text_translations][<%= locale %>]" type="text" value="<%= text %>">
+                          </div>
+                        </td>
+                        <td>
+                          <%= f.input :value, as: :string, :input_html => {:size =>3}, :label => false %>
+                        </td>
+                        <td>
+                          <%= f.input :sort_order, as: :string, :input_html => {:size =>3, :value => default_sort_order}, :label => false %>
+                        </td>
+                        <td>
+                          <%= f.input :can_exclude, :as => :radio, :label => false %>
+                        </td>
+
+                        <% datasets.each_with_index do |dataset, dataset_index| %>
+<% if answer.present? %>                        
+                          <% dataset_answer = answer.dataset_answers.by_dataset_id(dataset.dataset_id) %>
+                          <td class="dataset-question-answer" data-dataset-id="<%= dataset.dataset_id %>">
+                            <%= f.semantic_fields_for :dataset_answers, dataset_answer do |f_dataset_answer| %>
+                              <%= f_dataset_answer.input :dataset_id, as: :hidden %>
+                              <%= f_dataset_answer.input :text, as: :hidden %>
+                              <div class="select input required form-group" id="time_series_question_answers_attributes_<%= aindex %>_value_input">
+                                <span class="form-wrapper">
+                                  <select class="dataset-answer form-control" id="time_series_question_answers_attributes_<%= aindex %>_dataset_answers_attributes_<%= dataset_index %>_value" name="time_series_question[answers_attributes][<%= aindex %>][dataset_answers_attributes][<%= dataset_index %>][value]" data-original-value="<%= dataset_answer.value %>">
+                                  </select>
+                                </span>
+                              </div>
+                            <% end %>
+                          </td>
+<% end %>
+
+                        <% end %>
+                      <% else %>
+                        <td>
+                          <div class="string input required stringish form-group" id="time_series_question_answers_attributes_<%= aindex %>_text_translations_<%= locale %>_input">
+                            <input class="form-control" id="time_series_question_answers_attributes_<%= aindex %>_text_translations_<%= locale %>" name="time_series_question[answers_attributes][<%= aindex %>][text_translations][<%= locale %>]" type="text" value="<%= text %>">
+                          </div>
+                        </td>
+                        <td>
+                          <%= original_text %>
+                        </td>
+                      <% end %>
+                    </tr>

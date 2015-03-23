@@ -53,5 +53,15 @@ class Answer < CustomTranslation
   end
 
   #############################
+  ## used when editing time series questions
+  def to_json
+    {
+      value: self.value,
+      text: self.text,
+      sort_order: self.sort_order,
+      can_exclude: self.can_exclude,
+      exclude: self.exclude
+    }
+  end
 
 end

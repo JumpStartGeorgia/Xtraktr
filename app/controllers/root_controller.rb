@@ -1,8 +1,5 @@
 class RootController < ApplicationController
 
-  layout "explore_data", only: [:explore_data_show, :private_share]
-  layout "explore_time_series", only: [:explore_time_series_show]
-
   def index
     respond_to do |format|
       format.html # index.html.erb

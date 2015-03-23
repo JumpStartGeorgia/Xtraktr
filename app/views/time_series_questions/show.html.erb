@@ -1,5 +1,135 @@
-<p id="notice"><%= notice %></p>
+<%- 
+  label_key = "mongoid.attributes.time_series_question."
+  hint_key = "mongoid.hints.time_series_question."
+  a_label_key = "mongoid.attributes.time_series_answer."
+  a_hint_key = "mongoid.hints.time_series_answer."
+  tsq_label_key = "mongoid.attributes.time_series_dataset_question."
+  tsq_hint_key = "mongoid.hints.time_series_dataset_question."
+-%>
+<% title t '.title', question: @time_series_question.text %>
 
 
-<%= link_to 'Edit', edit_time_series_question_path(@time_series_question) %> |
-<%= link_to 'Back', time_series_questions_path %>
+<div class="form-group form-group-admin-buttons">
+  <%= link_to t('.back', :default => t("helpers.links.back")),
+              time_series_questions_path, :class => 'btn btn-default'  %>
+  <%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_time_series_question_path(@time_series, @time_series_question), :class => 'btn btn-default' %>
+</div>
+
+<div class="tabbed-translation-show">
+
+  <table id='time-series-answers' class="table table-striped table-hover table-nonfluid">
+    <thead>
+      <tr>
+        <th><%= t(tsq_label_key + 'dataset') %></th>
+        <th><%= t(tsq_label_key + 'text') %></th>
+      </tr>
+    </thead>    
+    <tbody>
+      <% @time_series_question.dataset_questions.each do |dataset_question| %>
+        <tr>
+          <td>
+            <%
+              dataset = @datasets.select{|x| x.dataset_id == dataset_question.dataset_id}.first
+            %>
+            <%= dataset.title if dataset.present? %>
+          </td>
+          <td>
+            <%= dataset_question.text %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>                  
+
+  <div role="tabpanel" class="tabbed-translation-fields">
+    <% 
+      locales = [I18n.locale] 
+      locales = @time_series.languages_sorted if @time_series.languages.present?
+    %>
+
+    <ul class="nav nav-tabs" role="tablist">
+      <% locales.each_with_index do |locale, index| %>
+        <%
+          cls = ''
+          cls = 'class=active' if index == 0
+        %>
+        <li role="presentation" <%= cls %> data-locale="<%= locale %>">
+          <a href="#<%= locale %>" aria-controls="home" role="tab" data-toggle="tab">
+            <% if index == 0 %>
+              <span class='glyphicon glyphicon-star' title='<%= t('helpers.default_language') %>'></span>
+            <% end %>
+            <% lang = @languages.select{|x| x.locale == locale.to_s}.first %>
+            <%= lang.present? ? lang.name : locale %>
+          </a>
+        </li>
+      <% end %>
+    </ul>
+
+    <div class="tab-content">
+      <% locales.each_with_index do |locale, index| %>
+        <%
+          cls = ''
+          cls = 'in active' if index == 0
+        %>
+
+        <% @time_series.current_locale = locale %>
+
+        <div role="tabpanel" class="tab-pane fade <%= cls %>" id="<%= locale %>" data-locale="<%= locale %>">
+          <p><strong><%= t(tsq_label_key + 'code') %>:</strong>
+          <%= @time_series_question.original_code %></p>
+
+          <p><strong><%= t(tsq_label_key + 'text') %>:</strong>
+          <%= @time_series_question.text %></p>
+
+          <h3><%= t('.header_answers') %></h3>
+          <% if @time_series_question.answers.present? %>
+            <table id='dataset-answers' class="table table-striped table-hover table-nonfluid">
+              <thead>
+                <tr>
+                  <th><%= t(a_label_key + 'text') %></th>
+                  <th><%= t(a_label_key + 'value') %></th>
+                  <th><%= t(a_label_key + 'sort_order') %></th>
+                  <th><%= t(a_label_key + 'can_exclude') %></th>
+                  <% @datasets.each do |dataset| %>
+                    <th><%= dataset.title %></th>
+                  <% end %>
+                </tr>
+              </thead>
+              <tbody>
+                <% @time_series_question.answers.sorted.each do |answer| %>
+                  <tr>
+                    <td>
+                      <%= answer.text %>
+                    </td>
+                    <td>
+                      <%= answer.value %>
+                    </td>
+                    <td>
+                      <%= answer.sort_order %>
+                    </td>
+                    <td>
+                      <%= format_boolean_flag(answer.can_exclude) %>
+                    </td>
+                    <% @datasets.each do |dataset| %>
+                      <% dataset_answer = answer.dataset_answers.by_dataset_id(dataset.dataset_id) %>
+                      <td><%= dataset_answer.text %></td>
+                    <% end %>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          <% else %>
+            <p>
+              <%= t('.no_answers') %>
+            </p>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+
+
+

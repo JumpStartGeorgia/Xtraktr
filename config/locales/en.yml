@@ -9,6 +9,7 @@ en:
       question: Question
       time_series: Time Series
       time_series_question: Question
+      time_series_answer: Answer
     attributes:
       user:
         email: Email Address
@@ -74,9 +75,18 @@ en:
         title: Label
         sort_order: Sort Order
       time_series_question:
-        code: Time Series Question Code
-        original_code: Time Series Question Code
-        text: Time Series Question
+        code: Question Code
+        original_code: Question Code
+        text: Question
+      time_series_dataset_question:
+        code: Question Code
+        text: Question
+        dataset: Dataset
+      time_series_answer:
+        value: Value
+        text: Answer
+        can_exclude: Can Exclude During Analysis
+        sort_order: Sort Order
       shapeset:
         title: Title
         description: Description
@@ -132,6 +142,18 @@ en:
         dataset_id: Select the dataset to add to this time series
         title: "The text that will represent this data set in the time series, most likely a time indicator. For example, if your dataset is from 2015, you could enter 2015; or if it is from January 2015, you can enter January 2015."
         sort_order: The order the data sets should appear in the time series
+      time_series_question:
+        code: The code of the question as you want it to appear in the time series
+        text: The text of the question as you want it to appear in the time series
+      time_series_dataset_question:
+        text: 'Only questions from the dataset that are not already assigned to this time series will be shown. When you select a new question, the list of answers for this dataset below will automatically change.'
+      time_series_answer:
+        value: The value of the answer
+        text: The text of the answer
+        can_exclude: "If selected, this answer will be available during analysis, but can be turned off if desired by the user."
+        sort_order: "The order the answers should appear"
+        default_text: "This is the answer text from the default language which is provided to make it easier to complete the translation"
+        dataset: The possible answers for the question selected from this dataset
   errors:
     messages:
       required_field: "is a required field."
@@ -464,6 +486,15 @@ en:
       btn_automatic: Automatically Assign Matching Questions
       btn_automatic_hint: Questions with the same Question Code in each dataset will automatically be added to the time series. This will take a few seconds to complete.
       header_dataset_question: "%{title} Question"
+    form: 
+      header_answers: Answers
+      explanation_answers: "The answer settings fields (value, sort order, etc) are only shown in the '%{lang}' tab."
+      default_text: Default Text
+      header_add_answer: Add a new answer for this question
+    show:
+      title: "Question: %{question}"
+      header_answers: Answers
+      no_answers: There are no answers for this question yet.
   shared:
     explore_data:
       no_matches: Your selections returned no data. Please try again with a different selection.

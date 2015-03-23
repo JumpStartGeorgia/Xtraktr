@@ -35,7 +35,11 @@ BootstrapStarter::Application.routes.draw do
     end
 
     resources :time_series do
-      resources :time_series_questions, :only => [:index, :show, :edit, :update], :path => 'questions', :as => 'questions'
+      resources :time_series_questions, :only => [:index, :show, :new, :create, :edit, :update], :path => 'questions', :as => 'questions' do
+        member do
+          post 'dataset_question_answers', :defaults => { :format => 'json' }
+        end
+      end
       member do
         get 'automatically_assign_questions'
       end

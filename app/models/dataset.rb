@@ -52,6 +52,14 @@ class Dataset < CustomTranslation
       where(:code => codes) 
     end
 
+    def not_in_codes(codes)
+      nin(:code => codes)
+    end
+
+    def for_analysis_not_in_codes(codes)
+      nin(:code => codes).where(:exclude => false, :has_code_answers => true)
+    end
+
     def with_original_code(original_code)
       where(:original_code => original_code).first
     end

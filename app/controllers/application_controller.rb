@@ -202,6 +202,7 @@ logger.debug "////////////////////////// BROWSER = #{user_agent}"
       end
     end
 
+
     respond_to do |format|
       format.html{
         # load the shapes if needed
@@ -232,6 +233,8 @@ logger.debug "////////////////////////// BROWSER = #{user_agent}"
         gon.highcharts_jpg = I18n.t('highcharts.jpg')
         gon.highcharts_pdf = I18n.t('highcharts.pdf')
         gon.highcharts_svg = I18n.t('highcharts.svg')
+
+        render layout: 'explore_data'
       } 
       format.js{
         # get the data
@@ -403,6 +406,8 @@ logger.debug "////////////////////////// BROWSER = #{user_agent}"
         gon.highcharts_jpg = I18n.t('highcharts.jpg')
         gon.highcharts_pdf = I18n.t('highcharts.pdf')
         gon.highcharts_svg = I18n.t('highcharts.svg')
+
+        render layout: 'explore_time_series'
       } 
       format.js{
         # get the data

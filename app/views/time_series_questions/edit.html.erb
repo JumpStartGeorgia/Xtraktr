@@ -1,6 +1,11 @@
-<h1>Editing time_series_question</h1>
+<%- model_class = TimeSeriesQuestion -%>
+<% title t '.title', :default => t('helpers.titles.edit', :model => model_class.model_name.human,
+                                 :default => "Edit #{model_class.model_name.human}") %>
 
-<%= render 'form' %>
+<div class="form-group form-group-admin-buttons">
+  <%= link_to t('helpers.links.list'), time_series_questions_path,
+  :class => 'btn btn-default' %>
+</div>
 
-<%= link_to 'Show', @time_series_question %> |
-<%= link_to 'Back', time_series_questions_path %>
+<%= render :partial => 'form' %>
+

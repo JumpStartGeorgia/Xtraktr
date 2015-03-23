@@ -4,6 +4,7 @@ class TimeSeriesQuestionsController < ApplicationController
     controller_instance.send(:valid_role?, User::ROLES[:user])
   end
 
+
   layout "explore_time_series"
 
   # GET /time_series_questions
@@ -22,7 +23,7 @@ class TimeSeriesQuestionsController < ApplicationController
       end
     else
       flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to datasets_path(:locale => I18n.locale)
+      redirect_to time_series_index_path(:locale => I18n.locale)
       return
     end
 
@@ -31,73 +32,175 @@ class TimeSeriesQuestionsController < ApplicationController
   # GET /time_series_questions/1
   # GET /time_series_questions/1.json
   def show
-    @time_series_question = TimeSeriesQuestion.find(params[:id])
+    @time_series = TimeSeries.by_id_for_user(params[:time_series_id], current_user.id)
 
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @time_series_question }
+    if @time_series.present?
+      @time_series_question = @time_series.questions.find(params[:id])
+      @datasets = @time_series.datasets.sorted
+      add_common_options
+
+      respond_to do |format|
+        format.html # show.html.erb
+        format.json { render json: @time_series_question }
+      end
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to time_series_questions_path(:locale => I18n.locale)
+      return
     end
   end
 
   # GET /time_series_questions/new
   # GET /time_series_questions/new.json
   def new
-    @time_series_question = TimeSeriesQuestion.new
+    @time_series = TimeSeries.by_id_for_user(params[:time_series_id], current_user.id)
 
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @time_series_question }
+    if @time_series.present?
+      @time_series_question = @time_series.questions.build
+      @datasets = @time_series.datasets.sorted
+      # build the dataset questions
+      @datasets.each do |dataset|
+        @time_series_question.dataset_questions.build(dataset_id: dataset.dataset_id)
+      end
+
+      # get the list of questions for each dataset in the time series that are not already in the time series
+      @questions = {}
+      @datasets.each do |ts_dataset|
+        @questions[ts_dataset.dataset_id] = ts_dataset.dataset.questions.not_in_codes(@time_series.questions.codes_for_dataset(ts_dataset.dataset_id))
+      end
+
+      add_common_options
+
+      @is_new = true
+
+      respond_to do |format|
+        format.html # new.html.erb
+        format.json { render json: @time_series_question }
+      end
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to time_series_questions_path(:locale => I18n.locale)
+      return
     end
   end
 
   # GET /time_series_questions/1/edit
   def edit
-    @time_series_question = TimeSeriesQuestion.find(params[:id])
+    @time_series = TimeSeries.by_id_for_user(params[:time_series_id], current_user.id)
+
+    if @time_series.present?
+      @time_series_question = @time_series.questions.find(params[:id])
+
+      @datasets = @time_series.datasets.sorted
+
+      # get the list of questions for each dataset in the time series that are not already in the time series
+      @questions = {}
+      @time_series_question.dataset_questions.each do |dataset_question|
+        # get all other questions not being used for this dataset
+        @questions[dataset_question.dataset_id] = dataset_question.dataset.questions.for_analysis_not_in_codes(@time_series.questions.codes_for_dataset(dataset_question.dataset_id)).to_a
+        # get question for this dataset
+        @questions[dataset_question.dataset_id] << dataset_question.dataset.questions.with_code(dataset_question.code)
+        @questions[dataset_question.dataset_id].sort_by!{|x| x.original_code}
+      end
+
+      add_common_options
+
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to time_series_questions_path(:locale => I18n.locale)
+      return
+    end
   end
 
   # POST /time_series_questions
   # POST /time_series_questions.json
   def create
-    @time_series_question = TimeSeriesQuestion.new(params[:time_series_question])
+    @time_series = TimeSeries.by_id_for_user(params[:time_series_id], current_user.id)
 
-    respond_to do |format|
-      if @time_series_question.save
-        format.html { redirect_to @time_series_question, notice: 'Time series question was successfully created.' }
-        format.json { render json: @time_series_question, status: :created, location: @time_series_question }
-      else
-        format.html { render action: "new" }
-        format.json { render json: @time_series_question.errors, status: :unprocessable_entity }
+    if @time_series.present?
+      @time_series_question = TimeSeriesQuestion.new(params[:time_series_question])
+
+      respond_to do |format|
+        if @time_series_question.save
+          format.html { redirect_to time_series_question_path(@time_series, @time_series_question), notice: t('app.msgs.success_created', :obj => t('mongoid.models.time_series_question')) }
+          format.json { render json: @time_series_question, status: :created, location: @time_series_question }
+        else
+          format.html { render action: "new" }
+          format.json { render json: @time_series_question.errors, status: :unprocessable_entity }
+        end
       end
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to time_series_questions_path(:locale => I18n.locale)
+      return
     end
   end
 
   # PUT /time_series_questions/1
   # PUT /time_series_questions/1.json
   def update
-    @time_series_question = TimeSeriesQuestion.find(params[:id])
+    @time_series = TimeSeries.by_id_for_user(params[:time_series_id], current_user.id)
 
-    respond_to do |format|
-      if @time_series_question.update_attributes(params[:time_series_question])
-        format.html { redirect_to @time_series_question, notice: 'Time series question was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: "edit" }
-        format.json { render json: @time_series_question.errors, status: :unprocessable_entity }
+    if @time_series.present?
+      @time_series_question = @time_series.questions.find(params[:id])
+
+      respond_to do |format|
+        if @time_series_question.update_attributes(params[:time_series_question])
+          format.html { redirect_to time_series_question_path(@time_series, @time_series_question), notice: t('app.msgs.success_updated', :obj => t('mongoid.models.time_series_question')) }
+          format.json { head :no_content }
+        else
+          format.html { render action: "edit" }
+          format.json { render json: @time_series_question.errors, status: :unprocessable_entity }
+        end
       end
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to time_series_questions_path(:locale => I18n.locale)
+      return
     end
   end
 
   # DELETE /time_series_questions/1
   # DELETE /time_series_questions/1.json
   def destroy
-    @time_series_question = TimeSeriesQuestion.find(params[:id])
-    @time_series_question.destroy
+    @time_series = TimeSeries.by_id_for_user(params[:time_series_id], current_user.id)
 
-    respond_to do |format|
-      format.html { redirect_to time_series_questions_url }
-      format.json { head :no_content }
+    if @time_series.present?
+      @time_series_question = @time_series.questions.find(params[:id])
+      @time_series_question.destroy
+
+      respond_to do |format|
+        format.html { redirect_to time_series_questions_url }
+        format.json { head :no_content }
+      end
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to time_series_questions_path(:locale => I18n.locale)
+      return
     end
   end
+
+
+  # get the answers for a dataset's question
+  def dataset_question_answers
+    answers = []
+    if params[:dataset_id].present? && params[:question_code].present?
+      ds = Dataset.find(params[:dataset_id])
+      if ds.present?
+        q = ds.questions.with_code(params[:question_code])
+        if q.present?
+          answers = q.answers.sorted.to_a
+        end
+      end
+
+    end
+
+    respond_to do |format|
+      format.json { render json: answers.map{|x| x.to_json} }
+    end
+  end
+
+
 
 private 
   def add_common_options
@@ -107,6 +210,8 @@ private
     add_time_series_nav_options()
 
     @languages = Language.sorted
+
+    gon.dataset_question_answers_path = dataset_question_answers_time_series_question_path if params[:id].present?
   end
 
 end

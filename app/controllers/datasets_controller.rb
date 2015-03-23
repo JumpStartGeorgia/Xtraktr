@@ -4,8 +4,6 @@ class DatasetsController < ApplicationController
     controller_instance.send(:valid_role?, User::ROLES[:user])
   end
 
-  layout "explore_data", except: [:index]
-
   # GET /datasets
   # GET /datasets.json
   def index
@@ -40,6 +38,7 @@ class DatasetsController < ApplicationController
       # and responds appropriately to html or js
       explore_data_generator(@dataset)
     end
+
   end
 
   # GET /datasets/new
