@@ -1,6 +1,6 @@
 <% 
-  answer ||= nil
-  answers ||= TimeSeriesAnswer.new
+  answer ||= TimeSeriesAnswer.new
+  answers ||= nil
   datasets ||= nil
   # if the aindex is not provided, default to 'new_answers' so the cocoon gem can replace it with a random index number
   aindex ||= 'new_answers'
@@ -9,6 +9,14 @@
   original_text = is_new_answer == false ? answers[aindex].text_translations[default_locale] : nil
   # if this is a new answer, do not show a default sort order
   default_sort_order = is_new_answer == false ? answer.sort_order : nil
+  # if this is a new answer object, make sure the dataset_answer records exist
+  if datasets.present? && (answer.dataset_answers.empty? || answer.dataset_answers.length != datasets.length)
+    datasets.each do |dataset|
+      if answer.dataset_answers.by_dataset_id(dataset.dataset_id).nil?
+        answer.dataset_answers.build(dataset_id: dataset.dataset_id)
+      end
+    end
+  end
 %>
 
                     <tr>
@@ -29,7 +37,7 @@
                         </td>
 
                         <% datasets.each_with_index do |dataset, dataset_index| %>
-<% if answer.present? %>                        
+<%# if answer.present? %>                        
                           <% dataset_answer = answer.dataset_answers.by_dataset_id(dataset.dataset_id) %>
                           <td class="dataset-question-answer" data-dataset-id="<%= dataset.dataset_id %>">
                             <%= f.semantic_fields_for :dataset_answers, dataset_answer do |f_dataset_answer| %>
@@ -43,7 +51,7 @@
                               </div>
                             <% end %>
                           </td>
-<% end %>
+<%# end %>
 
                         <% end %>
                       <% else %>

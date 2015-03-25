@@ -31,15 +31,12 @@ BootstrapStarter::Application.routes.draw do
         get 'mappable_form_edit'
         post 'mappable_form_edit'
         delete 'remove_mapping'
+        post 'question_answers', :defaults => { :format => 'json' }
       end
     end
 
     resources :time_series do
-      resources :time_series_questions, :only => [:index, :show, :new, :create, :edit, :update], :path => 'questions', :as => 'questions' do
-        member do
-          post 'dataset_question_answers', :defaults => { :format => 'json' }
-        end
-      end
+      resources :time_series_questions, :only => [:index, :show, :new, :create, :edit, :update], :path => 'questions', :as => 'questions'
       member do
         get 'automatically_assign_questions'
       end

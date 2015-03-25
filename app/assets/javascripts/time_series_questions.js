@@ -1,7 +1,7 @@
 var datatable;
 $(document).ready(function(){
 
-  // datatable for exclude questions page
+  // datatable for time series questions index page
   datatable = $('#time-series-questions').dataTable({
     "dom": '<"top"f>t<"bottom"lpi><"clear">',
     "columnDefs": [
@@ -16,17 +16,18 @@ $(document).ready(function(){
 
   // when question changes in form, get the answers for this question 
   // - get answers for question and add to table of answers
-  function update_question_answers(ths_select, is_page_load){
+  // - if tr_to_update provided, only update the select in that tr, else update all trs
+  function update_question_answers(ths_select, is_page_load, tr_to_update){
     if (is_page_load == undefined){
       is_page_load = false;    
     }
 
     var dataset_id = $(ths_select).closest('tr').find('td:first input[type="hidden"]').val();
+
     $.ajax({
       method: "POST",
-      url: gon.dataset_question_answers_path,
+      url: gon.dataset_question_answers_path.replace('%5Bdataset_id%5D', dataset_id),
       data: {
-        dataset_id: dataset_id, 
         question_code: $(ths_select).val()
       }
     })
@@ -40,7 +41,13 @@ $(document).ready(function(){
       });
    
       // add the options to each answer select input for this dataset
-      $('td.dataset-question-answer[data-dataset-id="' + dataset_id + '"]').each(function(){
+      var tds;
+      if (tr_to_update == undefined){
+        tds = $('td.dataset-question-answer[data-dataset-id="' + dataset_id + '"]');
+      }else{
+        tds = $(tr_to_update).find('td.dataset-question-answer[data-dataset-id="' + dataset_id + '"]');
+      }
+      $(tds).each(function(){
         var select = $(this).find('select').empty();
 
         // remove the existing options
@@ -70,11 +77,20 @@ $(document).ready(function(){
     });
 
     // when page loads, get the list of answers for each question
-    $('form select.dataset-question').each(function(){
-      if ($(this).val() != ''){
-        update_question_answers(this, true);
-      }
-    })
+    if ($('table#time-series-dataset-answers tbody tr').length > 0){
+      $('form select.dataset-question').each(function(){
+        if ($(this).val() != ''){
+          update_question_answers(this, true);
+        }
+      });
+    }
+
+    // add select lists for the new row
+    $('table#time-series-dataset-answers').on('cocoon:before-insert', function(e,to_add) {
+      $('form select.dataset-question').each(function(){
+        update_question_answers(this, false, to_add);
+      });
+    });
 
   }
 

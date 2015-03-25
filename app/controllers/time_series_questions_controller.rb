@@ -66,7 +66,7 @@ class TimeSeriesQuestionsController < ApplicationController
       # get the list of questions for each dataset in the time series that are not already in the time series
       @questions = {}
       @datasets.each do |ts_dataset|
-        @questions[ts_dataset.dataset_id] = ts_dataset.dataset.questions.not_in_codes(@time_series.questions.codes_for_dataset(ts_dataset.dataset_id))
+        @questions[ts_dataset.dataset_id] = ts_dataset.dataset.questions.for_analysis_not_in_codes(@time_series.questions.codes_for_dataset(ts_dataset.dataset_id))
       end
 
       add_common_options
@@ -181,26 +181,6 @@ class TimeSeriesQuestionsController < ApplicationController
   end
 
 
-  # get the answers for a dataset's question
-  def dataset_question_answers
-    answers = []
-    if params[:dataset_id].present? && params[:question_code].present?
-      ds = Dataset.find(params[:dataset_id])
-      if ds.present?
-        q = ds.questions.with_code(params[:question_code])
-        if q.present?
-          answers = q.answers.sorted.to_a
-        end
-      end
-
-    end
-
-    respond_to do |format|
-      format.json { render json: answers.map{|x| x.to_json} }
-    end
-  end
-
-
 
 private 
   def add_common_options
@@ -211,7 +191,7 @@ private
 
     @languages = Language.sorted
 
-    gon.dataset_question_answers_path = dataset_question_answers_time_series_question_path if params[:id].present?
+    gon.dataset_question_answers_path = question_answers_dataset_path(id: '[dataset_id]' )
   end
 
 end

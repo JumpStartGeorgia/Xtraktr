@@ -489,5 +489,23 @@ class DatasetsController < ApplicationController
     end
   end
 
+  # get the answers for a dataset's question
+  def question_answers
+    answers = []
+    if params[:question_code].present?
+      ds = Dataset.find(params[:id])
+      if ds.present?
+        q = ds.questions.with_code(params[:question_code])
+        if q.present?
+          answers = q.answers.sorted.to_a
+        end
+      end
+
+    end
+
+    respond_to do |format|
+      format.json { render json: answers.map{|x| x.to_json} }
+    end
+  end
 
 end

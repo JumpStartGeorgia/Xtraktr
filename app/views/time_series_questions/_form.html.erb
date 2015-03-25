@@ -10,7 +10,7 @@
 <%= semantic_form_for [@time_series, @time_series_question], url: @is_new == true ? time_series_questions_path : time_series_question_path, html: {class: 'tabbed-translation-form'} do |f| %>
   <%= f.error_messages %>
 
-  <table id='time-series-answers' class="table table-striped table-hover table-nonfluid">
+  <table id='time-series-dataset-questions' class="table table-striped table-hover table-nonfluid">
     <thead>
       <tr>
         <th><%= t(tsq_label_key + 'dataset') %></th>
@@ -87,7 +87,7 @@
               label = t(label_key + 'text')
               hint = t(hint_key + 'text')
               if index > 0
-                label << show_default_text(@question.text_translations[default_locale])
+                label << show_default_text(@time_series_question.text_translations[default_locale])
               end
             %>
             <%= translation.input locale, hint: hint, label: label.html_safe %>
@@ -96,7 +96,7 @@
           <h3><%= t('.header_answers') %></h3>
           <p><%= t('.explanation_answers', lang: default_lang) %></p>
 
-          <table id='time-series-answers' class="table table-striped table-hover table-nonfluid">
+          <table id='time-series-dataset-answers' class="table table-striped table-hover table-nonfluid">
             <thead>
               <tr>
                 <% if index == 0 %>
@@ -127,7 +127,7 @@
                   <td colspan="<%= 1 + @datasets.length %>">
                     <%= link_to_add_association t('helpers.links.add_answer'), f, :answers, 
                         :class => 'btn btn-success',
-                        :'data-association-insertion-node' => '.tab-content .tab-pane:first #time-series-answers tbody',
+                        :'data-association-insertion-node' => '.tab-content .tab-pane:first #time-series-dataset-answers tbody',
                         :'data-association-insertion-method' => 'append',
                         :render_options => {:locals => {:language_index => index, :locale => locale, :default_locale => default_locale, :datasets => @datasets }} %>
                   </td>
