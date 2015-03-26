@@ -16,7 +16,12 @@ BootstrapStarter::Application.routes.draw do
     end
 
     resources :datasets do
-      resources :questions, :only => [:index, :show, :edit, :update]
+      resources :questions, :only => [:index, :show, :edit, :update] do
+        collection do
+          get 'mass_changes'
+          post 'mass_changes'
+        end
+      end
       member do
         get 'warnings'
         get 'exclude_questions'

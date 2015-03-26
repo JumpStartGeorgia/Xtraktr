@@ -1169,4 +1169,185 @@ class Dataset < CustomTranslation
     return result
   end
 =end
+
+
+
+  ##################################
+  ## CSV upload and download
+  ##################################
+
+  # create csv to download questions
+  def generate_questions_csv
+    csv_data = CSV.generate do |csv|
+      # create header for csv
+      header = [I18n.t('mongoid.attributes.question.code')]
+      locales = self.languages_sorted
+      locales.each do |locale|
+        header << "#{I18n.t('mongoid.attributes.question.text')} (#{locale})"
+      end
+      header << "#{I18n.t('mongoid.attributes.question.exclude_download_header')}"
+      csv << header
+
+      # add questions
+      self.questions.each do |question|
+        row = [question.original_code]
+        locales.each do |locale|
+          if question.text_translations[locale].present?
+            row << question.text_translations[locale]
+          else 
+            row << ''
+          end
+        end
+        row << (question.exclude == true ? 'Y' : nil)
+        csv << row
+      end
+    end
+
+    return csv_data
+  end
+
+
+  # create csv to download answers
+  def generate_answers_csv
+    csv_data = CSV.generate do |csv|
+      # create header for csv
+      header = [I18n.t('mongoid.attributes.question.code'), I18n.t('mongoid.attributes.answer.value'), I18n.t('mongoid.attributes.answer.sort_order')]
+      locales = self.languages_sorted
+      locales.each do |locale|
+        header << "#{I18n.t('mongoid.attributes.answer.text')} (#{locale})"
+      end
+      header << [I18n.t('mongoid.attributes.answer.exclude_download_header'), I18n.t('mongoid.attributes.answer.can_exclude_download_header')]
+      csv << header.flatten
+
+      # add questions
+      self.questions.with_code_answers.each do |question|
+        question.answers.sorted.each do |answer|
+          row = [question.original_code]
+          row << answer.value
+          row << answer.sort_order
+          locales.each do |locale|
+            if answer.text_translations[locale].present?
+              row << answer.text_translations[locale]
+            else 
+              row << ''
+            end
+          end
+          row << (answer.exclude == true ? 'Y' : nil)
+          row << (answer.can_exclude == true ? 'Y' : nil)
+          csv << row
+        end
+      end
+    end
+    
+    return csv_data
+  end
+
+  
+  # read in the csv and update the question text as necessary
+  def process_questions_csv(file)
+    start = Time.now
+    infile = file.read
+    n, msg = 0, ""
+    idx_code = 0
+    idx_text_start = 1
+    locales = self.languages_sorted
+    # create counter to see how many items in each locale changed
+    counts = locales.map{|x| [x,0]}
+
+    CSV.parse(infile) do |row|
+      startRow = Time.now
+      n += 1
+      puts "@@@@@@@@@@@@@@@@@@ processing row #{n}"
+
+      if n > 1
+        # get question for this row
+        question = self.questions.with_code(row[idx_code])
+        if question.nil?
+          msg = "Row #{n}: Could not find question with code '#{row[idx_code]}'"
+          return msg
+        end
+
+        (0..locales.length).each do |locale_index|
+          col_index = locale_index + idx_text_start
+          locale = locales[locale_index]
+          # if question text is provided and not the same, update it
+          if row[col_index].present? && question.text_translations[locale] != row[col_index].strip
+            question.text_translations[locale] = row[col_index].strip
+            counts[locale] += 1
+          end
+        end
+
+        puts "******** time to process row: #{Time.now-startRow} seconds"
+        puts "************************ total time so far : #{Time.now-start} seconds"
+      end
+    end  
+
+    puts "****************** total changes: #{counts.map{|k,v| k + ' - ' + v.to_s}.join(', ')}"
+
+    # save if changes made
+    self.save if counts.map{|k,v| v}.inject(:+) > 0
+
+    puts "****************** time to process question text csv: #{Time.now-start} seconds for #{n} rows"
+
+    return msg
+  end
+
+  # read in the csv and update the answer text as necessary
+  def process_answers_csv(csv)
+    start = Time.now
+    infile = file.read
+    n, msg = 0, ""
+    idx_code = 0
+    idx_value = 1
+    idx_text_start = 2
+    locales = self.languages_sorted
+    # create counter to see how many items in each locale changed
+    counts = locales.map{|x| [x,0]}
+
+    CSV.parse(infile) do |row|
+      startRow = Time.now
+      n += 1
+      puts "@@@@@@@@@@@@@@@@@@ processing row #{n}"
+
+      if n > 1
+        # get question for this row
+        question = self.questions.with_code(row[idx_code])
+        if question.nil?
+          msg = "Row #{n}: Could not find question with code '#{row[idx_code]}'"
+          return msg
+        end
+
+        # get answer for this row
+        answer = question.answers.with_value(row[idx_value])
+        if answer.nil?
+          msg = "Row #{n}: Could not find answer with value '#{row[idx_value]}' for question with code '#{row[idx_code]}'"
+          return msg
+        end
+
+        (0..locales.length).each do |locale_index|
+          col_index = locale_index + idx_text_start
+          locale = locales[locale_index]
+          # if answer text is provided and not the same, update it
+          if row[col_index].present? && question.text_translations[locale] != row[col_index].strip
+            answer.text_translations[locale] = row[col_index].strip
+            counts[locale] += 1
+          end
+        end
+
+        puts "******** time to process row: #{Time.now-startRow} seconds"
+        puts "************************ total time so far : #{Time.now-start} seconds"
+      end
+    end  
+
+    puts "****************** total changes: #{counts.map{|k,v| k + ' - ' + v.to_s}.join(', ')}"
+
+    # save if changes made
+    self.save if counts.map{|k,v| v}.inject(:+) > 0
+
+    puts "****************** time to process question text csv: #{Time.now-start} seconds for #{n} rows"
+
+    return msg
+  end
+
+
 end

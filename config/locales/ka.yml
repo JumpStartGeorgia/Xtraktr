@@ -49,6 +49,7 @@ ka:
         original_code: Question Code
         text: Question
         exclude: Exclude Question from Analysis
+        exclude_download_header: Exclude Question from Analysis (leave blank to show question)
         no_questions: There are no questions on file for this dataset.
         is_mappable: Question has been setup to show answers on a map
         has_code_answers: Has defined list of answers
@@ -58,7 +59,9 @@ ka:
         value: Value
         text: Answer
         exclude: Exclude Answer from Analysis
+        exclude_download_header: Exclude Answer from Analysis (leave blank to show answer)
         can_exclude: Can Exclude During Analysis
+        can_exclude_download_header: Can Exclude During Analysis (leave blank to always show answer)
         no_questions: There are no questions on file for this dataset.
         sort_order: Sort Order
         shape_name: Name of Shape
@@ -461,6 +464,8 @@ ka:
     index:
       title: "Edit Questions and their Answers"
       explanation: "Use this page to select a question to edit it and/or it's answers."
+      mass_changes: "You can also use the %{link} to change multiple items at once via a spreadsheet upload."
+      mass_changes_link: Mass Changes page
       no_questions: There are no questions on file for this dataset.
     show:
       title: "Question: %{question}"
@@ -472,6 +477,21 @@ ka:
       default_text: Default Text
       header_add_answer: Add a new answer for this question
       header_add_missing_answer: The following values are in the data but are not provided as one of the answers. <br/>Select a value to add it as an answer and have it included in the analysis.
+    mass_changes:
+      title: Mass Changes for Questions/Answers
+      explanation: Use this page to upload a spreadsheet of Questions or Answers to quickly change the text or settings for many records at once.
+      template: Template
+      upload: Upload Your Spreadsheet of Changes
+      questions:
+        header: Questions
+        template: Clicking the button below will download a template of all questions in this dataset. Make the desired changes in the spreadsheet and then use the form below to update your changes.
+        template2: "The only columns that cannot be changed are: %{code}"
+        template_link: Download Questions Template
+      answers: 
+        header: Answers
+        template: Clicking the button below will download a template of all answers in this dataset. Make the desired changes in the spreadsheet and then use the form below to update your changes.
+        template2: "The only columns that cannot be changed are: %{code}, %{value}"
+        template_link: Download Answers Template
   time_series:
     form: 
       header_datasets: Datasets

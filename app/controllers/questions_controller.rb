@@ -139,6 +139,47 @@ class QuestionsController < ApplicationController
   # end
 
 
+  # allow the user to use csv files to update text and settings for questions and answers
+  def mass_changes
+    @dataset = Dataset.by_id_for_user(params[:dataset_id], current_user.id)
+
+    if @dataset.present?
+
+      add_common_options
+
+      if params[:download].present? && ['questions', 'answers'].include?(params[:download].downcase)
+        csv = nil
+        filename = @dataset.title
+        if params[:download].downcase == 'questions'
+          csv = @dataset.generate_questions_csv
+          filename << "-#{I18n.t('questions.mass_changes.questions.header')}"
+          filename << "-#{I18n.l Time.now, :format => :file}"
+        else #answers
+          csv = @dataset.generate_answers_csv
+          filename << "-#{I18n.t('questions.mass_changes.answers.header')}"
+          filename << "-#{I18n.l Time.now, :format => :file}"
+        end
+        respond_to do |format|
+          format.csv {
+            send_data csv, 
+              :type => 'text/csv; header=present',
+              :disposition => "attachment; filename=#{clean_filename(filename)}.csv"
+          }
+        end
+      else
+        respond_to do |format|
+          format.html 
+        end
+      end
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to datasets_path(:locale => I18n.locale)
+      return
+    end
+  end
+
+
+
 private 
   def add_common_options
     @css.push('tabbed_translation_form.css', "questions.css")

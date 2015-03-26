@@ -1,0 +1,42 @@
+<% title t('.title') %>
+
+<p>
+  <%= t('.explanation') %>
+</p>
+
+<div class="row">
+  <div class="col-sm-6">
+    <h2><%= t('.questions.header') %></h2>
+
+    <h3><%= t('.template') %></h3>
+    <p>
+      <%= t('.questions.template') %>
+    </p>
+    <p>
+      <%= t('.questions.template2', code: t('mongoid.attributes.question.code')) %>
+    </p>
+    <p style="text-align: center;">
+      <%= link_to t('.questions.template_link'), mass_changes_dataset_questions_path(download: 'questions', format: 'csv'), 
+          class: 'btn btn-primary' %>
+    </p>
+
+    <h3><%= t('.upload') %></h3>
+  </div>  
+  <div class="col-sm-6">
+    <h2><%= t('.answers.header') %></h2>
+
+    <h3><%= t('.template') %></h3>
+    <p>
+      <%= t('.answers.template') %>
+    </p>
+    <p>
+      <%= t('.answers.template2', code: t('mongoid.attributes.question.code'), value: t('mongoid.attributes.answer.value')) %>
+    </p>
+    <p style="text-align: center;">
+      <%= link_to t('.answers.template_link'), mass_changes_dataset_questions_path(download: 'answers', format: 'csv'), 
+          class: 'btn btn-primary' %>
+    </p>
+
+    <h3><%= t('.upload') %></h3>
+  </div>
+</div>

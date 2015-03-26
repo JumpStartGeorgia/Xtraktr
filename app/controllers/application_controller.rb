@@ -103,6 +103,11 @@ logger.debug "////////////////////////// BROWSER = #{user_agent}"
     #Rails.logger.debug "****************** prev urls session = #{session[:previous_urls]}"
 	end
 	
+  def clean_filename(filename)
+    filename.strip.latinize.to_ascii.gsub(' ', '_').gsub(/[\\ \/ \: \* \? \" \< \> \| \, \. ]/,'')
+  end
+
+
   # add in required content for translations if none provided
   # - if default locale does not have translations, use first trans that does as default
   def add_missing_translation_content(ary_trans)

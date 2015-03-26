@@ -36,6 +36,7 @@ gem 'rails_autolink', '~> 1.1.6' # convert string url into link
 #gem 'simple-spreadsheet', '~> 0.3.1' # read in spreadsheet format
 gem 'spreadsheet', '~> 1.0.1' # read in spreadsheet format
 gem 'roo', '~> 1.13.2' # read in spreadsheet format
+gem "unidecoder", "~> 1.1.2" #convert utf8 to ascii for permalinks
 
 # Gems used only for assets and not required
 # in production environments by default.
