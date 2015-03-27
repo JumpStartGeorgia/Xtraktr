@@ -20,8 +20,23 @@
           class: 'btn btn-primary' %>
     </p>
 
+    <hr />
+
     <h3><%= t('.upload') %></h3>
+    <%= form_tag load_mass_changes_questions_dataset_questions_path, multipart: true do %>
+      <div class="file input optional form-group">
+        <%= file_field_tag :file, accept: '.csv' %>
+      </div>
+
+      <div class="form-group">
+        <%= submit_tag t('.questions.submit'), class: 'btn btn-primary' %>
+      </div>
+
+    <% end %>
+
   </div>  
+
+
   <div class="col-sm-6">
     <h2><%= t('.answers.header') %></h2>
 
@@ -37,6 +52,20 @@
           class: 'btn btn-primary' %>
     </p>
 
+    <hr />
+
     <h3><%= t('.upload') %></h3>
+    <%= form_tag load_mass_changes_answers_dataset_questions_path, multipart: true do %>
+      <div class="file input optional form-group">
+        <%= file_field_tag :file, accept: '.csv' %>
+      </div>
+
+      <div class="form-group">
+        <%= submit_tag t('.answers.submit'), class: 'btn btn-primary' %>
+      </div>
+
+    <% end %>
+
+
   </div>
 </div>

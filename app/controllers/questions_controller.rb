@@ -178,7 +178,56 @@ class QuestionsController < ApplicationController
     end
   end
 
+  def load_mass_changes_questions
+    @dataset = Dataset.by_id_for_user(params[:dataset_id], current_user.id)
 
+    if @dataset.present?
+      if params[:file].present?
+        msg, counts = @dataset.process_questions_csv(params[:file])
+
+        # if no msg than there were no errors
+        if msg.blank?
+          logger.debug "****************** total changes: #{counts.map{|k,v| k + ' - ' + v.to_s}.join(', ')}"
+          flash[:success] =  t('app.msgs.mass_upload_questions_success', count: counts['overall'])
+        else
+          flash[:error] =  t('app.msgs.mass_upload_questions_error', msg: msg)
+        end
+      end
+
+      redirect_to mass_changes_dataset_questions_path
+      return
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to datasets_path(:locale => I18n.locale)
+      return
+    end
+  end
+
+
+  def load_mass_changes_answers
+    @dataset = Dataset.by_id_for_user(params[:dataset_id], current_user.id)
+
+    if @dataset.present?
+      if params[:file].present?
+        msg, counts = @dataset.process_answers_csv(params[:file])
+
+        # if no msg than there were no errors
+        if msg.blank?
+          logger.debug "****************** total changes: #{counts.map{|k,v| k + ' - ' + v.to_s}.join(', ')}"
+          flash[:success] =  t('app.msgs.mass_upload_answers_success', count: counts['overall'])
+        else
+          flash[:error] =  t('app.msgs.mass_upload_answers_error', msg: msg)
+        end
+      end
+
+      redirect_to mass_changes_dataset_questions_path
+      return
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to datasets_path(:locale => I18n.locale)
+      return
+    end
+  end
 
 private 
   def add_common_options

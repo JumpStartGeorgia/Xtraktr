@@ -165,6 +165,14 @@ en:
       translation_any_lang: "%{field_name} for Language '%{language}' %{msg}"
       invalid_language: "'%{lang_locale}' is not a valid language locale"
       dataset_length: "At least two datasets are needed for a time series to be saved."
+  mass_uploads_msgs:
+    bad_headers: The headers in the file do not match the headers from the template so it is not possible to determine what each column of data is. Please download the question template file and use the headers from that file.
+    missing_code: "Row %{n}: Could not find question with code '%{code}'"
+    questions:
+      not_save: "Row %{n}: Could not save question: %{msg}"
+    answers:
+      missing_answer: "Row %{n}: Could not find answer with value '%{value}' for question with code '%{code}'"
+      not_save: "Row %{n}: Could not save answer: %{msg}"
   publish_status:
     public: Public
     private: Private
@@ -330,6 +338,10 @@ en:
       mapping_deleted: "The question is no longer mappable."
       mapping_not_deleted: "The question mapping could not be deleted."
       time_series_automatic_match: "%{count} questions were added to your time series."
+      mass_upload_questions_error: "The following error occurred while processing the questions: %{msg}"
+      mass_upload_questions_success: "%{count} questions were updated!"
+      mass_upload_answers_error: "The following error occurred while processing the answers: %{msg}"
+      mass_upload_answers_success: "%{count} answers were updated!"
     menu:
       explore_data: Explore Data
       explore_time_series: Explore Time Series
@@ -487,11 +499,13 @@ en:
         template: Clicking the button below will download a template of all questions in this dataset. Make the desired changes in the spreadsheet and then use the form below to update your changes.
         template2: "The only columns that cannot be changed are: %{code}"
         template_link: Download Questions Template
+        submit: Update Questions
       answers: 
         header: Answers
         template: Clicking the button below will download a template of all answers in this dataset. Make the desired changes in the spreadsheet and then use the form below to update your changes.
         template2: "The only columns that cannot be changed are: %{code}, %{value}"
         template_link: Download Answers Template
+        submit: Update Answers
   time_series:
     form: 
       header_datasets: Datasets

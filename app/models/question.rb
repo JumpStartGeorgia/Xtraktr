@@ -70,11 +70,11 @@ class Question < CustomTranslation
   # validate the translation fields
   # text field needs to be validated for presence
   def validate_translations
-    logger.debug "***** validates question translations"
+#    logger.debug "***** validates question translations"
     if self.dataset.default_language.present?
-      logger.debug "***** - default is present; text = #{self.text_translations[self.dataset.default_language]}"
+#      logger.debug "***** - default is present; text = #{self.text_translations[self.dataset.default_language]}"
       if self.text_translations[self.dataset.default_language].blank?
-        logger.debug "***** -- text not present!"
+#        logger.debug "***** -- text not present!"
         errors.add(:base, I18n.t('errors.messages.translation_default_lang', 
             field_name: self.class.human_attribute_name('text'),
             language: Language.get_name(self.dataset.default_language),
@@ -97,7 +97,7 @@ class Question < CustomTranslation
   before_save :check_mappable
 
   def update_flags
-    logger.debug "updating question flags for #{self.code}"
+#    logger.debug "updating question flags for #{self.code}"
     self.has_code_answers = self.answers.present?
 
     return true
@@ -116,7 +116,7 @@ class Question < CustomTranslation
 
   # create a list of values that are in the data but not an answer value
   def missing_answers
-    self.dataset.data_items.unique_code_data(self.code) - self.answers.unique_values
+    (self.dataset.data_items.unique_code_data(self.code) - self.answers.unique_values).delete_if{|x| x.nil?}
   end
 
 

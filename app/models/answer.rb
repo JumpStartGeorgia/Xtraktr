@@ -30,11 +30,11 @@ class Answer < CustomTranslation
   # validate the translation fields
   # text field needs to be validated for presence
   def validate_translations
-    logger.debug "***** validates answer translations"
+#    logger.debug "***** validates answer translations"
     if self.question.dataset.default_language.present?
-      logger.debug "***** - default is present; locale = #{self.question.dataset.default_language}; trans = #{self.text_translations}; text = #{self.text_translations[self.question.dataset.default_language]}"
+#      logger.debug "***** - default is present; locale = #{self.question.dataset.default_language}; trans = #{self.text_translations}; text = #{self.text_translations[self.question.dataset.default_language]}"
       if self.text_translations[self.question.dataset.default_language].blank?
-        logger.debug "***** -- text not present!"
+#        logger.debug "***** -- text not present!"
         errors.add(:base, I18n.t('errors.messages.translation_default_lang', 
             field_name: self.class.human_attribute_name('text'),
             language: Language.get_name(self.question.dataset.default_language),

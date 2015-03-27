@@ -1177,6 +1177,7 @@ class Dataset < CustomTranslation
   ##################################
 
   # create csv to download questions
+  # columns: code, text (for each translation), exclude
   def generate_questions_csv
     csv_data = CSV.generate do |csv|
       # create header for csv
@@ -1208,6 +1209,7 @@ class Dataset < CustomTranslation
 
 
   # create csv to download answers
+  # columns: code, value, text (for each translation), exclude, can exclude
   def generate_answers_csv
     csv_data = CSV.generate do |csv|
       # create header for csv
@@ -1248,32 +1250,85 @@ class Dataset < CustomTranslation
     start = Time.now
     infile = file.read
     n, msg = 0, ""
-    idx_code = 0
-    idx_text_start = 1
     locales = self.languages_sorted
+
+    # to indicate where the columns are in the csv doc
+    indexes = Hash[locales.map{|x| [x,nil]}]
+    indexes['code'] = nil
+    indexes['exclude'] = nil
+
     # create counter to see how many items in each locale changed
-    counts = locales.map{|x| [x,0]}
+    counts = Hash[locales.map{|x| [x,0]}]
+    counts['overall'] = 0
 
     CSV.parse(infile) do |row|
       startRow = Time.now
+      # translation_changed = false
       n += 1
       puts "@@@@@@@@@@@@@@@@@@ processing row #{n}"
 
-      if n > 1
-        # get question for this row
-        question = self.questions.with_code(row[idx_code])
-        if question.nil?
-          msg = "Row #{n}: Could not find question with code '#{row[idx_code]}'"
+      if n == 1
+        foundAllHeaders = false
+        # look at headers and set indexes
+        # - doing this in case the user re-arranged the columns
+        # if header in csv is not known, throw error
+        I18n.available_locales.map{|x| x.to_s}.each do |app_locale|
+          # code
+          idx = row.index(I18n.t('mongoid.attributes.question.code', locale: app_locale))
+          indexes['code'] = idx if idx.present?
+          # exclude
+          idx = row.index(I18n.t('mongoid.attributes.question.exclude_download_header', locale: app_locale))
+          indexes['exclude'] = idx if idx.present?
+
+          # text translations
+          locales.each do |locale|
+            idx = row.index("#{I18n.t('mongoid.attributes.question.text', locale: app_locale)} (#{locale})")
+            indexes[locale] = idx if idx.present?
+          end
+
+          if !indexes.values.include?(nil)
+            # found all columns, so can stop
+            foundAllHeaders = true
+            break
+          end
+
+        end        
+
+        if !foundAllHeaders
+            msg = I18n.t('mass_uploads_msgs.bad_headers')
           return msg
         end
 
-        (0..locales.length).each do |locale_index|
-          col_index = locale_index + idx_text_start
-          locale = locales[locale_index]
+        puts "%%%%%%%%%% col indexes = #{indexes}"
+
+      else
+        # get question for this row
+        question = self.questions.with_original_code(row[indexes['code']])
+        if question.nil?
+          msg = I18n.t('mass_uploads_msgs.missing_code', n: n, code: row[indexes['code']])
+          return msg
+        end
+
+
+        # if value exist for exclude, assume it means true
+        question.exclude = row[indexes['exclude']].present?
+
+        locales.each do |locale|
           # if question text is provided and not the same, update it
-          if row[col_index].present? && question.text_translations[locale] != row[col_index].strip
-            question.text_translations[locale] = row[col_index].strip
+          if question.text_translations[locale] != row[indexes[locale]]
+            question.text_will_change!
+            question.text_translations[locale] = row[indexes[locale]].present? ? row[indexes[locale]].strip : nil
             counts[locale] += 1
+          end
+        end
+
+        # if the record changed, save the changes
+        if question.changed?
+          if question.save
+            counts['overall'] += 1
+          else
+            msg = I18n.t('mass_uploads_msgs.questions.not_save', n: n, msg: question.errors.full_messages)
+            return msg
           end
         end
 
@@ -1283,70 +1338,150 @@ class Dataset < CustomTranslation
     end  
 
     puts "****************** total changes: #{counts.map{|k,v| k + ' - ' + v.to_s}.join(', ')}"
+    puts "****************** time to process question csv: #{Time.now-start} seconds for #{n} rows"
 
-    # save if changes made
-    self.save if counts.map{|k,v| v}.inject(:+) > 0
-
-    puts "****************** time to process question text csv: #{Time.now-start} seconds for #{n} rows"
-
-    return msg
+    return msg, counts
   end
 
+
+
   # read in the csv and update the answer text as necessary
-  def process_answers_csv(csv)
+  def process_answers_csv(file)
     start = Time.now
     infile = file.read
     n, msg = 0, ""
-    idx_code = 0
-    idx_value = 1
-    idx_text_start = 2
     locales = self.languages_sorted
+    last_question_code = nil
+    question = nil
+
+    # to indicate where the columns are in the csv doc
+    indexes = Hash[locales.map{|x| [x,nil]}]
+    indexes['code'] = nil
+    indexes['value'] = nil
+    indexes['sort_order'] = nil
+    indexes['exclude'] = nil
+    indexes['can_exclude'] = nil
+
     # create counter to see how many items in each locale changed
-    counts = locales.map{|x| [x,0]}
+    counts = Hash[locales.map{|x| [x,0]}]
+    counts['overall'] = 0
 
     CSV.parse(infile) do |row|
       startRow = Time.now
+      # translation_changed = false
       n += 1
-      puts "@@@@@@@@@@@@@@@@@@ processing row #{n}"
+      logger.debug "@@@@@@@@@@@@@@@@@@ processing row #{n}"
 
-      if n > 1
-        # get question for this row
-        question = self.questions.with_code(row[idx_code])
-        if question.nil?
-          msg = "Row #{n}: Could not find question with code '#{row[idx_code]}'"
+      if n == 1
+        foundAllHeaders = false
+        # look at headers and set indexes
+        # - doing this in case the user re-arranged the columns
+        # if header in csv is not known, throw error
+        I18n.available_locales.map{|x| x.to_s}.each do |app_locale|
+          # code
+          idx = row.index(I18n.t('mongoid.attributes.question.code', locale: app_locale))
+          indexes['code'] = idx if idx.present?
+          # value
+          idx = row.index(I18n.t('mongoid.attributes.answer.value', locale: app_locale))
+          indexes['value'] = idx if idx.present?
+          # sort_order
+          idx = row.index(I18n.t('mongoid.attributes.answer.sort_order', locale: app_locale))
+          indexes['sort_order'] = idx if idx.present?
+          # exclude
+          idx = row.index(I18n.t('mongoid.attributes.answer.exclude_download_header', locale: app_locale))
+          indexes['exclude'] = idx if idx.present?
+          # can exclude
+          idx = row.index(I18n.t('mongoid.attributes.answer.can_exclude_download_header', locale: app_locale))
+          indexes['can_exclude'] = idx if idx.present?
+
+          # text translations
+          locales.each do |locale|
+            idx = row.index("#{I18n.t('mongoid.attributes.answer.text', locale: app_locale)} (#{locale})")
+            indexes[locale] = idx if idx.present?
+          end
+
+          if !indexes.values.include?(nil)
+            # found all columns, so can stop
+            foundAllHeaders = true
+            break
+          end
+
+        end        
+
+        if !foundAllHeaders
+            msg = I18n.t('mass_uploads_msgs.bad_headers')
           return msg
+        end
+
+        logger.debug "%%%%%%%%%% col indexes = #{indexes}"
+
+      else
+        ######################## 
+        # have to save the question and all of its answers 
+        # if try to just save an answer, mongoid uses incorrect index for question
+        ######################## 
+
+        # if the question is different, save the previous question before moving on to the new question
+        if last_question_code != row[indexes['code']]
+          # if the record changed, save the changes
+          if question.present? && question.changed?
+            if question.save
+              counts['overall'] += 1
+            else
+              msg = I18n.t('mass_uploads_msgs.answers.not_save', n: n, msg: answer.errors.full_messages)
+              return msg
+            end
+          end
+
+          # get question for this row
+          question = self.questions.with_original_code(row[indexes['code']])
+          if question.nil?
+            msg = I18n.t('mass_uploads_msgs.missing_code', n: n, code: row[indexes['code']])
+            return msg
+          end
         end
 
         # get answer for this row
-        answer = question.answers.with_value(row[idx_value])
+        answer = question.answers.with_value(row[indexes['value']])
         if answer.nil?
-          msg = "Row #{n}: Could not find answer with value '#{row[idx_value]}' for question with code '#{row[idx_code]}'"
+          msg = I18n.t('mass_uploads.answers.missing_answer', n: n, code: row[indexes['code']], value: row[indexes['value']])
           return msg
         end
 
-        (0..locales.length).each do |locale_index|
-          col_index = locale_index + idx_text_start
-          locale = locales[locale_index]
+
+        # if value exist for exclude, assume it means true
+        answer.sort_order = row[indexes['sort_order']]
+        answer.exclude = row[indexes['exclude']].present?
+        answer.can_exclude = row[indexes['can_exclude']].present?
+
+        locales.each do |locale|
           # if answer text is provided and not the same, update it
-          if row[col_index].present? && question.text_translations[locale] != row[col_index].strip
-            answer.text_translations[locale] = row[col_index].strip
+          if answer.text_translations[locale] != row[indexes[locale]]
+            answer.text_will_change!
+            answer.text_translations[locale] = row[indexes[locale]].present? ? row[indexes[locale]].strip : nil
             counts[locale] += 1
           end
         end
 
-        puts "******** time to process row: #{Time.now-startRow} seconds"
-        puts "************************ total time so far : #{Time.now-start} seconds"
+        logger.debug "******** time to process row: #{Time.now-startRow} seconds"
+        logger.debug "************************ total time so far : #{Time.now-start} seconds"
       end
     end  
 
-    puts "****************** total changes: #{counts.map{|k,v| k + ' - ' + v.to_s}.join(', ')}"
+    # make sure the last set of questions is change if needed 
+    if question.present? && question.changed?
+      if question.save
+        counts['overall'] += 1
+      else
+        msg = I18n.t('mass_uploads_msgs.answers.not_save', n: n, msg: answer.errors.full_messages)
+        return msg
+      end
+    end
 
-    # save if changes made
-    self.save if counts.map{|k,v| v}.inject(:+) > 0
+    logger.debug "****************** total changes: #{counts.map{|k,v| k + ' - ' + v.to_s}.join(', ')}"
+    logger.debug "****************** time to process answer csv: #{Time.now-start} seconds for #{n} rows"
 
-    puts "****************** time to process question text csv: #{Time.now-start} seconds for #{n} rows"
-
-    return msg
+    return msg, counts
   end
 
 

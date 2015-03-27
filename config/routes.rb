@@ -20,6 +20,8 @@ BootstrapStarter::Application.routes.draw do
         collection do
           get 'mass_changes'
           post 'mass_changes'
+          post 'load_mass_changes_questions'
+          post 'load_mass_changes_answers'
         end
       end
       member do
