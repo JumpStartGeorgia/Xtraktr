@@ -16,6 +16,7 @@ class Dataset < CustomTranslation
 
   field :title, type: String, localize: true
   field :description, type: String, localize: true
+  field :methodology, type: String, localize: true
   field :source, type: String, localize: true
   field :source_url, type: String, localize: true
   field :start_gathered_at, type: Date
@@ -201,12 +202,12 @@ class Dataset < CustomTranslation
 
   #############################
 
-  attr_accessible :title, :description, :user_id, :has_warnings, 
+  attr_accessible :title, :description, :methodology, :user_id, :has_warnings, 
       :data_items_attributes, :questions_attributes, :questions_with_bad_answers, 
       :datafile, :codebook, :public, :private_share_key, 
       :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at,
       :languages, :default_language,
-      :title_translations, :description_translations, :source_translations, :source_url_translations
+      :title_translations, :description_translations, :methodology_translations, :source_translations, :source_url_translations
 
   TYPE = {:onevar => 'onevar', :crosstab => 'crosstab'}
 
@@ -305,6 +306,9 @@ class Dataset < CustomTranslation
   end
   def description
     get_translation(self.description_translations)
+  end
+  def methodology
+    get_translation(self.methodology_translations)
   end
   def source
     get_translation(self.source_translations)
