@@ -4,7 +4,7 @@ class TimeSeriesController < ApplicationController
     controller_instance.send(:valid_role?, User::ROLES[:user])
   end
 
-  layout "explore_time_series", except: [:index]
+  layout "explore_time_series"
 
   # GET /time_series
   # GET /time_series.json
@@ -15,7 +15,7 @@ class TimeSeriesController < ApplicationController
     @js.push("search.js")
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html { render layout: 'application' }
       format.json { render json: @time_series }
     end
   end

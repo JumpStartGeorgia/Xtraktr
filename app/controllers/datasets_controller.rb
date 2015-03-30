@@ -4,6 +4,10 @@ class DatasetsController < ApplicationController
     controller_instance.send(:valid_role?, User::ROLES[:user])
   end
 
+  layout 'explore_data'
+
+
+
   # GET /datasets
   # GET /datasets.json
   def index
@@ -13,7 +17,7 @@ class DatasetsController < ApplicationController
     @js.push("search.js")
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html { render layout: 'application' }
       format.json { render json: @datasets }
     end
   end
