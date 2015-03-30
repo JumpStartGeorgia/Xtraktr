@@ -7,7 +7,7 @@ set -e
 AS_USER=unicef-staging # name of user on server
 APP_ROOT=/home/unicef-staging/Unicef-Staging/current # path to application current folder
 # update the name of the enviroment at '-E _____' to production, staging, etc
-CMD="cd $APP_ROOT; bundle exec unicorn -D -c $APP_ROOT/config/deploy/staging/unicorn.rb -E staging"
+CMD="cd $APP_ROOT; bundle exec unicorn -D -c $APP_ROOT/config/deploy/unicef_staging/unicorn.rb -E staging"
 ##################################
 
 PID=$APP_ROOT/tmp/pids/unicorn.pid
