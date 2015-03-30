@@ -196,6 +196,11 @@ class Dataset < CustomTranslation
   end
   accepts_nested_attributes_for :data_items
 
+  # reports written based off of this data
+  embeds_many :reports
+  accepts_nested_attributes_for :reports
+
+
   # record stats about this dataset
   embeds_one :stats, class_name: "Stats"
   accepts_nested_attributes_for :stats
@@ -203,7 +208,7 @@ class Dataset < CustomTranslation
   #############################
 
   attr_accessible :title, :description, :methodology, :user_id, :has_warnings, 
-      :data_items_attributes, :questions_attributes, :questions_with_bad_answers, 
+      :data_items_attributes, :questions_attributes, :reports_attributes, :questions_with_bad_answers, 
       :datafile, :public, :private_share_key, #:codebook, 
       :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at,
       :languages, :default_language,
@@ -231,6 +236,8 @@ class Dataset < CustomTranslation
   index ({ :'questions.answers.sort_order' => 1})
   index ({ :'questions.answers.exclude' => 1})
   index ({ :private_share_key => 1})
+  index ({ :'reports.title' => 1})
+  index ({ :'reports.released_at' => 1})
 
 
   #############################

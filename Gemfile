@@ -28,6 +28,7 @@ gem "useragent", :git => "https://github.com/jilion/useragent.git" # browser det
 #gem "rails_autolink", "~> 1.0.9" # convert string to link if it is url
 #gem 'paperclip', '~> 3.4.0' # to upload files
 gem "mongoid-paperclip", :require => "mongoid_paperclip" # upload files
+gem 'localized_files', git: 'https://github.com/4nt1/mongoid_paperclip_localized_files.git' # localize files
 #gem "has_permalink", "~> 0.1.4" # create permalink slugs for nice urls
 #gem "will_paginate", "~> 3.0.5" # add paging to long lists
 #gem "will_paginate_mongoid" # pagination with mongoid

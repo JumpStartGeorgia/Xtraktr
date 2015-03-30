@@ -25,6 +25,14 @@ GIT
       railties (>= 3.0)
 
 GIT
+  remote: https://github.com/4nt1/mongoid_paperclip_localized_files.git
+  revision: 1b2a8109e9b450f3a430bd8f80de38130c3640ba
+  specs:
+    localized_files (3.0.0)
+      mongoid-paperclip
+      paperclip
+
+GIT
   remote: https://github.com/jilion/useragent.git
   revision: 742f29d8643f378773a933b3c0a37ce1bc52a7aa
   specs:
@@ -309,6 +317,7 @@ DEPENDENCIES
   json
   kaminari (~> 0.16.1)
   less-rails!
+  localized_files!
   mailcatcher (= 0.5.12)
   mongoid (~> 3.1.6)
   mongoid-paperclip
