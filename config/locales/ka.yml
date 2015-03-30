@@ -320,7 +320,7 @@ ka:
       new: ახალი            
       save_settings: Save Settings
     common:
-      app_name: Xtraktr
+      app_name: UNICEF Data Portal #Xtraktr
       added_on: "დამატებულია: %{date}" 
       jumpstart: “ჯამპსტარტ ჯორჯია”
       js_link_title: “ჯამპსტარტ ჯორჯია” - ჩვენ გაწვდით მონაცემებს უკეთ!
