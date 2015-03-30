@@ -12,7 +12,7 @@ class Dataset < CustomTranslation
   #############################
   # paperclip data file storage
   has_mongoid_attached_file :datafile, :url => "/system/datasets/:id/original/:filename", :use_timestamp => false
-  has_mongoid_attached_file :codebook, :url => "/system/datasets/:id/codebook/:filename", :use_timestamp => false
+#  has_mongoid_attached_file :codebook, :url => "/system/datasets/:id/codebook/:filename", :use_timestamp => false
 
   field :title, type: String, localize: true
   field :description, type: String, localize: true
@@ -204,7 +204,7 @@ class Dataset < CustomTranslation
 
   attr_accessible :title, :description, :methodology, :user_id, :has_warnings, 
       :data_items_attributes, :questions_attributes, :questions_with_bad_answers, 
-      :datafile, :codebook, :public, :private_share_key, 
+      :datafile, :public, :private_share_key, #:codebook, 
       :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at,
       :languages, :default_language,
       :title_translations, :description_translations, :methodology_translations, :source_translations, :source_url_translations
@@ -236,9 +236,9 @@ class Dataset < CustomTranslation
   #############################
   # Validations
   validates_presence_of :default_language
-  validates_attachment :codebook, 
-      :content_type => { :content_type => ["text/plain", "application/pdf", "application/vnd.oasis.opendocument.text", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/msword"] }
-  validates_attachment_file_name :codebook, :matches => [/txt\Z/i, /pdf\Z/i, /odt\Z/i, /doc?x\Z/i]
+  # validates_attachment :codebook, 
+  #     :content_type => { :content_type => ["text/plain", "application/pdf", "application/vnd.oasis.opendocument.text", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/msword"] }
+  # validates_attachment_file_name :codebook, :matches => [/txt\Z/i, /pdf\Z/i, /odt\Z/i, /doc?x\Z/i]
   validates_attachment :datafile, :presence => true, 
       :content_type => { :content_type => ["application/x-spss-sav", "application/x-stata-dta", "application/octet-stream", "text/csv", "application/vnd.oasis.opendocument.spreadsheet", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"] }
   validates_attachment_file_name :datafile, :matches => [/sav\Z/i, /dta\Z/i, /csv\Z/i, /ods\Z/i, /xls\Z/i, /xlsx\Z/i]

@@ -106,9 +106,6 @@
               <%= simple_format_no_tags(@dataset.methodology, {}, {sanitize: false}) %>
             </div>
 
-            <p><strong><%= model_class.human_attribute_name(:codebook) %>:</strong>
-            <%= link_to t('helpers.links.download'), @dataset.codebook.url, class: 'btn btn-default', target: :blank if @dataset.codebook.exists? %></p>
-
             <p><strong><%= model_class.human_attribute_name(:datafile) %>:</strong>
             <%= link_to t('helpers.links.download'), @dataset.datafile.url, class: 'btn btn-default', target: :blank if @dataset.datafile.exists? %></p>
 

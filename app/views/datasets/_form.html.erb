@@ -24,18 +24,6 @@
         </div>
       </div>
       <div class="col-sm-4">
-        <div class="file input optional form-group" id="dataset_codebook_input">
-          <label class="" for="dataset_codebook"><%= t(label_key + 'codebook') %><div class="help-inline" original-title="<%= t(hint_key + 'codebook') %>"><div>?</div></div>
-          </label>
-          <% if @dataset.codebook.exists? %>
-            <p>
-              <%= link_to t('helpers.links.download'), @dataset.codebook.url, :target => :blank, :class => 'btn btn-default' %>
-            </p>
-          <% end %>
-          <input accept="text/plain, application/pdf, application/vnd.oasis.opendocument.text, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/msword" id="dataset_codebook" name="dataset[codebook]" type="file">
-        </div>
-      </div>
-      <div class="col-sm-4">
         <div class="radio_buttons input optional form-group" id="dataset_public_input">
           <label class="  control-label" for="dataset_public"><%= t(label_key + 'public') %><div class="help-inline" original-title="<%= t(hint_key + 'public') %>"><div>?</div></div>
           </label>
