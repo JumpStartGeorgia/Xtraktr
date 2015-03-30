@@ -1,4 +1,4 @@
-f##################################
+##################################
 ##### SET THESE VARIABLES ########
 ##################################
 server "alpha.jumpstart.ge", :web, :app, :db, primary: true # server where app is located
