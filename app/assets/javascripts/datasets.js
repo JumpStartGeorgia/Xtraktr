@@ -12,7 +12,10 @@ $(function() {
   // start gathered at
   $("input#dataset_start_gathered_at").datepicker({
     dateFormat: 'yy-mm-dd',
-    onSelect: customRange
+    onSelect: customRange,
+    changeYear: true,
+    changeMonth: true,
+    yearRange: 'c-20:c+0'
   });
   if (gon.start_gathered_at !== undefined && gon.start_gathered_at.length > 0)
   {
@@ -26,7 +29,10 @@ $(function() {
   // end gathered at
   $("input#dataset_end_gathered_at").datepicker({
     dateFormat: 'yy-mm-dd',
-    onSelect: customRange
+    onSelect: customRange,
+    changeYear: true,
+    changeMonth: true,
+    yearRange: 'c-20:c+0'
   });
   if (gon.end_gathered_at !== undefined && gon.end_gathered_at.length > 0)
   {
@@ -39,7 +45,10 @@ $(function() {
      
   // released at
   $("input#dataset_released_at").datepicker({
-    dateFormat: 'yy-mm-dd'
+    dateFormat: 'yy-mm-dd',
+    changeYear: true,
+    changeMonth: true,
+    yearRange: 'c-20:c+0'
   });
   if (gon.released_at !== undefined && gon.released_at.length > 0)
   {

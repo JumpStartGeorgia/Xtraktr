@@ -267,8 +267,10 @@ $(document).ready(function(){
         //   tinyMCE.editors[0].remove();
         // };
         // tinyMCE.editors.length = 0;
-        tinyMCE.execCommand('mceFocus', false, $('form.tabbed-translation-form .tab-content .tab-pane:first textarea').attr('id'));
-        tinyMCE.execCommand('mceRemoveControl', false, $('form.tabbed-translation-form .tab-content .tab-pane:first textarea').attr('id'));
+        $('form.tabbed-translation-form .tab-content .tab-pane:first textarea').each(function(){
+          tinyMCE.execCommand('mceFocus', false, $(this).attr('id'));
+          tinyMCE.execCommand('mceRemoveControl', false, $(this).attr('id'));
+        });
 
 
         // copy the first tab and insert it in appropriate index
@@ -284,8 +286,12 @@ $(document).ready(function(){
 
         // have to rebuild tinymce
         // tinyMCE.init(gon.tinymce_options);
-        tinyMCE.execCommand('mceAddControl', true, $('form.tabbed-translation-form .tab-content .tab-pane:first textarea').attr('id'));
-        tinyMCE.execCommand('mceAddControl', true, $(form).find('textarea').attr('id'));
+        $('form.tabbed-translation-form .tab-content .tab-pane:first textarea').each(function(){
+          tinyMCE.execCommand('mceAddControl', true, $(this).attr('id'));
+        });
+        $(form).find('textarea').each(function(){
+          tinyMCE.execCommand('mceAddControl', true, $(this).attr('id'));
+        })
 
       }
     }
