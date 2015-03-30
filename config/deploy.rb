@@ -2,8 +2,8 @@
 ##### SET ALL VARIABLES UNDER config/deploy/env.rb             #####
 ####################################################################
 
-set :stages, %w(production staging)
-set :default_stage, "staging" # if just run 'cap deploy' the staging environment will be used
+set :stages, %w(production staging unicef_staging)
+set :default_stage, "unicef_staging" # if just run 'cap deploy' the staging environment will be used
 
 require 'capistrano/ext/multistage' # so we can deploy to staging and production servers
 require "bundler/capistrano" # Load Bundler's capistrano plugin.
