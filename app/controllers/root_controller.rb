@@ -24,6 +24,7 @@ class RootController < ApplicationController
     else
 
       @css.push("dashboard_data.css")
+      @js.push("live_search.js")
 
       respond_to do |format|
         format.html # index.html.erb
@@ -65,6 +66,7 @@ class RootController < ApplicationController
     else
 
       @css.push("dashboard_time_series.css")
+      @js.push("live_search.js")
 
       respond_to do |format|
         format.html # index.html.erb

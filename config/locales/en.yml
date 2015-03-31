@@ -263,6 +263,7 @@ en:
   helpers:
     actions: Actions
     default_language: This is the default language that will show
+    search: Search
     links:
       admin: Admin Section
       edit: Edit

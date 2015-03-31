@@ -87,14 +87,20 @@
     </div>
     
     <div role="tabpanel" class="tab-pane fade" id="codebook">
+      <div id="codebook-search" class="input-group">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></span>
+        <input type="text" class="text-input col-sm-3" id="filter" class="form-control" value="" placeholder="<%= t('helpers.search') %>" />
+      </div>
       <ul class="list-unstyled">
         <% @dataset.questions.for_analysis.each do |question| %>
           <li class="row">
             <div class="col-sm-4 question">
               <h3>
-                <%= question.original_code %>:
-                <br />
-                <%= question.text %>
+                <%= link_to explore_data_show_path(id: @dataset, row: question.code) do %>
+                  <%= question.original_code %>:
+                  <br />
+                  <%= question.text %>
+                <% end %>
               </h3>
             </div>
             <div class="col-sm-8 details">

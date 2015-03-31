@@ -53,6 +53,10 @@
     </div>
     
     <div role="tabpanel" class="tab-pane fade in active" id="codebook">
+      <div id="codebook-search" class="input-group">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></span>
+        <input type="text" class="text-input col-sm-3" id="filter" class="form-control" value="" placeholder="<%= t('helpers.search') %>" />
+      </div>
       <ul class="list-unstyled">
         <% @time_series.questions.sorted.each do |question| %>
           <li class="row">

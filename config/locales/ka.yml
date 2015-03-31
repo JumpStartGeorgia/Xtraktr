@@ -263,6 +263,7 @@ ka:
   helpers:
     actions: აირჩიეთ
     default_language: This is the default language that will show
+    search: Search
     links:
       admin: ადმინისტრატორის განყოფილება
       edit: შეცვლა
