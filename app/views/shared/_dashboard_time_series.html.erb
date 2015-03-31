@@ -1,0 +1,106 @@
+<%- 
+  model_class = TimeSeries
+  is_admin_page = request.path == time_series_path(@time_series)
+%>
+
+<div id="dashboard-meta" class="row">
+  <div class="col-sm-9">
+    <div class="row">
+      <div class="col-sm-4" id="meta-dates">
+      </div>
+      <div class="col-sm-4" id="meta-source">
+      </div>
+      <div class="col-sm-4" id="share-links">
+        (share links)
+      </div>
+    </div>
+  </div>
+</div>
+<div id="dashboard-description" class="row">
+  <div class="col-sm-9">
+    <% if @time_series.description.present? %>
+      <div class="tinymce_format">
+        <%= simple_format_no_tags(@time_series.description, {}, {sanitize: false}) %>
+      </div>
+    <% end %>
+  </div>
+  <div class="col-sm-3" style="text-align: right;">
+    <ul class="list-unstyled">
+      <li>
+        <%= link_to t('menu.explore_data'), url_time_series_explore(@time_series), class: 'btn btn-primary' %>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div id="dashboard-tabs" role="tabpanel">
+
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation">
+      <a href="#highlights" aria-controls="highlights" role="tab" data-toggle="tab"><%= t('.tabs.highlights') %></a>
+    </li>
+    <li role="presentation" class="active">
+      <a href="#codebook" aria-controls="codebook" role="tab" data-toggle="tab"><%= t('.tabs.codebook') %></a>
+    </li>
+    <li role="presentation">
+      <a href="#licensing" aria-controls="licensing" role="tab" data-toggle="tab"><%= t('.tabs.licensing') %></a>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane fade" id="highlights">
+      
+    </div>
+    
+    <div role="tabpanel" class="tab-pane fade in active" id="codebook">
+      <div id="codebook-search" class="input-group">
+        <span class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></span>
+        <input type="text" class="text-input col-sm-3" id="filter" class="form-control" value="" placeholder="<%= t('helpers.search') %>" />
+      </div>
+      <ul class="list-unstyled">
+        <% @time_series.questions.sorted.each do |question| %>
+          <li class="row">
+            <div class="col-sm-4 question">
+              <h3>
+                <%= link_to url_time_series_explore(@time_series, row: question.code) do %>
+                  <%= question.original_code %>:
+                  <br />
+                  <%= question.text %>
+                <% end %>
+              </h3>
+            </div>
+            <div class="col-sm-8 details">
+              <div class="row question-row">
+                <div class="col-sm-1 headers">
+                  <%= t('.codebook.header_question') %>:                  
+                </div>
+                <div class="col-sm-11">
+                  <%= question.text %>
+                </div>
+              </div>
+              <div class="row answer-row">
+                <div class="col-sm-1 headers">
+                  <%= t('.codebook.header_values') %>:                  
+                </div>
+                <div class="col-sm-11">
+                  <ul>
+                    <% question.answers.sorted.each do |answer| %>
+                      <li>
+                      <%= answer.text %>
+                      </li> 
+                    <% end %>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+    
+    <div role="tabpanel" class="tab-pane fade" id="licensing">
+      
+    </div>
+  </div>
+
+</div>

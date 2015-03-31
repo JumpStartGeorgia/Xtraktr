@@ -336,7 +336,7 @@ en:
       new: New
       save_settings: Save Settings
     common:
-      app_name: X-Traktr #UNICEF Data Portal
+      app_name: UNICEF Data Portal #X-Traktr
       added_on: "Added on: %{date}" 
       jumpstart: JumpStart Georgia
       js_link_title: JumpStart Georgia - We communicate data better!
@@ -434,26 +434,6 @@ en:
     explore_data:
       title: Explore the Data
       no_data: 'At this time, no datasets have been loaded into the site.'
-    explore_data_dashboard:
-      tabs:
-        highlights: Highlights
-        methodology: Methodology
-        codebook: Codebook
-        reports: Reports
-        licensing: Licensing
-      codebook:
-        header_question: Variable
-        header_values: Values
-    explore_time_series_dashboard:
-      tabs:
-        highlights: Highlights
-        methodology: Methodology
-        codebook: Codebook
-        reports: Reports
-        licensing: Licensing
-      codebook:
-        header_question: Variable
-        header_values: Values
     explore_data_show:
       title: Explore the Data
     explore_time_series:
@@ -639,3 +619,23 @@ en:
       details:
         variable: Variable
         answers: Possible Answers    
+    dashboard_data:
+      tabs:
+        highlights: Highlights
+        methodology: Methodology
+        codebook: Codebook
+        reports: Reports
+        licensing: Licensing
+      codebook:
+        header_question: Variable
+        header_values: Values
+    dashboard_time_series:
+      tabs:
+        highlights: Highlights
+        methodology: Methodology
+        codebook: Codebook
+        reports: Reports
+        licensing: Licensing
+      codebook:
+        header_question: Variable
+        header_values: Values

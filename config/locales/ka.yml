@@ -336,7 +336,7 @@ ka:
       new: ახალი            
       save_settings: Save Settings
     common:
-      app_name: X-Traktr #UNICEF Data Portal
+      app_name: UNICEF Data Portal
       added_on: "დამატებულია: %{date}" 
       jumpstart: “ჯამპსტარტ ჯორჯია”
       js_link_title: “ჯამპსტარტ ჯორჯია” - ჩვენ გაწვდით მონაცემებს უკეთ!
@@ -434,23 +434,6 @@ ka:
     explore_data:
       title: Explore the Data
       no_data: 'At this time, no datasets have been loaded into the site.'
-    explore_data_dashboard:
-      tabs:
-        highlights: Highlights
-        methodology: Methodology
-        codebook: Codebook
-        reports: Reports
-        licensing: Licensing
-      codebook:
-        header_question: Variable
-        header_values: Values
-    explore_time_series_dashboard:
-      tabs:
-        highlights: Highlights
-        methodology: Methodology
-        codebook: Codebook
-        reports: Reports
-        licensing: Licensing
     explore_data_show:
       title: Explore the Data
     explore_time_series:
@@ -634,3 +617,23 @@ ka:
       details:
         variable: Variable
         answers: Possible Answers    
+    dashboard_data:
+      tabs:
+        highlights: Highlights
+        methodology: Methodology
+        codebook: Codebook
+        reports: Reports
+        licensing: Licensing
+      codebook:
+        header_question: Variable
+        header_values: Values
+    dashboard_time_series:
+      tabs:
+        highlights: Highlights
+        methodology: Methodology
+        codebook: Codebook
+        reports: Reports
+        licensing: Licensing
+      codebook:
+        header_question: Variable
+        header_values: Values

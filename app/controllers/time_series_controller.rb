@@ -27,13 +27,35 @@ class TimeSeriesController < ApplicationController
 
     if @time_series.blank?
       flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to datasets_path(:locale => I18n.locale)
+      redirect_to time_series_path(:locale => I18n.locale)
+      return
+    else
+      add_time_series_nav_options
+
+      @css.push("dashboard_time_series.css")
+      @js.push("live_search.js")
+
+      respond_to do |format|
+        format.html # index.html.erb
+      end
+    end
+  end
+  
+
+  # GET /time_series/1
+  # GET /time_series/1.json
+  def explore
+    @time_series = TimeSeries.by_id_for_user(params[:id], current_user.id)
+
+    if @time_series.blank?
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to time_series_path(:locale => I18n.locale)
       return
     else
       add_time_series_nav_options(show_title: false)
 
       gon.explore_time_series = true
-      gon.explore_time_series_ajax_path = time_series_path(:format => :js)
+      gon.explore_time_series_ajax_path = explore_time_series_path(:format => :js)
 
       # this method is in application_controller
       # and gets all of the required information
@@ -77,7 +99,7 @@ class TimeSeriesController < ApplicationController
       set_tabbed_translation_form_settings
     else
       flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to datasets_path(:locale => I18n.locale)
+      redirect_to time_series_path(:locale => I18n.locale)
       return
     end
 end
@@ -136,7 +158,7 @@ end
       end
     else
       flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to datasets_path(:locale => I18n.locale)
+      redirect_to time_series_path(:locale => I18n.locale)
       return
     end
   end
@@ -154,7 +176,7 @@ end
       end
     else
       flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to datasets_path(:locale => I18n.locale)
+      redirect_to time_series_path(:locale => I18n.locale)
       return
     end
   end
@@ -173,7 +195,7 @@ end
       end
     else
       flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to datasets_path(:locale => I18n.locale)
+      redirect_to time_series_path(:locale => I18n.locale)
       return
     end
   end

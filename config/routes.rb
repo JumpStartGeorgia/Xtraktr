@@ -25,6 +25,7 @@ BootstrapStarter::Application.routes.draw do
         end
       end
       member do
+        get 'explore'
         get 'warnings'
         get 'exclude_questions'
         post 'exclude_questions'
@@ -45,6 +46,7 @@ BootstrapStarter::Application.routes.draw do
     resources :time_series do
       resources :time_series_questions, :only => [:index, :show, :new, :create, :edit, :update], :path => 'questions', :as => 'questions'
       member do
+        get 'explore'
         get 'automatically_assign_questions'
       end
     end
@@ -53,7 +55,7 @@ BootstrapStarter::Application.routes.draw do
 		match '/explore_data', :to => 'root#explore_data', :as => :explore_data, :via => :get
 		match '/explore_data/:id', :to => 'root#explore_data_dashboard', :as => :explore_data_dashboard, :via => :get
     match '/explore_data/:id/explore', :to => 'root#explore_data_show', :as => :explore_data_show, :via => :get
-    match '/explore_time_series', :to => 'root#explore_time_series', :as => :explore_time_series, :via => :get
+    match '/explore_time_series', :to => 'root#explore_time_series', :as => :explore_time, :via => :get
     match '/explore_time_series/:id', :to => 'root#explore_time_series_dashboard', :as => :explore_time_series_dashboard, :via => :get
     match '/explore_time_series/:id/explore', :to => 'root#explore_time_series_show', :as => :explore_time_series_show, :via => :get
     match '/private_share/:id', :to => 'root#private_share', :as => :private_share, :via => :get

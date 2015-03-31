@@ -32,10 +32,32 @@ class DatasetsController < ApplicationController
       redirect_to datasets_path(:locale => I18n.locale)
       return
     else
+      add_dataset_nav_options 
+
+      @css.push("dashboard_data.css")
+      @js.push("live_search.js")
+
+      respond_to do |format|
+        format.html # index.html.erb
+      end
+    end
+
+  end
+
+  # GET /datasets/1
+  # GET /datasets/1.json
+  def explore
+    @dataset = Dataset.by_id_for_user(params[:id], current_user.id)
+
+    if @dataset.blank?
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to datasets_path(:locale => I18n.locale)
+      return
+    else
       add_dataset_nav_options(show_title: false)
 
       gon.explore_data = true
-      gon.explore_data_ajax_path = dataset_path(:format => :js)
+      gon.explore_data_ajax_path = explore_dataset_path(:format => :js)
 
       # this method is in application_controller
       # and gets all of the required information
@@ -44,6 +66,8 @@ class DatasetsController < ApplicationController
     end
 
   end
+
+
 
   # GET /datasets/new
   # GET /datasets/new.json
