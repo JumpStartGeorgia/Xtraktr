@@ -336,7 +336,7 @@ ka:
       new: ახალი            
       save_settings: Save Settings
     common:
-      app_name: X-Traktr #UNICEF Data Portal
+      app_name: UNICEF Data Portal #X-Traktr
       added_on: "დამატებულია: %{date}" 
       jumpstart: “ჯამპსტარტ ჯორჯია”
       js_link_title: “ჯამპსტარტ ჯორჯია” - ჩვენ გაწვდით მონაცემებს უკეთ!
