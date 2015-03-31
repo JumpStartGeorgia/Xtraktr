@@ -119,9 +119,9 @@
                   <%= t('.codebook.header_values') %>:                  
                 </div>
                 <div class="col-sm-11">
-                  <% if question.answers.present? %>
+                  <% if question.answers.all_for_analysis.present? %>
                     <ul>
-                      <% question.answers.sorted.each do |answer| %>
+                      <% question.answers.all_for_analysis.sorted.each do |answer| %>
                         <li>
                         <%= answer.text %>
                         </li> 
