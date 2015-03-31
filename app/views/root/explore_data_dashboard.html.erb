@@ -1,0 +1,168 @@
+<%- 
+  model_class = Dataset 
+  r_model_class = Report 
+  title @dataset.title 
+%>
+
+<div id="dashboard-meta" class="row">
+  <div class="col-sm-9">
+    <div class="row">
+      <div class="col-sm-4" id="meta-dates">
+        <%= format_dataset_dates(@dataset) %>
+      </div>
+      <div class="col-sm-4" id="meta-source">
+        <%= "#{model_class.human_attribute_name(:source)}: #{@dataset.source}" %>
+      </div>
+      <div class="col-sm-4" id="share-links">
+        (share links)
+      </div>
+    </div>
+  </div>
+</div>
+<div id="dashboard-description" class="row">
+  <div class="col-sm-9">
+    <% if @dataset.description.present? %>
+      <div class="tinymce_format">
+        <%= simple_format_no_tags(@dataset.description, {}, {sanitize: false}) %>
+      </div>
+    <% end %>
+  </div>
+  <div class="col-sm-3" style="text-align: right;">
+    <ul class="list-unstyled">
+      <li>
+        <%= link_to t('menu.explore_data'), explore_data_show_path(@dataset), class: 'btn btn-primary' %>
+      </li>
+      <% if @dataset.datafile.exists? %>
+        <li>
+          <%= link_to @dataset.datafile.url, class: 'btn btn-default btn-sm', target: :blank do %>
+            <%
+              text = t('helpers.links.download_data')
+              text << " "
+              if @dataset.file_type.present?
+                text << @dataset.file_type
+                text << " -"
+              end
+              text << " "
+              text << number_to_human_size(@dataset.datafile_file_size)
+            %>
+            <%= text %>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>
+
+<div id="dashboard-tabs" role="tabpanel">
+
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation">
+      <a href="#highlights" aria-controls="highlights" role="tab" data-toggle="tab"><%= t('.tabs.highlights') %></a>
+    </li>
+    <li role="presentation" class="active">
+      <a href="#methodology" aria-controls="methodology" role="tab" data-toggle="tab"><%= t('.tabs.methodology') %></a>
+    </li>
+    <li role="presentation">
+      <a href="#codebook" aria-controls="codebook" role="tab" data-toggle="tab"><%= t('.tabs.codebook') %></a>
+    </li>
+    <li role="presentation">
+      <a href="#reports" aria-controls="reports" role="tab" data-toggle="tab"><%= t('.tabs.reports') %></a>
+    </li>
+    <li role="presentation">
+      <a href="#licensing" aria-controls="licensing" role="tab" data-toggle="tab"><%= t('.tabs.licensing') %></a>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane fade" id="highlights">
+      
+    </div>
+    
+    <div role="tabpanel" class="tab-pane fade in active" id="methodology">
+      <% if @dataset.methodology.present? %>
+        <div class="tinymce_format">
+          <%= simple_format_no_tags(@dataset.methodology, {}, {sanitize: false}) %>
+        </div>
+      <% end %>
+    </div>
+    
+    <div role="tabpanel" class="tab-pane fade" id="codebook">
+      <ul class="list-unstyled">
+        <% @dataset.questions.for_analysis.each do |question| %>
+          <li class="row">
+            <div class="col-sm-4 question">
+              <h3>
+                <%= question.original_code %>:
+                <br />
+                <%= question.text %>
+              </h3>
+            </div>
+            <div class="col-sm-8 details">
+              <div class="row question-row">
+                <div class="col-sm-1 headers">
+                  <%= t('.codebook.header_question') %>:                  
+                </div>
+                <div class="col-sm-11">
+                  <%= question.text %>
+                </div>
+              </div>
+              <div class="row answer-row">
+                <div class="col-sm-1 headers">
+                  <%= t('.codebook.header_values') %>:                  
+                </div>
+                <div class="col-sm-11">
+                  <% if question.answers.present? %>
+                    <ul>
+                      <% question.answers.sorted.each do |answer| %>
+                        <li>
+                        <%= answer.text %>
+                        </li> 
+                      <% end %>
+                    </ul>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+    
+    <div role="tabpanel" class="tab-pane fade" id="reports">
+      <% if @dataset.reports.present? %>
+        <ul class="list-unstyled">
+          <% @dataset.reports.each do |report| %>
+            <li>
+              <h3><%= report.title %></h3>
+              <div class="row">
+                <div class="col-sm-4">
+                  <%= "#{r_model_class.human_attribute_name(:released_at)}: #{l report.released_at, format: :dataset}" %>
+                </div>
+                <div class="col-sm-4">
+                  <%= "#{r_model_class.human_attribute_name(:language_id)}: #{report.language.name}" %>
+                </div>
+                <div class="col-sm-4">
+                  <%= link_to report.file.url, class: 'btn btn-success btn-sm', target: :blank do %>
+                    <%
+                      text = report.file_type
+                      if text.present?
+                        text << " - "
+                      end
+                      text << number_to_human_size(report.file_file_size)
+                    %>
+                    <%= text %>
+                  <% end %>
+                </div>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
+    </div>
+
+    <div role="tabpanel" class="tab-pane fade" id="licensing">
+      
+    </div>
+  </div>
+
+</div>

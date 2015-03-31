@@ -1,0 +1,24 @@
+<%- model_class = Dataset -%>
+
+<h2><%= t('.header_latest') %></h2>
+<% if @datasets.present? %>
+  <ul class="list-unstyled">
+    <% @datasets.each do |dataset| %>
+      <li>
+        <h2><%= link_to dataset.title, explore_data_dashboard_path(dataset) %></h2>
+        <div>
+          <%= "#{model_class.human_attribute_name(:source)}: #{dataset.source}" %>
+        </div>
+        <% if dataset.description.present? %>
+          <div class="tinymce_format">
+            <%= simple_format_no_tags(dataset.description, {}, {sanitize: false}) %>
+          </div>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>
+    <%= t('.no_data') %>
+  </p>
+<% end %>

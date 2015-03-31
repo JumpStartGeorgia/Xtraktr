@@ -8,4 +8,17 @@ module DatasetsHelper
     end
   end
 
+
+  # if have start/end dates, show those, else use released date
+  def format_dataset_dates(dataset)
+    text = ''
+    if dataset.start_gathered_at.present? && dataset.end_gathered_at
+      text << I18n.l(dataset.start_gathered_at, format: :dataset)
+      text << " - "
+      text << I18n.l(dataset.end_gathered_at, format: :dataset)
+    elsif dataset.released_at.present?
+      text << I18n.l(dataset.released_at, format: :dataset)
+    end
+    return text
+  end
 end

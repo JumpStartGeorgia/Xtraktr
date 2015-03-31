@@ -307,6 +307,8 @@ ka:
       remove_dataset: Remove Dataset
       add_report: Add Report
       remove_report: Remove Report
+      download_data: Download Data
+      back_dashboard: Back to Dashboard
     titles:
       edit: "შეცვლა %{model}"
       save: "შენახვა %{model}"
@@ -426,9 +428,28 @@ ka:
         p2: "თუ თქვენ არ მოგითხოვიათ პაროლის შეცვლა, გთხოვთ, არ მიაქციოთ ყურადღება ამ შეტყობინებას."
         p3: "თქვენი პაროლი იგივე დარჩება, სანამ არ გადახვალთ ზემოთ მითითებულ ბმულზე და შექმნით ახალ პაროლს."    
   root:
+    index:
+      header_latest: Latest Datasets
     explore_data:
       title: Explore the Data
       no_data: 'At this time, no datasets have been loaded into the site.'
+    explore_data_dashboard:
+      tabs:
+        highlights: Highlights
+        methodology: Methodology
+        codebook: Codebook
+        reports: Reports
+        licensing: Licensing
+      codebook:
+        header_question: Variable
+        header_values: Values
+    explore_time_series_dashboard:
+      tabs:
+        highlights: Highlights
+        methodology: Methodology
+        codebook: Codebook
+        reports: Reports
+        licensing: Licensing
     explore_data_show:
       title: Explore the Data
     explore_time_series:

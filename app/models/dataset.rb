@@ -24,6 +24,8 @@ class Dataset < CustomTranslation
   field :released_at, type: Date
   # whether or not dataset can be shown to public
   field :public, type: Boolean, default: false
+  # when made public
+  field :public_at, type: Date
   # indicate if questions_with_bad_answers has data
   field :has_warnings, type: Boolean, default: false
   # array of hashes {code1: value1, code2: value2, etc}
@@ -226,6 +228,7 @@ class Dataset < CustomTranslation
   index ({ :user_id => 1})
   index ({ :shapeset_id => 1})
   index ({ :public => 1})
+  index ({ :public_at => 1})
   index ({ :'questions.code' => 1})
   index ({ :'questions.original_code' => 1})
   index ({ :'questions.text' => 1})
@@ -333,6 +336,7 @@ class Dataset < CustomTranslation
   after_destroy :delete_dataset_files
   before_save :update_flags
   before_save :update_stats
+  before_save :set_public_at
 
   # process the datafile and save all of the information from it
   def process_file
@@ -421,6 +425,17 @@ class Dataset < CustomTranslation
     return true
   end
 
+
+  # if public and public at not exist, set it
+  # else, make nil
+  def set_public_at
+    if self.public? && self.public_at.nil?
+      self.public_at = Time.now.to_date
+    elsif
+      self.public_at = nil
+    end
+  end
+
   #############################
   # Scopes
 
@@ -430,6 +445,10 @@ class Dataset < CustomTranslation
 
   def self.is_public
     where(public: true)
+  end
+
+  def self.recent
+    order_by([[:public_at, :desc]])
   end
 
   def self.by_private_key(key)

@@ -1,6 +1,8 @@
 class RootController < ApplicationController
 
   def index
+    @datasets = Dataset.is_public.recent.sorted.limit(5)
+
     respond_to do |format|
       format.html # index.html.erb
     end
@@ -11,6 +13,21 @@ class RootController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
+    end
+  end
+  
+  def explore_data_dashboard
+    @dataset = Dataset.is_public.find_by(id: params[:id])
+
+    if @dataset.blank?
+      redirect_to explore_data_path, :notice => t('app.msgs.does_not_exist')
+    else
+
+      @css.push("dashboard_data.css")
+
+      respond_to do |format|
+        format.html # index.html.erb
+      end
     end
   end
   
@@ -40,6 +57,22 @@ class RootController < ApplicationController
     end
   end
   
+  def explore_time_series_dashboard
+    @time_series = TimeSeries.is_public.find_by(id: params[:id])
+
+    if @time_series.blank?
+      redirect_to explore_time_series_path, :notice => t('app.msgs.does_not_exist')
+    else
+
+      @css.push("dashboard_time_series.css")
+
+      respond_to do |format|
+        format.html # index.html.erb
+      end
+    end
+  end
+  
+
   def explore_time_series_show
     @time_series = TimeSeries.is_public.find_by(id: params[:id])
 

@@ -6,7 +6,7 @@
   <ul class="list-unstyled">
     <% @datasets.each do |dataset| %>
       <li>
-        <h2><%= link_to dataset.title %></h2>
+        <h2><%= link_to dataset.title, explore_data_dashboard_path(dataset) %></h2>
         <div>
           <%= "#{model_class.human_attribute_name(:source)}: #{dataset.source}" %>
         </div>

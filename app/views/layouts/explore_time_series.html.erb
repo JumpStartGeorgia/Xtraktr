@@ -18,7 +18,7 @@
         <div class="collapse navbar-collapse" id="navbar-collapse">
           <ul class="nav navbar-nav navbar-left">
             <li role="menuitem">
-              <%= link_to t('app.menu.about_time_series'), '#time-series-about', :'data-toggle' => "modal"  if @time_series.created_at.present? %>
+              <%= link_to t('helpers.links.back_to_dashboard'), explore_time_series_dashboard_path(@time_series) %>
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
@@ -64,31 +64,6 @@
 
     <%= render :partial => 'layouts/footer' %>
 
-
-    <div class="modal fade" id="time-series-about" tabindex="-1" role="dialog" aria-labelledby="time-series-about-header" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only"><%= t('helpers.links.close') %></span></button>
-            <h4 class="modal-title" id="time-series-about-header"><%= @time_series.title %></h4>
-          </div>
-          <div class="modal-body">
-            <p><strong><%= model_class.human_attribute_name(:description) %>:</strong></p>
-            <div class="tinymce_format">
-              <%= simple_format_no_tags(@time_series.description, {}, {sanitize: false}) %>
-            </div>
-
-            <% if @is_admin %>
-              <p><strong><%= model_class.human_attribute_name(:public) %>:</strong>
-              <%= format_time_series_public_status(@time_series.public) %></p>
-            <% end %>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <% if @is_admin && @time_series.created_at.present? %>
       <div class="modal fade" id="private-share" tabindex="-1" role="dialog" aria-labelledby="private-share-header" aria-hidden="true">
