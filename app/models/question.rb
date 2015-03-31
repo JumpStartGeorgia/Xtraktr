@@ -65,7 +65,7 @@ class Question < CustomTranslation
   #############################
   # Validations
   validates_presence_of :code, :original_code
-#  validate :validate_translations
+  validate :validate_translations
 
   # validate the translation fields
   # text field needs to be validated for presence
@@ -87,8 +87,9 @@ class Question < CustomTranslation
   #############################
   ## override get methods for fields that are localized
   def text
+    # if the title is not present, show the code
     x = get_translation(self.text_translations, self.dataset.current_locale, self.dataset.default_language)
-    return x.present? ? x : self.code
+    return x.present? ? x : self.original_code
   end
 
   #############################

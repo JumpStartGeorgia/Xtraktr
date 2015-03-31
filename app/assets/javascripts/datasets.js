@@ -9,6 +9,27 @@ $(function() {
     } 
   }
 
+  // load the datepicker and selectpicker libraries for a report row
+  function load_report_row(this_row){
+    // datepicker
+    var date_input = $(this_row).find("input.dataset-report-released-at");
+    $(date_input).datepicker({
+      dateFormat: 'yy-mm-dd',
+      changeYear: true,
+      changeMonth: true,
+      yearRange: 'c-20:c+0'
+    });
+    if ($(date_input).val() != '')
+    {
+      $(date_input).datepicker("setDate", new Date($(date_input).val()));
+    }
+
+
+    // selectpicker
+    $(this_row).find('select.selectpicker-report-language').select2({width:'element'});
+  }
+
+
   // start gathered at
   $("input#dataset_start_gathered_at").datepicker({
     dateFormat: 'yy-mm-dd',
@@ -54,5 +75,18 @@ $(function() {
   {
     $("input#dataset_released_at").datepicker("setDate", new Date(gon.released_at));
   }
+
+  // when adding reports - add datepicker and selectpicker
+  $('table#dataset-reports tbody').on('cocoon:before-insert', function(e, insertedItem) {
+    load_report_row(insertedItem);
+  });  
+
+  // process all reports when page loads
+  if ($('table#dataset-reports tbody tr').length > 0){
+    $('table#dataset-reports tbody tr').each(function(){
+      load_report_row(this);
+    });
+  }
+
 
 });

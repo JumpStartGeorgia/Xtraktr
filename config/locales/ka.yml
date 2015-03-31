@@ -45,6 +45,7 @@ ka:
         default_language: Default Language
         is_mappable: Has questions have been setup to show answers on a map
         created_at: Added On
+        reports: Reports
       question:
         code: Question Code
         original_code: Question Code
@@ -66,6 +67,11 @@ ka:
         no_questions: There are no questions on file for this dataset.
         sort_order: Sort Order
         shape_name: Name of Shape
+      report:
+        title: Title
+        file: File
+        released_at: Date Released
+        langauge_id: Language
       time_series:
         title: Title
         description: Description
@@ -134,6 +140,11 @@ ka:
         can_exclude: "If selected, this answer will be available during analysis, but can be turned off if desired by the user."
         sort_order: "The order the answers should appear"
         default_text: "This is the answer text from the default language which is provided to make it easier to complete the translation"
+      report:
+        title: The title of the report
+        file: "The report file in pdf, doc, odt or txt format"
+        released_at: Date the report was released to the public
+        language_id: The language the report is written in
       mappable:
         question: Select the question that you want to have the answers appear on a map during analysis.
         shapeset: Select the shapeset to use for this question.
@@ -294,6 +305,8 @@ ka:
       view_data: View Data
       add_dataset: Add Dataset
       remove_dataset: Remove Dataset
+      add_report: Add Report
+      remove_report: Remove Report
     titles:
       edit: "შეცვლა %{model}"
       save: "შენახვა %{model}"
@@ -474,6 +487,9 @@ ka:
       title: "Mappable Question Form"
       matching_header: "Mapping '%{question}' to '%{shapeset}'"
       matching_explanation: "For each answer to '%{question}', select the matching map shape from '%{shapeset}'."
+    form:
+      reports: Reports
+      header_add_report: Add a report for this dataset
   questions:
     index:
       title: "Edit Questions and their Answers"
