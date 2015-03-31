@@ -2,7 +2,7 @@
 # replace 'xxx_id' with the name of the object parameter name that you want to use as the folder name
 
 Paperclip.interpolates('dataset_id') do |attachment, style|
- attachment.instance.dataset_id
+ attachment.instance.dataset.id
 end
 
 

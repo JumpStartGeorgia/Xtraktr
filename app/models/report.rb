@@ -1,53 +1,61 @@
-class Report < CustomTranslation
+class Report
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::Paperclip
-  include LocalizedFiles
 
   #############################
-  has_mongoid_attached_file :file, url: "/system/datasets/:dataset_id/reports/:id/:filename", use_timestamp: false, localize: true
+
+  belongs_to :language
+
+  #############################
+  has_mongoid_attached_file :file, url: "/system/datasets/:dataset_id/reports/:id/:filename", use_timestamp: false
 
 
-  field :title, type: String, localize: true
+  field :title, type: String
   field :released_at, type: Date
+  # record the extension of the file
+  field :file_extension, type: String
 
-  embedded_in :dataset
+
+  belongs_to :dataset
 
 
   #############################
-  attr_accessible :file, :title, :released_at, :file_translations, :title_translations
+  attr_accessible :file, :title, :released_at, :language_id
 
   #############################
   # Validations
+  validates_presence_of :title, :released_at, :language_id
   validates_attachment :file, 
       :content_type => { :content_type => ["text/plain", "application/pdf", "application/vnd.oasis.opendocument.text", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/msword"] }
   validates_attachment_file_name :file, :matches => [/txt\Z/i, /pdf\Z/i, /odt\Z/i, /doc?x\Z/i]
-  validate :validate_translations
-
-  # validate the translation fields
-  # text field needs to be validated for presence
-  def validate_translations
-#    logger.debug "***** validates question translations"
-    if self.dataset.default_language.present?
-#      logger.debug "***** - default is present; text = #{self.text_translations[self.dataset.default_language]}"
-      if self.text_translations[self.dataset.default_language].blank?
-#        logger.debug "***** -- text not present!"
-        errors.add(:base, I18n.t('errors.messages.translation_default_lang', 
-            field_name: self.class.human_attribute_name('text'),
-            language: Language.get_name(self.dataset.default_language),
-            msg: I18n.t('errors.messages.blank')) )
-      end
-    end
-  end 
 
 
   #############################
-  ## override get methods for fields that are localized
-  def title
-    get_translation(self.title_translations)
+  # Callbacks
+  before_save :get_file_extension
+
+  # if file extension does not exist, get it
+  def get_file_extension
+    logger.debug "%%%%%%%%%%%%%%%% file extension = #{File.extname(self.file.url).gsub('.', '').downcase}"
+    self.file_extension = File.extname(self.file.url).gsub('.', '').downcase if self.file_extension.blank?
   end
-  def file
-    get_translation(self.file_translations)
+
+
+  # indicate the file type based off of the file extension
+  def file_type
+    case self.file_extension
+    when 'pdf'
+      'PDF'
+    when 'doc', 'docx'
+      'DOC'
+    when 'odt'
+      'ODT'
+    when 'txt'
+      'TXT'
+    else
+      ''
+    end
   end
 
 

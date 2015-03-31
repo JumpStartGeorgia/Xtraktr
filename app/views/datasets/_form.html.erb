@@ -1,6 +1,8 @@
 <%- 
   label_key = "mongoid.attributes.dataset."
   hint_key = "mongoid.hints.dataset."
+  r_label_key = "mongoid.attributes.report."
+  r_hint_key = "mongoid.hints.report."
 -%>
 
 <%= semantic_form_for @dataset, html: {:multipart => true, class: 'tabbed-translation-form'} do |f| %>
@@ -200,6 +202,48 @@
     </div>
 
   </div>
+
+  <hr />
+
+  <h3><%= t('.reports') %></h3>
+
+  <table id='dataset-reports' class="table table-striped table-hover table-nonfluid">
+    <thead>
+      <tr>
+        <th>
+          <%= t(r_label_key + 'title') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(r_hint_key + 'title') %>"><div>?</div></div>
+        </th>
+        <th>
+          <%= t(r_label_key + 'released_at') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(r_hint_key + 'released_at') %>"><div>?</div></div>
+        </th>
+        <th>
+          <%= t(r_label_key + 'language_id') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(r_hint_key + 'language_id') %>"><div>?</div></div>
+        </th>
+        <th>
+          <%= t(r_label_key + 'file') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(r_hint_key + 'file') %>"><div>?</div></div>
+        </th>
+        <th>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @dataset.reports.each do |report| %>
+        <%= f.semantic_fields_for :reports, report do |f_report| %>
+          <%= render partial: 'report_fields', :locals => {:f => f_report} %>
+        <% end %>
+      <% end %>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="5">
+          <%= link_to_add_association t('helpers.links.add_report'), f, :reports, 
+              :class => 'btn btn-success',
+              :'data-association-insertion-node' => 'table#dataset-reports tbody',
+              :'data-association-insertion-method' => 'append' %>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
 
 
   <div class="form-group">

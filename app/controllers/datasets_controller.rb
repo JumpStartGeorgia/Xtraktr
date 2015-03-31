@@ -48,7 +48,7 @@ class DatasetsController < ApplicationController
 
     # add the required assets
     @css.push("jquery.ui.datepicker.css")
-    @js.push('jquery.ui.datepicker.js', "datasets.js")
+    @js.push('jquery.ui.datepicker.js', "datasets.js", 'cocoon.js')
 
     add_dataset_nav_options(set_url: false)
 
@@ -70,13 +70,14 @@ class DatasetsController < ApplicationController
       gon.end_gathered_at = @dataset.end_gathered_at.strftime('%m/%d/%Y') if @dataset.end_gathered_at.present?
       gon.released_at = @dataset.released_at.strftime('%m/%d/%Y') if @dataset.released_at.present?
 
-      # add the required assets
-      @css.push("jquery.ui.datepicker.css", "datasets.css")
-      @js.push('jquery.ui.datepicker.js', "datasets.js")
-
       add_dataset_nav_options()
 
       set_tabbed_translation_form_settings
+
+      # add the required assets
+      @css.push("jquery.ui.datepicker.css", "datasets.css")
+      @js.push('jquery.ui.datepicker.js', "datasets.js", 'cocoon.js')
+
     else
       flash[:info] =  t('app.msgs.does_not_exist')
       redirect_to datasets_path(:locale => I18n.locale)
@@ -101,7 +102,7 @@ class DatasetsController < ApplicationController
 
         # add the required assets
         @css.push("jquery.ui.datepicker.css")
-        @js.push('jquery.ui.datepicker.js', "datasets.js")
+        @js.push('jquery.ui.datepicker.js', "datasets.js", 'cocoon.js')
 
         add_dataset_nav_options({show_title: false, set_url: false})
 
@@ -134,7 +135,7 @@ class DatasetsController < ApplicationController
 
           # add the required assets
           @css.push("jquery.ui.datepicker.css")
-          @js.push('jquery.ui.datepicker.js', "datasets.js")
+          @js.push('jquery.ui.datepicker.js', "datasets.js", 'cocoon.js')
 
           add_dataset_nav_options()
 

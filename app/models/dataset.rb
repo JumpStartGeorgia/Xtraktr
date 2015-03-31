@@ -197,8 +197,8 @@ class Dataset < CustomTranslation
   accepts_nested_attributes_for :data_items
 
   # reports written based off of this data
-  embeds_many :reports
-  accepts_nested_attributes_for :reports
+  has_many :reports
+  accepts_nested_attributes_for :reports, :reject_if => :all_blank, :allow_destroy => true
 
 
   # record stats about this dataset
@@ -473,6 +473,21 @@ class Dataset < CustomTranslation
     questions_with_no_text.length
   end
 
+  # indicate the file type based off of the file extension
+  def file_type
+    case self.file_extension
+    when 'csv'
+      'CSV'
+    when 'xls'
+      'XLS'
+    when 'dta'
+      'STATA'
+    when 'sav'
+      'SPSS'
+    else
+      ''
+    end
+  end
 
 
   #############################

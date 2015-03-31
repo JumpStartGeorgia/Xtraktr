@@ -107,7 +107,41 @@
             </div>
 
             <p><strong><%= model_class.human_attribute_name(:datafile) %>:</strong>
-            <%= link_to t('helpers.links.download'), @dataset.datafile.url, class: 'btn btn-default', target: :blank if @dataset.datafile.exists? %></p>
+              <% if @dataset.datafile.exists? %>
+                <%= link_to @dataset.datafile.url, class: 'btn btn-default', target: :blank do %>
+                  <%
+                    text = @dataset.file_type
+                    if text.present?
+                      text << " - "
+                    end
+                    text << number_to_human_size(@dataset.datafile_file_size)
+                  %>
+                  <%= text %>
+                <% end %>
+              <% end %>
+            </p>
+
+            <p><strong><%= model_class.human_attribute_name(:reports) %>:</strong></p>
+            <% if @dataset.reports.present? %>
+              <ul>
+                <% @dataset.reports.each do |report| %>
+                  <li>
+                    <%= report.title %>
+                    <%= link_to report.file.url, class: 'btn btn-default', target: :blank do %>
+                      <%
+                        text = report.file_type
+                        if text.present?
+                          text << " - "
+                        end
+                        text << number_to_human_size(report.file_file_size)
+                      %>
+                      <%= text %>
+                    <% end %>
+                  </li>
+                <% end %>
+              </ul>
+            <% end %>
+
 
             <p><strong><%= model_class.human_attribute_name(:languages) %>:</strong></p>
             <ul class="list-inline">

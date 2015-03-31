@@ -1,0 +1,26 @@
+
+                    <tr class="nested-fields">
+                      <td>
+                        <%= f.input :title, as: :string, :label => false, input_html: {size: 50} %>
+                      </td>
+                      <td>
+                        <%= f.input :released_at, as: :string, :label => false, input_html: {size: 10, class: 'dataset-report-released-at'} %>
+                      </td>
+                      <td>
+                        <%= f.input :language, as: :select, label: false,
+                              :collection => @languages.map{|x| [x.name, x.id]},
+                              :input_html => {class: 'selectpicker-report-language', 
+                                :'data-live-search' => "true", :'data-size' => "3",
+                                :'data-width' => "72%"} %>
+                      </td>
+                      <td> 
+                        <% if f.object.present? && f.object.file.exists? %>
+                          <%= link_to t('helpers.links.view'), f.object.file.url, target: :blank, class: 'btn btn-primary btn-sm view-report' %>
+                        <% end %>
+                        <%= f.input :file, :as => :file, :label => false, input_html: {accept: '.pdf,.doc,.docx,.odt,.txt'} %>
+                      </td>
+                      <td>
+                        <%= link_to_remove_association 'X', f, 
+                            class: "btn btn-danger btn-sm", title: t('helpers.links.remove_report') %>
+                      </td>
+                    </tr>
