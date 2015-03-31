@@ -27,4 +27,10 @@ module DatasetsHelper
   def url_dataset_explore(dataset, options={})
     request.path == explore_data_dashboard_path(dataset) ? explore_data_show_path(dataset, options) : explore_dataset_path(dataset, options)
   end
+
+  # get the correct url to use for dashboard dataset
+  # can either be admin dataset page or root dataset page 
+  def url_dataset_dashboard(dataset, options={})
+    request.path == explore_data_show_path(dataset) ? explore_data_dashboard_path(dataset, options) : dataset_path(dataset, options)
+  end
 end
