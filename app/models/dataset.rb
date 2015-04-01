@@ -199,7 +199,13 @@ class Dataset < CustomTranslation
   accepts_nested_attributes_for :data_items
 
   # reports written based off of this data
-  has_many :reports
+  has_many :reports do 
+
+    def sorted
+      order_by([[:released_at, :desc], [:title, :asc]])
+    end
+
+  end
   accepts_nested_attributes_for :reports, :reject_if => :all_blank, :allow_destroy => true
 
 
@@ -595,7 +601,7 @@ class Dataset < CustomTranslation
     row_question = self.questions.with_code(question_code)
     result[:row_question] = row_question.text
     # if exclude_dkra is true, only get use the answers that cannot be excluded
-    result[:row_answers] = (exclude_dkra == true ? row_question.answers.must_include_for_analysis : row_question.answers.all_for_analysis).sort_by{|x| x.sort_order}
+    result[:row_answers] = exclude_dkra == true ? row_question.answers.must_include_for_analysis : row_question.answers.all_for_analysis
     result[:type] = TYPE[:onevar]
     result[:counts] = []
     result[:percents] = []
@@ -704,12 +710,12 @@ class Dataset < CustomTranslation
     row_question = self.questions.with_code(question_code1)
     result[:row_question] = row_question.text
     # if exclude_dkra is true, only get use the answers that cannot be excluded
-    result[:row_answers] = (exclude_dkra == true ? row_question.answers.must_include_for_analysis : row_question.answers.all_for_analysis).sort_by{|x| x.sort_order}
+    result[:row_answers] = exclude_dkra == true ? row_question.answers.must_include_for_analysis : row_question.answers.all_for_analysis
     result[:column_code] = question_code2
     col_question = self.questions.with_code(question_code2)
     result[:column_question] = col_question.text
     # if exclude_dkra is true, only get use the answers that cannot be excluded
-    result[:column_answers] = (exclude_dkra == true ? col_question.answers.must_include_for_analysis : col_question.answers.all_for_analysis).sort_by{|x| x.sort_order}
+    result[:column_answers] = exclude_dkra == true ? col_question.answers.must_include_for_analysis : col_question.answers.all_for_analysis
     result[:type] = TYPE[:crosstab]
     result[:counts] = []
     result[:percents] = []

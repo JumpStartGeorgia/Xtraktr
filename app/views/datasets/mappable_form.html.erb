@@ -14,7 +14,7 @@
           <%= label_tag :question, class: 'control-label' do %>
             <%= t('.question_label') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(hint_key + 'question') %>"><div>?</div></div>
           <% end %>
-          <%= select_tag :question, options_from_collection_for_select(@not_mappable, "id", "text", params[:question_id]),
+          <%= select_tag :question, options_from_collection_for_select(@not_mappable, "id", "code_with_text", params[:question_id]),
             :class => 'selectpicker-mappable', :'data-width' => '100%', :'data-live-search' => true %>
         </div>
         <div class="col-sm-6">

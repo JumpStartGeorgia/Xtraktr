@@ -121,7 +121,7 @@
                 <div class="col-sm-11">
                   <% if question.answers.all_for_analysis.present? %>
                     <ul>
-                      <% question.answers.all_for_analysis.sorted.each do |answer| %>
+                      <% question.answers.all_for_analysis.each do |answer| %>
                         <li>
                         <%= answer.text %>
                         </li> 
@@ -139,7 +139,7 @@
     <div role="tabpanel" class="tab-pane fade" id="reports">
       <% if @dataset.reports.present? %>
         <ul class="list-unstyled">
-          <% @dataset.reports.each do |report| %>
+          <% @dataset.reports.sorted.each do |report| %>
             <li>
               <h3><%= report.title %></h3>
               <div class="row">
@@ -162,6 +162,13 @@
                   <% end %>
                 </div>
               </div>
+              <% if report.summary.present? %>
+                <div>
+                  <div class="tinymce_format">
+                    <%= simple_format(report.summary, {}, {sanitize: false}) %>
+                  </div>
+                </div>
+              <% end %>
             </li>
           <% end %>
         </ul>

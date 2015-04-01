@@ -72,6 +72,7 @@ ka:
         file: File
         released_at: Date Released
         langauge_id: Language
+        summary: Summary
       time_series:
         title: Title
         description: Description
@@ -145,6 +146,7 @@ ka:
         file: "The report file in pdf, doc, odt or txt format"
         released_at: Date the report was released to the public
         language_id: The language the report is written in
+        summary: A brief summary of the report
       mappable:
         question: Select the question that you want to have the answers appear on a map during analysis.
         shapeset: Select the shapeset to use for this question.

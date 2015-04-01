@@ -169,6 +169,8 @@ class DatasetsController < ApplicationController
 
           set_tabbed_translation_form_settings
 
+          logger.debug "@@@@@@@@@@@@@@@ errors = #{@dataset.errors.full_messages}"
+
           format.html { render action: "edit" }
           format.json { render json: @dataset.errors, status: :unprocessable_entity }
         end

@@ -35,12 +35,14 @@ class Question < CustomTranslation
 
     # get answers that are not excluded
     def all_for_analysis
-      where(:exclude => false).to_a
+      where(:exclude => false)
+        .order_by([[:sort_order, :asc], [:text, :asc]])
     end
 
     # get answers that must be included for analysis
     def must_include_for_analysis
-      where(:can_exclude => false, :exclude => false).to_a
+      where(:can_exclude => false, :exclude => false)
+        .order_by([[:sort_order, :asc], [:text, :asc]])
     end
 
     def sorted
@@ -65,7 +67,7 @@ class Question < CustomTranslation
   #############################
   # Validations
   validates_presence_of :code, :original_code
-  validate :validate_translations
+#  validate :validate_translations # can't run this because question text might not exist
 
   # validate the translation fields
   # text field needs to be validated for presence
@@ -120,5 +122,9 @@ class Question < CustomTranslation
     (self.dataset.data_items.unique_code_data(self.code) - self.answers.unique_values).delete_if{|x| x.nil?}
   end
 
+
+  def code_with_text
+    "#{self.original_code} - #{self.text}"
+  end
 
 end

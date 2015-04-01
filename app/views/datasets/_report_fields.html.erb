@@ -4,6 +4,9 @@
                         <%= f.input :title, as: :string, :label => false, input_html: {size: 50} %>
                       </td>
                       <td>
+                        <%= f.input :summary, as: :text, :label => false, input_html: {rows: 2, cols: 50} %>
+                      </td>
+                      <td>
                         <%= f.input :released_at, as: :string, :label => false, input_html: {size: 10, class: 'dataset-report-released-at'} %>
                       </td>
                       <td>

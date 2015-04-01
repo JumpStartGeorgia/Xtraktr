@@ -12,6 +12,7 @@ class Report
 
 
   field :title, type: String
+  field :summary, type: String
   field :released_at, type: Date
   # record the extension of the file
   field :file_extension, type: String
@@ -21,7 +22,7 @@ class Report
 
 
   #############################
-  attr_accessible :file, :title, :released_at, :language_id
+  attr_accessible :file, :title, :summary, :released_at, :language_id
 
   #############################
   # Validations
@@ -41,6 +42,14 @@ class Report
     self.file_extension = File.extname(self.file.url).gsub('.', '').downcase if self.file_extension.blank?
   end
 
+  #############################
+  # Scopes
+
+  def sorted
+    order_by([[:released_at, :desc], [:title, :asc]])
+  end
+
+  #############################
 
   # indicate the file type based off of the file extension
   def file_type
