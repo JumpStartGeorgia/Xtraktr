@@ -106,7 +106,7 @@ function build_highmap(json, filter){
         },
 
         mapNavigation: {
-            enabled: false,
+            enabled: true,
             buttonOptions: {
                 verticalAlign: 'bottom'
             }

@@ -18,7 +18,7 @@
           <%= link_to t('helpers.links.download'), @shapeset.shapefile.url, :target => :blank, :class => 'btn btn-default' %>
         </p>
       <% end %>
-      <input accept="text/plain, application/json, application/octet-stream" id="shapeset_shapefile" name="shapeset[shapefile]" type="file">
+      <input accept=".json,.geojson" id="shapeset_shapefile" name="shapeset[shapefile]" type="file">
     </div>
 
     <%= f.input :languages, as: :select, :collection => @languages.map{|x| [x.name, x.locale]}, multiple: true, required: true,
