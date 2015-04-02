@@ -29,8 +29,7 @@ class Shapeset < CustomTranslation
   attr_accessible :title, :description, :shapefile, :names, :user_id, :source, :source_url, 
     :languages, :default_language,
     :title_translations, :description_translations, :source_translations, :source_url_translations
-  attr_accessor :reset_dataset_files
-
+  attr_accessor :reset_dataset_files, :orig_source, :orig_source_url
   KEY_NAME = 'name_'
 
   #############################
@@ -78,6 +77,12 @@ class Shapeset < CustomTranslation
             language: Language.get_name(self.default_language),
             msg: I18n.t('errors.messages.blank')) )
       end
+      if self.source_url_translations[self.default_language].blank?
+        errors.add(:base, I18n.t('errors.messages.translation_default_lang', 
+            field_name: self.class.human_attribute_name('source_url'),
+            language: Language.get_name(self.default_language),
+            msg: I18n.t('errors.messages.blank')) )
+      end
     end
   end 
 
@@ -98,9 +103,20 @@ class Shapeset < CustomTranslation
   ## Callbacks
 
   # before_create :process_file
+  after_initialize :set_orig_values
+  after_find :set_orig_values
   before_post_process :process_file
   after_post_process :set_update_datasets
+  after_save :check_source_changes
   after_commit :update_datasets
+
+  # set original source values so can check if source changed
+  def set_orig_values
+    if self.default_language.present?
+      self.orig_source = self.source_translations[default_language] if self.source_translations.present? && self.source_translations[default_language].present?
+      self.orig_source_url = self.source_url_translations[default_language] if self.source_url_translations.present? && self.source_url_translations[default_language].present?
+    end
+  end
 
   # process the shapefile
   def process_file
@@ -109,7 +125,7 @@ class Shapeset < CustomTranslation
     if File.exists? file_to_process
       json = JSON.parse(File.read(file_to_process))
       if json.present?
-        # get the keys for the properties
+        # get the names of the shapes
         keys = json['features'].first['properties'].keys.select{|x| x.match(/name_?/)}
         if keys.present?
           locales = keys.map{|x| x.gsub(KEY_NAME, '')}
@@ -119,12 +135,40 @@ class Shapeset < CustomTranslation
         end
       end
     end
+    return true
   end
+
+  # if the source changed, update the json file values
+  # - the source and source url are shown in the credits of the map if these two json keys are present
+  #   - this happens in the highmaps.js code itself
+  def check_source_changes
+    logger.debug "@@@@@@@@@@@@@ check_source_changes"
+    if self.orig_source != self.source_translations[self.default_language] || self.orig_source_url != self.source_url_translations[self.default_language] && File.exists?(self.shapefile.url)
+      logger.debug "@@@@@@@@@@@@@ changed! updating file!"
+
+      file = "#{Rails.public_path}#{self.shapefile.url}"
+
+      json = JSON.parse(File.read(file))
+      # set the source and source url in the file
+      json['copyrightShort'] = self.source_translations[self.default_language]
+      json['copyrightUrl'] = self.source_url_translations[self.default_language]
+
+      File.open(file, 'w') do |f|
+        f << json.to_json
+      end
+
+      # make sure all datasets using this file is updated too
+      self.reset_dataset_files = true
+    end
+    return true
+  end        
 
   # if the shapeset changed, set flag so dataset json will be updated
   def set_update_datasets
     logger.debug "$$$$$$$ shape file changed, setting flag"
     self.reset_dataset_files = true
+
+    return true
   end
 
   # if the shapeset changed, update the datasets that use this shapeset
@@ -136,6 +180,8 @@ class Shapeset < CustomTranslation
         dataset.update_mappable_flag
       end
     end
+
+    return true
   end
 
   #############################

@@ -126,7 +126,7 @@
                 label << show_default_text(@shapeset.source_url_translations[default_locale], 'url')
               end
             %>
-            <%= translation.input locale, as: :url, hint: hint, required: false, label: label.html_safe %>
+            <%= translation.input locale, as: :url, hint: hint, label: label.html_safe %>
           <% end %>
           <%= f.fields_for :description_translations, OpenStruct.new(f.object.description_translations) do |translation| %>
             <% 
