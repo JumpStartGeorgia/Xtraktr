@@ -68,5 +68,10 @@ module BootstrapStarter
 
     config.assets.precompile += %w( jquery.ui.datepicker.js cocoon.js )    
     config.assets.precompile += %w( jquery.ui.datepicker.css )    
+
+
+    # from: https://robots.thoughtbot.com/content-compression-with-rack-deflater
+    # compress all html/json responses
+    config.middleware.use Rack::Deflater
   end
 end

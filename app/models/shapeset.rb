@@ -29,6 +29,7 @@ class Shapeset < CustomTranslation
   attr_accessible :title, :description, :shapefile, :names, :user_id, :source, :source_url, 
     :languages, :default_language,
     :title_translations, :description_translations, :source_translations, :source_url_translations
+  attr_accessor :reset_dataset_files
 
   KEY_NAME = 'name_'
 
@@ -94,11 +95,16 @@ class Shapeset < CustomTranslation
   end
 
   #############################
+  ## Callbacks
 
-  before_create :process_file
+  # before_create :process_file
+  before_post_process :process_file
+  after_post_process :set_update_datasets
+  after_commit :update_datasets
 
   # process the shapefile
   def process_file
+    logger.debug "$$$$$$$$ new shapefile so getting name of each shape"
     file_to_process = self.shapefile.queued_for_write[:original].path
     if File.exists? file_to_process
       json = JSON.parse(File.read(file_to_process))
@@ -115,7 +121,25 @@ class Shapeset < CustomTranslation
     end
   end
 
+  # if the shapeset changed, set flag so dataset json will be updated
+  def set_update_datasets
+    logger.debug "$$$$$$$ shape file changed, setting flag"
+    self.reset_dataset_files = true
+  end
+
+  # if the shapeset changed, update the datasets that use this shapeset
+  # have to do it after commit to make sure the new shapefile has been written to disk first
+  def update_datasets
+    if self.reset_dataset_files == true
+      logger.debug "$$$$$$$ shape file changed, so need to update datasets"
+      Dataset.with_shapeset(self.id).each do |dataset|
+        dataset.update_mappable_flag
+      end
+    end
+  end
+
   #############################
+  ## Scopes
 
   def self.sorted
     order_by([[:title, :asc]])
@@ -130,7 +154,7 @@ class Shapeset < CustomTranslation
 
   # read in the geojson from the file
   def get_geojson
-    path = "#{Rails.root}/public#{self.shapefile.url}"
+    path = "#{Rails.public_path}/#{self.shapefile.url}"
     geojson = nil
     if File.exists?(path)
       geojson = File.read(path)
@@ -154,4 +178,11 @@ class Shapeset < CustomTranslation
   def source_url
     get_translation(self.source_url_translations)
   end
+
+  #############################
+
+  def title_with_source
+    "#{self.title} (#{self.source})"
+  end
+
 end

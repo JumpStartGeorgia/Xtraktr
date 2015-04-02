@@ -55,7 +55,7 @@ class Admin::ShapesetsController < ApplicationController
 
     respond_to do |format|
       if @shapeset.save
-        format.html { redirect_to admin_shapeset_path(@shapeset), notice: t('app.msgs.success_created', :obj => t('mongoid.models.shapeset')) }
+        format.html { redirect_to admin_shapesets_path, notice: t('app.msgs.success_created', :obj => t('mongoid.models.shapeset')) }
         format.json { render json: @shapeset, status: :created, location: @shapeset }
       else
         set_tabbed_translation_form_settings
@@ -74,7 +74,7 @@ class Admin::ShapesetsController < ApplicationController
 
     respond_to do |format|
       if @shapeset.save
-        format.html { redirect_to admin_shapeset_path(@shapeset), notice: t('app.msgs.success_updated', :obj => t('mongoid.models.shapeset')) }
+        format.html { redirect_to admin_shapesets_path, notice: t('app.msgs.success_updated', :obj => t('mongoid.models.shapeset')) }
         format.json { head :no_content }
       else
         set_tabbed_translation_form_settings

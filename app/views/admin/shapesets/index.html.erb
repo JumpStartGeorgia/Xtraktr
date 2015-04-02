@@ -15,6 +15,7 @@
       <th><%= model_class.human_attribute_name(:source) %></th>
       <th><%= model_class.human_attribute_name(:languages) %></th>
       <th><%= model_class.human_attribute_name(:descritpion) %></th>
+      <th><%= model_class.human_attribute_name(:shapefile) %></th>
       <th><%= model_class.human_attribute_name(:created_at) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
@@ -26,6 +27,11 @@
         <td><%= shapeset.source %></td>
         <td><%= format_languages(shapeset) %></td>
         <td><%= simple_format_no_tags(shapeset.description, {}, {sanitize: false}) %></td>
+        <td>
+          <% if shapeset.shapefile.exists? %>
+            <%= link_to t('helpers.links.download'), shapeset.shapefile.url, :target => :blank, :class => 'btn btn-default' %>
+          <% end %>
+        </td>
         <td><%= l shapeset.created_at, format: :date_only %></td>
         <td>
           <%= link_to t('app.buttons.edit'),

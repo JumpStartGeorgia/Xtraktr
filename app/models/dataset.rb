@@ -82,6 +82,16 @@ class Dataset < CustomTranslation
       where(:has_code_answers => false).to_a
     end
 
+    # get all questions with the shapeset_id
+    def with_shapeset(shapeset_id)
+      where(shapeset_id: shapeset_id)
+    end
+
+    # determine if a question has this shapeset
+    def has_shapeset?(shapeset_id)
+      where(shapeset_id: shapeset_id).count > 0
+    end
+
     def all_answers
       only(:code, :answers)
     end
@@ -235,12 +245,14 @@ class Dataset < CustomTranslation
   index ({ :shapeset_id => 1})
   index ({ :public => 1})
   index ({ :public_at => 1})
+  index ({ :is_mappable => 1})
   index ({ :'questions.code' => 1})
   index ({ :'questions.original_code' => 1})
   index ({ :'questions.text' => 1})
   index ({ :'questions.is_mappable' => 1})
   index ({ :'questions.has_code_answers' => 1})
   index ({ :'questions.exclude' => 1})
+  index ({ :'questions.shapeset_id' => 1})
   index ({ :'questions.answers.can_exclude' => 1})
   index ({ :'questions.answers.sort_order' => 1})
   index ({ :'questions.answers.exclude' => 1})
@@ -364,7 +376,7 @@ class Dataset < CustomTranslation
 
   # make sure all of the data files that were generated for this dataset are deleted
   def delete_dataset_files
-    path = "#{Rails.root}/public#{FOLDER_PATH}/#{self.id}"
+    path = "#{Rails.public_path}/#{FOLDER_PATH}/#{self.id}"
     FileUtils.rm_r(path) if File.exists?(path)
   end
 
@@ -422,10 +434,23 @@ class Dataset < CustomTranslation
       File.open(js_shapefile_file_path, 'w') do |f|
         f << "var highmap_shapes = " + shapes.to_json
       end
+
+      # now compress the file so browsers will use it
+      # from: http://stackoverflow.com/a/24497338
+      Zlib::GzipWriter.open(js_gz_shapefile_file_path) do |gz|
+        File.open(js_shapefile_file_path, 'rb') do |f|
+         while chunk = f.read(16*1024) do 
+           gz.write chunk
+         end
+        end
+        gz.close
+      end
+
     else
       # delete js file
       logger.debug "==== deleting shape js file at #{js_shapefile_file_path}"
       FileUtils.rm js_shapefile_file_path if File.exists?(js_shapefile_file_path)
+      FileUtils.rm js_gz_shapefile_file_path + ".gz" if File.exists?(js_gz_shapefile_file_path)
     end
 
     return true
@@ -474,11 +499,28 @@ class Dataset < CustomTranslation
     only(:id, :title, :languages)
   end
 
+  def self.with_shapeset(shapeset_id)
+    ds = []
+    x = where(is_mappable: true)
+    if x.present?
+      x.each do |dataset|
+        if dataset.questions.has_shapeset?(shapeset_id)
+          ds << dataset
+        end
+      end
+    end
+    return ds
+  end
+
   #############################
 
   # get the js shape file path
   def js_shapefile_file_path
-    "#{Rails.root}/public#{FOLDER_PATH}/#{self.id}/#{JS_FILE}"
+    "#{Rails.public_path}/#{FOLDER_PATH}/#{self.id}/#{JS_FILE}"
+  end
+
+  def js_gz_shapefile_file_path
+    "#{Rails.public_path}/#{FOLDER_PATH}/#{self.id}/#{JS_FILE}.gz"
   end
 
   def js_shapefile_url_path

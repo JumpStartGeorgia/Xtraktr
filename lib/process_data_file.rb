@@ -15,7 +15,7 @@ module ProcessDataFile
 
   #######################
   ## global variables
-  @@path = "#{Rails.root}/public/system/datasets/[dataset_id]/processed/"
+  @@path = "#{Rails.public_path}/system/datasets/[dataset_id]/processed/"
   @@file_data = 'data.csv'
   @@file_questions = 'questions.csv'
   @@file_answers_complete = 'answers_complete.csv'
@@ -48,7 +48,7 @@ module ProcessDataFile
     path = @@path.sub('[dataset_id]', self.id.to_s)
     # check if file has been saved yet
     # if file has not be saved to proper place yet, have to get queued file path
-    file_to_process = "#{Rails.root}/public#{self.datafile.url}"
+    file_to_process = "#{Rails.public_path}/#{self.datafile.url}"
     if !File.exists?(file_to_process) && self.datafile.queued_for_write[:original].present?
       file_to_process = self.datafile.queued_for_write[:original].path
     end
