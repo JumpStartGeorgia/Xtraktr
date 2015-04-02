@@ -4,7 +4,26 @@
     <title><%= content_for?(:title) ? "#{yield(:title)} | #{t('app.common.app_name')}" :
                 t('app.common.app_name') %></title>
     <%= csrf_meta_tags %>
-      <%= include_gon %>
+    <%= include_gon %>
+
+    <meta property="og:title" content="<%= content_for?(:title) ? 
+        ("#{yield(:title)} | #{t('app.common.app_name')}").html_safe :
+        t('app.common.app_name').html_safe %>" />
+    <%
+      desc = I18n.t('app.common.app_description')
+      if @dataset.present? && @dataset.description.present?
+        desc = strip_tags_nbsp(@dataset.description)
+      elsif @time_series.present? && @time_series.class == 'TimeSeries' && @time_series.description.present?
+        desc = strip_tags_nbsp(@time_series.description)
+      end
+    %>
+    
+    <meta name="description" content="<%= desc %>">
+    <meta property="og:description" content="<%= desc %>" />
+    <meta property="og:type" content="non_profit" />
+    <meta property="og:url" content="<%= current_url %>" />
+    <!-- meta property="og:image" content="<%= full_url('/assets/fb-img.jpg') %>" / -->
+    <meta property="og:site_name" content="<%= t('app.common.app_name') %>" />
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>

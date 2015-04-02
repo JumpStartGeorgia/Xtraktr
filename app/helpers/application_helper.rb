@@ -54,6 +54,13 @@ module ApplicationHelper
     object.language_objects.map{|x| x.name}.join('<br /> ').html_safe
   end
 
+  # apply the strip_tags helper and also convert nbsp to a ' '
+  def strip_tags_nbsp(text)
+    if text.present?
+      strip_tags(text.gsub('&nbsp;', ' '))
+    end
+  end
+
 
 
 end
