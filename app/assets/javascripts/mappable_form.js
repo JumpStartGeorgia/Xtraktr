@@ -24,11 +24,11 @@ function update_mappable_matching_list(){
   html += '<ul class="list-unstyled">';
   for(var i=0; i<question.answers.length;i++){
     html += '<li class="row">';
-    html +=  '<div class="col-sm-6">';
+    html +=  '<div class="col-sm-6 match-dataset">';
     html +=    question.answers[i].text;
     html +=    '<input type="hidden" name="map[answer][]" value="' + question.answers[i].id + '"/>';
     html +=  '</div>';
-    html +=  '<div class="col-sm-6">';
+    html +=  '<div class="col-sm-6 match-shapeset">';
     html +=    '<select name="map[shapeset][]" class="selectpicker-matching" data-width="100%" data-live-search="true" title="">';
     html +=      '<option value=""></option>';
     for(var j=0; j<shapeset.names.length;j++){
@@ -49,6 +49,24 @@ function update_mappable_matching_list(){
 
   // turn the selectpicker on for the shape names
   $('select.selectpicker-matching').selectpicker();    
+
+  // when page loads show which shapesets are not selected
+  $('select.selectpicker-matching').each(function(){
+    if ($(this).val() == ''){
+      highlight_unselected_match(this);
+    }
+  });
+}
+
+function highlight_unselected_match(ths_select){
+  console.log('select val = ' + $(ths_select).val());
+  if ($(ths_select).val() == ''){
+    console.log(' - adding class');
+    $(ths_select).closest('.match-shapeset').addClass('no-match');
+  }else{
+    console.log(' - removing class');
+    $(ths_select).closest('.match-shapeset').removeClass('no-match');
+  }
 }
 
 $(document).ready(function() {
@@ -67,5 +85,19 @@ $(document).ready(function() {
   }else if (gon.mappable_form_edit){
     // turn the selectpicker on for the shape names
     $('select.selectpicker-matching').selectpicker();    
+
+    // when page loads show which shapesets are not selected
+    $('select.selectpicker-matching').each(function(){
+      if ($(this).val() == ''){
+        highlight_unselected_match(this);
+      }
+    });
+
   }
+
+  // if shapeset is not selected for match, highlight it so easy to find
+  $('form#frm-mappable-question').on('change', 'select.selectpicker-matching', function(){
+    highlight_unselected_match(this);
+  });
+
 });

@@ -20,7 +20,7 @@
         <% @mappable.each do |question| %>
           <tr>
             <td><%= question.text %></td>
-            <td><%= question.shapeset.title %></td>
+            <td><%= question.shapeset.title_with_source %></td>
             <td>
               <%= link_to t('app.buttons.edit'),
                           mappable_form_edit_dataset_path(:id => @dataset, :question_id => question.id), :class => 'btn btn-xs btn-default' %>

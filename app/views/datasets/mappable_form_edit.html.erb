@@ -19,11 +19,11 @@
         <% @question.answers.each do |answer| %>
 
           <li class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-6 match-dataset">
               <%= answer.text %>
               <input type="hidden" name="map[answer][]" value="<%= answer.id %>"/>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-6 match-shapeset">
               <select name="map[shapeset][]" class="selectpicker-matching" data-width="100%" data-live-search="true" title="">
                 <option value=""></option>
                 <% @shapeset.names.sort.each do |shape_name| %>
