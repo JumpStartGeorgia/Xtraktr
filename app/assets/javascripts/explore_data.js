@@ -108,7 +108,7 @@ function build_highmap(json, filter){
         mapNavigation: {
             enabled: true,
             buttonOptions: {
-                verticalAlign: 'bottom'
+                verticalAlign: 'top'
             }
         },
         colorAxis: {
