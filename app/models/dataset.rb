@@ -512,6 +512,7 @@ class Dataset < CustomTranslation
     return ds
   end
 
+
   #############################
 
   # get the js shape file path
@@ -620,7 +621,10 @@ class Dataset < CustomTranslation
   end
 
   #############################
-
+  #############################
+  ## Data analysis
+  #############################
+  #############################
 
   ### perform a summary analysis of one question_code in 
   ### the data_items
@@ -1266,7 +1270,9 @@ class Dataset < CustomTranslation
 
 
   ##################################
+  ##################################
   ## CSV upload and download
+  ##################################
   ##################################
 
   # create csv to download questions
@@ -1576,6 +1582,5 @@ class Dataset < CustomTranslation
 
     return msg, counts
   end
-
 
 end

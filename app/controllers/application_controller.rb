@@ -168,6 +168,11 @@ logger.debug "////////////////////////// BROWSER = #{user_agent}"
     gon.tinymce_options = Hash[TinyMCE::Rails.configuration['default'].options.map{|(k,v)| [k.to_s,v.class == Array ? v.join(',') : v]}]
   end
 
+  # tell active-model-serializers gem to not include root name in json output
+  def default_serializer_options
+    { root: false }
+  end
+
   #######################
   ## get data for explore view
   #######################
