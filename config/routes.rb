@@ -59,6 +59,7 @@ BootstrapStarter::Application.routes.draw do
       match '/v1/dataset_catalog', to: 'v1#dataset_catalog', as: :v1_dataset_catalog, via: :get, :defaults => { :format => 'json' }
       match '/v1/dataset/:dataset_id', to: 'v1#dataset', as: :v1_dataset, via: :get, :defaults => { :format => 'json' }
       match '/v1/dataset_codebook/:dataset_id', to: 'v1#dataset_codebook', as: :v1_dataset_codebook, via: :get, :defaults => { :format => 'json' }
+      match '/v1/dataset_analysis/:dataset_id', to: 'v1#dataset_analysis', as: :v1_dataset_analysis, via: :get, :defaults => { :format => 'json' }
       match '/v1/time_series_catalog', to: 'v1#time_series_catalog', as: :v1_time_series_catalog, via: :get, :defaults => { :format => 'json' }
       match '/v1/time_series/:time_series_id', to: 'v1#time_series', as: :v1_time_series, via: :get, :defaults => { :format => 'json' }
       match '/v1/time_series_codebook/:time_series_id', to: 'v1#time_series_codebook', as: :v1_time_series_codebook, via: :get, :defaults => { :format => 'json' }

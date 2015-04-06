@@ -45,6 +45,19 @@ class Api::V1Controller < ApplicationController
     end
   end
 
+  # analyse the dataset for the passed in parameters
+  # parameters:
+  #  - question_code - code of question to analyze (required)
+  #  - broken_down_by_code - code of question to compare against the first question (optional)
+  #  - filt_by_code - code of question to filter the anaylsis by (optioanl)
+  #  - can_exclude - boolean indicating if the can_exclude answers should by excluded (optional, default false)
+  def dataset_analysis
+    respond_to do |format|
+      format.json { 
+        render json: ApiV1.dataset_analysis(params[:dataset_id], params[:question_code], params)
+      }
+    end
+  end
 
   ########################################
   ## TIME SERIES

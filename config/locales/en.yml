@@ -194,6 +194,12 @@ en:
   tabbed_translation_form:
     default_text: Default Text
     default_url: Default URL
+  api:
+    msgs:
+      no_dataset: "The Dataset could not be found."
+      no_question: "The Question cound not be found."
+      no_broken_down_by: "The Broken Down By Question could not be found."
+      no_filtered_by: "The Filter By Question could not be found."
   explore_time_series:
     na: N/A
     percent: Percent (%)
