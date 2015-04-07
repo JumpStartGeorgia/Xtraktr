@@ -1,5 +1,5 @@
 class ApiV1
-  ANALYSIS_TYPE = {:simple => 'simple', :comparative => 'comparative'}
+  ANALYSIS_TYPE = {:single => 'single', :comparative => 'comparative'}
 
   ########################################
   ## DATASETS
@@ -12,7 +12,13 @@ class ApiV1
 
   # get details about a dataset
   def self.dataset(dataset_id)
-    Dataset.is_public.find_by(id: dataset_id)
+    dataset = Dataset.is_public.find_by(id: dataset_id)
+
+    if dataset.nil?
+      return {errors: [{status: '404', detail: I18n.t('api.msgs.no_dataset') }]}
+    end
+
+    return dataset
   end
 
   # get codebook for a dataset
@@ -20,9 +26,11 @@ class ApiV1
     questions = nil
     dataset = Dataset.is_public.find_by(id: dataset_id)
 
-    if dataset.present?
-      questions = dataset.questions.for_analysis
+    if dataset.nil?
+      return {errors: [{status: '404', detail: I18n.t('api.msgs.no_dataset') }]}
     end
+
+    questions = dataset.questions.for_analysis
 
     return questions
   end
@@ -43,8 +51,8 @@ class ApiV1
   #   question: {code, original_code, text, answers: [{value, text, can_exclude}]},
   #   broken_down_by: {code, original_code, text, answers: [{value, text, can_exclude}]} (optional),
   #   filtered_by: {code, original_code, text, answers: [{value, text, can_exclude}]} (optional),
-  #   analysis_type: simple/comparative (simple means results will be hash while comparative means results will be array)
-  #   results: {total_responses, analysis: [{answer_value, count, percent}, ...]}
+  #   analysis_type: single/comparative (single means results will be hash while comparative means results will be array)
+  #   results: {total_responses, analysis: [{answer_value, answer_text, count, percent}, ...]}
   #   chart: {data: [{name, y(percent), count, answer_value}, ...] } (optional)
   #   map: {question_code, data: [{shape_name, display_name, value, count}, ...] } (optional)
   #   errors: [{status, detail}]
@@ -104,7 +112,7 @@ class ApiV1
 
     ########################
     # do the analysis
-    # if there is no broken down by then do simple analysis, else do comparative analysis
+    # if there is no broken down by then do single analysis, else do comparative analysis
     # use the data[] for the parameter values to get answers that should be included in analysis
     if broken_down_by.present?
       data[:analysis_type] = ANALYSIS_TYPE[:comparative]
@@ -112,10 +120,10 @@ class ApiV1
       data[:chart] = dataset_comparative_chart(data) if chart_formatted_data
       data[:map] = dataset_comparative_map(question.answers, broken_down_by.answers, data, question.is_mappable?) if map_formatted_data && (question.is_mappable? || broken_down_by.is_mappable?)
     else
-      data[:analysis_type] = ANALYSIS_TYPE[:simple]
-      data[:results] = dataset_simple_analysis(dataset, data[:question], data[:filtered_by])
-      data[:chart] = dataset_simple_chart(data) if chart_formatted_data
-      data[:map] = dataset_simple_map(question.answers, data) if map_formatted_data && question.is_mappable?
+      data[:analysis_type] = ANALYSIS_TYPE[:single]
+      data[:results] = dataset_single_analysis(dataset, data[:question], data[:filtered_by])
+      data[:chart] = dataset_single_chart(data) if chart_formatted_data
+      data[:map] = dataset_single_map(question.answers, data) if map_formatted_data && question.is_mappable?
     end
 
     return data
@@ -132,7 +140,13 @@ class ApiV1
 
   # get details about a time_series
   def self.time_series(time_series_id)
-    TimeSeries.is_public.find_by(id: time_series_id)
+    time_series = TimeSeries.is_public.find_by(id: time_series_id)
+
+    if time_series.nil?
+      return {errors: [{status: '404', detail: I18n.t('api.msgs.no_time_series') }]}
+    end
+
+    return time_series
   end
 
   # get codebook for a time_series
@@ -140,9 +154,11 @@ class ApiV1
     questions = nil
     time_series = TimeSeries.is_public.find_by(id: time_series_id)
 
-    if time_series.present?
-      questions = time_series.questions.sorted
+    if time_series.nil?
+      return {errors: [{status: '404', detail: I18n.t('api.msgs.no_time_series') }]}
     end
+
+    questions = time_series.questions.sorted
 
     return questions
   end
@@ -150,6 +166,8 @@ class ApiV1
 
 
 
+  ########################################
+  ########################################
   ########################################
   ########################################
 private
@@ -166,8 +184,8 @@ private
 
 
 
-  # for the given dataset and question, do a simple analysis
-  def self.dataset_simple_analysis(dataset, question, filtered_by=nil)
+  # for the given dataset and question, do a single analysis
+  def self.dataset_single_analysis(dataset, question, filtered_by=nil)
     # get the data for this code
     data = dataset.data_items.code_data(question[:code])
 
@@ -181,23 +199,23 @@ private
         merged_data = filter_data.zip(data)
         filter_results = []
         filtered_by[:answers].each do |filter_answer|
-          filter_item = {filter_answer_value: filter_answer[:value], filter_results: nil}
-          filter_item[:filter_results] = dataset_simple_analysis_processing(question, merged_data.select{|x| x[0].to_s == filter_answer[:value].to_s}.map{|x| x[1]})
+          filter_item = {filter_answer_value: filter_answer[:value], filter_answer_text: filter_answer[:text], filter_results: nil}
+          filter_item[:filter_results] = dataset_single_analysis_processing(question, merged_data.select{|x| x[0].to_s == filter_answer[:value].to_s}.map{|x| x[1]})
           filter_results << filter_item
         end
 
         return filter_results
       end
     else
-      return dataset_simple_analysis_processing(question, data)
+      return dataset_single_analysis_processing(question, data)
     end
 
   end
 
 
 
-  # for the given question and it's data, do a simple analysis and convert into counts and percents
-  def self.dataset_simple_analysis_processing(question, data)
+  # for the given question and it's data, do a single analysis and convert into counts and percents
+  def self.dataset_single_analysis_processing(question, data)
     results = {total_responses: 0, analysis: []}
 
     if data.present?
@@ -213,7 +231,7 @@ private
         # for each question answer, add the count and percent
         question[:answers].each do |answer|
           value = answer[:value]
-          item = {answer_value: answer[:value], count: 0, percent: 0}
+          item = {answer_value: answer[:value], answer_text: answer[:text], count: 0, percent: 0}
           if counts_per_answer[value].present?
             item[:count] = counts_per_answer[value]
             item[:percent] = (counts_per_answer[value].to_f/results[:total_responses]*100).round(2) if results[:total_responses] > 0
@@ -227,47 +245,109 @@ private
 
 
   # convert the results into pie chart format
-  # return format: {:data => [ {name, y(percent), count, answer_value}, ...] }
-  def self.dataset_simple_chart(data)
+  # return format: 
+  # - no filter: {:data => [ {name, y(percent), count, answer_value}, ...] }
+  # - with filter: [ {filter_answer_value, filter_answer_text, filter_results => [ {:data => [ {name, y(percent), count, answer_value}, ...] } ] } ]
+  def self.dataset_single_chart(data)
     if data.present?
-      chart = {}
-      chart[:data] = []
-      data[:question][:answers].each do |answer|
-        data_result = data[:results][:analysis].select{|x| x[:answer_value] == answer[:value]}.first
-        if data_result.present?
-          chart[:data] << {
-            name: answer[:text], 
-            y: data_result[:percent], 
-            count: data_result[:count], 
-            answer_value: answer[:value]
-          }
+      chart = nil
+      if data[:filtered_by].present?
+        chart = []
+        data[:results].each do |filter|
+          chart_item = {filter_answer_value: filter[:filter_answer_value], filter_answer_text: filter[:filter_answer_text], filter_results: {data: []}}
+          data[:question][:answers].each do |answer|
+            data_result = filter[:filter_results][:analysis].select{|x| x[:answer_value] == answer[:value]}.first
+            if data_result.present?
+              chart_item[:filter_results][:data] << dataset_single_chart_processing(answer, data_result)
+            end
+          end
+          if chart_item[:filter_results][:data].present?
+            chart << chart_item
+          end
+        end
+      else
+        chart = {}
+        chart[:data] = []
+        data[:question][:answers].each do |answer|
+          data_result = data[:results][:analysis].select{|x| x[:answer_value] == answer[:value]}.first
+          if data_result.present?
+            chart[:data] << dataset_single_chart_processing(answer, data_result)
+          end
         end
       end
+      
       return chart
     end
   end
 
-  # convert the results into map format
-  # return in highmaps format: [ {shape_name, display_name, value, count}, ... ] }
-  def self.dataset_simple_map(answers, data)
+
+  # format: {name, y(percent), count, answer_value}
+  def self.dataset_single_chart_processing(answer, data_result)
+    {
+      name: answer[:text], 
+      y: data_result[:percent], 
+      count: data_result[:count], 
+      answer_value: answer[:value]
+    }
+  end
+
+  # convert the results into highmaps map format
+  # return format: 
+  # - no filter: {data => [ {shape_name, display_name, value, count}, ... ] }
+  # - with filter: [ {filter_answer_value, filter_answer_text, filter_results => [ {data => [ {shape_name, display_name, value, count}, ... ] } ] } ]
+  def self.dataset_single_map(answers, data)
     if answers.present? && data.present?
-      map = {}
+      map = nil
 
-      # need question code so know which shape data to use
-      map[:question_code] = data[:question][:code]
+      if data[:filtered_by].present?
+        map = []
+        data[:results].each do |filter|
+          map_item = {filter_answer_value: filter[:filter_answer_value], filter_answer_text: filter[:filter_answer_text], 
+                    filter_results: {question_code: data[:question][:code], data: []}}
 
-      # load the data
-      map[:data] = []
-      answers.each_with_index do |answer|
-        data_result = data[:results][:analysis].select{|x| x[:answer_value] == answer.value}.first
-        map[:data] << {:shape_name => answer.shape_name, :display_name => answer.text, :value => data_result[:percent], :count => data_result[:count]}
+          answers.each_with_index do |answer|
+            data_result = filter[:filter_results][:analysis].select{|x| x[:answer_value] == answer.value}.first
+            if data_result.present?
+              map_item[:filter_results][:data] << dataset_single_map_processing(answer, data_result)
+            end
+          end
+
+          if map_item[:filter_results][:data].present?
+            map << map_item
+          end
+        end
+
+      else
+        map = {}
+
+        # need question code so know which shape data to use
+        map[:question_code] = data[:question][:code]
+
+        # load the data
+        map[:data] = []
+        answers.each_with_index do |answer|
+          data_result = data[:results][:analysis].select{|x| x[:answer_value] == answer.value}.first
+          if data_result.present?
+            map[:data] << dataset_single_map_processing(answer, data_result)
+          end
+        end
       end
 
       return map
     end
   end
 
+  # format: {shape_name, display_name, value, count}
+  def self.dataset_single_map_processing(answer, data_result)
+    {
+      :shape_name => answer.shape_name, 
+      :display_name => answer.text, 
+      :value => data_result[:percent], 
+      :count => data_result[:count]
+    }
+  end
 
+  #######################################3
 
   # for the given dataset, question and broken down by question, do a comparative analysis
   def self.dataset_comparative_analysis(dataset, question, broken_down_by, filtered_by=nil)
@@ -289,7 +369,7 @@ private
         merged_data = filter_data.zip(data)
         filter_results = []
         filtered_by[:answers].each do |filter_answer|
-          filter_item = {filter_answer_value: filter_answer[:value], filter_results: nil}
+          filter_item = {filter_answer_value: filter_answer[:value], filter_answer_text: filter_answer[:text], filter_results: nil}
           filter_item[:filter_results] = dataset_comparative_analysis_processing(question, broken_down_by, merged_data.select{|x| x[0].to_s == filter_answer[:value].to_s}.map{|x| x[1]})
           filter_results << filter_item
         end
@@ -309,8 +389,8 @@ private
   def self.dataset_comparative_analysis_processing(question, broken_down_by, data)
     results = {total_responses: 0, analysis: []}
     analysis = results[:analysis]
-    question_answer_template = {answer_value: nil, broken_down_results: nil}
-    broken_down_answer_template = {broken_down_answer_value: nil, count: 0, percent: 0}
+    question_answer_template = {answer_value: nil, answer_text: nil, broken_down_results: nil}
+    broken_down_answer_template = {broken_down_answer_value: nil, broken_down_answer_text: nil, count: 0, percent: 0}
 
     if data.present?
       # get the counts for each question answer by each broken down answer
@@ -335,11 +415,13 @@ private
           question_answer_count = 0
           item = question_answer_template.clone
           item[:answer_value] = answer[:value]
+          item[:answer_text] = answer[:text]
           item[:broken_down_results] = []
 
           broken_down_by[:answers].each do |bdb_answer|
             bdb_item = broken_down_answer_template.clone
             bdb_item[:broken_down_answer_value] = bdb_answer[:value]
+            bdb_item[:broken_down_answer_text] = bdb_answer[:text]
 
             if answer_counts.present? && answer_counts[bdb_answer[:value].to_s].present?
               bdb_item[:count] = answer_counts[bdb_answer[:value].to_s]
@@ -372,82 +454,188 @@ private
   end
 
 
-  # convert the results into pie chart format
-  # return format: {:data => [ {name, y(percent), count, answer_value}, ...] }
+  # convert the results into stacked bar chart format
+  # return format: 
+  # - no filter: {:data => [ {name, y(percent), count, answer_value}, ...] }
+  # - with filter: [ {filter_answer_value, filter_results => [ {:data => [ {name, y(percent), count, answer_value}, ...] } ] } ]
   def self.dataset_comparative_chart(data)
     if data.present?
-      chart = {}
+      chart = nil
+      if data[:filtered_by].present?
+        chart = []
+        data[:results].each do |filter|
+          chart_item = {filter_answer_value: filter[:filter_answer_value], filter_answer_text: filter[:filter_answer_text], filter_results: {labels: [], data: []}}
+          chart_item[:filter_results][:labels] = data[:question][:answers].map{|x| x[:text]}
 
-      chart[:labels] = data[:question][:answers].map{|x| x[:text]}
-      chart[:data] = []
-      # have to transpose the counts for highcharts
-      counts = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:count]}}.transpose
+          # have to transpose the counts for highcharts
+          counts = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:count]}}.transpose
 
-      data[:broken_down_by][:answers].each_with_index do |answer, i|
-        chart[:data] << {name: answer[:text], data: counts[i]}
+          data[:broken_down_by][:answers].each_with_index do |answer, i|
+            chart_item[:filter_results][:data] << {name: answer[:text], data: counts[i]}
+          end
+
+          if chart_item[:filter_results][:data].present?
+            chart << chart_item
+          end
+        end
+      else
+        chart = {}
+
+        chart[:labels] = data[:question][:answers].map{|x| x[:text]}
+        chart[:data] = []
+        # have to transpose the counts for highcharts
+        counts = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:count]}}.transpose
+
+        data[:broken_down_by][:answers].each_with_index do |answer, i|
+          chart[:data] << {name: answer[:text], data: counts[i]}
+        end
       end
+      
       return chart
     end
   end
 
 
-  # convert the results into map format
-  # return in highmaps format: [ {shape_name, display_name, value, count}, ... ] }
+  # return format: {:data => [ {name, y(percent), count, answer_value}, ...] }
+  def self.dataset_comparative_chart_processing(answer, data_result)
+    {
+      name: answer[:text], 
+      y: data_result[:percent], 
+      count: data_result[:count], 
+      answer_value: answer[:value]
+    }
+  end
+
+
+
+  # convert the results into highmaps map format
+  # return format: 
+  # - no filter: {data => [ {shape_name, display_name, value, count}, ... ] }
+  # - with filter: [ {filter_answer_value, filter_answer_text, filter_results => [ {data => [ {shape_name, display_name, value, count}, ... ] } ] } ]
   def self.dataset_comparative_map(question_answers, broken_down_by_answers, data, question_mappable=true)
     if question_answers.present? && broken_down_by_answers.present? && data.present?
-      map = {}
-      map[:question_code] = nil
-      map[:data] = []
+      map = nil
 
-      if question_mappable
-        # need question code so know which shape data to use
-        map[:question_code] = data[:question][:code]
+      if data[:filtered_by].present?
+        map = []
+        data[:results].each do |filter|
+          map_item = {filter_answer_value: filter[:filter_answer_value], filter_answer_text: filter[:filter_answer_text], 
+                    filter_results: {question_code: nil, data: []}}
 
-        # have to transpose the counts for highcharts (and re-calculate percents)
-        counts = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:count]}}.transpose
-        percents = []
-        counts.each do |count_row|
-          total = count_row.inject(:+)
-          if total > 0
-            percent_row = []
-            count_row.each do |item|
-              percent_row << (item.to_f/total*100).round(2)
+
+          if question_mappable
+            # need question code so know which shape data to use
+            map_item[:filter_results][:question_code] = data[:question][:code]
+
+            # have to transpose the counts for highcharts (and re-calculate percents)
+            counts = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:count]}}.transpose
+            percents = []
+            counts.each do |count_row|
+              total = count_row.inject(:+)
+              if total > 0
+                percent_row = []
+                count_row.each do |item|
+                  percent_row << (item.to_f/total*100).round(2)
+                end
+                percents << percent_row
+              else
+                percents << Array.new(count_row.length){0}
+              end
             end
-            percents << percent_row
+
+            broken_down_by_answers.each_with_index do |bdb_answer, bdb_index|
+              item = {broken_down_answer_value: bdb_answer.value, broken_down_answer_text: bdb_answer.text, data: []}
+              
+              question_answers.each_with_index do |q_answer, q_index|
+                item[:data] << dataset_comparative_map_processing(q_answer, percents[bdb_index][q_index], counts[bdb_index][q_index])
+              end
+              map_item[:filter_results][:data] << item
+            end        
           else
-            percents << Array.new(count_row.length){0}
+            # need question code so know which shape data to use
+            map_item[:filter_results][:question_code] = data[:broken_down_by][:code]
+
+            counts = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:count]}}
+            percents = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:percent]}}
+
+            question_answers.each_with_index do |q_answer, q_index|
+              item = {broken_down_answer_value: q_answer.value, broken_down_answer_text: q_answer.text, data: []}
+              
+              broken_down_by_answers.each_with_index do |bdb_answer, bdb_index|
+                item[:data] << dataset_comparative_map_processing(bdb_answer, percents[q_index][bdb_index], counts[q_index][bdb_index])
+              end
+              map_item[:filter_results][:data] << item
+            end        
+          end
+
+          if map_item[:filter_results][:data].present?
+            map << map_item
           end
         end
 
-        broken_down_by_answers.each_with_index do |bdb_answer, bdb_index|
-          item = {broken_down_answer_value: bdb_answer.value, data: []}
-          
-          question_answers.each_with_index do |q_answer, q_index|
-            item[:data] << {:shape_name => q_answer.shape_name, :display_name => q_answer.text, 
-                            :value => percents[bdb_index][q_index], :count => counts[bdb_index][q_index]}
-          end
-          map[:data] << item
-        end        
       else
-        # need question code so know which shape data to use
-        map[:question_code] = data[:broken_down_by][:code]
+        map = {}
+        map[:question_code] = nil
+        map[:data] = []
 
-        counts = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:count]}}
-        percents = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:percent]}}
+        if question_mappable
+          # need question code so know which shape data to use
+          map[:question_code] = data[:question][:code]
 
-        question_answers.each_with_index do |q_answer, q_index|
-          item = {broken_down_answer_value: q_answer.value, data: []}
-          
-          broken_down_by_answers.each_with_index do |bdb_answer, bdb_index|
-            item[:data] << {:shape_name => bdb_answer.shape_name, :display_name => bdb_answer.text, 
-                            :value => percents[q_index][bdb_index], :count => counts[q_index][bdb_index]}
+          # have to transpose the counts for highcharts (and re-calculate percents)
+          counts = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:count]}}.transpose
+          percents = []
+          counts.each do |count_row|
+            total = count_row.inject(:+)
+            if total > 0
+              percent_row = []
+              count_row.each do |item|
+                percent_row << (item.to_f/total*100).round(2)
+              end
+              percents << percent_row
+            else
+              percents << Array.new(count_row.length){0}
+            end
           end
-          map[:data] << item
-        end        
+
+          broken_down_by_answers.each_with_index do |bdb_answer, bdb_index|
+            item = {broken_down_answer_value: bdb_answer.value, broken_down_answer_text: bdb_answer.text, data: []}
+            
+            question_answers.each_with_index do |q_answer, q_index|
+              item[:data] << dataset_comparative_map_processing(q_answer, percents[bdb_index][q_index], counts[bdb_index][q_index])
+            end
+            map[:data] << item
+          end        
+        else
+          # need question code so know which shape data to use
+          map[:question_code] = data[:broken_down_by][:code]
+
+          counts = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:count]}}
+          percents = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:percent]}}
+
+          question_answers.each_with_index do |q_answer, q_index|
+            item = {broken_down_answer_value: q_answer.value, broken_down_answer_text: q_answer.text, data: []}
+            
+            broken_down_by_answers.each_with_index do |bdb_answer, bdb_index|
+              item[:data] << dataset_comparative_map_processing(bdb_answer, percents[q_index][bdb_index], counts[q_index][bdb_index])
+            end
+            map[:data] << item
+          end        
+        end
       end
 
       return map
     end
+  end
+
+  # format: {shape_name, display_name, value, count}
+  def self.dataset_comparative_map_processing(answer, percent, count)
+    {
+      :shape_name => answer.shape_name, 
+      :display_name => answer.text, 
+      :value => percent, 
+      :count => count
+    }
   end
 
 

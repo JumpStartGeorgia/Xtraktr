@@ -22,7 +22,7 @@ class Api::V1Controller < ApplicationController
   def dataset_catalog
     respond_to do |format|
       format.json { 
-        render json: ApiV1.dataset_catalog, each_serializer: DatasetCatalogSerializer
+        render json: ApiV1.dataset_catalog, each_serializer: DatasetCatalogSerializer, root: 'datasets'
       }
     end
   end
@@ -40,7 +40,7 @@ class Api::V1Controller < ApplicationController
   def dataset_codebook
     respond_to do |format|
       format.json { 
-        render json: ApiV1.dataset_codebook(params[:dataset_id]), each_serializer: QuestionSerializer
+        render json: ApiV1.dataset_codebook(params[:dataset_id]), each_serializer: QuestionSerializer, root: 'questions'
       }
     end
   end
@@ -67,7 +67,7 @@ class Api::V1Controller < ApplicationController
   def time_series_catalog
     respond_to do |format|
       format.json { 
-        render json: ApiV1.time_series_catalog, each_serializer: TimeSeriesCatalogSerializer
+        render json: ApiV1.time_series_catalog, each_serializer: TimeSeriesCatalogSerializer, root: 'time_series'
       }
     end
   end
@@ -85,7 +85,7 @@ class Api::V1Controller < ApplicationController
   def time_series_codebook
     respond_to do |format|
       format.json { 
-        render json: ApiV1.time_series_codebook(params[:time_series_id]), each_serializer: TimeSeriesQuestionSerializer
+        render json: ApiV1.time_series_codebook(params[:time_series_id]), each_serializer: TimeSeriesQuestionSerializer, root: 'questions'
       }
     end
   end

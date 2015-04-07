@@ -200,6 +200,7 @@ ka:
       no_question: "The Question cound not be found."
       no_broken_down_by: "The Broken Down By Question could not be found."
       no_filtered_by: "The Filter By Question could not be found."
+      no_dataset: "The Time Series could not be found."
   explore_time_series:
     na: N/A
     percent: Percent (%)
