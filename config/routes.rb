@@ -51,6 +51,21 @@ BootstrapStarter::Application.routes.draw do
       end
     end
 
+    # api
+    match '/api', to: 'api#index', as: :api, via: :get
+    namespace :api do
+      match '/v1', to: 'v1#index', as: :v1, via: :get
+      match '/v1/documentation(/:method)', to: 'v1#documentation', as: :v1_documentation, via: :get
+      match '/v1/dataset_catalog', to: 'v1#dataset_catalog', as: :v1_dataset_catalog, via: :get, :defaults => { :format => 'json' }
+      match '/v1/dataset', to: 'v1#dataset', as: :v1_dataset, via: :get, :defaults => { :format => 'json' }
+      match '/v1/dataset_codebook', to: 'v1#dataset_codebook', as: :v1_dataset_codebook, via: :get, :defaults => { :format => 'json' }
+      match '/v1/dataset_analysis', to: 'v1#dataset_analysis', as: :v1_dataset_analysis, via: :get, :defaults => { :format => 'json' }
+      match '/v1/time_series_catalog', to: 'v1#time_series_catalog', as: :v1_time_series_catalog, via: :get, :defaults => { :format => 'json' }
+      match '/v1/time_series', to: 'v1#time_series', as: :v1_time_series, via: :get, :defaults => { :format => 'json' }
+      match '/v1/time_series_codebook', to: 'v1#time_series_codebook', as: :v1_time_series_codebook, via: :get, :defaults => { :format => 'json' }
+      match '/v1/time_series_analysis', to: 'v1#time_series_analysis', as: :v1_time_series_analysis, via: :get, :defaults => { :format => 'json' }
+    end    
+
     # root pages
 		match '/explore_data', :to => 'root#explore_data', :as => :explore_data, :via => :get
 		match '/explore_data/:id', :to => 'root#explore_data_dashboard', :as => :explore_data_dashboard, :via => :get

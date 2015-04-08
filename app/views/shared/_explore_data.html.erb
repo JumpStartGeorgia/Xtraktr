@@ -128,7 +128,6 @@
       <ul class="nav nav-tabs" id="explore-tabs" role="tablist">
         <li id="nav-map" style="display:none;"><a href="#tab-map" role="tab" data-toggle="tab"><%= t('.tabs.map') %></a></li>
         <li id="nav-chart"><a href="#tab-chart" role="tab" data-toggle="tab"><%= t('.tabs.chart') %></a></li>
-        <li id="nav-table"><a href="#tab-table" role="tab" data-toggle="tab"><%= t('.tabs.table') %></a></li>
         <li id="nav-details"><a href="#tab-details" role="tab" data-toggle="tab"><%= t('.tabs.details') %></a></li>
       </ul>      
 
@@ -148,17 +147,28 @@
 
           <div id="highmap"></div>
 
+          <div class="container-table">
+            <h2><span><%= t('.tabs.table') %></span></h2>
+
+            <h3></h3>
+            <table class="table-data table table-striped table-hover table-nonfluid" 
+                  data-count="<%= t('.table.count') %>" data-percent="<%= t('.table.percent') %>">
+            </table>
+          </div>
+
         </div>
 
         <div class="tab-pane" id="tab-chart">
           <div id="chart"></div>
-        </div>
 
-        <div class="tab-pane" id="tab-table">
-          <h3></h3>
-          <table id="datatable" class="table table-striped table-hover table-nonfluid" 
-                data-count="<%= t('.table.count') %>" data-percent="<%= t('.table.percent') %>">
-          </table>
+          <div class="container-table">
+            <h2><span><%= t('.tabs.table') %></span></h2>
+
+            <h3></h3>
+            <table class="table-data table table-striped table-hover table-nonfluid" 
+                  data-count="<%= t('.table.count') %>" data-percent="<%= t('.table.percent') %>">
+            </table>
+          </div>
         </div>
 
         <div class="tab-pane" id="tab-details">

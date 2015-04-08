@@ -12,6 +12,8 @@ class TimeSeries < CustomTranslation
   field :description, type: String, localize: true
   # whether or not dataset can be shown to public
   field :public, type: Boolean, default: false
+  # when made public
+  field :public_at, type: Date
   # key to access dataset that is not public
   field :private_share_key, type: String
   field :languages, type: Array
@@ -59,6 +61,7 @@ class TimeSeries < CustomTranslation
   # indexes
   index ({ :title => 1})
   index ({ :public => 1})
+  index ({ :public_at => 1})
   index ({ :private_share_key => 1})
   index ({ :user_id => 1})
   index ({ :'questions.code' => 1})
@@ -130,6 +133,7 @@ class TimeSeries < CustomTranslation
   #############################
   # Callbacks
   before_create :create_private_share_key
+  before_save :set_public_at
 
   # create private share key that allows people to access this dataset if it is not public
   def create_private_share_key
@@ -139,12 +143,25 @@ class TimeSeries < CustomTranslation
     return true
   end
 
+  # if public and public at not exist, set it
+  # else, make nil
+  def set_public_at
+    if self.public? && self.public_at.nil?
+      self.public_at = Time.now.to_date
+    elsif
+      self.public_at = nil
+    end
+  end
 
   #############################
   # Scopes
 
   def self.sorted
     order_by([[:title, :asc]])
+  end
+
+  def self.recent
+    order_by([[:public_at, :desc]])
   end
 
   def self.is_public

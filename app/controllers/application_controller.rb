@@ -33,9 +33,9 @@ class ApplicationController < ActionController::Base
 	]
 
 	def is_browser_supported?
-		user_agent = UserAgent.parse(request.user_agent)
-logger.debug "////////////////////////// BROWSER = #{user_agent}"
-#		if SUPPORTED_BROWSERS.any? { |browser| user_agent < browser }
+		@user_agent = UserAgent.parse(request.user_agent)
+logger.debug "////////////////////////// BROWSER = #{@user_agent}"
+#		if SUPPORTED_BROWSERS.any? { |browser| @user_agent < browser }
 #			# browser not supported
 #logger.debug "////////////////////////// BROWSER NOT SUPPORTED"
 #			render "layouts/unsupported_browser", :layout => false
@@ -62,11 +62,16 @@ logger.debug "////////////////////////// BROWSER = #{user_agent}"
     # for loading extra css/js files    
     @css = []
     @js = []
+
+    # get the api key for the app user
+    api_key = User.find_by(email: 'application@mail.com').api_keys.first
+    @app_api_key = api_key.key if api_key.present?
   end
 
 	def initialize_gon
 		gon.set = true
 		gon.highlight_first_form_field = true
+    gon.app_api_key = @app_api_key
 
 		if I18n.locale == :ka
 		  gon.datatable_i18n_url = "/datatable_ka.txt"
@@ -166,6 +171,11 @@ logger.debug "////////////////////////// BROWSER = #{user_agent}"
     @css.push('tabbed_translation_form.css', 'select2.css')
     @js.push('tabbed_translation_form.js', 'select2/select2.min.js')
     gon.tinymce_options = Hash[TinyMCE::Rails.configuration['default'].options.map{|(k,v)| [k.to_s,v.class == Array ? v.join(',') : v]}]
+  end
+
+  # tell active-model-serializers gem to not include root name in json output
+  def default_serializer_options
+    { root: false }
   end
 
   #######################

@@ -28,16 +28,13 @@ gem "useragent", :git => "https://github.com/jilion/useragent.git" # browser det
 #gem "rails_autolink", "~> 1.0.9" # convert string to link if it is url
 #gem 'paperclip', '~> 3.4.0' # to upload files
 gem "mongoid-paperclip", :require => "mongoid_paperclip" # upload files
-# gem 'localized_files', git: 'https://github.com/4nt1/mongoid_paperclip_localized_files.git' # localize files
 #gem "has_permalink", "~> 0.1.4" # create permalink slugs for nice urls
-#gem "will_paginate", "~> 3.0.5" # add paging to long lists
-#gem "will_paginate_mongoid" # pagination with mongoid
 gem "kaminari", "~> 0.16.1" # paging
 gem 'rails_autolink', '~> 1.1.6' # convert string url into link
-#gem 'simple-spreadsheet', '~> 0.3.1' # read in spreadsheet format
 gem 'spreadsheet', '~> 1.0.1' # read in spreadsheet format
 gem 'roo', '~> 1.13.2' # read in spreadsheet format
 gem "unidecoder", "~> 1.1.2" #convert utf8 to ascii for permalinks
+gem 'active_model_serializers', '~> 0.9.3' # easily create json serialized model data
 
 # Gems used only for assets and not required
 # in production environments by default.

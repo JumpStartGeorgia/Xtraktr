@@ -1,4 +1,4 @@
-var datatable, i, j, json_data;
+var datatables, i, j, json_data;
 
 ////////////////////////////////////////////////
 // build time series line chart
@@ -114,11 +114,13 @@ function build_time_series_chart(json){
 // build data table
 function build_datatable(json){
   // set the title
-  $('#tab-table h3').html(json.title.html + json.subtitle.html);
+  $('.container-table h3').html(json.title.html + json.subtitle.html);
 
   // if the datatable alread exists, kill it
-  if (datatable != undefined){
-    datatable.fnDestroy();
+  if (datatables != undefined && datatables.length > 0){
+    for (var i=0;i<datatables.length;i++){
+      datatables[i].fnDestroy();
+    }
   }
 
 
@@ -146,10 +148,10 @@ function build_datatable(json){
   table += "</th>";
   for(i=0; i<json.column_answers.length;i++){
     table += "<th>";
-    table += $('#datatable').data('count');
+    table += $('.table-data:first').data('count');
     table += "</th>"
     table += "<th>";
-    table += $('#datatable').data('percent');
+    table += $('.table-data:first').data('percent');
     table += "</th>"
   }
   table += "</tr>";
@@ -176,43 +178,46 @@ function build_datatable(json){
 
   table += "</tbody>";
 
-  $('#datatable').html(table);
+  $('.table-data').html(table);
 
   // compute how many columns need to have this sort
   var sort_array = [];
-  for(var i=1; i<$('#datatable > thead tr:last-of-type th').length; i++){
+  for(var i=1; i<$('.table-data:first > thead tr:last-of-type th').length; i++){
     sort_array.push(i);
   }
 
   // initalize the datatable
-  datatable = $('#datatable').dataTable({
-    "dom": '<"top"fT>t<"bottom"lpi><"clear">',
-    "language": {
-      "url": gon.datatable_i18n_url
-    },
-    "columnDefs": [
-        { "type": "formatted-num", targets: sort_array }
-    ],
-    "tableTools": {
-      "sSwfPath": "/assets/dataTables/extras/swf/copy_csv_xls.swf",
-      "aButtons": [
-        {
-          "sExtends": "copy",
-          "sButtonText": gon.datatable_copy_title,
-          "sToolTip": gon.datatable_copy_tooltip
-        },
-        {
-          "sExtends": "csv",
-          "sButtonText": gon.datatable_csv_title,
-          "sToolTip": gon.datatable_csv_tooltip
-        },
-        {
-          "sExtends": "xls",
-          "sButtonText": gon.datatable_xls_title,
-          "sToolTip": gon.datatable_xls_tooltip
-        }
-      ]        
-    }
+  datatables = [];
+  $('.table-data').each(function(){
+    datatables.push($(this).dataTable({
+      "dom": '<"top"fT>t<"bottom"lpi><"clear">',
+      "language": {
+        "url": gon.datatable_i18n_url
+      },
+      "columnDefs": [
+          { "type": "formatted-num", targets: sort_array }
+      ],
+      "tableTools": {
+        "sSwfPath": "/assets/dataTables/extras/swf/copy_csv_xls.swf",
+        "aButtons": [
+          {
+            "sExtends": "copy",
+            "sButtonText": gon.datatable_copy_title,
+            "sToolTip": gon.datatable_copy_tooltip
+          },
+          {
+            "sExtends": "csv",
+            "sButtonText": gon.datatable_csv_title,
+            "sToolTip": gon.datatable_csv_tooltip
+          },
+          {
+            "sExtends": "xls",
+            "sButtonText": gon.datatable_xls_title,
+            "sToolTip": gon.datatable_xls_tooltip
+          }
+        ]        
+      }
+    }))
   });    
 
 }
@@ -334,13 +339,6 @@ $(document).ready(function() {
     // the item is properly drawn
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
       switch($(this).attr('href')){
-        case '#tab-table':
-          var ttInstances = TableTools.fnGetMasters();
-          for (i in ttInstances) {
-          if (ttInstances[i].fnResizeRequired()) 
-            ttInstances[i].fnResizeButtons();
-          }
-          break;
         case '#tab-chart':
           $('#chart').highcharts().reflow();        
           break;

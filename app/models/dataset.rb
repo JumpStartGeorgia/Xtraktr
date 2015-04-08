@@ -209,7 +209,7 @@ class Dataset < CustomTranslation
   accepts_nested_attributes_for :data_items
 
   # reports written based off of this data
-  has_many :reports do 
+  has_many :reports, dependent: :destroy do
 
     def sorted
       order_by([[:released_at, :desc], [:title, :asc]])
@@ -513,6 +513,7 @@ class Dataset < CustomTranslation
     return ds
   end
 
+
   #############################
 
   # get the js shape file path
@@ -621,7 +622,10 @@ class Dataset < CustomTranslation
   end
 
   #############################
-
+  #############################
+  ## Data analysis
+  #############################
+  #############################
 
   ### perform a summary analysis of one question_code in 
   ### the data_items
@@ -1267,7 +1271,9 @@ class Dataset < CustomTranslation
 
 
   ##################################
+  ##################################
   ## CSV upload and download
+  ##################################
   ##################################
 
   # create csv to download questions
@@ -1577,6 +1583,5 @@ class Dataset < CustomTranslation
 
     return msg, counts
   end
-
 
 end
