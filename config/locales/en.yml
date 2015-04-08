@@ -338,7 +338,7 @@ en:
       new: New
       save_settings: Save Settings
     common:
-      app_name: UNICEF Data Portal #X-Traktr
+      app_name: UNICEF Georgia Data Portal #X-Traktr
       app_description: ''
       added_on: "Added on: %{date}" 
       jumpstart: JumpStart Georgia
