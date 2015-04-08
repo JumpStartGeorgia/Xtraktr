@@ -5,6 +5,7 @@ class User
   #############################
 
   has_many :datasets
+  has_many :api_keys, dependent: :destroy
 
   #############################
 

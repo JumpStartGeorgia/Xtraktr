@@ -209,7 +209,7 @@ class Dataset < CustomTranslation
   accepts_nested_attributes_for :data_items
 
   # reports written based off of this data
-  has_many :reports do 
+  has_many :reports, dependent: :destroy do
 
     def sorted
       order_by([[:released_at, :desc], [:title, :asc]])
@@ -620,6 +620,7 @@ class Dataset < CustomTranslation
     return success
   end
 
+=begin this is now in api_v1 file
   #############################
   #############################
   ## Data analysis
@@ -936,6 +937,7 @@ class Dataset < CustomTranslation
     logger.debug "== total time = #{(Time.now - start)*1000} ms"
     return result
   end
+=end
 
 =begin old methods for use with data attribute
 

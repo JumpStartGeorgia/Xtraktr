@@ -1,7 +1,8 @@
 class Api::V1Controller < ApplicationController
+  before_filter :restrict_access, except: [:index, :documentation]
+  after_filter :record_request, except: [:index, :documentation]
 
   def index
-
     respond_to do |format|
       format.html # index.html.erb
     end
@@ -88,5 +89,22 @@ class Api::V1Controller < ApplicationController
         render json: ApiV1.time_series_codebook(params[:time_series_id]), each_serializer: TimeSeriesQuestionSerializer, root: 'questions'
       }
     end
+  end
+
+
+
+private
+  # make sure the access token is valid
+  def restrict_access
+    @user_api_key = ApiKey.find_by(key: params[:access_token])
+    if @user_api_key.nil?
+      render json: {errors: [{status: '401', detail: I18n.t('api.msgs.no_key') }]}
+      return false
+    end
+  end
+
+  # record the api request
+  def record_request
+    ApiRequest.record_request(@user_api_key, request.remote_ip, request.filtered_parameters, @user_agent)
   end
 end

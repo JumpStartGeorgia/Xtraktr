@@ -99,3 +99,12 @@ langs = [
 langs = langs.map{|x| {locale: x[0], name: x[1]}}
 Language.collection.insert(langs)
 
+
+#####################
+## Create app user and api key
+#####################
+puts 'Creating app user and api key'
+email = 'application@mail.com'
+User.find_by(email: email).destroy
+u = User.create(email: email, password: Devise.friendly_token[0,20], role: 0)
+u.api_keys.create

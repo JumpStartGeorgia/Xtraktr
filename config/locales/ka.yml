@@ -196,6 +196,7 @@ ka:
     default_url: Default URL
   api:
     msgs:
+      no_key: 'You must provide an API Key in order to use the API. You can quickly get an API _____________.'
       no_dataset: "The Dataset could not be found."
       no_question: "The Question cound not be found."
       no_broken_down_by: "The Broken Down By Question could not be found."
