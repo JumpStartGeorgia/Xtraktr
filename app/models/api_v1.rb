@@ -1,5 +1,5 @@
 class ApiV1
-  ANALYSIS_TYPE = {:single => 'single', :comparative => 'comparative'}
+  ANALYSIS_TYPE = {:single => 'single', :comparative => 'comparative', :time_series => 'time_series'}
 
   ########################################
   ## DATASETS
@@ -55,7 +55,7 @@ class ApiV1
   #   results: {total_responses, analysis: [{answer_value, answer_text, count, percent}, ...]}
   #   chart: {data: [{name, y(percent), count, answer_value}, ...] } (optional)
   #   map: {question_code, data: [{shape_name, display_name, value, count}, ...] } (optional)
-  #   errors: [{status, detail}]
+  #   errors: [{status, detail}] (optional)
   # }  
   def self.dataset_analysis(dataset_id, question_code, options={})
     data = {}
@@ -163,7 +163,95 @@ class ApiV1
     return questions
   end
 
+  # analyse the time series for the passed in parameters
+  # parameters:
+  #  - time_series_id - id of time_series to analyze (required)
+  #  - question_code - code of question to analyze (required)
+  #  - filtered_by_code - code of question to filter the analysis by (optioanl)
+  #  - can_exclude - boolean indicating if the can_exclude answers should by excluded (optional, default false)
+  #  - chart_formatted_data - boolean indicating if results should include data formatted for highcharts (optional, default false)
+  # return format:
+  # {
+  #   time_series: {id, title},
+  #   datasets: [{id, title, lable}, ...],
+  #   question: {code, original_code, text, answers: [{value, text, can_exclude}]},
+  #   filtered_by: {code, original_code, text, answers: [{value, text, can_exclude}]} (optional),
+  #   analysis_type: single (will always be single)
+  #   results: {total_responses, analysis: [{dataset_label, answer_text, count, percent}, ...]}
+  #   chart: {data: [{y(percent), count}, ...] } (optional)
+  #   errors: [{status, detail}] (optional)
+  # }  
+  def self.time_series_analysis(time_series_id, question_code, options={})
+    data = {}
+    time_series = TimeSeries.is_public.find_by(id: time_series_id)
 
+    # if the time_series could not be found, stop
+    if time_series.nil?
+      return {errors: [{status: '404', detail: I18n.t('api.msgs.no_time_series') }]}
+    end
+
+    question = time_series.questions.with_code(question_code)
+
+    # if the question could not be found, stop
+    if question.nil?
+      return {errors: [{status: '404', detail: I18n.t('api.msgs.no_question') }]}
+    end
+
+    datasets = time_series.datasets.sorted
+    dataset_questions = time_series.questions.dataset_questions_in_code(question_code)
+
+    # if the time series has no datasets, stop
+    if datasets.nil? || dataset_questions.nil?
+      return {errors: [{status: '404', detail: I18n.t('api.msgs.no_time_series_datasets') }]}
+    end
+
+
+    ########################
+    # get options
+    can_exclude = options[:can_exclude].present? && options[:can_exclude].to_bool == true
+    chart_formatted_data = options[:chart_formatted_data].present? && options[:chart_formatted_data].to_bool == true
+
+    # if filter by by exists, get it
+    filtered_by = nil
+    if options[:filtered_by_code].present?
+      filtered_by = time_series.questions.with_code(options[:filtered_by_code].strip)
+
+      # if the filter by question could not be found, stop
+      if filtered_by.nil?
+        return {errors: [{status: '404', detail: I18n.t('api.msgs.no_filtered_by') }]}
+      end
+    end
+
+    ########################
+    # start populating the output
+    data[:time_series] = {id: time_series.id, title: time_series.title}
+    data[:datasets] = create_time_series_dataset_hash(datasets)
+    data[:question] = create_time_series_question_hash(question, can_exclude)    
+    data[:filtered_by] = create_time_series_question_hash(filtered_by, can_exclude) if filtered_by.present?
+    data[:analysis_type] = ANALYSIS_TYPE[:time_series]
+    data[:results] = nil
+
+    ########################
+    # do the analysis
+    # run the analysis for each dataset
+    individual_results = []
+    dataset_questions.each do |dq|
+      x = dataset_analysis(dq.dataset_id, question_code, options)
+      if x.present?
+        individual_results << {dataset_id: dq.dataset_id, dataset_results:x}
+      end
+    end
+
+    # if the individual results were not all found,
+    if !(individual_results.present? && individual_results.select{|x| x[:errors].nil?}.present?)
+      return {errors: [{status: '404', detail: I18n.t('api.msgs.no_time_series_dataset_error') }]}
+    end
+
+    data[:results] = time_series_single_analysis(data[:datasets], individual_results, data[:question], data[:filtered_by])
+    data[:chart] = time_series_single_chart(data) if chart_formatted_data
+
+    return data
+  end
 
 
   ########################################
@@ -639,5 +727,160 @@ private
   end
 
 
+  ########################################
+  ########################################
+  ########################################
+  ########################################
 
+  # create array of dataset hash for a time series
+  def self.create_time_series_dataset_hash(datasets)
+    if datasets.present?
+      ary = []
+
+      datasets.each do |dataset|
+        if dataset.present?
+          hash = {dataset_id: dataset.dataset_id, title: dataset.dataset.title, label: dataset.title}
+        end
+        ary << hash
+      end
+
+      return ary
+    end
+  end
+
+
+  # create question hash for a time series
+  def self.create_time_series_question_hash(question, can_exclude=false)
+    hash = {}
+    if question.present?
+      hash = {code: question.code, original_code: question.original_code, text: question.text}
+      hash[:answers] = (can_exclude == true ? question.answers.must_include_for_analysis : question.answers.sorted).map{|x| {value: x.value, text: x.text, can_exclude: x.can_exclude}}
+    end
+
+    return hash
+  end
+
+
+  # for the given time_series and question, do a single analysis
+  def self.time_series_single_analysis(datasets, individual_results, question, filtered_by=nil)
+    # if filter provided, then get data for filter
+    # and then only pull out the code data that matches
+    if filtered_by.present?
+      filter_results = []
+      filtered_by[:answers].each do |filter_answer|
+        filter_item = {filter_answer_value: filter_answer[:value], filter_answer_text: filter_answer[:text], filter_results: nil}
+        filter_item[:filter_results] = time_series_single_analysis_processing(datasets, individual_results, question, filter_answer[:value])
+        filter_results << filter_item
+      end
+
+      return filter_results
+    else
+      return time_series_single_analysis_processing(datasets, individual_results, question)
+    end
+
+  end
+
+
+
+  # for the given question and it's data, do a single analysis and convert into counts and percents
+  def self.time_series_single_analysis_processing(datasets, individual_results, question, filter_answer_values=nil)
+    results = {total_responses: [], analysis: []}
+
+    question[:answers].each do |answer|
+      answer_item = {answer_value: answer[:value], answer_text: answer[:text], dataset_results: []}
+
+      datasets.each do |dataset|
+        dataset_item = {dataset_label: dataset[:label], dataset_title: dataset[:title], count: 0, percent: 0}
+
+        # see if this dataset had results
+        individual_result = individual_results.select{|x| x[:dataset_id] == dataset[:dataset_id]}.first
+        if individual_result.present?
+          # get results from dataset
+          dataset_answer_results = nil
+          if filter_answer_values.present?
+            filter_results = individual_result[:dataset_results][:results].select{|x| x[:filter_answer_value] == filter_answer_values}.first
+            dataset_answer_results = filter_results[:filter_results][:analysis].select{|x| x[:answer_value] == answer[:value]}.first if filter_results.present?
+          else
+            dataset_answer_results = individual_result[:dataset_results][:results][:analysis].select{|x| x[:answer_value] == answer[:value]}.first
+          end
+          if dataset_answer_results.present?
+            dataset_item[:count] = dataset_answer_results[:count]
+            dataset_item[:percent] = dataset_answer_results[:percent]
+          end
+        end
+        answer_item[:dataset_results] << dataset_item
+      end
+
+      results[:analysis] << answer_item
+    end
+
+
+    # add total responses for each dataset
+    datasets.each do |dataset|
+      response_item = {dataset_label: dataset[:label], dataset_title: dataset[:title], count: 0}
+
+      # see if this dataset had results
+      individual_result = individual_results.select{|x| x[:dataset_id] == dataset[:dataset_id]}.first
+      if individual_result.present?
+        if filter_answer_values.present?
+          filter_results = individual_result[:dataset_results][:results].select{|x| x[:filter_answer_value] == filter_answer_values}.first
+          response_item[:count] = filter_results[:filter_results][:total_responses] if filter_results.present?
+        else
+          response_item[:count] = individual_result[:dataset_results][:results][:total_responses]
+        end
+      end
+
+      results[:total_responses] << response_item
+    end
+
+    return results
+  end
+
+
+  # convert the results into pie chart format
+  # return format: 
+  # - no filter: {:data => [ {name, y(percent), count, answer_value}, ...] }
+  # - with filter: [ {filter_answer_value, filter_answer_text, filter_results => [ {:data => [ {name, y(percent), count, answer_value}, ...] } ] } ]
+  def self.time_series_single_chart(data)
+    if data.present?
+      chart = nil
+      if data[:filtered_by].present?
+        chart = []
+        data[:results].each do |filter|
+          chart_item = {filter_answer_value: filter[:filter_answer_value], filter_answer_text: filter[:filter_answer_text], filter_results: {data: []}}
+          data[:question][:answers].each do |answer|
+            data_result = filter[:filter_results][:analysis].select{|x| x[:answer_value] == answer[:value]}.first
+            if data_result.present?
+              chart_item[:filter_results][:data] << time_series_single_chart_processing(answer, data_result)
+            end
+          end
+          if chart_item[:filter_results][:data].present?
+            chart << chart_item
+          end
+        end
+      else
+        chart = {}
+        chart[:data] = []
+        data[:question][:answers].each do |answer|
+          data_result = data[:results][:analysis].select{|x| x[:answer_value] == answer[:value]}.first
+          if data_result.present?
+            chart[:data] << time_series_single_chart_processing(answer, data_result)
+          end
+        end
+      end
+      
+      return chart
+    end
+  end
+
+
+  # format: {name, y(percent), count, answer_value}
+  def self.time_series_single_chart_processing(answer, data_result)
+    {
+      name: answer[:text], 
+      y: data_result[:percent], 
+      count: data_result[:count], 
+      answer_value: answer[:value]
+    }
+  end
 end

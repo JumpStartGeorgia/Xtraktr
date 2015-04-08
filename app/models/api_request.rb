@@ -46,8 +46,6 @@ class ApiRequest
 
   # record the api request
   def self.record_request(api_key, ip, params, user_agent)
-    Rails.logger.debug "$$$$$$$$$$$$$$44 recording request"
-    Rails.logger.debug "$$$$$$$$$$$$$$44 #{params}"
     record = ApiRequest.new
 
     # if the key was found, save the ids
@@ -86,8 +84,6 @@ class ApiRequest
     end   
   
     record.save
-
-    Rails.logger.debug "$$$$$$$$$$$$$$44 request = #{record.inspect}"
 
     return record
   end

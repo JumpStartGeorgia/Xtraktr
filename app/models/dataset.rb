@@ -620,7 +620,6 @@ class Dataset < CustomTranslation
     return success
   end
 
-=begin this is now in api_v1 file
   #############################
   #############################
   ## Data analysis
@@ -937,7 +936,6 @@ class Dataset < CustomTranslation
     logger.debug "== total time = #{(Time.now - start)*1000} ms"
     return result
   end
-=end
 
 =begin old methods for use with data attribute
 

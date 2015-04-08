@@ -63,6 +63,7 @@ BootstrapStarter::Application.routes.draw do
       match '/v1/time_series_catalog', to: 'v1#time_series_catalog', as: :v1_time_series_catalog, via: :get, :defaults => { :format => 'json' }
       match '/v1/time_series', to: 'v1#time_series', as: :v1_time_series, via: :get, :defaults => { :format => 'json' }
       match '/v1/time_series_codebook', to: 'v1#time_series_codebook', as: :v1_time_series_codebook, via: :get, :defaults => { :format => 'json' }
+      match '/v1/time_series_analysis', to: 'v1#time_series_analysis', as: :v1_time_series_analysis, via: :get, :defaults => { :format => 'json' }
     end    
 
     # root pages
