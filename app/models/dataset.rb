@@ -487,8 +487,8 @@ class Dataset < CustomTranslation
   end
 
   def self.by_user(user_id)
-    # where(user_id: user_id)
-    all
+    where(user_id: user_id)
+    # all
   end
 
   # get the record if the user is the owner
