@@ -6,6 +6,8 @@ class Report
   #############################
 
   belongs_to :language
+  belongs_to :dataset
+
 
   #############################
   has_mongoid_attached_file :file, url: "/system/datasets/:dataset_id/reports/:id/:filename", use_timestamp: false
@@ -16,9 +18,6 @@ class Report
   field :released_at, type: Date
   # record the extension of the file
   field :file_extension, type: String
-
-
-  belongs_to :dataset
 
 
   #############################

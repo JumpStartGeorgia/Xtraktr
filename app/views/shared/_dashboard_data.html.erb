@@ -147,7 +147,9 @@
                   <%= "#{r_model_class.human_attribute_name(:released_at)}: #{l report.released_at, format: :dataset}" %>
                 </div>
                 <div class="col-sm-4">
-                  <%= "#{r_model_class.human_attribute_name(:language_id)}: #{report.language.name}" %>
+                  <% if report.language.present? %>
+                    <%= "#{r_model_class.human_attribute_name(:language_id)}: #{report.language.name}" %>
+                  <% end %>
                 </div>
                 <div class="col-sm-4">
                   <%= link_to report.file.url, class: 'btn btn-success btn-sm', target: :blank do %>
