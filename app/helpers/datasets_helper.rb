@@ -18,6 +18,8 @@ module DatasetsHelper
       text << I18n.l(dataset.end_gathered_at, format: :dataset)
     elsif dataset.released_at.present?
       text << I18n.l(dataset.released_at, format: :dataset)
+    elsif dataset.public_at.present?
+      text << I18n.l(dataset.public_at, format: :dataset)
     end
     return text
   end

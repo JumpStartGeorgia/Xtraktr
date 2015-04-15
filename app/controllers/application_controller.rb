@@ -194,26 +194,21 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 
       # initialize variables
       # start with a random question
-      @row = @questions.map{|x| x.code}.sample
-      @col = nil
-      @filter = nil
+      @question_code = @questions.map{|x| x.code}.sample
+      @broken_down_by_code = nil
+      @filtered_by_code = nil
 
       # check to make sure row and col param is in list of questions, if provided
-      if params[:row].present? && @questions.index{|x| x.code == params[:row]}.present?
-        @row = params[:row]
+      if params[:question_code].present? && @questions.index{|x| x.code == params[:question_code]}.present?
+        @question_code = params[:question_code]
       end
-      if params[:col].present? && @questions.index{|x| x.code == params[:col]}.present?
-        @col = params[:col]
+      if params[:broken_down_by_code].present? && @questions.index{|x| x.code == params[:broken_down_by_code]}.present?
+        @broken_down_by_code = params[:broken_down_by_code]
       end
 
       # check for valid filter values
-      if params[:filter_variable].present? && params[:filter_value].present? &&
-        q = @questions.select{|x| x.code.to_s == params[:filter_variable]}.first
-        a = q.answers.with_value(params[:filter_value]) if q.present?
-        
-        if q.present? && a.present?
-          @filter = {code: params[:filter_variable], value: params[:filter_value], name: q.text, answer: a.text }
-        end
+      if params[:filtered_by_code].present?  && @questions.index{|x| x.code == params[:filtered_by_code]}.present?
+        @filtered_by_code = params[:filtered_by_code]
       end
     end
 
@@ -249,40 +244,47 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
         gon.highcharts_pdf = I18n.t('highcharts.pdf')
         gon.highcharts_svg = I18n.t('highcharts.svg')
 
+        gon.explore_data = true
+        gon.dataset_id = params[:id]
+        gon.api_dataset_analysis_path = api_v1_dataset_analysis_path
+
         render layout: 'explore_data'
       } 
       format.js{
         # get the data
         options = {}
-        options[:filter] = @filter if @filter.present?
-        options[:exclude_dkra] = params[:exclude_dkra].to_bool if params[:exclude_dkra].present?
+        options[:broken_down_by_code] = @broken_down_by_code if @broken_down_by_code.present?
+        options[:filtered_by_code] = @filtered_by_code if @filtered_by_code.present?
+        options[:language] = params[:language] if params[:language].present?
+        options[:can_exclude] = params[:can_exclude].to_bool if params[:can_exclude].present?
+        options[:chart_formatted_data] = params[:chart_formatted_data].to_bool if params[:chart_formatted_data].present?
+        options[:map_formatted_data] = params[:map_formatted_data].to_bool if params[:map_formatted_data].present?
 
         @data = nil
         if @questions.present?
-          # if @col has data, then this is a crosstab,
+          # if @broken_down_by_code has data, then this is a crosstab,
           # else this is just a single variable lookup
-          if @col.present?
-            @data = dataset.data_crosstab_analysis(@row, @col, options)
+          @data = ApiV1.dataset_analysis(dataset.id, @question_code, options)
+          if @broken_down_by_code.present?
 
             @data[:title] = {}
-            @data[:title][:html] = build_data_crosstab_title_html(@data[:row_question], @data[:column_question], @filter, @data[:total_responses])
-            @data[:title][:text] = build_data_crosstab_title_text(@data[:row_question], @data[:column_question], @filter, @data[:total_responses])
+            @data[:title][:html] = build_data_crosstab_title_html(@data[:row_question], @data[:column_question], @filtered_by_code, @data[:total_responses])
+            @data[:title][:text] = build_data_crosstab_title_text(@data[:row_question], @data[:column_question], @filtered_by_code, @data[:total_responses])
             # create special map titles so filter of column can be shown in title
             # test to see which variable is mappable - that one must go in as the row for the map title
-            row_index = @questions.select{|x| x.code == params[:row] && x.is_mappable?}
+            row_index = @questions.select{|x| x.code == params[:question_code] && x.is_mappable?}
             if row_index.present?
-              @data[:title][:map_html] = build_data_crosstab_map_title_html(@data[:row_question], @data[:column_question], @filter, @data[:total_responses])
-              @data[:title][:map_text] = build_data_crosstab_map_title_text(@data[:row_question], @data[:column_question], @filter, @data[:total_responses])
+              @data[:title][:map_html] = build_data_crosstab_map_title_html(@data[:row_question], @data[:column_question], @filtered_by_code, @data[:total_responses])
+              @data[:title][:map_text] = build_data_crosstab_map_title_text(@data[:row_question], @data[:column_question], @filtered_by_code, @data[:total_responses])
             else
-              @data[:title][:map_html] = build_data_crosstab_map_title_html(@data[:column_question], @data[:row_question], @filter, @data[:total_responses])
-              @data[:title][:map_text] = build_data_crosstab_map_title_text(@data[:column_question], @data[:row_question], @filter, @data[:total_responses])
+              @data[:title][:map_html] = build_data_crosstab_map_title_html(@data[:column_question], @data[:row_question], @filtered_by_code, @data[:total_responses])
+              @data[:title][:map_text] = build_data_crosstab_map_title_text(@data[:column_question], @data[:row_question], @filtered_by_code, @data[:total_responses])
             end
           else
-            @data = dataset.data_onevar_analysis(@row, options)
             
             @data[:title] = {}
-            @data[:title][:html] = build_data_onevar_title_html(@data[:row_question], @filter, @data[:total_responses])
-            @data[:title][:text] = build_data_onevar_title_text(@data[:row_question], @filter, @data[:total_responses])
+            @data[:title][:html] = build_data_onevar_title_html(@data[:row_question], @filtered_by_code, @data[:total_responses])
+            @data[:title][:text] = build_data_onevar_title_text(@data[:row_question], @filtered_by_code, @data[:total_responses])
             @data[:title][:map_html] = @data[:title][:html]
             @data[:title][:map_text] = @data[:title][:text]
           end
@@ -294,7 +296,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 #        logger.debug "/////////////////////////// #{@data}"
 
         status = @data.present? ? :ok : :unprocessable_entity
-        render json: @data.to_json, status: :ok
+        render json: @data.to_json, status: status
 
       }
     end   
@@ -378,22 +380,17 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 
       # initialize variables
       # start with a random question
-      @row = @questions.map{|x| x.code}.sample
-      @filter = nil
+      @question_code = @questions.map{|x| x.code}.sample
+      @filter_by_code = nil
 
-      # check to make sure row param is in list of questions, if provided
-      if params[:row].present? && @questions.index{|x| x.code == params[:row]}.present?
-        @row = params[:row]
+      # check to make sure question_code param is in list of questions, if provided
+      if params[:question_code].present? && @questions.index{|x| x.code == params[:question_code]}.present?
+        @question_code = params[:question_code]
       end
 
       # check for valid filter values
-      if params[:filter_variable].present? && params[:filter_value].present? &&
-        q = @questions.select{|x| x.code.to_s == params[:filter_variable]}.first
-        a = q.answers.with_value(params[:filter_value]) if q.present?
-        
-        if q.present? && a.present?
-          @filter = {code: params[:filter_variable], value: params[:filter_value], name: q.text, answer: a.text }
-        end
+      if params[:filtered_by_code].present?  && @questions.index{|x| x.code == params[:filtered_by_code]}.present?
+        @filtered_by_code = params[:filtered_by_code]
       end
     end
 
@@ -422,17 +419,21 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
         gon.highcharts_pdf = I18n.t('highcharts.pdf')
         gon.highcharts_svg = I18n.t('highcharts.svg')
 
+        gon.explore_time_series = true
+        gon.time_series_id = params[:id]
+        gon.api_time_series_analysis_path = api_v1_time_series_analysis_path
+
         render layout: 'explore_time_series'
       } 
       format.js{
         # get the data
         options = {}
-        options[:filter] = @filter if @filter.present?
-        options[:exclude_dkra] = params[:exclude_dkra].to_bool if params[:exclude_dkra].present?
+        options[:filtered_by_code] = @filtered_by_code if @filtered_by_code.present?
+        options[:can_exclude] = params[:can_exclude].to_bool if params[:can_exclude].present?
 
         @data = nil
         if @questions.present?
-          @data = time_series.data_onevar_analysis(@row, options)
+          @data = time_series.data_onevar_analysis(@question_code, options)
           
           @data[:title] = {}
           @data[:title][:html] = build_time_series_onevar_title_html(@data[:row_question], @filter, @data[:total_responses])

@@ -61,10 +61,18 @@
     <li role="presentation">
       <a href="#highlights" aria-controls="highlights" role="tab" data-toggle="tab"><%= t('.tabs.highlights') %></a>
     </li>
-    <li role="presentation" class="active">
+    <% 
+      method_active = 'active'
+      codebook_active = ''
+      if !@dataset.methodology.present? 
+        method_active = ''
+        codebook_active = 'active'
+      end 
+    %>
+    <li role="presentation" class="<%= method_active %>">
       <a href="#methodology" aria-controls="methodology" role="tab" data-toggle="tab"><%= t('.tabs.methodology') %></a>
     </li>
-    <li role="presentation">
+    <li role="presentation" class="<%= codebook_active %>">
       <a href="#codebook" aria-controls="codebook" role="tab" data-toggle="tab"><%= t('.tabs.codebook') %></a>
     </li>
     <li role="presentation">
@@ -76,19 +84,32 @@
   </ul>
 
   <div class="tab-content">
+    <% 
+      method_active = 'in active'
+      codebook_active = ''
+      if !@dataset.methodology.present? 
+        method_active = ''
+        codebook_active = 'in active'
+      end 
+    %>
+
     <div role="tabpanel" class="tab-pane fade" id="highlights">
       
     </div>
     
-    <div role="tabpanel" class="tab-pane fade in active" id="methodology">
+    <div role="tabpanel" class="tab-pane fade <%= method_active %>" id="methodology">
       <% if @dataset.methodology.present? %>
         <div class="tinymce_format">
           <%= simple_format_no_tags(@dataset.methodology, {}, {sanitize: false}) %>
         </div>
+      <% else %>
+        <p>
+          <%= t('.no_methodology') %>
+        </p>
       <% end %>
     </div>
     
-    <div role="tabpanel" class="tab-pane fade" id="codebook">
+    <div role="tabpanel" class="tab-pane fade <%= codebook_active %>" id="codebook">
       <div id="codebook-search" class="input-group">
         <span class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></span>
         <input type="text" class="text-input col-sm-3" id="filter" class="form-control" value="" placeholder="<%= t('helpers.search') %>" />

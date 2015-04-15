@@ -10,11 +10,11 @@
 
         <div class="row">
           <div class="col-xs-6 col-sm-12">
-            <%= label_tag 'row', t('.form.row') %>
-            <select data-live-search="true" data-hide-disabled='true' data-width="100%" class="selectpicker" id="row" name="row">
+            <%= label_tag 'question_code', t('.form.question_code') %>
+            <select data-live-search="true" data-hide-disabled='true' data-width="100%" class="selectpicker" id="question_code" name="question_code">
               <% @questions.each_with_index do |question, index| %>
                 <% 
-                  selected = (@row.present? && @row == question.code) ? 'selected=selected ' : ''
+                  selected = (@question_code.present? && @question_code == question.code) ? 'selected=selected ' : ''
                 %>
                 <option value="<%= question.code %>" <%= selected %> ><%= "#{question.original_code} - #{question.text}" %></option>
               <% end %>
@@ -24,45 +24,25 @@
 
         <div class="row">
           <div class="col-xs-6 col-sm-12">
-            <%= label_tag 'filter_variable', t('.form.filter_variable') %>
-            <select data-live-search="true" data-hide-disabled='true' data-width="100%" class="selectpicker-filter" id="filter_variable" name="filter_variable">
+            <%= label_tag 'filtered_by_code', t('.form.filtered_by_code') %>
+            <select data-live-search="true" data-hide-disabled='true' data-width="100%" class="selectpicker-filter" id="filtered_by_code" name="filtered_by_code">
               <option value=""><%= t('.form.no_filter') %></option>
               <% @questions.each do |question| %>
                 <% 
-                  selected = filter_variable == question.code ? 'selected=selected ' : ''
-                  disabled = @row == question.code ? 'disabled=disabled ' : ''
+                  selected = @filtered_by_code == question.code ? 'selected=selected ' : ''
+                  disabled = @question_code == question.code ? 'disabled=disabled ' : ''
                 %>
                 <option value="<%= question.code %>" <%= selected %><%= disabled %>><%= "#{question.original_code} - #{question.text}" %></option>
               <% end %>
             </select>
           </div>
-          <%
-            show_filter_answers = filter_variable.blank? ? 'style=display:none;' : ''
-          %>
-          <div class="col-xs-6 col-sm-12">
-            <div id="filter_value_container" <%= show_filter_answers %>>
-              <%= label_tag 'filter_value', t('.form.filter_value') %>
-              <select data-live-search="true" data-hide-disabled='true' data-width="100%" class="selectpicker-filter" id="filter_value" name="filter_value">
-                <% @questions.each do |question| %>
-                  <% question.answers.each do |answer| %>
-                    <% 
-                      selected = @filter.present? && @filter[:value] == answer.value.to_s &&
-                                  filter_variable == question.code.to_s ? 'selected=selected ' : ''
-                      disabled = filter_variable == question.code.to_s ? '' : 'disabled=disabled '
-                    %>
-                    <option value="<%= answer.value %>" <%= selected %><%= disabled %> data-code="<%= question.code %>" ><%= answer.text %></option>
-                  <% end %>
-                <% end %>
-              </select>
-            </div>
-          </div>
         </div>
 
         <div class="row">
           <div class="col-xs-6 col-sm-12">
-            <%= label_tag 'exclude_dkra', :id => 'lbl_exclude_dkra', :title => t('.form.exclude_dkra_hint') do %>
-              <%= check_box_tag 'exclude_dkra', true, params[:exclude_dkra].present? ? params[:exclude_dkra].to_bool : false %>
-              <%= t('.form.exclude_dkra') %>
+            <%= label_tag 'can_exclude', :id => 'lbl_can_exclude', :title => t('.form.can_exclude_hint') do %>
+              <%= check_box_tag 'can_exclude', true, params[:can_exclude].present? ? params[:can_exclude].to_bool : false %>
+              <%= t('.form.can_exclude') %>
             <% end %>
           </div>
           <div class="col-xs-3 col-xs-offset-3 col-sm-12 col-sm-offset-0 text-right">
@@ -118,15 +98,15 @@
 
         <div class="tab-pane" id="tab-details">
           <div class="row">
-            <div class="col-sm-6" id="details-row">
+            <div class="col-sm-12" id="details-question-code">
               <p>
                 <strong><%= t('.details.variable') %>:</strong>
-                <span id="details-row-question"></span>
+                <span id="details-question-code-question"></span>
               </p>
               <p>
                 <strong><%= t('.details.answers') %></strong>
               </p>
-              <ul id="details-row-answers">
+              <ul id="details-question-code-answers">
               </ul> 
             </div>
           </div>

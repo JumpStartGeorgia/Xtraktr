@@ -57,7 +57,7 @@ class DatasetsController < ApplicationController
       add_dataset_nav_options(show_title: false)
 
       gon.explore_data = true
-      gon.explore_data_ajax_path = explore_dataset_path(:format => :js)
+      gon.api_dataset_analysis_path = api_v1_dataset_analysis_path
 
       # this method is in application_controller
       # and gets all of the required information

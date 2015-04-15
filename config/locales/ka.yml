@@ -207,45 +207,61 @@ ka:
   explore_time_series:
     na: N/A
     percent: Percent (%)
-    onevar:
+    single:
       html:
-        title: "%{row}"
-        title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> %{variable} = %{value}"
+        title: "%{question}"
+        title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> %{variable}"
+        title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> %{variable} = %{value}"
       text:
-        title: "%{row}"
-        title_filter: " where %{variable} = %{value}"
+        title: "%{question}"
+        title_filter: " filtered by: %{variable}"
+        title_filter_value: " filtered by: %{variable} = %{value}"
     subtitle:
-      html: "Total Responses: %{num}"
-      text: "Total Responses: %{num}"
+      html: 
+        title: "Total Responses: %{num}"
+        title_filter: "Total Responses Filtered by Answers to %{variable}: %{nums}"
+      text: 
+        title: "Total Responses: %{num}"
+        title_filter: "Total Responses Filtered by Answers to %{variable}: %{nums}"
   explore_data:
     hover_region: Hover over a Region
     na: N/A
     percent: Percent
-    crosstab:
+    comparative:
       html:
-        title: "<span class='title-highlight'>Answers to:</span> <br /> %{row} <br /> <span class='title-highlight'>broken down by:</span> <br /> %{col}"
-        title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> %{variable} = %{value}"
+        title: "<span class='title-highlight'>Answers to:</span> <br /> %{question} <br /> <span class='title-highlight'>broken down by:</span> <br /> %{broken_down_by}"
+        title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> %{variable}"
+        title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> %{variable} = %{value}"
         map:
-          title: "%{row} "
-          title_col: "<br /> <span class='title-highlight'>filtered by:</span> %{col} = [replace] "
-          title_filter: "<br /> <span class='title-highlight'>and</span> %{variable} = %{value}"
+          title: "%{question} "
+          title_col: "<br /> <span class='title-highlight'>filtered by:</span> %{broken_down_by} = [replace] "
+          title_filter: "<br /> <span class='title-highlight'>and</span> %{variable}"
+          title_filter_value: "<br /> <span class='title-highlight'>and</span> %{variable} = %{value}"
       text:
-        title: "Answers to: %{row} broken down by: %{col} "
-        title_filter: "filtered by: %{variable} = %{value}"
+        title: "Answers to: %{question} broken down by: %{broken_down_by} "
+        title_filter: "filtered by: %{variable}"
+        title_filter_value: "filtered by: %{variable} = %{value}"
         map:
-          title: "%{row} "
-          title_col: "filtered by: %{col} = [replace] "
-          title_filter: "and %{variable} = %{value}"
-    onevar:
+          title: "%{question} "
+          title_col: "filtered by: %{broken_down_by} = [replace] "
+          title_filter: "and %{variable}"
+          title_filter_value: "and %{variable} = %{value}"
+    single:
       html:
-        title: "%{row}"
-        title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> %{variable} = %{value}"
+        title: "%{question}"
+        title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> %{variable}"
+        title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> %{variable} = %{value}"
       text:
-        title: "%{row} "
-        title_filter: "filtered by: %{variable} = %{value}"
+        title: "%{question} "
+        title_filter: "filtered by: %{variable}"
+        title_filter_value: "filtered by: %{variable} = %{value}"
     subtitle:
-      html: "Total Responses: <span class='number'>%{num}</span>"
-      text: "Total Responses: %{num}"
+      html: 
+        title: "Total Responses: <span class='number'>%{num}</span>"
+        title_filter: "Total Responses Filtered by Answers to %{variable}: %{nums}"
+      text: 
+        title: "Total Responses: %{num}"
+        title_filter: "Total Responses Filtered by Answers to %{variable}: %{nums}"
   datatable:
     copy: 
       title: Copy
@@ -535,11 +551,13 @@ ka:
         template: Clicking the button below will download a template of all questions in this dataset. Make the desired changes in the spreadsheet and then use the form below to update your changes.
         template2: "The only columns that cannot be changed are: %{code}"
         template_link: Download Questions Template
+        submit: Update Questions
       answers: 
         header: Answers
         template: Clicking the button below will download a template of all answers in this dataset. Make the desired changes in the spreadsheet and then use the form below to update your changes.
         template2: "The only columns that cannot be changed are: %{code}, %{value}"
         template_link: Download Answers Template
+        submit: Update Answers
   time_series:
     form: 
       header_datasets: Datasets
@@ -577,17 +595,16 @@ ka:
         p1b: "You may also choose to narrow the scope of this analysis by selecting a subset of data to analyze."
         p2: "You can explore the analysis via a map (if one variable is 'Reg'), a chart, and a table."
       form:
-        row: Explore Answers To
-        col: Broken Down By (optional)
-        no_col: No Comparison
+        question_code: Explore Answers To
+        broken_down_by_code: Broken Down By (optional)
+        no_comparison: No Comparison
         swap: Swap the Questions
         submit: Generate
         reset: Reset 
-        filter_variable: Filtered By
+        filtered_by_code: Filtered By
         no_filter: No Filter
-        filter_value: With Value
-        exclude_dkra: Exclude "Don't know" & "Refuse"
-        exclude_dkra_hint: Remove answers like "Don't know" & "Refuse" from the analysis
+        can_exclude: Exclude "Don't know" & "Refuse"
+        can_exclude_hint: Remove answers like "Don't know" & "Refuse" from the analysis
       tabs:
         map: Map
         chart: Chart
@@ -612,14 +629,13 @@ ka:
         p1a: This page allows you to explore one question over a series of surveys. 
         p1b: "You may also choose to narrow the scope of this analysis by selecting a subset of data to analyze."
       form:
-        row: Explore Answers To
+        question_code: Explore Answers To
         submit: Generate
         reset: Reset 
-        filter_variable: Filtered By
+        filtered_by_code: Filtered By
         no_filter: No Filter
-        filter_value: With Value
-        exclude_dkra: Exclude "Don't know" & "Refuse"
-        exclude_dkra_hint: Remove answers like "Don't know" & "Refuse" from the analysis
+        can_exclude: Exclude "Don't know" & "Refuse"
+        can_exclude_hint: Remove answers like "Don't know" & "Refuse" from the analysis
       tabs:
         chart: Chart
         table: Table
@@ -640,6 +656,7 @@ ka:
       codebook:
         header_question: Variable
         header_values: Values
+      no_methodology: There is no methodology on file for this dataset.
     dashboard_time_series:
       tabs:
         highlights: Highlights

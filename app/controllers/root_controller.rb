@@ -40,8 +40,6 @@ class RootController < ApplicationController
     else
       @is_admin = false
       @dataset_url = explore_data_show_path(@dataset)
-      gon.explore_data = true
-      gon.explore_data_ajax_path = explore_data_show_path(:format => :js)
 
       # this method is in application_controller
       # and gets all of the required information
@@ -83,8 +81,6 @@ class RootController < ApplicationController
     else
       @is_admin = false
       @time_series_url = explore_time_series_show_path(@time_series)
-      gon.explore_time_series = true
-      gon.explore_ime_series_ajax_path = explore_time_series_show_path(:format => :js)
 
       # this method is in application_controller
       # and gets all of the required information
@@ -105,7 +101,7 @@ class RootController < ApplicationController
       @is_admin = false
       @dataset_url = private_share_path(@dataset.private_share_key)
       gon.explore_data = true
-      gon.explore_data_ajax_path = private_share_path(:format => :js)
+      gon.api_dataset_analysis_path = api_v1_dataset_analysis_path
 
       # this method is in application_controller
       # and gets all of the required information

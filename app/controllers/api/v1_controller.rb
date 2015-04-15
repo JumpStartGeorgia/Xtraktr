@@ -55,7 +55,7 @@ class Api::V1Controller < ApplicationController
   def dataset_analysis
     respond_to do |format|
       format.json { 
-        render json: ApiV1.dataset_analysis(params[:dataset_id], params[:question_code], params)
+        render json: ApiV1.dataset_analysis(params[:dataset_id], params[:question_code], request.filtered_parameters)
       }
     end
   end
@@ -99,7 +99,7 @@ class Api::V1Controller < ApplicationController
   def time_series_analysis
     respond_to do |format|
       format.json { 
-        render json: ApiV1.time_series_analysis(params[:time_series_id], params[:question_code], params)
+        render json: ApiV1.time_series_analysis(params[:time_series_id], params[:question_code], request.filtered_parameters)
       }
     end
   end

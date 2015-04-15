@@ -15,7 +15,7 @@ function build_highmap(json, filter){
 
     // set variables according to whether or not map is crosstab
     var data, title_html, title_text, filter_name;
-    if (json.type == 'crosstab'){
+    if (json.analysis_type == 'comparative'){
       // if filter passed in, just get the data for that filter
       // else, build filter and use first item in list for data
       if (filter == undefined){
@@ -51,13 +51,13 @@ function build_highmap(json, filter){
 
         data = json.map.data[json.map.filters[0].value];
         filter_name = json.map.filters[0].text;       
-        title_html = json.title.map_html.replace('[replace]', filter_name);
-        title_text = json.title.map_text.replace('[replace]', filter_name);
+        title_html = json.map.title.html.replace('[replace]', filter_name);
+        title_text = json.map.title.text.replace('[replace]', filter_name);
       }else{
         data = json.map.data[filter];
         filter_name = $('#highmap-filter-container ul li a[data-id="' + filter + '"]').html();       
-        title_html = json.title.map_html.replace('[replace]', filter_name);
-        title_text = json.title.map_text.replace('[replace]', filter_name);
+        title_html = json.map.title.html.replace('[replace]', filter_name);
+        title_text = json.map.title.text.replace('[replace]', filter_name);
       }
 
     }else{
@@ -65,8 +65,8 @@ function build_highmap(json, filter){
       $('#highmap-filter-container').hide();
 
       data = json.map.data;
-      title_html = json.title.map_html;
-      title_text = json.title.map_text;
+      title_html = json.map.title.html;
+      title_text = json.map.title.text;
 
     }
 
@@ -100,7 +100,7 @@ function build_highmap(json, filter){
             style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
         },
         subtitle: {
-            text: json.subtitle.html,
+            text: json.map.subtitle.html,
             useHTML: true,
             style: {'text-align': 'center', 'margin-top': '-15px'}
         },
@@ -156,7 +156,7 @@ function build_highmap(json, filter){
           {
             // shape layer with data
             data : data,
-            name: json.row_question,
+            name: json.question.text,
             mapData: highmap_shapes[json.map.question_code],
             joinBy: ['name_en', 'shape_name'],
             allAreas: false, // if shape does not have value, do not show it so base layer above will show
@@ -190,7 +190,7 @@ function build_highmap(json, filter){
               text: title_text
             },
             subtitle: {
-              text: json.subtitle.text
+              text: json.map.subtitle.text
             }
           },
           buttons: {
@@ -250,10 +250,10 @@ function build_crosstab_chart(json){
     });
 
     // if there are a lot of answers, scale the height accordingly
-    if (json.row_answers.length + json.column_answers.length < 10){
+    if (json.question.answers.length + json.broken_down_by.answers.length < 10){
       $('#chart').height(500);
     }else{
-      $('#chart').height(330 + json.row_answers.length*26.125 + json.column_answers.length*21);
+      $('#chart').height(330 + json.question.answers.length*26.125 + json.broken_down_by.answers.length*21);
     }
 
     $('#chart').highcharts({
@@ -261,19 +261,19 @@ function build_crosstab_chart(json){
             type: 'bar'
         },
         title: {
-            text: json.title.html,
+            text: json.chart.title.html,
             useHTML: true,
             style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
         },
         subtitle: {
-            text: json.subtitle.html,
+            text: json.chart.subtitle.html,
             useHTML: true,
             style: {'text-align': 'center', 'margin-top': '-15px'}
         },
         xAxis: {
             categories: json.chart.labels,
             title: {
-                text: json.row_question
+                text: json.question.text
             }
         },
         yAxis: {
@@ -284,7 +284,7 @@ function build_crosstab_chart(json){
         },
         legend: {
             title: {
-                text: json.column_question
+                text: json.broken_down_by.text
             },
             layout: 'vertical',
             reversed: true,
@@ -307,13 +307,13 @@ function build_crosstab_chart(json){
         exporting: {
           sourceWidth: 1280,
           sourceHeight: 720,
-          filename: json.title.text,
+          filename: json.chart.title.text,
           chartOptions:{
             title: {
-              text: json.title.text
+              text: json.chart.title.text
             },
             subtitle: {
-              text: json.subtitle.text
+              text: json.chart.subtitle.text
             }
           },
           buttons: {
@@ -363,10 +363,10 @@ function build_pie_chart(json){
     });
 
     // if there are a lot of answers, scale the height accordingly
-    if (json.row_answers.length < 5){
+    if (json.question.answers.length < 5){
       $('#chart').height(500);
     }else{
-      $('#chart').height(425 + json.row_answers.length*21);
+      $('#chart').height(425 + json.question.answers.length*21);
     }
 
     $('#chart').highcharts({
@@ -376,12 +376,12 @@ function build_pie_chart(json){
             plotShadow: false
         },
         title: {
-            text: json.title.html,
+            text: json.chart.title.html,
             useHTML: true,
             style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
         },
         subtitle: {
-            text: json.subtitle.html,
+            text: json.chart.subtitle.html,
             useHTML: true,
             style: {'text-align': 'center', 'margin-top': '-15px'}
         },
@@ -413,13 +413,13 @@ function build_pie_chart(json){
         exporting: {
           sourceWidth: 1280,
           sourceHeight: 720,
-          filename: json.title.text,
+          filename: json.chart.title.text,
           chartOptions:{
             title: {
-              text: json.title.text
+              text: json.chart.title.text
             },
             subtitle: {
-              text: json.subtitle.text
+              text: json.chart.subtitle.text
             }
           },
           buttons: {
@@ -464,7 +464,7 @@ function build_pie_chart(json){
 // build data table
 function build_datatable(json){
   // set the title
-  $('.container-table h3').html(json.title.html + json.subtitle.html);
+  $('.container-table h3').html(json.results.title.html + json.results.subtitle.html);
 
   // if the datatable alread exists, kill it
   if (datatables != undefined && datatables.length > 0){
@@ -479,31 +479,31 @@ function build_datatable(json){
 
   // build head
   table += "<thead>";
-  if (json.type == 'crosstab'){
+  if (json.analysis_type == 'comparative'){
     // 3 headers of:
-    //                col question
-    //                col answers .....
+    //                broekn_down_by question
+    //                broekn_down_by answers .....
 
-    // row question   count percent count percent .....
+    // question code question   count percent count percent .....
     table += "<tr class='th-center'>";
     table += "<th class='var1-col'></th>";
-    table += "<th colspan='" + (2*(json.column_answers.length+1)).toString() + "'>";
-    table += json.column_question;
+    table += "<th colspan='" + (2*(json.broken_down_by.answers.length+1)).toString() + "'>";
+    table += json.broken_down_by.text;
     table += "</th>";
     table += "</tr>";
     table += "<tr class='th-center'>";
     table += "<th class='var1-col'></th>";
-    for(i=0; i<json.column_answers.length;i++){
+    for(i=0; i<json.broken_down_by.answers.length;i++){
       table += "<th colspan='2'>";
-      table += json.column_answers[i].text.toString();
+      table += json.broken_down_by.answers[i].text.toString();
       table += "</th>"
     }
     table += "</tr>";
     table += "<tr>";
     table += "<th class='var1-col'>";
-    table += json.row_question;
+    table += json.question.text;
     table += "</th>";
-    for(i=0; i<json.column_answers.length;i++){
+    for(i=0; i<json.broken_down_by.answers.length;i++){
       table += "<th>";
       table += $('.table-data:first').data('count');
       table += "</th>"
@@ -513,10 +513,10 @@ function build_datatable(json){
     }
     table += "</tr>";
   }else{
-    // 1 header of: row question, count, percent
+    // 1 header of: question code question, count, percent
     table += "<tr class='th-center'>";
     table += "<th class='var1-col'>";
-    table += json.row_question;
+    table += json.question.text;
     table += "</th><th>";
     table += $('.table-data:first').data('count');
     table += "</th><th>";
@@ -527,33 +527,33 @@ function build_datatable(json){
 
   // build body
   table += "<tbody>";
-  if (json.type == 'crosstab'){
-    // cells per row: row answer, count/percent for each col
-    for(i=0; i<json.row_answers.length; i++){
+  if (json.analysis_type == 'comparative'){
+    // cells per row: question code answer, count/percent for each col
+    for(i=0; i<json.results.analysis.length; i++){
       table += "<tr>";
-      table += "<td class='var1-col' data-order='" + json.row_answers[i].sort_order + "'>";
-      table += json.row_answers[i].text;
+      table += "<td class='var1-col' data-order='" + json.question.answers[i].sort_order + "'>";
+      table += json.results.analysis[i].answer_text;
       table += "</td>";
-      for(j=0; j<json.counts[i].length; j++){
-        table += "<td data-order='" + json.counts[i][j] + "'>";
-        table += Highcharts.numberFormat(json.counts[i][j],0);
+      for(j=0; j<json.results.analysis[i].broken_down_results.length; j++){
+        table += "<td data-order='" + json.results.analysis[i].broken_down_results[j].count + "'>";
+        table += Highcharts.numberFormat(json.results.analysis[i].broken_down_results[j].count,0);
         table += "</td>";
         table += "<td>";
-        table += json.percents[i][j].toFixed(2);
+        table += json.results.analysis[i].broken_down_results[j].percent.toFixed(2);
         table += "%</td>";
       }
       table += "</tr>";
     }
   }else{
-    // cells per row: row answer, count, percent
-    for(i=0; i<json.row_answers.length; i++){
+    // cells per row: question code answer, count, percent
+    for(i=0; i<json.results.analysis.length; i++){
       table += "<tr>";
-      table += "<td class='var1-col' data-order='" + json.row_answers[i].sort_order + "'>";
-      table += json.row_answers[i].text;
-      table += "</td><td data-order='" + json.counts[i] + "'>";
-      table += Highcharts.numberFormat(json.counts[i],0);
+      table += "<td class='var1-col' data-order='" + json.question.answers[i].sort_order + "'>";
+      table += json.results.analysis[i].answer_text;
+      table += "</td><td data-order='" + json.results.analysis[i].count + "'>";
+      table += Highcharts.numberFormat(json.results.analysis[i].count,0);
       table += "</td><td>";
-      table += json.percents[i].toFixed(2);
+      table += json.results.analysis[i].percent.toFixed(2);
       table += "%</td>";
       table += "</tr>";
     }
@@ -574,7 +574,7 @@ function build_datatable(json){
   datatables = [];
   $('.table-data').each(function(){
     datatables.push($(this).dataTable({
-      "dom": '<"top"fT>t<"bottom"lpi><"clear">',
+      "dom": '<"top"fl>t<"bottom"p><"clear">',
       "language": {
         "url": gon.datatable_i18n_url
       },
@@ -609,26 +609,26 @@ function build_datatable(json){
 // build details (question and possible answers)
 function build_details(json){
   // clear out content first
-  $('#tab-details #details-row-question, #tab-details #details-row-answers, #tab-details #details-col-question, #tab-details #details-col-answers').html('');
+  $('#tab-details #details-question-code-question, #tab-details #details-question-code-answers, #tab-details #details-broken-down-by-question, #tab-details #details-broken-down-by-answers').html('');
 
-  // add row question/answers
-  if (json.row_question && json.row_answers){
-    $('#tab-details #details-row-question').html(json.row_question);    
-    for(var i=0;i<json.row_answers.length;i++){
-      $('#tab-details #details-row-answers').append('<li>' + json.row_answers[i].text + '</li>');
+  // add question question/answers
+  if (json.question && json.question.answers){
+    $('#tab-details #details-question-code-question').html(json.question.text);    
+    for(var i=0;i<json.question.answers.length;i++){
+      $('#tab-details #details-question-code-answers').append('<li>' + json.question.answers[i].text + '</li>');
     }
   }
 
-  // add col question/answers
-  if (json.column_question && json.column_answers){
-    $('#tab-details #details-col-question').html(json.column_question);    
-    for(var i=0;i<json.column_answers.length;i++){
-      $('#tab-details #details-col-answers').append('<li>' + json.column_answers[i].text + '</li>');
+  // add broken down by question/answers
+  if (json.broken_down_by && json.broken_down_by.answers){
+    $('#tab-details #details-broken-down-by-question').html(json.broken_down_by.text);    
+    for(var i=0;i<json.broken_down_by.answers.length;i++){
+      $('#tab-details #details-broken-down-by-answers').append('<li>' + json.broken_down_by.answers[i].text + '</li>');
     }
-    $('#tab-details #details-col').show();
+    $('#tab-details #details-broken-down-by').show();
   }else{
     // no column data so hide this section
-    $('#tab-details #details-col').hide();
+    $('#tab-details #details-broken-down-by').hide();
   }
 }
 
@@ -636,7 +636,7 @@ function build_details(json){
 // build the visualizations for the explore data page
 function build_explore_data_page(json){
 
-  if (json.type == 'crosstab'){
+  if (json.analysis_type == 'comparative'){
     build_crosstab_chart(json);
   }else{
     build_pie_chart(json);
@@ -660,29 +660,62 @@ function get_explore_data(is_back_button){
   if (is_back_button == undefined){
     is_back_button = false;
   }
-  // get params
-  // do not get any hidden fields (utf8 and authenticity token)
-  var querystring;
-  if (is_back_button){
-    var split = window.location.href.split('?');
-    if (split.length == 2){
-      querystring = split[1];
-    }
+  // build querystring for url and ajax call
+  var ajax_data = {};
+  var url_querystring = [];
+  // add options
+  ajax_data.dataset_id = gon.dataset_id;
+  ajax_data.access_token = gon.app_api_key;
+  ajax_data.with_title = true;
+  ajax_data.with_chart_data = true;
+  ajax_data.with_map_data = true;
+
+  params = queryStringToJSON(window.location.href);
+
+  if (is_back_button && params != undefined){
+    // add each param that was in the url
+    $.map(params, function(v, k){
+      ajax_data[k] = v;
+      url_querystring.push(l + '=' + v);
+    });
+
   } else{
-    querystring = $("form#form-explore-data select, form#form-explore-data input:not([type=hidden])").serialize();
+    // question code
+    if ($('select#question_code').val() != ''){
+      ajax_data.question_code = $('select#question_code').val();
+      url_querystring.push('question_code=' + ajax_data.question_code);
+    }
+
+    // broken down by
+    if ($('select#broken_down_by_code').val() != ''){
+      ajax_data.broken_down_by_code = $('select#broken_down_by_code').val();
+      url_querystring.push('broken_down_by_code=' + ajax_data.broken_down_by_code);
+    }
+
+    // filtered by
+    if ($('select#filtered_by_code').val() != ''){
+      ajax_data.filtered_by_code = $('select#filtered_by_code').val();
+      url_querystring.push('filtered_by_code=' + ajax_data.filtered_by_code);
+    }
+
+    // can exclude
+    if ($('input#can_exclude').is(':checked')){
+      ajax_data.can_exclude = true;
+      url_querystring.push('can_exclude=' + ajax_data.can_exclude);
+    }
 
     // add language param from url query string, if it exists
-    params = queryStringToJSON(window.location.href);
     if (params.language != undefined){
-      querystring += "&language=" + params.language;
+      ajax_data.language = params.language;
+      url_querystring.push('language=' + ajax_data.language);
     }
   }
 
   // call ajax
   $.ajax({
     type: "GET",
-    url: gon.explore_data_ajax_path,
-    data: querystring,
+    url: gon.api_dataset_analysis_path,
+    data: ajax_data,
     dataType: 'json'
   })
   .error(function( jqXHR, textStatus, errorThrown ) {
@@ -694,7 +727,7 @@ function get_explore_data(is_back_button){
     build_explore_data_page(json);
 
     // update url
-    var new_url = [location.protocol, '//', location.host, location.pathname, '?', querystring].join('');
+    var new_url = [location.protocol, '//', location.host, location.pathname, '?', url_querystring.join('&')].join('');
 
     // change the browser URL to the given link location
     if (!is_back_button && new_url != window.location.href){
@@ -710,19 +743,16 @@ function get_explore_data(is_back_button){
 // reset the filter forms and select a random variable for the row
 function reset_filter_form(){
 
-  //    $('select#row').val('');
-  $('select#col').val('');
-  $('select#filter_variable').val('');
-  $('select#filter_value').val('');
-  $('input#exclude_dkra').removeAttr('checked');
+  //    $('select#question_code').val('');
+  $('select#broken_down_by_code').val('');
+  $('select#filtered_by_code').val('');
+  $('input#can_exclude').removeAttr('checked');
 
   // reload the lists
-  //    $('select#row').selectpicker('refresh');
-  $('select#col').selectpicker('refresh');
+  //    $('select#question_code').selectpicker('refresh');
+  $('select#broken_down_by_code').selectpicker('refresh');
   $('#btn-swap-vars').hide();
-  $('select#filter_variable').selectpicker('refresh');
-  $('select#filter_value').selectpicker('refresh');
-  $('#filter_value_container').hide();
+  $('select#filtered_by_code').selectpicker('refresh');
 
 }
 
@@ -777,24 +807,24 @@ $(document).ready(function() {
     // if option changes, make sure the select option is not available in the other lists
     $('select.selectpicker').change(function(){
       val = $(this).val();
-      // if this is row, update col
+      // if this is question, update broken down by
       // else, vice-versa
-      if ($(this).attr('id') == 'row'){
-        // update col list
+      if ($(this).attr('id') == 'question_code'){
+        // update broken down by list
         // remove all disabled
-        $('select.selectpicker#col option[disabled="disabled"]').removeAttr('disabled');  
+        $('select#broken_down_by_code option[disabled="disabled"]').removeAttr('disabled');  
         // disable the new selection
-        $('select.selectpicker#col option[value="' + val + '"]').attr('disabled', 'disabled');
+        $('select#broken_down_by_code option[value="' + val + '"]').attr('disabled', 'disabled');
         // update the select list
-        $('select.selectpicker#col').selectpicker('refresh');
-      }else if ($(this).attr('id') == 'col'){
-        // update row list
+        $('select#broken_down_by_code').selectpicker('refresh');
+      }else if ($(this).attr('id') == 'broken_down_by_code'){
+        // update question list
         // remove all disabled
-        $('select.selectpicker#row option[disabled="disabled"]').removeAttr('disabled');  
+        $('select#question_code option[disabled="disabled"]').removeAttr('disabled');  
         // disable the new selection
-        $('select.selectpicker#row option[value="' + val + '"]').attr('disabled', 'disabled');
+        $('select#question_code option[value="' + val + '"]').attr('disabled', 'disabled');
         // update the select list
-        $('select.selectpicker#row').selectpicker('refresh');
+        $('select#question_code').selectpicker('refresh');
 
         // if val != '' then turn on swap button
         if (val == ''){
@@ -805,83 +835,52 @@ $(document).ready(function() {
       }
 
       // update filter list
-      var row = $('select.selectpicker#row').val();
-      var col = $('select.selectpicker#col').val();
+      var q = $('select#question_code').val();
+      var bdb = $('select#broken_down_by_code').val();
       // if filter is one of these values, reset filter to no filter
-      if (($('select#filter_variable').val() == row && row != '') || ($('select#filter_variable').val() == col && col != '')){
+      if (($('select#filtered_by_code').val() == q && q != '') || ($('select#filtered_by_code').val() == bdb && bdb != '')){
         // reset value and hide filter answers
-        $('select#filter_variable').selectpicker('val', '');
-        $('#filter_value_container').fadeOut();
-        $('select#filter_value option:not([disabled])').attr('disabled','disabled');
-        $('select#filter_value').selectpicker('refresh');
-        $('select#filter_value').selectpicker('render');
+        $('select#filtered_by_code').selectpicker('val', '');
       }   
       // mark selected items as disabled
-      $('select#filter_variable option[disabled="disabled"]').removeAttr('disabled');  
-      $('select#filter_variable option[value="' + row + '"]').attr('disabled','disabled');
-      $('select#filter_variable option[value="' + col + '"]').attr('disabled','disabled');
+      $('select#filtered_by_code option[disabled="disabled"]').removeAttr('disabled');  
+      $('select#filtered_by_code option[value="' + q + '"]').attr('disabled','disabled');
+      $('select#filtered_by_code option[value="' + bdb + '"]').attr('disabled','disabled');
 
-      $('select#filter_variable').selectpicker('refresh');
-      $('select#filter_variable').selectpicker('render');
+      $('select#filtered_by_code').selectpicker('refresh');
+      $('select#filtered_by_code').selectpicker('render');
     });  
-
-    // if filter variable is selected, update the filter values list
-    $('select#filter_variable').change(function(){
-      var value = $(this).val();
-
-      if (value == ''){
-        // no filter, so hide the filter values
-        $('#filter_value_container').fadeOut();
-        // mark all disabled
-        $('select#filter_value option:not([disabled])').attr('disabled','disabled');
-      }else{
-        // mark all disabled
-        $('select#filter_value option:not([disabled])').attr('disabled','disabled');
-
-        // turn on the values that have the filter variable value
-        $('select#filter_value option[data-code="' + value + '"]').removeAttr('disabled');
-
-        // show list
-        $('#filter_value_container').fadeIn();
-      }
-
-      // reload the list, selecting the first item in the list
-      $('select#filter_value option[data-code="' + value + '"]:first').attr('selected', 'selected');
-      $('select#filter_value').selectpicker('refresh');
-      $('select#filter_value').selectpicker('render');
-
-    });
 
     // swap vars button
     // - when clicked, swap the values and then submit the form
     $('button#btn-swap-vars').click(function(){
       // get the vals
-      var var1 = $('select#row').val();
-      var var2 = $('select#col').val();
+      var var1 = $('select#question_code').val();
+      var var2 = $('select#broken_down_by_code').val();
 
       // turn off disabled options
       // so can select in next step
-      $('select#row option[value="' + var2 + '"]').removeAttr('disabled');
-      $('select#col option[value="' + var1 + '"]').removeAttr('disabled');
+      $('select#question_code option[value="' + var2 + '"]').removeAttr('disabled');
+      $('select#broken_down_by_code option[value="' + var1 + '"]').removeAttr('disabled');
 
       // refresh so disabled options are removed
-      $('select#row').selectpicker('refresh');
-      $('select#col').selectpicker('refresh');
+      $('select#question_code').selectpicker('refresh');
+      $('select#broken_down_by_code').selectpicker('refresh');
 
       // swap the vals
-      $('select#row').selectpicker('val', var2);
-      $('select#col').selectpicker('val', var1);
+      $('select#question_code').selectpicker('val', var2);
+      $('select#broken_down_by_code').selectpicker('val', var1);
 
-      $('select#row').selectpicker('render');
-      $('select#col').selectpicker('render');
+      $('select#question_code').selectpicker('render');
+      $('select#broken_down_by_code').selectpicker('render');
 
       // disable the swapped values
-      $('select#row option[value="' + var1 + '"]').attr('disabled', 'disabled');
-      $('select#col option[value="' + var2 + '"]').attr('disabled', 'disabled');
+      $('select#question_code option[value="' + var1 + '"]').attr('disabled', 'disabled');
+      $('select#broken_down_by_code option[value="' + var2 + '"]').attr('disabled', 'disabled');
 
       // refresh so disabled options are updated
-      $('select#row').selectpicker('refresh');
-      $('select#col').selectpicker('refresh');
+      $('select#question_code').selectpicker('refresh');
+      $('select#broken_down_by_code').selectpicker('refresh');
 
       // submit the form
       $('input#btn-submit').trigger('click');
@@ -913,70 +912,46 @@ $(document).ready(function() {
       params = queryStringToJSON(window.location.href);
 
       // for each form field, reset if need to
-      // row
-      if (params.row != $('select#row').val()){
-        if (params.row == undefined){
-          $('select#row').val('');
+      // question code
+      if (params.question_code != $('select#question_code').val()){
+        if (params.question_code == undefined){
+          $('select#question_code').val('');
         }else{
-          $('select#row').val(params.row);
+          $('select#question_code').val(params.question_code);
         }
-        $('select#row').selectpicker('refresh');
+        $('select#question_code').selectpicker('refresh');
       }
 
-      // col
-      if (params.col != $('select#col').val()){
-        if (params.col == undefined){
-          $('select#col').val('');
+      // broken down by code
+      if (params.broken_down_by_code != $('select#broken_down_by_code').val()){
+        if (params.broken_down_by_code == undefined){
+          $('select#broken_down_by_code').val('');
         }else{
-          $('select#col').val(params.col);
+          $('select#broken_down_by_code').val(params.broken_down_by_code);
         }
-        $('select#col').selectpicker('refresh');
+        $('select#broken_down_by_code').selectpicker('refresh');
       }
-      if ($('select#col').val() == ''){
+      if ($('select#broken_down_by_code').val() == ''){
         $('#btn-swap-vars').hide();
       }else{
         $('#btn-swap-vars').show();
       }
 
-      // filter variable
-      if (params.filter_variable != $('select#filter_variable').val()){
-        if (params.filter_variable == undefined){
-          $('select#filter_variable').val('');
+      // filtered by
+      if (params.filtered_by_code != $('select#filtered_by_code').val()){
+        if (params.filtered_by_code == undefined){
+          $('select#filtered_by_code').val('');
         }else{
-          $('select#filter_variable').val(params.filter_variable);
+          $('select#filtered_by_code').val(params.filtered_by_code);
         }
-        $('select#filter_variable').selectpicker('refresh');
+        $('select#filtered_by_code').selectpicker('refresh');
       }
 
-      // filter value
-      if (params.filter_variable == ''){
-        // no filter, so hide the filter values
-        $('#filter_value_container').fadeOut();
-        // mark all disabled
-        $('select#filter_value option:not([disabled])').attr('disabled','disabled');
-      } else{
-        // deselect what is there
-        $('select#filter_value').val('');
-
-        // mark all disabled
-        $('select#filter_value option:not([disabled])').attr('disabled','disabled');
-
-        // turn on the values that have the filter variable value
-        $('select#filter_value option[data-code="' + params.filter_variable + '"]').removeAttr('disabled');
-
-        // set the value
-        $('select#filter_value option[data-code="' + params.filter_variable + '"][value="' + params.filter_value + '"]').attr('selected', 'selected');
-
-        // show list
-        $('#filter_value_container').fadeIn();
-      }
-      $('select#filter_value').selectpicker('refresh');
-
-      // exclude dkra
-      if (params.exclude_dkra == 'true'){
-        $('input#exclude_dkra').attr('checked', 'checked');
+      // can exclude
+      if (params.can_exclude == 'true'){
+        $('input#can_exclude').attr('checked', 'checked');
       }else{
-        $('input#exclude_dkra').removeAttr('checked');
+        $('input#can_exclude').removeAttr('checked');
       }
 
       // reload the data

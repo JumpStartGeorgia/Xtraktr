@@ -1,4 +1,5 @@
 class ApiV1
+  extend ActionView::Helpers::NumberHelper
   ANALYSIS_TYPE = {:single => 'single', :comparative => 'comparative', :time_series => 'time_series'}
 
   ########################################
@@ -43,8 +44,9 @@ class ApiV1
   #  - broken_down_by_code - code of question to compare against the first question (optional)
   #  - filtered_by_code - code of question to filter the analysis by (optioanl)
   #  - can_exclude - boolean indicating if the can_exclude answers should by excluded (optional, default false)
-  #  - chart_formatted_data - boolean indicating if results should include data formatted for highcharts (optional, default false)
-  #  - map_formatted_data - boolean indicating if results should include data formatted for highmaps (optional, default false)
+  #  - with_title - boolean indicating if results should include title (optional, default false)
+  #  - with_chart_data - boolean indicating if results should include data formatted for highcharts (optional, default false)
+  #  - with_map_data - boolean indicating if results should include data formatted for highmaps (optional, default false)
   # return format:
   # {
   #   dataset: {id, title},
@@ -52,9 +54,9 @@ class ApiV1
   #   broken_down_by: {code, original_code, text, answers: [{value, text, can_exclude}]} (optional),
   #   filtered_by: {code, original_code, text, answers: [{value, text, can_exclude}]} (optional),
   #   analysis_type: single/comparative (single means results will be hash while comparative means results will be array)
-  #   results: {total_responses, analysis: [{answer_value, answer_text, count, percent}, ...]}
-  #   chart: {data: [{name, y(percent), count, answer_value}, ...] } (optional)
-  #   map: {question_code, data: [{shape_name, display_name, value, count}, ...] } (optional)
+  #   results: {title, total_responses, analysis: [{answer_value, answer_text, count, percent}, ...]}
+  #   chart: {title, data: [{name, y(percent), count, answer_value}, ...] } (optional)
+  #   map: {question_code, title, data: [{shape_name, display_name, value, count}, ...] } (optional)
   #   errors: [{status, detail}] (optional)
   # }  
   def self.dataset_analysis(dataset_id, question_code, options={})
@@ -75,14 +77,15 @@ class ApiV1
 
     ########################
     # get options
-    can_exclude = options[:can_exclude].present? && options[:can_exclude].to_bool == true
-    chart_formatted_data = options[:chart_formatted_data].present? && options[:chart_formatted_data].to_bool == true
-    map_formatted_data = options[:map_formatted_data].present? && options[:map_formatted_data].to_bool == true
+    can_exclude = options['can_exclude'].present? && options['can_exclude'].to_bool == true
+    with_title = options['with_title'].present? && options['with_title'].to_bool == true
+    with_chart_data = options['with_chart_data'].present? && options['with_chart_data'].to_bool == true
+    with_map_data = options['with_map_data'].present? && options['with_map_data'].to_bool == true
 
     # if filter by by exists, get it
     filtered_by = nil
-    if options[:filtered_by_code].present?
-      filtered_by = dataset.questions.with_code(options[:filtered_by_code].strip)
+    if options['filtered_by_code'].present?
+      filtered_by = dataset.questions.with_code(options['filtered_by_code'].strip)
 
       # if the filter by question could not be found, stop
       if filtered_by.nil?
@@ -92,8 +95,8 @@ class ApiV1
 
     # if broken down by exists, get it
     broken_down_by = nil
-    if options[:broken_down_by_code].present?
-      broken_down_by = dataset.questions.with_code(options[:broken_down_by_code].strip)
+    if options['broken_down_by_code'].present?
+      broken_down_by = dataset.questions.with_code(options['broken_down_by_code'].strip)
 
       # if the broken_down_by by question could not be found, stop
       if broken_down_by.nil?
@@ -116,14 +119,14 @@ class ApiV1
     # use the data[] for the parameter values to get answers that should be included in analysis
     if broken_down_by.present?
       data[:analysis_type] = ANALYSIS_TYPE[:comparative]
-      data[:results] = dataset_comparative_analysis(dataset, data[:question], data[:broken_down_by], data[:filtered_by])
-      data[:chart] = dataset_comparative_chart(data) if chart_formatted_data
-      data[:map] = dataset_comparative_map(question.answers, broken_down_by.answers, data, question.is_mappable?) if map_formatted_data && (question.is_mappable? || broken_down_by.is_mappable?)
+      data[:results] = dataset_comparative_analysis(dataset, data[:question], data[:broken_down_by], data[:filtered_by], with_title)
+      data[:chart] = dataset_comparative_chart(data, with_title) if with_chart_data
+      data[:map] = dataset_comparative_map(question.answers, broken_down_by.answers, data, question.is_mappable?, with_title) if with_map_data && (question.is_mappable? || broken_down_by.is_mappable?)
     else
       data[:analysis_type] = ANALYSIS_TYPE[:single]
-      data[:results] = dataset_single_analysis(dataset, data[:question], data[:filtered_by])
-      data[:chart] = dataset_single_chart(data) if chart_formatted_data
-      data[:map] = dataset_single_map(question.answers, data) if map_formatted_data && question.is_mappable?
+      data[:results] = dataset_single_analysis(dataset, data[:question], data[:filtered_by], with_title)
+      data[:chart] = dataset_single_chart(data, with_title) if with_chart_data
+      data[:map] = dataset_single_map(question.answers, data, with_title) if with_map_data && question.is_mappable?
     end
 
     return data
@@ -169,7 +172,8 @@ class ApiV1
   #  - question_code - code of question to analyze (required)
   #  - filtered_by_code - code of question to filter the analysis by (optioanl)
   #  - can_exclude - boolean indicating if the can_exclude answers should by excluded (optional, default false)
-  #  - chart_formatted_data - boolean indicating if results should include data formatted for highcharts (optional, default false)
+  #  - with_title - boolean indicating if results should include title (optional, default false)
+  #  - with_chart_data - boolean indicating if results should include data formatted for highcharts (optional, default false)
   # return format:
   # {
   #   time_series: {id, title},
@@ -177,8 +181,8 @@ class ApiV1
   #   question: {code, original_code, text, answers: [{value, text, can_exclude}]},
   #   filtered_by: {code, original_code, text, answers: [{value, text, can_exclude}]} (optional),
   #   analysis_type: single (will always be single)
-  #   results: {total_responses, analysis: [{dataset_label, answer_text, count, percent}, ...]}
-  #   chart: {data: [{y(percent), count}, ...] } (optional)
+  #   results: {title, total_responses, analysis: [{dataset_label, answer_text, count, percent}, ...]}
+  #   chart: {title, data: [{y(percent), count}, ...] } (optional)
   #   errors: [{status, detail}] (optional)
   # }  
   def self.time_series_analysis(time_series_id, question_code, options={})
@@ -208,13 +212,14 @@ class ApiV1
 
     ########################
     # get options
-    can_exclude = options[:can_exclude].present? && options[:can_exclude].to_bool == true
-    chart_formatted_data = options[:chart_formatted_data].present? && options[:chart_formatted_data].to_bool == true
+    can_exclude = options['can_exclude'].present? && options['can_exclude'].to_bool == true
+    with_title = options['with_title'].present? && options['with_title'].to_bool == true
+    with_chart_data = options['with_chart_data'].present? && options['with_chart_data'].to_bool == true
 
     # if filter by by exists, get it
     filtered_by = nil
-    if options[:filtered_by_code].present?
-      filtered_by = time_series.questions.with_code(options[:filtered_by_code].strip)
+    if options['filtered_by_code'].present?
+      filtered_by = time_series.questions.with_code(options['filtered_by_code'].strip)
 
       # if the filter by question could not be found, stop
       if filtered_by.nil?
@@ -247,8 +252,8 @@ class ApiV1
       return {errors: [{status: '404', detail: I18n.t('api.msgs.no_time_series_dataset_error') }]}
     end
 
-    data[:results] = time_series_single_analysis(data[:datasets], individual_results, data[:question], data[:filtered_by])
-    data[:chart] = time_series_single_chart(data) if chart_formatted_data
+    data[:results] = time_series_single_analysis(data[:datasets], individual_results, data[:question], data[:filtered_by], with_title)
+    data[:chart] = time_series_single_chart(data, with_title) if with_chart_data
 
     return data
   end
@@ -264,7 +269,7 @@ private
     hash = {}
     if question.present?
       hash = {code: question.code, original_code: question.original_code, text: question.text}
-      hash[:answers] = (can_exclude == true ? question.answers.must_include_for_analysis : question.answers.all_for_analysis).map{|x| {value: x.value, text: x.text, can_exclude: x.can_exclude}}
+      hash[:answers] = (can_exclude == true ? question.answers.must_include_for_analysis : question.answers.all_for_analysis).map{|x| {value: x.value, text: x.text, can_exclude: x.can_exclude, sort_order: x.sort_order}}
     end
 
     return hash
@@ -273,7 +278,7 @@ private
 
 
   # for the given dataset and question, do a single analysis
-  def self.dataset_single_analysis(dataset, question, filtered_by=nil)
+  def self.dataset_single_analysis(dataset, question, filtered_by=nil, with_title=false)
     # get the data for this code
     data = dataset.data_items.code_data(question[:code])
 
@@ -285,17 +290,35 @@ private
         # merge the data and filter
         # and then pull out the data that has the corresponding filter value
         merged_data = filter_data.zip(data)
-        filter_results = []
+
+        filter_results = nil
+        if with_title
+          filter_results = {title: {html: nil, text: nil}, subtitle: {html: nil, text: nil}, filter_analysis: []}
+
+          filter_results[:title][:html] = dataset_single_analysis_title_html(question[:text], filtered_by[:text])
+          filter_results[:title][:text] = dataset_single_analysis_title_text(question[:text], filtered_by[:text])
+        else
+          filter_results = {filter_analysis: []}
+        end
+
         filtered_by[:answers].each do |filter_answer|
-          filter_item = {filter_answer_value: filter_answer[:value], filter_answer_text: filter_answer[:text], filter_results: nil}
-          filter_item[:filter_results] = dataset_single_analysis_processing(question, merged_data.select{|x| x[0].to_s == filter_answer[:value].to_s}.map{|x| x[1]})
-          filter_results << filter_item
+          filter_item = {filter_answer_value: filter_answer[:value], filter_answer_text: filter_answer[:text]}
+
+          filter_item[:filter_results] = dataset_single_analysis_processing(question, merged_data.select{|x| x[0].to_s == filter_answer[:value].to_s}.map{|x| x[1]}, with_title, filtered_by[:text], filter_answer[:text])
+
+          filter_results[:filter_analysis] << filter_item
+        end
+
+        if with_title
+          # needed to run all anaylsis in order to have all total responses for subtitle
+          filter_results[:subtitle][:html] = dataset_analysis_subtitle_html_filtered(filtered_by[:text], filter_results[:filter_analysis])
+          filter_results[:subtitle][:text] = dataset_analysis_subtitle_text_filtered(filtered_by[:text], filter_results[:filter_analysis])
         end
 
         return filter_results
       end
     else
-      return dataset_single_analysis_processing(question, data)
+      return dataset_single_analysis_processing(question, data, with_title)
     end
 
   end
@@ -303,8 +326,13 @@ private
 
 
   # for the given question and it's data, do a single analysis and convert into counts and percents
-  def self.dataset_single_analysis_processing(question, data)
-    results = {total_responses: 0, analysis: []}
+  def self.dataset_single_analysis_processing(question, data, with_title=false, filtered_by_text=nil, filtered_by_answer=nil)
+    results = nil
+    if with_title
+      results = {title: {html: nil, text: nil}, subtitle: {html: nil, text: nil}, total_responses: 0, analysis: []}
+    else
+      results = {total_responses: 0, analysis: []}
+    end
 
     if data.present?
       # do not want to count nil values
@@ -315,6 +343,14 @@ private
       if counts_per_answer.present?
         # record the total response
         results[:total_responses] = counts_per_answer.values.inject(:+)
+
+        # set the titles
+        if with_title
+          results[:title][:html] = dataset_single_analysis_title_html(question[:text], filtered_by_text, filtered_by_answer)
+          results[:title][:text] = dataset_single_analysis_title_text(question[:text], filtered_by_text, filtered_by_answer)
+          results[:subtitle][:html] = dataset_analysis_subtitle_html(results[:total_responses])
+          results[:subtitle][:text] = dataset_analysis_subtitle_text(results[:total_responses])
+        end
 
         # for each question answer, add the count and percent
         question[:answers].each do |answer|
@@ -331,18 +367,26 @@ private
     return results
   end
 
-
   # convert the results into pie chart format
   # return format: 
   # - no filter: {:data => [ {name, y(percent), count, answer_value}, ...] }
   # - with filter: [ {filter_answer_value, filter_answer_text, filter_results => [ {:data => [ {name, y(percent), count, answer_value}, ...] } ] } ]
-  def self.dataset_single_chart(data)
+  def self.dataset_single_chart(data, with_title=false)
     if data.present?
       chart = nil
       if data[:filtered_by].present?
         chart = []
-        data[:results].each do |filter|
-          chart_item = {filter_answer_value: filter[:filter_answer_value], filter_answer_text: filter[:filter_answer_text], filter_results: {data: []}}
+        data[:results][:filter_analysis].each do |filter|
+          chart_item = {filter_answer_value: filter[:filter_answer_value], filter_answer_text: filter[:filter_answer_text], filter_results: {} }
+  
+          # set the titles
+          # - assume titles are already set in data[:filtered_by][:results]
+          if with_title
+            chart_item[:filter_results][:title] = filter[:filter_results][:title]
+            chart_item[:filter_results][:subtitle] = filter[:filter_results][:subtitle]
+          end
+  
+          chart_item[:filter_results][:data] = []
           data[:question][:answers].each do |answer|
             data_result = filter[:filter_results][:analysis].select{|x| x[:answer_value] == answer[:value]}.first
             if data_result.present?
@@ -355,6 +399,14 @@ private
         end
       else
         chart = {}
+
+        # set the titles
+        # - assume titles are already set in data[:results]
+        if with_title
+          chart[:title] = data[:results][:title]
+          chart[:subtitle] = data[:results][:subtitle]
+        end
+
         chart[:data] = []
         data[:question][:answers].each do |answer|
           data_result = data[:results][:analysis].select{|x| x[:answer_value] == answer[:value]}.first
@@ -383,16 +435,24 @@ private
   # return format: 
   # - no filter: {data => [ {shape_name, display_name, value, count}, ... ] }
   # - with filter: [ {filter_answer_value, filter_answer_text, filter_results => [ {data => [ {shape_name, display_name, value, count}, ... ] } ] } ]
-  def self.dataset_single_map(answers, data)
+  def self.dataset_single_map(answers, data, with_title=false)
     if answers.present? && data.present?
       map = nil
 
       if data[:filtered_by].present?
         map = []
-        data[:results].each do |filter|
+        data[:results][:filter_analysis].each do |filter|
           map_item = {filter_answer_value: filter[:filter_answer_value], filter_answer_text: filter[:filter_answer_text], 
-                    filter_results: {question_code: data[:question][:code], data: []}}
+                    filter_results: {question_code: data[:question][:code]}}
 
+          # set the titles
+          # - assume titles are already set in data[:results]
+          if with_title
+            map_item[:filter_results][:title] = filter[:filter_results][:title]
+            map_item[:filter_results][:subtitle] = filter[:filter_results][:subtitle]
+          end
+
+          map_item[:filter_results][:data] = []
           answers.each_with_index do |answer|
             data_result = filter[:filter_results][:analysis].select{|x| x[:answer_value] == answer.value}.first
             if data_result.present?
@@ -410,6 +470,13 @@ private
 
         # need question code so know which shape data to use
         map[:question_code] = data[:question][:code]
+
+        # set the titles
+        # - assume titles are already set in data[:results]
+        if with_title
+          map[:title] = data[:results][:title]
+          map[:subtitle] = data[:results][:subtitle]
+        end
 
         # load the data
         map[:data] = []
@@ -438,7 +505,7 @@ private
   #######################################3
 
   # for the given dataset, question and broken down by question, do a comparative analysis
-  def self.dataset_comparative_analysis(dataset, question, broken_down_by, filtered_by=nil)
+  def self.dataset_comparative_analysis(dataset, question, broken_down_by, filtered_by=nil, with_title=false)
     # get the values for the codes from the data
     question_data = dataset.data_items.code_data(question[:code])
     broken_down_data = dataset.data_items.code_data(broken_down_by[:code])
@@ -455,17 +522,35 @@ private
         # merge the data and filter
         # and then pull out the data that has the corresponding filter value
         merged_data = filter_data.zip(data)
-        filter_results = []
+
+        filter_results = nil
+        if with_title
+          filter_results = {title: {html: nil, text: nil}, subtitle: {html: nil, text: nil}, filter_analysis: []}
+
+          filter_results[:title][:html] = dataset_comparative_analysis_title_html(question[:text], broken_down_by[:text], filtered_by[:text])
+          filter_results[:title][:text] = dataset_comparative_analysis_title_text(question[:text], broken_down_by[:text], filtered_by[:text])
+        else
+          filter_results = {filter_analysis: []}
+        end
+
         filtered_by[:answers].each do |filter_answer|
-          filter_item = {filter_answer_value: filter_answer[:value], filter_answer_text: filter_answer[:text], filter_results: nil}
-          filter_item[:filter_results] = dataset_comparative_analysis_processing(question, broken_down_by, merged_data.select{|x| x[0].to_s == filter_answer[:value].to_s}.map{|x| x[1]})
-          filter_results << filter_item
+          filter_item = {filter_answer_value: filter_answer[:value], filter_answer_text: filter_answer[:text]}
+
+          filter_item[:filter_results] = dataset_comparative_analysis_processing(question, broken_down_by, merged_data.select{|x| x[0].to_s == filter_answer[:value].to_s}.map{|x| x[1]}, with_title, filtered_by[:text], filter_answer[:text])
+          
+          filter_results[:filter_analysis] << filter_item
+        end
+
+        if with_title
+          # needed to run all anaylsis in order to have all total responses for subtitle
+          filter_results[:subtitle][:html] = dataset_analysis_subtitle_html_filtered(filtered_by[:text], filter_results[:filter_analysis])
+          filter_results[:subtitle][:text] = dataset_analysis_subtitle_text_filtered(filtered_by[:text], filter_results[:filter_analysis])
         end
 
         return filter_results
       end
     else
-      return dataset_comparative_analysis_processing(question, broken_down_by, data)
+      return dataset_comparative_analysis_processing(question, broken_down_by, data, with_title)
     end
 
   end
@@ -474,8 +559,13 @@ private
 
   # for the given dataset, question and broken down by question, do a comparative analysis and convert into counts and percents
   # data is an array of [question answer, broken down by answer]
-  def self.dataset_comparative_analysis_processing(question, broken_down_by, data)
-    results = {total_responses: 0, analysis: []}
+  def self.dataset_comparative_analysis_processing(question, broken_down_by, data, with_title=false, filtered_by_text=nil, filtered_by_answer=nil)
+    results = nil
+    if with_title
+      results = {title: {html: nil, text: nil}, subtitle: {html: nil, text: nil}, total_responses: 0, analysis: []}
+    else
+      results = {total_responses: 0, analysis: []}
+    end
     analysis = results[:analysis]
     question_answer_template = {answer_value: nil, answer_text: nil, broken_down_results: nil}
     broken_down_answer_template = {broken_down_answer_value: nil, broken_down_answer_text: nil, count: 0, percent: 0}
@@ -535,6 +625,13 @@ private
         # total responses
         results[:total_responses] = total
 
+        # set the titles
+        if with_title
+          results[:title][:html] = dataset_comparative_analysis_title_html(question[:text], broken_down_by[:text], filtered_by_text, filtered_by_answer)
+          results[:title][:text] = dataset_comparative_analysis_title_text(question[:text], broken_down_by[:text], filtered_by_text, filtered_by_answer)
+          results[:subtitle][:html] = dataset_analysis_subtitle_html(results[:total_responses])
+          results[:subtitle][:text] = dataset_analysis_subtitle_text(results[:total_responses])
+        end
       end
 
     end
@@ -546,18 +643,27 @@ private
   # return format: 
   # - no filter: {:data => [ {name, y(percent), count, answer_value}, ...] }
   # - with filter: [ {filter_answer_value, filter_results => [ {:data => [ {name, y(percent), count, answer_value}, ...] } ] } ]
-  def self.dataset_comparative_chart(data)
+  def self.dataset_comparative_chart(data, with_title=false)
     if data.present?
       chart = nil
       if data[:filtered_by].present?
         chart = []
-        data[:results].each do |filter|
-          chart_item = {filter_answer_value: filter[:filter_answer_value], filter_answer_text: filter[:filter_answer_text], filter_results: {labels: [], data: []}}
-          chart_item[:filter_results][:labels] = data[:question][:answers].map{|x| x[:text]}
+        data[:results][:filter_analysis].each do |filter|
+          chart_item = {filter_answer_value: filter[:filter_answer_value], filter_answer_text: filter[:filter_answer_text], filter_results: {}}
 
+          # set the titles
+          # - assume titles are already set in data[:filtered_by][:results]
+          if with_title
+            chart_item[:filter_results][:title] = filter[:filter_results][:title]
+            chart_item[:filter_results][:subtitle] = filter[:filter_results][:subtitle]
+          end
+
+          chart_item[:filter_results][:labels] = data[:question][:answers].map{|x| x[:text]}
+  
           # have to transpose the counts for highcharts
           counts = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:count]}}.transpose
 
+          chart_item[:filter_results][:data] = []
           data[:broken_down_by][:answers].each_with_index do |answer, i|
             chart_item[:filter_results][:data] << {name: answer[:text], data: counts[i]}
           end
@@ -568,6 +674,13 @@ private
         end
       else
         chart = {}
+
+        # set the titles
+        # - assume titles are already set in data[:results]
+        if with_title
+          chart[:title] = data[:results][:title]
+          chart[:subtitle] = data[:results][:subtitle]
+        end
 
         chart[:labels] = data[:question][:answers].map{|x| x[:text]}
         chart[:data] = []
@@ -600,20 +713,28 @@ private
   # return format: 
   # - no filter: {data => [ {shape_name, display_name, value, count}, ... ] }
   # - with filter: [ {filter_answer_value, filter_answer_text, filter_results => [ {data => [ {shape_name, display_name, value, count}, ... ] } ] } ]
-  def self.dataset_comparative_map(question_answers, broken_down_by_answers, data, question_mappable=true)
+  def self.dataset_comparative_map(question_answers, broken_down_by_answers, data, question_mappable=true, with_title=false)
     if question_answers.present? && broken_down_by_answers.present? && data.present?
       map = nil
 
       if data[:filtered_by].present?
         map = []
-        data[:results].each do |filter|
+        data[:results][:filter_analysis].each do |filter|
           map_item = {filter_answer_value: filter[:filter_answer_value], filter_answer_text: filter[:filter_answer_text], 
-                    filter_results: {question_code: nil, data: []}}
+                    filter_results: {}}
 
 
           if question_mappable
             # need question code so know which shape data to use
             map_item[:filter_results][:question_code] = data[:question][:code]
+
+            # set the titles
+            if with_title
+              map[:title] = {}
+              map[:title][:html] = dataset_comparative_analysis_map_title_html(data[:question][:text], data[:broken_down_by][:text], filter[:filter_answer_text], filter[:filter_answer_value])
+              map[:title][:text] = dataset_comparative_analysis_map_title_text(data[:question][:text], data[:broken_down_by][:text], filter[:filter_answer_text], filter[:filter_answer_value])
+              map[:subtitle] = data[:results][:subtitle]
+            end
 
             # have to transpose the counts for highcharts (and re-calculate percents)
             counts = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:count]}}.transpose
@@ -631,6 +752,7 @@ private
               end
             end
 
+            map_item[:filter_results][:data] = []
             broken_down_by_answers.each_with_index do |bdb_answer, bdb_index|
               item = {broken_down_answer_value: bdb_answer.value, broken_down_answer_text: bdb_answer.text, data: []}
               
@@ -643,9 +765,18 @@ private
             # need question code so know which shape data to use
             map_item[:filter_results][:question_code] = data[:broken_down_by][:code]
 
+            # set the titles
+            if with_title
+              map[:title] = {}
+              map[:title][:html] = dataset_comparative_analysis_map_title_html(data[:question][:text], data[:broken_down_by][:text], filter[:filter_answer_text], filter[:filter_answer_value])
+              map[:title][:text] = dataset_comparative_analysis_map_title_text(data[:question][:text], data[:broken_down_by][:text], filter[:filter_answer_text], filter[:filter_answer_value])
+              map[:subtitle] = data[:results][:subtitle]
+            end
+
             counts = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:count]}}
             percents = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:percent]}}
 
+            map_item[:filter_results][:data] = []
             question_answers.each_with_index do |q_answer, q_index|
               item = {broken_down_answer_value: q_answer.value, broken_down_answer_text: q_answer.text, data: []}
               
@@ -664,6 +795,15 @@ private
       else
         map = {}
         map[:question_code] = nil
+
+        # set the titles
+        if with_title
+          map[:title] = {}
+          map[:title][:html] = dataset_comparative_analysis_map_title_html(data[:question][:text], data[:broken_down_by][:text])
+          map[:title][:text] = dataset_comparative_analysis_map_title_text(data[:question][:text], data[:broken_down_by][:text])
+          map[:subtitle] = data[:results][:subtitle]
+        end
+
         map[:data] = []
 
         if question_mappable
@@ -754,7 +894,7 @@ private
     hash = {}
     if question.present?
       hash = {code: question.code, original_code: question.original_code, text: question.text}
-      hash[:answers] = (can_exclude == true ? question.answers.must_include_for_analysis : question.answers.sorted).map{|x| {value: x.value, text: x.text, can_exclude: x.can_exclude}}
+      hash[:answers] = (can_exclude == true ? question.answers.must_include_for_analysis : question.answers.sorted).map{|x| {value: x.value, text: x.text, can_exclude: x.can_exclude, sort_order: x.sort_order}}
     end
 
     return hash
@@ -762,20 +902,37 @@ private
 
 
   # for the given time_series and question, do a single analysis
-  def self.time_series_single_analysis(datasets, individual_results, question, filtered_by=nil)
+  def self.time_series_single_analysis(datasets, individual_results, question, filtered_by=nil, with_title=false)
     # if filter provided, then get data for filter
     # and then only pull out the code data that matches
     if filtered_by.present?
-      filter_results = []
+      filter_results = nil
+      if with_title
+        filter_results = {title: {html: nil, text: nil}, subtitle: {html: nil, text: nil}, filter_analysis: []}
+
+        filter_results[:title][:html] = time_series_single_analysis_title_html(question[:text], filtered_by[:text])
+        filter_results[:title][:text] = time_series_single_analysis_title_text(question[:text], filtered_by[:text])
+      else
+        filter_results = {filter_analysis: []}
+      end
+
       filtered_by[:answers].each do |filter_answer|
-        filter_item = {filter_answer_value: filter_answer[:value], filter_answer_text: filter_answer[:text], filter_results: nil}
-        filter_item[:filter_results] = time_series_single_analysis_processing(datasets, individual_results, question, filter_answer[:value])
-        filter_results << filter_item
+        filter_item = {filter_answer_value: filter_answer[:value], filter_answer_text: filter_answer[:text]}
+
+        filter_item[:filter_results] = time_series_single_analysis_processing(datasets, individual_results, question, with_title, filtered_by[:text], filter_answer[:value])
+
+        filter_results[:filter_analysis] << filter_item
+      end
+
+      if with_title
+        # needed to run all anaylsis in order to have all total responses for subtitle
+        filter_results[:subtitle][:html] = time_series_analysis_subtitle_html_filtered(filtered_by[:text], filter_results[:filter_analysis])
+        filter_results[:subtitle][:text] = time_series_analysis_subtitle_text_filtered(filtered_by[:text], filter_results[:filter_analysis])
       end
 
       return filter_results
     else
-      return time_series_single_analysis_processing(datasets, individual_results, question)
+      return time_series_single_analysis_processing(datasets, individual_results, question, with_title)
     end
 
   end
@@ -783,8 +940,13 @@ private
 
 
   # for the given question and it's data, do a single analysis and convert into counts and percents
-  def self.time_series_single_analysis_processing(datasets, individual_results, question, filter_answer_values=nil)
-    results = {total_responses: [], analysis: []}
+  def self.time_series_single_analysis_processing(datasets, individual_results, question, with_title=false, filter_text=nil, filter_answer_value=nil)
+    results = nil
+    if with_title
+      results = {title: {html: nil, text: nil}, subtitle: {html: nil, text: nil}, total_responses: [], analysis: []}
+    else
+      results = {total_responses: [], analysis: []}
+    end
 
     question[:answers].each do |answer|
       answer_item = {answer_value: answer[:value], answer_text: answer[:text], dataset_results: []}
@@ -797,8 +959,8 @@ private
         if individual_result.present?
           # get results from dataset
           dataset_answer_results = nil
-          if filter_answer_values.present?
-            filter_results = individual_result[:dataset_results][:results].select{|x| x[:filter_answer_value] == filter_answer_values}.first
+          if filter_answer_value.present?
+            filter_results = individual_result[:dataset_results][:results][:filter_analysis].select{|x| x[:filter_answer_value] == filter_answer_value}.first
             dataset_answer_results = filter_results[:filter_results][:analysis].select{|x| x[:answer_value] == answer[:value]}.first if filter_results.present?
           else
             dataset_answer_results = individual_result[:dataset_results][:results][:analysis].select{|x| x[:answer_value] == answer[:value]}.first
@@ -822,8 +984,8 @@ private
       # see if this dataset had results
       individual_result = individual_results.select{|x| x[:dataset_id] == dataset[:dataset_id]}.first
       if individual_result.present?
-        if filter_answer_values.present?
-          filter_results = individual_result[:dataset_results][:results].select{|x| x[:filter_answer_value] == filter_answer_values}.first
+        if filter_answer_value.present?
+          filter_results = individual_result[:dataset_results][:results][:filter_analysis].select{|x| x[:filter_answer_value] == filter_answer_value}.first
           response_item[:count] = filter_results[:filter_results][:total_responses] if filter_results.present?
         else
           response_item[:count] = individual_result[:dataset_results][:results][:total_responses]
@@ -833,26 +995,59 @@ private
       results[:total_responses] << response_item
     end
 
+    # set the titles
+    if with_title
+      if filter_answer_value.present?
+        # look for any match in filter results with the filter answer value
+        filter_result = individual_results.map{|x| x[:dataset_results][:results][:filter_analysis]}.flatten.select{|x| x[:filter_answer_value] == filter_answer_value}.first
+        if filter_result.present?
+          results[:title][:html] = time_series_single_analysis_title_html(question[:text], filter_text, filter_result[:filter_answer_text])
+          results[:title][:text] = time_series_single_analysis_title_text(question[:text], filter_text, filter_result[:filter_answer_text])
+          results[:subtitle][:html] = time_series_analysis_subtitle_html(results[:total_responses])
+          results[:subtitle][:text] = time_series_analysis_subtitle_text(results[:total_responses])
+        end
+      else
+        results[:title][:html] = time_series_single_analysis_title_html(question[:text])
+        results[:title][:text] = time_series_single_analysis_title_text(question[:text])
+        results[:subtitle][:html] = time_series_analysis_subtitle_html(results[:total_responses])
+        results[:subtitle][:text] = time_series_analysis_subtitle_text(results[:total_responses])
+      end
+    end
+
     return results
   end
 
 
   # convert the results into pie chart format
   # return format: 
-  # - no filter: {:data => [ {name, y(percent), count, answer_value}, ...] }
+  # - no filter: {title, subtitle, datasets, :data => [ {name, y(percent), count, answer_value}, ...] }
   # - with filter: [ {filter_answer_value, filter_answer_text, filter_results => [ {:data => [ {name, y(percent), count, answer_value}, ...] } ] } ]
-  def self.time_series_single_chart(data)
+  def self.time_series_single_chart(data, with_title=false)
     if data.present?
       chart = nil
       if data[:filtered_by].present?
         chart = []
-        data[:results].each do |filter|
-          chart_item = {filter_answer_value: filter[:filter_answer_value], filter_answer_text: filter[:filter_answer_text], filter_results: {data: []}}
+        data[:results][:filter_analysis].each do |filter|
+          chart_item = {filter_answer_value: filter[:filter_answer_value], filter_answer_text: filter[:filter_answer_text], filter_results: {}}
+
+          # set the titles
+          # - assume titles are already set in data[:filtered_by][:results]
+          if with_title
+            chart_item[:filter_results][:title] = filter[:filter_results][:title]
+            chart_item[:filter_results][:subtitle] = filter[:filter_results][:subtitle]
+          end
+  
+          chart_item[:filter_results][:data] = []
           data[:question][:answers].each do |answer|
+            result_item = {name: answer[:text], data:[]}
+
             data_result = filter[:filter_results][:analysis].select{|x| x[:answer_value] == answer[:value]}.first
             if data_result.present?
-              chart_item[:filter_results][:data] << time_series_single_chart_processing(answer, data_result)
+              data_result[:dataset_results].each do |dataset_result|
+                result_item[:data] << time_series_single_chart_processing(dataset_result)
+              end
             end
+            chart_item[:filter_results][:data] << result_item
           end
           if chart_item[:filter_results][:data].present?
             chart << chart_item
@@ -860,12 +1055,27 @@ private
         end
       else
         chart = {}
+
+        # set the titles
+        # - assume titles are already set in data[:results]
+        if with_title
+          chart[:title] = data[:results][:title]
+          chart[:subtitle] = data[:results][:subtitle]
+        end
+
+        chart[:datasets] = data[:datasets].map{|x| x[:label]}
         chart[:data] = []
         data[:question][:answers].each do |answer|
+          chart_item = {name: answer[:text], data:[]}
+          
           data_result = data[:results][:analysis].select{|x| x[:answer_value] == answer[:value]}.first
           if data_result.present?
-            chart[:data] << time_series_single_chart_processing(answer, data_result)
+            data_result[:dataset_results].each do |dataset_result|
+              chart_item[:data] << time_series_single_chart_processing(dataset_result)
+            end
           end
+
+          chart[:data] << chart_item
         end
       end
       
@@ -874,13 +1084,202 @@ private
   end
 
 
-  # format: {name, y(percent), count, answer_value}
-  def self.time_series_single_chart_processing(answer, data_result)
+  # format: {y(percent), count}
+  def self.time_series_single_chart_processing(data_result)
     {
-      name: answer[:text], 
       y: data_result[:percent], 
-      count: data_result[:count], 
-      answer_value: answer[:value]
+      count: data_result[:count]
     }
   end
+
+
+  ########################################
+  ########################################
+  ########################################
+  ########################################
+
+
+  def self.dataset_single_analysis_title_html(question, filtered_by_text=nil, filtered_by_answer=nil)
+    title = I18n.t('explore_data.single.html.title', :question => question)
+    if filtered_by_text.present?
+      if filtered_by_answer.present?
+        title << I18n.t('explore_data.single.html.title_filter_value', :variable => filtered_by_text, :value => filtered_by_answer )
+      else
+        title << I18n.t('explore_data.single.html.title_filter', :variable => filtered_by_text)
+      end
+    end
+    return title.html_safe
+  end 
+
+  def self.dataset_single_analysis_title_text(question, filtered_by_text=nil, filtered_by_answer=nil)
+    title = I18n.t('explore_data.single.text.title', :question => question)
+    if filtered_by_text.present?
+      if filtered_by_answer.present?
+        title << I18n.t('explore_data.single.text.title_filter_value', :variable => filtered_by_text, :value => filtered_by_answer )
+      else
+        title << I18n.t('explore_data.single.text.title_filter', :variable => filtered_by_text)
+      end
+    end
+    return title
+  end 
+
+  def self.dataset_comparative_analysis_title_html(question, broken_down_by, filtered_by_text=nil, filtered_by_answer=nil)
+    title = I18n.t('explore_data.comparative.html.title', :question => question, :broken_down_by => broken_down_by)
+    if filtered_by_text.present?
+      if filtered_by_answer.present?
+        title << I18n.t('explore_data.comparative.html.title_filter_value', :variable => filtered_by_text, :value => filtered_by_answer )
+      else
+        title << I18n.t('explore_data.comparative.html.title_filter', :variable => filtered_by_text )
+      end
+    end
+    return title.html_safe
+  end 
+
+  def self.dataset_comparative_analysis_title_text(question, broken_down_by, filtered_by_text=nil, filtered_by_answer=nil)
+    title = I18n.t('explore_data.comparative.text.title', :question => question, :broken_down_by => broken_down_by)
+    if filtered_by_text.present?
+      if filtered_by_answer.present?
+        title << I18n.t('explore_data.comparative.text.title_filter_value', :variable => filtered_by_text, :value => filtered_by_answer )
+      else
+        title << I18n.t('explore_data.comparative.text.title_filter', :variable => filtered_by_text )
+      end
+    end
+    return title
+  end 
+
+  def self.dataset_comparative_analysis_map_title_html(question, broken_down_by, filtered_by_text=nil, filtered_by_answer=nil)
+    title = I18n.t('explore_data.comparative.html.map.title', :question => question)
+    title << I18n.t('explore_data.comparative.html.map.title_col', :broken_down_by => broken_down_by)
+    if filtered_by_text.present?
+      if filtered_by_answer.present?
+        title << I18n.t('explore_data.comparative.html.map.title_filter_value', :variable => filtered_by_text, :value => filtered_by_answer )
+      else
+        title << I18n.t('explore_data.comparative.html.map.title_filter', :variable => filtered_by_text )
+      end
+    end
+    return title.html_safe
+  end 
+
+  def self.dataset_comparative_analysis_map_title_text(question, broken_down_by, filtered_by_text=nil, filtered_by_answer=nil)
+    title = I18n.t('explore_data.comparative.text.map.title', :question => question)
+    title << I18n.t('explore_data.comparative.text.map.title_col', :broken_down_by => broken_down_by)
+    if filtered_by_text.present?
+      if filtered_by_answer.present?
+        title << I18n.t('explore_data.comparative.text.map.title_filter_value', :variable => filtered_by_text, :value => filtered_by_answer )
+      else
+        title << I18n.t('explore_data.comparative.text.map.title_filter', :variable => filtered_by_text )
+      end
+    end
+    return title
+  end 
+
+  def self.dataset_analysis_subtitle_html(total)
+    title = "<br /> <span class='total_responses'>"
+    title << I18n.t('explore_data.subtitle.html.title', :num => number_with_delimiter(total))
+    title << "</span>"
+    return title.html_safe
+  end 
+
+  def self.dataset_analysis_subtitle_text(total)
+    return I18n.t('explore_data.subtitle.text.title', :num => number_with_delimiter(total))
+  end 
+
+  def self.dataset_analysis_subtitle_html_filtered(filtered_by_text, results)
+    title = "<br /> <span class='total_responses'>"
+    filter_responses = []
+    results.each do |result|
+      text = "<br /> - #{result[:filter_answer_text]}: <span class='number'>#{number_with_delimiter(result[:filter_results][:total_responses])}</span>"
+      filter_responses << text
+    end
+    title << I18n.t('explore_data.subtitle.html.title_filter', :variable => filtered_by_text, :nums => filter_responses.join)
+    title << "</span>"
+    return title.html_safe
+  end 
+
+  def self.dataset_analysis_subtitle_text_filtered(filtered_by_text, results)
+    filter_responses = []
+    results.each do |result|
+      text = " #{result[:filter_answer_text]}: #{number_with_delimiter(result[:filter_results][:total_responses])}"
+      filter_responses << text
+    end
+    return I18n.t('explore_data.subtitle.text.title_filter', :variable => filtered_by_text, :nums => filter_responses.join('; '))
+  end 
+
+
+
+
+  def self.time_series_single_analysis_title_html(question, filtered_by_text=nil, filtered_by_answer=nil)
+    title = I18n.t('explore_time_series.single.html.title', :question => question)
+    if filtered_by_text.present?
+      if filtered_by_answer.present?
+        title << I18n.t('explore_time_series.single.html.title_filter_value', :variable => filtered_by_text, :value => filtered_by_answer )
+      else
+        title << I18n.t('explore_time_series.single.html.title_filter', :variable => filtered_by_text )
+      end
+    end
+    return title.html_safe
+  end 
+
+  def self.time_series_single_analysis_title_text(question, filtered_by_text=nil, filtered_by_answer=nil)
+    title = I18n.t('explore_time_series.single.text.title', :question => question)
+    if filtered_by_text.present?
+      if filtered_by_answer.present?
+        title << I18n.t('explore_time_series.single.text.title_filter_value', :variable => filtered_by_text, :value => filtered_by_answer )
+      else
+        title << I18n.t('explore_time_series.single.text.title_filter', :variable => filtered_by_text )
+      end
+    end
+    return title
+  end 
+
+  def self.time_series_analysis_subtitle_html(totals)
+    title = "<br /> <span class='total_responses'>"
+    num = []
+    totals.each do |total|
+      num << "#{total[:dataset_label]}: <span class='number'>#{number_with_delimiter(total[:count])}</span>"
+    end
+    title << I18n.t('explore_time_series.subtitle.html.title', :num => num.join('; '))
+    title << "</span>"
+    return title.html_safe
+  end 
+
+  def self.time_series_analysis_subtitle_text(totals)
+    num = []
+    totals.each do |total|
+      num << "#{total[:dataset_label]}: #{number_with_delimiter(total[:count])}"
+    end
+    return I18n.t('explore_time_series.subtitle.text.title', :num => num.join('; '))
+  end 
+
+  def self.time_series_analysis_subtitle_html_filtered(filtered_by_text, results)
+    title = "<br /> <span class='total_responses'>"
+    filter_responses = []
+    results.each do |result|
+      text = "<br /> - #{result[:filter_answer_text]}: "
+      num = []
+      result[:filter_results][:total_responses].each do |response|
+        num << "#{response[:dataset_label]}: <span class='number'>#{number_with_delimiter(response[:count])}</span>"
+      end
+      text << num.join('; ')
+      filter_responses << text
+    end
+    title << I18n.t('explore_time_series.subtitle.html.title_filter', :variable => filtered_by_text, :nums => filter_responses.join)
+    title << "</span>"
+    return title.html_safe
+  end 
+
+  def self.time_series_analysis_subtitle_text_filtered(filtered_by_text, results)
+    filter_responses = []
+    results.each do |result|
+      text = " #{result[:filter_answer_text]}: "
+      num = []
+      result[:filter_results][:total_responses].each do |response|
+        num << "#{response[:dataset_label]}: #{number_with_delimiter(response[:count])}"
+      end
+      text << num.join('; ')
+      filter_responses << text
+    end
+    return I18n.t('explore_time_series.subtitle.text.title_filter', :variable => filtered_by_text, :nums => filter_responses.join('; '))
+  end 
+
 end
