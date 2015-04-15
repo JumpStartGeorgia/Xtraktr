@@ -1,10 +1,10 @@
-@bright-blue-text-color: #00adee;
+@import "variables.css.less";
 
 #dashboard-meta{
   margin-bottom: 20px;
   #meta-dates{
     font-style: italic;
-    color: @bright-blue-text-color;
+    color: @bright-blue-color;
   }
   #meta-source{
     font-style: italic;
@@ -28,7 +28,7 @@
         }
       }
       .highlight{
-        background-color: @bright-blue-text-color;
+        background-color: @bright-blue-color;
       }
       & > ul > li{
         padding: 10px 0;
@@ -56,7 +56,7 @@
               line-height: 1;
               &:before {
                 content: "\2022";
-                color: #d95d6a;
+                color: @maroon-color;
                 font-size: 1.5em;
                 line-height: 1em;
                 padding-right: .25em;
@@ -67,7 +67,7 @@
           }
         }
         .headers{
-          color: @bright-blue-text-color;
+          color: @bright-blue-color;
         }
       }
     }

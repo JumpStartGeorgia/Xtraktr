@@ -112,117 +112,28 @@ function build_time_series_charts(json){
 
     // remove all existing charts
     $('#container-chart').empty();
+    // remove all existing chart links
+    $('#jumpto-charts').hide();
+    $('#jumpto-charts #jumpto-charts-items').empty();
 
-    // test if the filter is being used and build the chart accordingly
+    // test if the filter is being used and build the chart(s) accordingly
     if (json.chart.constructor === Array){
       // filters
       for(var i=0; i<json.chart.length; i++){
+        // create chart
         build_time_series_chart(json.chart[i].filter_results, chart_height);
+
+        // add jumpto link
+        $('#jumpto-charts #jumpto-charts-items').append('<li class="scroll-link" data-href="#chart-' + (i+1) + '">' + json.filtered_by.text + ' = ' + json.chart[i].filter_answer_text + '</li>');
       }
+      $('#jumpto-charts').show();
+
     }else{
       // no filters
       build_time_series_chart(json.chart, chart_height);
     }
   }
 
-
-
-  // if (json.chart && json.chart.data){
-  //   // if there are a lot of answers, scale the height accordingly
-  //   if (json.question.answers.length < 5){
-  //     $('#chart').height(500);
-  //   }else{
-  //     $('#chart').height(425 + json.question.answers.length*21);
-  //   }
-
-
-  //   $('#chart').highcharts({
-  //     chart: {
-  //         plotBackgroundColor: null,
-  //         plotBorderWidth: null,
-  //         plotShadow: false
-  //     },
-  //     title: {
-  //         text: json.chart.title.html,
-  //         useHTML: true,
-  //         style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
-  //     },
-  //     subtitle: {
-  //         text: json.chart.subtitle.html,
-  //         useHTML: true,
-  //         style: {'text-align': 'center', 'margin-top': '-15px'}
-  //     },
-  //     xAxis: {
-  //         categories: json.chart.datasets
-  //     },
-  //     yAxis: {
-  //         title: {
-  //             text: gon.percent
-  //         },
-  //         max: 100,
-  //         min: 0,
-  //         plotLines: [{
-  //             value: 0,
-  //             width: 1,
-  //             color: '#808080'
-  //         }]
-  //     },
-  //     tooltip: {
-  //         headerFormat: '<span style="font-size: 13px; font-style: italic; font-weight: bold;">{point.key}</span><br/>',
-  //         pointFormat: '<span style="font-weight: bold;">{series.name}</span>: {point.count:,.0f} ({point.y:.2f}%)<br/>',
-  //     },
-  //     legend: {
-  //         layout: 'vertical',
-  //         symbolHeight: 14,
-  //         itemMarginBottom: 5,
-  //         itemStyle: { "color": "#333333", "cursor": "pointer", "fontSize": "14px", "fontWeight": "bold" }
-  //     },
-  //     series: json.chart.data,
-  //     exporting: {
-  //       sourceWidth: 1280,
-  //       sourceHeight: 720,
-  //       filename: json.chart.title.text,
-  //       chartOptions:{
-  //         title: {
-  //           text: json.chart.title.text
-  //         },
-  //         subtitle: {
-  //           text: json.chart.subtitle.text
-  //         }
-  //       },
-  //       buttons: {
-  //         contextButton: {
-  //           menuItems: [
-  //             {
-  //               text: gon.highcharts_png,
-  //               onclick: function () {
-  //                   this.exportChart({type: 'image/png'});
-  //               }
-  //             }, 
-  //             {
-  //               text: gon.highcharts_jpg,
-  //               onclick: function () {
-  //                   this.exportChart({type: 'image/jpeg'});
-  //               }
-  //             }, 
-  //             {
-  //               text: gon.highcharts_pdf,
-  //               onclick: function () {
-  //                   this.exportChart({type: 'application/pdf'});
-  //               }
-  //             }, 
-  //             {
-  //               text: gon.highcharts_svg,
-  //               onclick: function () {
-  //                   this.exportChart({type: 'image/svg+xml'});
-  //               }
-  //             }
-  //           ]
-  //         }
-  //       }
-  //     }
-  //   });
-  // }
 }
 
 
@@ -447,7 +358,6 @@ function build_explore_time_series_page(json){
 ////////////////////////////////////////////////
 // get data and load page
 function get_explore_time_series(is_back_button){
-//  $('#explore-time-series-loader').fadeIn('slow');
 
   if (is_back_button == undefined){
     is_back_button = false;
@@ -522,6 +432,7 @@ function get_explore_time_series(is_back_button){
     }
 
     $('#explore-time-series-loader').fadeOut('slow');
+    $('#jumpto-loader').fadeOut('slow');
 
   });
 }
@@ -570,6 +481,7 @@ $(document).ready(function() {
     // catch the form submit and call the url with the
     // form values in the url
     $("form#form-explore-time-series").submit(function(){
+      $('#jumpto-loader').fadeIn('slow');
       $('#explore-time-series-loader').fadeIn('slow', function(){
         get_explore_time_series();
       });
@@ -579,6 +491,7 @@ $(document).ready(function() {
     // reset the form fields
     $("form#form-explore-time-series input#btn-reset").click(function(e){
       e.preventDefault();
+      $('#jumpto-loader').fadeIn('slow');
       $('#explore-time-series-loader').fadeIn('slow', function(){
         reset_filter_form();
         get_explore_time_series();
@@ -610,8 +523,29 @@ $(document).ready(function() {
     });  
 
     // get the initial data
+    $('#jumpto').show();
+    $('#jumpto-loader').fadeIn('slow');
     $('#explore-time-series-loader').fadeIn('slow', function(){
       get_explore_time_series();
+    });
+
+
+    // jumpto scrolling
+    $("#jumpto").on('click', 'ul li.scroll-link', function(){
+      var href = $(this).data('href');
+      console.log('scroll to href = ' + href);
+      $('html, body').animate({
+        scrollTop: $(href).offset().top - 120
+      }, 1500);
+    });
+
+    // when chart tab clicked on, make sure the jumpto block is showing, else, hide it
+    $('#explore-tabs li a').click(function(){
+      if ($(this).attr('href') == '#tab-chart'){
+        $('#jumpto').show();
+      }else{
+        $('#jumpto').hide();
+      }
     });
 
     // the below code is to override back button to get the ajax content without page reload
@@ -650,6 +584,8 @@ $(document).ready(function() {
 
 
       // reload the data
+      $('#jumpto').show();
+      $('#jumpto-loader').fadeIn('slow');
       $('#explore-time-series-loader').fadeIn('slow', function(){
         get_explore_time_series(true);
       });

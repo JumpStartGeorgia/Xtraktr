@@ -12,7 +12,7 @@
     <nav id="time-series-navbar" class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="container-fluid">
         <div class="navbar-header">
-        <%= link_to @time_series.title, url_time_series_dashboard(@time_series),:class=>"navbar-brand" if @time_series.created_at.present? %>
+        <%= link_to t('helpers.links.back_dashboard'), url_time_series_dashboard(@time_series), :class=>"navbar-brand" if @time_series.created_at.present? %>
         </div>
 
         <div class="collapse navbar-collapse" id="navbar-collapse">

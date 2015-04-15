@@ -1,5 +1,5 @@
 @import "twitter/bootstrap/variables.less";
-@bright-blue-text-color: #00adee;
+@import "variables.css.less";
 
 #explore-time-series{
   margin-top: 20px;
@@ -11,63 +11,101 @@
     padding: 15px;
   }
 
-  .tooltip {
-    min-width: 250px;
-    .tooltip-inner{
-      max-width: none;
-      padding: 10px;
+  #explore-form{
+    background-color: #f6f7f7;
+    h2{
+      color: @maroon-color;
+      font-size: 20px;
+      margin-bottom: 20px;
+      margin-top: 10px;
     }
-  }
 
-  select{
-    width: 200px;
-  }
+    select{
+      width: 200px;
+    }
 
-  /* allow the text to wrap in the drop downs for long text will make the drop down too wide */
-  .dropdown-menu > li {
-      & > a{
-      white-space: normal;
-      width: 500px;
-      min-width: 250px;
-    }
-    &.disabled {
-      padding: 0 !important;
-    }
-  }
-  @media (max-width: @screen-sm-min) { 
-    /* shrink width due to small screens */
+    /* allow the text to wrap in the drop downs for long text will make the drop down too wide */
     .dropdown-menu > li {
         & > a{
-        max-width: 300px;
-        width: 100%;
+        white-space: normal;
+        width: 500px;
+        min-width: 250px;
+      }
+      &.disabled {
+        padding: 0 !important;
       }
     }
-  }
-
-  #var2-label-swap{
-    button#btn-swap-vars{
-      float: right;
-    }
-  }
-
-  label#lbl_can_exclude{
-    font-weight: normal;
-    font-size: 13px;
-  }
-
-  #buttons{
-    #btn-submit{
-      background-color: @bright-blue-text-color;
-      color: #fff;
-      float: right;
-      padding: 8px 50px;
+    @media (max-width: @screen-sm-min) { 
+      /* shrink width due to small screens */
+      .dropdown-menu > li {
+          & > a{
+          max-width: 300px;
+          width: 100%;
+        }
+      }
     }
 
-    #btn-reset{
-      background-color: #bfbfbf;
-      color: #fff;
-      float: left;
-      padding: 8px 25px;
+    label#lbl_can_exclude{
+      font-weight: normal;
+      font-size: 13px;
+    }
+
+    #buttons{
+      margin-bottom: 20px;
+      #btn-submit{
+        background-color: @bright-blue-color;
+        color: #fff;
+        float: right;
+        padding: 8px 50px;
+      }
+
+      #btn-reset{
+        background-color: #bfbfbf;
+        color: #fff;
+        float: left;
+        padding: 8px 25px;
+      }
+    }
+
+    #jumpto{
+      display: none;
+      position: relative;
+      padding-top: 10px;
+      border-top: dotted 1px #ccc;
+      h3{
+        color: #333;
+        font-size: 14px;
+        font-weight: bold;
+        margin-top: 0;
+        margin-bottom: 5px;
+      }
+      & > ul{
+        padding-left: 10px;
+        li{
+          &.scroll-link{
+            cursor: pointer;
+            &:hover{
+              background-color: #fff;
+              color: #000;
+            }
+          }
+          &#jumpto-charts{
+            display: none;
+            #jumpto-charts-items{
+              padding-left: 20px;
+            }
+          }
+        }
+      }
+
+      #jumpto-loader{
+        background-color: rgba(0, 0, 0, 0.4);
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        display: none;
+      }
     }
   }
 
@@ -127,7 +165,7 @@
     font-style: italic;
     color: #888;
     span.number{
-      color: @bright-blue-text-color;
+      color: @bright-blue-color;
       font-weight: bold;
     }
   }
@@ -142,7 +180,7 @@
       margin-top: -9px;
       margin-left: 10px;
       span{
-        border-bottom: solid 3px @bright-blue-text-color;
+        border-bottom: solid 3px @bright-blue-color;
         background-color: #fff;
       }
      }
@@ -200,11 +238,11 @@
   #tab-details{
     .details-item{
       h3{
-        color: @bright-blue-text-color;
+        color: @bright-blue-color;
         font-size: 20px;
       }
       .header-variable, .header-answers{
-        color: @bright-blue-text-color;
+        color: @bright-blue-color;
       }
       .list-answers{
         list-style: none;
@@ -216,7 +254,7 @@
           line-height: 1;
           &:before {
             content: "\2022";
-            color: @bright-blue-text-color;
+            color: @bright-blue-color;
             font-size: 1.5em;
             line-height: 1em;
             padding-right: .25em;

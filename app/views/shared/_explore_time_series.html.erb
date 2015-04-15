@@ -1,6 +1,9 @@
 <div id="explore-time-series" class="row">
   <% if @questions.present? %>
-    <div class="col-sm-3">
+    <div id="explore-form" class="col-sm-3">
+      <h2>
+        <%= @time_series.title %>
+      </h2>
 
       <%= form_tag(explore_time_series_path, :id => 'form-explore-time-series') do %>
 
@@ -52,6 +55,21 @@
         </div>
       <% end %> 
 
+      <div id="jumpto">
+        <h3>Jump To</h3>
+        <ul class="list-unstyled">
+          <li id="jumpto-table" class="scroll-link" data-href=".container-table">Table</li>
+          <li id="jumpto-charts" data-href="#container-chart">
+            Charts
+            <ul id="jumpto-charts-items">
+              <li>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <div id="jumpto-loader"></div>
+      </div>
+
     </div>
 
     <div id="explore-time-series-content" class="col-sm-9">
@@ -62,7 +80,7 @@
 
       <div class="tab-content" id="explore-content">
 
-        <div class="tab-pane" id="tab-chart">
+        <div class="tab-pane fade" id="tab-chart">
           <div id="container-chart"></div>
 
           <div class="container-table">
@@ -76,7 +94,7 @@
         </div>
 
 
-        <div class="tab-pane" id="tab-details">
+        <div class="tab-pane fade" id="tab-details">
           <div class="details-item" id="details-question-code">
             <h3><%= t('.form.question_code') %></h3>
             <p>

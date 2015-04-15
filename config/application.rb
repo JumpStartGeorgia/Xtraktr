@@ -62,7 +62,7 @@ module BootstrapStarter
 
 
     config.assets.precompile += %w( datasets.js explore_data.js explore_time_series.js exclude_answers.js exclude_questions.js live_search.js mappable_form.js questions.js search.js tabbed_translation_form.js time_series.js time_series_questions.js )    
-    config.assets.precompile += %w( dashboard_data.css dashboard_time_series.css datasets.css explore_data.css explore_time_series.css exclude_answers.css exclude_questions.css mappable_form.css questions.css tabbed_translation_form.css time_series.css time_series_questions.css )    
+    config.assets.precompile += %w( dashboard_data.css dashboard_time_series.css datasets.css explore_data.css explore_time_series.css exclude_answers.css exclude_questions.css mappable_form.css questions.css tabbed_translation_form.css time_series.css time_series_questions.css variables.css)    
     config.assets.precompile += %w( bootstrap-select.min.js highcharts.js highcharts-map.js highcharts-exporting.js select2/select2.min.js )    
     config.assets.precompile += %w( bootstrap-select.min.css select2.css select2-bootstrap.css )    
 
