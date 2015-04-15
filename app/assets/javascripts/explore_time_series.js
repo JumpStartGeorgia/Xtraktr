@@ -1,143 +1,228 @@
 var datatables, i, j, json_data;
-var x,y;
-$.fn.dataTableExt.oApi.fnFakeRowspan = function (oSettings) {
-    $.each(oSettings.aoData, function(i, oData) {
-      var cellsToRemove = [];
-      for (var iColumn = 0; iColumn < oData.nTr.childNodes.length; iColumn++) {
-        var cell = oData.nTr.childNodes[iColumn];
-console.log('----');
-console.log(cell);
-console.log(typeof cell);
-        var rowspan = $(cell).data('rowspan');
-        var hide = $(cell).data('hide');
-console.log(rowspan);
-console.log(hide);
- 
-        if (hide) {
-          cellsToRemove.push(cell);
-        } else if (rowspan > 1) {
-          cell.rowSpan = rowspan;
-        }
-      }
-      // Remove the cells at the end, so you're not editing the current array
-      x = oData.nTr;
-      y = cellsToRemove;
-      $.each(cellsToRemove, function(cell) {
-        oData.nTr.removeChild(cell);
-      });
-    });
- 
-    oSettings.aoDrawCallback.push({ "sName": "fnFakeRowspan" });
-      
-    return this;
-};
+
 
 ////////////////////////////////////////////////
 // build time series line chart
-function build_time_series_chart(json){
-  if (json.chart && json.chart.data){
-    // set languaage text
-    Highcharts.setOptions({
-      lang: {
-        contextButtonTitle: gon.highcharts_context_title
-      }
-    });
+function build_time_series_chart(json_chart, chart_height){
+  if (chart_height == undefined){
+    chart_height = 501; // need the 1 for the border bottom line
+  }
 
-    // if there are a lot of answers, scale the height accordingly
-    if (json.question.answers.length < 5){
-      $('#chart').height(500);
-    }else{
-      $('#chart').height(425 + json.question.answers.length*21);
-    }
+  // create a div tag for this chart
+  var chart_id = 'chart-' + ($('#container-chart .chart').length+1);
+  $('#container-chart').append('<div id="' + chart_id + '" class="chart" style="height: ' + chart_height + 'px;"></div>');
 
-
-    $('#chart').highcharts({
-      chart: {
-          plotBackgroundColor: null,
-          plotBorderWidth: null,
-          plotShadow: false
-      },
-      title: {
-          text: json.chart.title.html,
-          useHTML: true,
-          style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
-      },
-      subtitle: {
-          text: json.chart.subtitle.html,
-          useHTML: true,
-          style: {'text-align': 'center', 'margin-top': '-15px'}
-      },
-      xAxis: {
-          categories: json.chart.datasets
-      },
-      yAxis: {
-          title: {
-              text: gon.percent
-          },
-          max: 100,
-          min: 0,
-          plotLines: [{
-              value: 0,
-              width: 1,
-              color: '#808080'
-          }]
-      },
-      tooltip: {
-          headerFormat: '<span style="font-size: 13px; font-style: italic; font-weight: bold;">{point.key}</span><br/>',
-          pointFormat: '<span style="font-weight: bold;">{series.name}</span>: {point.count:,.0f} ({point.y:.2f}%)<br/>',
-      },
-      legend: {
-          layout: 'vertical',
-          symbolHeight: 14,
-          itemMarginBottom: 5,
-          itemStyle: { "color": "#333333", "cursor": "pointer", "fontSize": "14px", "fontWeight": "bold" }
-      },
-      series: json.chart.data,
-      exporting: {
-        sourceWidth: 1280,
-        sourceHeight: 720,
-        filename: json.chart.title.text,
-        chartOptions:{
-          title: {
-            text: json.chart.title.text
-          },
-          subtitle: {
-            text: json.chart.subtitle.text
-          }
+  // create chart
+  $('#container-chart #' + chart_id).highcharts({
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false
+    },
+    title: {
+        text: json_chart.title.html,
+        useHTML: true,
+        style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
+    },
+    subtitle: {
+        text: json_chart.subtitle.html,
+        useHTML: true,
+        style: {'text-align': 'center', 'margin-top': '-15px'}
+    },
+    xAxis: {
+        categories: json_chart.datasets
+    },
+    yAxis: {
+        title: {
+            text: gon.percent
         },
-        buttons: {
-          contextButton: {
-            menuItems: [
-              {
-                text: gon.highcharts_png,
-                onclick: function () {
-                    this.exportChart({type: 'image/png'});
-                }
-              }, 
-              {
-                text: gon.highcharts_jpg,
-                onclick: function () {
-                    this.exportChart({type: 'image/jpeg'});
-                }
-              }, 
-              {
-                text: gon.highcharts_pdf,
-                onclick: function () {
-                    this.exportChart({type: 'application/pdf'});
-                }
-              }, 
-              {
-                text: gon.highcharts_svg,
-                onclick: function () {
-                    this.exportChart({type: 'image/svg+xml'});
-                }
+        max: 100,
+        min: 0,
+        plotLines: [{
+            value: 0,
+            width: 1,
+            color: '#808080'
+        }]
+    },
+    tooltip: {
+        headerFormat: '<span style="font-size: 13px; font-style: italic; font-weight: bold;">{point.key}</span><br/>',
+        pointFormat: '<span style="font-weight: bold;">{series.name}</span>: {point.count:,.0f} ({point.y:.2f}%)<br/>',
+    },
+    legend: {
+        layout: 'vertical',
+        symbolHeight: 14,
+        itemMarginBottom: 5,
+        itemStyle: { "color": "#333333", "cursor": "pointer", "fontSize": "14px", "fontWeight": "bold" }
+    },
+    series: json_chart.data,
+    exporting: {
+      sourceWidth: 1280,
+      sourceHeight: 720,
+      filename: json_chart.title.text,
+      chartOptions:{
+        title: {
+          text: json_chart.title.text
+        },
+        subtitle: {
+          text: json_chart.subtitle.text
+        }
+      },
+      buttons: {
+        contextButton: {
+          menuItems: [
+            {
+              text: gon.highcharts_png,
+              onclick: function () {
+                  this.exportChart({type: 'image/png'});
               }
-            ]
-          }
+            }, 
+            {
+              text: gon.highcharts_jpg,
+              onclick: function () {
+                  this.exportChart({type: 'image/jpeg'});
+              }
+            }, 
+            {
+              text: gon.highcharts_pdf,
+              onclick: function () {
+                  this.exportChart({type: 'application/pdf'});
+              }
+            }, 
+            {
+              text: gon.highcharts_svg,
+              onclick: function () {
+                  this.exportChart({type: 'image/svg+xml'});
+              }
+            }
+          ]
         }
       }
-    });
+    }
+  });
+}
+
+function build_time_series_charts(json){
+  if (json.chart){
+    // determine chart height
+    // if there are a lot of answers, scale the height accordingly
+    var chart_height = 501; // need the 1 for the border bottom line
+    if (json.question.answers.length >= 5){
+      chart_height = 425 + json.question.answers.length*21 + 1;
+    }
+
+    // remove all existing charts
+    $('#container-chart').empty();
+
+    // test if the filter is being used and build the chart accordingly
+    if (json.chart.constructor === Array){
+      // filters
+      for(var i=0; i<json.chart.length; i++){
+        build_time_series_chart(json.chart[i].filter_results, chart_height);
+      }
+    }else{
+      // no filters
+      build_time_series_chart(json.chart, chart_height);
+    }
   }
+
+
+
+  // if (json.chart && json.chart.data){
+  //   // if there are a lot of answers, scale the height accordingly
+  //   if (json.question.answers.length < 5){
+  //     $('#chart').height(500);
+  //   }else{
+  //     $('#chart').height(425 + json.question.answers.length*21);
+  //   }
+
+
+  //   $('#chart').highcharts({
+  //     chart: {
+  //         plotBackgroundColor: null,
+  //         plotBorderWidth: null,
+  //         plotShadow: false
+  //     },
+  //     title: {
+  //         text: json.chart.title.html,
+  //         useHTML: true,
+  //         style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
+  //     },
+  //     subtitle: {
+  //         text: json.chart.subtitle.html,
+  //         useHTML: true,
+  //         style: {'text-align': 'center', 'margin-top': '-15px'}
+  //     },
+  //     xAxis: {
+  //         categories: json.chart.datasets
+  //     },
+  //     yAxis: {
+  //         title: {
+  //             text: gon.percent
+  //         },
+  //         max: 100,
+  //         min: 0,
+  //         plotLines: [{
+  //             value: 0,
+  //             width: 1,
+  //             color: '#808080'
+  //         }]
+  //     },
+  //     tooltip: {
+  //         headerFormat: '<span style="font-size: 13px; font-style: italic; font-weight: bold;">{point.key}</span><br/>',
+  //         pointFormat: '<span style="font-weight: bold;">{series.name}</span>: {point.count:,.0f} ({point.y:.2f}%)<br/>',
+  //     },
+  //     legend: {
+  //         layout: 'vertical',
+  //         symbolHeight: 14,
+  //         itemMarginBottom: 5,
+  //         itemStyle: { "color": "#333333", "cursor": "pointer", "fontSize": "14px", "fontWeight": "bold" }
+  //     },
+  //     series: json.chart.data,
+  //     exporting: {
+  //       sourceWidth: 1280,
+  //       sourceHeight: 720,
+  //       filename: json.chart.title.text,
+  //       chartOptions:{
+  //         title: {
+  //           text: json.chart.title.text
+  //         },
+  //         subtitle: {
+  //           text: json.chart.subtitle.text
+  //         }
+  //       },
+  //       buttons: {
+  //         contextButton: {
+  //           menuItems: [
+  //             {
+  //               text: gon.highcharts_png,
+  //               onclick: function () {
+  //                   this.exportChart({type: 'image/png'});
+  //               }
+  //             }, 
+  //             {
+  //               text: gon.highcharts_jpg,
+  //               onclick: function () {
+  //                   this.exportChart({type: 'image/jpeg'});
+  //               }
+  //             }, 
+  //             {
+  //               text: gon.highcharts_pdf,
+  //               onclick: function () {
+  //                   this.exportChart({type: 'application/pdf'});
+  //               }
+  //             }, 
+  //             {
+  //               text: gon.highcharts_svg,
+  //               onclick: function () {
+  //                   this.exportChart({type: 'image/svg+xml'});
+  //               }
+  //             }
+  //           ]
+  //         }
+  //       }
+  //     }
+  //   });
+  // }
 }
 
 
@@ -320,15 +405,26 @@ function build_datatable(json){
 ////////////////////////////////////////////////
 // build details (question and possible answers)
 function build_details(json){
-  // clear out content first
-  $('#tab-details #details-row-question, #tab-details #details-row-answers').html('');
+  // clear out existing content and hide
+  $('#tab-details .details-item .name-variable, #tab-details .details-item .list-answers').empty();
+  $('#tab-details .details-item').hide();
 
-  // add row question/answers
-  if (json.question.text && json.question.answers){
-    $('#tab-details #details-question-code-question').html(json.question.text);    
+  // add questions
+  if (json.question && json.question.text && json.question.answers){
+    $('#tab-details #details-question-code .name-variable').html(json.question.text);    
     for(var i=0;i<json.question.answers.length;i++){
-      $('#tab-details #details-question-code-answers').append('<li>' + json.question.answers[i].text + '</li>');
+      $('#tab-details #details-question-code .list-answers').append('<li>' + json.question.answers[i].text + '</li>');
     }
+    $('#tab-details #details-question-code').show();
+  }
+
+  // add filters
+  if (json.filtered_by && json.filtered_by.text && json.filtered_by.answers){
+    $('#tab-details #details-filtered-by-code .name-variable').html(json.filtered_by.text);    
+    for(var i=0;i<json.filtered_by.answers.length;i++){
+      $('#tab-details #details-filtered-by-code .list-answers').append('<li>' + json.filtered_by.answers[i].text + '</li>');
+    }
+    $('#tab-details #details-filtered-by-code').show();
   }
 
 }
@@ -337,7 +433,7 @@ function build_details(json){
 // build the visualizations for the explore data page
 function build_explore_time_series_page(json){
 
-  // build_time_series_chart(json);
+  build_time_series_charts(json);
   build_datatable(json);
   build_details(json);
 
@@ -448,10 +544,15 @@ function reset_filter_form(){
 ////////////////////////////////////////////////
 
 $(document).ready(function() {
-  if (gon.explore_time_series){
-    // turn on tooltip for dataset description
-    $('#dataset-description').tooltip();
+  // set languaage text
+  Highcharts.setOptions({
+    lang: {
+      contextButtonTitle: gon.highcharts_context_title
+    }
+  });
 
+
+  if (gon.explore_time_series){
     // due to using tabs, chart and table cannot be properly drawn
     // because they may be hidden. 
     // this event catches when a tab is being shown to make sure 
@@ -459,7 +560,9 @@ $(document).ready(function() {
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
       switch($(this).attr('href')){
         case '#tab-chart':
-          // $('#chart').highcharts().reflow();        
+          $('#container-chart .chart').each(function(){
+            $(this).highcharts().reflow();        
+          });
           break;
       }
     });
@@ -490,7 +593,6 @@ $(document).ready(function() {
 
     // if option changes, make sure the select option is not available in the other lists
     $('select.selectpicker').change(function(){
-      console.log('select change!');
       // update filter list
       var question_code = $('select#question_code').val();
       // if filter is one of these values, reset filter to no filter
@@ -506,20 +608,6 @@ $(document).ready(function() {
       $('select#filtered_by_code').selectpicker('refresh');
       $('select#filtered_by_code').selectpicker('render');
     });  
-
-    // to be able to sort the jquery datatable build in the function below
-    // - coming in as: xx (xx.xx%); want to only keep first number
-    jQuery.fn.dataTableExt.oSort['formatted-num-asc'] = function ( a, b ) {
-      var x = a.match(/\d/) ? a.replace( /\s\(\d{0,}.?\d{0,}\%\)/g, "" ) : 0;
-      var y = b.match(/\d/) ? b.replace( /\s\(\d{0,}.?\d{0,}\%\)/g, "" ) : 0;
-      return parseFloat(x) - parseFloat(y);
-    };
-
-    jQuery.fn.dataTableExt.oSort['formatted-num-desc'] = function ( a, b ) {
-      var x = a.match(/\d/) ? a.replace( /\s\(\d{0,}.?\d{0,}\%\)/g, "" ) : 0;
-      var y = b.match(/\d/) ? b.replace( /\s\(\d{0,}.?\d{0,}\%\)/g, "" ) : 0;
-      return parseFloat(y) - parseFloat(x);
-    };
 
     // get the initial data
     $('#explore-time-series-loader').fadeIn('slow', function(){

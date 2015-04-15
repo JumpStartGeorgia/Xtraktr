@@ -1,8 +1,10 @@
+@bright-blue-text-color: #00adee;
+
 #dashboard-meta{
   margin-bottom: 20px;
   #meta-dates{
     font-style: italic;
-    color: #00adee;
+    color: @bright-blue-text-color;
   }
   #meta-source{
     font-style: italic;
@@ -26,7 +28,7 @@
         }
       }
       .highlight{
-        background-color: #00adee;
+        background-color: @bright-blue-text-color;
       }
       & > ul > li{
         padding: 10px 0;
@@ -45,11 +47,27 @@
         }
         .answer-row{
           ul{
-            padding-left: 15px;
+            list-style: none;
+            padding-left: 0em;
+            margin:-4px 0 0;
+            li { 
+              padding-left: 0.75em; 
+              text-indent: -.7em;
+              line-height: 1;
+              &:before {
+                content: "\2022";
+                color: #d95d6a;
+                font-size: 1.5em;
+                line-height: 1em;
+                padding-right: .25em;
+                position: relative;
+                top: .15em;
+              }
+            }
           }
         }
         .headers{
-          color: #00adee;
+          color: @bright-blue-text-color;
         }
       }
     }

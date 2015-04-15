@@ -1020,11 +1020,13 @@ private
 
   # convert the results into pie chart format
   # return format: 
-  # - no filter: {title, subtitle, datasets, :data => [ {name, y(percent), count, answer_value}, ...] }
-  # - with filter: [ {filter_answer_value, filter_answer_text, filter_results => [ {:data => [ {name, y(percent), count, answer_value}, ...] } ] } ]
+  # - no filter: {title, subtitle, datasets, data => [ {name, y(percent), count, answer_value}, ...] }
+  # - with filter: [ {filter_answer_value, filter_answer_text, filter_results => [ {title, subtitle, datasets, data => [ {name, y(percent), count, answer_value}, ...] } ] } ]
   def self.time_series_single_chart(data, with_title=false)
     if data.present?
       chart = nil
+      datasets = data[:datasets].map{|x| x[:label]}
+
       if data[:filtered_by].present?
         chart = []
         data[:results][:filter_analysis].each do |filter|
@@ -1036,6 +1038,8 @@ private
             chart_item[:filter_results][:title] = filter[:filter_results][:title]
             chart_item[:filter_results][:subtitle] = filter[:filter_results][:subtitle]
           end
+
+          chart_item[:filter_results][:datasets] = datasets
   
           chart_item[:filter_results][:data] = []
           data[:question][:answers].each do |answer|
@@ -1063,7 +1067,7 @@ private
           chart[:subtitle] = data[:results][:subtitle]
         end
 
-        chart[:datasets] = data[:datasets].map{|x| x[:label]}
+        chart[:datasets] = datasets
         chart[:data] = []
         data[:question][:answers].each do |answer|
           chart_item = {name: answer[:text], data:[]}

@@ -886,20 +886,6 @@ $(document).ready(function() {
       $('input#btn-submit').trigger('click');
     });
 
-    // to be able to sort the jquery datatable build in the function below
-    // - coming in as: xx (xx.xx%); want to only keep first number
-    jQuery.fn.dataTableExt.oSort['formatted-num-asc'] = function ( a, b ) {
-      var x = a.match(/\d/) ? a.replace( /\s\(\d{0,}.?\d{0,}\%\)/g, "" ) : 0;
-      var y = b.match(/\d/) ? b.replace( /\s\(\d{0,}.?\d{0,}\%\)/g, "" ) : 0;
-      return parseFloat(x) - parseFloat(y);
-    };
-
-    jQuery.fn.dataTableExt.oSort['formatted-num-desc'] = function ( a, b ) {
-      var x = a.match(/\d/) ? a.replace( /\s\(\d{0,}.?\d{0,}\%\)/g, "" ) : 0;
-      var y = b.match(/\d/) ? b.replace( /\s\(\d{0,}.?\d{0,}\%\)/g, "" ) : 0;
-      return parseFloat(y) - parseFloat(x);
-    };
-
     // get the initial data
     $('#explore-data-loader').fadeIn('slow', function(){
       get_explore_data();

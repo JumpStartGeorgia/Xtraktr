@@ -45,34 +45,13 @@
               <%= t('.form.can_exclude') %>
             <% end %>
           </div>
-          <div class="col-xs-3 col-xs-offset-3 col-sm-12 col-sm-offset-0 text-right">
-            <%= submit_tag t('.form.reset'), :class => 'btn btn-warning', :id => 'btn-reset' %>
-            <%= submit_tag t('.form.submit'), :class => 'btn btn-primary', :id => 'btn-submit' %>
+          <div class="col-xs-3 col-xs-offset-3 col-sm-12 col-sm-offset-0 clear" id="buttons">
+            <%= submit_tag t('.form.reset'), :class => 'btn', :id => 'btn-reset' %>
+            <%= submit_tag t('.form.submit'), :class => 'btn', :id => 'btn-submit' %>
           </div>
         </div>
       <% end %> 
 
-      <div class="panel-group" id="panel-instructions" style="margin-top: 20px;">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 class="panel-title">
-              <a data-toggle="collapse" data-parent="#panel-instructions" href="#instructions">
-                <%= t('.instructions.header') %>
-              </a>
-            </h4>
-          </div>
-          <div id="instructions" class="panel-collapse collapse">
-            <div class="panel-body">
-              <p>
-                <%= t('.instructions.p1a') %>
-                <%= t('.instructions.p1b') %>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      
     </div>
 
     <div id="explore-time-series-content" class="col-sm-9">
@@ -84,7 +63,7 @@
       <div class="tab-content" id="explore-content">
 
         <div class="tab-pane" id="tab-chart">
-          <div id="chart"></div>
+          <div id="container-chart"></div>
 
           <div class="container-table">
             <h2><span><%= t('.tabs.table') %></span></h2>
@@ -96,22 +75,35 @@
           </div>
         </div>
 
+
         <div class="tab-pane" id="tab-details">
-          <div class="row">
-            <div class="col-sm-12" id="details-question-code">
-              <p>
-                <strong><%= t('.details.variable') %>:</strong>
-                <span id="details-question-code-question"></span>
-              </p>
-              <p>
-                <strong><%= t('.details.answers') %></strong>
-              </p>
-              <ul id="details-question-code-answers">
-              </ul> 
-            </div>
+          <div class="details-item" id="details-question-code">
+            <h3><%= t('.form.question_code') %></h3>
+            <p>
+              <span class="header-variable"><%= t('.details.variable') %>:</span>
+              <span class="name-variable"></span>
+            </p>
+            <p>
+              <span class="header-answers"><%= t('.details.answers') %></span>
+            </p>
+            <ul class="list-answers">
+            </ul> 
+          </div>
+          <div class="details-item" id="details-filtered-by-code">
+            <h3><%= t('.form.filtered_by_code') %></h3>
+            <p>
+              <span class="header-variable"><%= t('.details.variable') %>:</span>
+              <span class="name-variable"></span>
+            </p>
+            <p>
+              <span class="header-answers"><%= t('.details.answers') %></span>
+            </p>
+            <ul class="list-answers">
+            </ul> 
           </div>
         </div>
       </div>
+
 
       <div id="explore-time-series-loader">
         <div class="spinner">

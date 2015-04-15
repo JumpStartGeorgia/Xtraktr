@@ -645,7 +645,7 @@ en:
         percent: Percent
       details:
         variable: Variable
-        answers: Possible Answers    
+        answers: Values    
     dashboard_data:
       tabs:
         highlights: Highlights
