@@ -398,6 +398,11 @@ ka:
       about_time_series: About 
       all_datasets: All Datasets
       all_time_series: All Time Series
+      contact: Contact
+      api: API
+      instructions: Instructions
+      home: Home
+      disclaimer: Disclaimer
       admin_dataset:
         explore_data: Explore Data
         heading: Dataset Options
@@ -460,6 +465,12 @@ ka:
   root:
     index:
       header_latest: Latest Datasets
+    contact:
+      title: Contact
+    instructions:
+      title: Instructions
+    disclaimer:
+      title: Disclaimer
     explore_data:
       title: Explore the Data
       no_data: 'At this time, no datasets have been loaded into the site.'
@@ -470,6 +481,10 @@ ka:
       no_data: 'At this time, no time series have been created in the site.'
     explore_data_show:
       title: Explore Time Series Data
+  api:
+    v1:
+      index:
+        title: API - Version 1
   datasets:
     index:
       stats:

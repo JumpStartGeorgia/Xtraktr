@@ -1,10 +1,7 @@
 class ApiController < ApplicationController
 
   def index
-
-    respond_to do |format|
-      format.html # index.html.erb
-    end
+    redirect_to api_v1_path
   end
 
 end

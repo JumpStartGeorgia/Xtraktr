@@ -8,6 +8,28 @@ class RootController < ApplicationController
     end
   end
 
+  def instructions
+
+    respond_to do |format|
+      format.html # index.html.erb
+    end
+  end
+
+  def contact
+
+    respond_to do |format|
+      format.html # index.html.erb
+    end
+  end
+
+  def disclaimer
+
+    respond_to do |format|
+      format.html # index.html.erb
+    end
+  end
+
+
   def explore_data
     @datasets = Dataset.is_public.sorted
 

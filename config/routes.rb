@@ -67,6 +67,9 @@ BootstrapStarter::Application.routes.draw do
     end    
 
     # root pages
+    match '/contact', :to => 'root#contact', :as => :contact, :via => :get
+    match '/instructions', :to => 'root#instructions', :as => :instructions, :via => :get
+    match '/disclaimer', :to => 'root#disclaimer', :as => :disclaimer, :via => :get
 		match '/explore_data', :to => 'root#explore_data', :as => :explore_data, :via => :get
 		match '/explore_data/:id', :to => 'root#explore_data_dashboard', :as => :explore_data_dashboard, :via => :get
     match '/explore_data/:id/explore', :to => 'root#explore_data_show', :as => :explore_data_show, :via => :get
