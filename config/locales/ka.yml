@@ -3,7 +3,7 @@ ka:
   mongoid:
     models:
       user: მომხმარებელი
-      page: ტექსტი გვერდებისთვის
+      page_content: ტექსტი გვერდებისთვის
       dataset: Dataset
       shapeset: Shapeset
       question: Question
@@ -21,10 +21,9 @@ ka:
         sign_in_count: "შემოსვლის რაოდენობა"
         created_at: "შექმნის თარიღი"
         current_sign_in_at: "ბოლო შემოსვლის თარიღი"
-      page:
-        name: კონტენტის უნიკალური სახელი (არ შეცვალოთ!)
-      page_translation:
-        title: სათაური, რომელიც გამოჩნდება კონტენტის ზემოთ
+      page_content:
+        name: Unique Name
+        title: Title
         content: კონტენტი
       dataset:
         title: Title
@@ -172,6 +171,10 @@ ka:
         sort_order: "The order the answers should appear"
         default_text: "This is the answer text from the default language which is provided to make it easier to complete the translation"
         dataset: The possible answers for the question selected from this dataset
+      page_content:
+        name: კონტენტის უნიკალური სახელი (არ შეცვალოთ!)
+        title: სათაური, რომელიც გამოჩნდება კონტენტის ზემოთ
+        content: Content to be shown on page
   errors:
     messages:
       required_field: "სავალდებულო ველი"
@@ -442,7 +445,7 @@ ka:
     index:
       title: ადმინისტრატორის განყოფილება
       users: მომხმარებლები
-      pages: საიტზე ტექსტის რედაქტირება
+      page_contents: საიტზე ტექსტის რედაქტირება
       datasets: Datasets
       shapesets: Shapesets
     users:

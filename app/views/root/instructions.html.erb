@@ -1,7 +1,9 @@
 <% if @page_content.present? %>
   <% title @page_content.title %>
 
-  <%= simple_format_no_tags(@page_content.content, {}, {sanitize: false}) %>
+  <div class="tinymce_format">
+    <%= simple_format_no_tags(@page_content.content, {}, {sanitize: false}) %>
+  </div>
 
 <% else %>
   <% title t('.title') %>

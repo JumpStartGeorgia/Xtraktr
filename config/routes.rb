@@ -11,7 +11,7 @@ BootstrapStarter::Application.routes.draw do
 
     namespace :admin do
       resources :shapesets
-      resources :pages
+      resources :page_contents
       resources :users
     end
 
