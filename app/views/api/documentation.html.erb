@@ -1,0 +1,26 @@
+<% title "#{@api_version.title} - #{@api_method.title}" %>
+
+<div class="api row">
+  <div class="col-sm-9">
+    <% if @api_method.content.present? %>
+      <div class="tinymce_format">
+        <%= simple_format_no_tags(@api_method.content, {}, {sanitize: false}) %>
+      </div>
+    <% else %>
+      <p>
+        <%= t('.no_content') %>
+      </p>
+    <% end %>
+  </div>
+  <div class="col-sm-3 documentation-links">
+    <h2><%= link_to t('helpers.links.api_home'), api_path %></h2>
+    <h2><%= @api_version.title %></h2>
+    <ul class="list-unstyled">
+      <% @api_version.api_methods.sorted.each do |method| %>
+        <li>
+          <%= link_to method.title, "/#{I18n.locale}/api/#{@api_version.permalink}/documentation/#{method.permalink}" %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>

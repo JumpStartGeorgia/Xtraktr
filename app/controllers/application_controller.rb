@@ -166,11 +166,11 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 
 
   # set variables need for the tabbed translation forms
-  def set_tabbed_translation_form_settings
+  def set_tabbed_translation_form_settings(tinymce_template='default')
     @languages = Language.sorted
     @css.push('tabbed_translation_form.css', 'select2.css')
     @js.push('tabbed_translation_form.js', 'select2/select2.min.js')
-    gon.tinymce_options = Hash[TinyMCE::Rails.configuration['default'].options.map{|(k,v)| [k.to_s,v.class == Array ? v.join(',') : v]}]
+    gon.tinymce_options = Hash[TinyMCE::Rails.configuration[tinymce_template].options.map{|(k,v)| [k.to_s,v.class == Array ? v.join(',') : v]}]
   end
 
   # tell active-model-serializers gem to not include root name in json output

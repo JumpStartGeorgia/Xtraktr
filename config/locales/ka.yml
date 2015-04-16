@@ -10,6 +10,8 @@ ka:
       time_series: Time Series
       time_series_question: Question
       time_series_answer: Answer
+      api_version: API Version
+      api_method: API Method
     attributes:
       user:
         email: ელ.ფოსტა
@@ -106,6 +108,13 @@ ka:
         languages: Languages of Shapeset
         default_language: Default Language
         created_at: Added On
+      api_version:
+        permalink: Abbreviated Name Used in URL
+        title: Title
+      api_methods:
+        permalink: Abbreviated Name Used in URL
+        title: Title
+        content: Content
     hints:
       dataset:
         title: The title of your dataset
@@ -341,6 +350,7 @@ ka:
       remove_report: Remove Report
       download_data: Download Data
       back_dashboard: Back to Dashboard
+      api_home: API Home
     titles:
       edit: "შეცვლა %{model}"
       save: "შენახვა %{model}"
@@ -485,9 +495,12 @@ ka:
     explore_data_show:
       title: Explore Time Series Data
   api:
-    v1:
-      index:
-        title: API - Version 1
+    index:
+      title: API
+      no_versions: 'No documentation for the API has been created yet.'
+      no_methods: "No documentation for this version has been created yet."
+    documentation:
+      no_content: "No documentation for this method has been created yet."
   datasets:
     index:
       stats:

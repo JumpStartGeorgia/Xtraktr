@@ -106,4 +106,33 @@ puts 'Creating page content records'
 PageContent.create(name: 'instructions', title: 'Instructions', content: 'coming soon...') if PageContent.by_name('instructions').nil?
 PageContent.create(name: 'contact', title: 'Contact', content: 'coming soon...') if PageContent.by_name('contact').nil?
 PageContent.create(name: 'disclaimer', title: 'Disclaimer', content: 'coming soon...') if PageContent.by_name('disclaimer').nil?
-PageContent.create(name: 'api', title: 'API', content: 'coming soon...') if PageContent.by_name('api').nil?
+PageContent.create(name: 'api', title: 'API', content: '<p>The UNICEF Georgia Data Portal API allows you to get information and run analyses on the datasets and time series available on this site.</p>
+<h2>The URL to the api is the following:</h2>
+<div class="url">http://dev-unicef.jumpstart.ge/[locale]/api/[version]/</div>
+<p>where:</p>
+<ul class="list-unstyled">
+<li>[locale] = the locale of the language you want the data to be returned in (currently ka for Georgian or en for English)</li>
+<li>[version] = the version number of the api (see below)</li>
+</ul>
+<h2>API Calls</h2>
+<p>The following is a list of calls that are available in each version of the api.</p>') if PageContent.by_name('api').nil?
+
+#####################
+## Create API Versions/Methods
+#####################
+puts 'Creating API Versions/Methods'
+v = ApiVersion.by_permalink('v1')
+if v.blank?
+  v = ApiVersion.create(permalink: 'v1', title: 'Version 1')
+end
+if v.api_methods.empty?
+  v.api_methods.create(permalink: 'dataset_catalog', title: 'Dataset Catalog', sort_order: 1)
+  v.api_methods.create(permalink: 'dataset', title: 'Dataset Details', sort_order: 2)
+  v.api_methods.create(permalink: 'dataset_codebook', title: 'Dataset Codebook', sort_order: 3)
+  v.api_methods.create(permalink: 'dataset_analysis', title: 'Dataset Analysis', sort_order: 4)
+
+  v.api_methods.create(permalink: 'time_series_catalog', title: 'Time Series Catalog', sort_order: 5)
+  v.api_methods.create(permalink: 'time_series', title: 'Time Series Details', sort_order: 6)
+  v.api_methods.create(permalink: 'time_series_codebook', title: 'Time Series Codebook', sort_order: 7)
+  v.api_methods.create(permalink: 'time_series_analysis', title: 'Time Series Analysis', sort_order: 8)
+end

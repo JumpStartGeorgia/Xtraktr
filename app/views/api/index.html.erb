@@ -3,6 +3,31 @@
 
   <div class="tinymce_format">
     <%= simple_format_no_tags(@page_content.content, {}, {sanitize: false}) %>
+
+    <div class="version-links">
+      <% if @api_versions.present? %>
+        <% @api_versions.each do |version| %>
+          <h3><%= version.title %></h3>
+          <% if version.api_methods.present? %>
+            <ul>
+              <% version.api_methods.sorted.each do |method| %>
+                <li>
+                  <%= link_to method.title, "/#{I18n.locale}/api/#{version.permalink}/documentation/#{method.permalink}" %>
+                </li>
+              <% end %>
+            </ul>
+          <% else %>
+            <p>
+              <%= t('.no_methods') %>
+            </p>
+          <% end %>
+        <% end %>
+      <% else %>
+        <p>
+          <%= t('.no_versions') %>
+        </p>
+      <% end %>
+    </div>
   </div>
 
 <% else %>

@@ -1,0 +1,59 @@
+@import "variables.css.less";
+
+.api, .tinymce_format, .mceContentBody{
+  h2{
+    color: @bright-blue-color;
+    font-size: 20px;
+  }
+  h3{
+    color: @bright-blue-color;
+    font-size: 17px;
+  }
+  .url{
+    background-color: @light-grey-color;
+    padding: 10px 13px;
+    border: solid 1px #ececec;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  ul.list-unstyled {
+    padding-left: 0.5em;
+    li {
+      list-style: none;
+    }
+  }
+  .version-links{
+    ul{
+      list-style: none;
+      padding-left: 0.25em;
+      margin:-10px 0 0;
+      li { 
+        list-style: none;
+        padding-left: 2em; 
+        text-indent: -.7em;
+        line-height: 1;
+        &:before {
+          content: "\2022";
+          color: @bright-blue-color;
+          font-size: 1.5em;
+          line-height: 1em;
+          padding-right: .25em;
+          position: relative;
+          top: .15em;
+        }
+      }
+    }    
+    a{
+      color: @bright-blue-color;
+    }
+  }
+  .documentation-links{
+    background-color: @light-grey-color;
+    h2 a{
+      color: @bright-blue-color;
+    }
+    a{
+      color: @dark-grey-color;
+    }
+  }
+}

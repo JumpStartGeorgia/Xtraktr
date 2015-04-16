@@ -20,6 +20,8 @@ class Admin::PageContentsController < ApplicationController
   def show
     @page_content = PageContent.find(params[:id])
 
+    @css.push('api.css')
+
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @page_content }
@@ -31,7 +33,7 @@ class Admin::PageContentsController < ApplicationController
   def new
     @page_content = PageContent.new
 
-    set_tabbed_translation_form_settings
+    set_tabbed_translation_form_settings('advanced')
 
     respond_to do |format|
       format.html # new.html.erb
@@ -43,7 +45,7 @@ class Admin::PageContentsController < ApplicationController
   def edit
     @page_content = PageContent.find(params[:id])
 
-    set_tabbed_translation_form_settings
+    set_tabbed_translation_form_settings('advanced')
   end
 
   # POST /pages
@@ -56,7 +58,7 @@ class Admin::PageContentsController < ApplicationController
         format.html { redirect_to admin_page_content_path(@page_content), notice: t('app.msgs.success_created', :obj => t('mongoid.models.page_content')) }
         format.json { render json: @page_content, status: :created, location: @page_content }
       else
-        set_tabbed_translation_form_settings
+        set_tabbed_translation_form_settings('advanced')
         format.html { render action: "new" }
         format.json { render json: @page_content.errors, status: :unprocessable_entity }
       end
@@ -75,7 +77,7 @@ class Admin::PageContentsController < ApplicationController
         format.html { redirect_to admin_page_content_path(@page_content), notice: t('app.msgs.success_updated', :obj => t('mongoid.models.page_content')) }
         format.json { head :no_content }
       else
-        set_tabbed_translation_form_settings
+        set_tabbed_translation_form_settings('advanced')
         format.html { render action: "edit" }
         format.json { render json: @page_content.errors, status: :unprocessable_entity }
       end

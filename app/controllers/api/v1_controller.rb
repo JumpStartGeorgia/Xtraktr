@@ -7,9 +7,28 @@ class Api::V1Controller < ApplicationController
   end
 
   def documentation
+    redirect = false
+    redirect = params[:method].nil?
 
-    respond_to do |format|
-      format.html # index.html.erb
+    if !redirect
+      v = request.path.split('/')[3]
+      m = request.path.split('/').last
+      # see if version exists
+      @api_version = ApiVersion.by_permalink(v)
+      # see if method exists
+      @api_method = ApiMethod.by_permalink(@api_version.id, m) if @api_version.present?
+
+      redirect = @api_method.nil?
+    end
+
+    if redirect
+      redirect_to api_path, :notice => t('app.msgs.does_not_exist')
+    else
+      @css.push('api.css')
+
+      respond_to do |format|
+        format.html {render 'api/documentation'}
+      end
     end
   end
 
