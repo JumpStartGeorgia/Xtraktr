@@ -93,6 +93,17 @@ Language.collection.insert(langs)
 #####################
 puts 'Creating app user and api key'
 email = 'application@mail.com'
-User.where(email: email).destroy
-u = User.create(email: email, password: Devise.friendly_token[0,20], role: 0)
-u.api_keys.create
+if User.where(email: email).nil?
+  #User.where(email: email).destroy
+  u = User.create(email: email, password: Devise.friendly_token[0,20], role: 0)
+  u.api_keys.create
+end
+
+#####################
+## Create page content records
+#####################
+puts 'Creating page content records'
+PageContent.create(name: 'instructions', title: 'Instructions', content: 'coming soon...') if PageContent.by_name('instructions').nil?
+PageContent.create(name: 'contact', title: 'Contact', content: 'coming soon...') if PageContent.by_name('contact').nil?
+PageContent.create(name: 'disclaimer', title: 'Disclaimer', content: 'coming soon...') if PageContent.by_name('disclaimer').nil?
+PageContent.create(name: 'api', title: 'API', content: 'coming soon...') if PageContent.by_name('api').nil?

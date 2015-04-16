@@ -9,6 +9,7 @@ class RootController < ApplicationController
   end
 
   def instructions
+    @page_content = PageContent.by_name('instructions')
 
     respond_to do |format|
       format.html # index.html.erb
@@ -16,6 +17,7 @@ class RootController < ApplicationController
   end
 
   def contact
+    @page_content = PageContent.by_name('contact')
 
     respond_to do |format|
       format.html # index.html.erb
@@ -23,6 +25,7 @@ class RootController < ApplicationController
   end
 
   def disclaimer
+    @page_content = PageContent.by_name('disclaimer')
 
     respond_to do |format|
       format.html # index.html.erb

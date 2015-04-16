@@ -3,9 +3,7 @@ class Api::V1Controller < ApplicationController
   after_filter :record_request, except: [:index, :documentation]
 
   def index
-    respond_to do |format|
-      format.html # index.html.erb
-    end
+    redirect_to api_path
   end
 
   def documentation

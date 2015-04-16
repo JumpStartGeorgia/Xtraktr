@@ -1,3 +1,10 @@
-<% title t('.title') %>
+<% if @page_content.present? %>
+  <% title @page_content.title %>
 
-comming soon...
+  <%= simple_format_no_tags(@page_content.content, {}, {sanitize: false}) %>
+
+<% else %>
+  <% title t('.title') %>
+
+  comming soon...
+<% end %>
