@@ -13,13 +13,13 @@ module DatasetsHelper
   def format_dataset_dates(dataset)
     text = ''
     if dataset.start_gathered_at.present? && dataset.end_gathered_at
-      text << I18n.l(dataset.start_gathered_at, format: :dataset)
+      text << I18n.l(dataset.start_gathered_at, format: :day_first)
       text << " - "
-      text << I18n.l(dataset.end_gathered_at, format: :dataset)
+      text << I18n.l(dataset.end_gathered_at, format: :day_first)
     elsif dataset.released_at.present?
-      text << I18n.l(dataset.released_at, format: :dataset)
+      text << I18n.l(dataset.released_at, format: :day_first)
     elsif dataset.public_at.present?
-      text << I18n.l(dataset.public_at, format: :dataset)
+      text << I18n.l(dataset.public_at, format: :day_first)
     end
     return text
   end

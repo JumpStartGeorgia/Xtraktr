@@ -10,17 +10,23 @@ class ApiVersion
 
   field :permalink, type: String
   field :title, type: String, localize: true
+  # whether or not can be shown to public
+  field :public, type: Boolean, default: false
+  # when made public
+  field :public_at, type: Date
 
   #############################
   accepts_nested_attributes_for :api_methods, :reject_if => :all_blank, :allow_destroy => true
 
-  attr_accessible :permalink, :title, :title_translations, :api_methods_attributes
+  attr_accessible :permalink, :title, :title_translations, :api_methods_attributes, :public, :public_at
 
   #############################
 
   # indexes
   index ({ :permalink => 1})
   index ({ :title => 1})
+  index ({ :public => 1})
+  index ({ :public_at => 1})
 
   #############################
   # Validations
@@ -47,6 +53,7 @@ class ApiVersion
   #############################
   # Callbacks
   before_save :set_to_nil
+  before_save :set_public_at
 
   # if title are '', reset value to nil so fallback works
   def set_to_nil
@@ -55,10 +62,25 @@ class ApiVersion
     end
   end 
 
+  # if public and public at not exist, set it
+  # else, make nil
+  def set_public_at
+    if self.public? && self.public_at.nil?
+      self.public_at = Time.now.to_date
+    elsif !self.public?
+      self.public_at = nil
+    end
+  end
+
+
   #############################
 
+  def self.is_public
+    where(public: true)
+  end
+
   def self.sorted
-    order_by([[:permalink, :asc], [:title, :asc]])
+    order_by([[:public_at, :asc], [:title, :asc]])
   end
 
   def self.by_permalink(permalink)

@@ -111,10 +111,16 @@ ka:
       api_version:
         permalink: Abbreviated Name Used in URL
         title: Title
-      api_methods:
+        public: Is Public?
+        public_at: Released At
+        updated_at: Last Updated At
+      api_method:
         permalink: Abbreviated Name Used in URL
         title: Title
         content: Content
+        public: Is Public?
+        public_at: Released At
+        updated_at: Last Updated At
     hints:
       dataset:
         title: The title of your dataset

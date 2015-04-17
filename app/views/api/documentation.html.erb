@@ -2,6 +2,9 @@
 
 <div class="api row">
   <div class="col-sm-9">
+    <div id="api-dates">
+      <%= format_api_method_dates(@api_method) %>
+    </div>
     <% if @api_method.content.present? %>
       <div class="tinymce_format">
         <%= simple_format_no_tags(@api_method.content, {}, {sanitize: false}) %>
@@ -16,7 +19,7 @@
     <h2><%= link_to t('helpers.links.api_home'), api_path %></h2>
     <h2><%= @api_version.title %></h2>
     <ul class="list-unstyled">
-      <% @api_version.api_methods.sorted.each do |method| %>
+      <% @api_version.api_methods.is_public.sorted.each do |method| %>
         <li>
           <%= link_to method.title, "/#{I18n.locale}/api/#{@api_version.permalink}/documentation/#{method.permalink}" %>
         </li>

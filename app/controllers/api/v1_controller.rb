@@ -14,9 +14,9 @@ class Api::V1Controller < ApplicationController
       v = request.path.split('/')[3]
       m = request.path.split('/').last
       # see if version exists
-      @api_version = ApiVersion.by_permalink(v)
+      @api_version = ApiVersion.is_public.by_permalink(v)
       # see if method exists
-      @api_method = ApiMethod.by_permalink(@api_version.id, m) if @api_version.present?
+      @api_method = ApiMethod.is_public.by_permalink(@api_version.id, m) if @api_version.present?
 
       redirect = @api_method.nil?
     end

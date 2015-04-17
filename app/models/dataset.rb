@@ -462,7 +462,7 @@ class Dataset < CustomTranslation
   def set_public_at
     if self.public? && self.public_at.nil?
       self.public_at = Time.now.to_date
-    elsif
+    elsif !self.public?
       self.public_at = nil
     end
   end

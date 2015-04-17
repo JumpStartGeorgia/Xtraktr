@@ -12,9 +12,13 @@ class ApiMethod
   field :title, type: String, localize: true
   field :sort_order, type: Integer, default: 1
   field :content, type: String, localize: true
+  # whether or not can be shown to public
+  field :public, type: Boolean, default: false
+  # when made public
+  field :public_at, type: Date
 
   #############################
-  attr_accessible :permalink, :title, :content, :sort_order, :title_translations, :content_translations
+  attr_accessible :permalink, :title, :content, :sort_order, :title_translations, :content_translations, :public, :public_at
 
   #############################
 
@@ -23,6 +27,8 @@ class ApiMethod
   index ({ :title => 1})
   index ({ :sort_order => 1})
   index ({ :api_version_id => 1})
+  index ({ :public => 1})
+  index ({ :public_at => 1})
 
   #############################
   # Validations
@@ -49,6 +55,7 @@ class ApiMethod
   #############################
   # Callbacks
   before_save :set_to_nil
+  before_save :set_public_at
 
   # if title or content are '', reset value to nil so fallback works
   def set_to_nil
@@ -61,7 +68,21 @@ class ApiMethod
     end
   end 
 
+  # if public and public at not exist, set it
+  # else, make nil
+  def set_public_at
+    if self.public? && self.public_at.nil?
+      self.public_at = Time.now.to_date
+    elsif !self.public?
+      self.public_at = nil
+    end
+  end
+
   #############################
+
+  def self.is_public
+    where(public: true)
+  end
 
   def self.sorted
     order_by([[:sort_order, :asc], [:title, :asc]])

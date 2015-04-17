@@ -165,7 +165,7 @@
               <h3><%= report.title %></h3>
               <div class="row">
                 <div class="col-sm-4">
-                  <%= "#{r_model_class.human_attribute_name(:released_at)}: #{l report.released_at, format: :dataset}" %>
+                  <%= "#{r_model_class.human_attribute_name(:released_at)}: #{l report.released_at, format: :day_first}" %>
                 </div>
                 <div class="col-sm-4">
                   <% if report.language.present? %>

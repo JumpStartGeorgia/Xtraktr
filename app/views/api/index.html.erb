@@ -7,10 +7,13 @@
     <div class="version-links">
       <% if @api_versions.present? %>
         <% @api_versions.each do |version| %>
-          <h3><%= version.title %></h3>
-          <% if version.api_methods.present? %>
+          <h3>
+            <%= version.title %>
+            <span>(<%= I18n.l(version.public_at, format: :day_first) %>)</span>
+          </h3>
+          <% if version.api_methods.is_public.present? %>
             <ul>
-              <% version.api_methods.sorted.each do |method| %>
+              <% version.api_methods.is_public.sorted.each do |method| %>
                 <li>
                   <%= link_to method.title, "/#{I18n.locale}/api/#{version.permalink}/documentation/#{method.permalink}" %>
                 </li>
