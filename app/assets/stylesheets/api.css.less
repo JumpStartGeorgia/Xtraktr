@@ -1,6 +1,6 @@
 @import "variables.css.less";
 
-.api, .tinymce_format, .mceContentBody{
+.api, .tinymce_format, .mce-content-body {
   h2{
     color: @bright-blue-color;
     font-size: 20px;
@@ -70,6 +70,22 @@
       font-style: italic;
       margin-right: 20px;
       font-size: 13px;
+    }
+  }
+
+  table.table{
+    margin: 0;
+    border-color: @medium-grey-color;
+    th, td {
+      background-color: @light-grey-color;
+      padding: 13px 23px;
+      border-color: @medium-grey-color;
+    }
+    thead th{
+      color: @maroon-color;
+    }
+    tbody tr td:first-of-type{
+      font-weight: bold;
     }
   }
 }

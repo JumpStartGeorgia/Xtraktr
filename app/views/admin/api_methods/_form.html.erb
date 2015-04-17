@@ -1,15 +1,38 @@
 <%- 
-  label_key = "mongoid.attributes.page_content."
-  hint_key = "mongoid.hints.page_content."
+  label_key = "mongoid.attributes.api_method."
+  hint_key = "mongoid.hints.api_method."
 -%>
 
-<%= semantic_form_for([:admin, @page_content], html: {class: 'tabbed-translation-form'}) do |f| %>
-	<%= f.error_messages %>
+<%= semantic_form_for([:admin, @api_version, @api_method], html: {class: 'tabbed-translation-form'}) do |f| %>
+  <%= f.error_messages %>
 
-	<%= f.inputs do %>
-	  <%= f.input :name, hint: t(hint_key + 'name') %>
-	<% end %>
-
+  <%= f.inputs do %>
+    <div class="row">
+      <div class="col-sm-4">
+        <%= f.input :permalink, hint: t(hint_key + 'permalink'), input_html: {size: 15} %>
+      </div>
+      <div class="col-sm-4">
+        <div class="radio_buttons input optional form-group" id="api_method_public_input">
+          <label class="  control-label" for="api_method_public"><%= t(label_key + 'public') %><div class="help-inline" original-title="<%= t(hint_key + 'public') %>"><div>?</div></div>
+          </label>
+          <div class="radio">
+            <label class="choice" for="api_method_public_true">
+              <% checked = @api_method.public? ? 'checked=checked' : '' %>
+              <input <%= checked %> id="api_method_public_true" name="api_method[public]" type="radio" value="true" />
+              <%= t('formtastic.yes') %>
+            </label>
+          </div>
+          <div class="radio">
+            <label class="choice" for="api_method_public_false">
+              <% checked = @api_method.public? ? '' : 'checked=checked' %>
+              <input <%= checked %> id="api_method_public_false" name="api_method[public]" type="radio" value="false" />
+              <%= t('formtastic.no') %>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
 
 
   <div role="tabpanel" class="tabbed-translation-fields">
@@ -53,7 +76,7 @@
               label = t(label_key + 'title')
               hint = t(hint_key + 'title')
               if index > 0
-                label << show_default_text(@page_content.title_translations[default_locale])
+                label << show_default_text(@api_method.title_translations[default_locale])
               end
             %>
             <%= translation.input locale, hint: hint, label: label.html_safe %>
@@ -64,7 +87,7 @@
               label = t(label_key + 'content')
               hint = t(hint_key + 'content')
               if index > 0
-                label << show_default_text(@page_content.content_translations[default_locale])
+                label << show_default_text(@api_method.content_translations[default_locale])
               end
             %>
             <%= translation.input locale, :as => :text, hint: hint, required: false, rows: 10, label: label.html_safe, 
@@ -77,8 +100,8 @@
 
   <div class="form-group">
     <%= f.submit nil, :class => 'btn btn-primary' %>
-	  <%= f.submit t('helpers.links.reset'), :class => 'btn btn-warning', :type => :reset, :name => :reset %>
-	  <%= link_to t('helpers.links.cancel'), admin_page_contents_path, :class => 'btn btn-warning' %>
+    <%= f.submit t('helpers.links.reset'), :class => 'btn btn-warning', :type => :reset, :name => :reset %>
+    <%= link_to t('helpers.links.cancel'), admin_api_versions_path, :class => 'btn btn-warning' %>
   </div>
 <% end %>
 

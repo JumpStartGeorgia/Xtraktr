@@ -109,16 +109,17 @@ en:
         default_language: Default Language
         created_at: Added On
       api_version:
-        permalink: Abbreviated Name Used in URL
+        permalink: Permalink
         title: Title
-        public: Is Public?
+        public: Make Available to the Public
         public_at: Released At
         updated_at: Last Updated At
+        methods: Methods
       api_method:
-        permalink: Abbreviated Name Used in URL
+        permalink: Permalink
         title: Title
         content: Content
-        public: Is Public?
+        public: Make Available to the Public
         public_at: Released At
         updated_at: Last Updated At
     hints:
@@ -190,6 +191,15 @@ en:
         name: Unique name for content (do not change!)
         title: Title to show above content
         content: Content to be shown on page
+      api_version:
+        permalink: Abbreviated Name Used in URL (e.g., v1)
+        title: Title of the API Version
+        public: "Select 'Yes' to make the API Version documentation available to the world"
+      api_method:
+        permalink: Abbreviated Name Used in URL (e.g., v1)
+        title: Title of API Method
+        content: Explanation of how to use the API Method
+        public: "Select 'Yes' to make the API Method documentation available to the world"
   errors:
     messages:
       required_field: "is a required field."
@@ -464,6 +474,7 @@ en:
       page_contents: Edit Text on Site
       datasets: Datasets
       shapesets: Shapesets
+      api_documentation: API Version Documentation
     users:
       edit:
         title: Editing User

@@ -24,7 +24,8 @@ class Api::V1Controller < ApplicationController
     if redirect
       redirect_to api_path, :notice => t('app.msgs.does_not_exist')
     else
-      @css.push('api.css')
+      @css.push('shCore.css', 'shThemeDefault.css', 'api.css')
+      @js.push('shCore.js', 'shBrushJScript.js', 'api.js')
 
       respond_to do |format|
         format.html {render 'api/documentation'}

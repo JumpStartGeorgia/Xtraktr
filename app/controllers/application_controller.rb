@@ -171,6 +171,11 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     @css.push('tabbed_translation_form.css', 'select2.css')
     @js.push('tabbed_translation_form.js', 'select2/select2.min.js')
     gon.tinymce_options = Hash[TinyMCE::Rails.configuration[tinymce_template].options.map{|(k,v)| [k.to_s,v.class == Array ? v.join(',') : v]}]
+
+    if tinymce_template != 'default'
+      @css.push('shCore.css')
+      @js.push('shCore.js', 'shBrushJScript.js')
+    end
   end
 
   # tell active-model-serializers gem to not include root name in json output

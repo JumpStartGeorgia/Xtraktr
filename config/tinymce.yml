@@ -1,98 +1,137 @@
 default:
-  theme_advanced_toolbar_location: top
-  theme_advanced_toolbar_align: left
-  theme_advanced_statusbar_location: none
   statusbar: false
   browser_spellcheck: true
   convert_urls: false
   width: "100%"
-  theme_advanced_buttons1:
-    - cut
-    - copy
-    - paste
-    - undo
-    - redo
-    - separator
-    - removeformat
-    - cleanup
-    - separator
-    - fullscreen  
-    - code
-  theme_advanced_buttons2:
-    - bold
-    - italic
-    - underline
-    - strikethrough
-    - separator
-    - justifyleft
-    - justifycenter
-    - justifyright
-    - justifyfull
-    - separator
-    - bullist
-    - numlist
-    - outdent
-    - indent
-    - blockquote
-    - separator
-    - link
-    - unlink
-    - anchor
-  plugins:
-    - fullscreen
-    - paste
+  menubar: false
+  plugins: "autolink paste fullscreen code link anchor lists hr"
+  toolbar_items_size: 'small'
+  toolbar1: "cut copy paste searchreplace | undo redo | removeformat | fullscreen code"
+  toolbar2: "bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent blockquote | link unlink anchor | hr"
   content_css: /css/tinymce.css
   paste_auto_cleanup_on_paste: true
   paste_remove_spans: true
   paste_strip_class_attributes: 'mso'
 
 advanced:
-  theme_advanced_toolbar_location: top
-  theme_advanced_toolbar_align: left
-  theme_advanced_statusbar_location: none
-  theme_advanced_blockformats : "p,h1,h2,h3,h4,h5,h6,blockquote,div,code"
   statusbar: false
   browser_spellcheck: true
   convert_urls: false
   width: "100%"
-  theme_advanced_buttons1:
-    - cut
-    - copy
-    - paste
-    - undo
-    - redo
-    - separator
-    - removeformat
-    - cleanup
-    - separator
-    - fullscreen  
-    - code
-  theme_advanced_buttons2:
-    - formatselect
-    - separator
-    - bold
-    - italic
-    - underline
-    - strikethrough
-    - separator
-    - justifyleft
-    - justifycenter
-    - justifyright
-    - justifyfull
-    - separator
-    - bullist
-    - numlist
-    - outdent
-    - indent
-    - blockquote
-    - separator
-    - link
-    - unlink
-    - anchor
-  plugins:
-    - fullscreen
-    - paste
+  theme_modern_blockformats: "p,h1,h2,h3,h4,h5,h6,blockquote,div,code"
+  menubar: false
+  plugins: "autolink paste fullscreen table code link anchor lists hr sh4tinymce"
+  toolbar_items_size: 'small'
+  toolbar1: "cut copy paste searchreplace | undo redo | removeformat | fullscreen code"
+  toolbar2: "formatselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent blockquote | link unlink anchor | hr | table | sh4tinymce"
   content_css: ['/css/tinymce.css', '/assets/api.css']
   paste_auto_cleanup_on_paste: true
   paste_remove_spans: true
   paste_strip_class_attributes: 'mso'
+
+
+
+# default:
+#   theme_modern_toolbar_location: top
+#   theme_modern_toolbar_align: left
+#   theme_modern_statusbar_location: none
+#   statusbar: false
+#   browser_spellcheck: true
+#   convert_urls: false
+#   width: "100%"
+#   theme_modern_buttons1:
+#     - cut
+#     - copy
+#     - paste
+#     - undo
+#     - redo
+#     - separator
+#     - removeformat
+#     - cleanup
+#     - separator
+#     - fullscreen  
+#     - code
+#   theme_modern_buttons2:
+#     - bold
+#     - italic
+#     - underline
+#     - strikethrough
+#     - separator
+#     - justifyleft
+#     - justifycenter
+#     - justifyright
+#     - justifyfull
+#     - separator
+#     - bullist
+#     - numlist
+#     - outdent
+#     - indent
+#     - blockquote
+#     - separator
+#     - link
+#     - unlink
+#     - anchor
+#     - separator
+#     - tablecontrols
+#   plugins:
+#     - fullscreen
+#     - paste
+#     - table
+#   content_css: /css/tinymce.css
+#   paste_auto_cleanup_on_paste: true
+#   paste_remove_spans: true
+#   paste_strip_class_attributes: 'mso'
+
+# advanced:
+#   theme_modern_toolbar_location: top
+#   theme_modern_toolbar_align: left
+#   theme_modern_statusbar_location: none
+#   theme_modern_blockformats : "p,h1,h2,h3,h4,h5,h6,blockquote,div,code"
+#   statusbar: false
+#   browser_spellcheck: true
+#   convert_urls: false
+#   width: "100%"
+#   theme_modern_buttons1:
+#     - cut
+#     - copy
+#     - paste
+#     - undo
+#     - redo
+#     - separator
+#     - removeformat
+#     - cleanup
+#     - separator
+#     - fullscreen  
+#     - code
+#   theme_modern_buttons2:
+#     - formatselect
+#     - separator
+#     - bold
+#     - italic
+#     - underline
+#     - strikethrough
+#     - separator
+#     - justifyleft
+#     - justifycenter
+#     - justifyright
+#     - justifyfull
+#     - separator
+#     - bullist
+#     - numlist
+#     - outdent
+#     - indent
+#     - blockquote
+#     - separator
+#     - link
+#     - unlink
+#     - anchor
+#     - separator
+#     - tablecontrols
+#   plugins:
+#     - fullscreen
+#     - paste
+#     - table
+#   content_css: ['/css/tinymce.css', '/assets/api.css']
+#   paste_auto_cleanup_on_paste: true
+#   paste_remove_spans: true
+#   paste_strip_class_attributes: 'mso'

@@ -26,7 +26,7 @@
         <td><%= link_to dataset.title, dataset_path(dataset) %></td>
         <td><%= dataset.source %></td>
         <td><%= format_languages(dataset) %></td>
-        <td><%= format_dataset_public_status(dataset.public) %></td>
+        <td><%= format_public_status(dataset.public) %></td>
         <td data-order="<%= dataset.stats.data_records %>">
           <%= t('.stats.data_records') %>: <%= number_with_delimiter(dataset.stats.data_records) %>
           <br />

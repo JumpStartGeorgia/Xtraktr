@@ -62,5 +62,15 @@ module ApplicationHelper
   end
 
 
+  def format_public_status(is_public, small=false)
+    css_small = small == true ? 'small-status' : ''
+    if is_public == true
+      return "<div class='publish-status public #{css_small}'>#{t('publish_status.public')}</div>".html_safe
+    else
+      return "<div class='publish-status not-public #{css_small}'>#{t('publish_status.private')}</div>".html_safe
+    end
+  end
+
+
 
 end

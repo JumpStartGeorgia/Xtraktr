@@ -1,0 +1,54 @@
+<%- model_class = ApiVersion -%>
+<% title t '.title', :default => model_class.model_name.human.pluralize %>
+
+<div class="form-group form-group-admin-buttons">
+  <%= link_to t('.new', :default => t("helpers.links.new")),
+              new_admin_api_version_path,
+              :class => 'btn btn-primary' %>
+  <%= link_to t('helpers.links.admin'), admin_path,
+  :class => 'btn btn-default' %>
+</div>
+
+<table class="table table-striped display">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:title) %></th>
+      <th><%= model_class.human_attribute_name(:permalink) %></th>
+      <th><%= model_class.human_attribute_name(:public) %></th>
+      <th><%= model_class.human_attribute_name(:methods) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @api_versions.each do |api_version| %>
+      <tr>
+        <td><%= link_to api_version.title, admin_api_version_path(api_version) %></td>
+        <td><%= api_version.permalink %></td>
+        <td><%= format_public_status(api_version.public) %></td>
+        <td>
+          <% if api_version.api_methods.present? %>
+            <ul>
+              <% api_version.api_methods.sorted.each do |method| %>
+                <li>
+                  <%= link_to method.title, admin_api_version_api_method_path(api_version, method) %>
+                  <%= format_public_status(method.public, true) %>
+                </li>
+              <% end %>
+            </ul>
+          <% end %>
+        </td>
+        <td>
+          <%= link_to t('app.buttons.edit'),
+                      edit_admin_api_version_path(api_version), :class => 'btn btn-xs btn-default' %>
+          <%= link_to t('app.buttons.delete'),
+                      admin_api_version_path(api_version),
+                      :method => :delete,
+                      :data => { :confirm => I18n.t("helpers.links.confirm") },
+                      :class => 'btn btn-xs btn-danger' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+

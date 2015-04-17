@@ -1,0 +1,96 @@
+<%- 
+  label_key = "mongoid.attributes.api_version."
+  hint_key = "mongoid.hints.api_version."
+-%>
+
+<%= semantic_form_for([:admin, @api_version], html: {class: 'tabbed-translation-form'}) do |f| %>
+  <%= f.error_messages %>
+
+  <%= f.inputs do %>
+    <div class="row">
+      <div class="col-sm-4">
+        <%= f.input :permalink, hint: t(hint_key + 'permalink'), input_html: {size: 15} %>
+      </div>
+      <div class="col-sm-4">
+        <div class="radio_buttons input optional form-group" id="api_version_public_input">
+          <label class="  control-label" for="api_version_public"><%= t(label_key + 'public') %><div class="help-inline" original-title="<%= t(hint_key + 'public') %>"><div>?</div></div>
+          </label>
+          <div class="radio">
+            <label class="choice" for="api_version_public_true">
+              <% checked = @api_version.public? ? 'checked=checked' : '' %>
+              <input <%= checked %> id="api_version_public_true" name="api_version[public]" type="radio" value="true" />
+              <%= t('formtastic.yes') %>
+            </label>
+          </div>
+          <div class="radio">
+            <label class="choice" for="api_version_public_false">
+              <% checked = @api_version.public? ? '' : 'checked=checked' %>
+              <input <%= checked %> id="api_version_public_false" name="api_version[public]" type="radio" value="false" />
+              <%= t('formtastic.no') %>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+
+
+  <div role="tabpanel" class="tabbed-translation-fields">
+    <% 
+      locales = I18n.available_locales
+    %>
+
+    <ul class="nav nav-tabs" role="tablist" 
+        data-default-language-icon="<span class='glyphicon glyphicon-star' title='<%= t('helpers.default_language') %>'></span>">
+      <%
+        default_locale = I18n.default_locale.to_s
+        default_lang = '' 
+      %>
+      <% locales.each_with_index do |locale, index| %>
+        <%
+          lang = @languages.select{|x| x.locale == locale.to_s}.first
+          cls = ''
+          if index == 0
+            cls = 'class=active' 
+            default_locale = locale
+            default_lang = lang.present? ? lang.name : locale 
+          end
+        %>
+        <li role="presentation" <%= cls %> data-locale="<%= locale %>">
+          <a href="#<%= locale %>" aria-controls="home" role="tab" data-toggle="tab">
+            <%= lang.present? ? lang.name : locale %>
+          </a>
+        </li>
+      <% end %>
+    </ul>
+
+    <div class="tab-content">
+      <% locales.each_with_index do |locale, index| %>
+        <%
+          cls = ''
+          cls = 'in active' if index == 0
+        %>
+        <div role="tabpanel" class="tab-pane fade <%= cls %>" id="<%= locale %>" data-locale="<%= locale %>">
+          <%= f.fields_for :title_translations, OpenStruct.new(f.object.title_translations) do |translation| %>
+            <% 
+              label = t(label_key + 'title')
+              hint = t(hint_key + 'title')
+              if index > 0
+                label << show_default_text(@api_version.title_translations[default_locale])
+              end
+            %>
+            <%= translation.input locale, hint: hint, label: label.html_safe %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= f.submit t('helpers.links.reset'), :class => 'btn btn-warning', :type => :reset, :name => :reset %>
+    <%= link_to t('helpers.links.cancel'), admin_api_versions_path, :class => 'btn btn-warning' %>
+  </div>
+<% end %>
+

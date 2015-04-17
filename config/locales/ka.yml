@@ -109,16 +109,17 @@ ka:
         default_language: Default Language
         created_at: Added On
       api_version:
-        permalink: Abbreviated Name Used in URL
+        permalink: Permalink
         title: Title
-        public: Is Public?
+        public: Make Available to the Public
         public_at: Released At
         updated_at: Last Updated At
+        methods: Methods
       api_method:
-        permalink: Abbreviated Name Used in URL
+        permalink: Permalink
         title: Title
         content: Content
-        public: Is Public?
+        public: Make Available to the Public
         public_at: Released At
         updated_at: Last Updated At
     hints:
@@ -190,6 +191,15 @@ ka:
         name: კონტენტის უნიკალური სახელი (არ შეცვალოთ!)
         title: სათაური, რომელიც გამოჩნდება კონტენტის ზემოთ
         content: Content to be shown on page
+      api_version:
+        permalink: Abbreviated Name Used in URL (e.g., v1)
+        title: Title of the API Version
+        public: "Select 'Yes' to make the API Version documentation available to the world"
+      api_method:
+        permalink: Abbreviated Name Used in URL (e.g., v1)
+        title: Title of API Method
+        content: Explanation of how to use the API Method
+        public: "Select 'Yes' to make the API Method documentation available to the world"
   errors:
     messages:
       required_field: "სავალდებულო ველი"
@@ -464,6 +474,7 @@ ka:
       page_contents: საიტზე ტექსტის რედაქტირება
       datasets: Datasets
       shapesets: Shapesets
+      api_documentation: API Version Documentation
     users:
       edit:
         title: ცვლილებების შეტანა მომხმარებლის გვერდზე

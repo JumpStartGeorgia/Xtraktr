@@ -13,8 +13,9 @@ BootstrapStarter::Application.routes.draw do
       resources :shapesets
       resources :page_contents
       resources :users
-      resources :api_versions
-      resources :api_methods
+      resources :api_versions, :except => [:show] do
+        resources :api_methods, :except => [:index]
+      end
     end
 
     resources :datasets do
