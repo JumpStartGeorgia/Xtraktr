@@ -122,6 +122,7 @@ en:
         public: Make Available to the Public
         public_at: Released At
         updated_at: Last Updated At
+        sort_order: Sort Order
     hints:
       dataset:
         title: The title of your dataset
@@ -174,7 +175,7 @@ en:
       time_series_dataset:
         dataset_id: Select the dataset to add to this time series
         title: "The text that will represent this data set in the time series, most likely a time indicator. For example, if your dataset is from 2015, you could enter 2015; or if it is from January 2015, you can enter January 2015."
-        sort_order: The order the data sets should appear in the time series
+        sort_order: The order the datasets should appear in the time series
       time_series_question:
         code: The code of the question as you want it to appear in the time series
         text: The text of the question as you want it to appear in the time series
@@ -200,6 +201,7 @@ en:
         title: Title of API Method
         content: Explanation of how to use the API Method
         public: "Select 'Yes' to make the API Method documentation available to the world"
+        sort_order: The order the API methods should appear
   errors:
     messages:
       required_field: "is a required field."

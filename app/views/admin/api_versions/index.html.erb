@@ -26,6 +26,9 @@
         <td><%= api_version.permalink %></td>
         <td><%= format_public_status(api_version.public) %></td>
         <td>
+          <%= link_to t('.new', :default => t("helpers.links.new")),
+              new_admin_api_version_api_method_path(api_version),
+              :class => 'btn btn-primary btn-xs' %>
           <% if api_version.api_methods.present? %>
             <ul>
               <% api_version.api_methods.sorted.each do |method| %>

@@ -106,7 +106,7 @@ puts 'Creating page content records'
 PageContent.create(name: 'instructions', title: 'Instructions', content: 'coming soon...') if PageContent.by_name('instructions').nil?
 PageContent.create(name: 'contact', title: 'Contact', content: 'coming soon...') if PageContent.by_name('contact').nil?
 PageContent.create(name: 'disclaimer', title: 'Disclaimer', content: 'coming soon...') if PageContent.by_name('disclaimer').nil?
-PageContent.create(name: 'api', title: 'API', content: '<p>The UNICEF Georgia Data Portal API allows you to get information and run analyses on the datasets and time series available on this site.</p>
+PageContent.create(name: 'api', title: 'API', content: '<p>The UNICEF Georgia Data Portal API allows you to get information and run analyses on the datasets and time series available on this site.&nbsp;</p>
 <h2>The URL to the api is the following:</h2>
 <div class="url">http://dev-unicef.jumpstart.ge/[locale]/api/[version]/</div>
 <p>where:</p>
@@ -114,7 +114,9 @@ PageContent.create(name: 'api', title: 'API', content: '<p>The UNICEF Georgia Da
 <li>[locale] = the locale of the language you want the data to be returned in (currently ka for Georgian or en for English)</li>
 <li>[version] = the version number of the api (see below)</li>
 </ul>
-<h2>API Calls</h2>
+<h2>Access Token</h2>
+<p>All API calls require an access token - a key that let\'s us know who is making the request.&nbsp;You can obtain an access token&nbsp;easily, and for free, by going <a href="#">here</a>.</p>
+<h2><span style="color: #00adee; font-size: 20px;">API Calls</span></h2>
 <p>The following is a list of calls that are available in each version of the api.</p>') if PageContent.by_name('api').nil?
 
 #####################

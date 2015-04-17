@@ -18,7 +18,7 @@ class ApiMethod
   field :public_at, type: Date
 
   #############################
-  attr_accessible :permalink, :title, :content, :sort_order, :title_translations, :content_translations, :public, :public_at
+  attr_accessible :permalink, :title, :content, :sort_order, :title_translations, :content_translations, :public, :public_at, :api_version_id
 
   #############################
 

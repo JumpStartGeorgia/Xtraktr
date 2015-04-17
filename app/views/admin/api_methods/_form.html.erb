@@ -7,9 +7,13 @@
   <%= f.error_messages %>
 
   <%= f.inputs do %>
+    <%= f.input :api_version_id, as: :hidden, label: false, input_html: {value: params[:api_version_id]} %>
     <div class="row">
       <div class="col-sm-4">
         <%= f.input :permalink, hint: t(hint_key + 'permalink'), input_html: {size: 15} %>
+      </div>
+      <div class="col-sm-4">
+        <%= f.input :sort_order, as: :number, hint: t(hint_key + 'sort_order'), min: 1, step: 5 %>
       </div>
       <div class="col-sm-4">
         <div class="radio_buttons input optional form-group" id="api_method_public_input">
