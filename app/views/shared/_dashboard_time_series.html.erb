@@ -43,6 +43,9 @@
       <a href="#codebook" aria-controls="codebook" role="tab" data-toggle="tab"><%= t('.tabs.codebook') %></a>
     </li>
     <li role="presentation">
+      <a href="#datasets" aria-controls="datasets" role="tab" data-toggle="tab"><%= t('.tabs.datasets') %></a>
+    </li>
+    <li role="presentation">
       <a href="#licensing" aria-controls="licensing" role="tab" data-toggle="tab"><%= t('.tabs.licensing') %></a>
     </li>
   </ul>
@@ -94,6 +97,16 @@
               </div>
             </div>
           </li>
+        <% end %>
+      </ul>
+    </div>
+    
+    <div role="tabpanel" class="tab-pane fade" id="datasets">
+      <ul class="list-unstyled">
+        <% @time_series.datasets.sorted.each do |dataset| %>
+          <li>
+            <%= link_to "#{dataset.title} - #{dataset.dataset.title}", explore_data_dashboard_path(dataset.dataset_id) %>
+          </li>      
         <% end %>
       </ul>
     </div>

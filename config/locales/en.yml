@@ -714,6 +714,7 @@ en:
         codebook: Codebook
         reports: Reports
         licensing: Licensing
+        datasets: Datasets
       codebook:
         header_question: Variable
         header_values: Values
