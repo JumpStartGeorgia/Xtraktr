@@ -102,10 +102,10 @@
     </div>
     
     <div role="tabpanel" class="tab-pane fade" id="datasets">
-      <ul class="list-unstyled">
+      <ul>
         <% @time_series.datasets.sorted.each do |dataset| %>
           <li>
-            <%= link_to "#{dataset.title} - #{dataset.dataset.title}", explore_data_dashboard_path(dataset.dataset_id) %>
+            <%= link_to "#{dataset.title} - #{dataset.dataset.title}", url_dataset_to_datasets_dashboard(@time_series.id, dataset.dataset_id) %>
           </li>      
         <% end %>
       </ul>

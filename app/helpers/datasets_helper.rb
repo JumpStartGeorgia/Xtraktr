@@ -26,4 +26,10 @@ module DatasetsHelper
   def url_dataset_dashboard(dataset, options={})
     request.path == explore_data_show_path(dataset) ? explore_data_dashboard_path(dataset, options) : dataset_path(dataset, options)
   end
+
+  # get the correct url to use on dashboard of dataset to send to dashboard of time series
+  # can either be admin dataset page or root dataset page 
+  def url_dataset_to_times_series_dashboard(dataset_id, time_series_id, options={})
+    request.path == explore_data_dashboard_path(dataset_id) ? explore_time_series_dashboard_path(time_series_id, options) : time_series_path(time_series_id, options)
+  end
 end
