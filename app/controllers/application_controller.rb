@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  layout 'app'
   protect_from_forgery
 
 	before_filter :set_locale
