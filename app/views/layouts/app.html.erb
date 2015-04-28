@@ -17,12 +17,11 @@
 						</div>
 					<% end %>
 
-
-					<% if content_for?(:title) %>
+          <% if @show_title == true && content_for?(:title) %>
             <div class="page-header">
               <h1><%= yield(:title) %></h1>
             </div>
-					<% end %>
+          <% end %>
 
           <%= yield %>
         </div><!--/span-->
@@ -31,20 +30,7 @@
     </div> <!-- /container -->
 
 
-    <!-- Javascripts
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <%= javascript_include_tag  *(@js.present? ? ["application", @js].flatten : ["application"]), :media => "all" %>      
-		<script type="text/javascript">
-			I18n.defaultLocale = "<%= I18n.default_locale %>";
-			I18n.locale = "<%= I18n.locale %>";
-		</script>
-
-		<% if Rails.env.production? %>
-			<!-- insert google analytics for production site here -->
-		<% elsif Rails.env.staging? %>
-			<!-- insert google analytics for staging site here -->
-		<% end %>
+    <%= render :partial => 'layouts/js' %>
 
   </body>
 </html>

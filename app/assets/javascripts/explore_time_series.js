@@ -114,8 +114,9 @@ function build_time_series_charts(json){
     // remove all existing charts
     $('#container-chart').empty();
     // remove all existing chart links
-    $('#jumpto-charts').hide();
-    $('#jumpto-charts .jumpto-items').empty();
+    $('#jumpto-charts #jumpto-charts-items').hide();
+    $('#jumpto-charts #jumpto-charts-items .jumpto-items').empty();
+    var jumpto_text = '';
 
     // test if the filter is being used and build the chart(s) accordingly
     if (json.chart.constructor === Array){
@@ -125,9 +126,12 @@ function build_time_series_charts(json){
         build_time_series_chart(json.chart[i].filter_results, chart_height);
 
         // add jumpto link
-        $('#jumpto-charts .jumpto-items').append('<li class="scroll-link" data-href="#chart-' + (i+1) + '">' + json.filtered_by.text + ' = ' + json.chart[i].filter_answer_text + '</li>');
+        jumpto_text += '<li class="scroll-link" data-href="#chart-' + (i+1) + '">' + json.filtered_by.text + ' = ' + json.chart[i].filter_answer_text + '</li>';
       }
-      $('#jumpto-charts').show();
+
+      // show jumpto links
+      $('#jumpto-charts .jumpto-items').append(jumpto_text);
+      $('#jumpto-charts #jumpto-charts-items').show();
 
     }else{
       // no filters

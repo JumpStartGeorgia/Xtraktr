@@ -67,6 +67,8 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     # get the api key for the app user
     api_key = User.find_by(email: 'application@mail.com').api_keys.first
     @app_api_key = api_key.key if api_key.present?
+
+    @show_title = true
   end
 
 	def initialize_gon
@@ -229,7 +231,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
         gon.dataset_id = params[:id]
         gon.api_dataset_analysis_path = api_v1_dataset_analysis_path
 
-        render layout: 'explore_data'
+#        render layout: 'explore_data'
       } 
       # format.js{
 #         # get the data
@@ -404,7 +406,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
         gon.time_series_id = params[:id]
         gon.api_time_series_analysis_path = api_v1_time_series_analysis_path
 
-        render layout: 'explore_time_series'
+        # render layout: 'explore_time_series'
       } 
       # format.js{
       #   # get the data

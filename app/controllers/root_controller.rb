@@ -47,7 +47,6 @@ class RootController < ApplicationController
     if @dataset.blank?
       redirect_to explore_data_path, :notice => t('app.msgs.does_not_exist')
     else
-
       @css.push("dashboard.css")
       @js.push("live_search.js")
 
@@ -87,7 +86,6 @@ class RootController < ApplicationController
     if @time_series.blank?
       redirect_to explore_time_series_path, :notice => t('app.msgs.does_not_exist')
     else
-
       @css.push("dashboard.css")
       @js.push("live_search.js")
 

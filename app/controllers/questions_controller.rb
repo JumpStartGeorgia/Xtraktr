@@ -4,7 +4,7 @@ class QuestionsController < ApplicationController
     controller_instance.send(:valid_role?, User::ROLES[:user])
   end
 
-  layout "explore_data"
+  # layout "explore_data"
 
 
   # GET /questions
