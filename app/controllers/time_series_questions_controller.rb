@@ -5,7 +5,7 @@ class TimeSeriesQuestionsController < ApplicationController
   end
 
 
-  layout "explore_time_series"
+  # layout "explore_time_series"
 
   # GET /time_series_questions
   # GET /time_series_questions.json

@@ -4,7 +4,7 @@ class DatasetsController < ApplicationController
     controller_instance.send(:valid_role?, User::ROLES[:user])
   end
 
-  layout 'explore_data'
+  # layout 'explore_data'
 
 
 
@@ -17,7 +17,7 @@ class DatasetsController < ApplicationController
     @js.push("search.js")
 
     respond_to do |format|
-      format.html { render layout: 'application' }
+      format.html 
       format.json { render json: @datasets }
     end
   end
@@ -34,7 +34,7 @@ class DatasetsController < ApplicationController
     else
       add_dataset_nav_options 
 
-      @css.push("dashboard_data.css")
+      @css.push("dashboard.css")
       @js.push("live_search.js")
 
       respond_to do |format|

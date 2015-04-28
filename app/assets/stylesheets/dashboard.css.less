@@ -71,5 +71,39 @@
         }
       }
     }
+
+    #datasets{
+      ul{
+        list-style: none;
+        padding-left: 1em;
+        margin:-4px 0 0;
+        li { 
+          padding-left: 0.75em; 
+          text-indent: -.7em;
+          line-height: 1.5;
+          &:before {
+            content: "\2022";
+            color: @bright-blue-color;
+            font-size: 1.5em;
+            line-height: 1em;
+            padding-right: .25em;
+            position: relative;
+            top: .1em;
+          }
+          a{
+            color: @bright-blue-color;
+          }
+        }
+      }
+    }
+
+    #reports{
+      li{
+        margin-bottom: 20px;
+      }
+      h3{
+        font-size: 20px;
+      }
+    }
   }
 }

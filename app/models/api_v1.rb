@@ -268,7 +268,7 @@ private
   def self.create_dataset_question_hash(question, can_exclude=false)
     hash = {}
     if question.present?
-      hash = {code: question.code, original_code: question.original_code, text: question.text}
+      hash = {code: question.code, original_code: question.original_code, text: question.text, is_mappable: question.is_mappable}
       hash[:answers] = (can_exclude == true ? question.answers.must_include_for_analysis : question.answers.all_for_analysis).map{|x| {value: x.value, text: x.text, can_exclude: x.can_exclude, sort_order: x.sort_order}}
     end
 
@@ -388,10 +388,13 @@ private
   
           chart_item[:filter_results][:data] = []
           data[:question][:answers].each do |answer|
+            result_item = {name: answer[:text], data:[]}
+
             data_result = filter[:filter_results][:analysis].select{|x| x[:answer_value] == answer[:value]}.first
             if data_result.present?
-              chart_item[:filter_results][:data] << dataset_single_chart_processing(answer, data_result)
+              result_item[:data] << dataset_single_chart_processing(answer, data_result)
             end
+            chart_item[:filter_results][:data] << result_item
           end
           if chart_item[:filter_results][:data].present?
             chart << chart_item
@@ -433,8 +436,8 @@ private
 
   # convert the results into highmaps map format
   # return format: 
-  # - no filter: {data => [ {shape_name, display_name, value, count}, ... ] }
-  # - with filter: [ {filter_answer_value, filter_answer_text, filter_results => [ {data => [ {shape_name, display_name, value, count}, ... ] } ] } ]
+  # - no filter: {shape_question_code, map_sets => {title, subtitle, data => [ {shape_name, display_name, value, count}, ... ] } }
+  # - with filter: [{filter_answer_value, filter_answer_text, shape_question_code, filter_results => [ map_sets => {title, subtitle, data => [ {shape_name, display_name, value, count}, ... ] } ] } ]
   def self.dataset_single_map(answers, data, with_title=false)
     if answers.present? && data.present?
       map = nil
@@ -443,47 +446,45 @@ private
         map = []
         data[:results][:filter_analysis].each do |filter|
           map_item = {filter_answer_value: filter[:filter_answer_value], filter_answer_text: filter[:filter_answer_text], 
-                    filter_results: {question_code: data[:question][:code]}}
+                    filter_results: {shape_question_code: data[:question][:code], map_sets: {}}}
 
           # set the titles
           # - assume titles are already set in data[:results]
           if with_title
-            map_item[:filter_results][:title] = filter[:filter_results][:title]
-            map_item[:filter_results][:subtitle] = filter[:filter_results][:subtitle]
+            map_item[:filter_results][:map_sets][:title] = filter[:filter_results][:title]
+            map_item[:filter_results][:map_sets][:subtitle] = filter[:filter_results][:subtitle]
           end
 
-          map_item[:filter_results][:data] = []
+          map_item[:filter_results][:map_sets][:data] = []
           answers.each_with_index do |answer|
             data_result = filter[:filter_results][:analysis].select{|x| x[:answer_value] == answer.value}.first
             if data_result.present?
-              map_item[:filter_results][:data] << dataset_single_map_processing(answer, data_result)
+              map_item[:filter_results][:map_sets][:data] << dataset_single_map_processing(answer, data_result)
             end
           end
 
-          if map_item[:filter_results][:data].present?
+          if map_item[:filter_results][:map_sets][:data].present?
             map << map_item
           end
         end
 
       else
-        map = {}
-
         # need question code so know which shape data to use
-        map[:question_code] = data[:question][:code]
+        map = {shape_question_code: data[:question][:code], map_sets: {}}
 
         # set the titles
         # - assume titles are already set in data[:results]
         if with_title
-          map[:title] = data[:results][:title]
-          map[:subtitle] = data[:results][:subtitle]
+          map[:map_sets][:title] = data[:results][:title]
+          map[:map_sets][:subtitle] = data[:results][:subtitle]
         end
 
         # load the data
-        map[:data] = []
+        map[:map_sets][:data] = []
         answers.each_with_index do |answer|
           data_result = data[:results][:analysis].select{|x| x[:answer_value] == answer.value}.first
           if data_result.present?
-            map[:data] << dataset_single_map_processing(answer, data_result)
+            map[:map_sets][:data] << dataset_single_map_processing(answer, data_result)
           end
         end
       end
@@ -522,7 +523,6 @@ private
         # merge the data and filter
         # and then pull out the data that has the corresponding filter value
         merged_data = filter_data.zip(data)
-
         filter_results = nil
         if with_title
           filter_results = {title: {html: nil, text: nil}, subtitle: {html: nil, text: nil}, filter_analysis: []}
@@ -566,7 +566,6 @@ private
     else
       results = {total_responses: 0, analysis: []}
     end
-    analysis = results[:analysis]
     question_answer_template = {answer_value: nil, answer_text: nil, broken_down_results: nil}
     broken_down_answer_template = {broken_down_answer_value: nil, broken_down_answer_text: nil, count: 0, percent: 0}
 
@@ -662,13 +661,12 @@ private
   
           # have to transpose the counts for highcharts
           counts = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:count]}}.transpose
+          if counts.present?
+            chart_item[:filter_results][:data] = []
+            data[:broken_down_by][:answers].each_with_index do |answer, i|
+              chart_item[:filter_results][:data] << {name: answer[:text], data: counts[i]}
+            end
 
-          chart_item[:filter_results][:data] = []
-          data[:broken_down_by][:answers].each_with_index do |answer, i|
-            chart_item[:filter_results][:data] << {name: answer[:text], data: counts[i]}
-          end
-
-          if chart_item[:filter_results][:data].present?
             chart << chart_item
           end
         end
@@ -711,12 +709,11 @@ private
 
   # convert the results into highmaps map format
   # return format: 
-  # - no filter: {data => [ {shape_name, display_name, value, count}, ... ] }
-  # - with filter: [ {filter_answer_value, filter_answer_text, filter_results => [ {data => [ {shape_name, display_name, value, count}, ... ] } ] } ]
+  # - no filter: {shape_question_code, map_sets => [{title, subtitle, data => [ {shape_name, display_name, value, count}, ... ] } ] }
+  # - with filter: [{filter_answer_value, filter_answer_text, shape_question_code, filter_results => [ map_sets => [{title, subtitle, data => [ {shape_name, display_name, value, count}, ... ] } ] } ]
   def self.dataset_comparative_map(question_answers, broken_down_by_answers, data, question_mappable=true, with_title=false)
     if question_answers.present? && broken_down_by_answers.present? && data.present?
       map = nil
-
       if data[:filtered_by].present?
         map = []
         data[:results][:filter_analysis].each do |filter|
@@ -726,15 +723,7 @@ private
 
           if question_mappable
             # need question code so know which shape data to use
-            map_item[:filter_results][:question_code] = data[:question][:code]
-
-            # set the titles
-            if with_title
-              map[:title] = {}
-              map[:title][:html] = dataset_comparative_analysis_map_title_html(data[:question][:text], data[:broken_down_by][:text], filter[:filter_answer_text], filter[:filter_answer_value])
-              map[:title][:text] = dataset_comparative_analysis_map_title_text(data[:question][:text], data[:broken_down_by][:text], filter[:filter_answer_text], filter[:filter_answer_value])
-              map[:subtitle] = data[:results][:subtitle]
-            end
+            map_item[:filter_results][:shape_question_code] = data[:question][:code]
 
             # have to transpose the counts for highcharts (and re-calculate percents)
             counts = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:count]}}.transpose
@@ -752,63 +741,67 @@ private
               end
             end
 
-            map_item[:filter_results][:data] = []
+            map_item[:filter_results][:map_sets] = []
             broken_down_by_answers.each_with_index do |bdb_answer, bdb_index|
-              item = {broken_down_answer_value: bdb_answer.value, broken_down_answer_text: bdb_answer.text, data: []}
+              item = {broken_down_answer_value: bdb_answer.value, broken_down_answer_text: bdb_answer.text}
               
+              # set the titles
+              if with_title
+                item[:title] = {}
+                item[:title][:html] = dataset_comparative_analysis_map_title_html(data[:question][:text], data[:broken_down_by][:text], bdb_answer.text, data[:filtered_by][:text], filter[:filter_answer_text])
+                item[:title][:text] = dataset_comparative_analysis_map_title_text(data[:question][:text], data[:broken_down_by][:text], bdb_answer.text, data[:filtered_by][:text], filter[:filter_answer_text])
+                item[:subtitle] = data[:results][:subtitle]
+              end
+
+              # load the data
+              item[:data] = []
               question_answers.each_with_index do |q_answer, q_index|
                 item[:data] << dataset_comparative_map_processing(q_answer, percents[bdb_index][q_index], counts[bdb_index][q_index])
               end
-              map_item[:filter_results][:data] << item
+              map_item[:filter_results][:map_sets] << item
             end        
           else
             # need question code so know which shape data to use
-            map_item[:filter_results][:question_code] = data[:broken_down_by][:code]
-
-            # set the titles
-            if with_title
-              map[:title] = {}
-              map[:title][:html] = dataset_comparative_analysis_map_title_html(data[:question][:text], data[:broken_down_by][:text], filter[:filter_answer_text], filter[:filter_answer_value])
-              map[:title][:text] = dataset_comparative_analysis_map_title_text(data[:question][:text], data[:broken_down_by][:text], filter[:filter_answer_text], filter[:filter_answer_value])
-              map[:subtitle] = data[:results][:subtitle]
-            end
+            map_item[:filter_results][:shape_question_code] = data[:broken_down_by][:code]
 
             counts = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:count]}}
             percents = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:percent]}}
 
-            map_item[:filter_results][:data] = []
-            question_answers.each_with_index do |q_answer, q_index|
-              item = {broken_down_answer_value: q_answer.value, broken_down_answer_text: q_answer.text, data: []}
-              
-              broken_down_by_answers.each_with_index do |bdb_answer, bdb_index|
-                item[:data] << dataset_comparative_map_processing(bdb_answer, percents[q_index][bdb_index], counts[q_index][bdb_index])
-              end
-              map_item[:filter_results][:data] << item
-            end        
+            map_item[:filter_results][:map_sets] = []
+            if counts.present?
+              question_answers.each_with_index do |q_answer, q_index|
+                item = {broken_down_answer_value: q_answer.value, broken_down_answer_text: q_answer.text}
+
+                # set the titles
+                if with_title
+                  item[:title] = {}
+                  item[:title][:html] = dataset_comparative_analysis_map_title_html(data[:broken_down_by][:text], data[:question][:text], q_answer.text, data[:filtered_by][:text], filter[:filter_answer_text])
+                  item[:title][:text] = dataset_comparative_analysis_map_title_text(data[:broken_down_by][:text], data[:question][:text], q_answer.text, data[:filtered_by][:text], filter[:filter_answer_text])
+                  item[:subtitle] = data[:results][:subtitle]
+                end
+
+                # load the data
+                item[:data] = []
+                broken_down_by_answers.each_with_index do |bdb_answer, bdb_index|                  
+                  item[:data] << dataset_comparative_map_processing(bdb_answer, percents[q_index][bdb_index], counts[q_index][bdb_index])
+                end
+                map_item[:filter_results][:map_sets] << item
+              end        
+            end
           end
 
-          if map_item[:filter_results][:data].present?
+          if map_item[:filter_results][:map_sets].present?
             map << map_item
           end
         end
 
       else
-        map = {}
-        map[:question_code] = nil
 
-        # set the titles
-        if with_title
-          map[:title] = {}
-          map[:title][:html] = dataset_comparative_analysis_map_title_html(data[:question][:text], data[:broken_down_by][:text])
-          map[:title][:text] = dataset_comparative_analysis_map_title_text(data[:question][:text], data[:broken_down_by][:text])
-          map[:subtitle] = data[:results][:subtitle]
-        end
-
-        map[:data] = []
-
+        map = {shape_question_code: nil, map_sets: []}
+        
         if question_mappable
           # need question code so know which shape data to use
-          map[:question_code] = data[:question][:code]
+          map[:shape_question_code] = data[:question][:code]
 
           # have to transpose the counts for highcharts (and re-calculate percents)
           counts = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:count]}}.transpose
@@ -827,27 +820,47 @@ private
           end
 
           broken_down_by_answers.each_with_index do |bdb_answer, bdb_index|
-            item = {broken_down_answer_value: bdb_answer.value, broken_down_answer_text: bdb_answer.text, data: []}
-            
+            item = {broken_down_answer_value: bdb_answer.value, broken_down_answer_text: bdb_answer.text}
+
+            # set the titles
+            if with_title
+              item[:title] = {}
+              item[:title][:html] = dataset_comparative_analysis_map_title_html(data[:question][:text], data[:broken_down_by][:text], bdb_answer.text)
+              item[:title][:text] = dataset_comparative_analysis_map_title_text(data[:question][:text], data[:broken_down_by][:text], bdb_answer.text)
+              item[:subtitle] = data[:results][:subtitle]
+            end
+
+            # load the data
+            item[:data] = []
             question_answers.each_with_index do |q_answer, q_index|
               item[:data] << dataset_comparative_map_processing(q_answer, percents[bdb_index][q_index], counts[bdb_index][q_index])
             end
-            map[:data] << item
+            map[:map_sets] << item
           end        
         else
           # need question code so know which shape data to use
-          map[:question_code] = data[:broken_down_by][:code]
+          map[:shape_question_code] = data[:broken_down_by][:code]
 
           counts = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:count]}}
           percents = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:percent]}}
 
           question_answers.each_with_index do |q_answer, q_index|
-            item = {broken_down_answer_value: q_answer.value, broken_down_answer_text: q_answer.text, data: []}
+            item = {broken_down_answer_value: q_answer.value, broken_down_answer_text: q_answer.text}
+
+            # set the titles
+            if with_title
+              item[:title] = {}
+              item[:title][:html] = dataset_comparative_analysis_map_title_html(data[:broken_down_by][:text], data[:question][:text], q_answer.text)
+              item[:title][:text] = dataset_comparative_analysis_map_title_text(data[:question][:text], data[:broken_down_by][:text], q_answer.text)
+              item[:subtitle] = data[:results][:subtitle]
+            end
             
+            # load the data
+            item[:data] = []
             broken_down_by_answers.each_with_index do |bdb_answer, bdb_index|
               item[:data] << dataset_comparative_map_processing(bdb_answer, percents[q_index][bdb_index], counts[q_index][bdb_index])
             end
-            map[:data] << item
+            map[:map_sets] << item
           end        
         end
       end
@@ -1151,9 +1164,9 @@ private
     return title
   end 
 
-  def self.dataset_comparative_analysis_map_title_html(question, broken_down_by, filtered_by_text=nil, filtered_by_answer=nil)
+  def self.dataset_comparative_analysis_map_title_html(question, broken_down_by, broken_down_by_answer, filtered_by_text=nil, filtered_by_answer=nil)
     title = I18n.t('explore_data.comparative.html.map.title', :question => question)
-    title << I18n.t('explore_data.comparative.html.map.title_col', :broken_down_by => broken_down_by)
+    title << I18n.t('explore_data.comparative.html.map.title_col', :broken_down_by => broken_down_by, :broken_down_by_answer => broken_down_by_answer)
     if filtered_by_text.present?
       if filtered_by_answer.present?
         title << I18n.t('explore_data.comparative.html.map.title_filter_value', :variable => filtered_by_text, :value => filtered_by_answer )
@@ -1164,9 +1177,9 @@ private
     return title.html_safe
   end 
 
-  def self.dataset_comparative_analysis_map_title_text(question, broken_down_by, filtered_by_text=nil, filtered_by_answer=nil)
+  def self.dataset_comparative_analysis_map_title_text(question, broken_down_by, broken_down_by_answer, filtered_by_text=nil, filtered_by_answer=nil)
     title = I18n.t('explore_data.comparative.text.map.title', :question => question)
-    title << I18n.t('explore_data.comparative.text.map.title_col', :broken_down_by => broken_down_by)
+    title << I18n.t('explore_data.comparative.text.map.title_col', :broken_down_by => broken_down_by, :broken_down_by_answer => broken_down_by_answer)
     if filtered_by_text.present?
       if filtered_by_answer.present?
         title << I18n.t('explore_data.comparative.text.map.title_filter_value', :variable => filtered_by_text, :value => filtered_by_answer )

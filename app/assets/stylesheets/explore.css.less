@@ -1,7 +1,7 @@
 @import "twitter/bootstrap/variables.less";
 @import "variables.css.less";
 
-#explore-time-series{
+#explore-data{
   margin-top: 20px;
 
   #no-matches{
@@ -45,6 +45,12 @@
       }
     }
 
+    #var2-label-swap{
+      button#btn-swap-vars{
+        float: right;
+      }
+    }
+
     label#lbl_can_exclude{
       font-weight: normal;
       font-size: 13px;
@@ -81,7 +87,11 @@
       }
       & > ul{
         padding-left: 10px;
+        display: none;
         li{
+          & > ul{
+            padding-left: 15px;
+          }
           &.scroll-link{
             cursor: pointer;
             &:hover{
@@ -89,9 +99,9 @@
               color: #000;
             }
           }
-          &#jumpto-charts{
+          &#jumpto-charts-items, &#jumpto-maps-items{
             display: none;
-            #jumpto-charts-items{
+            .jumpto-items{
               padding-left: 20px;
             }
           }
@@ -143,7 +153,7 @@
   #container-chart{
     .chart{
       width:100%; 
-      height:500px;
+      height:501px;
       margin-bottom: 30px;
       border-bottom: dotted 1px #ccc;
       &:last-of-type{
@@ -168,6 +178,11 @@
       color: @bright-blue-color;
       font-weight: bold;
     }
+  }
+
+  #tab-map h3{
+    text-align: center;
+    font-size: 18px;
   }
 
   .container-table {
@@ -198,11 +213,18 @@
   }
 
   /* Map Styling */
-  #highmap {
-    height: 500px;
-    width: 100%;
-    margin: 20px 0px;
+  #container-map {
+    .map {
+      height: 501px;
+      width: 100%;
+      margin: 20px 20px 30px;
+      border-bottom: dotted 1px #ccc;
+      &:last-of-type{
+        border-bottom: none;
+      }
+    }
   }
+
 
   #highmap-filter-container{
     display: none;
@@ -234,6 +256,7 @@
       margin-right: 8px;
       opacity: 0.7;
   }
+
 
   #tab-details{
     .details-item{
@@ -267,11 +290,11 @@
   }
 
   /* loading animation, from: http://tobiasahlin.com/spinkit/ */
-  #explore-time-series-content{
+  #explore-data-content{
     position: relative;
     min-height: 200px;
   }
-  #explore-time-series-loader{
+  #explore-data-loader{
     background-color: rgba(0, 0, 0, 0.4);
     position: absolute;
     top: 0;

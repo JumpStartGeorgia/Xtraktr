@@ -264,27 +264,27 @@ ka:
         title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> %{variable} = %{value}"
         map:
           title: "%{question} "
-          title_col: "<br /> <span class='title-highlight'>filtered by:</span> %{broken_down_by} = [replace] "
-          title_filter: "<br /> <span class='title-highlight'>and</span> %{variable}"
-          title_filter_value: "<br /> <span class='title-highlight'>and</span> %{variable} = %{value}"
+          title_col: "<br /> <span class='title-highlight'>broken down by:</span> %{broken_down_by} = %{broken_down_by_answer} "
+          title_filter: "<br /> <span class='title-highlight'>filtered by:</span> %{variable}"
+          title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> %{variable} = %{value}"
       text:
-        title: "Answers to: %{question} broken down by: %{broken_down_by} "
-        title_filter: "filtered by: %{variable}"
-        title_filter_value: "filtered by: %{variable} = %{value}"
+        title: "Answers to: %{question}, broken down by: %{broken_down_by}"
+        title_filter: ", filtered by: %{variable}"
+        title_filter_value: ", filtered by: %{variable} = %{value}"
         map:
           title: "%{question} "
-          title_col: "filtered by: %{broken_down_by} = [replace] "
-          title_filter: "and %{variable}"
-          title_filter_value: "and %{variable} = %{value}"
+          title_col: "broken down by: %{broken_down_by} = %{broken_down_by_answer}"
+          title_filter: ", filtered by: %{variable}"
+          title_filter_value: ", filtered by: %{variable} = %{value}"
     single:
       html:
-        title: "%{question}"
+        title: "Answers to: %{question}"
         title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> %{variable}"
         title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> %{variable} = %{value}"
       text:
-        title: "%{question} "
-        title_filter: "filtered by: %{variable}"
-        title_filter_value: "filtered by: %{variable} = %{value}"
+        title: "Answers to: %{question} "
+        title_filter: ", filtered by: %{variable}"
+        title_filter_value: ", filtered by: %{variable} = %{value}"
     subtitle:
       html: 
         title: "Total Responses: <span class='number'>%{num}</span>"
@@ -639,14 +639,10 @@ ka:
       na: N/A
       percent: Percent
       dataset_title: Dataset
-      instructions:
-        header: Description
-        p1a: This page allows you to explore one question or the interaction between two questions. 
-        p1b: "You may also choose to narrow the scope of this analysis by selecting a subset of data to analyze."
-        p2: "You can explore the analysis via a map (if one variable is 'Reg'), a chart, and a table."
       form:
         question_code: Explore Answers To
-        broken_down_by_code: Broken Down By (optional)
+        broken_down_by_code: Broken Down By
+        optional: optional
         no_comparison: No Comparison
         swap: Swap the Questions
         submit: Generate
@@ -655,6 +651,11 @@ ka:
         no_filter: No Filter
         can_exclude: Exclude "Don't know" & "Refuse"
         can_exclude_hint: Remove answers like "Don't know" & "Refuse" from the analysis
+      jumpto:
+        header: Jump To
+        table: Data Table
+        charts: Charts
+        maps: Maps
       tabs:
         map: Map
         chart: Chart
@@ -674,10 +675,6 @@ ka:
       na: N/A
       percent: Percent
       time_series_title: Time Series
-      instructions:
-        header: Description
-        p1a: This page allows you to explore one question over a series of surveys. 
-        p1b: "You may also choose to narrow the scope of this analysis by selecting a subset of data to analyze."
       form:
         question_code: Explore Answers To
         submit: Generate
@@ -686,6 +683,10 @@ ka:
         no_filter: No Filter
         can_exclude: Exclude "Don't know" & "Refuse"
         can_exclude_hint: Remove answers like "Don't know" & "Refuse" from the analysis
+      jumpto:
+        header: Jump To
+        table: Data Table
+        charts: Charts
       tabs:
         chart: Chart
         table: Table
@@ -707,6 +708,7 @@ ka:
         header_question: Variable
         header_values: Values
       no_methodology: There is no methodology on file for this dataset.
+      no_reports: There are no reports on file for this dataset.
     dashboard_time_series:
       tabs:
         highlights: Highlights
@@ -714,6 +716,7 @@ ka:
         codebook: Codebook
         reports: Reports
         licensing: Licensing
+        datasets: Datasets
       codebook:
         header_question: Variable
         header_values: Values

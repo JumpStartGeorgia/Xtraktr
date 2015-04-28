@@ -16,7 +16,6 @@
     <% end %>
   </div>
   <div class="col-sm-3 documentation-links">
-    <h2><%= link_to t('helpers.links.api_home'), api_path %></h2>
     <h2><%= @api_version.title %></h2>
     <ul class="list-unstyled">
       <% @api_version.api_methods.is_public.sorted.each do |method| %>
@@ -25,5 +24,6 @@
         </li>
       <% end %>
     </ul>
+    <h2><%= link_to t('helpers.links.api_home'), api_path %></h2>
   </div>
 </div>

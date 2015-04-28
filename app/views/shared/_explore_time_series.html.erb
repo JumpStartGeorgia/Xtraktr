@@ -1,4 +1,4 @@
-<div id="explore-time-series" class="row">
+<div id="explore-data" class="row">
   <% if @questions.present? %>
     <div id="explore-form" class="col-sm-3">
       <h2>
@@ -6,10 +6,6 @@
       </h2>
 
       <%= form_tag(explore_time_series_path, :id => 'form-explore-time-series') do %>
-
-        <%
-          filter_variable = @filter.present? ? @filter[:code] : ''
-        %>
 
         <div class="row">
           <div class="col-xs-6 col-sm-12">
@@ -56,23 +52,23 @@
       <% end %> 
 
       <div id="jumpto">
-        <h3>Jump To</h3>
+        <h3><%= t('.jumpto.header') %></h3>
         <ul class="list-unstyled">
-          <li id="jumpto-table" class="scroll-link" data-href=".container-table">Table</li>
           <li id="jumpto-charts" data-href="#container-chart">
-            Charts
-            <ul id="jumpto-charts-items">
+            <%= t('.jumpto.charts') %>
+            <ul class="jumpto-items">
               <li>
               </li>
             </ul>
           </li>
+          <li id="jumpto-table" class="scroll-link" data-href=".container-table"><%= t('.jumpto.table') %></li>
         </ul>
         <div id="jumpto-loader"></div>
       </div>
 
     </div>
 
-    <div id="explore-time-series-content" class="col-sm-9">
+    <div id="explore-data-content" class="col-sm-9">
       <ul class="nav nav-tabs" id="explore-tabs" role="tablist">
         <li id="nav-chart"><a href="#tab-chart" role="tab" data-toggle="tab"><%= t('.tabs.chart') %></a></li>
         <li id="nav-details"><a href="#tab-details" role="tab" data-toggle="tab"><%= t('.tabs.details') %></a></li>
@@ -123,7 +119,7 @@
       </div>
 
 
-      <div id="explore-time-series-loader">
+      <div id="explore-data-loader">
         <div class="spinner">
           <div class="rect1"></div>
           <div class="rect2"></div>

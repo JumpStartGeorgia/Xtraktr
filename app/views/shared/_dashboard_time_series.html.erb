@@ -43,13 +43,16 @@
       <a href="#codebook" aria-controls="codebook" role="tab" data-toggle="tab"><%= t('.tabs.codebook') %></a>
     </li>
     <li role="presentation">
+      <a href="#datasets" aria-controls="datasets" role="tab" data-toggle="tab"><%= t('.tabs.datasets') %></a>
+    </li>
+    <li role="presentation">
       <a href="#licensing" aria-controls="licensing" role="tab" data-toggle="tab"><%= t('.tabs.licensing') %></a>
     </li>
   </ul>
 
   <div class="tab-content">
     <div role="tabpanel" class="tab-pane fade" id="highlights">
-      
+      coming soon...
     </div>
     
     <div role="tabpanel" class="tab-pane fade in active" id="codebook">
@@ -83,13 +86,18 @@
                   <%= t('.codebook.header_values') %>:                  
                 </div>
                 <div class="col-sm-11">
-                  <ul>
-                    <% question.answers.sorted.each do |answer| %>
-                      <li>
-                      <%= answer.text %>
-                      </li> 
-                    <% end %>
-                  </ul>
+                  <%
+                    answers = question.answers.sorted
+                    if answers.present? 
+                  %>
+                    <ul>
+                      <% answers.each do |answer| %>
+                        <li>
+                        <%= answer.text %>
+                        </li> 
+                      <% end %>
+                    </ul>
+                  <% end %>
                 </div>
               </div>
             </div>
@@ -98,8 +106,18 @@
       </ul>
     </div>
     
+    <div role="tabpanel" class="tab-pane fade" id="datasets">
+      <ul>
+        <% @time_series.datasets.sorted.each do |dataset| %>
+          <li>
+            <%= link_to "#{dataset.title} - #{dataset.dataset.title}", url_dataset_to_datasets_dashboard(@time_series.id, dataset.dataset_id) %>
+          </li>      
+        <% end %>
+      </ul>
+    </div>
+    
     <div role="tabpanel" class="tab-pane fade" id="licensing">
-      
+      coming soon...
     </div>
   </div>
 
