@@ -2,6 +2,11 @@
 <html lang="<%= I18n.locale %>">
   <head>
     <%= render :partial => 'layouts/head' %>
+
+    <% if @shapes_url.present? %>
+      <script src="<%= @shapes_url %>"></script>
+    <% end %>
+
   </head>
   <body>
 

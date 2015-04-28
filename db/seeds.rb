@@ -125,10 +125,96 @@ PageContent.create(name: 'api', title: 'API', content: '<p>The UNICEF Georgia Da
 puts 'Creating API Versions/Methods'
 v = ApiVersion.by_permalink('v1')
 if v.blank?
-  v = ApiVersion.create(permalink: 'v1', title: 'Version 1')
+  v = ApiVersion.create(permalink: 'v1', title: 'Version 1', public: true)
 end
 if v.api_methods.empty?
-  v.api_methods.create(permalink: 'dataset_catalog', title: 'Dataset Catalog', sort_order: 1)
+  v.api_methods.create(permalink: 'dataset_catalog', title: 'Dataset Catalog', public: true, sort_order: 1, content: '<p>Get a list of all datasets on this site.</p>
+<h2>URL</h2>
+<p>To call this method, use an HTTP GET request to the following URL:</p>
+<div class="url">http://dev-unicef.jumpstart.ge/[locale]/api/v1/dataset_catalog</div>
+<p>where:</p>
+<ul class="list-unstyled">
+<li>[locale] = the locale of the language you want the data to be returned in (currently ka for Georgian or en for English)</li>
+</ul>
+<h2>Required Parameters</h2>
+<p>The following parameters must be included in the request:</p>
+<table class="table table-bordered table-hover table-nonfluid">
+<thead>
+<tr><th>Parameter</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>access_token</td>
+<td>All requests must include an access_token. You can obtain an access tokeneasily, and for free, by going <a href="#">here</a>.</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<h2>Optional Parameters</h2>
+<p>There are no optional parameters for this call.</p>
+<h2>What You Get</h2>
+<p>The return object is a JSON array of all datasets in the site with the following information:</p>
+<table class="table table-bordered table-hover table-nonfluid">
+<thead>
+<tr><th>Parameter</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>id</td>
+<td>Unique ID of the dataset that you will need to get further information or run an analysis</td>
+</tr>
+<tr>
+<td>title</td>
+<td>The title of the dataset</td>
+</tr>
+<tr>
+<td>source</td>
+<td>The name of the source that gathered the data</td>
+</tr>
+<tr>
+<td>start_gathered_at</td>
+<td>Date the data gathering process started, format: yyyy-mm-dd (e.g., 2015-01-31)</td>
+</tr>
+<tr>
+<td>end_gathered_at</td>
+<td>Date the data gathering process finished, format: yyyy-mm-dd (e.g., 2015-01-31)</td>
+</tr>
+<tr>
+<td>released_at</td>
+<td>Date the data was released to the public by the source, format: yyyy-mm-dd (e.g., 2015-01-31)</td>
+</tr>
+<tr>
+<td>public_at</td>
+<td>Date the data was made public on this site, format: yyyy-mm-dd (e.g., 2015-01-31)</td>
+</tr>
+</tbody>
+</table>
+<h2>Examples</h2>
+<p>Here is an example of what can be returned after calling this method with the following url:</p>
+<div class="url">http://dev-unicef.jumpstart.ge/en/api/v1/dataset_catalog?access_token=123456789</div>
+<pre class="brush:js;auto-links:false;toolbar:false;tab-size:2" contenteditable="false">{
+  datasets: [
+    {
+      id: "1111111111",
+      title: "This is a dataset!",
+      source: "People",
+      start_gathered_at: "2014-04-01",
+      end_gathered_at: "2014-06-30",
+      released_at: "2015-01-01",
+      public_at: "2015-03-01"
+    },
+    {
+      id: "2222222222",
+      title: "Wow, another dataset!",
+      source: "Studies R Us",
+      start_gathered_at: null,
+      end_gathered_at: null,
+      released_at: null,
+      public_at: "2015-04-15"
+    }
+  ]
+}</pre>
+<p></p>')
   v.api_methods.create(permalink: 'dataset', title: 'Dataset Details', sort_order: 2)
   v.api_methods.create(permalink: 'dataset_codebook', title: 'Dataset Codebook', sort_order: 3)
   v.api_methods.create(permalink: 'dataset_analysis', title: 'Dataset Analysis', sort_order: 4)
