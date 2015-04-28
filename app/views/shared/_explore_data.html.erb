@@ -84,21 +84,15 @@
           <li id="jumpto-charts-items" data-href="#container-chart">
             <%= t('.jumpto.charts') %>
             <ul class="jumpto-items">
-              <li>
-              </li>
             </ul>
           </li>
-          <li class="jumpto-table scroll-link" data-href="#chart-table"><%= t('.jumpto.table') %></li>
         </ul>
         <ul class="list-unstyled" id="jumpto-maps">
           <li id="jumpto-maps-items" data-href="#container-map">
             <%= t('.jumpto.maps') %>
             <ul class="jumpto-items">
-              <li>
-              </li>
             </ul>
           </li>
-          <li class="jumpto-table scroll-link" data-href="#map-table"><%= t('.jumpto.table') %></li>
         </ul>
         <div id="jumpto-loader"></div>
       </div>
@@ -109,6 +103,7 @@
       <ul class="nav nav-tabs" id="explore-tabs" role="tablist">
         <li id="nav-chart"><a href="#tab-chart" role="tab" data-toggle="tab"><%= t('.tabs.chart') %></a></li>
         <li id="nav-map" style="display:none;"><a href="#tab-map" role="tab" data-toggle="tab"><%= t('.tabs.map') %></a></li>
+        <li id="nav-table"><a href="#tab-table" role="tab" data-toggle="tab"><%= t('.tabs.table') %></a></li>
         <li id="nav-details"><a href="#tab-details" role="tab" data-toggle="tab"><%= t('.tabs.details') %></a></li>
       </ul>      
 
@@ -116,31 +111,21 @@
         
         <div class="tab-pane fade" id="tab-chart">
           <div id="container-chart"></div>
-
-          <div class="container-table" id="chart-table">
-            <h2><span><%= t('.tabs.table') %></span></h2>
-
-            <h3></h3>
-            <table class="table-data table table-striped table-hover table-nonfluid" 
-                  data-count="<%= t('app.common.count') %>" data-percent="<%= t('app.common.percent') %>">
-            </table>
-          </div>
         </div>
 
 
         <div class="tab-pane active" id="tab-map">
-          
           <div id="container-map"></div>
+        </div>
 
-          <div class="container-table" id="map-table">
-            <h2><span><%= t('.tabs.table') %></span></h2>
 
+        <div class="tab-pane fade" id="tab-table">
+          <div id="container-table">
             <h3></h3>
             <table class="table-data table table-striped table-hover table-nonfluid" 
                   data-count="<%= t('app.common.count') %>" data-percent="<%= t('app.common.percent') %>">
             </table>
           </div>
-
         </div>
 
 

@@ -132,10 +132,14 @@ function build_time_series_charts(json){
       // show jumpto links
       $('#jumpto-charts .jumpto-items').append(jumpto_text);
       $('#jumpto-charts #jumpto-charts-items').show();
+      $('#jumpto').show();
 
     }else{
       // no filters
       build_time_series_chart(json.chart, chart_height);
+  
+      // hide jumpto
+      $('#jumpto').hide();
     }
   }
 
@@ -147,7 +151,7 @@ function build_time_series_charts(json){
 // build data table
 function build_datatable(json){
   // set the title
-  $('.container-table h3').html(json.results.title.html + json.results.subtitle.html);
+  $('#container-table h3').html(json.results.title.html + json.results.subtitle.html);
 
   // if the datatable alread exists, kill it
   if (datatables != undefined && datatables.length > 0){
@@ -181,10 +185,10 @@ function build_datatable(json){
     table += "</th>";
     for(i=0; i<json.datasets.length;i++){
       table += "<th>";
-      table += $('.table-data:first').data('count');
+      table += $('#container-table table').data('count');
       table += "</th>"
       table += "<th>";
-      table += $('.table-data:first').data('percent');
+      table += $('#container-table table').data('percent');
       table += "</th>"
     }
     table += "</tr>";
@@ -234,10 +238,10 @@ function build_datatable(json){
     table += "</th>";
     for(i=0; i<json.datasets.length;i++){
       table += "<th>";
-      table += $('.table-data:first').data('count');
+      table += $('#container-table table').data('count');
       table += "</th>"
       table += "<th>";
-      table += $('.table-data:first').data('percent');
+      table += $('#container-table table').data('percent');
       table += "</th>"
     }
     table += "</tr>";
@@ -272,17 +276,17 @@ function build_datatable(json){
 
 
   // add the table to the page
-  $('.table-data').html(table);
+  $('#container-table table').html(table);
 
   // compute how many columns need to have this sort
   var sort_array = [];
-  for(var i=1; i<$('.table-data:first > thead tr:last-of-type th').length; i++){
+  for(var i=1; i<$('#container-table table > thead tr:last-of-type th').length; i++){
     sort_array.push(i);
   }
 
   //initalize the datatable
   datatables = [];
-  $('.table-data').each(function(){
+  $('#container-table table').each(function(){
     datatables.push($(this).dataTable({
       "dom": '<"top"fl>t<"bottom"p><"clear">',
       "language": {
@@ -495,6 +499,13 @@ $(document).ready(function() {
             $(this).highcharts().reflow();        
           });
           break;
+        case '#tab-table':
+          var ttInstances = TableTools.fnGetMasters();
+          for (i in ttInstances) {
+          if (ttInstances[i].fnResizeRequired()) 
+            ttInstances[i].fnResizeButtons();
+          }
+          break;
       }
     });
 
@@ -543,8 +554,6 @@ $(document).ready(function() {
     });  
 
     // get the initial data
-    $('#jumpto').show();
-    $('#jumpto-loader').fadeIn('slow');
     $('#explore-data-loader').fadeIn('slow', function(){
       get_explore_time_series();
     });
@@ -560,7 +569,7 @@ $(document).ready(function() {
 
     // when chart tab clicked on, make sure the jumpto block is showing, else, hide it
     $('#explore-tabs li a').click(function(){
-      if ($(this).attr('href') == '#tab-chart'){
+      if ($(this).attr('href') == '#tab-chart' && $('#jumpto .jumpto-items li').length > 0){
         $('#jumpto').show();
       }else{
         $('#jumpto').hide();
@@ -603,7 +612,6 @@ $(document).ready(function() {
 
 
       // reload the data
-      $('#jumpto').show();
       $('#jumpto-loader').fadeIn('slow');
       $('#explore-data-loader').fadeIn('slow', function(){
         get_explore_time_series(true);

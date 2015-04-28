@@ -62,6 +62,7 @@ class RootController < ApplicationController
     if @dataset.blank?
       redirect_to explore_data_path, :notice => t('app.msgs.does_not_exist')
     else
+      @show_title = false
       @is_admin = false
       @dataset_url = explore_data_show_path(@dataset)
 
@@ -102,6 +103,7 @@ class RootController < ApplicationController
     if @time_series.blank?
       redirect_to explore_time_series_path, :notice => t('app.msgs.does_not_exist')
     else
+      @show_title = false
       @is_admin = false
       @time_series_url = explore_time_series_show_path(@time_series)
 

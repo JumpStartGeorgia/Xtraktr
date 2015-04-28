@@ -175,7 +175,7 @@ function build_highmaps(json){
     // remove all existing maps
     $('#container-map').empty();
     // remove all existing map links
-    $('#jumpto-maps #jumpto-maps-items').hide();
+    $('#jumpto-maps #jumpto-maps').hide();
     $('#jumpto-maps #jumpto-maps-items .jumpto-items').empty();
 
     var jumpto_text = '';
@@ -223,7 +223,8 @@ function build_highmaps(json){
 
       // show jumpto
       $('#jumpto-maps .jumpto-items').append(jumpto_text);
-      $('#jumpto-maps #jumpto-maps-items').show();
+      $('#jumpto-maps #jumpto-maps').show();
+      $('#jumpto').show();
 
     }else{
 
@@ -239,10 +240,14 @@ function build_highmaps(json){
 
         // show jumpto
         $('#jumpto-maps .jumpto-items').append(jumpto_text);
-        $('#jumpto-maps #jumpto-maps-items').show();
+        $('#jumpto-maps #jumpto-maps').show();
+        $('#jumpto').show();
 
       }else{
         build_highmap(json.map.shape_question_code, json.map.map_sets);
+  
+        // hide jumpto
+        $('#jumpto').hide();
       }
     }
 
@@ -378,7 +383,7 @@ function build_crosstab_charts(json){
     // remove all existing charts
     $('#container-chart').empty();
     // remove all existing chart links
-    $('#jumpto-charts #jumpto-charts-items').hide();
+    $('#jumpto-charts #jumpto-charts').hide();
     $('#jumpto-charts #jumpto-charts-items .jumpto-items').empty();
     var jumpto_text = '';
 
@@ -395,11 +400,15 @@ function build_crosstab_charts(json){
 
       // show jumpto links
       $('#jumpto-charts .jumpto-items').append(jumpto_text);
-      $('#jumpto-charts #jumpto-charts-items').show();
+      $('#jumpto-charts #jumpto-charts').show();
+      $('#jumpto').show();
 
     }else{
       // no filters
       build_crosstab_chart(json.question.text, json.broken_down_by.text, json.chart, chart_height);
+
+      // hide jumpto
+      $('#jumpto').hide();
     }
   }
 } 
@@ -519,7 +528,7 @@ function build_pie_charts(json){
     // remove all existing charts
     $('#container-chart').empty();
     // remove all existing chart links
-    $('#jumpto-charts #jumpto-charts-items').hide();
+    $('#jumpto-charts #jumpto-charts').hide();
     $('#jumpto-charts #jumpto-charts-items .jumpto-items').empty();
     var jumpto_text = '';
 
@@ -536,11 +545,15 @@ function build_pie_charts(json){
 
       // show jumpto links
       $('#jumpto-charts .jumpto-items').append(jumpto_text);
-      $('#jumpto-charts #jumpto-charts-items').show();
+      $('#jumpto-charts #jumpto-charts').show();
+      $('#jumpto').show();
 
     }else{
       // no filters
       build_pie_chart(json.chart, chart_height);
+  
+      // hide jumpto
+      $('#jumpto').hide();
     }
   }
 } 
@@ -553,7 +566,7 @@ function build_pie_charts(json){
 // build data table
 function build_datatable(json){
   // set the title
-  $('.container-table h3').html(json.results.title.html + json.results.subtitle.html);
+  $('#container-table h3').html(json.results.title.html + json.results.subtitle.html);
 
   // if the datatable alread exists, kill it
   if (datatables != undefined && datatables.length > 0){
@@ -597,10 +610,10 @@ function build_datatable(json){
       table += "</th>";
       for(i=0; i<json.broken_down_by.answers.length;i++){
         table += "<th>";
-        table += $('.table-data:first').data('count');
+        table += $('#container-table table').data('count');
         table += "</th>"
         table += "<th>";
-        table += $('.table-data:first').data('percent');
+        table += $('#container-table table').data('percent');
         table += "</th>"
       }
       table += "</tr>";
@@ -610,9 +623,9 @@ function build_datatable(json){
       table += "<th class='var1-col'>";
       table += json.question.text;
       table += "</th><th>";
-      table += $('.table-data:first').data('count');
+      table += $('#container-table table').data('count');
       table += "</th><th>";
-      table += $('.table-data:first').data('percent');
+      table += $('#container-table table').data('percent');
       table += "</th></tr>";
     }
   }else{
@@ -645,10 +658,10 @@ function build_datatable(json){
       table += "</th>";
       for(i=0; i<json.broken_down_by.answers.length;i++){
         table += "<th>";
-        table += $('.table-data:first').data('count');
+        table += $('#container-table table').data('count');
         table += "</th>"
         table += "<th>";
-        table += $('.table-data:first').data('percent');
+        table += $('#container-table table').data('percent');
         table += "</th>"
       }
       table += "</tr>";
@@ -663,9 +676,9 @@ function build_datatable(json){
       table += "<th class='var1-col'>";
       table += json.question.text;
       table += "</th><th>";
-      table += $('.table-data:first').data('count');
+      table += $('#container-table table').data('count');
       table += "</th><th>";
-      table += $('.table-data:first').data('percent');
+      table += $('#container-table table').data('percent');
       table += "</th></tr>";
     }
   }
@@ -762,17 +775,17 @@ function build_datatable(json){
 
   table += "</tbody>";
 
-  $('.table-data').html(table);
+  $('#container-table table').html(table);
 
   // compute how many columns need to have this sort
   var sort_array = [];
-  for(var i=1; i<$('.table-data:first > thead tr:last-of-type th').length; i++){
+  for(var i=1; i<$('#container-table table > thead tr:last-of-type th').length; i++){
     sort_array.push(i);
   }
 
   // initalize the datatable
   datatables = [];
-  $('.table-data').each(function(){
+  $('#container-table table').each(function(){
     datatables.push($(this).dataTable({
       "dom": '<"top"fl>t<"bottom"p><"clear">',
       "language": {
@@ -1015,6 +1028,13 @@ $(document).ready(function() {
             $(this).highcharts().reflow();        
           });
           break;
+        case '#tab-table':
+          var ttInstances = TableTools.fnGetMasters();
+          for (i in ttInstances) {
+          if (ttInstances[i].fnResizeRequired()) 
+            ttInstances[i].fnResizeButtons();
+          }
+          break;
       }
     });
 
@@ -1127,8 +1147,6 @@ $(document).ready(function() {
     });
 
     // get the initial data
-    $('#jumpto').show();
-    $('#jumpto-loader').fadeIn('slow');
     $('#explore-data-loader').fadeIn('slow', function(){
       get_explore_data();
     });
@@ -1143,11 +1161,11 @@ $(document).ready(function() {
 
     // when chart tab clicked on, make sure the jumpto block is showing, else, hide it
     $('#explore-tabs li a').click(function(){
-      if ($(this).attr('href') == '#tab-chart'){
+      if ($(this).attr('href') == '#tab-chart' && $('#jumpto #jumpto-charts .jumpto-items li').length > 0){
         $('#jumpto').show();
         $('#jumpto #jumpto-charts').show();
         $('#jumpto #jumpto-maps').hide();
-      }else if ($(this).attr('href') == '#tab-map'){
+      }else if ($(this).attr('href') == '#tab-map' && $('#jumpto #jumpto-maps .jumpto-items li').length > 0){
         $('#jumpto').show();
         $('#jumpto #jumpto-maps').show();
         $('#jumpto #jumpto-charts').hide();
