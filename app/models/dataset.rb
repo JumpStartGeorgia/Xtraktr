@@ -358,7 +358,7 @@ class Dataset < CustomTranslation
   before_create :create_private_share_key
   after_destroy :delete_dataset_files
   before_save :update_flags
-  before_save :update_stats
+  after_save :update_stats
   before_save :set_public_at
 
   # process the datafile and save all of the information from it
@@ -367,7 +367,6 @@ class Dataset < CustomTranslation
 
     # udpate meta data
     update_flags
-    update_stats
 
   end
 
@@ -399,6 +398,7 @@ class Dataset < CustomTranslation
 
   def update_stats
     logger.debug "==== update stats"
+
     self.build_stats if self.stats.nil?
 
     # how many questions can be analyzed
@@ -418,9 +418,10 @@ class Dataset < CustomTranslation
 
     # how many questions have bad answers
     self.stats.questions_bad_answers = self.questions_with_bad_answers.nil? ? 0 : self.questions_with_bad_answers.length
-
     # how many data records
     self.stats.data_records = self.data_items.blank? ? 0 : self.data_items.first.data.length
+
+    self.stats.save
 
     return true
   end
