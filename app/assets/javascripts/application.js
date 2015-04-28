@@ -34,6 +34,13 @@ $(document).ready(function(){
     $('form div.help-inline,form div.help-block, form label abbr').tipsy({gravity: 'sw', fade: true});
   }
 
+  $('#side-menu a').click(function(){
+    var t = $(this);
+    var p = t.closest('ul');
+    p.find('a.active').removeClass('active');
+    t.addClass('active');
+  });
+
 });
 
 ////////////////////////////////////////////////
