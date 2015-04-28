@@ -1,234 +1,256 @@
-var geojson, datatables, i, j, json_data, highmap;
+var geojson, datatables, i, j, json_data;
 
-
-////////////////////////////////////////////////
-////////////////////////////////////////////////
 
 
 ////////////////////////////////////////////////
 // build highmap
-function build_highmap(json, filter){
-  if (json.map && json.map.data){
+function build_highmap(shape_question_code, json_map_set){
+console.log(json_map_set);  
+  // create a div tag for this map
+  var map_id = 'map-' + ($('#container-map .map').length+1);
+  $('#container-map').append('<div id="' + map_id + '" class="map"></div>');
 
-    // adjust the width of the map to fit its container
-    $('#highmap').width($('#explore-tabs').width());
-
-    // set variables according to whether or not map is crosstab
-    var data, title_html, title_text, filter_name;
-    if (json.analysis_type == 'comparative'){
-      // if filter passed in, just get the data for that filter
-      // else, build filter and use first item in list for data
-      if (filter == undefined){
-        // create filter
-        // header text
-        $('#highmap-filter-container #highmap-filter-header').html($('#highmap-filter-container #highmap-filter-header').data('orig').replace('[replace]', json.map.filter));
-        // show first item by default
-        $('#highmap-filter-container #highmap-default-id').html(json.map.filters[0].text);
-        // empty the exist list items
-        $('#highmap-filter-container ul').empty();
-        // build drop down lists
-        for(i=0; i<json.map.filters.length; i++){
-          $('#highmap-filter-container ul').append('<li class="map_filter"><a href="#" data-id="' + json.map.filters[i].value + '">' + json.map.filters[i].text + '</a></li>');
-        }      
-        // turn on filter
-        $('#highmap-filter-container').show();
-
-        // map filter click event
-        $('#highmap-filter-container ul li.map_filter a').on('click', function(e) {
-          e.preventDefault();
-          
-          var name = $(this).html();
-          var data_id = $(this).data("id");
-          $('span#highmap-default-id').text(name);
-
-          // show loading screen
-          highmap.showLoading();
-
-          // reload the map
-          build_highmap(json_data, data_id);
-          
-        });
-
-        data = json.map.data[json.map.filters[0].value];
-        filter_name = json.map.filters[0].text;       
-        title_html = json.map.title.html.replace('[replace]', filter_name);
-        title_text = json.map.title.text.replace('[replace]', filter_name);
-      }else{
-        data = json.map.data[filter];
-        filter_name = $('#highmap-filter-container ul li a[data-id="' + filter + '"]').html();       
-        title_html = json.map.title.html.replace('[replace]', filter_name);
-        title_text = json.map.title.text.replace('[replace]', filter_name);
-      }
-
-    }else{
-      // turn off filter
-      $('#highmap-filter-container').hide();
-
-      data = json.map.data;
-      title_html = json.map.title.html;
-      title_text = json.map.title.text;
-
-    }
-
-    $('#highmap').highcharts('Map', {
-        chart:{
-          events: {
-            load: function () {
-              if (this.options.chart.forExport) {
-                  Highcharts.each(this.series, function (series) {
-                    // only show data labels for shapes that have data
-                    if (series.name != 'baseLayer'){
-                      series.update({
-                        dataLabels: {
-                          enabled: true,
-                          color: 'white',
-                          formatter: function () {
-                            return this.point.properties.display_name + '<br/>' + Highcharts.numberFormat(this.point.count, 0) + '   (' + this.point.value + '%)';
-                          }
+  $('#container-map #' + map_id).highcharts('Map', {
+      chart:{
+        events: {
+          load: function () {
+            if (this.options.chart.forExport) {
+                Highcharts.each(this.series, function (series) {
+                  // only show data labels for shapes that have data
+                  if (series.name != 'baseLayer'){
+                    series.update({
+                      dataLabels: {
+                        enabled: true,
+                        color: 'white',
+                        formatter: function () {
+                          return this.point.properties.display_name + '<br/>' + Highcharts.numberFormat(this.point.count, 0) + '   (' + this.point.value + '%)';
                         }
-                      }, false);
-                    }
-                });
-                this.redraw();
-              }
-            }
-          }          
-        },
-        title: {
-            text: title_html,
-            useHTML: true,
-            style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
-        },
-        subtitle: {
-            text: json.map.subtitle.html,
-            useHTML: true,
-            style: {'text-align': 'center', 'margin-top': '-15px'}
-        },
-
-        mapNavigation: {
-            enabled: true,
-            buttonOptions: {
-                verticalAlign: 'top'
-            }
-        },
-        colorAxis: {
-          min: 0,
-          max: 100, 
-  //            minColor: '#efeaea',
-  //            maxColor: '#662E2E',
-          labels: {
-              formatter: function () {
-                return this.value + '%';
-              },
-          },
-        },
-        loading: {
-          labelStyle: {
-            color: 'white',
-            fontSize: '20px'
-          },
-          style: {
-            backgroundColor: '#000'
-          }
-        },
-        series : [{
-            // create base layer for N/A
-            // will be overriden with next data series if data exists
-            data : Highcharts.geojson(highmap_shapes[json.map.question_code], 'map'),
-            name: 'baseLayer',
-            color: '#eeeeee',
-            showInLegend: false,
-            tooltip: {
-                headerFormat: '',
-                pointFormat: '<b>{point.properties.name_en}:</b> ' + gon.na
-                // using name_en in case shape has no data and therefore no display_name
-            },
-            borderColor: '#909090',
-            borderWidth: 1,
-            states: {
-                hover: {
-                    color: '#D6E3B5',
-                    borderColor: '#000',
-                    borderWidth: 2
-                }
-            }
-          },
-          {
-            // shape layer with data
-            data : data,
-            name: json.question.text,
-            mapData: highmap_shapes[json.map.question_code],
-            joinBy: ['name_en', 'shape_name'],
-            allAreas: false, // if shape does not have value, do not show it so base layer above will show
-            tooltip: {
-                headerFormat: '',
-                pointFormat: '<b>{point.display_name}:</b> {point.count:,.0f} ({point.value}%)'    
-            },
-            borderColor: '#909090',
-            borderWidth: 1,
-            states: {
-              hover: {
-                color: '#D6E3B5',
-                borderColor: '#000',
-                borderWidth: 2
-              }
-            },
-            dataLabels: {
-              enabled: true,
-              color: 'white',
-              formatter: function () {
-                return Highcharts.numberFormat(this.point.count, 0) + '   (' + this.point.value + '%)';
-              }
-            }
-        }],
-        exporting: {
-          sourceWidth: 1280,
-          sourceHeight: 720,
-          filename: title_text,
-          chartOptions:{
-            title: {
-              text: title_text
-            },
-            subtitle: {
-              text: json.map.subtitle.text
-            }
-          },
-          buttons: {
-            contextButton: {
-              menuItems: [
-                {
-                  text: gon.highcharts_png,
-                  onclick: function () {
-                      this.exportChart({type: 'image/png'});
+                      }
+                    }, false);
                   }
-                }, 
-                {
-                  text: gon.highcharts_jpg,
-                  onclick: function () {
-                      this.exportChart({type: 'image/jpeg'});
-                  }
-                }, 
-                {
-                  text: gon.highcharts_pdf,
-                  onclick: function () {
-                      this.exportChart({type: 'application/pdf'});
-                  }
-                }, 
-                {
-                  text: gon.highcharts_svg,
-                  onclick: function () {
-                      this.exportChart({type: 'image/svg+xml'});
-                  }
-                }
-              ]
+              });
+              this.redraw();
             }
           }
         }          
-    });
-    highmap = $('#highmap').highcharts();
+      },
+      title: {
+          text: json_map_set.title.html,
+          useHTML: true,
+          style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
+      },
+      subtitle: {
+          text: json_map_set.subtitle.html,
+          useHTML: true,
+          style: {'text-align': 'center', 'margin-top': '-15px'}
+      },
+
+      mapNavigation: {
+          enabled: true,
+          buttonOptions: {
+              verticalAlign: 'top'
+          }
+      },
+      colorAxis: {
+        min: 0,
+        max: 100, 
+//            minColor: '#efeaea',
+//            maxColor: '#662E2E',
+        labels: {
+            formatter: function () {
+              return this.value + '%';
+            },
+        },
+      },
+      loading: {
+        labelStyle: {
+          color: 'white',
+          fontSize: '20px'
+        },
+        style: {
+          backgroundColor: '#000'
+        }
+      },
+      series : [{
+          // create base layer for N/A
+          // will be overriden with next data series if data exists
+          data : Highcharts.geojson(highmap_shapes[shape_question_code], 'map'),
+          name: 'baseLayer',
+          color: '#eeeeee',
+          showInLegend: false,
+          tooltip: {
+              headerFormat: '',
+              pointFormat: '<b>{point.properties.name_en}:</b> ' + gon.na
+              // using name_en in case shape has no data and therefore no display_name
+          },
+          borderColor: '#909090',
+          borderWidth: 1,
+          states: {
+              hover: {
+                  color: '#D6E3B5',
+                  borderColor: '#000',
+                  borderWidth: 2
+              }
+          }
+        },
+        {
+          // shape layer with data
+          data : json_map_set.data,
+          name: 'dataLayer',
+          mapData: highmap_shapes[shape_question_code],
+          joinBy: ['name_en', 'shape_name'],
+          allAreas: false, // if shape does not have value, do not show it so base layer above will show
+          tooltip: {
+              headerFormat: '',
+              pointFormat: '<b>{point.display_name}:</b> {point.count:,.0f} ({point.value}%)'    
+          },
+          borderColor: '#909090',
+          borderWidth: 1,
+          states: {
+            hover: {
+              color: '#D6E3B5',
+              borderColor: '#000',
+              borderWidth: 2
+            }
+          },
+          dataLabels: {
+            enabled: true,
+            color: 'white',
+            formatter: function () {
+              return Highcharts.numberFormat(this.point.count, 0) + '   (' + this.point.value + '%)';
+            }
+          }
+      }],
+      exporting: {
+        sourceWidth: 1280,
+        sourceHeight: 720,
+        filename: json_map_set.title.text,
+        chartOptions:{
+          title: {
+            text: json_map_set.title.text
+          },
+          subtitle: {
+            text: json_map_set.subtitle.text
+          }
+        },
+        buttons: {
+          contextButton: {
+            menuItems: [
+              {
+                text: gon.highcharts_png,
+                onclick: function () {
+                    this.exportChart({type: 'image/png'});
+                }
+              }, 
+              {
+                text: gon.highcharts_jpg,
+                onclick: function () {
+                    this.exportChart({type: 'image/jpeg'});
+                }
+              }, 
+              {
+                text: gon.highcharts_pdf,
+                onclick: function () {
+                    this.exportChart({type: 'application/pdf'});
+                }
+              }, 
+              {
+                text: gon.highcharts_svg,
+                onclick: function () {
+                    this.exportChart({type: 'image/svg+xml'});
+                }
+              }
+            ]
+          }
+        }
+      }          
+  });
+}
+
+
+// build highmap
+function build_highmaps(json){
+  if (json.map){
+    // adjust the width of the map to fit its container
+    $('#container-map').width($('#explore-tabs').width());
+
+    // remove all existing maps
+    $('#container-map').empty();
+    // remove all existing map links
+    $('#jumpto-maps #jumpto-maps-items').hide();
+    $('#jumpto-maps #jumpto-maps-items .jumpto-items').empty();
+
+    var jumpto_text = '';
+    var non_map_text;
+    if (json.broken_down_by){
+      non_map_text = json.broken_down_by.text;
+      if (json.broken_down_by.is_mappable == true){
+        non_map_text = json.question.text;
+      }
+    }
+
+    // test if the filter is being used and build the chart(s) accordingly
+    if (json.map.constructor === Array){
+      // filters
+      var map_index = 0;
+
+      for(var h=0; h<json.map.length; h++){
+        if (json.broken_down_by && json.map[h].filter_results.map_sets.constructor === Array){
+          // add jumpto link
+          jumpto_text += '<li data-href="#map-' + (map_index+1) + '">' + json.filtered_by.text + ' = ' + json.map[h].filter_answer_text;
+          jumpto_text += '<ul>';          
+
+          for(var i=0; i<json.map[h].filter_results.map_sets.length; i++){
+            build_highmap(json.map[h].filter_results.shape_question_code, json.map[h].filter_results.map_sets[i]);
+
+            // add jumpto link
+            jumpto_text += '<li class="scroll-link" data-href="#map-' + (map_index+1) + '">' + non_map_text + ' = ' + json.map[h].filter_results.map_sets[i].broken_down_answer_text + '</li>';
+
+            // increase the map index
+            map_index += 1;        
+          }
+
+          jumpto_text += '</ul></li>';          
+
+        }else{
+          build_highmap(json.map[h].filter_results.shape_question_code, json.map[h].filter_results.map_sets);
+
+          // add jumpto link
+          jumpto_text += '<li class="scroll-link" data-href="#map-' + (map_index+1) + '">' + json.filtered_by.text + ' = ' + json.map[h].filter_answer_text + '</li>';
+
+          // increase the map index
+          map_index += 1;        
+        }
+      }
+
+      // show jumpto
+      $('#jumpto-maps .jumpto-items').append(jumpto_text);
+      $('#jumpto-maps #jumpto-maps-items').show();
+
+    }else{
+
+      // no filters
+      if (json.broken_down_by && json.map.map_sets.constructor === Array){
+
+        for(var i=0; i<json.map.map_sets.length; i++){
+          build_highmap(json.map.shape_question_code, json.map.map_sets[i]);
+
+          // add jumpto link
+          jumpto_text += '<li class="scroll-link" data-href="#map-' + (i+1) + '">' + non_map_text + ' = ' + json.map.map_sets[i].broken_down_answer_text + '</li>';
+        }
+
+        // show jumpto
+        $('#jumpto-maps .jumpto-items').append(jumpto_text);
+        $('#jumpto-maps #jumpto-maps-items').show();
+
+      }else{
+        build_highmap(json.map.shape_question_code, json.map.map_sets);
+      }
+    }
 
     // show map tabs
     $('#explore-tabs #nav-map').show();
+
   }else{
     // no map so hide tab
     $('#explore-tabs #nav-map').hide();
@@ -240,223 +262,288 @@ function build_highmap(json, filter){
 
 ////////////////////////////////////////////////
 // build crosstab chart
-function build_crosstab_chart(json){
-  if (json.chart && json.chart.data){
-    // set languaage text
-    Highcharts.setOptions({
-      lang: {
-        contextButtonTitle: gon.highcharts_context_title
-      }
-    });
+function build_crosstab_chart(question_text, broken_down_by_text, json_chart, chart_height){
+  if (chart_height == undefined){
+    chart_height = 501; // need the 1 for the border bottom line
+  }
 
-    // if there are a lot of answers, scale the height accordingly
-    if (json.question.answers.length + json.broken_down_by.answers.length < 10){
-      $('#chart').height(500);
-    }else{
-      $('#chart').height(330 + json.question.answers.length*26.125 + json.broken_down_by.answers.length*21);
-    }
+  // create a div tag for this chart
+  var chart_id = 'chart-' + ($('#container-chart .chart').length+1);
+  $('#container-chart').append('<div id="' + chart_id + '" class="chart" style="height: ' + chart_height + 'px;"></div>');
 
-    $('#chart').highcharts({
-        chart: {
-            type: 'bar'
-        },
+  // create chart
+  $('#container-chart #' + chart_id).highcharts({
+    chart: {
+        type: 'bar'
+    },
+    title: {
+        text: json_chart.title.html,
+        useHTML: true,
+        style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
+    },
+    subtitle: {
+        text: json_chart.subtitle.html,
+        useHTML: true,
+        style: {'text-align': 'center', 'margin-top': '-15px'}
+    },
+    xAxis: {
+        categories: json_chart.labels,
         title: {
-            text: json.chart.title.html,
-            useHTML: true,
-            style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
+            text: question_text
+        }
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: gon.percent
+        }
+    },
+    legend: {
+        title: {
+            text: broken_down_by_text
+        },
+        layout: 'vertical',
+        reversed: true,
+        symbolHeight: 14,
+        itemMarginBottom: 5,
+        itemStyle: { "color": "#333333", "cursor": "pointer", "fontSize": "14px", "fontWeight": "bold" }
+    },
+    tooltip: {
+        pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y:,.0f}</b> ({point.percentage:.2f}%)<br/>',
+        //shared: true,
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        followPointer: true
+    },
+    plotOptions: {
+        bar: {
+            stacking: 'percent'
+        }
+    },
+    series: json_chart.data.reverse(),
+    exporting: {
+      sourceWidth: 1280,
+      sourceHeight: 720,
+      filename: json_chart.title.text,
+      chartOptions:{
+        title: {
+          text: json_chart.title.text
         },
         subtitle: {
-            text: json.chart.subtitle.html,
-            useHTML: true,
-            style: {'text-align': 'center', 'margin-top': '-15px'}
-        },
-        xAxis: {
-            categories: json.chart.labels,
-            title: {
-                text: json.question.text
-            }
-        },
-        yAxis: {
-            min: 0,
-            title: {
-                text: gon.percent
-            }
-        },
-        legend: {
-            title: {
-                text: json.broken_down_by.text
-            },
-            layout: 'vertical',
-            reversed: true,
-            symbolHeight: 14,
-            itemMarginBottom: 5,
-            itemStyle: { "color": "#333333", "cursor": "pointer", "fontSize": "14px", "fontWeight": "bold" }
-        },
-        tooltip: {
-            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y:,.0f}</b> ({point.percentage:.2f}%)<br/>',
-            //shared: true,
-            backgroundColor: 'rgba(255, 255, 255, 0.95)',
-            followPointer: true
-        },
-        plotOptions: {
-            bar: {
-                stacking: 'percent'
-            }
-        },
-        series: json.chart.data.reverse(),
-        exporting: {
-          sourceWidth: 1280,
-          sourceHeight: 720,
-          filename: json.chart.title.text,
-          chartOptions:{
-            title: {
-              text: json.chart.title.text
-            },
-            subtitle: {
-              text: json.chart.subtitle.text
-            }
-          },
-          buttons: {
-            contextButton: {
-              menuItems: [
-                {
-                  text: gon.highcharts_png,
-                  onclick: function () {
-                      this.exportChart({type: 'image/png'});
-                  }
-                }, 
-                {
-                  text: gon.highcharts_jpg,
-                  onclick: function () {
-                      this.exportChart({type: 'image/jpeg'});
-                  }
-                }, 
-                {
-                  text: gon.highcharts_pdf,
-                  onclick: function () {
-                      this.exportChart({type: 'application/pdf'});
-                  }
-                }, 
-                {
-                  text: gon.highcharts_svg,
-                  onclick: function () {
-                      this.exportChart({type: 'image/svg+xml'});
-                  }
-                }
-              ]
-            }
-          }
+          text: json_chart.subtitle.text
         }
-    });    
-  }
+      },
+      buttons: {
+        contextButton: {
+          menuItems: [
+            {
+              text: gon.highcharts_png,
+              onclick: function () {
+                  this.exportChart({type: 'image/png'});
+              }
+            }, 
+            {
+              text: gon.highcharts_jpg,
+              onclick: function () {
+                  this.exportChart({type: 'image/jpeg'});
+              }
+            }, 
+            {
+              text: gon.highcharts_pdf,
+              onclick: function () {
+                  this.exportChart({type: 'application/pdf'});
+              }
+            }, 
+            {
+              text: gon.highcharts_svg,
+              onclick: function () {
+                  this.exportChart({type: 'image/svg+xml'});
+              }
+            }
+          ]
+        }
+      }
+    }
+  });    
 }
 
 ////////////////////////////////////////////////
-// build pie chart
-function build_pie_chart(json){
-  if (json.chart && json.chart.data){
-    // set languaage text
-    Highcharts.setOptions({
-      lang: {
-        contextButtonTitle: gon.highcharts_context_title
-      }
-    });
-
+// build crosstab charts for each chart item in json
+function build_crosstab_charts(json){
+  if (json.chart){
+    // determine chart height
     // if there are a lot of answers, scale the height accordingly
-    if (json.question.answers.length < 5){
-      $('#chart').height(500);
-    }else{
-      $('#chart').height(425 + json.question.answers.length*21);
+    var chart_height = 501; // need the 1 for the border bottom line
+    if (json.question.answers.length + json.broken_down_by.answers.length >= 10){
+      chart_height = 330 + json.question.answers.length*26.125 + json.broken_down_by.answers.length*21 + 1;
     }
 
-    $('#chart').highcharts({
-        chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false
-        },
+    // remove all existing charts
+    $('#container-chart').empty();
+    // remove all existing chart links
+    $('#jumpto-charts #jumpto-charts-items').hide();
+    $('#jumpto-charts #jumpto-charts-items .jumpto-items').empty();
+    var jumpto_text = '';
+
+    // test if the filter is being used and build the chart(s) accordingly
+    if (json.chart.constructor === Array){
+      // filters
+      for(var i=0; i<json.chart.length; i++){
+        // create chart
+        build_crosstab_chart(json.question.text, json.broken_down_by.text, json.chart[i].filter_results, chart_height);
+
+        // add jumpto link
+        jumpto_text += '<li class="scroll-link" data-href="#chart-' + (i+1) + '">' + json.filtered_by.text + ' = ' + json.chart[i].filter_answer_text + '</li>';
+      }
+
+      // show jumpto links
+      $('#jumpto-charts .jumpto-items').append(jumpto_text);
+      $('#jumpto-charts #jumpto-charts-items').show();
+
+    }else{
+      // no filters
+      build_crosstab_chart(json.question.text, json.broken_down_by.text, json.chart, chart_height);
+    }
+  }
+} 
+
+
+
+////////////////////////////////////////////////
+// build pie chart
+function build_pie_chart(json_chart, chart_height){
+  if (chart_height == undefined){
+    chart_height = 501; // need the 1 for the border bottom line
+  }
+
+  // create a div tag for this chart
+  var chart_id = 'chart-' + ($('#container-chart .chart').length+1);
+  $('#container-chart').append('<div id="' + chart_id + '" class="chart" style="height: ' + chart_height + 'px;"></div>');
+
+  // create chart
+  $('#container-chart #' + chart_id).highcharts({
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false
+    },
+    title: {
+        text: json_chart.title.html,
+        useHTML: true,
+        style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
+    },
+    subtitle: {
+        text: json_chart.subtitle.html,
+        useHTML: true,
+        style: {'text-align': 'center', 'margin-top': '-15px'}
+    },
+    tooltip: {
+        formatter: function () {
+          return '<b>' + this.key + ':</b> ' + Highcharts.numberFormat(this.point.options.count,0) + ' (' + this.y + '%)';
+        }
+    },
+    plotOptions: {
+        pie: {
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: false
+            },
+            showInLegend: true
+        }
+    },
+    legend: {
+        align: 'center',
+        layout: 'vertical',
+        symbolHeight: 14,
+        itemMarginBottom: 5,
+        itemStyle: { "color": "#333333", "cursor": "pointer", "fontSize": "14px", "fontWeight": "bold" }
+    },
+    series: [{
+        type: 'pie',
+        data: json_chart.data
+    }],
+    exporting: {
+      sourceWidth: 1280,
+      sourceHeight: 720,
+      filename: json_chart.title.text,
+      chartOptions:{
         title: {
-            text: json.chart.title.html,
-            useHTML: true,
-            style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
+          text: json_chart.title.text
         },
         subtitle: {
-            text: json.chart.subtitle.html,
-            useHTML: true,
-            style: {'text-align': 'center', 'margin-top': '-15px'}
-        },
-        tooltip: {
-            formatter: function () {
-              return '<b>' + this.key + ':</b> ' + Highcharts.numberFormat(this.point.options.count,0) + ' (' + this.y + '%)';
-            }
-        },
-        plotOptions: {
-            pie: {
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: false
-                },
-                showInLegend: true
-            }
-        },
-        legend: {
-            align: 'center',
-            layout: 'vertical',
-            symbolHeight: 14,
-            itemMarginBottom: 5,
-            itemStyle: { "color": "#333333", "cursor": "pointer", "fontSize": "14px", "fontWeight": "bold" }
-        },
-        series: [{
-            type: 'pie',
-            data: json.chart.data
-        }],
-        exporting: {
-          sourceWidth: 1280,
-          sourceHeight: 720,
-          filename: json.chart.title.text,
-          chartOptions:{
-            title: {
-              text: json.chart.title.text
-            },
-            subtitle: {
-              text: json.chart.subtitle.text
-            }
-          },
-          buttons: {
-            contextButton: {
-              menuItems: [
-                {
-                  text: gon.highcharts_png,
-                  onclick: function () {
-                      this.exportChart({type: 'image/png'});
-                  }
-                }, 
-                {
-                  text: gon.highcharts_jpg,
-                  onclick: function () {
-                      this.exportChart({type: 'image/jpeg'});
-                  }
-                }, 
-                {
-                  text: gon.highcharts_pdf,
-                  onclick: function () {
-                      this.exportChart({type: 'application/pdf'});
-                  }
-                }, 
-                {
-                  text: gon.highcharts_svg,
-                  onclick: function () {
-                      this.exportChart({type: 'image/svg+xml'});
-                  }
-                }
-              ]
-            }
-          }
+          text: json_chart.subtitle.text
         }
-
-    });
-  }
+      },
+      buttons: {
+        contextButton: {
+          menuItems: [
+            {
+              text: gon.highcharts_png,
+              onclick: function () {
+                  this.exportChart({type: 'image/png'});
+              }
+            }, 
+            {
+              text: gon.highcharts_jpg,
+              onclick: function () {
+                  this.exportChart({type: 'image/jpeg'});
+              }
+            }, 
+            {
+              text: gon.highcharts_pdf,
+              onclick: function () {
+                  this.exportChart({type: 'application/pdf'});
+              }
+            }, 
+            {
+              text: gon.highcharts_svg,
+              onclick: function () {
+                  this.exportChart({type: 'image/svg+xml'});
+              }
+            }
+          ]
+        }
+      }
+    }
+  });
 }
+
+////////////////////////////////////////////////
+// build pie chart for each chart item in json
+function build_pie_charts(json){
+  if (json.chart){
+    // determine chart height
+    // if there are a lot of answers, scale the height accordingly
+    var chart_height = 501; // need the 1 for the border bottom line
+    if (json.question.answers.length >= 5){
+      chart_height = 425 + json.question.answers.length*21 + 1;
+    }
+
+    // remove all existing charts
+    $('#container-chart').empty();
+    // remove all existing chart links
+    $('#jumpto-charts').hide();
+    $('#jumpto-charts .jumpto-items').empty();
+
+    // test if the filter is being used and build the chart(s) accordingly
+    if (json.chart.constructor === Array){
+      // filters
+      for(var i=0; i<json.chart.length; i++){
+        // create chart
+        build_pie_chart(json.chart[i].filter_results, chart_height);
+
+        // add jumpto link
+        $('#jumpto-charts .jumpto-items').append('<li class="scroll-link" data-href="#chart-' + (i+1) + '">' + json.filtered_by.text + ' = ' + json.chart[i].filter_answer_text + '</li>');
+      }
+      $('#jumpto-charts').show();
+
+    }else{
+      // no filters
+      build_pie_chart(json.chart, chart_height);
+    }
+  }
+} 
+
+
 
 
 
@@ -479,86 +566,197 @@ function build_datatable(json){
 
   // build head
   table += "<thead>";
-  if (json.analysis_type == 'comparative'){
-    // 3 headers of:
-    //                broekn_down_by question
-    //                broekn_down_by answers .....
 
-    // question code question   count percent count percent .....
-    table += "<tr class='th-center'>";
-    table += "<th class='var1-col'></th>";
-    table += "<th colspan='" + (2*(json.broken_down_by.answers.length+1)).toString() + "'>";
-    table += json.broken_down_by.text;
-    table += "</th>";
-    table += "</tr>";
-    table += "<tr class='th-center'>";
-    table += "<th class='var1-col'></th>";
-    for(i=0; i<json.broken_down_by.answers.length;i++){
-      table += "<th colspan='2'>";
-      table += json.broken_down_by.answers[i].text.toString();
-      table += "</th>"
-    }
-    table += "</tr>";
-    table += "<tr>";
-    table += "<th class='var1-col'>";
-    table += json.question.text;
-    table += "</th>";
-    for(i=0; i<json.broken_down_by.answers.length;i++){
-      table += "<th>";
+  // test if the filter is being used and build the table accordingly
+  if (json.filtered_by == undefined){
+    if (json.analysis_type == 'comparative'){
+      // 3 headers of:
+      //                broken_down_by question
+      //                broken_down_by answers .....
+
+      // question code question   count percent count percent .....
+      table += "<tr class='th-center'>";
+      table += "<th class='var1-col'></th>";
+      table += "<th colspan='" + (2*(json.broken_down_by.answers.length+1)).toString() + "'>";
+      table += json.broken_down_by.text;
+      table += "</th>";
+      table += "</tr>";
+      table += "<tr class='th-center'>";
+      table += "<th class='var1-col'></th>";
+      for(i=0; i<json.broken_down_by.answers.length;i++){
+        table += "<th colspan='2'>";
+        table += json.broken_down_by.answers[i].text.toString();
+        table += "</th>"
+      }
+      table += "</tr>";
+      table += "<tr>";
+      table += "<th class='var1-col'>";
+      table += json.question.text;
+      table += "</th>";
+      for(i=0; i<json.broken_down_by.answers.length;i++){
+        table += "<th>";
+        table += $('.table-data:first').data('count');
+        table += "</th>"
+        table += "<th>";
+        table += $('.table-data:first').data('percent');
+        table += "</th>"
+      }
+      table += "</tr>";
+    }else{
+      // 1 header of: question code question, count, percent
+      table += "<tr class='th-center'>";
+      table += "<th class='var1-col'>";
+      table += json.question.text;
+      table += "</th><th>";
       table += $('.table-data:first').data('count');
-      table += "</th>"
-      table += "<th>";
+      table += "</th><th>";
       table += $('.table-data:first').data('percent');
-      table += "</th>"
+      table += "</th></tr>";
     }
-    table += "</tr>";
   }else{
-    // 1 header of: question code question, count, percent
-    table += "<tr class='th-center'>";
-    table += "<th class='var1-col'>";
-    table += json.question.text;
-    table += "</th><th>";
-    table += $('.table-data:first').data('count');
-    table += "</th><th>";
-    table += $('.table-data:first').data('percent');
-    table += "</th></tr>";
+    if (json.analysis_type == 'comparative'){
+      // 3 headers of:
+      //                broken_down_by question
+      //                broken_down_by answers .....
+
+      // filter question   count percent count percent .....
+      table += "<tr class='th-center'>";
+      table += "<th class='var1-col' colspan='2'></th>";
+      table += "<th colspan='" + (2*(json.broken_down_by.answers.length+1)).toString() + "'>";
+      table += json.broken_down_by.text;
+      table += "</th>";
+      table += "</tr>";
+      table += "<tr class='th-center'>";
+      table += "<th class='var1-col' colspan='2'></th>";
+      for(i=0; i<json.broken_down_by.answers.length;i++){
+        table += "<th colspan='2'>";
+        table += json.broken_down_by.answers[i].text.toString();
+        table += "</th>"
+      }
+      table += "</tr>";
+      table += "<tr>";
+      table += "<th class='var1-col'>";
+      table += json.filtered_by.text;
+      table += "</th>";
+      table += "<th class='var1-col'>";
+      table += json.question.text;
+      table += "</th>";
+      for(i=0; i<json.broken_down_by.answers.length;i++){
+        table += "<th>";
+        table += $('.table-data:first').data('count');
+        table += "</th>"
+        table += "<th>";
+        table += $('.table-data:first').data('percent');
+        table += "</th>"
+      }
+      table += "</tr>";
+
+    }else{
+
+      // 1 header of: filter question, count, percent
+      table += "<tr class='th-center'>";
+      table += "<th class='var1-col'>";
+      table += json.filtered_by.text;
+      table += "</th>";
+      table += "<th class='var1-col'>";
+      table += json.question.text;
+      table += "</th><th>";
+      table += $('.table-data:first').data('count');
+      table += "</th><th>";
+      table += $('.table-data:first').data('percent');
+      table += "</th></tr>";
+    }
   }
   table += "</thead>";
 
+
   // build body
   table += "<tbody>";
-  if (json.analysis_type == 'comparative'){
-    // cells per row: question code answer, count/percent for each col
-    for(i=0; i<json.results.analysis.length; i++){
-      table += "<tr>";
-      table += "<td class='var1-col' data-order='" + json.question.answers[i].sort_order + "'>";
-      table += json.results.analysis[i].answer_text;
-      table += "</td>";
-      for(j=0; j<json.results.analysis[i].broken_down_results.length; j++){
-        table += "<td data-order='" + json.results.analysis[i].broken_down_results[j].count + "'>";
-        table += Highcharts.numberFormat(json.results.analysis[i].broken_down_results[j].count,0);
+  if (json.filtered_by == undefined){
+    if (json.analysis_type == 'comparative'){
+      // cells per row: question code answer, count/percent for each col
+      for(i=0; i<json.results.analysis.length; i++){
+        table += "<tr>";
+        table += "<td class='var1-col' data-order='" + json.question.answers[i].sort_order + "'>";
+        table += json.results.analysis[i].answer_text;
         table += "</td>";
-        table += "<td>";
-        table += json.results.analysis[i].broken_down_results[j].percent.toFixed(2);
-        table += "%</td>";
+        for(j=0; j<json.results.analysis[i].broken_down_results.length; j++){
+          table += "<td data-order='" + json.results.analysis[i].broken_down_results[j].count + "'>";
+          table += Highcharts.numberFormat(json.results.analysis[i].broken_down_results[j].count,0);
+          table += "</td>";
+          table += "<td>";
+          table += json.results.analysis[i].broken_down_results[j].percent.toFixed(2);
+          table += "%</td>";
+        }
+        table += "</tr>";
       }
-      table += "</tr>";
+
+    }else{
+      
+      // cells per row: question code answer, count, percent
+      for(i=0; i<json.results.analysis.length; i++){
+        table += "<tr>";
+        table += "<td class='var1-col' data-order='" + json.question.answers[i].sort_order + "'>";
+        table += json.results.analysis[i].answer_text;
+        table += "</td><td data-order='" + json.results.analysis[i].count + "'>";
+        table += Highcharts.numberFormat(json.results.analysis[i].count,0);
+        table += "</td><td>";
+        table += json.results.analysis[i].percent.toFixed(2);
+        table += "%</td>";
+        table += "</tr>";
+      }
     }
+
   }else{
-    // cells per row: question code answer, count, percent
-    for(i=0; i<json.results.analysis.length; i++){
-      table += "<tr>";
-      table += "<td class='var1-col' data-order='" + json.question.answers[i].sort_order + "'>";
-      table += json.results.analysis[i].answer_text;
-      table += "</td><td data-order='" + json.results.analysis[i].count + "'>";
-      table += Highcharts.numberFormat(json.results.analysis[i].count,0);
-      table += "</td><td>";
-      table += json.results.analysis[i].percent.toFixed(2);
-      table += "%</td>";
-      table += "</tr>";
+
+    if (json.analysis_type == 'comparative'){
+      // cells per row: filter question code answer, count/percent for each col
+      for(h=0; h<json.results.filter_analysis.length; h++){
+
+        for(i=0; i<json.results.filter_analysis[h].filter_results.analysis.length; i++){
+          table += "<tr>";
+          table += "<td class='var1-col' data-order='" + json.filtered_by.answers[h].sort_order + "'>";
+          table += json.results.filter_analysis[h].filter_answer_text;
+          table += "</td>";
+          table += "<td class='var1-col' data-order='" + json.question.answers[i].sort_order + "'>";
+          table += json.results.filter_analysis[h].filter_results.analysis[i].answer_text;
+          table += "</td>";
+
+          for(j=0; j<json.results.filter_analysis[h].filter_results.analysis[i].broken_down_results.length; j++){
+            table += "<td data-order='" + json.results.filter_analysis[h].filter_results.analysis[i].broken_down_results[j].count + "'>";
+            table += Highcharts.numberFormat(json.results.filter_analysis[h].filter_results.analysis[i].broken_down_results[j].count,0);
+            table += "</td>";
+            table += "<td>";
+            table += json.results.filter_analysis[h].filter_results.analysis[i].broken_down_results[j].percent.toFixed(2);
+            table += "%</td>";
+          }
+          table += "</tr>";
+        }
+      }
+    }else{
+      // for each filter, show each question and the count/percents
+      // cells per row: filter question code answer, count, percent
+      for(h=0; h<json.results.filter_analysis.length; h++){
+
+        for(i=0; i<json.results.filter_analysis[h].filter_results.analysis.length; i++){
+          table += "<tr>";
+          table += "<td class='var1-col' data-order='" + json.filtered_by.answers[h].sort_order + "'>";
+          table += json.results.filter_analysis[h].filter_answer_text;
+          table += "</td>";
+          table += "<td class='var1-col' data-order='" + json.question.answers[i].sort_order + "'>";
+          table += json.results.filter_analysis[h].filter_results.analysis[i].answer_text;
+          table += "</td>";
+          table += "<td data-order='" + json.results.filter_analysis[h].filter_results.analysis[i].count + "'>";
+          table += Highcharts.numberFormat(json.results.filter_analysis[h].filter_results.analysis[i].count,0);
+          table += "</td>";
+          table += "<td>";
+          table += json.results.filter_analysis[h].filter_results.analysis[i].percent.toFixed(2);
+          table += "%</td>";
+          table += "</tr>";
+        }
+      }
     }
   }
-
 
   table += "</tbody>";
 
@@ -608,28 +806,53 @@ function build_datatable(json){
 ////////////////////////////////////////////////
 // build details (question and possible answers)
 function build_details(json){
-  // clear out content first
-  $('#tab-details #details-question-code-question, #tab-details #details-question-code-answers, #tab-details #details-broken-down-by-question, #tab-details #details-broken-down-by-answers').html('');
+  // clear out existing content and hide
+  $('#tab-details .details-item .name-variable, #tab-details .details-item .list-answers').empty();
+  $('#tab-details .details-item').hide();
 
-  // add question question/answers
-  if (json.question && json.question.answers){
-    $('#tab-details #details-question-code-question').html(json.question.text);    
+  // add questions
+  if (json.question && json.question.text && json.question.answers){
+    $('#tab-details #details-question-code .name-variable').html(json.question.text);    
     for(var i=0;i<json.question.answers.length;i++){
-      $('#tab-details #details-question-code-answers').append('<li>' + json.question.answers[i].text + '</li>');
+      $('#tab-details #details-question-code .list-answers').append('<li>' + json.question.answers[i].text + '</li>');
     }
+    $('#tab-details #details-question-code').show();
   }
 
-  // add broken down by question/answers
-  if (json.broken_down_by && json.broken_down_by.answers){
-    $('#tab-details #details-broken-down-by-question').html(json.broken_down_by.text);    
+  // add broken down by
+  if (json.broken_down_by && json.broken_down_by.text && json.broken_down_by.answers){
+    $('#tab-details #details-broken-down-by-code .name-variable').html(json.broken_down_by.text);    
     for(var i=0;i<json.broken_down_by.answers.length;i++){
-      $('#tab-details #details-broken-down-by-answers').append('<li>' + json.broken_down_by.answers[i].text + '</li>');
+      $('#tab-details #details-broken-down-by-code .list-answers').append('<li>' + json.broken_down_by.answers[i].text + '</li>');
     }
-    $('#tab-details #details-broken-down-by').show();
-  }else{
-    // no column data so hide this section
-    $('#tab-details #details-broken-down-by').hide();
+    $('#tab-details #details-broken-down-by-code').show();
   }
+
+  // add filters
+  if (json.filtered_by && json.filtered_by.text && json.filtered_by.answers){
+    $('#tab-details #details-filtered-by-code .name-variable').html(json.filtered_by.text);    
+    for(var i=0;i<json.filtered_by.answers.length;i++){
+      $('#tab-details #details-filtered-by-code .list-answers').append('<li>' + json.filtered_by.answers[i].text + '</li>');
+    }
+    $('#tab-details #details-filtered-by-code').show();
+  }
+
+}
+
+////////////////////////////////////////////////
+// update the page title to include the title of the analysis
+function build_page_title(json){
+  // get current page title
+  // first index - dataset title
+  // last index - app name
+  var title_parts = $('title').html().split(' | ');
+
+  if (json.results.title.text){
+    $('title').html(title_parts[0] + ' | ' + json.results.title.text + ' | ' + title_parts[title_parts.length-1])
+  }else{
+    $('title').html(title_parts[0] + ' | ' + title_parts[title_parts.length-1])
+  }
+   
 }
 
 ////////////////////////////////////////////////
@@ -637,13 +860,15 @@ function build_details(json){
 function build_explore_data_page(json){
 
   if (json.analysis_type == 'comparative'){
-    build_crosstab_chart(json);
+    build_crosstab_charts(json);
   }else{
-    build_pie_chart(json);
+    build_pie_charts(json);
   }
-  build_highmap(json);
+  build_highmaps(json);
   build_datatable(json);
   build_details(json);
+
+  build_page_title(json);
 
   // if no visible tab is marked as active, mark the first active one
   if ($('#explore-tabs li.active:visible').length == 0){
@@ -660,6 +885,7 @@ function get_explore_data(is_back_button){
   if (is_back_button == undefined){
     is_back_button = false;
   }
+
   // build querystring for url and ajax call
   var ajax_data = {};
   var url_querystring = [];
@@ -735,6 +961,7 @@ function get_explore_data(is_back_button){
     }
 
     $('#explore-data-loader').fadeOut('slow');
+    $('#jumpto-loader').fadeOut('slow');
 
   });
 }
@@ -761,10 +988,15 @@ function reset_filter_form(){
 ////////////////////////////////////////////////
 
 $(document).ready(function() {
-  if (gon.explore_data){
-    // turn on tooltip for dataset description
-    $('#dataset-description').tooltip();
+  // set languaage text
+  Highcharts.setOptions({
+    lang: {
+      contextButtonTitle: gon.highcharts_context_title
+    }
+  });
 
+
+  if (gon.explore_data){
     // due to using tabs, the map, chart and table cannot be properly drawn
     // because they may be hidden. 
     // this event catches when a tab is being shown to make sure 
@@ -772,10 +1004,14 @@ $(document).ready(function() {
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
       switch($(this).attr('href')){
         case '#tab-map':
-          highmap.reflow();
+          $('#container-map .map').each(function(){
+            $(this).highcharts().reflow();        
+          });
           break;
         case '#tab-chart':
-          $('#chart').highcharts().reflow();        
+          $('#container-chart .chart').each(function(){
+            $(this).highcharts().reflow();        
+          });
           break;
       }
     });
@@ -783,6 +1019,7 @@ $(document).ready(function() {
     // catch the form submit and call the url with the
     // form values in the url
     $("form#form-explore-data").submit(function(){
+      $('#jumpto-loader').fadeIn('slow');
       $('#explore-data-loader').fadeIn('slow', function(){
         get_explore_data();
       });
@@ -792,6 +1029,7 @@ $(document).ready(function() {
     // reset the form fields
     $("form#form-explore-data input#btn-reset").click(function(e){
       e.preventDefault();
+      $('#jumpto-loader').fadeIn('slow');
       $('#explore-data-loader').fadeIn('slow', function(){
         reset_filter_form();
         get_explore_data();
@@ -887,9 +1125,37 @@ $(document).ready(function() {
     });
 
     // get the initial data
+    $('#jumpto').show();
+    $('#jumpto-loader').fadeIn('slow');
     $('#explore-data-loader').fadeIn('slow', function(){
       get_explore_data();
     });
+
+    // jumpto scrolling
+    $("#jumpto").on('click', 'ul li.scroll-link', function(){
+      var href = $(this).data('href');
+      $('html, body').animate({
+        scrollTop: $(href).offset().top - 120
+      }, 1500);
+    });
+
+    // when chart tab clicked on, make sure the jumpto block is showing, else, hide it
+    $('#explore-tabs li a').click(function(){
+      if ($(this).attr('href') == '#tab-chart'){
+        $('#jumpto').show();
+        $('#jumpto #jumpto-charts').show();
+        $('#jumpto #jumpto-maps').hide();
+      }else if ($(this).attr('href') == '#tab-map'){
+        $('#jumpto').show();
+        $('#jumpto #jumpto-maps').show();
+        $('#jumpto #jumpto-charts').hide();
+      }else{
+        $('#jumpto').hide();
+        $('#jumpto #jumpto-charts').hide();
+        $('#jumpto #jumpto-maps').hide();
+      }
+    });
+
 
     // the below code is to override back button to get the ajax content without page reload
     $(window).bind('popstate', function() {

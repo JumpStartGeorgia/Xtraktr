@@ -52,7 +52,7 @@
 
   <div class="tab-content">
     <div role="tabpanel" class="tab-pane fade" id="highlights">
-      
+      coming soon...
     </div>
     
     <div role="tabpanel" class="tab-pane fade in active" id="codebook">
@@ -86,13 +86,18 @@
                   <%= t('.codebook.header_values') %>:                  
                 </div>
                 <div class="col-sm-11">
-                  <ul>
-                    <% question.answers.sorted.each do |answer| %>
-                      <li>
-                      <%= answer.text %>
-                      </li> 
-                    <% end %>
-                  </ul>
+                  <%
+                    answers = question.answers.sorted
+                    if answers.present? 
+                  %>
+                    <ul>
+                      <% answers.each do |answer| %>
+                        <li>
+                        <%= answer.text %>
+                        </li> 
+                      <% end %>
+                    </ul>
+                  <% end %>
                 </div>
               </div>
             </div>
@@ -112,7 +117,7 @@
     </div>
     
     <div role="tabpanel" class="tab-pane fade" id="licensing">
-      
+      coming soon...
     </div>
   </div>
 

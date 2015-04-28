@@ -101,6 +101,7 @@ function build_time_series_chart(json_chart, chart_height){
   });
 }
 
+// build time series line chart for each chart item in json
 function build_time_series_charts(json){
   if (json.chart){
     // determine chart height
@@ -114,7 +115,7 @@ function build_time_series_charts(json){
     $('#container-chart').empty();
     // remove all existing chart links
     $('#jumpto-charts').hide();
-    $('#jumpto-charts #jumpto-charts-items').empty();
+    $('#jumpto-charts .jumpto-items').empty();
 
     // test if the filter is being used and build the chart(s) accordingly
     if (json.chart.constructor === Array){
@@ -124,7 +125,7 @@ function build_time_series_charts(json){
         build_time_series_chart(json.chart[i].filter_results, chart_height);
 
         // add jumpto link
-        $('#jumpto-charts #jumpto-charts-items').append('<li class="scroll-link" data-href="#chart-' + (i+1) + '">' + json.filtered_by.text + ' = ' + json.chart[i].filter_answer_text + '</li>');
+        $('#jumpto-charts .jumpto-items').append('<li class="scroll-link" data-href="#chart-' + (i+1) + '">' + json.filtered_by.text + ' = ' + json.chart[i].filter_answer_text + '</li>');
       }
       $('#jumpto-charts').show();
 
@@ -259,9 +260,7 @@ function build_datatable(json){
           table += json.results.filter_analysis[h].filter_results.analysis[i].dataset_results[j].percent.toFixed(2);
           table += "%</td>";
         }
-        if (i < json.results.filter_analysis[h].filter_results.analysis.length-1){
-          table += "</tr>";
-        }
+        table += "</tr>";
       }
     }
     table += "</tbody>";
@@ -341,12 +340,29 @@ function build_details(json){
 }
 
 ////////////////////////////////////////////////
+// update the page title to include the title of the analysis
+function build_page_title(json){
+  // get current page title
+  // first index - dataset title
+  // last index - app name
+  var title_parts = $('title').html().split(' | ');
+
+  if (json.results.title.text){
+    $('title').html(title_parts[0] + ' | ' + json.results.title.text + ' | ' + title_parts[title_parts.length-1])
+  }else{
+    $('title').html(title_parts[0] + ' | ' + title_parts[title_parts.length-1])
+  }   
+}
+
+
+////////////////////////////////////////////////
 // build the visualizations for the explore data page
 function build_explore_time_series_page(json){
 
   build_time_series_charts(json);
   build_datatable(json);
   build_details(json);
+  build_page_title(json);
 
   // if no visible tab is marked as active, mark the first active one
   if ($('#explore-tabs li.active:visible').length == 0){
@@ -431,7 +447,7 @@ function get_explore_time_series(is_back_button){
       window.history.pushState({path:new_url}, '', new_url);
     }
 
-    $('#explore-time-series-loader').fadeOut('slow');
+    $('#explore-data-loader').fadeOut('slow');
     $('#jumpto-loader').fadeOut('slow');
 
   });
@@ -482,7 +498,7 @@ $(document).ready(function() {
     // form values in the url
     $("form#form-explore-time-series").submit(function(){
       $('#jumpto-loader').fadeIn('slow');
-      $('#explore-time-series-loader').fadeIn('slow', function(){
+      $('#explore-data-loader').fadeIn('slow', function(){
         get_explore_time_series();
       });
       return false;
@@ -492,7 +508,7 @@ $(document).ready(function() {
     $("form#form-explore-time-series input#btn-reset").click(function(e){
       e.preventDefault();
       $('#jumpto-loader').fadeIn('slow');
-      $('#explore-time-series-loader').fadeIn('slow', function(){
+      $('#explore-data-loader').fadeIn('slow', function(){
         reset_filter_form();
         get_explore_time_series();
       });
@@ -525,7 +541,7 @@ $(document).ready(function() {
     // get the initial data
     $('#jumpto').show();
     $('#jumpto-loader').fadeIn('slow');
-    $('#explore-time-series-loader').fadeIn('slow', function(){
+    $('#explore-data-loader').fadeIn('slow', function(){
       get_explore_time_series();
     });
 
@@ -533,7 +549,6 @@ $(document).ready(function() {
     // jumpto scrolling
     $("#jumpto").on('click', 'ul li.scroll-link', function(){
       var href = $(this).data('href');
-      console.log('scroll to href = ' + href);
       $('html, body').animate({
         scrollTop: $(href).offset().top - 120
       }, 1500);
@@ -586,7 +601,7 @@ $(document).ready(function() {
       // reload the data
       $('#jumpto').show();
       $('#jumpto-loader').fadeIn('slow');
-      $('#explore-time-series-loader').fadeIn('slow', function(){
+      $('#explore-data-loader').fadeIn('slow', function(){
         get_explore_time_series(true);
       });
     });  

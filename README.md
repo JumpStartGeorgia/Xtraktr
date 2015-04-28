@@ -56,16 +56,6 @@ rake db:migrate
 rake db:seed
 ````
 
-### Model Files
-The [/app/models](/app/models) folder contains two files: [page.rb](/app/models/page.rb) and [page_translation.rb](/app/models/page_translation.rb). 
-
-#### page.rb 
-A 'translates' call at the top of the file tells globalize which fields should have translations. Also notice the attr_accessible line with the :page_translations_attributes value. This must be there if you want to add translated text through a web form.
-
-#### page_translation.rb
-In this file, make sure that you do not include the mapping id field, in this case page_id, in the validates presence statement. The value is not populated until after the page model is saved so validation on this would always fail.
-
-This file also includes some custom code that allows the user to enter content for one language and have it automatically be applied to all other languages if no content in that language is provided. This is what the 'required_data_provided?' and 'add_required_data methods' are for. In this case, the title and content are required so if both of them are not provided, the text from another language will automatically be used (more on this part later).
 
 ### Controllers
 For any controller that is allowing a user to add/edit translated content, please change the controller in the following ways (refer to [/app/controllers/admin/page_controller.rb](/app/controllers/admin/page_controller.rb) for an exmaple):

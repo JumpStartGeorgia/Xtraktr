@@ -34,7 +34,7 @@ class DatasetsController < ApplicationController
     else
       add_dataset_nav_options 
 
-      @css.push("dashboard_data.css")
+      @css.push("dashboard.css")
       @js.push("live_search.js")
 
       respond_to do |format|

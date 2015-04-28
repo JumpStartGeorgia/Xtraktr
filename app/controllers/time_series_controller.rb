@@ -32,7 +32,7 @@ class TimeSeriesController < ApplicationController
     else
       add_time_series_nav_options
 
-      @css.push("dashboard_time_series.css")
+      @css.push("dashboard.css")
       @js.push("live_search.js")
 
       respond_to do |format|
