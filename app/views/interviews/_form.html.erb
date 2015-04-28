@@ -1,0 +1,51 @@
+<div class="interview">
+   <div class="title">Registration</div>
+   <%= semantic_form_for(@mod, html: {class: 'tabbed-translation-form'}) do |f| %>
+       <%= f.inputs do %>  
+         <div class="row">
+            <div class="col-sm-6">
+               <%= f.input :first_name, :as => :string, hint: 'First Name', :input_html => {} %>
+            </div>
+            <div class="col-sm-6">
+               <%= f.input :last_name, :as => :string, hint: 'Last Name', :input_html => {} %>
+            </div>      
+         </div> 
+         <%= f.input :email %>
+         <% Interview::AGE_GROUP.each do |k,v| %>
+            <%= radio_button_tag 'interview[age_group]', k %>
+            <%= label_tag "age_group", v %>
+         <% end %>
+         <div class="row">
+            <div class="col-sm-6">
+               <%= f.input :residence, :as => :string, hint: 'Residence', :input_html => {} %>
+            </div>
+            <div class="col-sm-6">
+               <%= f.input :affiliation, :as => :string, hint: 'Affiliation', :input_html => {} %>
+            </div>      
+         </div> 
+         <% Interview::STATUS.each do |k,v| %>
+            <%= radio_button_tag 'interview[status]', k %>
+            <%= label_tag "status", v %>
+         <% end %>
+         <%= f.input :status_other, :input_html => { style: 'display:none;' }%>
+         <%= f.input :description, :as => :text, :input_html => { :class => 'autogrow', :rows => 5, :cols => 80, :maxlength => 10  } %>
+         <%= f.input :terms, :as => :boolean, :label => false %>   
+         <label for="terms">I agree to the <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a></label>
+
+      <% end %>   
+      
+      <div class="form-group">
+       <%= f.submit nil, :class => 'btn btn-primary' %>
+      </div>
+
+   <% end %>   
+</div>
+
+
+<script>
+// $(document).ready(function(){
+//    $('input[name=status]').click(function(){
+//        console.log('sdf');
+//    });
+// });
+</script>

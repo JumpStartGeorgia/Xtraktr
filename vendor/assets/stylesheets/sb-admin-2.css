@@ -138,7 +138,7 @@ body {
         z-index: 1;
         position: absolute;
         width: 160px;
-        margin-top: 51px;
+        /*margin-top: 51px;*/
     }
 
     .navbar-top-links .dropdown-messages,

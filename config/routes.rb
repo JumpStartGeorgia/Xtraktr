@@ -70,6 +70,8 @@ BootstrapStarter::Application.routes.draw do
     end    
 
     # root pages
+    resources 'interviews', :only => [:index, :new, :create]
+
     match '/contact', :to => 'root#contact', :as => :contact, :via => :get
     match '/instructions', :to => 'root#instructions', :as => :instructions, :via => :get
     match '/disclaimer', :to => 'root#disclaimer', :as => :disclaimer, :via => :get

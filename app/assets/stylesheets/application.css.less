@@ -288,6 +288,18 @@ ul.dropdown-menu.inner.selectpicker li a{
     font-weight: 200;
 }
 @font-face {
+    font-family: "opensans_li";    
+    src: url( '/assets/fonts/opensans_li.ttf') format("truetype");           
+    font-style: normal;
+    font-weight: 200;
+}
+@font-face {
+    font-family: "opensans_b";    
+    src: url( '/assets/fonts/opensans_b.ttf') format("truetype");           
+    font-style: normal;
+    font-weight: 200;
+}
+@font-face {
     font-family: "nokiasans_s60";    
     src: url( '/assets/fonts/nokiasans_s60.ttf') format("truetype");           
     font-style: normal;
@@ -396,8 +408,15 @@ ul.dropdown-menu.inner.selectpicker li a{
 .navbar-form
 {
   margin:0px;
+  .form-group
+  {
+    width:100%;
+  }
    input
   {
+    font-family:'opensans_li';
+    font-size:13px;
+    color:#3c4352;
      -webkit-border-radius: 0px;
     -moz-border-radius: 0px;
     border-radius: 0px;  
@@ -411,15 +430,24 @@ ul.dropdown-menu.inner.selectpicker li a{
     box-shadow: none;
     min-height:51px;
     height:100%;
+    width:100% !important;
+    background:transparent url(/assets/svg/search.svg) no-repeat;
+    background-size:16px 16px;
+    background-position: 9px 20px;
+    padding-left:29px;
     &:focus,&:active {
       outline: none;
       -webkit-box-shadow: none;
       -moz-box-shadow: none;
       box-shadow: none;
-    border-top:0px;
-    border-bottom:0px;
-    border-left:1px solid #f4f4f4;
-    border-right:1px solid #f4f4f4;
+      border-top:0px;
+      border-bottom:0px;
+      border-left:1px solid #f4f4f4;
+      border-right:1px solid #f4f4f4;
+    }
+    &:before
+    {
+
     }
   }
 }
@@ -435,9 +463,24 @@ ul.dropdown-menu.inner.selectpicker li a{
     display:inline-block;
   }
   .text
-  {
-
+  {    
     display:inline-block;
+    letter-spacing: 1px;
+    margin-left:9px;
+    position: relative;
+    top: -2px;
+    .number
+    {
+      font-family:'opensans_b';
+      font-size:16px;
+      color:#3c4352;
+    }
+    .questions
+    {
+      font-family:'opensans';
+      font-size:10px;
+      color:#3c4352;      
+    }
   }
 }
 .boxic
@@ -508,4 +551,51 @@ box-shadow: 1px 1px 0px 1px rgba(235,235,235,1);
     }
   }
 
+}
+
+
+
+
+.navbar
+{
+  .navbar-header,.stats,.navbar-form,.navbar-top-links
+  {
+    display:table-cell;
+    float:none !important;
+    vertical-align:top;
+  }
+  .navbar-header
+  {
+    min-width:160px;
+  }
+  .stats
+  {
+    min-width:120px;
+  }
+  .navbar-form
+  {
+    width:100%;
+  }
+  .navbar-top-links
+  {
+    min-width:300px;
+  }
+}
+
+#dashboard-tabs
+{
+  ul.nav-tabs
+  {
+    border-bottom: 1px solid #cecece;
+    > li
+    {
+      > a
+      {
+        font-family:'nokiasans_s60';
+        font-size:14px;
+        color:#3c4352;
+        text-transform:uppercase;
+      }
+    }
+  }
 }
