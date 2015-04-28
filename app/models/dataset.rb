@@ -72,6 +72,11 @@ class Dataset < CustomTranslation
       where(:exclude => false, :has_code_answers => true).to_a
     end
     
+    # get count questions that are not excluded and have code answers
+    def for_analysis_count
+      where(:exclude => false, :has_code_answers => true).count
+    end
+    
     # get all of the questions with code answers
     def with_code_answers
       where(:has_code_answers => true).to_a
@@ -220,7 +225,7 @@ class Dataset < CustomTranslation
 
 
   # record stats about this dataset
-  embeds_one :stats, class_name: "Stats"
+  has_one :stats, class_name: "Stats"
   accepts_nested_attributes_for :stats
 
   #############################
@@ -395,6 +400,12 @@ class Dataset < CustomTranslation
   def update_stats
     logger.debug "==== update stats"
     self.build_stats if self.stats.nil?
+
+    # how many questions can be analyzed
+    self.stats.questions_analyzable = self.questions.for_analysis_count
+
+    # how many questions can be analyzed if dataset is public
+    self.stats.public_questions_analyzable = self.public? ? self.questions.for_analysis_count : 0
 
     # how many questions have answers
     self.stats.questions_good = self.questions.nil? ? 0 : self.questions.with_code_answers.length

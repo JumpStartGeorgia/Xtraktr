@@ -68,7 +68,11 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     api_key = User.find_by(email: 'application@mail.com').api_keys.first
     @app_api_key = api_key.key if api_key.present?
 
+    # show h1 title by default
     @show_title = true
+
+    # get public question count
+    @public_question_count = Stats.public_question_count
   end
 
 	def initialize_gon

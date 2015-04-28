@@ -9,4 +9,10 @@ namespace :migration do
   task :dataset_localization => :environment do
     require "./db/migrate/dataset_localization.rb"
   end
+
+
+  desc "move dataset stats to own documents (not embed)"
+  task :move_stats => :environment do
+    require "./db/migrate/move_stats.rb"
+  end
 end
