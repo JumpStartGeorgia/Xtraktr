@@ -1,16 +1,15 @@
 module DatasetsHelper
 
-  # if have start/end dates, show those, else use released date
-  def format_dataset_dates(dataset)
+  def format_gathered_dates(start_at, end_at)
     text = ''
-    if dataset.start_gathered_at.present? && dataset.end_gathered_at
-      text << I18n.l(dataset.start_gathered_at, format: :day_first)
+    if start_at.present? && end_at.present?
+      text << I18n.l(start_at, format: :day_first)
       text << " - "
-      text << I18n.l(dataset.end_gathered_at, format: :day_first)
-    elsif dataset.released_at.present?
-      text << I18n.l(dataset.released_at, format: :day_first)
-    elsif dataset.public_at.present?
-      text << I18n.l(dataset.public_at, format: :day_first)
+      text << I18n.l(end_at, format: :day_first)
+    elsif start_at.present?
+      text << I18n.l(start_at, format: :day_first)
+    elsif end_at.present?
+      text << I18n.l(start_at, format: :day_first)
     end
     return text
   end

@@ -40,7 +40,7 @@ ka:
         released_at: Date Released
         start_gathered_at: Date Started Gathering Data
         end_gathered_at: Date Finished Gathering Data
-        gathered_at: Dates Gathered Data
+        gathered_at: Dates Collected
         public: Make Available to Public
         languages: Languages of Dataset
         default_language: Default Language
@@ -82,6 +82,7 @@ ka:
         public: Make Available to the Public
         created_at: Added On
         datasets: Datasets
+        dates: Dates Included
       time_series_dataset:
         dataset_id: Dataset
         title: Label
@@ -400,6 +401,10 @@ ka:
       added_on: "დამატებულია: %{date}" 
       jumpstart: “ჯამპსტარტ ჯორჯია”
       js_link_title: “ჯამპსტარტ ჯორჯია” - ჩვენ გაწვდით მონაცემებს უკეთ!
+      question: Question
+      answers: Answers
+      count: Count
+      percent: Percent
     msgs:
       does_not_exist: თქვენ ცდილობთ ისეთი გვერდის ნახვას, რომელიც არ არსებობს.
       not_authorized: თქვენ არ გაქვთ ამ გვერდის ნახვის უფლება.
@@ -663,12 +668,6 @@ ka:
         details: Details
       map:
         filter: "Filter map by selecting an answer to '%{text}':"
-      table:
-        count: Count
-        percent: Percent
-      details:
-        variable: Variable
-        answers: Possible Answers    
     explore_time_series:
       no_matches: Your selections returned no data. Please try again with a different selection.
       no_data: "'%{title}' does not have any data that is analyzable at this time."
@@ -691,12 +690,6 @@ ka:
         chart: Chart
         table: Table
         details: Details
-      table:
-        count: Count
-        percent: Percent
-      details:
-        variable: Variable
-        answers: Values    
     dashboard_data:
       tabs:
         highlights: Highlights
@@ -704,9 +697,6 @@ ka:
         codebook: Codebook
         reports: Reports
         licensing: Licensing
-      codebook:
-        header_question: Variable
-        header_values: Values
       no_methodology: There is no methodology on file for this dataset.
       no_reports: There are no reports on file for this dataset.
     dashboard_time_series:
@@ -717,6 +707,3 @@ ka:
         reports: Reports
         licensing: Licensing
         datasets: Datasets
-      codebook:
-        header_question: Variable
-        header_values: Values

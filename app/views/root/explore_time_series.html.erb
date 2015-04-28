@@ -7,6 +7,10 @@
     <% @time_series.each do |time_series| %>
       <li>
         <h2><%= link_to time_series.title, explore_time_series_dashboard_path(time_series) %></h2>
+        <div>
+          <%= model_class.human_attribute_name(:dates) %>:
+          <%= time_series.datasets.sorted.map{|x| x.title}.join(', ') %>
+        </div>
         <% if time_series.description.present? %>
           <div class="tinymce_format">
             <%= simple_format_no_tags(time_series.description, {}, {sanitize: false}) %>
