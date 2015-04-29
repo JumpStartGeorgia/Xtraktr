@@ -7,8 +7,16 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <%= link_to root_path(:locale => I18n.locale),:class=>"navbar-brand" do %>
-            <%= image_tag '/assets/svg/logo.svg', :id => 'logo', :alt => t('app.common.app_name') %>
+          <%
+            link_class = ''
+            img_path = '/assets/svg/logo.svg'
+            if @is_xtraktr
+              link_class = 'xtraktr'
+              img_path = '/assets/svg/xtraktr_logo.svg'
+            end
+          %>
+          <%= link_to root_path(:locale => I18n.locale),:class=>"navbar-brand #{link_class}" do %>
+            <%= image_tag img_path, :id => 'logo', :alt => t('app.common.app_name') %>
           <% end %>
         </div>
         <div class="stats navbar-left">
