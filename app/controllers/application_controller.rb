@@ -58,7 +58,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 
 	def preload_global_variables
     # indicate that whether login should allow local and omniauth or just locale
-	  @enable_omniauth = true
+	  @enable_omniauth = false
 
     # for loading extra css/js files    
     @css = []
@@ -68,12 +68,25 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     api_key = User.find_by(email: 'application@mail.com').api_keys.first
     @app_api_key = api_key.key if api_key.present?
 
+    # show h1 title by default
     @show_title = true
+
+    # get public question count
+    @public_question_count = Stats.public_question_count
+
+    # show subnav bar
+    @show_subnav_navbar = false
+  end
+
+  # show the subnavbar
+  # this is called from before_filters in controllers
+  def set_subnavbar
+    @show_subnav_navbar = true
   end
 
 	def initialize_gon
 		gon.set = true
-		gon.highlight_first_form_field = true
+		gon.highlight_first_form_field = false
     gon.app_api_key = @app_api_key
 
 		if I18n.locale == :ka
@@ -123,7 +136,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 
     @css.push("datasets.css")
     @dataset_url = dataset_path(@dataset) if set_url
-    @is_admin = true
+    @is_dataset_admin = true
     
     @show_title = show_title
   end
@@ -135,7 +148,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 
     @css.push("time_series.css")
     @time_series_url = time_series_path(@time_series) if set_url
-    @is_admin = true
+    @is_time_series_admin = true
     
     @show_title = show_title
   end

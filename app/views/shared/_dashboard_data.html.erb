@@ -8,11 +8,19 @@
   <div class="col-sm-9">
     <div class="row">
       <div class="col-sm-4" id="meta-dates">
-        <%= format_dataset_dates(@dataset) %>
+        <%= model_class.human_attribute_name(:gathered_at) %>:
+        <%= format_gathered_dates(@dataset.start_gathered_at, @dataset.end_gathered_at) %>
       </div>
+      <div class="col-sm-4" id="meta-dates">
+        <%= model_class.human_attribute_name(:released_at) %>:
+        <%= I18n.l(@dataset.released_at, format: :day_first) if @dataset.released_at.present?  %>
+      </div>
+      <% if false %>
       <div class="col-sm-4" id="meta-source">
-        <%= "#{model_class.human_attribute_name(:source)}: #{@dataset.source}" %>
+        <%= model_class.human_attribute_name(:source) %>:
+        <%= @dataset.source %>
       </div>
+      <% end %>
       <% if !is_admin_page %>
         <div class="col-sm-4" id="share-links">
           (share links)
@@ -129,7 +137,7 @@
             <div class="col-sm-8 details">
               <div class="row question-row">
                 <div class="col-sm-1 headers">
-                  <%= t('.codebook.header_question') %>:                  
+                  <%= t('app.common.question') %>:                  
                 </div>
                 <div class="col-sm-11">
                   <%= question.text %>
@@ -137,7 +145,7 @@
               </div>
               <div class="row answer-row">
                 <div class="col-sm-1 headers">
-                  <%= t('.codebook.header_values') %>:                  
+                  <%= t('app.common.answers') %>:                  
                 </div>
                 <div class="col-sm-11">
                   <%

@@ -98,6 +98,7 @@ class Question < CustomTranslation
 
   before_save :update_flags
   before_save :check_mappable
+  after_save :update_stats
 
   def update_flags
 #    logger.debug "updating question flags for #{self.code}"
@@ -113,6 +114,14 @@ class Question < CustomTranslation
       self.dataset.update_mappable_flag
     end
     return true
+  end
+
+  # if the exclude flag changes, update the dataset stats
+  def update_stats
+    logger.debug "@@@@@@@ question update stats"
+    if self.exclude_changed?
+      self.dataset.update_stats
+    end
   end
 
   #############################

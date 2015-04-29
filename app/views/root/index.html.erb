@@ -10,9 +10,11 @@
       <% @datasets.each do |dataset| %>
         <li>
           <h2><%= link_to dataset.title, explore_data_dashboard_path(dataset) %></h2>
+          <% if false %>
           <div>
             <%= "#{model_class.human_attribute_name(:source)}: #{dataset.source}" %>
           </div>
+          <% end %>
           <% if dataset.description.present? %>
             <div class="tinymce_format">
               <%= simple_format_no_tags(dataset.description, {}, {sanitize: false}) %>

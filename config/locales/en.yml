@@ -40,7 +40,7 @@ en:
         released_at: Date Released
         start_gathered_at: Date Started Gathering Data
         end_gathered_at: Date Finished Gathering Data
-        gathered_at: Dates Gathered Data
+        gathered_at: Dates Collected
         public: Make Available to the Public
         languages: Languages of Dataset
         default_language: Default Language
@@ -82,6 +82,7 @@ en:
         public: Make Available to the Public
         created_at: Added On
         datasets: Datasets
+        dates: Dates Included
       time_series_dataset:
         dataset_id: Dataset
         title: Label
@@ -400,6 +401,12 @@ en:
       added_on: "Added on: %{date}" 
       jumpstart: JumpStart Georgia
       js_link_title: JumpStart Georgia - We communicate data better!
+      question: Question
+      answers: Answers
+      count: Count
+      percent: Percent
+      dataset_dashboard: Dataset Dashboard
+      time_series_dashboard: Time Series Dashboard
     msgs:
       does_not_exist: You tried to access a page that does not exist.
       not_authorized: You are not authorized to view that page.
@@ -663,12 +670,6 @@ en:
         details: Details
       map:
         filter: "Filter map by selecting an answer to '%{text}':"
-      table:
-        count: Count
-        percent: Percent
-      details:
-        variable: Variable
-        answers: Possible Answers    
     explore_time_series:
       no_matches: Your selections returned no data. Please try again with a different selection.
       no_data: "'%{title}' does not have any data that is analyzable at this time."
@@ -691,12 +692,6 @@ en:
         chart: Chart
         table: Table
         details: Details
-      table:
-        count: Count
-        percent: Percent
-      details:
-        variable: Variable
-        answers: Values    
     dashboard_data:
       tabs:
         highlights: Highlights
@@ -704,9 +699,6 @@ en:
         codebook: Codebook
         reports: Reports
         licensing: Licensing
-      codebook:
-        header_question: Variable
-        header_values: Values
       no_methodology: There is no methodology on file for this dataset.
       no_reports: There are no reports on file for this dataset.
     dashboard_time_series:
@@ -717,6 +709,3 @@ en:
         reports: Reports
         licensing: Licensing
         datasets: Datasets
-      codebook:
-        header_question: Variable
-        header_values: Values

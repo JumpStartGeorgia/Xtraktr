@@ -7,9 +7,21 @@
     <% @datasets.each do |dataset| %>
       <li>
         <h2><%= link_to dataset.title, explore_data_dashboard_path(dataset) %></h2>
+        <div class="row">
+          <div class="col-sm-4" id="meta-dates">
+            <%= model_class.human_attribute_name(:gathered_at) %>:
+            <%= format_gathered_dates(dataset.start_gathered_at, dataset.end_gathered_at) %>
+          </div>
+          <div class="col-sm-4" id="meta-dates">
+            <%= model_class.human_attribute_name(:released_at) %>:
+            <%= I18n.l(dataset.released_at, format: :day_first) if dataset.released_at.present? %>
+          </div>
+        </div>
+        <% if false %>
         <div>
           <%= "#{model_class.human_attribute_name(:source)}: #{dataset.source}" %>
         </div>
+        <% end %>
         <% if dataset.description.present? %>
           <div class="tinymce_format">
             <%= simple_format_no_tags(dataset.description, {}, {sanitize: false}) %>
