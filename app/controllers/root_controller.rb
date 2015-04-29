@@ -4,6 +4,8 @@ class RootController < ApplicationController
   def index
     @datasets = Dataset.is_public.recent.sorted.limit(5)
 
+    @time_series = TimeSeries.is_public.recent.sorted.limit(5) if @is_xtraktr
+
     respond_to do |format|
       format.html # index.html.erb
     end

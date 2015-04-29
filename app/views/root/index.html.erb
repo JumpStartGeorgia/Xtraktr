@@ -2,7 +2,7 @@
 
 <div class="boxic">
   <div class="title">
-    <h2><%= t('.header_latest') %></h2>
+    <h2><%= t('.header_latest_datasets') %></h2>
     <div class="cell"><div class="line"></div></div>
   </div>
   <% if @datasets.present? %>
@@ -10,7 +10,7 @@
       <% @datasets.each do |dataset| %>
         <li>
           <h2><%= link_to dataset.title, explore_data_dashboard_path(dataset) %></h2>
-          <% if false %>
+          <% if @is_xtraktr %>
           <div>
             <%= "#{model_class.human_attribute_name(:source)}: #{dataset.source}" %>
           </div>
@@ -25,7 +25,34 @@
     </ul>
   <% else %>
     <p>
-      <%= t('.no_data') %>
+      <%= t('.no_datasets') %>
     </p>
   <% end %>
 </div>
+
+<% if @is_xtraktr %>
+<div class="boxic">
+  <div class="title">
+    <h2><%= t('.header_latest_time_series') %></h2>
+    <div class="cell"><div class="line"></div></div>
+  </div>
+  <% if @time_series.present? %>
+    <ul class="list-unstyled">
+      <% @time_series.each do |time_series| %>
+        <li>
+          <h2><%= link_to time_series.title, explore_time_series_dashboard_path(time_series) %></h2>
+          <% if time_series.description.present? %>
+            <div class="tinymce_format">
+              <%= simple_format_no_tags(time_series.description, {}, {sanitize: false}) %>
+            </div>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>
+      <%= t('.no_time_series') %>
+    </p>
+  <% end %>
+</div>
+<% end %>

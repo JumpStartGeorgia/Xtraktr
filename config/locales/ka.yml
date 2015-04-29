@@ -402,6 +402,7 @@ ka:
       jumpstart: “ჯამპსტარტ ჯორჯია”
       js_link_title: “ჯამპსტარტ ჯორჯია” - ჩვენ გაწვდით მონაცემებს უკეთ!
       question: Question
+      questions: Questions
       answers: Answers
       count: Count
       percent: Percent
@@ -503,7 +504,10 @@ ka:
         p3: "თქვენი პაროლი იგივე დარჩება, სანამ არ გადახვალთ ზემოთ მითითებულ ბმულზე და შექმნით ახალ პაროლს."    
   root:
     index:
-      header_latest: Latest Datasets
+      header_latest_datasets: Latest Datasets
+      no_datasets: 'At this time, no datasets have been loaded into the site.'
+      header_latest_time_series: Latest Time Series
+      no_time_series: 'At this time, no time series have been created in the site.'
     contact:
       title: Contact
     instructions:

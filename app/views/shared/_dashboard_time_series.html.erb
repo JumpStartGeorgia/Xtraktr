@@ -10,11 +10,11 @@
         <%= model_class.human_attribute_name(:dates) %>:
         <%= @time_series.datasets.sorted.map{|x| x.title}.join(', ') %>
       </div>
-      <% if false %>
-      <div class="col-sm-4" id="meta-source">
+      <% if @is_xtraktr %>
+      <div class="col-sm-3" id="meta-source">
       </div>
       <% end %>
-      <div class="col-sm-4" id="share-links">
+      <div class="col-sm-3 pull-right" id="share-links">
         (share links)
       </div>
     </div>
