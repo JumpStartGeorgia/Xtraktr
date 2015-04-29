@@ -1,5 +1,5 @@
 <% if @page_content.present? %>
-  <% title @page_content.title %>
+  <% #title @page_content.title %>
 
   <div class="tinymce_format">
     <%= simple_format_no_tags(@page_content.content, {}, {sanitize: false}) %>
@@ -34,7 +34,6 @@
   </div>
 
 <% else %>
-  <% title t('.title') %>
-
+  <% #title t('.title') %>
   comming soon...
 <% end %>
