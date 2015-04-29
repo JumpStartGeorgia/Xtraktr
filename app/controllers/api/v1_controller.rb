@@ -138,8 +138,6 @@ private
 
   # record the api request
   def record_request
-    if !@is_xtraktr
-      ApiRequest.record_request(@user_api_key, request.remote_ip, request.filtered_parameters, @user_agent)
-    end
+    ApiRequest.record_request(@user_api_key, request.remote_ip, request.filtered_parameters, @user_agent)
   end
 end
