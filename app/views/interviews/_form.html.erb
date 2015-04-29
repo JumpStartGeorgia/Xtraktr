@@ -29,7 +29,7 @@
          <% end %>
          <%= f.input :status_other, :input_html => { style: 'display:none;' }%>
          <%= f.input :description, :as => :text, :input_html => { :class => 'autogrow', :rows => 5, :cols => 80, :maxlength => 10  } %>
-         <%= f.input :terms, :as => :boolean, :label => false %>   
+         <%= f.input :terms, :as => :boolean, label: false %>   
          <label for="terms">I agree to the <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a></label>
 
       <% end %>   
