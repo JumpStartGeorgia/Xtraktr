@@ -215,12 +215,12 @@ if v.api_methods.empty?
   ]
 }</pre>
 <p></p>')
-  v.api_methods.create(permalink: 'dataset', title: 'Dataset Details', sort_order: 2)
-  v.api_methods.create(permalink: 'dataset_codebook', title: 'Dataset Codebook', sort_order: 3)
-  v.api_methods.create(permalink: 'dataset_analysis', title: 'Dataset Analysis', sort_order: 4)
+  v.api_methods.create(permalink: 'dataset', title: 'Dataset Details', sort_order: 2, public: true, content: 'coming soon...')
+  v.api_methods.create(permalink: 'dataset_codebook', title: 'Dataset Codebook', sort_order: 3, public: true, content: 'coming soon...')
+  v.api_methods.create(permalink: 'dataset_analysis', title: 'Dataset Analysis', sort_order: 4, public: true, content: 'coming soon...')
 
-  v.api_methods.create(permalink: 'time_series_catalog', title: 'Time Series Catalog', sort_order: 5)
-  v.api_methods.create(permalink: 'time_series', title: 'Time Series Details', sort_order: 6)
-  v.api_methods.create(permalink: 'time_series_codebook', title: 'Time Series Codebook', sort_order: 7)
-  v.api_methods.create(permalink: 'time_series_analysis', title: 'Time Series Analysis', sort_order: 8)
+  v.api_methods.create(permalink: 'time_series_catalog', title: 'Time Series Catalog', sort_order: 5, public: true, content: 'coming soon...')
+  v.api_methods.create(permalink: 'time_series', title: 'Time Series Details', sort_order: 6, public: true, content: 'coming soon...')
+  v.api_methods.create(permalink: 'time_series_codebook', title: 'Time Series Codebook', sort_order: 7, public: true, content: 'coming soon...')
+  v.api_methods.create(permalink: 'time_series_analysis', title: 'Time Series Analysis', sort_order: 8, public: true, content: 'coming soon...')
 end

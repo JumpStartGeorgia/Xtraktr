@@ -57,8 +57,10 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
   end
 
 	def preload_global_variables
+    @is_xtraktr = false
+
     # indicate that whether login should allow local and omniauth or just locale
-	  @enable_omniauth = false
+	  @enable_omniauth = @is_xtraktr
 
     # for loading extra css/js files    
     @css = []
