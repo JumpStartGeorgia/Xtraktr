@@ -8,7 +8,7 @@
             <span class="icon-bar"></span>
           </button>
           <%= link_to root_path(:locale => I18n.locale),:class=>"navbar-brand" do %>
-            <%#= image_tag 'xtraktr_logo.png', :id => 'logo' %><%= t('app.common.app_name') %>
+            <%= image_tag '/assets/svg/logo.svg', :id => 'logo', :alt => t('app.common.app_name') %>
           <% end %>
         </div>
         <div class="stats navbar-left">
@@ -69,7 +69,6 @@
             <% if !@is_xtraktr %>
             <li><%= link_to "Back to UNICEF.org", 'http://www.unicef.org', class: 'unicef' %></li>
             <% end %>
-            
             <li>
               <%= link_to root_path do %>
                 <div alt="<%= t('app.menu.home') %>" class="img side-menu-home"></div>

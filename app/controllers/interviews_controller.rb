@@ -17,14 +17,21 @@ class InterviewsController < ApplicationController
 
   def create
     @mod = Interview.new(params[:interview])
-
+    @file_id = params[:download_file_id]
+    @url = Dataset.find(@file_id).datafile.url 
+    @model_name = @mod.model_name.downcase
     respond_to do |format|
-      if params[:terms] == "1" && @mod.save
-        format.html { redirect_to interview_path, notice: t('app.msgs.success_created', :obj => t('mongoid.models.user')) }
-        format.json { render json: @mod, status: :created, location: @mod }
+      if @mod.save
+
+        @mapper = FileMapper.create({file: @file_id })
+        format.js {render action: "create" , status: :ok }
+        #format.html { redirect_to interview_path, notice: t('app.msgs.success_created', :obj => t('mongoid.models.user')) }
+        #format.json { render json: @mod, status: :created, location: @mod }
       else
-        format.html { render action: "new" }
-        format.json { render json: @mod.errors, status: :unprocessable_entity }
+        # format.html { render action: "new" }
+        @errors = @mod.errors.to_json
+        format.js {render action: "missing" , status: :ok }
+        # format.json { render json: @mod.errors, status: :unprocessable_entity }
       end
     end
   end

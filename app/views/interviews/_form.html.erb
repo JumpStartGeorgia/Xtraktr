@@ -1,6 +1,6 @@
-<div class="interview">
+<div class="interview" id="agreement">
    <div class="title">Registration</div>
-   <%= semantic_form_for(@mod, html: {class: 'tabbed-translation-form'}) do |f| %>
+   <%= semantic_form_for(@mod, html: {class: 'tabbed-translation-form'}, :remote => true) do |f| %>
        <%= f.inputs do %>  
          <div class="row">
             <div class="col-sm-6">
@@ -11,10 +11,7 @@
             </div>      
          </div> 
          <%= f.input :email %>
-         <% Interview::AGE_GROUP.each do |k,v| %>
-            <%= radio_button_tag 'interview[age_group]', k %>
-            <%= label_tag "age_group", v %>
-         <% end %>
+         <%= f.input :age_group, :as => :radio, :collection => Hash[Interview::AGE_GROUP.map{|k,v| [v,k] }] %>
          <div class="row">
             <div class="col-sm-6">
                <%= f.input :residence, :as => :string, hint: 'Residence', :input_html => {} %>
@@ -23,15 +20,17 @@
                <%= f.input :affiliation, :as => :string, hint: 'Affiliation', :input_html => {} %>
             </div>      
          </div> 
-         <% Interview::STATUS.each do |k,v| %>
-            <%= radio_button_tag 'interview[status]', k %>
-            <%= label_tag "status", v %>
-         <% end %>
+         <%= f.input :status, :as => :radio, :collection => Hash[Interview::STATUS.map{|k,v| [v,k] }] %>
          <%= f.input :status_other, :input_html => { style: 'display:none;' }%>
          <%= f.input :description, :as => :text, :input_html => { :class => 'autogrow', :rows => 5, :cols => 80, :maxlength => 10  } %>
-         <%= f.input :terms, :as => :boolean, :label => false %>   
-         <label for="terms">I agree to the <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a></label>
-
+         <div class="boolean input optional checkbox form-group" id="interview_terms_input">
+            <input name="interview[terms]" type="hidden" value="0">
+            <label class="  control-label" for="interview_terms">
+               <input id="interview_terms" name="interview[terms]" type="checkbox" value="1">
+               I agree to the <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>
+            </label>
+         </div>      
+         <input id="download_file_id" name="download_file_id" type="hidden" value="<%= @file_id %>">
       <% end %>   
       
       <div class="form-group">

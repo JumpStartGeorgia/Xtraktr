@@ -44,6 +44,7 @@
       </li>
       <% if @dataset.datafile.exists? %>
         <li>
+          <div class="btn btn-default btn-sm download" data-id="<%= @dataset.id.to_s %>"><%= t('helpers.links.download_data') %></div>
           <%= link_to @dataset.datafile.url, class: 'btn btn-default btn-sm', target: :blank do %>
             <%
               text = t('helpers.links.download_data')

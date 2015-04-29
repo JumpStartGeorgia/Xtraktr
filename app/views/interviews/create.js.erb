@@ -1,0 +1,4 @@
+console.log("<%= @mapper.inspect %>")
+$('.js_modal').remove();
+$('.js_modal_bg').remove();
+$('.download[data-id=<%= @file_id  %>]').attr('data-link','<%= @mapper.key %>');

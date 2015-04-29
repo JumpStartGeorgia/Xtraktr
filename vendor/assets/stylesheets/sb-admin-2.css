@@ -22,10 +22,11 @@ body {
     #page-wrapper {
         /*position: inherit;*/
         position:relative;
-        margin: 0 0 0 160px;
+        margin: 0 0 0 140px;
         padding:0px 0px 41px;
         /*padding: 0 30px;*/
-        border-left: 1px solid #000;  
+        border-left: 1px solid #303642;
+        border-top:1px solid #eaeae9;
     }
         #page-wrapper .row
         {
@@ -137,7 +138,7 @@ body {
     .sidebar {
         z-index: 1;
         position: absolute;
-        width: 160px;
+        width: 140px;
         /*margin-top: 51px;*/
     }
 
