@@ -36,9 +36,9 @@ class Interview
     validates_presence_of :status_other, :if => lambda { |o| o.status == 8 }
     validates :terms, :numericality => { :equal_to => 1 }
 
-    attr_accessible :first_name, :last_name, :age_group, :residence,
-                    :email, :affiliation, :status, :status_other, :description
     attr_accessor :terms
+    attr_accessible :first_name, :last_name, :age_group, :residence,
+                    :email, :affiliation, :status, :status_other, :description, :terms
 
 
   def self.test

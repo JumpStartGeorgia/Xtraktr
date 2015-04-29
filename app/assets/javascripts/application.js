@@ -40,6 +40,30 @@ $(document).ready(function(){
     p.find('a.active').removeClass('active');
     t.addClass('active');
   });
+  $('.download').click(function(){
+    var t = $(this);
+    var link = t.attr('data-link');
+    if(link !== undefined)
+    {
+      window.location.href = link;
+      return;
+    }
+    $.ajax({
+      url: "/" + document.documentElement.lang + "/download",
+      data: { id: t.attr('data-id') },
+      success: function(d)
+      {
+        if(d.agreement)
+        {
+          window.location.href = d.url;
+        }
+        else
+        {
+          $('body').append("<div class='js_modal'>"+d.form+"</div><div class='js_modal_bg'></div>");
+        }
+      }
+    });
+  });
 
 });
 

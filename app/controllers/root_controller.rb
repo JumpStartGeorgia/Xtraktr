@@ -137,5 +137,21 @@ class RootController < ApplicationController
       explore_data_generator(@dataset)
     end
   end
+
+  def download
+    sign_in = user_signed_in?
+    data = { agreement: (sign_in ? true : false), params: params }
+    if sign_in 
+      data[:url] = '/system/datasets/551cf0022c17430337000002/original/Barriers.dta'
+      # save user data
+    else
+      @mod = Interview.new
+      @file_id = params[:id]
+      data[:form] = render_to_string "interviews/_form", :layout => false 
+    end    
+    respond_to do |format|
+      format.json { render json: data }
+    end
+  end
   
 end
