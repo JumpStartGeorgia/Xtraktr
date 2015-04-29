@@ -1,162 +1,44 @@
-# encoding: UTF-8
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-#
-# Examples:
-#
-#   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
-#   Mayor.create(name: 'Emanuel', city: cities.first)
-
-=begin
-#####################
-## Languages
-#####################
-puts 'loading languages'
-Language.delete_all
-langs = [
-  ["af", "Afrikaans"],
-  ["sq", "shqipe"],
-  ["ar", "العربية‏"],
-  ["hy", "Հայերեն"],
-  ["az", "Azərbaycan­ılı"],
-  ["eu", "euskara"],
-  ["be", "Беларускі"],
-  ["bg", "български"],
-  ["ca", "català"],
-  ["hr", "hrvatski"],
-  ["cs", "čeština"],
-  ["da", "dansk"],
-  ["div", "ދިވެހިބަސް‏"],
-  ["nl", "Nederlands"],
-  ["en", "English"],
-  ["et", "eesti"],
-  ["fo", "føroyskt"],
-  ["fi", "suomi"],
-  ["fr", "français"],
-  ["gl", "galego"],
-  ["ka", "ქართული"],
-  ["de", "Deutsch"],
-  ["el", "ελληνικά"],
-  ["gu", "ગુજરાતી"],
-  ["he", "עברית‏"],
-  ["hi", "हिंदी"],
-  ["hu", "magyar"],
-  ["is", "íslenska"],
-  ["id", "Bahasa Indonesia"],
-  ["it", "italiano"],
-  ["ja", "日本語"],
-  ["kn", "ಕನ್ನಡ"],
-  ["kk", "Қазащb"],
-  ["sw", "Kiswahili"],
-  ["kok", "कोंकणी"],
-  ["ko", "한국어"],
-  ["ky", "Кыргыз"],
-  ["lv", "latviešu"],
-  ["lt", "lietuvių"],
-  ["mk", "македонски јазик"],
-  ["ms", "Bahasa Malaysia"],
-  ["mr", "मराठी"],
-  ["mn", "Монгол хэл"],
-  ["no", "norsk"],
-  ["fa", "فارسى‏"],
-  ["pl", "polski"],
-  ["pt", "Português"],
-  ["pa", "ਪੰਜਾਬੀ"],
-  ["ro", "română"],
-  ["ru", "русский"],
-  ["sa", "संस्कृत"],
-  ["sr", "srpski"],
-  ["sk", "slovenčina"],
-  ["sl", "slovenski"],
-  ["es", "español"],
-  ["sv", "svenska"],
-  ["syr", "ܣܘܪܝܝܐ‏"],
-  ["ta", "தமிழ்"],
-  ["tt", "Татар"],
-  ["te", "తెలుగు"],
-  ["th", "ไทย"],
-  ["tr", "Türkçe"],
-  ["uk", "україньска"],
-  ["ur", "اُردو‏"],
-  ["uz", "U'zbek"],
-  ["vi", "Tiếng Việt"],
-  ["zh-TW", "繁體中文"],
-  ["zh-CN", "简体中文"]
-]
-
-langs = langs.map{|x| {locale: x[0], name: x[1]}}
-Language.collection.insert(langs)
-=end
-
-#####################
-## Create app user and api key
-#####################
-puts 'Creating app user and api key'
-email = 'application@mail.com'
-if User.where(email: email).nil?
-  #User.where(email: email).destroy
-  u = User.create(email: email, password: Devise.friendly_token[0,20], role: 0)
-  u.api_keys.create
-end
+# replace the api documentation with text written for xtraktr
 
 #####################
 ## Create page content records
 #####################
-puts 'Creating page content records'
-PageContent.create(name: 'instructions', title: 'Instructions', content: 'coming soon...') if PageContent.by_name('instructions').nil?
-PageContent.create(name: 'contact', title: 'Contact', content: 'coming soon...') if PageContent.by_name('contact').nil?
-PageContent.create(name: 'disclaimer', title: 'Disclaimer', content: 'coming soon...') if PageContent.by_name('disclaimer').nil?
-if ENV['reload_api_docs'] && PageContent.by_name('api').present?
+puts 'Creating api home page doc'
+if PageContent.by_name('api').present?
   PageContent.by_name('api').destroy
 end
-PageContent.create(name: 'api', title: 'API', content: '<p>The UNICEF Georgia Data Portal API allows you to get information and run analyses on the datasets and time series available on this site.</p>
+PageContent.create(name: 'api', title: 'API', content: '<p>The X-Traktr API allows you to get information and run analyses on the datasets and time series available on this site.</p>
 <h2>The URL to the api is the following:</h2>
-<div class="url">http://dev-unicef.jumpstart.ge/[locale]/api/[version]/</div>
+<div class="url">http://dev-xtraktr.jumpstart.ge/[locale]/api/[version]/</div>
 <p>where:</p>
 <ul class="list-unstyled">
 <li>[locale] = the locale of the language you want the data to be returned in (currently <strong>ka</strong> for Georgian or <strong>en</strong> for English)</li>
 <li>[version] = the version number of the api (see below)</li>
 </ul>
-<h2>Access Token</h2>
-<p>All API calls require an access token - a key that let\'s us know who is making the request.You can obtain an access tokeneasily, and for free, by going <a href="#">here</a>.</p>
 <h2>API Calls</h2>
-<p>The following is a list of calls that are available in each version of the api.</p>') if PageContent.by_name('api').nil?
+<p>The following is a list of calls that are available in each version of the api.</p>') 
 
 #####################
 ## Create API Versions/Methods
 #####################
 puts 'Creating API Versions/Methods'
 v = ApiVersion.by_permalink('v1')
-if ENV['reload_api_docs'] && v.present?
+if v.present?
   v.destroy
   v = nil
 end
-if v.blank?
-  v = ApiVersion.create(permalink: 'v1', title: 'Version 1', public: true)
-end
-if v.api_methods.empty?
+
+v = ApiVersion.create(permalink: 'v1', title: 'Version 1', public: true)
   v.api_methods.create(permalink: 'dataset_catalog', title: 'Dataset Catalog', public: true, sort_order: 1, content: '<p>Get a list of all datasets.</p>
 <h2>URL</h2>
 <p>To call this method, use an HTTP GET request to the following URL:</p>
-<div class="url">http://dev-unicef.jumpstart.ge/[locale]/api/v1/dataset_catalog</div>
+<div class="url">http://dev-xtraktr.jumpstart.ge/[locale]/api/v1/dataset_catalog</div>
 <p>where:</p>
 <ul class="list-unstyled">
 <li>[locale] = the locale of the language you want the data to be returned in (currently <strong>ka</strong> for Georgian or <strong>en</strong> for English)</li>
 </ul>
 <h2>Required Parameters</h2>
-<p>The following parameters must be included in the request:</p>
-<table class="table table-bordered table-hover table-nonfluid">
-<thead>
-<tr><th>Parameter</th><th>Description</th></tr>
-</thead>
-<tbody>
-<tr>
-<td>access_token</td>
-<td>All requests must include an access_token. You can obtain an access token easily, and for free, by going <a href="#">here</a>.</td>
-</tr>
-</tbody>
-</table>
-<p></p>
+<p>There are no required parameters for this call.</p>
 <h2>Optional Parameters</h2>
 <p>There are no optional parameters for this call.</p>
 <h2>What You Get</h2>
@@ -198,7 +80,7 @@ if v.api_methods.empty?
 </table>
 <h2>Examples</h2>
 <p>Here is an example of what can be returned after calling this method with the following url:</p>
-<div class="url">http://dev-unicef.jumpstart.ge/en/api/v1/dataset_catalog?access_token=123456789</div>
+<div class="url">http://dev-xtraktr.jumpstart.ge/en/api/v1/dataset_catalog</div>
 <pre class="brush:js;auto-links:false;toolbar:false;tab-size:2" contenteditable="false">{
   datasets: [
     {
@@ -225,7 +107,7 @@ if v.api_methods.empty?
   v.api_methods.create(permalink: 'dataset', title: 'Dataset Details', sort_order: 2, public: true, content: '<p>Get details about a dataset.</p>
 <h2>URL</h2>
 <p>To call this method, use an HTTP GET request to the following URL:</p>
-<div class="url">http://dev-unicef.jumpstart.ge/[locale]/api/v1/dataset</div>
+<div class="url">http://dev-xtraktr.jumpstart.ge/[locale]/api/v1/dataset</div>
 <p>where:</p>
 <ul class="list-unstyled">
 <li>[locale] = the locale of the language you want the data to be returned in (currently <strong>ka</strong> for Georgian or <strong>en</strong> for English)</li>
@@ -237,10 +119,6 @@ if v.api_methods.empty?
 <tr><th>Parameter</th><th>Description</th></tr>
 </thead>
 <tbody>
-<tr>
-<td>access_token</td>
-<td>All requests must include an access_token. You can obtain an access token easily, and for free, by going <a href="#">here</a>.</td>
-</tr>
 <tr>
 <td>dataset_id</td>
 <td>The ID of the dataset.</td>
@@ -313,7 +191,7 @@ if v.api_methods.empty?
 </table>
 <h2>Examples</h2>
 <p>Here is an example of what can be returned after calling this method with the following url:</p>
-<div class="url">http://dev-unicef.jumpstart.ge/en/api/v1/dataset?access_token=123456789&amp;dataset_id=1111111111</div>
+<div class="url">http://dev-xtraktr.jumpstart.ge/en/api/v1/dataset?dataset_id=1111111111</div>
 <pre class="brush:js;auto-links:false;toolbar:false;tab-size:2" contenteditable="false">{
   {
     id: "1111111111",
@@ -338,7 +216,7 @@ if v.api_methods.empty?
   v.api_methods.create(permalink: 'dataset_codebook', title: 'Dataset Codebook', sort_order: 3, public: true, content: '<p>Get the codebook for a dataset.</p>
 <h2>URL</h2>
 <p>To call this method, use an HTTP GET request to the following URL:</p>
-<div class="url">http://dev-unicef.jumpstart.ge/[locale]/api/v1/dataset_codebook</div>
+<div class="url">http://dev-xtraktr.jumpstart.ge/[locale]/api/v1/dataset_codebook</div>
 <p>where:</p>
 <ul class="list-unstyled">
 <li>[locale] = the locale of the language you want the data to be returned in (currently <strong>ka</strong> for Georgian or <strong>en</strong> for English)</li>
@@ -350,11 +228,6 @@ if v.api_methods.empty?
 <tr><th>Parameter</th><th>Description</th></tr>
 </thead>
 <tbody>
-<tr>
-<td>access_token</td>
-<td>All requests must include an access_token. You can obtain an access token easily, and for free, by going <a href="#">here</a>.</td>
-</tr>
-<tr>
 <td>dataset_id</td>
 <td>The ID of the dataset.</td>
 </tr>
@@ -402,7 +275,7 @@ if v.api_methods.empty?
 </table>
 <h2>Examples</h2>
 <p>Here is an example of what can be returned after calling this method with the following url:</p>
-<div class="url">http://dev-unicef.jumpstart.ge/en/api/v1/dataset_codebook?access_token=123456789&amp;dataset_id=1111111111</div>
+<div class="url">http://dev-xtraktr.jumpstart.ge/en/api/v1/dataset_codebook?dataset_id=1111111111</div>
 <pre class="brush:js;auto-links:false;toolbar:false;tab-size:2" contenteditable="false">{
   questions: [
     {
@@ -464,7 +337,7 @@ if v.api_methods.empty?
 <p><strong>This documentation is not complete yet.</strong></p>
 <h2>URL</h2>
 <p>To call this method, use an HTTP GET request to the following URL:</p>
-<div class="url">http://dev-unicef.jumpstart.ge/[locale]/api/v1/dataset_analysis</div>
+<div class="url">http://dev-xtraktr.jumpstart.ge/[locale]/api/v1/dataset_analysis</div>
 <p>where:</p>
 <ul class="list-unstyled">
 <li>[locale] = the locale of the language you want the data to be returned in (currently <strong>ka</strong> for Georgian or <strong>en</strong> for English)</li>
@@ -476,10 +349,6 @@ if v.api_methods.empty?
 <tr><th>Parameter</th><th>Description</th></tr>
 </thead>
 <tbody>
-<tr>
-<td>access_token</td>
-<td>All requests must include an access_token. You can obtain an access token easily, and for free, by going <a href="#">here</a>.</td>
-</tr>
 <tr>
 <td>dataset_id</td>
 <td>The ID of the dataset.</td>
@@ -633,7 +502,7 @@ if v.api_methods.empty?
 </table>
 <h2>Examples</h2>
 <p>Here is an example of analyzing the results of Gender with the following url:</p>
-<div class="url">http://dev-unicef.jumpstart.ge/en/api/v1/dataset_analysis?access_token=123456789&amp;dataset_id=1111111111&amp;question_code=gender</div>
+<div class="url">http://dev-xtraktr.jumpstart.ge/en/api/v1/dataset_analysis?dataset_id=1111111111&amp;question_code=gender</div>
 <pre class="brush:js;auto-links:false;toolbar:false;tab-size:2" contenteditable="false">{
   dataset: 
   {
@@ -678,25 +547,14 @@ if v.api_methods.empty?
   v.api_methods.create(permalink: 'time_series_catalog', title: 'Time Series Catalog', sort_order: 5, public: true, content: '<p>Get a list of all time series.</p>
 <h2>URL</h2>
 <p>To call this method, use an HTTP GET request to the following URL:</p>
-<div class="url">http://dev-unicef.jumpstart.ge/[locale]/api/v1/time_series_catalog</div>
+<div class="url">http://dev-xtraktr.jumpstart.ge/[locale]/api/v1/time_series_catalog</div>
 <p>where:</p>
 <ul class="list-unstyled">
 <li>[locale] = the locale of the language you want the data to be returned in (currently <strong>ka</strong> for Georgian or <strong>en</strong> for English)</li>
 </ul>
 <h2>Required Parameters</h2>
 <p>The following parameters must be included in the request:</p>
-<table class="table table-bordered table-hover table-nonfluid">
-<thead>
-<tr><th>Parameter</th><th>Description</th></tr>
-</thead>
-<tbody>
-<tr>
-<td>access_token</td>
-<td>All requests must include an access_token. You can obtain an access token easily, and for free, by going <a href="#">here</a>.</td>
-</tr>
-</tbody>
-</table>
-<p></p>
+<p>There are no required parameters for this call.</p>
 <h2>Optional Parameters</h2>
 <p>There are no optional parameters for this call.</p>
 <h2>What You Get</h2>
@@ -726,7 +584,7 @@ if v.api_methods.empty?
 </table>
 <h2>Examples</h2>
 <p>Here is an example of what can be returned after calling this method with the following url:</p>
-<div class="url">http://dev-unicef.jumpstart.ge/en/api/v1/time_series_catalog?access_token=123456789</div>
+<div class="url">http://dev-xtraktr.jumpstart.ge/en/api/v1/time_series_catalog</div>
 <pre class="brush:js;auto-links:false;toolbar:false;tab-size:2" contenteditable="false">{
   time_series: [
     {
@@ -754,7 +612,7 @@ if v.api_methods.empty?
   v.api_methods.create(permalink: 'time_series', title: 'Time Series Details', sort_order: 6, public: true, content: '<p>Get details about a time series.</p>
 <h2>URL</h2>
 <p>To call this method, use an HTTP GET request to the following URL:</p>
-<div class="url">http://dev-unicef.jumpstart.ge/[locale]/api/v1/time_series</div>
+<div class="url">http://dev-xtraktr.jumpstart.ge/[locale]/api/v1/time_series</div>
 <p>where:</p>
 <ul class="list-unstyled">
 <li>[locale] = the locale of the language you want the data to be returned in (currently <strong>ka</strong> for Georgian or <strong>en</strong> for English)</li>
@@ -766,10 +624,6 @@ if v.api_methods.empty?
 <tr><th>Parameter</th><th>Description</th></tr>
 </thead>
 <tbody>
-<tr>
-<td>access_token</td>
-<td>All requests must include an access_token. You can obtain an access token easily, and for free, by going <a href="#">here</a>.</td>
-</tr>
 <tr>
 <td>time_series_id</td>
 <td>The ID of the time series.</td>
@@ -818,7 +672,7 @@ if v.api_methods.empty?
 </table>
 <h2>Examples</h2>
 <p>Here is an example of what can be returned after calling this method with the following url:</p>
-<div class="url">http://dev-unicef.jumpstart.ge/en/api/v1/time_series?access_token=123456789&amp;time_series_id=1111111111</div>
+<div class="url">http://dev-xtraktr.jumpstart.ge/en/api/v1/time_series?time_series_id=1111111111</div>
 <pre class="brush:js;auto-links:false;toolbar:false;tab-size:2" contenteditable="false">{
   {
     id: "1111111111",
@@ -841,7 +695,7 @@ if v.api_methods.empty?
   v.api_methods.create(permalink: 'time_series_codebook', title: 'Time Series Codebook', sort_order: 7, public: true, content: '<p>Get the codebook for a time series.</p>
 <h2>URL</h2>
 <p>To call this method, use an HTTP GET request to the following URL:</p>
-<div class="url">http://dev-unicef.jumpstart.ge/[locale]/api/v1/time_series_codebook</div>
+<div class="url">http://dev-xtraktr.jumpstart.ge/[locale]/api/v1/time_series_codebook</div>
 <p>where:</p>
 <ul class="list-unstyled">
 <li>[locale] = the locale of the language you want the data to be returned in (currently <strong>ka</strong> for Georgian or <strong>en</strong> for English)</li>
@@ -853,10 +707,6 @@ if v.api_methods.empty?
 <tr><th>Parameter</th><th>Description</th></tr>
 </thead>
 <tbody>
-<tr>
-<td>access_token</td>
-<td>All requests must include an access_token. You can obtain an access token easily, and for free, by going <a href="#">here</a>.</td>
-</tr>
 <tr>
 <td>time_series_id</td>
 <td>The ID of the time series.</td>
@@ -901,7 +751,7 @@ if v.api_methods.empty?
 </table>
 <h2>Examples</h2>
 <p>Here is an example of what can be returned after calling this method with the following url:</p>
-<div class="url">http://dev-unicef.jumpstart.ge/en/api/v1/time_series_codebook?access_token=123456789&amp;time_series_id=1111111111</div>
+<div class="url">http://dev-xtraktr.jumpstart.ge/en/api/v1/time_series_codebook?time_series_id=1111111111</div>
 <pre class="brush:js;auto-links:false;toolbar:false;tab-size:2" contenteditable="false">{
   questions: [
     {
@@ -963,7 +813,7 @@ if v.api_methods.empty?
 <p><strong>This documentation is not complete yet.</strong></p>
 <h2>URL</h2>
 <p>To call this method, use an HTTP GET request to the following URL:</p>
-<div class="url">http://dev-unicef.jumpstart.ge/[locale]/api/v1/time_series_analysis</div>
+<div class="url">http://dev-xtraktr.jumpstart.ge/[locale]/api/v1/time_series_analysis</div>
 <p>where:</p>
 <ul class="list-unstyled">
 <li>[locale] = the locale of the language you want the data to be returned in (currently <strong>ka</strong> for Georgian or <strong>en</strong> for English)</li>
@@ -975,10 +825,6 @@ if v.api_methods.empty?
 <tr><th>Parameter</th><th>Description</th></tr>
 </thead>
 <tbody>
-<tr>
-<td>access_token</td>
-<td>All requests must include an access_token. You can obtain an access token easily, and for free, by going <a href="#">here</a>.</td>
-</tr>
 <tr>
 <td>time_series_id</td>
 <td>The ID of the time series.</td>
@@ -1108,7 +954,7 @@ if v.api_methods.empty?
 </table>
 <h2>Examples</h2>
 <p>Here is an example of analyzing the results of Gender with the following url:</p>
-<div class="url">http://dev-unicef.jumpstart.ge/en/api/v1/time_series_analysis?access_token=123456789&amp;time_series_id=1111111111&amp;question_code=gender</div>
+<div class="url">http://dev-xtraktr.jumpstart.ge/en/api/v1/time_series_analysis?time_series_id=1111111111&amp;question_code=gender</div>
 <pre class="brush:js;auto-links:false;toolbar:false;tab-size:2" contenteditable="false">{
   time_series: 
   {
@@ -1166,4 +1012,3 @@ if v.api_methods.empty?
   }
 }</pre>
 <p></p>')
-end

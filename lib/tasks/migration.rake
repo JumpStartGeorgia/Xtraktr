@@ -15,4 +15,10 @@ namespace :migration do
   task :move_stats => :environment do
     require "./db/migrate/move_stats.rb"
   end
+
+
+  desc "load the api documentation written for xtraktr"
+  task :xtraktr_api_doc => :environment do
+    require "./db/migrate/xtraktr_api_doc.rb"
+  end
 end
