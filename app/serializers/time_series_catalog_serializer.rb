@@ -1,3 +1,3 @@
 class TimeSeriesCatalogSerializer < ActiveModel::Serializer
-  attributes :id, :title, :public_at
+  attributes :id, :title, :dates_included, :public_at
 end

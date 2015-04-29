@@ -50,7 +50,7 @@ class ApiV1
   # return format:
   # {
   #   dataset: {id, title},
-  #   question: {code, original_code, text, answers: [{value, text, can_exclude}]},
+  #   question: {code, original_code, text, is_mappable, answers: [{value, text, can_exclude, sort_order}]},
   #   broken_down_by: {code, original_code, text, answers: [{value, text, can_exclude}]} (optional),
   #   filtered_by: {code, original_code, text, answers: [{value, text, can_exclude}]} (optional),
   #   analysis_type: single/comparative (single means results will be hash while comparative means results will be array)
@@ -177,10 +177,10 @@ class ApiV1
   # return format:
   # {
   #   time_series: {id, title},
-  #   datasets: [{id, title, lable}, ...],
+  #   datasets: [{id, title, label}, ...],
   #   question: {code, original_code, text, answers: [{value, text, can_exclude}]},
   #   filtered_by: {code, original_code, text, answers: [{value, text, can_exclude}]} (optional),
-  #   analysis_type: single (will always be single)
+  #   analysis_type: time_series (will always be time_series)
   #   results: {title, total_responses, analysis: [{dataset_label, answer_text, count, percent}, ...]}
   #   chart: {title, data: [{y(percent), count}, ...] } (optional)
   #   errors: [{status, detail}] (optional)

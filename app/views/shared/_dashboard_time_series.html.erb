@@ -8,7 +8,7 @@
     <div class="row">
       <div class="col-sm-6" id="meta-dates">
         <%= model_class.human_attribute_name(:dates) %>:
-        <%= @time_series.datasets.sorted.map{|x| x.title}.join(', ') %>
+        <%= @time_series.dates_included.join(', ') %>
       </div>
       <% if @is_xtraktr %>
       <div class="col-sm-3" id="meta-source">

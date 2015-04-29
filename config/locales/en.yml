@@ -225,16 +225,6 @@ en:
   tabbed_translation_form:
     default_text: Default Text
     default_url: Default URL
-  api:
-    msgs:
-      no_key: 'You must provide an API Access Token in order to use the API. You can quickly get an API _____________.'
-      no_dataset: "The Dataset could not be found."
-      no_question: "The Question cound not be found."
-      no_broken_down_by: "The Broken Down By Question could not be found."
-      no_filtered_by: "The Filter By Question could not be found."
-      no_time_series: "The Time Series could not be found."
-      no_time_series_dataset: "The Time Series does not have any datasets assigned to it."
-      no_time_series_dataset_error: "There was an error getting the data for the datasets in the time series."
   explore_time_series:
     na: N/A
     percent: Percent (%)
@@ -525,6 +515,15 @@ en:
     explore_data_show:
       title: Explore Time Series Data
   api:
+    msgs:
+      no_key: 'You must provide an API Access Token in order to use the API. You can quickly get an API _____________.'
+      no_dataset: "The Dataset could not be found."
+      no_question: "The Question cound not be found."
+      no_broken_down_by: "The Broken Down By Question could not be found."
+      no_filtered_by: "The Filter By Question could not be found."
+      no_time_series: "The Time Series could not be found."
+      no_time_series_dataset: "The Time Series does not have any datasets assigned to it."
+      no_time_series_dataset_error: "There was an error getting the data for the datasets in the time series."
     index:
       title: API
       no_versions: 'No documentation for the API has been created yet.'
