@@ -5,6 +5,7 @@ class ApiController < ApplicationController
     @api_versions = ApiVersion.is_public.sorted
 
     @css.push('api.css')
+    @show_title = false
     
     respond_to do |format|
       format.html # index.html.erb
