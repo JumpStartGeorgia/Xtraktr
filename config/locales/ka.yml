@@ -405,6 +405,8 @@ ka:
       answers: Answers
       count: Count
       percent: Percent
+      dataset_dashboard: Dataset Dashboard
+      time_series_dashboard: Time Series Dashboard
     msgs:
       does_not_exist: თქვენ ცდილობთ ისეთი გვერდის ნახვას, რომელიც არ არსებობს.
       not_authorized: თქვენ არ გაქვთ ამ გვერდის ნახვის უფლება.
