@@ -8,7 +8,7 @@
     <div class="row">
       <div class="col-sm-6" id="meta-dates">
         <%= model_class.human_attribute_name(:dates) %>:
-        <%= @time_series.datasets.sorted.map{|x| x.title}.join(', ') %>
+        <%= @time_series.dates_included.join(', ') %>
       </div>
       <% if @is_xtraktr %>
       <div class="col-sm-3" id="meta-source">
@@ -31,7 +31,7 @@
   <div class="col-sm-3" style="text-align: right;">
     <ul class="list-unstyled">
       <li>
-        <%= link_to t('menu.explore_data'), url_time_series_explore(@time_series), class: 'btn btn-primary' %>
+        <%= link_to t('app.menu.explore_data'), url_time_series_explore(@time_series), class: 'btn btn-primary', title: t('app.menu.titles.explore_time_series') %>
       </li>
     </ul>
   </div>
@@ -114,7 +114,7 @@
       <ul>
         <% @time_series.datasets.sorted.each do |dataset| %>
           <li>
-            <%= link_to "#{dataset.title} - #{dataset.dataset.title}", url_dataset_to_datasets_dashboard(@time_series.id, dataset.dataset_id) %>
+            <%= link_to "#{dataset.title} - #{dataset.dataset_title}", url_dataset_to_datasets_dashboard(@time_series.id, dataset.dataset_id) %>
           </li>      
         <% end %>
       </ul>

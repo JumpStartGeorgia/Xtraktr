@@ -3,17 +3,17 @@
   <% if current_user.role? User::ROLES[:admin] %>
      <div class="col-sm-4">
    		<ul class="standard">
-        <li>
-         <%= link_to t('.shapesets'), admin_shapesets_path %>
-        </li>
    			<li>
-         <%= link_to t('.users'), admin_users_path %>
+         <%= link_to t('.page_contents'), admin_page_contents_path %>
         </li>
         <li>
          <%= link_to t('.api_documentation'), admin_api_versions_path %>
         </li>
-   			<li>
-         <%= link_to t('.page_contents'), admin_page_contents_path %>
+        <li>
+         <%= link_to t('.shapesets'), admin_shapesets_path %>
+        </li>
+        <li>
+         <%= link_to t('.users'), admin_users_path %>
         </li>
    		</ul>
     </div>

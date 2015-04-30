@@ -89,7 +89,12 @@ div#form-ka {
 	padding:4px 14px !important;
 	font-size:14px !important;
   box-sizing:content-box;
+
+  &[type="number"]{
+    width: 100px;  
+  }
 }
+
 
 
 /* fix styles when using tinymce */
@@ -112,8 +117,6 @@ div#form-ka {
 
 /* logo in header */
 .navbar-brand{
-/*  padding-top: 8px;
-*/  
   font-size: 15px;
   background-color:#00adee;
   // padding: 7px;
@@ -129,6 +132,19 @@ div#form-ka {
   &:hover
   {
     background-color:#00adee;
+  }
+  &.xtraktr{
+    background-color:#EB5D30;
+    padding: 0 24px;
+    #logo{
+      display: inline-block;    
+      width: 78px;
+      height:50px;    
+    }
+    &:hover
+    {
+      background-color:#EB5D30 !important;
+    }
   }
 }
 .navbar-default .navbar-brand:hover, .navbar-default .navbar-brand:focus {

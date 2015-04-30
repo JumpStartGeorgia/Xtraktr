@@ -223,6 +223,8 @@ class Dataset < CustomTranslation
   end
   accepts_nested_attributes_for :reports, :reject_if => :all_blank, :allow_destroy => true
 
+  # mapping of time series to datasets
+  has_many :time_series_datasets
 
   # record stats about this dataset
   has_one :stats, class_name: "Stats"
@@ -633,322 +635,322 @@ class Dataset < CustomTranslation
     return success
   end
 
-  #############################
-  #############################
-  ## Data analysis
-  #############################
-  #############################
+  # #############################
+  # #############################
+  # ## Data analysis
+  # #############################
+  # #############################
 
-  ### perform a summary analysis of one question_code in 
-  ### the data_items
-  ### - question_code: code of question to analyze and put along row of crosstab
-  # - options:
-  #   - filter: if provided, indicates a field and value to filter the data by
-  #           format: {code: ____, value: ______}
-  #   - exclude_dkra: flag indicating if don't know/refuse to answer answers should be ignored
-  def data_onevar_analysis(question_code, options={})
-    start = Time.now
+  # ### perform a summary analysis of one question_code in 
+  # ### the data_items
+  # ### - question_code: code of question to analyze and put along row of crosstab
+  # # - options:
+  # #   - filter: if provided, indicates a field and value to filter the data by
+  # #           format: {code: ____, value: ______}
+  # #   - exclude_dkra: flag indicating if don't know/refuse to answer answers should be ignored
+  # def data_onevar_analysis(question_code, options={})
+  #   start = Time.now
 
-    filter = options[:filter]
-    exclude_dkra = options[:exclude_dkra] == true
-    logger.debug "//////////// data_onevar_analysis - question_code: #{question_code}, filter: #{filter}, exclude_dkra: #{exclude_dkra}"
+  #   filter = options[:filter]
+  #   exclude_dkra = options[:exclude_dkra] == true
+  #   logger.debug "//////////// data_onevar_analysis - question_code: #{question_code}, filter: #{filter}, exclude_dkra: #{exclude_dkra}"
 
-    result = {}
+  #   result = {}
 
-    # get the question/answers
-    result[:row_code] = question_code
-    row_question = self.questions.with_code(question_code)
-    result[:row_question] = row_question.text
-    # if exclude_dkra is true, only get use the answers that cannot be excluded
-    result[:row_answers] = exclude_dkra == true ? row_question.answers.must_include_for_analysis : row_question.answers.all_for_analysis
-    result[:type] = TYPE[:onevar]
-    result[:counts] = []
-    result[:percents] = []
-    result[:total_responses] = nil
-    result[:chart] = {}
+  #   # get the question/answers
+  #   result[:row_code] = question_code
+  #   row_question = self.questions.with_code(question_code)
+  #   result[:row_question] = row_question.text
+  #   # if exclude_dkra is true, only get use the answers that cannot be excluded
+  #   result[:row_answers] = exclude_dkra == true ? row_question.answers.must_include_for_analysis : row_question.answers.all_for_analysis
+  #   result[:type] = TYPE[:onevar]
+  #   result[:counts] = []
+  #   result[:percents] = []
+  #   result[:total_responses] = nil
+  #   result[:chart] = {}
 
-    # if the row question/answers were found, continue
-    if result[:row_question].present? && result[:row_answers].present?
+  #   # if the row question/answers were found, continue
+  #   if result[:row_question].present? && result[:row_answers].present?
 
-      # get the data for this code
-      data = self.data_items.code_data(question_code)
+  #     # get the data for this code
+  #     data = self.data_items.code_data(question_code)
 
-      # if filter provided, then get data for filter
-      # and then only pull out the code data that matches
-       if filter.present?
-        filter_data = self.data_items.code_data(filter[:code])
-        if filter_data.present?
-          # merge the data and filter
-          # and then pull out the data that has the corresponding filter value
-          merged_data = filter_data.zip(data)
-          data = merged_data.select{|x| x[0].to_s == filter[:value].to_s}.map{|x| x[1]}
-        end
-      end
+  #     # if filter provided, then get data for filter
+  #     # and then only pull out the code data that matches
+  #      if filter.present?
+  #       filter_data = self.data_items.code_data(filter[:code])
+  #       if filter_data.present?
+  #         # merge the data and filter
+  #         # and then pull out the data that has the corresponding filter value
+  #         merged_data = filter_data.zip(data)
+  #         data = merged_data.select{|x| x[0].to_s == filter[:value].to_s}.map{|x| x[1]}
+  #       end
+  #     end
 
-      if data.present?
-        # do not want to count nil values
-        counts =  data.select{|x| x.present?}
-                  .each_with_object(Hash.new(0)) { |item,counts| counts[item.to_s] += 1 }
+  #     if data.present?
+  #       # do not want to count nil values
+  #       counts =  data.select{|x| x.present?}
+  #                 .each_with_object(Hash.new(0)) { |item,counts| counts[item.to_s] += 1 }
 
-        logger.debug "== total time to get counts = #{(Time.now - start)*1000} ms"
+  #       logger.debug "== total time to get counts = #{(Time.now - start)*1000} ms"
 
-        # now put it all together
+  #       # now put it all together
 
-        # - create counts
-        result[:row_answers].each do |row_answer|
-          # look for count for this row answer
-          count = counts[row_answer.value.to_s]
-          if count.present?
-            result[:counts] << count
-          else
-            result[:counts] << 0
-          end
-        end
+  #       # - create counts
+  #       result[:row_answers].each do |row_answer|
+  #         # look for count for this row answer
+  #         count = counts[row_answer.value.to_s]
+  #         if count.present?
+  #           result[:counts] << count
+  #         else
+  #           result[:counts] << 0
+  #         end
+  #       end
 
-        # - take counts and turn into percents
-        total = result[:counts].inject(:+)
-        # if total is 0, then set percent to 0
-        if total == 0
-          result[:percents] = Array.new(result[:counts].length){0}
-        else
-          result[:counts].each do |count_item|
-            result[:percents] << (count_item.to_f/total*100).round(2)
-          end
-        end
+  #       # - take counts and turn into percents
+  #       total = result[:counts].inject(:+)
+  #       # if total is 0, then set percent to 0
+  #       if total == 0
+  #         result[:percents] = Array.new(result[:counts].length){0}
+  #       else
+  #         result[:counts].each do |count_item|
+  #           result[:percents] << (count_item.to_f/total*100).round(2)
+  #         end
+  #       end
 
-        # - record the total number of responses
-        result[:total_responses] = result[:counts].inject(:+).to_i
+  #       # - record the total number of responses
+  #       result[:total_responses] = result[:counts].inject(:+).to_i
 
-        # - format data for charts
-        # pie chart requires data to be in following format:
-        # [ {name, y, count, answer_value}, {name, y, count, answer_value}, ...]
-        result[:chart][:data] = []
-        (0..result[:row_answers].length-1).each do |index|
-          result[:chart][:data] << {
-            name: result[:row_answers][index].text, 
-            y: result[:percents][index], 
-            count: result[:counts][index], 
-            answer_value: result[:row_answers][index].value
-          }
-        end
+  #       # - format data for charts
+  #       # pie chart requires data to be in following format:
+  #       # [ {name, y, count, answer_value}, {name, y, count, answer_value}, ...]
+  #       result[:chart][:data] = []
+  #       (0..result[:row_answers].length-1).each do |index|
+  #         result[:chart][:data] << {
+  #           name: result[:row_answers][index].text, 
+  #           y: result[:percents][index], 
+  #           count: result[:counts][index], 
+  #           answer_value: result[:row_answers][index].value
+  #         }
+  #       end
 
-        # - if row is a mappable variable, create the map data
-        if row_question.is_mappable?
-          result[:map] = {}
-          result[:map][:data] = []
-          result[:map][:question_code] = question_code
+  #       # - if row is a mappable variable, create the map data
+  #       if row_question.is_mappable?
+  #         result[:map] = {}
+  #         result[:map][:data] = []
+  #         result[:map][:question_code] = question_code
 
-          result[:row_answers].each_with_index do |row_answer, row_index|
-            # store in highmaps format: {shape_name, display_name, value, count}
-            result[:map][:data] << {:shape_name => row_answer.shape_name, :display_name => row_answer.text, :value => result[:percents][row_index], :count => result[:counts][row_index]}
-          end
-        end
+  #         result[:row_answers].each_with_index do |row_answer, row_index|
+  #           # store in highmaps format: {shape_name, display_name, value, count}
+  #           result[:map][:data] << {:shape_name => row_answer.shape_name, :display_name => row_answer.text, :value => result[:percents][row_index], :count => result[:counts][row_index]}
+  #         end
+  #       end
 
-      end
-    end
+  #     end
+  #   end
 
-    logger.debug "== total time = #{(Time.now - start)*1000} ms"
-    return result
-  end
+  #   logger.debug "== total time = #{(Time.now - start)*1000} ms"
+  #   return result
+  # end
 
 
-  ### perform a crosstab analysis between two question codes in data_items
-  ### - question_code1: code of question to analyze and put along row of crosstab
-  ### - question_code2: code of question to analyze and put along columns of crosstab
-  def data_crosstab_analysis(question_code1, question_code2, options={})
-    start = Time.now
+  # ### perform a crosstab analysis between two question codes in data_items
+  # ### - question_code1: code of question to analyze and put along row of crosstab
+  # ### - question_code2: code of question to analyze and put along columns of crosstab
+  # def data_crosstab_analysis(question_code1, question_code2, options={})
+  #   start = Time.now
 
-    filter = options[:filter]
-    exclude_dkra = options[:exclude_dkra] == true
-    logger.debug "//////////// data_crosstab_analysis - question_code1: #{question_code1}, question_code2: #{question_code2}, filter: #{filter}, exclude_dkra: #{exclude_dkra}"
+  #   filter = options[:filter]
+  #   exclude_dkra = options[:exclude_dkra] == true
+  #   logger.debug "//////////// data_crosstab_analysis - question_code1: #{question_code1}, question_code2: #{question_code2}, filter: #{filter}, exclude_dkra: #{exclude_dkra}"
 
-    result = {}
+  #   result = {}
 
-    # get the question/answers
-    result[:row_code] = question_code1
-    row_question = self.questions.with_code(question_code1)
-    result[:row_question] = row_question.text
-    # if exclude_dkra is true, only get use the answers that cannot be excluded
-    result[:row_answers] = exclude_dkra == true ? row_question.answers.must_include_for_analysis : row_question.answers.all_for_analysis
-    result[:column_code] = question_code2
-    col_question = self.questions.with_code(question_code2)
-    result[:column_question] = col_question.text
-    # if exclude_dkra is true, only get use the answers that cannot be excluded
-    result[:column_answers] = exclude_dkra == true ? col_question.answers.must_include_for_analysis : col_question.answers.all_for_analysis
-    result[:type] = TYPE[:crosstab]
-    result[:counts] = []
-    result[:percents] = []
-    result[:total_responses] = nil
-    result[:chart] = {}
+  #   # get the question/answers
+  #   result[:row_code] = question_code1
+  #   row_question = self.questions.with_code(question_code1)
+  #   result[:row_question] = row_question.text
+  #   # if exclude_dkra is true, only get use the answers that cannot be excluded
+  #   result[:row_answers] = exclude_dkra == true ? row_question.answers.must_include_for_analysis : row_question.answers.all_for_analysis
+  #   result[:column_code] = question_code2
+  #   col_question = self.questions.with_code(question_code2)
+  #   result[:column_question] = col_question.text
+  #   # if exclude_dkra is true, only get use the answers that cannot be excluded
+  #   result[:column_answers] = exclude_dkra == true ? col_question.answers.must_include_for_analysis : col_question.answers.all_for_analysis
+  #   result[:type] = TYPE[:crosstab]
+  #   result[:counts] = []
+  #   result[:percents] = []
+  #   result[:total_responses] = nil
+  #   result[:chart] = {}
 
-    # if the row and col question/answers were found, continue
-    if result[:row_question].present? && result[:row_answers].present? && result[:column_question].present? && result[:column_answers].present?
-      # get uniq values
-      row_answers = result[:row_answers].map{|x| x.value}.sort
-      col_answers = result[:column_answers].map{|x| x.value}.sort
-      logger.debug "unique row answers = #{row_answers}"
-      logger.debug "unique col answers = #{col_answers}"
+  #   # if the row and col question/answers were found, continue
+  #   if result[:row_question].present? && result[:row_answers].present? && result[:column_question].present? && result[:column_answers].present?
+  #     # get uniq values
+  #     row_answers = result[:row_answers].map{|x| x.value}.sort
+  #     col_answers = result[:column_answers].map{|x| x.value}.sort
+  #     logger.debug "unique row answers = #{row_answers}"
+  #     logger.debug "unique col answers = #{col_answers}"
 
-      # get the values for the codes from the data
-      data1 = self.data_items.code_data(question_code1)
-      data2 = self.data_items.code_data(question_code2)
+  #     # get the values for the codes from the data
+  #     data1 = self.data_items.code_data(question_code1)
+  #     data2 = self.data_items.code_data(question_code2)
 
-      row_items = data1.uniq
-      col_items = data2.uniq
+  #     row_items = data1.uniq
+  #     col_items = data2.uniq
 
-      logger.debug "uniq row items = #{row_items}"
-      logger.debug "uniq col items = #{col_items}"
+  #     logger.debug "uniq row items = #{row_items}"
+  #     logger.debug "uniq col items = #{col_items}"
 
-      # merge the data arrays into one array that 
-      # has nested arrays
-      data = data1.zip(data2)
+  #     # merge the data arrays into one array that 
+  #     # has nested arrays
+  #     data = data1.zip(data2)
 
-     # if filter provided, then get data for filter
-      # and then only pull out the code data that matches
-       if filter.present?
-        filter_data = self.data_items.code_data(filter[:code])
-        if filter_data.present?
-          # merge the data and filter
-          # and then pull out the data that has the corresponding filter value
-          merged_data = filter_data.zip(data)
-          data = merged_data.select{|x| x[0].to_s == filter[:value].to_s}.map{|x| x[1]}
-        end
-      end
+  #    # if filter provided, then get data for filter
+  #     # and then only pull out the code data that matches
+  #      if filter.present?
+  #       filter_data = self.data_items.code_data(filter[:code])
+  #       if filter_data.present?
+  #         # merge the data and filter
+  #         # and then pull out the data that has the corresponding filter value
+  #         merged_data = filter_data.zip(data)
+  #         data = merged_data.select{|x| x[0].to_s == filter[:value].to_s}.map{|x| x[1]}
+  #       end
+  #     end
 
-      counts = {}
+  #     counts = {}
 
-      # for each existing row answer
-      row_items.each do |row_item|
-        # do not process nil values
-        if row_item.present?
-          # get the col values that exist with this answer
-          # and then count how many times each appears
-          # do not process nil values for x[1]
-          counts[row_item.to_s] = data.select{|x| x[0] == row_item && x[1].present?}.map{|x| x[1]}
-                                    .each_with_object(Hash.new(0)) { |item,counts| counts[item.to_s] += 1 }
-        end
-      end
+  #     # for each existing row answer
+  #     row_items.each do |row_item|
+  #       # do not process nil values
+  #       if row_item.present?
+  #         # get the col values that exist with this answer
+  #         # and then count how many times each appears
+  #         # do not process nil values for x[1]
+  #         counts[row_item.to_s] = data.select{|x| x[0] == row_item && x[1].present?}.map{|x| x[1]}
+  #                                   .each_with_object(Hash.new(0)) { |item,counts| counts[item.to_s] += 1 }
+  #       end
+  #     end
 
-      logger.debug "== total time to get data = #{(Time.now - start)*1000} ms"
+  #     logger.debug "== total time to get data = #{(Time.now - start)*1000} ms"
 
-      if counts.present?
-        # now put it all together
+  #     if counts.present?
+  #       # now put it all together
 
-        # - create counts
-        result[:row_answers].each do |r|
-          data_row = []
-          row_counts = counts[r.value.to_s]
-          if row_counts.present?
-            result[:column_answers].each do |c|
-              col_count = row_counts[c.value.to_s]
-              if col_count.present?
-                data_row << col_count
-              else
-                data_row << 0
-              end
-            end
-          else
-            data_row = Array.new(result[:column_answers].length){0}
-          end
-          result[:counts] << data_row
-        end
+  #       # - create counts
+  #       result[:row_answers].each do |r|
+  #         data_row = []
+  #         row_counts = counts[r.value.to_s]
+  #         if row_counts.present?
+  #           result[:column_answers].each do |c|
+  #             col_count = row_counts[c.value.to_s]
+  #             if col_count.present?
+  #               data_row << col_count
+  #             else
+  #               data_row << 0
+  #             end
+  #           end
+  #         else
+  #           data_row = Array.new(result[:column_answers].length){0}
+  #         end
+  #         result[:counts] << data_row
+  #       end
 
-        # - take counts and turn into percents
-        totals = []
-        logger.debug "counts = \n #{result[:counts]}"
-        result[:counts].each do |count_row|
-          total = count_row.inject(:+)
-          logger.debug " - row total = #{total}"
-          totals << total
-          if total > 0
-            percent_row = []
-            count_row.each do |item|
-              percent_row << (item.to_f/total*100).round(2)
-            end
-            result[:percents] << percent_row
-          else
-            result[:percents] << Array.new(count_row.length){0}
-          end
-        end
-        logger.debug "----------"
-        logger.debug " - totals = #{totals}"
-        logger.debug " - total = #{totals.inject(:+).to_i}"
+  #       # - take counts and turn into percents
+  #       totals = []
+  #       logger.debug "counts = \n #{result[:counts]}"
+  #       result[:counts].each do |count_row|
+  #         total = count_row.inject(:+)
+  #         logger.debug " - row total = #{total}"
+  #         totals << total
+  #         if total > 0
+  #           percent_row = []
+  #           count_row.each do |item|
+  #             percent_row << (item.to_f/total*100).round(2)
+  #           end
+  #           result[:percents] << percent_row
+  #         else
+  #           result[:percents] << Array.new(count_row.length){0}
+  #         end
+  #       end
+  #       logger.debug "----------"
+  #       logger.debug " - totals = #{totals}"
+  #       logger.debug " - total = #{totals.inject(:+).to_i}"
 
-        # - record the total number of responses
-        result[:total_responses] = totals.inject(:+).to_i
+  #       # - record the total number of responses
+  #       result[:total_responses] = totals.inject(:+).to_i
 
-        # - format data for charts
-        result[:chart][:labels] = result[:row_answers].map{|x| x.text}
-        result[:chart][:data] = []
-        counts = result[:counts].transpose
+  #       # - format data for charts
+  #       result[:chart][:labels] = result[:row_answers].map{|x| x.text}
+  #       result[:chart][:data] = []
+  #       counts = result[:counts].transpose
 
-        (0..result[:column_answers].length-1).each do |index|
-          item = {}
-          item[:name] = result[:column_answers][index].text
-          item[:data] = counts[index]
-          result[:chart][:data] << item
-        end
+  #       (0..result[:column_answers].length-1).each do |index|
+  #         item = {}
+  #         item[:name] = result[:column_answers][index].text
+  #         item[:data] = counts[index]
+  #         result[:chart][:data] << item
+  #       end
 
-        # - if row or column is a mappable variable, create the map data
-        if row_question.is_mappable? || col_question.is_mappable?
-          result[:map] = {}
-          result[:map][:data] = {}
+  #       # - if row or column is a mappable variable, create the map data
+  #       if row_question.is_mappable? || col_question.is_mappable?
+  #         result[:map] = {}
+  #         result[:map][:data] = {}
 
-          # if the row is the mappable, recompute percents so columns add up to 100%
-          if row_question.is_mappable?
-            result[:map][:question_code] = question_code1
-            result[:map][:filter] = col_question.text
-            result[:map][:filters] = result[:column_answers]
+  #         # if the row is the mappable, recompute percents so columns add up to 100%
+  #         if row_question.is_mappable?
+  #           result[:map][:question_code] = question_code1
+  #           result[:map][:filter] = col_question.text
+  #           result[:map][:filters] = result[:column_answers]
 
-            counts = result[:counts].transpose
-            percents = []
-            counts.each do |count_row|
-              total = count_row.inject(:+)
-              if total > 0
-                percent_row = []
-                count_row.each do |item|
-                  percent_row << (item.to_f/total*100).round(2)
-                end
-                percents << percent_row
-              else
-                percents << Array.new(count_row.length){0}
-              end
-            end
+  #           counts = result[:counts].transpose
+  #           percents = []
+  #           counts.each do |count_row|
+  #             total = count_row.inject(:+)
+  #             if total > 0
+  #               percent_row = []
+  #               count_row.each do |item|
+  #                 percent_row << (item.to_f/total*100).round(2)
+  #               end
+  #               percents << percent_row
+  #             else
+  #               percents << Array.new(count_row.length){0}
+  #             end
+  #           end
 
-            result[:column_answers].each_with_index do |col_answer, col_index|
-              # create hash to store the data for this answer
-              result[:map][:data][col_answer.value.to_s] = []
+  #           result[:column_answers].each_with_index do |col_answer, col_index|
+  #             # create hash to store the data for this answer
+  #             result[:map][:data][col_answer.value.to_s] = []
 
-              # now store the results for each item
-              (0..result[:row_answers].length-1).each do |index|
-                # store in highmaps format: {name, value, count}
-                result[:map][:data][col_answer.value.to_s] << {:shape_name => result[:row_answers][index].shape_name, :display_name => result[:row_answers][index].text, :value => percents[col_index][index], :count => counts[col_index][index]}
-              end 
-            end
+  #             # now store the results for each item
+  #             (0..result[:row_answers].length-1).each do |index|
+  #               # store in highmaps format: {name, value, count}
+  #               result[:map][:data][col_answer.value.to_s] << {:shape_name => result[:row_answers][index].shape_name, :display_name => result[:row_answers][index].text, :value => percents[col_index][index], :count => counts[col_index][index]}
+  #             end 
+  #           end
 
-          else
-            result[:map][:question_code] = question_code2
-            result[:map][:filter] = row_question.text
-            result[:map][:filters] = result[:row_answers]
+  #         else
+  #           result[:map][:question_code] = question_code2
+  #           result[:map][:filter] = row_question.text
+  #           result[:map][:filters] = result[:row_answers]
 
-            result[:row_answers].each_with_index do |row_answer, row_index|
-              # create hash to store the data for this answer
-              result[:map][:data][row_answer.value.to_s] = []
+  #           result[:row_answers].each_with_index do |row_answer, row_index|
+  #             # create hash to store the data for this answer
+  #             result[:map][:data][row_answer.value.to_s] = []
 
-              # now store the results for each item
-              (0..result[:column_answers].length-1).each do |index|
-                # store in highmaps format: {shape_name, display_name, value, count}
-                result[:map][:data][row_answer.value.to_s] << {:shape_name => result[:column_answers][index].shape_name, :display_name => result[:column_answers][index].text, :value => result[:percents][row_index][index], :count => result[:counts][row_index][index]}
-              end 
-            end
-          end
-        end
-      end
-    end
+  #             # now store the results for each item
+  #             (0..result[:column_answers].length-1).each do |index|
+  #               # store in highmaps format: {shape_name, display_name, value, count}
+  #               result[:map][:data][row_answer.value.to_s] << {:shape_name => result[:column_answers][index].shape_name, :display_name => result[:column_answers][index].text, :value => result[:percents][row_index][index], :count => result[:counts][row_index][index]}
+  #             end 
+  #           end
+  #         end
+  #       end
+  #     end
+  #   end
 
-    logger.debug "== total time = #{(Time.now - start)*1000} ms"
-    return result
-  end
+  #   logger.debug "== total time = #{(Time.now - start)*1000} ms"
+  #   return result
+  # end
 
 =begin old methods for use with data attribute
 

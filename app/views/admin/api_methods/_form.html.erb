@@ -10,7 +10,7 @@
     <%= f.input :api_version_id, as: :hidden, label: false, input_html: {value: params[:api_version_id]} %>
     <div class="row">
       <div class="col-sm-4">
-        <%= f.input :permalink, hint: t(hint_key + 'permalink'), input_html: {size: 15} %>
+        <%= f.input :permalink, hint: t(hint_key + 'permalink'), input_html: {size: 25} %>
       </div>
       <div class="col-sm-4">
         <%= f.input :sort_order, as: :number, hint: t(hint_key + 'sort_order'), min: 1, step: 5 %>

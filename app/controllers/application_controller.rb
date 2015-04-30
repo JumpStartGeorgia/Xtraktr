@@ -57,6 +57,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
   end
 
 	def preload_global_variables
+    # flag to indicate if the app is currently running in unicef or xtraktr mode
     @is_xtraktr = false
 
     # indicate that whether login should allow local and omniauth or just locale

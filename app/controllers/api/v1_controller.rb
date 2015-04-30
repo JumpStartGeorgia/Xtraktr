@@ -127,10 +127,12 @@ class Api::V1Controller < ApplicationController
 private
   # make sure the access token is valid
   def restrict_access
-    @user_api_key = ApiKey.find_by(key: params[:access_token])
-    if @user_api_key.nil?
-      render json: {errors: [{status: '401', detail: I18n.t('api.msgs.no_key') }]}
-      return false
+    if !@is_xtraktr
+      @user_api_key = ApiKey.find_by(key: params[:access_token])
+      if @user_api_key.nil?
+        render json: {errors: [{status: '401', detail: I18n.t('api.msgs.no_key') }]}
+        return false
+      end
     end
   end
 

@@ -190,8 +190,8 @@ $(document).ready(function(){
 
     if (values == null || values.length == 0){
       console.log('- no selections so defualt to current app locale');
-      // no items selected so default to current locale
-      values = [I18n.locale]; 
+      // no items selected so default to all available locales
+      values = I18n.available_locales; 
     }
     console.log('--> current selected langs = ' + values);
 

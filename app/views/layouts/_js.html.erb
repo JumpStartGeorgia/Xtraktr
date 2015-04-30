@@ -5,6 +5,7 @@
     <script type="text/javascript">
       I18n.defaultLocale = "<%= I18n.default_locale %>";
       I18n.locale = "<%= I18n.locale %>";
+      I18n.available_locales = "<%= I18n.available_locales.map{|x| x.to_s}.join(',') %>".split(',');
     </script>
 
     <% if Rails.env.production? %>
