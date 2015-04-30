@@ -16,6 +16,11 @@
             <%= model_class.human_attribute_name(:released_at) %>:
             <%= I18n.l(dataset.released_at, format: :day_first) if dataset.released_at.present? %>
           </div>
+          <% if dataset.time_series_datasets.present? %>
+            <div class="col-sm-4" id="time-series-link">
+              <%= link_to t('app.menu.time_series'), explore_time_series_dashboard_path(dataset.time_series_datasets.first.time_series_id), class: 'btn btn-primary btn-sm', title: t('app.menu.titles.dataset_to_time_series') %>
+            </div>
+          <% end %>
         </div>
         <% if @is_xtraktr %>
         <div>

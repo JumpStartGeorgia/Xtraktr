@@ -40,8 +40,13 @@
   <div class="col-sm-3" style="text-align: right;">
     <ul class="list-unstyled">
       <li>
-        <%= link_to t('menu.explore_data'), url_dataset_explore(@dataset), class: 'btn btn-primary' %>
+        <%= link_to t('app.menu.explore_data'), url_dataset_explore(@dataset), class: 'btn btn-primary', title: t('app.menu.titles.explore_dataset') %>
       </li>
+      <% if @dataset.time_series_datasets.present? %>
+        <li>
+          <%= link_to t('app.menu.time_series'), url_dataset_to_times_series_dashboard(@dataset.id, @dataset.time_series_datasets.first.time_series_id), class: 'btn btn-primary', title: t('app.menu.titles.dataset_to_time_series') %>
+        </li>
+      <% end %>
       <% if @dataset.datafile.exists? %>
         <li>
           <div class="btn btn-default btn-sm download" data-id="<%= @dataset.id.to_s %>"><%= t('helpers.links.download_data') %></div>

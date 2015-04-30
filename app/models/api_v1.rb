@@ -892,7 +892,7 @@ private
 
       datasets.each do |dataset|
         if dataset.present?
-          hash = {dataset_id: dataset.dataset_id, title: dataset.dataset.title, label: dataset.title}
+          hash = {dataset_id: dataset.dataset_id, title: dataset.dataset_title, label: dataset.title}
         end
         ary << hash
       end

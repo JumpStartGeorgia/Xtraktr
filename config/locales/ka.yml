@@ -432,6 +432,10 @@ ka:
       instructions: Instructions
       home: Home
       disclaimer: Disclaimer
+      titles:
+        explore_dataset: Explore the dataset data through charts, maps and tables
+        explore_time_series: Explore the time series data through charts and tables
+        dataset_to_time_series: Explore this dataset as part of a time series 
       admin_dataset:
         explore_data: Explore Data
         heading: Dataset Options

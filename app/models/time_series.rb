@@ -19,7 +19,7 @@ class TimeSeries < CustomTranslation
   field :languages, type: Array
   field :default_language, type: String
 
-  embeds_many :datasets, class_name: 'TimeSeriesDataset' do
+  has_many :datasets, class_name: 'TimeSeriesDataset' do
     def sorted
       order_by([[:sort_order, :asc], [:title, :asc]]).to_a
     end
@@ -69,8 +69,6 @@ class TimeSeries < CustomTranslation
   index ({ :'questions.text' => 1})
   index ({ :'questions.answers.can_exclude' => 1})
   index ({ :'questions.answers.sort_order' => 1})
-  index ({ :'datasets.sort_order' => 1})
-  index ({ :'datasets.dataset_id' => 1})
 
   #############################
   # Validations
@@ -155,6 +153,10 @@ class TimeSeries < CustomTranslation
 
   #############################
   # Scopes
+
+  def self.only_id_title
+    only(:id, :title)
+  end
 
   def self.sorted
     order_by([[:title, :asc]])
