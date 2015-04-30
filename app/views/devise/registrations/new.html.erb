@@ -1,7 +1,9 @@
 <%- model_class = User -%>
+<% registration = true %>
 <% title t('helpers.links.sign_up_title', :app_name => t('app.common.app_name')) %> 
 
 <div id="signup-form">
+  <div class="title"><%= t('helpers.links.sign_up2') %></div>
   <% if @enable_omniauth %>
     <div class="providers">
       <%- if devise_mapping.omniauthable? %>    
@@ -25,13 +27,12 @@
   	<%= f.error_messages %>
 
 	  <%= f.inputs do %>
-	    <%= f.input :email, :as => :email, :input_html => { :size => 35 , :class => "login-username" }, :placeholder => model_class.human_attribute_name(:email) , label: false %>
-	    <%#= f.input :nickname, hint: t('helpers.hints.nickname'), :input_html => { :size => 35 } %>
+      <%= render :partial => 'shared/agreement', :locals => { f: f, resource: resource, reg: true } %>
 
-	    <% if f.object.password_required? %>
-		    <%= f.input :password, :input_html => { :size => 35 , :class => "login-password" }, :placeholder => model_class.human_attribute_name(:password), label: false %>
-		    <%= f.input :password_confirmation, :input_html => { :size => 35 , :class => "login-password-confirmation" }, :placeholder => model_class.human_attribute_name(:password_confirmation), label: false %>
-	    <% end %>
+      <% if !registration %>
+       <input id="download_file_id" name="download_file_id" type="hidden" value="<%= @file_id %>">  
+      <% end %>
+
     <% end %>
     
 	  <div class="control-group submit-row">
@@ -41,12 +42,12 @@
 
   <div class="control-group">
   <%- if controller_name != 'sessions' %>
-		  <%= link_to t('helpers.links.sign_in'), new_session_path(resource_name), :class => 'sign-in-link' %>
+		  <%= link_to t('helpers.links.sign_in'), new_session_path(resource_name), :class => 'sign-in-link reattach ' %>
 	  <% end -%>
 
 	  <%- if devise_mapping.recoverable? && controller_name != 'passwords' %>
   		  <div class="forgot-box">
-		  	<%= link_to t('helpers.links.forgot_password'), new_password_path(resource_name), :class => 'forgot-link' %>
+		  	<%= link_to t('helpers.links.forgot_password'), new_password_path(resource_name), :class => 'forgot-link reattach ' %>
 		  </div>
 	  <% end -%>
   </div>

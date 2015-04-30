@@ -36,12 +36,12 @@
 
   <div class="control-group">
 	  <%- if devise_mapping.recoverable? && controller_name != 'passwords' %>
-		  <%= link_to t('helpers.links.forgot_password'), new_password_path(resource_name), :class => 'forgot-link' %>
+		  <%= link_to t('helpers.links.forgot_password'), new_password_path(resource_name), :class => 'reattach forgot-link' %>
 	  <% end -%>
 
 	  <%- if devise_mapping.registerable? && controller_name != 'registrations' %>
 	  	<div class="sign-up-box">
-  		  <span><%= t('helpers.links.sign_up_question') %></span>&nbsp;<%= link_to t('helpers.links.sign_up'), new_registration_path(resource_name), :class => 'sign-up-link' %>
+  		  <span><%= t('helpers.links.sign_up_question') %></span>&nbsp;<%= link_to t('helpers.links.sign_up'), new_registration_path(resource_name), :class => 'reattach sign-up-link' %>
 	  	</div>
 	  <% end -%>	
   </div>  

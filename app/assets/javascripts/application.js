@@ -40,6 +40,25 @@ $(document).ready(function(){
     p.find('a.active').removeClass('active');
     t.addClass('active');
   });
+
+
+  $(document).on('click', '.reattach', function(e){
+    var t = $(this);
+
+    $.ajax({
+      url: t.attr('href')
+    }).done(function(d)
+    {
+       modal(d);      
+    });
+
+    e.preventDefault();
+  });
+
+
+
+
+
   $('.download').click(function(){
     var t = $(this);
     $.ajax({
@@ -64,15 +83,15 @@ $(document).ready(function(){
   });
   
 
-  $(document).on('change', '#interview_status_input input[type=radio]', function()
+  $(document).on('change', '#agreement_status_input input[type=radio], #user_status_input input[type=radio]', function()
     {
       if(this.value == 8)
       {
-        $('#interview_status_other_input').show();
+        $('#agreement_status_other_input, #user_status_other_input').show();
       }
       else
       {
-        var other = $('#interview_status_other_input').hide();
+        var other = $('#agreement_status_other_input, #user_status_other_input').hide();
         other.find('input').val('');
       }
     });
@@ -81,11 +100,15 @@ $(document).ready(function(){
 var js_modal;
 function modal(html)
 {
-  var w = $(document).width();
-  var max_width = w > 768 ? 768 : w;
-  js_modal.find('.popup').html(html).css('max-width',max_width);
-  js_modal_on();
-
+  if(typeof html !== 'undefined')
+  {
+    var w = $(window).width();
+    var h = $(window).height();
+    var max_width = (w > 768 ? 768 : w) - 20;
+    var max_height = (h > 1024 ? 1024 : h - 60);
+    js_modal.find('.popup').html(html).css({'max-width':max_width, 'max-height':max_height});
+    js_modal_on();
+  }
 }
 function js_modal_on() 
 {

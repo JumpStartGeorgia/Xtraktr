@@ -1,20 +1,16 @@
-class InterviewsController < ApplicationController
-   def index
-      respond_to do |format|
-         format.html # index.html.erb
-      end
-   end
+class AgreementsController < ApplicationController
+
   def new
-    @mod = Interview.new
+    @mod = Agreement.new
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html render :partial => 'form'
       format.json { render json: @mod }
     end
   end
 
   def create
-    @mod = Interview.new(params[:interview])
+    @mod = Agreement.new(params[:agreement])
     @file_id = params[:download_file_id]
     @url = Dataset.find(@file_id).datafile.url 
     @model_name = @mod.model_name.downcase

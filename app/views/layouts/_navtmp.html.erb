@@ -61,7 +61,7 @@
             </ul>
           </li>
         <% else %>
-          <li role="menuitem"><%= link_to(t('helpers.links.sign_in2'), new_user_session_path)  %></li>
+          <li role="menuitem"><%= link_to(t('helpers.links.sign_in2'), new_user_session_path, class: 'reattach sign_in')  %></li>
         <% end %>
         <% I18n.available_locales.each do |locale| %>
           <% if locale != I18n.locale %>

@@ -19,6 +19,17 @@ class User
          :recoverable, :rememberable, :trackable, :validatable, 
          :omniauthable, :omniauth_providers => [:facebook]
 
+  ## Constants
+  AGE_GROUP = { 1 => '17-24', 2 => '25-34', 3 => '35-44', 4 => '45-54', 5 => '55-64', 6 => 'above'}
+  STATUS = { 1 => 'researcher',
+             2 => 'student',
+             3 => 'journalist',
+             4 => 'ngo',
+             5 => 'government_official',
+             6 => 'international_organization',
+             7 => 'private_sector',
+             8 => 'other' }
+
   ## Database authenticatable
   field :email,              :type => String, :default => ""
   field :encrypted_password, :type => String, :default => ""
@@ -36,6 +47,17 @@ class User
   field :last_sign_in_at,    :type => Time
   field :current_sign_in_ip, :type => String
   field :last_sign_in_ip,    :type => String
+
+  ## Agreementable
+
+  field :first_name, type: String
+  field :last_name, type: String
+  field :age_group, type: Integer #{ 1 => '17-24', 2 => '25-34', 3 => '35-44', 4 => '45-54', 5 => '55-64', 6 => 'above'}
+  field :residence, type: String
+  field :affiliation, type: String
+  field :status, type: Integer #{ 1 => 'researcher', 2 => 'student', 3 => 'journalist', 4 => 'ngo', 5 => 'government_official', 6 => 'international_organization', 7 => 'private_sector', 8 => 'other' } 
+  field :status_other, type: String
+  field :description, type: String
 
   ## Encryptable
   # field :password_salt, :type => String
@@ -72,10 +94,25 @@ class User
   index({ :reset_password_token => 1}, { background: true, unique: true, sparse: true })
 
   #############################
-
+  attr_accessor :terms
   attr_accessible :email, :password, :password_confirmation, :remember_me, 
-                  :role, :provider, :uid, :nickname, :avatar
+                  :role, :provider, :uid, :nickname, :avatar,
+                  :first_name, :last_name, :age_group, :residence,
+                  :affiliation, :status, :status_other, :description, :terms
 
+  #############################
+  ## Validations
+
+  validates :first_name, presence: true
+  validates :last_name, presence: true
+  validates :age_group, inclusion: { in: AGE_GROUP.keys }
+  validates :residence, presence: true
+  validates :email, presence: true
+  validates :affiliation, presence: true
+  validates :status, inclusion: { in: STATUS.keys }
+  validates_presence_of :status_other, :if => lambda { |o| o.status == 8 }
+  validates :terms, :numericality => { :equal_to => 1 }
+  
   ####################
 
   before_create :create_nickname
@@ -140,6 +177,23 @@ class User
   # if user logged in with omniauth, password is not required
   def password_required?
     super && provider.blank?
+  end
+
+  def agreement(file)
+    a = Agreement.create({
+        email: self.email,
+        first_name: self.first_name,
+        last_name: self.last_name,
+        age_group: self.age_group,
+        residence: self.residence,
+        affiliation: self.affiliation,
+        status: self.status,
+        status_other: self.status_other,
+        description: self.description,
+        file: file,
+        terms: 1
+      })
+    a.valid?
   end
 
 end
