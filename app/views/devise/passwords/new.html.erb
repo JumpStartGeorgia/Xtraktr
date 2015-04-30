@@ -13,12 +13,12 @@
 
   <div class="control-group">
 	  <%- if controller_name != 'sessions' %>
-		  <%= link_to t('helpers.links.sign_in'), new_session_path(resource_name), :class => 'sign-in-link' %>
+		  <%= link_to t('helpers.links.sign_in'), new_session_path(resource_name), :class => 'sign-in-link reattach ' %>
 	  <% end -%>
 
 	  <%- if devise_mapping.registerable? && controller_name != 'registrations' %>
 	  	<div class="sign-up-box">
-		  <span><%= t('helpers.links.sign_up_question') %></span>&nbsp;<%= link_to t('helpers.links.sign_up'), new_registration_path(resource_name), :class => 'sign-up-link' %>
+		  <span><%= t('helpers.links.sign_up_question') %></span>&nbsp;<%= link_to t('helpers.links.sign_up'), new_registration_path(resource_name), :class => 'sign-up-link reattach ' %>
 	  	</div>
 	  <% end -%>	
   </div>

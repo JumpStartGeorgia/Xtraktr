@@ -2,11 +2,15 @@ class ApplicationController < ActionController::Base
   layout 'app'
   protect_from_forgery
 
+  DEVISE_CONTROLLERS = ['devise/sessions', 'devise/registrations', 'devise/passwords']
+
 	before_filter :set_locale
 	before_filter :is_browser_supported?
 	before_filter :preload_global_variables
 	before_filter :initialize_gon
 	before_filter :store_location
+
+  layout :layout_by_resource
 
 	unless Rails.application.config.consider_all_requests_local
 		rescue_from Exception,
@@ -98,6 +102,14 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 		  gon.datatable_i18n_url = ""
 		end
 	end
+
+  def layout_by_resource
+    if !DEVISE_CONTROLLERS.index(params[:controller]).nil? && request.xhr?
+      nil
+    else
+      "app"
+    end
+  end
 
 	def after_sign_in_path_for(resource)
 		session[:previous_urls].last || request.env['omniauth.origin'] || root_path(:locale => I18n.locale)

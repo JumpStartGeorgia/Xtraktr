@@ -70,7 +70,7 @@ BootstrapStarter::Application.routes.draw do
     end    
 
     # root pages
-    resources 'interviews', :only => [:index, :new, :create]
+    resources 'agreements', :only => [:new, :create]
 
     match '/contact', :to => 'root#contact', :as => :contact, :via => :get
     match '/download/:id', :to => 'root#download', :as => :download, :via => :get

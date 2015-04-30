@@ -1,0 +1,36 @@
+<% reg||=false %>
+<div class="row">
+        <div class="col-sm-6"><%= f.input :first_name, :as => :string %></div>
+        <div class="col-sm-6"><%= f.input :last_name, :as => :string %></div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6"><%= f.input :email, :as => :email, :input_html => { :size => 35 , :class => "login-username" } %></div>
+        <% if reg %>
+        <div class="col-sm-6">
+          <% if f.object.password_required? %>
+            <%= f.input :password, :input_html => { :size => 35 , :class => "login-password" } %>
+            <%= f.input :password_confirmation, :input_html => { :size => 35 , :class => "login-password-confirmation" } %>
+          <% end %>
+        </div>
+        <% end %>
+      </div>
+
+      <%= f.input :age_group, :as => :radio, :collection => Hash[[1,2,3,4,5,6].map{|k| [t('user.age_group.g' + k.to_s), k] }] %>
+
+      <div class="row">
+        <div class="col-sm-6"><%= f.input :residence, :as => :string %></div>
+        <div class="col-sm-6"><%= f.input :affiliation, :as => :string %></div>
+      </div>
+
+      <%= f.input :status, :as => :radio, :collection => Hash[User::STATUS.map{|k,v| [t('user.status.' + v), k] }] %>
+      <%= f.input :status_other %>
+
+      <%= f.input :description, :as => :text, :input_html => { :class => 'autogrow', :rows => 5, :cols => 80  } %>
+      
+      <div class="boolean input optional checkbox form-group" id="user_terms_input">
+            <input name="user[terms]" type="hidden" value="0">
+            <label class="  control-label" for="user_terms">
+               <input id="user_terms" name="user[terms]" type="checkbox" value="1">
+               <%= t('app.common.terms').html_safe %>
+            </label>
+      </div>    

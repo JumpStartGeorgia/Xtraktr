@@ -23,6 +23,24 @@ en:
         sign_in_count: Number of Times Logged In
         created_at: Date Created
         current_sign_in_at: Date Last Logged In
+        first_name: First Name
+        last_name: Last Name
+        age_group: Age Group
+        residence: Country of Residence
+        affiliation: Affiliation
+        status: Status
+        status_other: When other(Please specify)
+        description: Short description of research objective (<i>optional</i>)           
+      agreement:
+        email: Email Address
+        first_name: First Name
+        last_name: Last Name
+        age_group: Age Group
+        residence: Country of Residence
+        affiliation: Affiliation
+        status: Status
+        status_other: When other(Please specify)
+        description: Short description of research objective (<i>optional</i>)   
       page_content:
         name: Unique Name
         title: Title
@@ -399,6 +417,7 @@ en:
       percent: Percent
       dataset_dashboard: Dataset Dashboard
       time_series_dashboard: Time Series Dashboard
+      terms: "I agree to the <a href='#'>Terms of Use</a> and <a href='#'>Privacy Policy</a>"   
     msgs:
       does_not_exist: You tried to access a page that does not exist.
       not_authorized: You are not authorized to view that page.
@@ -457,6 +476,23 @@ en:
         warnings: Warnings
         delete: Delete
         private_share: Share Private Time Series
+  user:
+    age_group:
+      g1: "17-24"
+      g2: "25-34"
+      g3: "35-44"
+      g4: "45-54"
+      g5: "55-64"
+      g6: "above(>65)"
+    status:
+      researcher: Researcher
+      student: Student
+      journalist: Journalist
+      ngo: NGO
+      government_official: Government Official
+      international_organization: International Organization
+      private_sector: Private Sector
+      other: Other
   layouts:
     nav:
       toggle: Toggle navigation
