@@ -73,7 +73,8 @@ BootstrapStarter::Application.routes.draw do
     resources 'interviews', :only => [:index, :new, :create]
 
     match '/contact', :to => 'root#contact', :as => :contact, :via => :get
-    match '/download', :to => 'root#download', :as => :download, :via => :get
+    match '/download/:id', :to => 'root#download', :as => :download, :via => :get
+    match '/download_request', :to => 'root#download_request', :as => :download_request, :via => :get
     match '/instructions', :to => 'root#instructions', :as => :instructions, :via => :get
     match '/disclaimer', :to => 'root#disclaimer', :as => :disclaimer, :via => :get
 		match '/explore_data', :to => 'root#explore_data', :as => :explore_data, :via => :get

@@ -2,10 +2,14 @@ class FileMapper
   include Mongoid::Document
   include Mongoid::Timestamps
 
-
   #############################
 
-   field :key, type: String
+   field :key, type: String, default: ->{ 
+      begin
+         key = SecureRandom.base64.tr('+/=', 'dTv')
+      end while self.class.where(key: key).any?
+      key
+   }
    field :file, type: String
 
   #############################
@@ -16,13 +20,6 @@ class FileMapper
 
   attr_accessible :key, :file
 
-  before_create :create_key
-
-  def create_key
-    begin
-      self.key = SecureRandom.base64.tr('+/=', 'dTv')
-    end while self.class.where(key: self.key).any?
-  end
 end
 
 

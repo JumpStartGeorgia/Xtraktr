@@ -138,19 +138,31 @@ class RootController < ApplicationController
     end
   end
 
-  def download
+  def download_request
     sign_in = user_signed_in?
-    data = { agreement: (sign_in ? true : false), params: params }
+    data = { agreement: sign_in }
+    @file_id = params[:id]
     if sign_in 
-      data[:url] = '/system/datasets/551cf0022c17430337000002/original/Barriers.dta'
       # save user data
+      @mapper = FileMapper.create({ file: @file_id })
+      data[:url] = "/#{I18n.locale}/download/#{@mapper.key}"
     else
-      @mod = Interview.new
-      @file_id = params[:id]
+      @mod = Interview.new      
       data[:form] = render_to_string "interviews/_form", :layout => false 
     end    
     respond_to do |format|
       format.json { render json: data }
+    end
+  end
+  def download
+    begin      
+     mapper = FileMapper.find_by(key: params[:id])
+     file = Dataset.find(mapper.file)
+     mapper.destroy
+     send_file  file.datafile.path , :filename => file.title.gsub(' ', '_') + File.extname(file.datafile.original_filename),
+  :type => 'application/octet-stream'
+    rescue
+      render file: "#{Rails.root}/public/404.html", layout: false, status: 404
     end
   end
   

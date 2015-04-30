@@ -4,8 +4,6 @@ class InterviewsController < ApplicationController
          format.html # index.html.erb
       end
    end
-
-
   def new
     @mod = Interview.new
 
@@ -22,17 +20,12 @@ class InterviewsController < ApplicationController
     @model_name = @mod.model_name.downcase
     respond_to do |format|
       if @mod.save
-
-        @mapper = FileMapper.create({file: @file_id })
-        format.js {render action: "create" , status: :ok }
-        #format.html { redirect_to interview_path, notice: t('app.msgs.success_created', :obj => t('mongoid.models.user')) }
-        #format.json { render json: @mod, status: :created, location: @mod }
+        @mapper = FileMapper.create({ file: @file_id })         
+        format.js {render action: "create" , status: :ok, :locals => { :ok => true }}
       else
-        # format.html { render action: "new" }
         @errors = @mod.errors.to_json
-        format.js {render action: "missing" , status: :ok }
-        # format.json { render json: @mod.errors, status: :unprocessable_entity }
+        format.js {render action: "create" , status: :precondition_failed  }
       end
     end
-  end
+  end  
 end
