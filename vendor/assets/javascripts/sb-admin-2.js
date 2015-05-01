@@ -20,11 +20,12 @@ $(function() {
         }
     });
 
-    var url = window.location;
-    var element = $('ul.nav a').filter(function() {
-        return this.href == url;// || url.href.indexOf(this.href) == 0;
-    }).addClass('active').parent().parent().addClass('in').parent();
-    if (element.is('li')) {
-        element.addClass('active');
-    }
+    // var url = window.location.href;
+    // var element = $('ul.nav a').filter(function() {
+    //     return url.indexOf(this.href) == 0;
+    // });
+    // if(element.length)
+    //     $('ul.nav a').removeClass('active');
+
+    // element.addClass('active').parent().parent().addClass('in');
 });

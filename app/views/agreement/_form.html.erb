@@ -5,7 +5,11 @@
          <%= render :partial => 'shared/agreement', :locals => { f: f } %>
          <input id="download_file_id" name="download_file_id" type="hidden" value="<%= @file_id %>">
       <% end %>   
-      
+
+      <div class="form-group">
+        <%= link_to(t('helpers.links.sign_in'), new_user_session_path, class: 'reattach sign_in')  %>
+      </div>
+
       <div class="form-group">
        <%= f.submit nil, :class => 'btn btn-primary' %>
       </div>
