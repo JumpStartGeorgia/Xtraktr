@@ -1,12 +1,16 @@
 class Api::V1Controller < ApplicationController
   before_filter :restrict_access, except: [:index, :documentation]
+  before_filter :set_background
   after_filter :record_request, except: [:index, :documentation]
+  
+
 
   def index
     redirect_to api_path
   end
 
   def documentation
+    
     redirect = false
     redirect = params[:method].nil?
 
@@ -140,4 +144,11 @@ private
   def record_request
     ApiRequest.record_request(@user_api_key, request.remote_ip, request.filtered_parameters, @user_agent)
   end
+
+  def set_background
+    @white = 'class=white'
+    @show_subnav_navbar = true
+    @api = true
+  end
+
 end

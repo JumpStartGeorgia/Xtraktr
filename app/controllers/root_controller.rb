@@ -142,15 +142,9 @@ class RootController < ApplicationController
     sign_in = user_signed_in?
     data = { agreement: sign_in }
     @file_id = params[:id]
-    if sign_in 
-      # save user data
-      if current_user.agreement(@file_id)
-        @mapper = FileMapper.create({ file: @file_id })
-        data[:url] = "/#{I18n.locale}/download/#{@mapper.key}"
-      else
-        @mod = Agreement.new      
-        data[:form] = render_to_string "agreement/_form", :layout => false 
-      end
+    if sign_in && current_user.agreement(@file_id)
+      mapper = FileMapper.create({ file: @file_id })
+      data[:url] = "/#{I18n.locale}/download/#{mapper.key}"
     else
       @mod = Agreement.new      
       data[:form] = render_to_string "agreement/_form", :layout => false

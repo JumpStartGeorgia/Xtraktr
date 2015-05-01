@@ -71,6 +71,13 @@ module ApplicationHelper
     end
   end
 
-
+  def link_to_sidebar path, name, klass='img '
+    current = current_page?(path) || (path != root_path && request.path.index(path))
+    link_to path, class: (current ? ' active' : '') do
+      tt = t('app.menu.' + name)
+      ('<div alt="' + tt + '" class="'+klass+'side-menu-' + name + '"></div>
+      <span>' + tt + '</span>').html_safe      
+    end
+  end
 
 end

@@ -577,26 +577,47 @@ box-shadow: 1px 1px 0px 1px rgba(235,235,235,1);
     }
   }
 }
-
+#page-wrapper
+{
+  background-color: #f6f7f7;
+  &.white
+  {
+    background-color: #fff;
+  }
+}
 
 /* sub-navigation bar */
 #subnav-navbar{
-  background-color: #ededed;
-  border-top: solid 1px #cdcdcd;
-  border-bottom: solid 1px #cdcdcd;
-  margin: 1px -15px !important;
-  padding: 7px;
-  min-height: 36px;
-  & > div:nth-child(1) a{
-    padding-top: 15px;
-    margin-left: 0;
+  background: #f6f7f7 url(/assets/svg/pattern.svg) repeat;
+  background-size:7px 7px;
+  border-bottom: solid 1px #eaeae9;
+  margin: 0px -30px 30px !important;
+  padding: 0px;
+  min-height: 18px;
+  height:18px;
+  .breadcrumbo
+  {
+    line-height:18px;
+    a{
+      line-height:18px;
+      margin-left: 0;
+    }
   }
   .navbar-nav > li > a{
     padding-top: 0;
     padding-bottom: 0;
   }
 }
-
+.page-header
+{
+  h1
+  {
+    font-family:'pfcentroslabpro';
+    font-size:16px;
+    color:#00adee;
+    text-transform:uppercase;
+  }
+}
 
 .navbar
 {
@@ -646,6 +667,7 @@ box-shadow: 1px 1px 0px 1px rgba(235,235,235,1);
 #js_modal
 {
   display:none;
+  z-index:9997;
   .popup
   {
     position: fixed;
@@ -659,6 +681,7 @@ box-shadow: 1px 1px 0px 1px rgba(235,235,235,1);
     z-index:999;
     padding:10px;
     overflow:auto;
+    z-index:9999;
   }
   .bg
   {
@@ -669,6 +692,7 @@ box-shadow: 1px 1px 0px 1px rgba(235,235,235,1);
     position: fixed;
     top: 0px;
     left: 0px;
+    z-index:9998;
   }
 }
 
@@ -690,3 +714,4 @@ box-shadow: 1px 1px 0px 1px rgba(235,235,235,1);
     position:relative;
   }
 }
+
