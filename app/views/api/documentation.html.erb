@@ -2,6 +2,7 @@
 
 <div class="api">
   <div class="col-left">
+      <h1><%= yield(:title) %></h1>
     <div id="api-dates">
       <%= format_api_method_dates(@api_method) %>
     </div>
@@ -17,7 +18,10 @@
   </div>
   <div class="col-right documentation-links">
     <div class="box">
-      <h2><%= @api_version.title %></h2>
+      <div class="header">
+        <h2><%= @api_version.title %></h2>
+        <div class="line"></div>
+      </div>
       <ul class="list-unstyled">
         <% @api_version.api_methods.is_public.sorted.each do |method| %>
           <li>

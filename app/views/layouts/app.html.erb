@@ -9,11 +9,9 @@
 
   </head>
   <body>
-
     <%= render :partial => 'layouts/navtmp' %>
-    <div id="page-wrapper" <%= "#{@white}" %>>
-      <div class="row">
-        <div class="col-sm-12">
+    <div id="page-wrapper" class='wrappers'>
+      <div class="content">
 					<% flash.each do |key, msg| %>
 						<div class="alert <%= flash_translation(key) %> fade in">
 							<a href="#" data-dismiss="alert" class="close">×</a>
@@ -76,9 +74,8 @@
           <% end %>
 
           <%= yield %>
-        </div><!--/span-->
-      </div><!--/row-->
-    <%= render :partial => 'layouts/footer' %>
+      <%= render :partial => 'layouts/footer' %>
+      </div>
     </div> <!-- /container -->
 
 

@@ -146,8 +146,8 @@ private
   end
 
   def set_background
-    @white = 'class=white'
     @show_subnav_navbar = true
+    @show_title = false
     @api = true
   end
 

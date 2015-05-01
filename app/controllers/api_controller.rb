@@ -1,7 +1,6 @@
 class ApiController < ApplicationController
 
   def index
-   @white = 'class=white'
    @show_subnav_navbar = true
    @page_content = PageContent.by_name('api')
    @api_versions = ApiVersion.is_public.sorted

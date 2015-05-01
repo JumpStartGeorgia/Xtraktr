@@ -1,7 +1,7 @@
 <% if @page_content.present? %>
   <%= title @page_content.title %>
 
-  <div class="tinymce_format api">
+  <div class="tinymce_format article">
     <%= simple_format_no_tags(@page_content.content, {}, {sanitize: false}) %>
 
     <div class="version-links">
