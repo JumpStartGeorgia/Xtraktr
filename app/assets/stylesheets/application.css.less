@@ -332,17 +332,12 @@ ul.dropdown-menu.inner.selectpicker li a{
     font-weight: 200;
 }
 @font-face {
-    font-family: "pfcentroslabpro";    
-    src: url( '/assets/fonts/pf_centro_slab_pro.otf') format("opentype");         
+    font-family: "prime";    
+    src: url( '/assets/fonts/prime.otf') format("opentype");         
     font-style: normal;
     font-weight: 200;
 }
-@font-face {
-    font-family: "sourcesans_pro";    
-    src: url( '/assets/fonts/sourcesans_pro.otf') format("opentype");         
-    font-style: normal;
-    font-weight: 200;
-}
+
 @font-face {
     font-family: "sourcesans_pro_i";    
     src: url( '/assets/fonts/sourcesans_pro_i.otf') format("opentype");         
@@ -355,6 +350,31 @@ ul.dropdown-menu.inner.selectpicker li a{
     font-style: normal;
     font-weight: 200;
 }
+@font-face {
+    font-family: "sourcesans_pro_li";    
+    src: url( '/assets/fonts/sourcesans_pro_li.otf') format("opentype");         
+    font-style: normal;
+    font-weight: 200;
+}
+@font-face {
+    font-family: "sourcesans_pro_eli";    
+    src: url( '/assets/fonts/sourcesans_pro_eli.otf') format("opentype");         
+    font-style: normal;
+    font-weight: 200;
+}
+@font-face {
+    font-family: "sourcesans_pro";    
+    src: url( '/assets/fonts/sourcesans_pro.otf') format("opentype");         
+    font-style: normal;
+    font-weight: 200;
+}
+@font-face {
+    font-family: "sourcesans_pro_sbi";    
+    src: url( '/assets/fonts/sourcesans_pro_sbi.otf') format("opentype");         
+    font-style: normal;
+    font-weight: 200;
+}
+
 
 #side-menu
 {
@@ -558,7 +578,7 @@ box-shadow: 1px 1px 0px 1px rgba(235,235,235,1);
       color:#3c4352;
       a,h2
       {
-        font-family:'pfcentroslabpro';
+        font-family:'prime';
         font-size:14px;
         color:#d95d6a;
         line-height:20px;
@@ -580,39 +600,121 @@ box-shadow: 1px 1px 0px 1px rgba(235,235,235,1);
 #page-wrapper
 {
   background-color: #f6f7f7;
-  &.white
-  {
-    background-color: #fff;
-  }
 }
 
 /* sub-navigation bar */
-#subnav-navbar{
-  background: #f6f7f7 url(/assets/svg/pattern.svg) repeat;
-  background-size:7px 7px;
-  border-bottom: solid 1px #eaeae9;
-  margin: 0px -30px 30px !important;
-  padding: 0px;
-  min-height: 18px;
-  height:18px;
-  .breadcrumbo
+.content{
+  .article
   {
-    line-height:18px;
-    a{
-      line-height:18px;
-      margin-left: 0;
+  
+
+    /* --------------------------- explore_data ----------------------------- */
+    padding:0 30px;
+    &.explore
+    {   
+      padding:0px;
+      .dataset-filters
+      {
+        border-bottom:2px dotted #b5b5b5;
+      }
+      .dataset-list
+      {
+        display:inline-block;
+        width:100%;
+        list-style:none;
+        padding:0 30px;
+        margin:0px;
+        li:after
+        {
+          border-top:1px solid #e8e8e8;
+          border-bottom:1px solid #fff;
+          content:'';
+          display:block;       
+        }
+        h2,a
+        {
+          font-family:'prime','sans-serif';
+          font-size:16px;
+          color:#d95d6a;
+          text-transform:uppercase;
+          margin:10px 0 5px;
+        }
+        .info
+        {
+          max-width:1024px;
+          margin-bottom:7px;
+          > div
+          {
+            display:inline-block;
+            margin-right:10px;
+            vertical-align:top;
+          }
+          .calendar
+          {
+            background:transparent url(/assets/svg/calendar.svg) no-repeat;
+            width:21px;
+            height:22px;
+          }
+          .timestamp
+          {
+            color:#5faac1;
+            font-family: 'sourcesans_pro_li', 'sans-serif';
+            font-size:16px;
+            span
+            {
+              font-family: 'sourcesans_pro_sbi', 'sans-serif';
+            }
+          }
+          .time-series
+          {
+            float:right;
+            position: relative;
+            top: -9px;
+            margin:0px;
+            img
+            {
+              width:36px;
+              height:36px;
+            }
+          }
+
+        }
+        .description
+        {
+          font-family: 'sourcesans_pro_l', 'sans-serif';
+          font-size:16px;
+          color:#3c4352;
+          max-width:1024px;          
+        }
+      }
     }
   }
-  .navbar-nav > li > a{
-    padding-top: 0;
-    padding-bottom: 0;
+
+  #subnav-navbar{
+    background: #f6f7f7 url(/assets/svg/pattern.svg) repeat;
+    background-size:7px 7px;
+    border-bottom: solid 1px #eaeae9;
+    min-height: 18px;
+    height:18px;
+    .breadcrumbo
+    {
+      line-height:18px;
+      a{
+        line-height:18px;
+        margin-left: 0;
+      }
+    }
+    .navbar-nav > li > a{
+      padding-top: 0;
+      padding-bottom: 0;
+    }
   }
 }
 .page-header
 {
   h1
   {
-    font-family:'pfcentroslabpro';
+    font-family:'prime';
     font-size:16px;
     color:#00adee;
     text-transform:uppercase;

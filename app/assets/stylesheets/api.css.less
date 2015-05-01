@@ -24,6 +24,11 @@
     font-family:'sourcesans_pro', 'sans-serif';    
     color:@bright-blue-color;
   }
+  h1
+  {
+    font-size:16px;
+    text-transform:uppercase;
+  }
   h2{
     font-size: 17px;
   }
@@ -37,7 +42,7 @@
     font-family:'sourcesans_pro', 'sans-serif';  
     font-size:14px;  
     color:@dark-grey-text;  
-    margin-bottom: 10px;
+    margin:0px 0px 10px 0px;
   }
   ul.list-unstyled {
     padding-left: 0.5em;
@@ -71,11 +76,9 @@
         &:before {
           content: "\2022";
           color: @bright-blue-color;
-          font-size: 1.5em;
-          line-height: 1em;
-          padding-right: .25em;
-          position: relative;
-          top: .15em;
+          font-size: 1em;
+          line-height: 1.4em;
+          padding-right: 0.5em;
         }
       }
     }    
@@ -85,47 +88,78 @@
   .col-left{
     display:table-cell;
     vertical-align:top;
-    border-right:1px solid #d7e0e7;
+    border-right:1px solid #d6d6d6;
+    background-color:#fff;
+    padding:0px 30px;
   }
   .col-right{
     min-width:300px;
+    max-width:300px;
     display:table-header-group;
     vertical-align:top;
+    .header
+    {
+      width:100%;
+      margin-bottom:10px;
+      border-collapse: separate;
+      border-spacing: 10px 0px;
+      h2
+      {
+        position:relative;
+        top:8px;
+        white-space: nowrap;
+      }
+      h2, .line { display:table-cell; }
+      .line
+      {
+        width:100%;
+        padding:0px 0px 0px 10px;
+        border-bottom:2px dotted #b5b5b5;
+      }
+    }
   }
-.documentation-links{
+.documentation-links{    
     .box
     {
-      background-color: #F6F7F7;      
+           
       padding:20px;
     }
     h2.title
     {
+      font-family:'nokiasans_s60';
+      font-size:14px;
+      color:@bright-blue-color;
       padding: 0px 30px 4px 0px;
       border-bottom: 1px solid #b8c0c6;
       display: inline-block;
       margin:0px 0px 10px 0px;
     }
     h2 a{
-      color: #898989;
-      font-family:oxygen;
-      font-size:17px;
-      text-decoration:underline;
+      font-family:'nokiasans_s60';
+      font-size:14px;
+      color:@bright-blue-color;
     }
     a{
-      color: #898989;
-      font-family:oxygen;
-      font-size:15px;
+      color: #666e7c;
+      font-family:'sourcesans_pro', 'sans-serif';   
+      font-size:14px; 
       text-decoration:none;
+      &:hover
+      {
+        color: @bright-blue-color;
+      }
     }
-     li:before {
-          content: "\2022";
-          color: #f88600;
-          font-size: 1.5em;
-          line-height: 1em;
-          padding-right: .25em;
-          position: relative;
-          top: .15em;
-        }
+    li:before {
+      content: "\2022";
+      color: #666e7c;
+      font-size: 1em;
+      line-height: 1.4em;
+      padding-right: 0.5em;
+    }
+    li:hover:before
+    {
+      color: @bright-blue-color;
+    }
   }
   #api-dates{
     margin-bottom: 10px;
@@ -149,47 +183,47 @@
     border-collapse:collapse;    
     overflow-x: auto;
     th, td {
-      background-color: #fff;
-      padding: 5px;
-      border:1px solid #c1c8ce;
-      color: #5f5f5f;
+      background-color: #f6f7f7;
+      padding: 6px 10px;
+      border:1px solid #c4c4c4;
+      color: #49505e;
       font-family:'dejavusans';
       font-size:14px;
       line-height:22px;
       vertical-align:top;
       &:lang(en)
       {
-         font-family: 'oxygen';
+         font-family:'sourcesans_pro_l', 'sans-serif';
       }        
       a
       {
         text-decoration:underline;
-        color: #5f5f5f;
+        color: #49505e;
         font-family:'dejavusans';
         font-size:14px;
         &:lang(en)
         {
-           font-family: 'oxygen';
+           font-family:'sourcesans_pro_l', 'sans-serif';
         }            
       }
     }
     thead th{
-      color: #5f5f5f;
+      color: #d95d6a;
       font-family:'dejavusans-b';
-      font-size:15px;
+      font-size:14px;
       text-align:left;
       &:lang(en)
       {
-        font-family: 'oxygen-b';
+        font-family:'sourcesans_pro', 'sans-serif';  
       }         
     }
     tbody tr td:first-of-type{
-      color: #5f5f5f;
+      color: #3c4352;
       font-family:'dejavusans-b';
       font-size:14px;
       &:lang(en)
       {
-        font-family: 'oxygen-b';
+        font-family:'sourcesans_pro', 'sans-serif';
       }         
     }
   }
@@ -215,11 +249,11 @@
   }
 }
 @media (min-width: 768px) { 
-  .row {
+  .api {
     .col-left{
       display:table-cell;
       vertical-align:top;
-      border-right:1px solid #d7e0e7;
+      border-right:1px solid #d6d6d6;
     }
     .col-right{
       min-width:300px;
