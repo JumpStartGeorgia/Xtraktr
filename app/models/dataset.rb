@@ -13,6 +13,8 @@ class Dataset < CustomTranslation
   # paperclip data file storage
   has_mongoid_attached_file :datafile, :url => "/system/datasets/:id/original/:filename", :use_timestamp => false
 #  has_mongoid_attached_file :codebook, :url => "/system/datasets/:id/codebook/:filename", :use_timestamp => false
+  #has_and_belongs_to_many :categories, inverse_of: nil
+  has_many :category_mappers
 
   field :title, type: String, localize: true
   field :description, type: String, localize: true
@@ -178,6 +180,9 @@ class Dataset < CustomTranslation
     def not_mappable
       where(:is_mappable => false, :has_code_answers => true)
     end
+
+  end
+  embeds_many :categories do
 
   end
   accepts_nested_attributes_for :questions
@@ -1598,4 +1603,7 @@ class Dataset < CustomTranslation
     return msg, counts
   end
 
+  def categories
+    Category.in(id: self.category_mappers.map {|x| x.category_id } ).to_a
+  end
 end

@@ -378,7 +378,7 @@ en:
       download_data: Download Data
       back_dashboard: Back to Dashboard
       api_home: API Home
-
+      agreement: Agreement
     titles:
       edit: "Edit %{model}"
       save: "Save %{model}"

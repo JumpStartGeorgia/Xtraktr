@@ -3,7 +3,7 @@
 <% title t('helpers.links.sign_up_title', :app_name => t('app.common.app_name')) %> 
 
 <div id="signup-form">
-  <div class="title"><%= t('helpers.links.sign_up2') %></div>
+  <div class="red-box"><%= t('helpers.links.sign_up2') %></div>
   <% if @enable_omniauth %>
     <div class="providers">
       <%- if devise_mapping.omniauthable? %>    

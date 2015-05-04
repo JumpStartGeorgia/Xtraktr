@@ -7,7 +7,17 @@
     <div class="dataset-filters">
       <div class="search">search</div>
       <div class="sort">sort</div>
-      <div class="category-picker">category</div>
+      <div class="category-picker">
+        <div class="selector"><div class="img"></div><span>Choose Category</span></div>
+        <ul>
+        <% Category.each {|x| %>
+          <li class="<%= x.permalink %> bright">
+            <span><%= x.name %></span>
+            <div class="img"></div>
+          </li>
+        <% } %>
+        </ul>
+      </div>
     </div>
     <ul class="dataset-list">
       <% @datasets.each do |dataset| %>

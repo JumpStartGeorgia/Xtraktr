@@ -45,7 +45,9 @@ class TimeSeries < CustomTranslation
       map{|x| x.dataset_questions}.flatten.select{|x| x.dataset_id == dataset_id}.map{|x| x.code}
     end    
   end
-
+  embeds_many :categories do
+    
+  end
   #############################
 
   accepts_nested_attributes_for :datasets, reject_if: :all_blank
