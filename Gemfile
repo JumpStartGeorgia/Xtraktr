@@ -37,6 +37,7 @@ gem 'roo', '~> 1.13.2' # read in spreadsheet format
 gem "unidecoder", "~> 1.1.2" #convert utf8 to ascii for permalinks
 gem 'active_model_serializers', '~> 0.9.3' # easily create json serialized model data
 gem 'mongoid_search', :git => 'https://github.com/mauriciozaffari/mongoid_search.git', :branch => "master" # search mongo collections
+gem 'whenever' # schedule cron jobs
 
 # Gems used only for assets and not required
 # in production environments by default.

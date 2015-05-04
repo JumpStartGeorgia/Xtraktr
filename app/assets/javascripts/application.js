@@ -42,31 +42,65 @@ $(document).ready(function(){
   });
   $('.download').click(function(){
     var t = $(this);
-    var link = t.attr('data-link');
-    if(link !== undefined)
-    {
-      window.location.href = link;
-      return;
-    }
     $.ajax({
-      url: "/" + document.documentElement.lang + "/download",
+      url: "/" + document.documentElement.lang + "/download_request",
       data: { id: t.attr('data-id') },
-      success: function(d)
+      
+    }).done(function(d)
+    {
+      if(d.agreement)
       {
-        if(d.agreement)
-        {
-          window.location.href = d.url;
-        }
-        else
-        {
-          $('body').append("<div class='js_modal'>"+d.form+"</div><div class='js_modal_bg'></div>");
-        }
+        window.location.href = d.url;
+      }
+      else
+      {
+        modal(d.form);
       }
     });
   });
+  js_modal =  $('#js_modal');
+  js_modal.find('.bg').click(function(){
+    js_modal_off();
+  });
+  
+
+  $(document).on('change', '#interview_status_input input[type=radio]', function()
+    {
+      if(this.value == 8)
+      {
+        $('#interview_status_other_input').show();
+      }
+      else
+      {
+        var other = $('#interview_status_other_input').hide();
+        other.find('input').val('');
+      }
+    });
 
 });
+var js_modal;
+function modal(html)
+{
+  var w = $(document).width();
+  var max_width = w > 768 ? 768 : w;
+  js_modal.find('.popup').html(html).css('max-width',max_width);
+  js_modal_on();
 
+}
+function js_modal_on() 
+{
+  $(document).on('keyup.js_modal',function(e) {
+    if (e.keyCode == 27) {  // escape key maps to keycode `27`
+      js_modal_off();
+    }  
+  });
+  js_modal.fadeIn(500);
+}
+function js_modal_off() 
+{
+  js_modal.fadeOut(500);
+  $(document).off('keyup.js_modal');
+}
 ////////////////////////////////////////////////
 // convert the querystring variables into json
 function queryStringToJSON(url) {

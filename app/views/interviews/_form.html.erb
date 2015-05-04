@@ -20,8 +20,8 @@
                <%= f.input :affiliation, :as => :string, hint: 'Affiliation', :input_html => {} %>
             </div>      
          </div> 
-         <%= f.input :status, :as => :radio, :collection => Hash[Interview::STATUS.map{|k,v| [v,k] }] %>
-         <%= f.input :status_other, :input_html => { style: 'display:none;' }%>
+         <%= f.input :status, :as => :radio, :collection => Hash[Interview::STATUS.map{|k,v| [t('app.interview.status_' + v),k] }] %>
+         <%= f.input :status_other %>
          <%= f.input :description, :as => :text, :input_html => { :class => 'autogrow', :rows => 5, :cols => 80, :maxlength => 10  } %>
          <div class="boolean input optional checkbox form-group" id="interview_terms_input">
             <input name="interview[terms]" type="hidden" value="0">
@@ -39,12 +39,3 @@
 
    <% end %>   
 </div>
-
-
-<script>
-// $(document).ready(function(){
-//    $('input[name=status]').click(function(){
-//        console.log('sdf');
-//    });
-// });
-</script>

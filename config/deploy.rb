@@ -4,10 +4,12 @@
 
 set :stages, %w(production staging unicef_staging)
 set :default_stage, "unicef_staging" # if just run 'cap deploy' the staging environment will be used
+set :whenever_command, "bundle exec whenever" # must use bundle exec
+set :whenever_environment, defer { stage } # get it to work with stages
 
 require 'capistrano/ext/multistage' # so we can deploy to staging and production servers
 require "bundler/capistrano" # Load Bundler's capistrano plugin.
-
+require "whenever/capistrano" # whenever gem to update crontab
 # these vars are set in deploy/env.rb
 #set :user, "placeholder"
 #set :application, "placeholder"
