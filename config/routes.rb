@@ -5,10 +5,11 @@ BootstrapStarter::Application.routes.draw do
 	#--------------------------------
 	scope ":locale", locale: /#{I18n.available_locales.join("|")}/ do
 
-		match '/admin', :to => 'admin#index', :as => :admin, :via => :get
 		devise_for :users, :path_names => {:sign_in => 'login', :sign_out => 'logout'},
 											 :controllers => {:omniauth_callbacks => "omniauth_callbacks"}
 
+    match '/admin', :to => 'admin#index', :as => :admin, :via => :get
+    match '/admin/download_api_requests', :to => 'admin#download_api_requests', :as => :admin_download_api_requests, :via => :get, :defaults => { :format => 'csv' }
     namespace :admin do
       resources :shapesets
       resources :page_contents

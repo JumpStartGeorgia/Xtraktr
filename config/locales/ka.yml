@@ -127,6 +127,28 @@ ka:
         public_at: Released At
         updated_at: Last Updated At
         sort_order: Sort Order
+      api_request:
+        api_key_id: API Key ID
+        user_id: User ID
+        dataset_id: Dataset ID
+        time_series_id: Time Series ID
+        ip_address: IP Address
+        locale: API Locale
+        api_version: API Version
+        action: API Action
+        question_code: Question Code
+        broken_down_by_code: Broken Down By Code
+        filtered_by_code: Filtered By Code
+        can_exclude: Can Exclude
+        with_title: With Title
+        with_chart_data: With Chart Data
+        with_map_data: With Map Data
+        browser: Browser
+        version: Browser Version
+        os: OS
+        platform: OS Platform
+        app: App
+        is_mobile: Is Mobile Device?
     hints:
       dataset:
         title: The title of your dataset
@@ -486,6 +508,7 @@ ka:
       datasets: Datasets
       shapesets: Shapesets
       api_documentation: API Version Documentation
+      download_api_requests: Download API Request History
     users:
       edit:
         title: ცვლილებების შეტანა მომხმარებლის გვერდზე

@@ -21,8 +21,9 @@ class ApiRequest
   field :broken_down_by_code, :type => String
   field :filtered_by_code, :type => String
   field :can_exclude, :type => Boolean
-  field :chart_formatted_data, :type => Boolean
-  field :map_formatted_data, :type => Boolean
+  field :with_title, :type => Boolean
+  field :with_chart_data, :type => Boolean
+  field :with_map_data, :type => Boolean
 
   # user agent info
   field :browser, :type => String
@@ -40,8 +41,15 @@ class ApiRequest
   index({ :user_id => 1}, { background: true})
   index({ :dataset_id => 1}, { background: true})
   index({ :time_series_id => 1}, { background: true})
+  index({ :created_at => 1}, { background: true})
 
   ####################
+
+
+  def self.sorted
+    order_by([[:created_at, :asc]])
+  end
+
 
 
   # record the api request
@@ -57,7 +65,6 @@ class ApiRequest
     # record the ip
     record.ip_address = ip if ip.present?
 
-
     # record the request being made
     if params.present?
       record.locale = params['locale'] if params['locale'].present?
@@ -69,8 +76,9 @@ class ApiRequest
       record.broken_down_by_code = params['broken_down_by_code'] if params['broken_down_by_code'].present?
       record.filtered_by_code = params['filtered_by_code'] if params['filtered_by_code'].present?
       record.can_exclude = params['can_exclude'].to_bool if params['can_exclude'].present?
-      record.chart_formatted_data = params['chart_formatted_data'].to_bool if params['chart_formatted_data'].present?
-      record.map_formatted_data = params['map_formatted_data'].to_bool if params['map_formatted_data'].present?
+      record.with_title = params['with_title'].to_bool if params['with_title'].present?
+      record.with_chart_data = params['with_chart_data'].to_bool if params['with_chart_data'].present?
+      record.with_map_data = params['with_map_data'].to_bool if params['with_map_data'].present?
     end
 
     # record the user agent info
@@ -88,4 +96,35 @@ class ApiRequest
     return record
   end
 
+
+  # generate a csv object for all records on file
+  def self.generate_csv
+    return CSV.generate do |csv_row|
+      # add header
+      csv_row << csv_header
+
+      sorted.each do |record|
+        # add row
+        csv_row << record.csv_data
+      end
+    end
+  end
+
+
+  def self.csv_header
+    model = ApiRequest
+    return [  
+      model.human_attribute_name("self.api_key_id"), model.human_attribute_name("user_id"), model.human_attribute_name("dataset_id"), model.human_attribute_name("time_series_id"), model.human_attribute_name("ip_address"), 
+      model.human_attribute_name("self.locale"), model.human_attribute_name("api_version"), model.human_attribute_name("action"), model.human_attribute_name("question_code"), model.human_attribute_name("broken_down_by_code"), model.human_attribute_name("filtered_by_code"), model.human_attribute_name("can_exclude"), model.human_attribute_name("with_title"), model.human_attribute_name("with_chart_data"), model.human_attribute_name("with_map_data"), 
+      model.human_attribute_name("self.browser"), model.human_attribute_name("version"), model.human_attribute_name("os"), model.human_attribute_name("platform"), model.human_attribute_name("app"), model.human_attribute_name("is_mobile")
+    ]
+  end
+
+  def csv_data
+    return [  
+      self.api_key_id, self.user_id, self.dataset_id, self.time_series_id, self.ip_address, 
+      self.locale, self.api_version, self.action, self.question_code, self.broken_down_by_code, self.filtered_by_code, self.can_exclude, self.with_title, self.with_chart_data, self.with_map_data, 
+      self.browser, self.version, self.os, self.platform, self.app, self.is_mobile
+    ]
+  end
 end

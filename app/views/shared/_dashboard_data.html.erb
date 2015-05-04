@@ -50,19 +50,6 @@
       <% if @dataset.datafile.exists? %>
         <li>
           <div class="btn btn-default btn-sm download" data-id="<%= @dataset.id.to_s %>"><%= t('helpers.links.download_data') %></div>
-          <%= link_to @dataset.datafile.url, class: 'btn btn-default btn-sm', target: :blank do %>
-            <%
-              text = t('helpers.links.download_data')
-              text << " "
-              if @dataset.file_type.present?
-                text << @dataset.file_type
-                text << " -"
-              end
-              text << " "
-              text << number_to_human_size(@dataset.datafile_file_size)
-            %>
-            <%= text %>
-          <% end %>
         </li>
       <% end %>
     </ul>
