@@ -1,5 +1,5 @@
 <div class="agreement" id="agreement">
-   <div class="title">Registration</div>
+   <div class="red-box"><%= t('helpers.links.agreement') %></div>
    <%= semantic_form_for(@mod, html: {class: 'tabbed-translation-form'}, :remote => true) do |f| %>
        <%= f.inputs do %>  
          <%= render :partial => 'shared/agreement', :locals => { f: f } %>

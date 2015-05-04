@@ -96,6 +96,11 @@ $(document).ready(function(){
       }
     });
 
+  $('.category-picker .selector').click(function(){
+    var t = $(this);
+    t.parent().find('ul').toggle();
+  });  
+
 });
 var js_modal;
 function modal(html)
