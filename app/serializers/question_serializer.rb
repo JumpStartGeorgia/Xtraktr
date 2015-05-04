@@ -1,5 +1,5 @@
 class QuestionSerializer < ActiveModel::Serializer
-  attributes :code, :original_code, :text, :is_mappable
+  attributes :code, :original_code, :text, :notes, :is_mappable
 
   has_many :answers
 

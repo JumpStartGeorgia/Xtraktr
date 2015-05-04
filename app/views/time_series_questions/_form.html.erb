@@ -93,6 +93,17 @@
             <%= translation.input locale, hint: hint, label: label.html_safe %>
           <% end %>
 
+          <%= f.fields_for :notes_translations, OpenStruct.new(f.object.notes_translations) do |translation| %>
+            <% 
+              label = t(label_key + 'notes')
+              hint = t(hint_key + 'notes')
+              if index > 0
+                label << show_default_text(@time_series_question.notes_translations[default_locale])
+              end
+            %>
+            <%= translation.input locale, hint: hint, label: label.html_safe, required: false %>
+          <% end %>
+
           <h3><%= t('.header_answers') %></h3>
           <p><%= t('.explanation_answers', lang: default_lang) %></p>
 

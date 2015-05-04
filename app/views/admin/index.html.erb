@@ -1,6 +1,6 @@
 <% title t('.title') %>
 
-  <% if current_user.role? User::ROLES[:admin] %>
+  <% if current_user.role? @site_admin_role %>
      <div class="col-sm-4">
    		<ul class="standard">
    			<li>
@@ -12,9 +12,11 @@
         <li>
          <%= link_to t('.shapesets'), admin_shapesets_path %>
         </li>
-        <li>
-         <%= link_to t('.users'), admin_users_path %>
-        </li>
+        <% if current_user.role? User::ROLES[:admin] %>
+          <li>
+           <%= link_to t('.users'), admin_users_path %>
+          </li>
+        <% end %>
    		</ul>
     </div>
   <% end %>

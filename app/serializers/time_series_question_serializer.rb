@@ -1,5 +1,5 @@
 class TimeSeriesQuestionSerializer < ActiveModel::Serializer
-  attributes :code, :original_code, :text
+  attributes :code, :original_code, :text, :notes
 
   has_many :answers
 

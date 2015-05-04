@@ -89,6 +89,16 @@ Language.collection.insert(langs)
 =end
 
 #####################
+## Build search index
+#####################
+puts 'Building search index'
+if Dataset.first._keywords.nil? || TimeSeries.first._keywords.nil?
+  puts "- starting index"  
+  Rake::Task['mongoid_search:index'].invoke
+  puts "- finished index"  
+end
+
+#####################
 ## Create app user and api key
 #####################
 puts 'Creating app user and api key'

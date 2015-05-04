@@ -37,7 +37,29 @@ class RootController < ApplicationController
 
 
   def explore_data
-    @datasets = Dataset.is_public.sorted
+    @datasets = Dataset.is_public
+
+    # add search
+    if params[:q].present?
+      @datasets = @datasets.search(params[:q])
+    end
+    # add sort
+    if params[:sort].present?
+      case params[:sort].downcase
+        when 'public'
+          @datasets = @datasets.sorted_public_at
+        when 'released'
+          @datasets = @datasets.sorted_released_at
+        when 'title'
+          @datasets = @datasets.sorted_title
+      end
+    else
+      @datasets = @datasets.sorted_title
+    end
+    # add category
+    if params[:category].present?
+
+    end
 
     respond_to do |format|
       format.html # index.html.erb
@@ -76,8 +98,31 @@ class RootController < ApplicationController
     end
   end
   
+
+
   def explore_time_series
-    @time_series = TimeSeries.is_public.sorted
+    @time_series = TimeSeries.is_public
+
+    # add search
+    if params[:q].present?
+      @time_series = @time_series.search(params[:q])
+    end
+    # add sort
+    if params[:sort].present?
+      case params[:sort].downcase
+        when 'public'
+          @time_series = @time_series.sorted_public_at
+        when 'title'
+          @time_series = @time_series.sorted_title
+      end
+    else
+      @time_series = @time_series.sorted_title
+    end
+    # add category
+    if params[:category].present?
+
+    end
+
 
     respond_to do |format|
       format.html # index.html.erb

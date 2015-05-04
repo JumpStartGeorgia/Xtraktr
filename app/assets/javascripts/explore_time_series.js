@@ -324,12 +324,18 @@ function build_datatable(json){
 // build details (question and possible answers)
 function build_details(json){
   // clear out existing content and hide
-  $('#tab-details .details-item .name-variable, #tab-details .details-item .list-answers').empty();
+  $('#tab-details .details-item .name-variable, #tab-details .details-item .notes, #tab-details .details-item .list-answers').empty();
   $('#tab-details .details-item').hide();
 
   // add questions
   if (json.question && json.question.text && json.question.answers){
     $('#tab-details #details-question-code .name-variable').html(json.question.text);    
+    if (json.question.notes){
+      $('#tab-details #details-question-code .notes').html(json.question.notes);    
+      $('#tab-details #details-question-code .details-notes').show();
+    }else{
+      $('#tab-details #details-question-code .details-notes').hide();
+    }
     for(var i=0;i<json.question.answers.length;i++){
       $('#tab-details #details-question-code .list-answers').append('<li>' + json.question.answers[i].text + '</li>');
     }
@@ -339,6 +345,12 @@ function build_details(json){
   // add filters
   if (json.filtered_by && json.filtered_by.text && json.filtered_by.answers){
     $('#tab-details #details-filtered-by-code .name-variable').html(json.filtered_by.text);    
+    if (json.filtered_by.notes){
+      $('#tab-details #details-filtered-by-code .notes').html(json.filtered_by.notes);    
+      $('#tab-details #details-filtered-by-code .details-notes').show();
+    }else{
+      $('#tab-details #details-filtered-by-code .details-notes').hide();
+    }
     for(var i=0;i<json.filtered_by.answers.length;i++){
       $('#tab-details #details-filtered-by-code .list-answers').append('<li>' + json.filtered_by.answers[i].text + '</li>');
     }

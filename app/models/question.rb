@@ -12,6 +12,7 @@ class Question < CustomTranslation
   field :code, type: String
   field :original_code, type: String
   field :text, type: String, localize: true
+  field :notes, type: String, localize: true
   # whether or not the questions has answers
   field :has_code_answers, type: Boolean, default: false
   # whether or not the question should not be included in the analysis
@@ -62,7 +63,8 @@ class Question < CustomTranslation
   # index ({ :is_mappable => 1})
 
   #############################
-  attr_accessible :code, :text, :original_code, :has_code_answers, :is_mappable, :answers_attributes, :exclude, :text_translations
+  attr_accessible :code, :text, :original_code, :has_code_answers, :is_mappable, 
+      :answers_attributes, :exclude, :text_translations, :notes, :notes_translations
 
   #############################
   # Validations
@@ -93,6 +95,10 @@ class Question < CustomTranslation
     x = get_translation(self.text_translations, self.dataset.current_locale, self.dataset.default_language)
     return x.present? ? x : self.original_code
   end
+  def notes
+    get_translation(self.notes_translations, self.dataset.current_locale, self.dataset.default_language)
+  end
+
 
   #############################
 

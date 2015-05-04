@@ -149,6 +149,16 @@
                   <%= question.text %>
                 </div>
               </div>
+              <% if question.notes.present? %>
+                <div class="row notes-row">
+                  <div class="col-sm-1 headers">
+                    <%= t('app.common.notes') %>:                  
+                  </div>
+                  <div class="col-sm-11">
+                    <%= question.notes %>
+                  </div>
+                </div>
+              <% end %>
               <div class="row answer-row">
                 <div class="col-sm-1 headers">
                   <%= t('app.common.answers') %>:                  

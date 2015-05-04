@@ -63,6 +63,10 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     # indicate that whether login should allow local and omniauth or just locale
 	  @enable_omniauth = @is_xtraktr
 
+    # indicate which role has access to edit datasets/time series
+    @data_editor_role = @is_xtraktr ? User::ROLES[:user] : User::ROLES[:data_editor]
+    @site_admin_role = @is_xtraktr ? User::ROLES[:admin] : User::ROLES[:site_admin]
+
     # for loading extra css/js files    
     @css = []
     @js = []

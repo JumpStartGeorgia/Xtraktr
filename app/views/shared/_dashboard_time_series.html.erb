@@ -69,7 +69,7 @@
           <li class="row">
             <div class="col-sm-4 question">
               <h3>
-                <%= link_to url_time_series_explore(@time_series, row: question.code) do %>
+                <%= link_to url_time_series_explore(@time_series, question_code: question.code) do %>
                   <%= question.original_code %>:
                   <br />
                   <%= question.text %>
@@ -85,6 +85,16 @@
                   <%= question.text %>
                 </div>
               </div>
+              <% if question.notes.present? %>
+                <div class="row notes-row">
+                  <div class="col-sm-1 headers">
+                    <%= t('app.common.notes') %>:                  
+                  </div>
+                  <div class="col-sm-11">
+                    <%= question.notes %>
+                  </div>
+                </div>
+              <% end %>
               <div class="row answer-row">
                 <div class="col-sm-1 headers">
                   <%= t('app.common.answers') %>:                  

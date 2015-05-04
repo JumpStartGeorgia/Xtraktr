@@ -1,6 +1,7 @@
 class TimeSeries < CustomTranslation
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Search
 
   #############################
 
@@ -69,6 +70,10 @@ class TimeSeries < CustomTranslation
   index ({ :'questions.text' => 1})
   index ({ :'questions.answers.can_exclude' => 1})
   index ({ :'questions.answers.sort_order' => 1})
+
+  #############################
+  # Full text search
+  search_in :title, :description, :questions => [:original_code, :text, :notes, :answers => [:text]]
 
   #############################
   # Validations
@@ -158,12 +163,24 @@ class TimeSeries < CustomTranslation
     only(:id, :title)
   end
 
-  def self.sorted
+  def self.search(q)
+    full_text_search(q)
+  end
+
+  def self.sorted_title
     order_by([[:title, :asc]])
   end
 
+  def self.sorted
+    sorted_title
+  end
+
+  def self.sorted_public_at
+    order_by([[:public_at, :desc], [:title, :asc]])
+  end
+
   def self.recent
-    order_by([[:public_at, :desc]])
+    sorted_public_at
   end
 
   def self.is_public
@@ -334,6 +351,7 @@ class TimeSeries < CustomTranslation
 
     # create record for each match
     matches.each do |code|
+      puts "- adding question with code #{code}"
       # create question
       q = self.questions.build
       dataset_ids.each do |dataset_id|
@@ -344,6 +362,7 @@ class TimeSeries < CustomTranslation
             q.code = question.code
             q.original_code = question.original_code
             q.text_translations = question.text_translations
+            q.notes_translations = question.notes_translations
           end
 
           q.dataset_questions.build(code: question.code, text_translations: question.text_translations, dataset_id: dataset_id)

@@ -27,14 +27,14 @@
               <div class="col-sm-9">
                 <% if @is_dataset_admin && @dataset.present? && @dataset.created_at.present? %>
                   <%= link_to @dataset.title, url_dataset_dashboard(@dataset) %>
-                <% elsif @dataset.present? && (request.path == explore_data_dashboard_path(@dataset) || request.path == dataset_path(@dataset)) %>
+                <% elsif @dataset.present?  && @dataset.created_at.present? && (request.path == explore_data_dashboard_path(@dataset) || request.path == dataset_path(@dataset)) %>
                   <%= t('app.common.dataset_dashboard') %>
                 <% elsif @dataset.present? && @dataset.created_at.present? %>
                   <%= link_to t('helpers.links.back_dashboard'), url_dataset_dashboard(@dataset) %>
 
                 <% elsif @is_time_series_admin && @time_series.present? && @time_series.created_at.present? %>
                   <%= link_to @time_series.title, url_time_series_dashboard(@time_series) %>
-                <% elsif @time_series.present? && (request.path == explore_time_series_dashboard_path(@time_series) || request.path == time_series_path(@time_series)) %>
+                <% elsif @time_series.present? && @time_series.class == TimeSeries && @time_series.created_at.present? && (request.path == explore_time_series_dashboard_path(@time_series) || request.path == time_series_path(@time_series)) %>
                   <%= t('app.common.time_series_dashboard') %>
                 <% elsif @is_time_series_admin && @time_series.present? && @time_series.created_at.present? %>
                   <%= link_to t('helpers.links.back_dashboard'), url_time_series_dashboard(@time_series) %>

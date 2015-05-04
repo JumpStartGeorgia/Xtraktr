@@ -8,7 +8,7 @@ class TimeSeriesDatasetAnswer
 
   #############################
 
-  field :dataset_id, type: String
+#  field :dataset_id, type: String
   field :value, type: String
   field :text, type: String, localize: true
 

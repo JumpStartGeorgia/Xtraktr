@@ -51,6 +51,7 @@ ka:
         code: Question Code
         original_code: Question Code
         text: Question
+        notes: Notes
         exclude: Exclude Question from Analysis
         exclude_download_header: Exclude Question from Analysis (leave blank to show question)
         no_questions: There are no questions on file for this dataset.
@@ -91,9 +92,11 @@ ka:
         code: Question Code
         original_code: Question Code
         text: Question
+        notes: Notes
       time_series_dataset_question:
         code: Question Code
         text: Question
+        notes: Notes
         dataset: Dataset
       time_series_answer:
         value: Value
@@ -149,6 +152,7 @@ ka:
         default_language: The shapeset language that is used by default if no specific language is requested
       question:
         text: The text of the question
+        notes: Any special notes about the question
         exclude: "If selected, this question will not be available during analysis."
         is_mappable: "If the question is mappable in nature, you can match the question to a shapeset and be able to analyize the question on a map."
       answer:
@@ -180,8 +184,10 @@ ka:
       time_series_question:
         code: The code of the question as you want it to appear in the time series
         text: The text of the question as you want it to appear in the time series
+        notes: Any special notes about the question
       time_series_dataset_question:
         text: 'Only questions from the dataset that are not already assigned to this time series will be shown. When you select a new question, the list of answers for this dataset below will automatically change.'
+        notes: Any special notes about the question
       time_series_answer:
         value: The value of the answer
         text: The text of the answer
@@ -394,6 +400,7 @@ ka:
       question: Question
       questions: Questions
       answers: Answers
+      notes: Notes
       count: Count
       percent: Percent
       dataset_dashboard: Dataset Dashboard

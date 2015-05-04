@@ -10,6 +10,7 @@ class TimeSeriesQuestion < CustomTranslation
   field :code, type: String
   field :original_code, type: String
   field :text, type: String, localize: true
+  field :notes, type: String, localize: true
 
   embeds_many :dataset_questions, class_name: 'TimeSeriesDatasetQuestion' do
     # get the record for a dataset
@@ -40,11 +41,23 @@ class TimeSeriesQuestion < CustomTranslation
   accepts_nested_attributes_for :dataset_questions
   accepts_nested_attributes_for :answers
 
-  attr_accessible :code, :text, :original_code, 
+  attr_accessible :code, :text, :original_code, :notes, :notes_translations,
                   :answers_attributes, :text_translations, :dataset_questions_attributes
 
   #############################
   # Validations
   validates_presence_of :code, :original_code
+
+  #############################
+  ## override get methods for fields that are localized
+  def text
+    # if the title is not present, show the code
+    x = get_translation(self.text_translations, self.time_series.current_locale, self.time_series.default_language)
+    return x.present? ? x : self.original_code
+  end
+  def notes
+    get_translation(self.notes_translations, self.time_series.current_locale, self.time_series.default_language)
+  end
+
 
 end

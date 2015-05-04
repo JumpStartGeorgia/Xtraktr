@@ -27,4 +27,10 @@ class TimeSeriesAnswer < CustomTranslation
   attr_accessible :value, :text, :sort_order, :text_translations, :dataset_answers_attributes, :can_exclude
 
 
+  #############################
+  ## override get methods for fields that are localized
+  def text
+    get_translation(self.text_translations, self.time_series_question.time_series.current_locale, self.time_series_question.time_series.default_language)
+  end
+
 end

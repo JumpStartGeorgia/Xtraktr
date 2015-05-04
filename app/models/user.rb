@@ -9,6 +9,10 @@ class User
 
   #############################
 
+  ROLES = {:user => 0, :data_editor => 33, :site_admin => 75, :admin => 99}
+
+  #############################
+
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -83,8 +87,6 @@ class User
   end
 
   #############################
-
-  ROLES = {:user => 0, :content_editor => 33, :admin => 99}
 
 
   def self.no_admins

@@ -3,6 +3,7 @@ class Dataset < CustomTranslation
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::Paperclip
+  include Mongoid::Search
   include ProcessDataFile # script in lib folder that will convert datafile to csv and then load into appropriate fields
 
   #############################
@@ -42,6 +43,7 @@ class Dataset < CustomTranslation
   field :private_share_key, type: String
   field :languages, type: Array
   field :default_language, type: String
+
 
   embeds_many :questions do
     # these are functions that will query the questions documents
@@ -269,6 +271,10 @@ class Dataset < CustomTranslation
 
 
   #############################
+  # Full text search
+  search_in :title, :description, :methodology, :source, :questions => [:original_code, :text, :notes, :answers => [:text]]
+
+  #############################
   # Validations
   validates_presence_of :default_language
   # validates_attachment :codebook, 
@@ -484,16 +490,32 @@ class Dataset < CustomTranslation
   #############################
   # Scopes
 
-  def self.sorted
+  def self.search(q)
+    full_text_search(q)
+  end
+
+  def self.sorted_title
     order_by([[:title, :asc]])
+  end
+
+  def self.sorted
+    sorted_title
+  end
+
+  def self.sorted_public_at
+    order_by([[:public_at, :desc], [:title, :asc]])
+  end
+
+  def self.recent
+    sorted_public_at
+  end
+
+  def self.sorted_released_at
+    order_by([[:released_at, :desc], [:title, :asc]])
   end
 
   def self.is_public
     where(public: true)
-  end
-
-  def self.recent
-    order_by([[:public_at, :desc]])
   end
 
   def self.by_private_key(key)

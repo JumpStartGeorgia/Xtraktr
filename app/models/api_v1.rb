@@ -268,7 +268,7 @@ private
   def self.create_dataset_question_hash(question, can_exclude=false)
     hash = {}
     if question.present?
-      hash = {code: question.code, original_code: question.original_code, text: question.text, is_mappable: question.is_mappable}
+      hash = {code: question.code, original_code: question.original_code, text: question.text, notes: question.notes, is_mappable: question.is_mappable}
       hash[:answers] = (can_exclude == true ? question.answers.must_include_for_analysis : question.answers.all_for_analysis).map{|x| {value: x.value, text: x.text, can_exclude: x.can_exclude, sort_order: x.sort_order}}
     end
 
@@ -906,7 +906,7 @@ private
   def self.create_time_series_question_hash(question, can_exclude=false)
     hash = {}
     if question.present?
-      hash = {code: question.code, original_code: question.original_code, text: question.text}
+      hash = {code: question.code, original_code: question.original_code, text: question.text, notes: question.notes}
       hash[:answers] = (can_exclude == true ? question.answers.must_include_for_analysis : question.answers.sorted).map{|x| {value: x.value, text: x.text, can_exclude: x.can_exclude, sort_order: x.sort_order}}
     end
 

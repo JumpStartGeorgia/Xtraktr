@@ -82,6 +82,9 @@
           <p><strong><%= t(tsq_label_key + 'text') %>:</strong>
           <%= @time_series_question.text %></p>
 
+          <p><strong><%= t(tsq_label_key + 'notes') %>:</strong>
+          <%= @time_series_question.notes %></p>
+
           <h3><%= t('.header_answers') %></h3>
           <% if @time_series_question.answers.present? %>
             <table id='dataset-answers' class="table table-striped table-hover table-nonfluid">

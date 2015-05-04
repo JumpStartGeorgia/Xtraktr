@@ -1,7 +1,7 @@
 class DatasetsController < ApplicationController
   before_filter :authenticate_user!
   before_filter do |controller_instance|
-    controller_instance.send(:valid_role?, User::ROLES[:user])
+    controller_instance.send(:valid_role?, @data_editor_role)
   end
   before_filter :set_subnavbar
 
@@ -12,7 +12,7 @@ class DatasetsController < ApplicationController
   # GET /datasets
   # GET /datasets.json
   def index
-    @datasets = Dataset.by_user(current_user.id).sorted
+    @datasets = Dataset.by_user(current_user.id).sorted_title
 
     @css.push("datasets.css")
     @js.push("search.js")

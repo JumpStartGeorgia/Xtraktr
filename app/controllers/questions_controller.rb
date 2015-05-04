@@ -1,7 +1,7 @@
 class QuestionsController < ApplicationController
   before_filter :authenticate_user!
   before_filter do |controller_instance|
-    controller_instance.send(:valid_role?, User::ROLES[:user])
+    controller_instance.send(:valid_role?, @data_editor_role)
   end
   before_filter :set_subnavbar
 
