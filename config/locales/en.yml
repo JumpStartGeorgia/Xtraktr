@@ -410,6 +410,8 @@ en:
       confirm: Are you sure?
       new: New
       save_settings: Save Settings
+      choose_category: Choose Category
+      change_category: Change Category
     common:
       app_name: UNICEF Georgia Data Portal #X-Traktr
       app_description: ''
