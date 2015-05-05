@@ -1,57 +1,57 @@
  <%- model_class = Dataset -%>
-
-<div class="article explore">
   <% #title t('.title') %>
 
+<div class="article explore">
   <% if @datasets.present? %>
     <div class="dataset-filters">
-      <div class="search">search</div>
-      <div class="sort">sort</div>
-      <div class="category-picker">
-        <div class="selector"><div class="img"></div><span>Choose Category</span></div>
+      <div class="search" data-filter='search'>search</div>
+      <div class="sort"  data-filter='sort'>sort</div>
+      <div class="category"  data-filter='category'>
+        <div class="selector"><div class="img none" data-selected="none" title="<%= t('app.buttons.choose_category') %>"></div><span data-text-none="<%= t('app.buttons.choose_category') %>" data-text-selected="<%= t('app.buttons.change_category') %>"><%= t('app.buttons.choose_category') %></span></div>
         <ul>
-        <% Category.each {|x| %>
-          <li class="<%= x.permalink %> bright">
-            <span><%= x.name %></span>
-            <div class="img"></div>
-          </li>
-        <% } %>
+          <% Category.each {|x| %>
+            <li class="bright" data-filter-value="<%= x.permalink %>">
+              <div class="text"><span><%= x.name %></span></div>
+              <div class="img <%= x.permalink %>" title="<%= x.name %>"></div>
+            </li>
+          <% } %>
         </ul>
       </div>
     </div>
-    <ul class="dataset-list">
-      <% @datasets.each do |dataset| %>
-        <li>
-          <h2><%= link_to dataset.title, explore_data_dashboard_path(dataset) %></h2>
-          <div class="info">
-            <div class="calendar"></div>
-            <div class="timestamp">
-              <span><%= model_class.human_attribute_name(:gathered_at) %>:</span>
-              <%= format_gathered_dates(dataset.start_gathered_at, dataset.end_gathered_at) %>
+    <div class="dataset-list">
+      <ul>
+        <% @datasets.each do |dataset| %>
+          <li>
+            <h2><%= link_to dataset.title, explore_data_dashboard_path(dataset) %></h2>
+            <div class="info">
+              <div class="calendar"></div>
+              <div class="timestamp">
+                <span><%= model_class.human_attribute_name(:gathered_at) %>:</span>
+                <%= format_gathered_dates(dataset.start_gathered_at, dataset.end_gathered_at) %>
+              </div>
+              <div class="timestamp">
+                <span><%= model_class.human_attribute_name(:released_at) %>::</span>
+                <%= I18n.l(dataset.released_at, format: :day_first) if dataset.released_at.present? %>
+              </div>
+              <% if dataset.time_series_datasets.present? %>
+                <div class="time-series">
+                  <%= link_to  image_tag("svg/timeseries.svg", alt: t('app.menu.titles.dataset_to_time_series')), explore_time_series_dashboard_path(dataset.time_series_datasets.first.time_series_id), title: t('app.menu.titles.dataset_to_time_series')  %>                  
+                </div>
+              <% end %>
             </div>
-            <div class="timestamp">
-              <span><%= model_class.human_attribute_name(:released_at) %>::</span>
-              <%= I18n.l(dataset.released_at, format: :day_first) if dataset.released_at.present? %>
-            </div>
-            <% if dataset.time_series_datasets.present? %>
-              <div class="time-series">
-                <%= link_to  image_tag("svg/timeseries.svg", alt: t('app.menu.titles.dataset_to_time_series')), explore_time_series_dashboard_path(dataset.time_series_datasets.first.time_series_id), title: t('app.menu.titles.dataset_to_time_series')  %>                  
+            <% if @is_xtraktr %>
+              <div class="source"><%= "#{model_class.human_attribute_name(:source)}: #{dataset.source}" %></div>
+            <% end %>
+
+            <% if dataset.description.present? %>
+              <div class="description">
+                <%= simple_format_no_tags(dataset.description, {}, {sanitize: false}) %>
               </div>
             <% end %>
-          </div>
-        
-          <% if @is_xtraktr %>
-            <div class="source"><%= "#{model_class.human_attribute_name(:source)}: #{dataset.source}" %></div>
-          <% end %>
-
-          <% if dataset.description.present? %>
-            <div class="description">
-              <%= simple_format_no_tags(dataset.description, {}, {sanitize: false}) %>
-            </div>
-          <% end %>
-        </li>
-      <% end %>
-    </ul>
+          </li>
+        <% end %>
+      </ul>
+    </div>
   <% else %>
     <p>
       <%= t('.no_data') %>

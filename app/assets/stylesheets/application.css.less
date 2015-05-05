@@ -618,10 +618,15 @@ box-shadow: 1px 1px 0px 1px rgba(235,235,235,1);
     padding:0 30px;
     &.explore
     {   
-      padding:0px;
+      padding:0px;      
       .dataset-filters
       {
-        border-bottom:2px dotted #b5b5b5;
+        position:relative;
+        // border-bottom:2px dotted #b5b5b5;
+        > div 
+        {
+          display:inline-block;
+        }
       }
       .dataset-list
       {
@@ -825,36 +830,40 @@ box-shadow: 1px 1px 0px 1px rgba(235,235,235,1);
 
 
 
-.dataset-filters
-{
-  height:115px;
-  position:relative;
-}
 
-.category-picker
+.category
 {
+  height:109px;
   .selector
   {
     position:absolute;
     right:0px;
     top:0px;
-    height:113px;
-    width:150px;
+    height:109px;
+    width:123px;
     background-color:#fff;
     border:1px solid #f2f2f2;
     border-right:0;
+    border-top:0;
+    -webkit-border-top-left-radius: 3px;
+    -webkit-border-bottom-left-radius: 3px;
+    -moz-border-radius-topleft: 3px;
+    -moz-border-radius-bottomleft: 3px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    display:table;
     &:hover
     {
       cursor:pointer;
     }
     .img
     {
-      background:transparent url(/assets/svg/categories/choose.svg) no-repeat;
-      width:42px;
+      width:62px;
       height:42px;
       display:table-cell;
       vertical-align:middle;
-      height:100%;
+      margin-left:10px;
+      background-position:center center !important;
     }
     span
     {      
@@ -875,15 +884,16 @@ box-shadow: 1px 1px 0px 1px rgba(235,235,235,1);
     margin:0px;
     padding:0px;
     position:absolute;
-    right:100px;
+    right:120px;
     top:0px;
     border:1px solid #f2f2f2;
     border-right:0;
+    border-top:0;
     li
     {
       display:table-cell;
       width:103px;
-      height:113px;
+      height:109px;
       background-color:#fff;
       overflow: hidden;
       margin:0px;
@@ -891,6 +901,7 @@ box-shadow: 1px 1px 0px 1px rgba(235,235,235,1);
       border-width:1px;
       vertical-align: top;
       height:100%;
+      position:relative;
       &:first-child
       {
         -webkit-border-top-left-radius: 3px;
@@ -899,52 +910,75 @@ box-shadow: 1px 1px 0px 1px rgba(235,235,235,1);
         -moz-border-radius-bottomleft: 3px;
         border-top-left-radius: 3px;
         border-bottom-left-radius: 3px;
-              }
+      }
+      &:hover,&.active
+      {
+        background-color:#fafafa;
+        cursor:pointer;
+        .img
+        {
+          transform:scale(1.2,1.2);
+        }
+      }
       .img
       {
         width:100%;
-        height:42px;
-        background-size:42px;
-        // margin:5px 0px 15px 30px;
+        height:52px;
         margin:0px;
         text-align:center;
-        display:table-row;
       }    
-      span  
+      .text  
       {
-        font-family:'sourcesans_pro';
-        font-size:12px;
-        line-height:16px;
-        color:#636975;
-        text-transform:uppercase;
-        text-align:center;
-        vertical-align:middle;
-        display:inline-block;
-        height:63px;
-        width:100%;
-        // padding:10px 3px 10px;
-        padding:0px;
-        display:table-row;
 
+        span
+        {
+          font-family:'sourcesans_pro';
+          font-size:12px;
+          line-height:16px;
+          color:#636975;
+          text-transform:uppercase;
+          text-align:center;
+          vertical-align:middle;
+          display:table-cell;
+          height:56px;
+          width:101px;
+          padding:0px 10px;
+        }
       }
     }
-    .child_protection .img{ background:transparent url(/assets/svg/categories/child_protection.svg) no-repeat; }
-    .violence .img{ background:transparent url(/assets/svg/categories/violence.svg) no-repeat; }
-    .disability .img{ background:transparent url(/assets/svg/categories/disability.svg) no-repeat; }
-    .health .img{ background:transparent url(/assets/svg/categories/health.svg) no-repeat; }
-    .education .img{ background:transparent url(/assets/svg/categories/education.svg) no-repeat; }
-    .social_production .img{ background:transparent url(/assets/svg/categories/social_production.svg) no-repeat; }
-    .wash .img{ background:transparent url(/assets/svg/categories/wash.svg) no-repeat; }
-    .youth .img{ background:transparent url(/assets/svg/categories/youth.svg) no-repeat; }
+    li:after
+    {
+      content: "";
+      background: transparent url(/assets/svg/dotted.svg);
+      width: 1px;
+      display: inline-block;
+      position: absolute;
+      top: 10px;
+      right: 0px;
+      bottom: 10px;
+    }
 
+
+  }
+  .img
+  {
+    &.child_protection{ background:transparent url(/assets/svg/categories/child_protection.svg) center top/42px no-repeat; }
+    &.violence{ background:transparent url(/assets/svg/categories/violence.svg) center top/42px no-repeat; }
+    &.disability{ background:transparent url(/assets/svg/categories/disability.svg) center top/42px no-repeat; }
+    &.health{ background:transparent url(/assets/svg/categories/health.svg) center top/42px no-repeat; }
+    &.education{ background:transparent url(/assets/svg/categories/education.svg) center top/42px no-repeat; }
+    &.social_production{ background:transparent url(/assets/svg/categories/social_production.svg) center top/42px no-repeat; }
+    &.wash{ background:transparent url(/assets/svg/categories/wash.svg) center top/42px no-repeat; }
+    &.youth{ background:transparent url(/assets/svg/categories/youth.svg) center top/42px no-repeat; }
+    &.none{ background:transparent url(/assets/svg/categories/none.svg) center center/42px no-repeat; }
   }
 }
 
-.bright
-{
-  border-image-slice: 0 1 0 0;
-  border-image-width: 0px 1px 0px 1px;
-  border-image-outset: 0px 0px 0px 0px;
-  border-image-repeat: round round;
-  border-image-source: url(/assets/svg/dots.svg);
-}
+// .bright
+// {
+//   border-image-slice: 1 1 1 1;
+//   border-image-width: 0px 1px 0px 0px;
+//   border-image-outset: 0px 0px 0px 0px;
+//   border-image-repeat: round round;
+//   border-image-source: url(/assets/svg/dots.svg);
+// }
