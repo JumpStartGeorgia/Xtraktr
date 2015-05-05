@@ -23,19 +23,19 @@ class DatasetFiles < CustomTranslation
   #############################
   ## override get methods for fields that are localized
   def codebook
-    get_translation(self.codebook_translations)
+    get_translation(self.codebook_translations, self.dataset.current_locale, self.dataset.default_language)
   end
   def csv
-    get_translation(self.csv_translations)
+    get_translation(self.csv_translations, self.dataset.current_locale, self.dataset.default_language)
   end
   def spss
-    get_translation(self.spss_translations)
+    get_translation(self.spss_translations, self.dataset.current_locale, self.dataset.default_language)
   end
   def stata
-    get_translation(self.stata_translations)
+    get_translation(self.stata_translations, self.dataset.current_locale, self.dataset.default_language)
   end
   def r
-    get_translation(self.r_translations)
+    get_translation(self.r_translations, self.dataset.current_locale, self.dataset.default_language)
   end
   
 
