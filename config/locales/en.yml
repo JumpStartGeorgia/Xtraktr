@@ -746,3 +746,39 @@ en:
         reports: Reports
         licensing: Licensing
         datasets: Datasets
+  export_data:
+    dataset: 'Dataset: %{title}'
+    download_from: 'Downloaded From: %{app_name} at %{url}.'
+    last_update: 'Data Last Updated: %{date}'
+    instructions:
+      codebook: 'The codebook is a list of all questions and answers available in this dataset. It is provided as a reference to help you quickly find items of interest.'
+      csv_main: 'The CSV file is a spreadsheet of all of the data in the dataset. You can open this file in OpenOffice, Excel, Google Spreadsheets or any other spreadsheet software. '
+      csv: |
+        The CSV download contains 2 files:
+        - Codebook: %{codebook}
+
+        - CSV: %{csv} The CSV is formatted with headers (format: code - name) and the answers are the answer text, not the answer value.
+      spss: |
+        The SPSS download contains 3 files:
+        - Codebook: %{codebook}
+
+        - CSV: %{csv} The CSV is formatted to be loaded into SPSS, so it does not contain headers and the answers are the answer values, not the answer text.
+        
+        - SPS: The SPS file is a script file that you run in SPSS that will load the data from the CSV file and also create each variable and it's possible values. 
+               IMPORTANT - Before runing the script file in SPSS, you will need to update the line with 'DATA LIST FILE' to include the full path to the CSV file.
+      stata: |
+        The STATA download contains 3 files:
+        - Codebook: %{codebook}
+
+        - CSV: %{csv} The CSV is formatted to be loaded into STATA, so it does not contain headers and the answers are the answer text, not the answer values.
+        
+        - DO: The STATA DO file is a script file that you run in STATA that will load the data from the CSV file and also create each variable and it's possible values. 
+               IMPORTANT - Before runing the script file in STATA, you will need to update the line with 'using' at the end of the file to include the full path to the CSV file.
+      r: |
+        The R download contains 3 files:
+        - Codebook: %{codebook}
+
+        - CSV: %{csv} The CSV is formatted to be loaded into R, so the headers are the variables and the answers are the answer values, not the answer text.
+        
+        - R: The R file is a script file that you run in R that will load the data from the CSV file and also create each variable. 
+               IMPORTANT - Before runing the script file in R, you will need to update the 'setwd' line to include the full path to the CSV file.

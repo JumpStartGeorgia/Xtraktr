@@ -219,8 +219,8 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     respond_to do |format|
       format.html{
         # load the shapes if needed
-        if dataset.is_mappable?
-          @shapes_url = dataset.js_shapefile_url_path
+        if dataset.is_mappable? && dataset.urls.shape_file.present?
+          @shapes_url = dataset.urls.shape_file
         end
 
         # add the required assets

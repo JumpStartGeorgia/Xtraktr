@@ -1,6 +1,80 @@
 # encoding: utf-8
 module ExportData
   require 'csv'
+  require 'zipruby'
+
+  # create a zip file of the request type
+  # if type is not codebook, include coodebook in zip
+  # update dataset with path to the file
+  # type = codebook, csv, spss, stata, r
+  def self.create_file(dataset, type)
+
+    # make sure path exists
+    FileUtils.mkpath("#{Rails.public_path}#{dataset.data_download_staging_path}")    
+
+    # set path to codebook here since used in all methods
+    @codebook_file = 'codebook.txt'
+    @codebook_file_path = "#{Rails.public_path}#{dataset.data_download_staging_path}/#{@codebook_file}"
+
+    # set readme file name to appear in zip file
+    @zip_file = 'README.txt'
+
+    # all options require codebook, so create it
+    codebook(dataset)
+
+    # generate the requested files
+    case type
+      when 'csv'
+        csv(dataset)
+      when 'spss'
+        spss(dataset)
+      when 'stata'
+        stata(dataset)
+      when 'r'
+        r(dataset)
+    end
+
+  end
+
+
+  # create all files for a dataset that do not exist yet
+  def self.create_all_files(dataset)
+    start = Time.now
+
+    # make sure path exists
+    FileUtils.mkpath("#{Rails.public_path}#{dataset.data_download_staging_path}")    
+
+    # set path to codebook here since used in all methods
+    @codebook_file = 'codebook.txt'
+    @codebook_file_path = "#{Rails.public_path}#{dataset.data_download_staging_path}/#{@codebook_file}"
+
+    codebook(dataset)
+    csv(dataset)
+    spss(dataset)
+    stata(dataset)
+    r(dataset)
+
+    puts "@@@@@ it took #{(Time.now-start).round(3)} seconds to create all files for dataset"
+  end
+
+
+  # make sure all datasets have data files
+  def self.create_all_dataset_files
+    start = Time.now
+    
+    Dataset.all.each do |dataset|
+      puts ">>> dataset: #{dataset.title}"
+      # make sure dataset has url object
+      dataset.create_urls_object
+      # create the data files for this dataset
+      create_all_files(dataset)
+    end
+
+    puts ">>>>>>>> it took #{(Time.now-start).round(3)} seconds to create all files for all datasets"
+  end
+
+private
+
 
   #########################################
   #########################################
@@ -9,46 +83,64 @@ module ExportData
   # question code - question
   # answers:
   #   value - text
-  def self.codebook
+  def self.codebook(dataset)
+    puts '>> creating codebok'
     start = Time.now
 
     output = ''
-    d = Dataset.first
-    questions = d.questions.for_analysis
-    puts "- there are #{questions.length} questions"
-    filename = clean_filename(d.title)
-    text_file = "#{Rails.root}/tmp/#{filename}_CODEBOOK.txt"
+    questions = dataset.questions.for_analysis
 
-    # add title
-    output << d.title
-    output << "\n"
-    output << "Codebook Generated On: #{I18n.l(start, format: :file)}"
-    output << "\n\n"
+    filename = clean_filename(dataset.title)
+    zip_name = "codebook.zip"
+    zip_file_path = "#{Rails.public_path}#{dataset.data_download_path}/#{zip_name}"
+    readme_name = "readme_codebook.txt"
+    readme_file_path = "#{Rails.public_path}#{dataset.data_download_staging_path}/#{readme_name}"
 
-    # add each question/answer
-    questions.each do |question|
-      output << "--------------"
+    if !File.exists?(@codebook_file_path)
+      # add title
+      output << dataset.title
       output << "\n"
-      output << "#{question.original_code} - #{clean_text(question.text)}"
-      output << "\n"
-      if question.notes.present?
-        output << "Notes: #{question.notes}"        
+      output << "Codebook Generated On: #{I18n.l(start, format: :file)}"
+      output << "\n\n"
+
+      # add each question/answer
+      questions.each do |question|
+        output << "--------------"
+        output << "\n"
+        output << "#{question.original_code} - #{clean_text(question.text)}"
+        output << "\n"
+        if question.notes.present?
+          output << "Notes: #{question.notes}"        
+          output << "\n"
+        end
+        output << "Answers:"
+        output << "\n"
+        question.answers.all_for_analysis.each do |answer|
+          output << "  #{answer.value} - #{clean_text(answer.text)}"
+          output << "\n"
+        end
         output << "\n"
       end
-      output << "Answers:"
-      output << "\n"
-      question.answers.all_for_analysis.each do |answer|
-        output << "  #{answer.value} - #{clean_text(answer.text)}"
-        output << "\n"
-      end
-      output << "\n"
+
+      #######################
+      # create codebook file
+      puts "- creating codebook file"
+      File.open(@codebook_file_path, 'w') {|f| f.write(output) }
     end
 
-    #######################
-    # create text file
-    puts "- creating text file"
-    File.open(text_file, 'w') {|f| f.write(output) }
+    # create the readme
+    create_readme(readme_file_path, 'codebook', dataset)
 
+    # create the zip file
+    create_zip(dataset.title, zip_file_path, [
+        {file_name: @zip_file, file_path: readme_file_path},
+        {file_name: @codebook_file, file_path: @codebook_file_path}
+      ]
+    )
+
+    # record the path to the file in the dataset
+    dataset.urls.codebook = "#{dataset.data_download_path}/#{zip_name}"
+    dataset.save
 
     puts "-- it took #{(Time.now-start).round(3)} seconds to create the codebook file"
     return nil  
@@ -58,20 +150,42 @@ module ExportData
   #########################################
   #########################################
   # create csv file
-  def self.csv
+  def self.csv(dataset)
+    puts '>> creating csv'
     start = Time.now
 
     output = ''
-    d = Dataset.first
-    questions = d.questions.for_analysis
-    puts "- there are #{questions.length} questions"
-    filename = clean_filename(d.title)
-    csv_file = "#{Rails.root}/tmp/#{filename}.csv"
+    questions = dataset.questions.for_analysis
+
+    filename = clean_filename(dataset.title)
+    csv_file = "csv.csv"
+    csv_file_path = "#{Rails.public_path}#{dataset.data_download_staging_path}/#{csv_file}"
+    zip_name = "csv.zip"
+    zip_file_path = "#{Rails.public_path}#{dataset.data_download_path}/#{zip_name}"
+    readme_name = "readme_csv.txt"
+    readme_file_path = "#{Rails.public_path}#{dataset.data_download_staging_path}/#{readme_name}"
     
-    #######################
-    # create csv file
-    puts "- creating csv file"
-    File.open(csv_file, 'w') {|f| f.write(build_csv(d, questions, with_raw_data: false, with_header: true)) }
+    if !File.exists?(csv_file_path)
+      #######################
+      # create csv file
+      puts "- creating csv file"
+      File.open(csv_file_path, 'w') {|f| f.write(build_csv(dataset, questions, with_raw_data: false, with_header: true)) }
+    end
+
+    # create the readme
+    create_readme(readme_file_path, 'csv', dataset)
+
+    # create the zip file
+    create_zip(dataset.title, zip_file_path, [
+        {file_name: @zip_file, file_path: readme_file_path},
+        {file_name: @codebook_file, file_path: @codebook_file_path},
+        {file_name: csv_file, file_path: csv_file_path}
+      ]
+    )
+
+    # record the path to the file in the dataset
+    dataset.urls.csv = "#{dataset.data_download_path}/#{zip_name}"
+    dataset.save
 
     puts "-- it took #{(Time.now-start).round(3)} seconds to create the csv file"
     return nil  
@@ -84,80 +198,109 @@ module ExportData
   # create spss file
   # notes 
   # - strings cannot be more than 60 chars
-  def self.spss
+  def self.spss(dataset)
+    puts '>> creating spss'
     start = Time.now
 
     output = ''
-    d = Dataset.first
-    questions = d.questions.for_analysis
-    puts "- there are #{questions.length} questions"
-    filename = clean_filename(d.title)
-    csv_filename = "#{filename}_SPSS.csv"
-    spss_file = "#{Rails.root}/tmp/#{filename}.sps"
-    csv_file = "#{Rails.root}/tmp/#{csv_filename}"
+    questions = dataset.questions.for_analysis
+
+    filename = clean_filename(dataset.title)
+    csv_file = "spss.csv"
+    spss_file = 'spss.sps'
+    spss_file_path = "#{Rails.public_path}#{dataset.data_download_staging_path}/#{spss_file}"
+    csv_file_path = "#{Rails.public_path}#{dataset.data_download_staging_path}/#{csv_file}"
+    zip_name = "spss.zip"
+    zip_file_path = "#{Rails.public_path}#{dataset.data_download_path}/#{zip_name}"
+    readme_name = "readme_spss.txt"
+    readme_file_path = "#{Rails.public_path}#{dataset.data_download_staging_path}/#{readme_name}"
     
 
-    #######################
-    ## create spss file
-    puts "- creating spss file"
+    if !File.exists?(spss_file_path)
+      #######################
+      ## create spss file
+      puts "- creating spss file"
 
-    # add title
-    output << "TITLE \"#{shorten_text(d.title)}\".\n\n"
+      # add title
+      output << "TITLE \"#{shorten_text(dataset.title)}\".\n\n"
 
-    # add data list file line
-    output << '* IMPORTANT: you must update the path to the file to include the full path (e.g., C:\Desktop\...).'
-    output << "\n"
-    output << "DATA LIST FILE= \"#{csv_filename}\"  free (\",\")\n"
-
-
-    # add question codes
-    output << '/ '
-    questions.each do |question|
-      output << question.original_code
-      output << ' '
-    end
-    output << " . \n\n"
-
-    # add variable labels (question code/text)
-    output << "VARIABLE LABELS \n"
-    questions.each do |question|
-      output << question.original_code
-      output << ' "'
-      output << shorten_text(clean_text(question.text))
-      # output << question.original_code
-      output << "\" \n"
-    end
-    output << " . \n\n"
+      # add data list file line
+      output << "***********************************"
+      output << "\n"
+      output << '* IMPORTANT: you must update the path to the file to include the full path (e.g., C:\Desktop\...).'
+      output << "\n"
+      output << "***********************************"
+      output << "\n"
+      output << "DATA LIST FILE= \"#{csv_file}\"  free (\",\")\n"
 
 
-    # add value labels (answer)
-    output << "VALUE LABELS \n"
-    questions.each do |question|
-      output << "/ \n"
-      output << question.original_code
-      output << " \n"
-      question.answers.all_for_analysis.each do |answer|
-        output << ' ' # not needed - just to make it easier to read
-        output << answer.value
+      # add question codes
+      output << '/ '
+      questions.each do |question|
+        output << question.original_code
+        output << ' '
+      end
+      output << " . \n\n"
+
+      # add variable labels (question code/text)
+      output << "VARIABLE LABELS \n"
+      questions.each do |question|
+        output << question.original_code
         output << ' "'
-        output << shorten_text(clean_text(answer.text))
+        output << shorten_text(clean_text(question.text))
+        # output << question.original_code
         output << "\" \n"
       end
+      output << " . \n\n"
+
+
+      # add value labels (answer)
+      output << "VALUE LABELS \n"
+      questions.each do |question|
+        output << "/ \n"
+        output << question.original_code
+        output << " \n"
+        question.answers.all_for_analysis.each do |answer|
+          output << ' ' # not needed - just to make it easier to read
+          output << answer.value
+          output << ' "'
+          output << shorten_text(clean_text(answer.text))
+          output << "\" \n"
+        end
+      end
+      output << " . \n\n"
+
+
+      # finish the file
+      output << 'EXECUTE.'
+
+      # write out spss file
+      File.open(spss_file_path, 'w') {|f| f.write(output) }
     end
-    output << " . \n\n"
 
+    if !File.exists?(csv_file_path)
+      #######################
+      # create csv file
+      puts "- creating csv file"
+      File.open(csv_file_path, 'w') {|f| f.write(build_csv(dataset, questions)) }
+    end
 
-    # finish the file
-    output << 'EXECUTE.'
+    # create the readme
+    create_readme(readme_file_path, 'spss', dataset)
 
-    # write out spss file
-    File.open(spss_file, 'w') {|f| f.write(output) }
+    # create the zip file
+    create_zip(dataset.title, zip_file_path, [
+        {file_name: @zip_file, file_path: readme_file_path},
+        {file_name: @codebook_file, file_path: @codebook_file_path},
+        {file_name: csv_file, file_path: csv_file_path},
+        {file_name: spss_file, file_path: spss_file_path}
+      ]
+    )
 
+    # record the path to the file in the dataset
+    dataset.urls.spss = "#{dataset.data_download_path}/#{zip_name}"
+    dataset.save
 
-    #######################
-    # create csv file
-    puts "- creating csv file"
-    File.open(csv_file, 'w') {|f| f.write(build_csv(d, questions)) }
 
     puts "-- it took #{(Time.now-start).round(3)} seconds to create the spss and csv files"
     return nil
@@ -173,41 +316,65 @@ module ExportData
   # create labels:
       # label define sexfmt 0 "Male" 1 "Female"
       # infile str16 name sex:sexfmt age using persons        
-  def self.stata
+  def self.stata(dataset)
+    puts '>> creating stata'
     start = Time.now
 
     output = ''
-    d = Dataset.first
-    questions = d.questions.for_analysis
-    puts "- there are #{questions.length} questions"
-    filename = clean_filename(d.title)
-    csv_filename = "#{filename}_STATA.csv"
-    stata_file = "#{Rails.root}/tmp/#{filename}.do"
-    csv_file = "#{Rails.root}/tmp/#{csv_filename}"
+    questions = dataset.questions.for_analysis
 
-    #######################
-    # create stata file
-    puts "- creating stata file"
-    output << '* IMPORTANT: you must update the path to the file at the end of the next line to include the full path (e.g., C:\Desktop\...)'
-    output << "\n\n"
-    output << 'infile '
-    questions.each do |question|
-      output << question.original_code
-      if question.has_code_answers
-        output << ":#{question.original_code}_fmt"
+    filename = clean_filename(dataset.title)
+    csv_file = "stata.csv"
+    stata_file = "stata.do"
+    stata_file_path = "#{Rails.public_path}#{dataset.data_download_staging_path}/#{stata_file}"
+    csv_file_path = "#{Rails.public_path}#{dataset.data_download_staging_path}/#{csv_file}"
+    zip_name = "stata.zip"
+    zip_file_path = "#{Rails.public_path}#{dataset.data_download_path}/#{zip_name}"
+    readme_name = "readme_stata.txt"
+    readme_file_path = "#{Rails.public_path}#{dataset.data_download_staging_path}/#{readme_name}"
+
+    if !File.exists?(stata_file_path)
+      #######################
+      # create stata file
+      puts "- creating stata file"
+      output << '* IMPORTANT: you must update the path to the file at the end of the next line to include the full path (e.g., C:\Desktop\...)'
+      output << "\n\n"
+      output << 'infile '
+      questions.each do |question|
+        output << question.original_code
+        if question.has_code_answers
+          output << ":#{question.original_code}_fmt"
+        end
+        output << ' '
       end
-      output << ' '
+      output << " using  #{csv_file} , automatic "
+
+      # write out stata file
+      File.open(stata_file_path, 'w') {|f| f.write(output) }
     end
-    output << " using  #{csv_filename} , automatic "
 
-    # write out stata file
-    File.open(stata_file, 'w') {|f| f.write(output) }
+    if !File.exists?(csv_file_path)
+      #######################
+      # create csv file
+      puts "- creating csv file"
+      File.open(csv_file_path, 'w') {|f| f.write(build_csv(dataset, questions, with_raw_data: false)) }
+    end
 
+    # create the readme
+    create_readme(readme_file_path, 'stata', dataset)
 
-    #######################
-    # create csv file
-    puts "- creating csv file"
-    File.open(csv_file, 'w') {|f| f.write(build_csv(d, questions, with_raw_data: false)) }
+    # create the zip file
+    create_zip(dataset.title, zip_file_path, [
+        {file_name: @zip_file, file_path: readme_file_path},
+        {file_name: @codebook_file, file_path: @codebook_file_path},
+        {file_name: csv_file, file_path: csv_file_path},
+        {file_name: stata_file, file_path: stata_file_path}
+      ]
+    )
+
+    # record the path to the file in the dataset
+    dataset.urls.stata = "#{dataset.data_download_path}/#{zip_name}"
+    dataset.save
 
 
     puts "-- it took #{(Time.now-start).round(3)} seconds to create the stata and csv files"
@@ -218,55 +385,85 @@ module ExportData
   #########################################
   #########################################
   # create r file that reads in csv file
-  def self.r
+  def self.r(dataset)
+    puts '>> creating r'
     start = Time.now
 
     output = ''
-    d = Dataset.first
-    questions = d.questions.for_analysis
-    puts "- there are #{questions.length} questions"
-    filename = clean_filename(d.title)
-    csv_filename = "#{filename}_R.csv"
-    r_file = "#{Rails.root}/tmp/#{filename}.r"
-    csv_file = "#{Rails.root}/tmp/#{csv_filename}"
+    questions = dataset.questions.for_analysis
+
+    filename = clean_filename(dataset.title)
+    csv_file = "r.csv"
+    r_file = 'r.r'
+    r_file_path = "#{Rails.public_path}#{dataset.data_download_staging_path}/#{r_file}"
+    csv_file_path = "#{Rails.public_path}#{dataset.data_download_staging_path}/#{csv_file}"
+    zip_name = "r.zip"
+    zip_file_path = "#{Rails.public_path}#{dataset.data_download_path}/#{zip_name}"
+    readme_name = "readme_r.txt"
+    readme_file_path = "#{Rails.public_path}#{dataset.data_download_staging_path}/#{readme_name}"
 
 
-    #######################
-    # create r file
-    puts "- creating r file"
-    output << '#! /usr/bin/env Rscript'
-    output << "\n\n"
-    output << "###########################"
-    output << "\n"
-    output << "# IMPORTANT: update the setwd line below to the directory where the csv file is located"
-    output << "\n"
-    output << "###########################"
-    output << "\n"
-    output << "setwd(\".\")"    
-    output << "\n\n"
-    output << "# read in the csv file to a variable called 'data'"
-    output << "\n"
-    output << "data <- read.csv('#{csv_filename}', header=TRUE)"
-    output << "\n\n"
-    output << "# quit"
-    output << "\n"
-    output << "q()"
+    if !File.exists?(r_file_path)
+      #######################
+      # create r file
+      puts "- creating r file"
+      output << '#! /usr/bin/env Rscript'
+      output << "\n\n"
+      output << "###########################"
+      output << "\n"
+      output << "# IMPORTANT: update the setwd line below to the directory where the csv file is located"
+      output << "\n"
+      output << "###########################"
+      output << "\n"
+      output << "setwd(\".\")"    
+      output << "\n\n"
+      output << "# read in the csv file to a variable called 'data'"
+      output << "\n"
+      output << "data <- read.csv('#{csv_file}', header=TRUE)"
+      output << "\n\n"
+      output << "# quit"
+      output << "\n"
+      output << "q()"
 
 
-    # write out r file
-    File.open(r_file, 'w') {|f| f.write(output) }
+      # write out r file
+      File.open(r_file_path, 'w') {|f| f.write(output) }
+    end
 
-    #######################
-    # create csv file
-    puts "- creating csv file"
-    File.open(csv_file, 'w') {|f| f.write(build_csv(d, questions, with_raw_data: false, with_header_code_only: true)) }
+
+    if !File.exists?(csv_file_path)
+      #######################
+      # create csv file
+      puts "- creating csv file"
+      File.open(csv_file_path, 'w') {|f| f.write(build_csv(dataset, questions, with_raw_data: false, with_header_code_only: true)) }
+    end
+
+    # create the readme
+    create_readme(readme_file_path, 'r', dataset)
+
+    # create the zip file
+    create_zip(dataset.title, zip_file_path, [
+        {file_name: @zip_file, file_path: readme_file_path},
+        {file_name: @codebook_file, file_path: @codebook_file_path},
+        {file_name: csv_file, file_path: csv_file_path},
+        {file_name: r_file, file_path: r_file_path}
+      ]
+    )
+
+    # record the path to the file in the dataset
+    dataset.urls.r = "#{dataset.data_download_path}/#{zip_name}"
+    dataset.save
 
 
     puts "-- it took #{(Time.now-start).round(3)} seconds to create the r and csv files"
     return nil
   end
 
-private
+
+  #########################################
+  #########################################
+  #########################################
+  #########################################
 
   def self.clean_filename(text)
     if !text.nil?
@@ -292,6 +489,9 @@ private
     end
     return text
   end
+
+  #########################################
+  #########################################
 
   def self.build_csv(dataset, questions, options={})
     with_raw_data = options[:with_raw_data].nil? ? true : options[:with_raw_data]
@@ -344,6 +544,73 @@ private
     end
 
     return csv
+  end
+
+  #########################################
+  #########################################
+
+  def self.create_readme(file_name, type, dataset)
+    output = ''
+    url_helpers = Rails.application.routes.url_helpers
+    url = dataset.public? ? url_helpers.explore_data_dashboard_url(locale: I18n.locale, id: dataset) : url_helpers.dataset_url(locale: I18n.locale, id: url)
+    date = dataset.urls.updated_at.present? ? dataset.urls.updated_at : dataset.updated_at
+
+    if !File.exists?(file_name)
+      puts '- creating readme'
+      # heading
+      output << I18n.t('export_data.dataset', title: dataset.title)
+      output << "\n"
+      output << I18n.t('export_data.download_from', app_name: I18n.t('app.common.app_name'), url: url)
+      output << "\n"
+      output << I18n.t('export_data.last_update', date: I18n.l(date, format: :long))
+      output << "\n\n\n"
+
+      case type
+        when 'codebook'
+          output << I18n.t('export_data.instructions.codebook')
+        when 'csv'
+          output << I18n.t('export_data.instructions.csv', 
+                    codebook: I18n.t('export_data.instructions.codebook'),
+                    csv: I18n.t('export_data.instructions.csv_main'))
+        when 'spss'
+          output << I18n.t('export_data.instructions.spss', 
+                    codebook: I18n.t('export_data.instructions.codebook'),
+                    csv: I18n.t('export_data.instructions.csv_main'))
+        when 'stata'
+          output << I18n.t('export_data.instructions.stata', 
+                    codebook: I18n.t('export_data.instructions.codebook'),
+                    csv: I18n.t('export_data.instructions.csv_main'))
+        when 'r'
+          output << I18n.t('export_data.instructions.r', 
+                    codebook: I18n.t('export_data.instructions.codebook'),
+                    csv: I18n.t('export_data.instructions.csv_main'))
+      end
+
+      # write the file
+      File.open(file_name, 'w') {|f| f.write(output) }
+    end
+  end
+
+  #########################################
+  #########################################
+
+
+  # create a zip file with the files provided
+  # - files is an array of hash: {file_name, file_path}
+  #   where file_name is the name to use for the file in the zip
+  def self.create_zip(title, zip_file_path, files=[])
+
+    if !File.exists?(zip_file_path)
+      puts "- creating zip"
+      # zip the files and move to the main folder
+      Zip::Archive.open(zip_file_path, Zip::CREATE) do |zipfile|
+        zipfile.add_dir(title)
+        files.each do |file|
+          # args: file name (with directory), source
+          zipfile.add_file("#{title}/#{file[:file_name]}", file[:file_path])
+        end
+      end
+    end
   end
 
 end

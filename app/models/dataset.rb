@@ -232,19 +232,24 @@ class Dataset < CustomTranslation
   has_one :stats, class_name: "Stats"
   accepts_nested_attributes_for :stats
 
+  # related files for the dataset
+  embeds_one :urls, class_name: 'DatasetFiles'
+  accepts_nested_attributes_for :urls
+
   #############################
 
   attr_accessible :title, :description, :methodology, :user_id, :has_warnings, 
       :data_items_attributes, :questions_attributes, :reports_attributes, :questions_with_bad_answers, 
       :datafile, :public, :private_share_key, #:codebook, 
       :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at,
-      :languages, :default_language,
+      :languages, :default_language, :stats_attributes, :urls_attributes, 
       :title_translations, :description_translations, :methodology_translations, :source_translations, :source_url_translations
 
   TYPE = {:onevar => 'onevar', :crosstab => 'crosstab'}
 
-  FOLDER_PATH = "/system/datasets"
-  JS_FILE = "shapes.js"
+  FOLDER_PATH = '/system/datasets'
+  JS_FILE = 'shapes.js'
+  DOWNLOAD_FOLDER = 'data_download'
 
   #############################
   # indexes
@@ -363,6 +368,7 @@ class Dataset < CustomTranslation
   # Callbacks
   
   before_create :process_file
+  before_save :create_urls_object
   before_create :create_private_share_key
   after_destroy :delete_dataset_files
   before_save :update_flags
@@ -376,6 +382,11 @@ class Dataset < CustomTranslation
     # udpate meta data
     update_flags
 
+  end
+
+  # create the urls object on create so have place to store urls
+  def create_urls_object
+    self.build_urls if self.urls.nil?
   end
 
   # create private share key that allows people to access this dataset if it is not public
@@ -444,6 +455,10 @@ class Dataset < CustomTranslation
     # else, delete the js file
     if self.is_mappable?
       logger.debug "=== creating js file"
+
+      # make sure the urls object exists
+      create_urls_object
+
       # create hash of shapes in format: {code => geojson, code => geojson}
       shapes = {}
       self.questions.are_mappable.each do |question|
@@ -466,11 +481,18 @@ class Dataset < CustomTranslation
         gz.close
       end
 
+      # record the shape file url
+      self.urls.shape_file = js_shapefile_url_path
+
     else
       # delete js file
       logger.debug "==== deleting shape js file at #{js_shapefile_file_path}"
       FileUtils.rm js_shapefile_file_path if File.exists?(js_shapefile_file_path)
       FileUtils.rm js_gz_shapefile_file_path + ".gz" if File.exists?(js_gz_shapefile_file_path)
+
+      # remove the shape file url
+      self.urls.shape_file = nil
+
     end
 
     return true
@@ -551,6 +573,7 @@ class Dataset < CustomTranslation
 
 
   #############################
+  ## paths to dataset related files
 
   # get the js shape file path
   def js_shapefile_file_path
@@ -563,6 +586,14 @@ class Dataset < CustomTranslation
 
   def js_shapefile_url_path
     "#{FOLDER_PATH}/#{self.id}/#{JS_FILE}"
+  end
+
+  def data_download_path
+    "#{FOLDER_PATH}/#{self.id}/#{DOWNLOAD_FOLDER}"
+  end
+
+  def data_download_staging_path
+    "#{FOLDER_PATH}/#{self.id}/#{DOWNLOAD_FOLDER}/staging"
   end
 
   #############################
