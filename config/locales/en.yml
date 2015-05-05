@@ -556,6 +556,12 @@ en:
       title: Disclaimer
     explore_data:
       title: Explore the Data
+      search_datasets: Search Datasets
+      sort_by: 
+        this: Sort By
+        title: Title
+        release: Release Date
+        publish: Publish Date
       no_data: 'At this time, no datasets have been loaded into the site.'
     explore_data_show:
       title: Explore the Data

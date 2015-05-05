@@ -130,9 +130,43 @@ $(document).ready(function(){
     
     $(document).off('click.category');
     e.stopPropagation();
+    filter();
   });  
+  $('.search .go').click(function(){ filter(); });
+  $('.sort select').change(function(){ filter(); });
+
+
 
 });
+function filter()
+{
+  var filters = $('.dataset-filters');
+  var q = filters.find('.search input').val();
+  var sort = filters.find('.sort select').val();
+  var category = filters.find('.category .selector .img').attr('data-selected');
+  var url = filters.attr('data-path');
+  var data = { sort: sort };
+  if(q != "") data["q"] = q;
+  if(category != "none") data["category"] = category;
+  $.ajax({
+    url: url,
+    data: data,
+    
+  }).done(function(d)
+  {
+     console.log(d);
+    // if(d.agreement)
+    // {
+    //   window.location.href = d.url;
+    // }
+    // else
+    // {
+    //   modal(d.form);
+    // }
+  });
+   console.log(q,sort,category,url);
+
+}
 var js_modal;
 function modal(html)
 {

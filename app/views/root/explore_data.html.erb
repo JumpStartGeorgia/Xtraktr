@@ -3,11 +3,15 @@
 
 <div class="article explore">
   <% if @datasets.present? %>
-    <div class="dataset-filters">
-      <div class="search" data-filter='search'><input type="search"></div>
+    <div class="dataset-filters" data-path="<%= explore_data_path %>">
+      <div class="search" data-filter='search'><div class="box"><input type="search" placeholder="<%= t('.search_datasets') %>"><div class="go">GO</div></div></div>
       <div class="sort"  data-filter='sort'>
-        <label>SORT BY:</label>
-        <select></select>
+        <label><%= t('.sort_by.this') %>:</label>         
+        <select>
+          <option value="title"><%= t('.sort_by.title') %></option>
+          <option value="release"><%= t('.sort_by.release') %></option>
+          <option value="publish"><%= t('.sort_by.publish') %></option>
+        </select>
       </div>
       <div class="category"  data-filter='category'>
         <div class="selector"><div class="img none" data-selected="none" title="<%= t('app.buttons.choose_category') %>"></div><span data-text-none="<%= t('app.buttons.choose_category') %>" data-text-selected="<%= t('app.buttons.change_category') %>"><%= t('app.buttons.choose_category') %></span></div>
@@ -50,6 +54,9 @@
               <div class="description">
                 <%= simple_format_no_tags(dataset.description, {}, {sanitize: false}) %>
               </div>
+            <% end %>
+            <% if dataset.datafile.exists? %>
+              <div class="download" data-id="<%= dataset.id.to_s %>" title="<%= t('helpers.links.download_data') %>">asdsf</div>        
             <% end %>
           </li>
         <% end %>
