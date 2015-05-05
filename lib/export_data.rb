@@ -99,7 +99,7 @@ module ExportData
 
     #######################
     ## create spss file
-    puts "- writing to file: #{spss_file}"
+    puts "- creating spss file"
 
     # add title
     output << "TITLE \"#{shorten_text(d.title)}\".\n\n"
@@ -187,6 +187,7 @@ module ExportData
 
     #######################
     # create stata file
+    puts "- creating stata file"
     output << '* IMPORTANT: you must update the path to the file at the end of the next line to include the full path (e.g., C:\Desktop\...)'
     output << "\n\n"
     output << 'infile '
@@ -199,7 +200,7 @@ module ExportData
     end
     output << " using  #{csv_filename} , automatic "
 
-    # write out spss file
+    # write out stata file
     File.open(stata_file, 'w') {|f| f.write(output) }
 
 
@@ -214,6 +215,56 @@ module ExportData
   end
 
 
+  #########################################
+  #########################################
+  # create r file that reads in csv file
+  def self.r
+    start = Time.now
+
+    output = ''
+    d = Dataset.first
+    questions = d.questions.for_analysis
+    puts "- there are #{questions.length} questions"
+    filename = clean_filename(d.title)
+    csv_filename = "#{filename}_R.csv"
+    r_file = "#{Rails.root}/tmp/#{filename}.r"
+    csv_file = "#{Rails.root}/tmp/#{csv_filename}"
+
+
+    #######################
+    # create r file
+    puts "- creating r file"
+    output << '#! /usr/bin/env Rscript'
+    output << "\n\n"
+    output << "###########################"
+    output << "\n"
+    output << "# IMPORTANT: update the setwd line below to the directory where the csv file is located"
+    output << "\n"
+    output << "###########################"
+    output << "\n"
+    output << "setwd(\".\")"    
+    output << "\n\n"
+    output << "# read in the csv file to a variable called 'data'"
+    output << "\n"
+    output << "data <- read.csv('#{csv_filename}', header=TRUE)"
+    output << "\n\n"
+    output << "# quit"
+    output << "\n"
+    output << "q()"
+
+
+    # write out r file
+    File.open(r_file, 'w') {|f| f.write(output) }
+
+    #######################
+    # create csv file
+    puts "- creating csv file"
+    File.open(csv_file, 'w') {|f| f.write(build_csv(d, questions, with_raw_data: false, with_header_code_only: true)) }
+
+
+    puts "-- it took #{(Time.now-start).round(3)} seconds to create the r and csv files"
+    return nil
+  end
 
 private
 
@@ -245,6 +296,7 @@ private
   def self.build_csv(dataset, questions, options={})
     with_raw_data = options[:with_raw_data].nil? ? true : options[:with_raw_data]
     with_header = options[:with_header].nil? ? false : options[:with_header]
+    with_header_code_only = options[:with_header_code_only].nil? ? false : options[:with_header_code_only]
 
     data = []
     header = []
@@ -252,7 +304,11 @@ private
 
     if dataset.present? && questions.present?
       questions.each do |question|
-        header << "#{question.original_code} - #{question.text}"
+        if with_header_code_only
+          header << question.original_code
+        else
+          header << "#{question.original_code} - #{question.text}"
+        end
 
         if with_raw_data
           # use the data values
@@ -274,7 +330,7 @@ private
 
       # now use transpose to get in proper format
       csv = CSV.generate do |csv_row|
-        if with_header
+        if with_header || with_header_code_only
           csv_row << header
         end
 

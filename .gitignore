@@ -19,3 +19,4 @@
 
 #ignore db config
 /config/mongoid.yml
+
