@@ -4,8 +4,11 @@
 <div class="article explore">
   <% if @datasets.present? %>
     <div class="dataset-filters">
-      <div class="search" data-filter='search'>search</div>
-      <div class="sort"  data-filter='sort'>sort</div>
+      <div class="search" data-filter='search'><input type="search"></div>
+      <div class="sort"  data-filter='sort'>
+        <label>SORT BY:</label>
+        <select></select>
+      </div>
       <div class="category"  data-filter='category'>
         <div class="selector"><div class="img none" data-selected="none" title="<%= t('app.buttons.choose_category') %>"></div><span data-text-none="<%= t('app.buttons.choose_category') %>" data-text-selected="<%= t('app.buttons.change_category') %>"><%= t('app.buttons.choose_category') %></span></div>
         <ul>
