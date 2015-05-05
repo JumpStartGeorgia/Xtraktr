@@ -134,9 +134,6 @@ $(document).ready(function(){
   });  
   $('.search .go').click(function(){ filter(); });
   $('.sort select').change(function(){ filter(); });
-
-
-
 });
 function filter()
 {

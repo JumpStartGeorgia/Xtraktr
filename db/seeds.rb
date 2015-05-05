@@ -1184,10 +1184,10 @@ end
 #####################
 puts 'Creating categories'
 Category.create(permalink: 'child_protection',  name_translations:{'en' => 'Child Protection', 'ka' => 'ბავშვთა დაცვა'},                            sort_order: 1) if Category.by_permalink('child_protection').nil?
-Category.create(permalink: 'violence',          name_translations:{'en' => 'Violence against children', 'ka' => 'ბავშვთა მიმართ ძალადობა'},         sort_order: 1) if Category.by_permalink('violence').nil?
-Category.create(permalink: 'disability',        name_translations:{'en' => 'Disability', 'ka' => 'შეზღუდვა'},                                       sort_order: 1) if Category.by_permalink('disability').nil?
-Category.create(permalink: 'health',            name_translations:{'en' => 'Maternal and Child Health', 'ka' => 'დედისა და ბავშვის ჯანმრთელობა'},   sort_order: 1) if Category.by_permalink('health').nil?
-Category.create(permalink: 'education',         name_translations:{'en' => 'Education', 'ka' => 'განათლება'},                                       sort_order: 1) if Category.by_permalink('education').nil?
-Category.create(permalink: 'social_production', name_translations:{'en' => 'Social Protection', 'ka' => 'სოციალური დაცვა'},                         sort_order: 1) if Category.by_permalink('social_production').nil?
-Category.create(permalink: 'wash',              name_translations:{'en' => 'Water, Sanitation and Hygiene', 'ka' => 'წყალი, სანიტარია და ჰიგიენა'}, sort_order: 1) if Category.by_permalink('wash').nil?
-Category.create(permalink: 'youth',             name_translations:{'en' => 'Youth', 'ka' => 'ახალგაზრდობა'},                                        sort_order: 1) if Category.by_permalink('youth').nil?
+Category.create(permalink: 'violence',          name_translations:{'en' => 'Violence against children', 'ka' => 'ბავშვთა მიმართ ძალადობა'},         sort_order: 2) if Category.by_permalink('violence').nil?
+Category.create(permalink: 'disability',        name_translations:{'en' => 'Disability', 'ka' => 'შეზღუდვა'},                                       sort_order: 3) if Category.by_permalink('disability').nil?
+Category.create(permalink: 'health',            name_translations:{'en' => 'Maternal and Child Health', 'ka' => 'დედისა და ბავშვის ჯანმრთელობა'},   sort_order: 4) if Category.by_permalink('health').nil?
+Category.create(permalink: 'education',         name_translations:{'en' => 'Education', 'ka' => 'განათლება'},                                       sort_order: 5) if Category.by_permalink('education').nil?
+Category.create(permalink: 'social_production', name_translations:{'en' => 'Social Protection', 'ka' => 'სოციალური დაცვა'},                         sort_order: 6) if Category.by_permalink('social_production').nil?
+Category.create(permalink: 'wash',              name_translations:{'en' => 'Water, Sanitation and Hygiene', 'ka' => 'წყალი, სანიტარია და ჰიგიენა'}, sort_order: 7) if Category.by_permalink('wash').nil?
+Category.create(permalink: 'youth',             name_translations:{'en' => 'Youth', 'ka' => 'ახალგაზრდობა'},                                        sort_order: 8) if Category.by_permalink('youth').nil?
