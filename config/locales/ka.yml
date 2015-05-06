@@ -531,10 +531,8 @@ ka:
     index:
       header_latest_datasets: Latest Datasets
       no_datasets: 'At this time, no datasets have been loaded into the site.'
-      no_match_datasets: 'Sorry, no datasets match your search request.'
       header_latest_time_series: Latest Time Series
       no_time_series: 'At this time, no time series have been created in the site.'
-      no_match_time_series: 'Sorry, no time series match your search request.'
     contact:
       title: Contact
     instructions:
@@ -544,11 +542,13 @@ ka:
     explore_data:
       title: Explore the Data
       no_data: 'At this time, no datasets have been loaded into the site.'
+      no_match: 'Sorry, no datasets match your search request.'
     explore_data_show:
       title: Explore the Data
     explore_time_series:
       title: Explore Time Series Data
       no_data: 'At this time, no time series have been created in the site.'
+      no_match: 'Sorry, no time series match your search request.'
     explore_data_show:
       title: Explore Time Series Data
   api:
