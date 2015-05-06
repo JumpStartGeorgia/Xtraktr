@@ -531,8 +531,10 @@ en:
     index:
       header_latest_datasets: Latest Datasets
       no_datasets: 'At this time, no datasets have been loaded into the site.'
+      no_match_datasets: 'Sorry, no datasets match your search request.'
       header_latest_time_series: Latest Time Series
       no_time_series: 'At this time, no time series have been created in the site.'
+      no_match_time_series: 'Sorry, no time series match your search request.'
     contact:
       title: Contact
     instructions:
