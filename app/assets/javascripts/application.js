@@ -57,14 +57,42 @@ $(document).ready(function(){
 
 
 
+$('.download').click(function(e){
+    var t = $(this);  
+    var open = !t.hasClass('open');
+      
+    $('.download.open').each(function(){
+      $(document).off('click.download');
+      $(this).removeClass('open');
+    });
+
+    if(t.offset().top+146 > $(document).height())
+    {
+      t.find('ul').css('top', -132);
+    }
+  t.toggleClass('open',open);
+  if(open)
+  {
+    $(document).on('click.download',function(){
+       t.removeClass('open');
+       // t.find('ul').toggle();
+       $(document).off('click.download');
+    });
+  }
+  else $(document).off('click.download');
+  // t.find('ul').toggle();
+
+  e.stopPropagation();
+});
 
 
-  $('.download').click(function(){
+  $('.download li div.type').click(function(e){
     var t = $(this);
+    var type = t.attr('data-type');
+    var id = t.closest('.download').attr('data-id');
     $.ajax({
       url: "/" + document.documentElement.lang + "/download_request",
-      data: { id: t.attr('data-id') },
-      
+      data: { id: id, type: type },      
     }).done(function(d)
     {
       if(d.agreement)
@@ -76,7 +104,12 @@ $(document).ready(function(){
         modal(d.form);
       }
     });
+     // t.closest('ul').toggle();
+      t.closest('.download').removeClass('open');
+      $(document).off('click.download');
+    e.stopPropagation();      
   });
+
   js_modal =  $('#js_modal');
   js_modal.find('.bg').click(function(){
     js_modal_off();

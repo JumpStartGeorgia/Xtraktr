@@ -57,7 +57,15 @@
               </div>
             <% end %>
             <% if dataset.datafile.exists? %>
-              <div class="download" data-id="<%= dataset.id.to_s %>" title="<%= t('helpers.links.download_data') %>">asdsf</div>        
+              <div class="download-wrapper" >
+                <div class="download" data-id="<%= dataset.id.to_s %>" title="<%= t('helpers.links.download_data') %>">
+                <ul>
+                  <li><div class="type" data-type='csv' title="<%= t('download_data_options.title.csv') %>"><%= t('download_data_options.text.csv') %></div></li>
+                  <li><div class="type" data-type='spss' title="<%= t('download_data_options.title.spss') %>"><%= t('download_data_options.text.spss') %></div></li>
+                  <li><div class="type" data-type='stata' title="<%= t('download_data_options.title.stata') %>"><%= t('download_data_options.text.stata') %></div></li>
+                  <li><div class="type" data-type='r' title="<%= t('download_data_options.title.r') %>"><%= t('download_data_options.text.r') %></div></li>
+                </ul>                 
+              </div>        
             <% end %>
           </li>
         <% end %>

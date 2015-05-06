@@ -11,6 +11,7 @@ class FileMapper
       key
    }
    field :file, type: String
+   field :file_type, type: String
 
   #############################
   ## Indexes
@@ -18,7 +19,7 @@ class FileMapper
   index({ :key => 1}, { background: true})
   index({ :user_id => 1}, { background: true})
 
-  attr_accessible :key, :file
+  attr_accessible :key, :file, :file_type
 
 end
 

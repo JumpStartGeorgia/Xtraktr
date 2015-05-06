@@ -768,3 +768,14 @@ en:
         reports: Reports
         licensing: Licensing
         datasets: Datasets
+  download_data_options:
+     text:
+       csv: CSV
+       spss: SPSS
+       stata: STATA
+       r: R
+     title:
+       csv: Data formatted for spreadsheets
+       spss: Data formatted for SPSS 
+       stata: Data formatted for STATA
+       r: Data formatted for R
