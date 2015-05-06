@@ -43,6 +43,7 @@ class Dataset < CustomTranslation
   field :private_share_key, type: String
   field :languages, type: Array
   field :default_language, type: String
+  field :reset_download_files, type: Boolean, default: true
 
 
   embeds_many :questions do
@@ -233,7 +234,7 @@ class Dataset < CustomTranslation
   accepts_nested_attributes_for :stats
 
   # related files for the dataset
-  embeds_one :urls, class_name: 'DatasetFiles'
+  embeds_one :urls, class_name: 'DatasetFiles', cascade_callbacks: true
   accepts_nested_attributes_for :urls
 
   #############################
@@ -374,6 +375,7 @@ class Dataset < CustomTranslation
   before_save :update_flags
   after_save :update_stats
   before_save :set_public_at
+  before_save :check_if_dirty
 
   # process the datafile and save all of the information from it
   def process_file
@@ -382,11 +384,13 @@ class Dataset < CustomTranslation
     # udpate meta data
     update_flags
 
+    return true
   end
 
   # create the urls object on create so have place to store urls
   def create_urls_object
     self.build_urls if self.urls.nil?
+    return true
   end
 
   # create private share key that allows people to access this dataset if it is not public
@@ -507,7 +511,17 @@ class Dataset < CustomTranslation
     elsif !self.public?
       self.public_at = nil
     end
+    return true
   end
+
+  # if the dataset changed, make sure the reset_download_files flag is set to true
+  def check_if_dirty
+    if self.changed?
+      self.reset_download_files = true
+    end
+    return true
+  end
+
 
   #############################
   # Scopes

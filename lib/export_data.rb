@@ -12,6 +12,9 @@ module ExportData
     # set readme file name to appear in zip file
     @zip_file = 'README.txt'
 
+    # make sure dataset has url object
+    dataset.create_urls_object
+
     current_locale = dataset.current_locale.dup
 
     # create files for each locale in the dataset
@@ -60,6 +63,10 @@ module ExportData
     # set readme file name to appear in zip file
     @zip_file = 'README.txt'
 
+
+    # make sure dataset has url object
+    dataset.create_urls_object
+
     current_locale = dataset.current_locale.dup
 
     # create files for each locale in the dataset
@@ -86,6 +93,9 @@ module ExportData
 
     dataset.current_locale = current_locale
 
+    # indicate that the files are up to date
+    dataset.reset_download_files = false
+    
     dataset.save
 
     puts "@@@@@ it took #{(Time.now-start).round(3)} seconds to create all files for dataset"
@@ -98,14 +108,18 @@ module ExportData
     
     Dataset.all.each do |dataset|
       puts ">>> dataset: #{dataset.title}"
-      # make sure dataset has url object
-      dataset.create_urls_object
       # create the data files for this dataset
       create_all_files(dataset)
     end
 
     puts ">>>>>>>> it took #{(Time.now-start).round(3)} seconds to create all files for all datasets"
   end
+
+
+  #########################################
+  #########################################
+  #########################################
+  #########################################
 
 private
 
@@ -130,7 +144,7 @@ private
     readme_name = "readme_codebook.txt"
     readme_file_path = "#{Rails.public_path}#{dataset.data_download_staging_path}/#{dataset.current_locale}/#{readme_name}"
 
-    if !File.exists?(@codebook_file_path)
+    if !File.exists?(@codebook_file_path) || dataset.reset_download_files?
       # add title
       output << dataset.title
       output << "\n"
@@ -166,16 +180,14 @@ private
     create_readme(readme_file_path, 'codebook', dataset)
 
     # create the zip file
-    create_zip(dataset.title, zip_file_path, [
+    create_zip(dataset, zip_file_path, [
         {file_name: @zip_file, file_path: readme_file_path},
         {file_name: @codebook_file, file_path: @codebook_file_path}
       ]
     )
 
     # record the path to the file in the dataset
-    puts "=== codebook url before #{dataset.urls.codebook_translations}"
     dataset.urls.codebook_translations[dataset.current_locale] = "#{dataset.data_download_path}/#{dataset.current_locale}/#{zip_name}"
-    puts "=== codebook url after #{dataset.urls.codebook_translations}"
 
     puts "-- it took #{(Time.now-start).round(3)} seconds to create the codebook file"
     return nil  
@@ -200,7 +212,7 @@ private
     readme_name = "readme_csv.txt"
     readme_file_path = "#{Rails.public_path}#{dataset.data_download_staging_path}/#{dataset.current_locale}/#{readme_name}"
     
-    if !File.exists?(csv_file_path)
+    if !File.exists?(csv_file_path) || dataset.reset_download_files?
       #######################
       # create csv file
       puts "- creating csv file"
@@ -211,7 +223,7 @@ private
     create_readme(readme_file_path, 'csv', dataset)
 
     # create the zip file
-    create_zip(dataset.title, zip_file_path, [
+    create_zip(dataset, zip_file_path, [
         {file_name: @zip_file, file_path: readme_file_path},
         {file_name: @codebook_file, file_path: @codebook_file_path},
         {file_name: csv_file, file_path: csv_file_path}
@@ -250,7 +262,7 @@ private
     readme_file_path = "#{Rails.public_path}#{dataset.data_download_staging_path}/#{dataset.current_locale}/#{readme_name}"
     
 
-    if !File.exists?(spss_file_path)
+    if !File.exists?(spss_file_path) || dataset.reset_download_files?
       #######################
       ## create spss file
       puts "- creating spss file"
@@ -312,7 +324,7 @@ private
       File.open(spss_file_path, 'w') {|f| f.write(output) }
     end
 
-    if !File.exists?(csv_file_path)
+    if !File.exists?(csv_file_path) || dataset.reset_download_files?
       #######################
       # create csv file
       puts "- creating csv file"
@@ -323,7 +335,7 @@ private
     create_readme(readme_file_path, 'spss', dataset)
 
     # create the zip file
-    create_zip(dataset.title, zip_file_path, [
+    create_zip(dataset, zip_file_path, [
         {file_name: @zip_file, file_path: readme_file_path},
         {file_name: @codebook_file, file_path: @codebook_file_path},
         {file_name: csv_file, file_path: csv_file_path},
@@ -365,7 +377,7 @@ private
     readme_name = "readme_stata.txt"
     readme_file_path = "#{Rails.public_path}#{dataset.data_download_staging_path}/#{dataset.current_locale}/#{readme_name}"
 
-    if !File.exists?(stata_file_path)
+    if !File.exists?(stata_file_path) || dataset.reset_download_files?
       #######################
       # create stata file
       puts "- creating stata file"
@@ -385,7 +397,7 @@ private
       File.open(stata_file_path, 'w') {|f| f.write(output) }
     end
 
-    if !File.exists?(csv_file_path)
+    if !File.exists?(csv_file_path) || dataset.reset_download_files?
       #######################
       # create csv file
       puts "- creating csv file"
@@ -396,7 +408,7 @@ private
     create_readme(readme_file_path, 'stata', dataset)
 
     # create the zip file
-    create_zip(dataset.title, zip_file_path, [
+    create_zip(dataset, zip_file_path, [
         {file_name: @zip_file, file_path: readme_file_path},
         {file_name: @codebook_file, file_path: @codebook_file_path},
         {file_name: csv_file, file_path: csv_file_path},
@@ -433,7 +445,7 @@ private
     readme_file_path = "#{Rails.public_path}#{dataset.data_download_staging_path}/#{dataset.current_locale}/#{readme_name}"
 
 
-    if !File.exists?(r_file_path)
+    if !File.exists?(r_file_path) || dataset.reset_download_files?
       #######################
       # create r file
       puts "- creating r file"
@@ -461,7 +473,7 @@ private
     end
 
 
-    if !File.exists?(csv_file_path)
+    if !File.exists?(csv_file_path) || dataset.reset_download_files?
       #######################
       # create csv file
       puts "- creating csv file"
@@ -472,7 +484,7 @@ private
     create_readme(readme_file_path, 'r', dataset)
 
     # create the zip file
-    create_zip(dataset.title, zip_file_path, [
+    create_zip(dataset, zip_file_path, [
         {file_name: @zip_file, file_path: readme_file_path},
         {file_name: @codebook_file, file_path: @codebook_file_path},
         {file_name: csv_file, file_path: csv_file_path},
@@ -588,7 +600,7 @@ private
     # if the urls updated_at does not exist, use the dataset updated_at
     date = dataset.urls.updated_at.present? ? dataset.urls.updated_at : dataset.updated_at
 
-    if !File.exists?(file_name)
+    if !File.exists?(file_name) || dataset.reset_download_files?
       puts '- creating readme'
       # heading
       output << I18n.t('export_data.dataset', title: dataset.title)
@@ -631,16 +643,18 @@ private
   # create a zip file with the files provided
   # - files is an array of hash: {file_name, file_path}
   #   where file_name is the name to use for the file in the zip
-  def self.create_zip(title, zip_file_path, files=[])
+  def self.create_zip(dataset, zip_file_path, files=[])
+
+    FileUtils.rm zip_file_path if dataset.reset_download_files? && File.exists?(zip_file_path)
 
     if !File.exists?(zip_file_path)
       puts "- creating zip"
       # zip the files and move to the main folder
       Zip::Archive.open(zip_file_path, Zip::CREATE) do |zipfile|
-        zipfile.add_dir(title)
+        zipfile.add_dir(dataset.title)
         files.each do |file|
           # args: file name (with directory), source
-          zipfile.add_file("#{title}/#{file[:file_name]}", file[:file_path])
+          zipfile.add_file("#{dataset.title}/#{file[:file_name]}", file[:file_path])
         end
       end
     end

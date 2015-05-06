@@ -101,10 +101,12 @@ class Question < CustomTranslation
 
 
   #############################
+  # callbacks
 
   before_save :update_flags
   before_save :check_mappable
   after_save :update_stats
+  before_save :check_if_dirty
 
   def update_flags
 #    logger.debug "updating question flags for #{self.code}"
@@ -128,6 +130,15 @@ class Question < CustomTranslation
     if self.exclude_changed?
       self.dataset.update_stats
     end
+    return true
+  end
+
+  # if the question changed, make sure the dataset.reset_download_files flag is set to true
+  def check_if_dirty
+    if self.changed?
+      self.dataset.reset_download_files = true
+    end
+    return true
   end
 
   #############################

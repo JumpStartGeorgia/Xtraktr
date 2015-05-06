@@ -21,8 +21,13 @@
 #env :PATH, '/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin'
 set :output, "log/cron.log"
 
-# scrape the bank websites
-# have to take into account the 4 hour time difference on production server
+# remove old records from filemapper
 every :day, :at => '4:00 am' do
   rake "filemapper:clean"
+end
+
+# make sure all datasets have download data files
+every :hour do
+  require 'export_data'
+  # ExportData.create_all_dataset_files
 end

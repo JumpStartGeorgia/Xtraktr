@@ -50,6 +50,25 @@
       <% if @dataset.datafile.exists? %>
         <li>
           <div class="btn btn-default btn-sm download" data-id="<%= @dataset.id.to_s %>"><%= t('helpers.links.download_data') %></div>
+
+          <% if @dataset.urls.present? %>
+            <div id="data-download-list" class="dropdown">
+              <button id="data-download-label" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <%= t('helpers.links.download_data') %>
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu" aria-labelledby="data-download-label">
+                <li><%= link_to t('download_data_options.text.csv'), @dataset.urls.csv, title: t('download_data_options.title.csv'), 
+                        :'data-id' => @dataset.id.to_s, :'data-file-type' => 'csv' %></li>
+                <li><%= link_to t('download_data_options.text.r'), @dataset.urls.r, title: t('download_data_options.title.r'), 
+                        :'data-id' => @dataset.id.to_s, :'data-file-type' => 'r' %></li>
+                <li><%= link_to t('download_data_options.text.spss'), @dataset.urls.spss, title: t('download_data_options.title.spss'), 
+                        :'data-id' => @dataset.id.to_s, :'data-file-type' => 'spss' %></li>
+                <li><%= link_to t('download_data_options.text.stata'), @dataset.urls.stata, title: t('download_data_options.title.stata'), 
+                        :'data-id' => @dataset.id.to_s, :'data-file-type' => 'stata' %></li>
+              </ul>
+            </div>          
+          <% end %>
         </li>
       <% end %>
     </ul>

@@ -782,3 +782,14 @@ en:
         
         - R: The R file is a script file that you run in R that will load the data from the CSV file and also create each variable. 
                IMPORTANT - Before runing the script file in R, you will need to update the 'setwd' line to include the full path to the CSV file.
+  download_data_options:
+    text:
+      csv: CSV
+      spss: SPSS
+      stata: STATA
+      r: R
+    title:
+      csv: Data formatted for spreadsheets
+      spss: Data formatted for SPSS 
+      stata: Data formatted for STATA
+      r: Data formatted for R
