@@ -519,6 +519,9 @@ class Dataset < CustomTranslation
     order_by([[:released_at, :desc], [:title, :asc]])
   end
 
+  def self.categorize(cat)
+   self.in(id: CategoryMapper.where(category_id: Category.find_by(permalink: cat).id).map(:dataset_id))
+  end
   def self.is_public
     where(public: true)
   end

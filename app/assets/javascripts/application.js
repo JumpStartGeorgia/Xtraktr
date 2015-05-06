@@ -34,6 +34,8 @@ $(document).ready(function(){
     $('form div.help-inline,form div.help-block, form label abbr').tipsy({gravity: 'sw', fade: true});
   }
 
+  $('[data-toggle="tooltip"]').tooltip()
+
   $('#side-menu a').click(function(){
     var t = $(this);
     var p = t.closest('ul');
@@ -165,6 +167,13 @@ $('.download').click(function(e){
     e.stopPropagation();
     filter();
   });  
+   $('.search .go').click(function(){ filter(); });
+
+  $(document).on('keyup.dataset_search','.search input', function(e) {
+    if (e.keyCode == 13) {  // enter
+      $('.search .go').trigger('click');
+    }  
+  });
   $('.search .go').click(function(){ filter(); });
   $('.sort select').change(function(){ filter(); });
 });
@@ -181,10 +190,10 @@ function filter()
   $.ajax({
     url: url,
     data: data,
-    
+    dataType: 'json',    
   }).done(function(d)
   {
-     console.log(d);
+     $('.dataset-list').html(d.d);
     // if(d.agreement)
     // {
     //   window.location.href = d.url;

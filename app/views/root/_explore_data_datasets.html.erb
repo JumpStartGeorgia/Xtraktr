@@ -1,0 +1,48 @@
+ <%- model_class = Dataset -%>
+<ul>
+  <% if @datasets.present? %>
+    <% @datasets.each do |dataset| %>
+      <li>
+        <h2><%= link_to dataset.title, explore_data_dashboard_path(dataset) %></h2>
+        <div class="info">
+          <div class="calendar"></div>
+          <div class="timestamp">
+            <span><%= model_class.human_attribute_name(:gathered_at) %>:</span>
+            <%= format_gathered_dates(dataset.start_gathered_at, dataset.end_gathered_at) %>
+          </div>
+          <div class="timestamp">
+            <span><%= model_class.human_attribute_name(:released_at) %>::</span>
+            <%= I18n.l(dataset.released_at, format: :day_first) if dataset.released_at.present? %>
+          </div>
+          <% if dataset.time_series_datasets.present? %>
+            <div class="time-series" title="<%= t('app.menu.titles.dataset_to_time_series') %>" data-toggle="tooltip" data-placement="right">
+              <%= link_to  image_tag("svg/timeseries.svg", alt: t('app.menu.titles.dataset_to_time_series')), explore_time_series_dashboard_path(dataset.time_series_datasets.first.time_series_id)%>                  
+            </div>
+          <% end %>
+        </div>
+        <% if @is_xtraktr %>
+          <div class="source"><%= "#{model_class.human_attribute_name(:source)}: #{dataset.source}" %></div>
+        <% end %>
+
+        <% if dataset.description.present? %>
+          <div class="description">
+            <%= simple_format_no_tags(dataset.description, {}, {sanitize: false}) %>
+          </div>
+        <% end %>
+        <% if dataset.datafile.exists? %>
+          <div class="download-wrapper" >
+            <div class="download" data-id="<%= dataset.id.to_s %>" title="<%= t('helpers.links.download_data') %>">
+            <ul>
+              <li><div class="type" data-type='csv' title="<%= t('download_data_options.title.csv') %>"><%= t('download_data_options.text.csv') %></div></li>
+              <li><div class="type" data-type='spss' title="<%= t('download_data_options.title.spss') %>"><%= t('download_data_options.text.spss') %></div></li>
+              <li><div class="type" data-type='stata' title="<%= t('download_data_options.title.stata') %>"><%= t('download_data_options.text.stata') %></div></li>
+              <li><div class="type" data-type='r' title="<%= t('download_data_options.title.r') %>"><%= t('download_data_options.text.r') %></div></li>
+            </ul>                 
+          </div>        
+        <% end %>
+      </li>
+    <% end %>  
+  <% else %>
+    <li><div class="no-data-found"><%= t('root.explore_data.no_match') %></div></li>
+  <% end %>
+</ul>

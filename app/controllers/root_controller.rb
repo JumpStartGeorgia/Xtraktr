@@ -46,9 +46,9 @@ class RootController < ApplicationController
     # add sort
     if params[:sort].present?
       case params[:sort].downcase
-        when 'public'
+        when 'publish'
           @datasets = @datasets.sorted_public_at
-        when 'released'
+        when 'release'
           @datasets = @datasets.sorted_released_at
         when 'title'
           @datasets = @datasets.sorted_title
@@ -58,12 +58,13 @@ class RootController < ApplicationController
     end
     # add category
     if params[:category].present?
-
+      @datasets = @datasets.categorize(params[:category])
     end
-
+    data = { d: (render_to_string "root/_explore_data_datasets", :layout => false) }
     respond_to do |format|
       format.html # index.html.erb
-    end
+      format.json { render json: data }
+    end    
   end
   
   def explore_data_dashboard
