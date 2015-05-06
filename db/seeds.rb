@@ -1,4 +1,5 @@
 # encoding: UTF-8
+
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
 #
@@ -114,7 +115,19 @@ end
 #####################
 puts 'Creating page content records'
 PageContent.create(name: 'instructions', title: 'Instructions', content: 'coming soon...') if PageContent.by_name('instructions').nil?
-PageContent.create(name: 'contact', title: 'Contact', content: 'coming soon...') if PageContent.by_name('contact').nil?
+PageContent.create(name: 'contact', title_translations: {'en' => 'Contact', 'ka' => 'კონტაქტი'}, content_translations: {'en' => '<p>If you would like to find out more about our data or have questions about datasets on this site, please send us an email or call us at:</p>
+<p>
+tbilisi@unicef.org
+<br/>
++995 32 2 23 23 88 or +995 32 2 25 11 30 
+</p>
+', 'ka' => '<p>თუ გაქვთ რაიმე სახის შეკითხვა ან გსურთ მონაცემების შესახებ უფრო მეტი ინფორმაციის მიღება, გთხოვთ დაგვიკავშრდეთ ქვემოთ მითითებული ელ-ფოსტის ან ტელეფონის საშუალებით:</p>
+<p>
+tbilisi@unicef.org
+<br/>
++995 32 2 23 23 88 or +995 32 2 25 11 30 
+</p>'}) if PageContent.by_name('contact').nil?
+
 PageContent.create(name: 'disclaimer', title: 'Disclaimer', content: 'coming soon...') if PageContent.by_name('disclaimer').nil?
 if ENV['reload_api_docs'] && PageContent.by_name('api').present?
   PageContent.by_name('api').destroy
