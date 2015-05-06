@@ -14,6 +14,7 @@ module ExportData
 
     # make sure dataset has url object
     dataset.create_urls_object
+    get_url_params(dataset)
 
     current_locale = dataset.current_locale.dup
 
@@ -49,6 +50,7 @@ module ExportData
     end
 
     dataset.current_locale = current_locale
+    set_url_params(dataset)
 
     dataset.save
 
@@ -66,6 +68,7 @@ module ExportData
 
     # make sure dataset has url object
     dataset.create_urls_object
+    get_url_params(dataset)
 
     current_locale = dataset.current_locale.dup
 
@@ -92,6 +95,7 @@ module ExportData
     end
 
     dataset.current_locale = current_locale
+    set_url_params(dataset)
 
     # indicate that the files are up to date
     dataset.reset_download_files = false
@@ -187,7 +191,7 @@ private
     )
 
     # record the path to the file in the dataset
-    dataset.urls.codebook_translations[dataset.current_locale] = "#{dataset.data_download_path}/#{dataset.current_locale}/#{zip_name}"
+    @urls[:codebook][dataset.current_locale] = "#{dataset.data_download_path}/#{dataset.current_locale}/#{zip_name}"
 
     puts "-- it took #{(Time.now-start).round(3)} seconds to create the codebook file"
     return nil  
@@ -231,7 +235,7 @@ private
     )
 
     # record the path to the file in the dataset
-    dataset.urls.csv_translations[dataset.current_locale] = "#{dataset.data_download_path}/#{dataset.current_locale}/#{zip_name}"
+    @urls[:csv][dataset.current_locale] = "#{dataset.data_download_path}/#{dataset.current_locale}/#{zip_name}"
     
     puts "-- it took #{(Time.now-start).round(3)} seconds to create the csv file"
     return nil  
@@ -344,7 +348,7 @@ private
     )
 
     # record the path to the file in the dataset
-    dataset.urls.spss_translations[dataset.current_locale] = "#{dataset.data_download_path}/#{dataset.current_locale}/#{zip_name}"
+    @urls[:spss][dataset.current_locale] = "#{dataset.data_download_path}/#{dataset.current_locale}/#{zip_name}"
 
     puts "-- it took #{(Time.now-start).round(3)} seconds to create the spss and csv files"
     return nil
@@ -417,7 +421,7 @@ private
     )
 
     # record the path to the file in the dataset
-    dataset.urls.stata_translations[dataset.current_locale] = "#{dataset.data_download_path}/#{dataset.current_locale}/#{zip_name}"
+    @urls[:stata][dataset.current_locale] = "#{dataset.data_download_path}/#{dataset.current_locale}/#{zip_name}"
 
     puts "-- it took #{(Time.now-start).round(3)} seconds to create the stata and csv files"
     return nil
@@ -493,7 +497,7 @@ private
     )
 
     # record the path to the file in the dataset
-    dataset.urls.r_translations[dataset.current_locale] = "#{dataset.data_download_path}/#{dataset.current_locale}/#{zip_name}"
+    @urls[:r][dataset.current_locale] = "#{dataset.data_download_path}/#{dataset.current_locale}/#{zip_name}"
 
     puts "-- it took #{(Time.now-start).round(3)} seconds to create the r and csv files"
     return nil
@@ -659,5 +663,34 @@ private
       end
     end
   end
+
+
+  #########################################
+  #########################################
+  ## mongoid does not detect a change in value if updating a translation locale like: x.title_translations['en'] = 'title'
+  ## instead, you have replace the entire translations attribute
+  ## and that is what these functions are for
+  ## the first one saves the exisitng values locally
+  ## then after the local values are updated, the urls object is updated
+
+  def self.get_url_params(dataset)
+    @urls = {codebook: {}, csv: {}, r: {}, spss: {}, stata: {}}
+    @urls[:codebook] = dataset.urls.codebook_translations.dup if dataset.urls.codebook_translations.present?
+    @urls[:csv] = dataset.urls.csv_translations.dup if dataset.urls.csv_translations.present?
+    @urls[:r] = dataset.urls.r_translations.dup if dataset.urls.r_translations.present?
+    @urls[:spss] = dataset.urls.spss_translations.dup if dataset.urls.spss_translations.present?
+    @urls[:stata] = dataset.urls.stata_translations.dup if dataset.urls.stata_translations.present?
+  end
+
+  def self.set_url_params(dataset)
+    dataset.urls.codebook_translations = @urls[:codebook] if @urls[:codebook].present?
+    dataset.urls.csv_translations = @urls[:csv] if @urls[:csv].present?
+    dataset.urls.r_translations = @urls[:r] if @urls[:r].present?
+    dataset.urls.spss_translations = @urls[:spss] if @urls[:spss].present?
+    dataset.urls.stata_translations = @urls[:stata] if @urls[:stata].present?
+  end
+
+
+
 
 end

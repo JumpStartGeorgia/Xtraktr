@@ -39,16 +39,4 @@ class DatasetFiles < CustomTranslation
   end
   
 
-
-  before_save :t2
-  before_create :t1
-  def t1
-    puts "$$$$$$$$$$$$4 dataset files before create"
-    puts "$$$$$$$$$$$$4 changed? #{self.changed?}; codebook chagned = #{self.codebook.changed?} codebook trans change = #{self.codebook_translations.changed?}"
-  end
-  def t2
-    puts "$$$$$$$$$$$$4 dataset files before save!"
-    puts "$$$$$$$$$$$$4 changed? #{self.changed?}; codebook chagned = #{self.codebook.changed?} codebook trans change = #{self.codebook_translations.changed?}"
-  end
-
 end
