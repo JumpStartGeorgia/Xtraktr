@@ -417,8 +417,8 @@ ka:
       choose_category: Choose Category
       change_category: Change Category      
     common:
-      app_name: UNICEF Georgia Data Portal #X-Traktr
-      app_slogan: 'UNICEF საქართველოს ღია მონაცემები: პრობლემების გადაჭრა საზომით'
+      app_name: UNICEF საქართველოს ღია მონაცემები #X-Traktr
+      app_slogan: 'პრობლემების გადაჭრა საზომით'
       app_description: 'UNICEF საქართველო, სხვა მრავალ პარტნიორთან ერთად აგროვებს მონაცემებს საქართველოში ბავშვთა კეთილდღეობის შესახებ არსებულ სიტუაციაზე. ამ ცოდნას ის გადასცემს ნაციონალურ და გლობალურ გადაწყვეტილების მიმღებ ორგანოებს რათა გაუმჯობესდეს ბავშვა კეთილდღეობა საქართველოში.'
       added_on: "დამატებულია: %{date}" 
       jumpstart: “ჯამპსტარტ ჯორჯია”
