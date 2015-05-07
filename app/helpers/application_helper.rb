@@ -79,5 +79,4 @@ module ApplicationHelper
       <span>' + tt + '</span>').html_safe      
     end
   end
-
 end

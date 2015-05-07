@@ -60,6 +60,9 @@ class RootController < ApplicationController
     if params[:category].present?
       @datasets = @datasets.categorize(params[:category])
     end
+
+    @datasets = Kaminari.paginate_array(@datasets).page(params[:page]).per(per_page)
+    
     data = { d: (render_to_string "root/_explore_data_datasets", :layout => false) }
     respond_to do |format|
       format.html # index.html.erb

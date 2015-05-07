@@ -123,7 +123,7 @@ footer {
 
 .tooltip
 {
-  .tooltip-arrow
+  &.right .tooltip-arrow
   {
     border:0 !important;
     background:transparent url(/assets/svg/tooltip_left.svg) no-repeat center left/6px 18px !important;
@@ -136,6 +136,24 @@ footer {
     -webkit-transform: translateY(-50%);
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
+    right:auto !important;
+    // transform:rotate(-90deg) !important;;    
+    margin:0px !important;
+    padding:0px !important;
+  }
+  &.bottom .tooltip-arrow
+  {
+    border:0 !important;
+    background:transparent url(/assets/svg/tooltip_up.svg) no-repeat center left/18px 6px !important;
+    width:18px !important;
+    height:6px !important;
+    position:absolute !important;
+    top:0px !important;
+    bottom:auto !important;
+    left:50% !important;
+    -webkit-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
     right:auto !important;
     // transform:rotate(-90deg) !important;;    
     margin:0px !important;

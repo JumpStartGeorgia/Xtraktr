@@ -31,7 +31,7 @@
         <% end %>
         <% if dataset.datafile.exists? %>
           <div class="download-wrapper" >
-            <div class="download" data-id="<%= dataset.id.to_s %>" title="<%= t('helpers.links.download_data') %>">
+            <div class="download" data-id="<%= dataset.id.to_s %>" title="<%= t('helpers.links.download_data') %>" data-toggle="tooltip" data-placement="bottom">
             <ul>
               <li><div class="type" data-type='csv' title="<%= t('download_data_options.title.csv') %>"><%= t('download_data_options.text.csv') %></div></li>
               <li><div class="type" data-type='spss' title="<%= t('download_data_options.title.spss') %>"><%= t('download_data_options.text.spss') %></div></li>
@@ -46,3 +46,4 @@
     <li><div class="no-data-found"><%= t('root.explore_data.no_match') %></div></li>
   <% end %>
 </ul>
+<%= paginate @datasets %>

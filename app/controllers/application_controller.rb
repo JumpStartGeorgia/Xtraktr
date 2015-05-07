@@ -1,7 +1,9 @@
 class ApplicationController < ActionController::Base
+
   layout 'app'
   protect_from_forgery
 
+  PER_PAGE_COUNT = 1
   DEVISE_CONTROLLERS = ['devise/sessions', 'devise/registrations', 'devise/passwords']
 
 	before_filter :set_locale
@@ -521,5 +523,8 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 		  .deliver
 		render :file => "#{Rails.root}/public/500.html", :status => 500
 	end
+  def per_page
+    return PER_PAGE_COUNT
+  end
 
 end
