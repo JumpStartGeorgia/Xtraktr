@@ -87,7 +87,7 @@ class ApiRequest
       record.version = user_agent.version
       record.os = user_agent.os
       record.platform = user_agent.platform
-      record.app = user_agent.app
+      record.app = user_agent.application
       record.is_mobile = user_agent.mobile?
     end   
   
