@@ -38,6 +38,7 @@ class TimeSeriesController < ApplicationController
         @time_series.current_locale = params[:language]
       end
 
+      @license = PageContent.by_name('license')
 
       @css.push("dashboard.css")
       @js.push("live_search.js")

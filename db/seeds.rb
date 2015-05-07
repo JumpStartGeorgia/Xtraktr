@@ -145,6 +145,9 @@ PageContent.create(name: 'api', title: 'API', content: '<p>The UNICEF Georgia Da
 <h2>API Calls</h2>
 <p>The following is a list of calls that are available in each version of the api.</p>') if PageContent.by_name('api').nil?
 
+PageContent.create(name: 'license', title: 'Licensing', content: '<p>To review UNICEF\'s terms of use, licensing, and other relevant information, please visit UNICEF\'s index (English only) of important legal information.</p>
+<p><a href="http://www.unicef.org/about/legal_index.html" target="_blank">http://www.unicef.org/about/legal_index.html</a></p> ') if PageContent.by_name('license').nil?
+
 #####################
 ## Create API Versions/Methods
 #####################

@@ -83,6 +83,8 @@ class RootController < ApplicationController
         @dataset.current_locale = params[:language]
       end
 
+      @license = PageContent.by_name('license')
+
       @css.push("dashboard.css")
       @js.push("live_search.js")
 
@@ -151,6 +153,8 @@ class RootController < ApplicationController
       if params[:language].present? && @time_series.languages.include?(params[:language])
         @time_series.current_locale = params[:language]
       end
+
+      @license = PageContent.by_name('license')
 
       @css.push("dashboard.css")
       @js.push("live_search.js")

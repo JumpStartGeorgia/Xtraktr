@@ -40,6 +40,7 @@ class DatasetsController < ApplicationController
         @dataset.current_locale = params[:language]
       end
 
+      @license = PageContent.by_name('license')
 
       @css.push("dashboard.css")
       @js.push("live_search.js")
