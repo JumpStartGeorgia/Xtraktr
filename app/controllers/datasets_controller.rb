@@ -35,6 +35,12 @@ class DatasetsController < ApplicationController
     else
       add_dataset_nav_options 
 
+      # if the language parameter exists and it is valid, use it instead of the default current_locale
+      if params[:language].present? && @dataset.languages.include?(params[:language])
+        @dataset.current_locale = params[:language]
+      end
+
+
       @css.push("dashboard.css")
       @js.push("live_search.js")
 

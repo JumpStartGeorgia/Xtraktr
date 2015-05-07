@@ -12,23 +12,48 @@ class ApiV1
   end
 
   # get details about a dataset
-  def self.dataset(dataset_id)
+  # parameters:
+  #  - dataset_id - id of dataset to get info on (required)
+  #  - language - locale of language to get data in (optional)
+  def self.dataset(dataset_id, options={})
+    # get options
+    language = options['language'].present? ? options['language'].downcase : nil
+
+    # get dataset
     dataset = Dataset.is_public.find_by(id: dataset_id)
 
     if dataset.nil?
       return {errors: [{status: '404', detail: I18n.t('api.msgs.no_dataset') }]}
     end
 
+    # if language provided, set it
+    if language.present? && dataset.languages.include?(language)
+      dataset.current_locale = language
+    end
+
     return dataset
   end
 
   # get codebook for a dataset
-  def self.dataset_codebook(dataset_id)
+  # parameters:
+  #  - dataset_id - id of dataset to get codebook for (required)
+  #  - language - locale of language to get data in (optional)
+  def self.dataset_codebook(dataset_id, options={})
     questions = nil
+
+    # get options
+    language = options['language'].present? ? options['language'].downcase : nil
+
+    # get dataset
     dataset = Dataset.is_public.find_by(id: dataset_id)
 
     if dataset.nil?
       return {errors: [{status: '404', detail: I18n.t('api.msgs.no_dataset') }]}
+    end
+
+    # if language provided, set it
+    if language.present? && dataset.languages.include?(language)
+      dataset.current_locale = language
     end
 
     questions = dataset.questions.for_analysis
@@ -47,6 +72,7 @@ class ApiV1
   #  - with_title - boolean indicating if results should include title (optional, default false)
   #  - with_chart_data - boolean indicating if results should include data formatted for highcharts (optional, default false)
   #  - with_map_data - boolean indicating if results should include data formatted for highmaps (optional, default false)
+  #  - language - locale of language to get data in (optional)
   # return format:
   # {
   #   dataset: {id, title},
@@ -61,6 +87,15 @@ class ApiV1
   # }  
   def self.dataset_analysis(dataset_id, question_code, options={})
     data = {}
+
+    # get options
+    can_exclude = options['can_exclude'].present? && options['can_exclude'].to_bool == true
+    with_title = options['with_title'].present? && options['with_title'].to_bool == true
+    with_chart_data = options['with_chart_data'].present? && options['with_chart_data'].to_bool == true
+    with_map_data = options['with_map_data'].present? && options['with_map_data'].to_bool == true
+    language = options['language'].present? ? options['language'].downcase : nil
+
+
     dataset = Dataset.is_public.find_by(id: dataset_id)
 
     # if the dataset could not be found, stop
@@ -68,19 +103,18 @@ class ApiV1
       return {errors: [{status: '404', detail: I18n.t('api.msgs.no_dataset') }]}
     end
 
+    # if language provided, set it
+    if language.present? && dataset.languages.include?(language)
+      dataset.current_locale = language
+    end
+
+    # get the questions
     question = dataset.questions.with_code(question_code)
 
     # if the question could not be found, stop
     if question.nil?
       return {errors: [{status: '404', detail: I18n.t('api.msgs.no_question') }]}
     end
-
-    ########################
-    # get options
-    can_exclude = options['can_exclude'].present? && options['can_exclude'].to_bool == true
-    with_title = options['with_title'].present? && options['with_title'].to_bool == true
-    with_chart_data = options['with_chart_data'].present? && options['with_chart_data'].to_bool == true
-    with_map_data = options['with_map_data'].present? && options['with_map_data'].to_bool == true
 
     # if filter by by exists, get it
     filtered_by = nil
@@ -142,23 +176,46 @@ class ApiV1
   end
 
   # get details about a time_series
-  def self.time_series(time_series_id)
+  # parameters:
+  #  - time_series_id - id of time_series to get info on (required)
+  #  - language - locale of language to get data in (optional)
+  def self.time_series(time_series_id, options={})
+    # get options
+    language = options['language'].present? ? options['language'].downcase : nil
+
     time_series = TimeSeries.is_public.find_by(id: time_series_id)
 
     if time_series.nil?
       return {errors: [{status: '404', detail: I18n.t('api.msgs.no_time_series') }]}
     end
 
+    # if language provided, set it
+    if language.present? && time_series.languages.include?(language)
+      time_series.current_locale = language
+    end
+
     return time_series
   end
 
   # get codebook for a time_series
-  def self.time_series_codebook(time_series_id)
+  # parameters:
+  #  - time_series_id - id of time_series to get codebook for (required)
+  #  - language - locale of language to get data in
+  def self.time_series_codebook(time_series_id, options={})
     questions = nil
+
+    # get options
+    language = options['language'].present? ? options['language'].downcase : nil
+
     time_series = TimeSeries.is_public.find_by(id: time_series_id)
 
     if time_series.nil?
       return {errors: [{status: '404', detail: I18n.t('api.msgs.no_time_series') }]}
+    end
+
+    # if language provided, set it
+    if language.present? && time_series.languages.include?(language)
+      time_series.current_locale = language
     end
 
     questions = time_series.questions.sorted
@@ -174,6 +231,7 @@ class ApiV1
   #  - can_exclude - boolean indicating if the can_exclude answers should by excluded (optional, default false)
   #  - with_title - boolean indicating if results should include title (optional, default false)
   #  - with_chart_data - boolean indicating if results should include data formatted for highcharts (optional, default false)
+  #  - language - locale of language to get data in (optional)
   # return format:
   # {
   #   time_series: {id, title},
@@ -187,11 +245,25 @@ class ApiV1
   # }  
   def self.time_series_analysis(time_series_id, question_code, options={})
     data = {}
+
+    ########################
+    # get options
+    can_exclude = options['can_exclude'].present? && options['can_exclude'].to_bool == true
+    with_title = options['with_title'].present? && options['with_title'].to_bool == true
+    with_chart_data = options['with_chart_data'].present? && options['with_chart_data'].to_bool == true
+    language = options['language'].present? ? options['language'].downcase : nil
+
+
     time_series = TimeSeries.is_public.find_by(id: time_series_id)
 
     # if the time_series could not be found, stop
     if time_series.nil?
       return {errors: [{status: '404', detail: I18n.t('api.msgs.no_time_series') }]}
+    end
+
+    # if language provided, set it
+    if language.present? && time_series.languages.include?(language)
+      time_series.current_locale = language
     end
 
     question = time_series.questions.with_code(question_code)
@@ -209,12 +281,6 @@ class ApiV1
       return {errors: [{status: '404', detail: I18n.t('api.msgs.no_time_series_datasets') }]}
     end
 
-
-    ########################
-    # get options
-    can_exclude = options['can_exclude'].present? && options['can_exclude'].to_bool == true
-    with_title = options['with_title'].present? && options['with_title'].to_bool == true
-    with_chart_data = options['with_chart_data'].present? && options['with_chart_data'].to_bool == true
 
     # if filter by by exists, get it
     filtered_by = nil

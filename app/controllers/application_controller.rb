@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   layout 'app'
   protect_from_forgery
 
-  PER_PAGE_COUNT = 1
+  PER_PAGE_COUNT = 6
   DEVISE_CONTROLLERS = ['devise/sessions', 'devise/registrations', 'devise/passwords']
 
 	before_filter :set_locale

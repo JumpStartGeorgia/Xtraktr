@@ -33,6 +33,12 @@ class TimeSeriesController < ApplicationController
     else
       add_time_series_nav_options
 
+      # if the language parameter exists and it is valid, use it instead of the default current_locale
+      if params[:language].present? && @time_series.languages.include?(params[:language])
+        @time_series.current_locale = params[:language]
+      end
+
+
       @css.push("dashboard.css")
       @js.push("live_search.js")
 
