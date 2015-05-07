@@ -3,6 +3,7 @@ class Agreement
   include Mongoid::Timestamps
 
   #############################
+  belongs_to :dataset
 
   field :first_name, type: String
   field :last_name, type: String
@@ -13,13 +14,14 @@ class Agreement
   field :status, type: Integer
   field :status_other, type: String
   field :description, type: String
+  field :dataset_type, type: String
+  field :dataset_locale, type: String
 
-  field :file, type: String
   #############################
 
   attr_accessor :terms
   attr_accessible :first_name, :last_name, :age_group, :residence,
-                  :email, :affiliation, :status, :status_other, :description, :file, :terms
+                  :email, :affiliation, :status, :status_other, :description, :dataset_id, :dataset_type, :dataset_locale, :terms
 
     STATUS = { 1 => 'researcher',
                2 => 'student',
@@ -29,6 +31,7 @@ class Agreement
                6 => 'international_organization',
                7 => 'private_sector',
                8 => 'other' }
+
   #############################
   ## Validations
 
@@ -40,7 +43,9 @@ class Agreement
   validates :affiliation, presence: true
   validates :status, inclusion: { in: STATUS.keys }
   validates_presence_of :status_other, :if => lambda { |o| o.status == 8 }
-  validates :file, presence: true
+  validates :dataset_id, presence: true
+  validates :dataset_type, presence: true
+  validates :dataset_locale, presence: true
   validates :terms, :numericality => { :equal_to => 1 }
 
 end

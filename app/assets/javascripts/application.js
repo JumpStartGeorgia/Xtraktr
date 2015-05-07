@@ -10,8 +10,9 @@
 //= require jquery_ujs
 //= require jquery.ui.core
 //= require jquery.ui.effect
-//= require jquery.tipsy
-//= require twitter/bootstrap
+// Do not use twitter/bootstrap/tooltip because it has hack, to have possibility add class with klass options
+//= require twitter/bootstrap/dropdown
+//= require bootstrap.tooltip.min
 //= require dataTables/jquery.dataTables
 //= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
 //= require dataTables/extras/dataTables.tableTools
@@ -28,13 +29,10 @@ $(document).ready(function(){
 		.off('click.dropdown touchstart.dropdown.data-api', '.dropdown')
 		.on('click.dropdown touchstart.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() });
 
-
-  // add nice tooltips for form help
-  if ($('form div.help-inline,form div.help-block, form label abbr').length > 0){ 
-    $('form div.help-inline,form div.help-block, form label abbr').tipsy({gravity: 'sw', fade: true});
-  }
-
-  $('[data-toggle="tooltip"]').tooltip()
+  $('body').tooltip({
+    selector: '[title]',
+    container: 'body'    
+  });
 
   $('#side-menu a').click(function(){
     var t = $(this);
@@ -91,10 +89,12 @@ $('.download').click(function(e){
   $('.download li div.type').click(function(e){
     var t = $(this);
     var type = t.attr('data-type');
+    
     var id = t.closest('.download').attr('data-id');
+    var lang = t.closest('.download').attr('data-lang');
     $.ajax({
       url: "/" + document.documentElement.lang + "/download_request",
-      data: { id: id, type: type },      
+      data: { id: id, type: type, lang: lang },      
     }).done(function(d)
     {
       if(d.agreement)

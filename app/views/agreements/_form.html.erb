@@ -3,8 +3,6 @@
    <%= semantic_form_for(@mod, html: {class: 'tabbed-translation-form'}, :remote => true) do |f| %>
        <%= f.inputs do %>  
           <%= render :partial => 'shared/agreement', :locals => { f: f } %>
-          <input id="download_file_id" name="download_file_id" type="hidden" value="<%= @file_id %>">
-          <input id="download_file_type" name="download_file_type" type="hidden" value="<%= @file_type %>">
       <% end %>   
 
       <div class="form-group">

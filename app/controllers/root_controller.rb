@@ -192,14 +192,15 @@ class RootController < ApplicationController
   def download_request
     sign_in = user_signed_in?
     data = { agreement: sign_in }
-    @file_id = params[:id]
-    @file_type = params[:type]
-    if sign_in && current_user.agreement(@file_id)
-      mapper = FileMapper.create({ file: @file_id, type: @file_type })
+    @dataset_id = params[:id]
+    @dataset_type = params[:type]
+    @dataset_locale = params[:lang]
+    if sign_in && current_user.agreement(@dataset_id, @dataset_type, @dataset_locale)
+      mapper = FileMapper.create({ dataset_id: @dataset_id, dataset_type: @dataset_type, dataset_locale: @dataset_locale })
       data[:url] = "/#{I18n.locale}/download/#{mapper.key}"
     else
-      @mod = Agreement.new      
-      data[:form] = render_to_string "agreement/_form", :layout => false
+      @mod = Agreement.new({ dataset_id: @dataset_id, dataset_type: @dataset_type, dataset_locale: @dataset_locale  })      
+      data[:form] = render_to_string "agreements/_form", :layout => false
     end    
     respond_to do |format|
       format.json { render json: data }
@@ -207,11 +208,14 @@ class RootController < ApplicationController
   end
   def download
     begin      
-     mapper = FileMapper.find_by(key: params[:id])
-     file = Dataset.find(mapper.file)
-     mapper.destroy
-     send_file  file.datafile.path , :filename => file.title.gsub(' ', '_') + File.extname(file.datafile.original_filename),
-  :type => 'application/octet-stream'
+      mapper = FileMapper.find_by(key: params[:id])
+      dat = Dataset.find(mapper.dataset_id)
+      dat.current_locale = mapper.dataset_locale
+      file = dat.urls[mapper.dataset_type][mapper.dataset_locale]
+      mapper.destroy
+      send_file  Rails.public_path + file,  :filename => clean_filename(dat.title + "--"+ mapper.dataset_type.upcase +  "--" + I18n.l(Time.now,format: :file)) +  ".zip",
+       :type=>"application/zip", :x_sendfile=>true        
+
     rescue
       render file: "#{Rails.root}/public/404.html", layout: false, status: 404
     end

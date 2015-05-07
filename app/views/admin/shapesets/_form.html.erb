@@ -11,7 +11,7 @@
 
     <div class="file input optional form-group" id="shapeset_shapefile_input">
       <label class="control-label" for="shapeset_shapefile">
-        <%= t(label_key + 'shapefile') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(hint_key + 'shapefile') %>"><div>?</div></div>
+        <%= t(label_key + 'shapefile') %><abbr title="required">*</abbr><div class="help-inline" title="<%= t(hint_key + 'shapefile') %>"><div>?</div></div>
       </label>
       <% if @shapeset.shapefile.exists? %>
         <p>
@@ -36,7 +36,7 @@
    
     <div class="select input optional form-group" id="shapeset_default_language_input">
       <label class="control-label" for="shapeset_default_language">
-        <%= t(label_key + 'default_language') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(hint_key + 'default_language') %>"><div>?</div></div>
+        <%= t(label_key + 'default_language') %><abbr title="required">*</abbr><div class="help-inline" title="<%= t(hint_key + 'default_language') %>"><div>?</div></div>
       </label>
       <select class="selectpicker-language form-control default-language" data-live-search="true" data-selected-text-format="count>3" data-size="7" data-width="72%" 
               id="shapeset_default_language" name="shapeset[default_language]">

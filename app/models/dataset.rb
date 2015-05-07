@@ -185,9 +185,6 @@ class Dataset < CustomTranslation
     end
 
   end
-  embeds_many :categories do
-
-  end
   accepts_nested_attributes_for :questions
 
   # store the data
@@ -571,7 +568,12 @@ class Dataset < CustomTranslation
   end
 
   def self.categorize(cat)
-   self.in(id: CategoryMapper.where(category_id: Category.find_by(permalink: cat).id).map(:dataset_id))
+    cat = Category.find_by(permalink: cat) 
+    if cat.present?
+      self.in(id: CategoryMapper.where(category_id: cat.id).map(:dataset_id))
+    else
+      all
+    end
   end
   def self.is_public
     where(public: true)

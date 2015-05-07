@@ -15,7 +15,7 @@
   </p>
 
   <div class="radio_buttons input optional form-group" id="question_exclude_input">
-    <label class="control-label" for="question_exclude"><%= t(label_key + 'exclude') %><div class="help-inline" original-title="<%= t(hint_key + 'exclude') %>"><div>?</div></div>
+    <label class="control-label" for="question_exclude"><%= t(label_key + 'exclude') %><div class="help-inline" title="<%= t(hint_key + 'exclude') %>"><div>?</div></div>
     </label>
     <div class="radio">
       <label class="choice" for="question_exclude_true">
@@ -36,7 +36,7 @@
 
   <div class="input">
     <label class="control-label">
-      <%= t(label_key + 'is_mappable') %><div class="help-inline" original-title="<%= t(hint_key + 'is_mappable') %>"><div>?</div></div>
+      <%= t(label_key + 'is_mappable') %><div class="help-inline" title="<%= t(hint_key + 'is_mappable') %>"><div>?</div></div>
     </label>
     <% if @question.is_mappable? %>
       <%= t('formtastic.yes') %>
@@ -121,14 +121,14 @@
             <thead>
               <tr>
                 <% if index == 0 %>
-                  <th><%= t(a_label_key + 'text') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(a_hint_key + 'text') %>"><div>?</div></div></th>
-                  <th><%= t(a_label_key + 'value') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(a_hint_key + 'value') %>"><div>?</div></div></th>
-                  <th><%= t(a_label_key + 'sort_order') %><div class="help-inline" original-title="<%= t(a_hint_key + 'sort_order') %>"><div>?</div></div></th>
-                  <th><%= t(a_label_key + 'exclude') %><div class="help-inline" original-title="<%= t(a_hint_key + 'exclude') %>"><div>?</div></div></th>
-                  <th><%= t(a_label_key + 'can_exclude') %><div class="help-inline" original-title="<%= t(a_hint_key + 'can_exclude') %>"><div>?</div></div></th>
+                  <th><%= t(a_label_key + 'text') %><abbr title="required">*</abbr><div class="help-inline" title="<%= t(a_hint_key + 'text') %>"><div>?</div></div></th>
+                  <th><%= t(a_label_key + 'value') %><abbr title="required">*</abbr><div class="help-inline" title="<%= t(a_hint_key + 'value') %>"><div>?</div></div></th>
+                  <th><%= t(a_label_key + 'sort_order') %><div class="help-inline" title="<%= t(a_hint_key + 'sort_order') %>"><div>?</div></div></th>
+                  <th><%= t(a_label_key + 'exclude') %><div class="help-inline" title="<%= t(a_hint_key + 'exclude') %>"><div>?</div></div></th>
+                  <th><%= t(a_label_key + 'can_exclude') %><div class="help-inline" title="<%= t(a_hint_key + 'can_exclude') %>"><div>?</div></div></th>
                 <% else %>
-                  <th><%= t(a_label_key + 'text') %><div class="help-inline" original-title="<%= t(a_hint_key + 'text') %>"><div>?</div></div></th>
-                  <th><%= t('tabbed_translation_form.default_text') %><div class="help-inline" original-title="<%= t(a_hint_key + 'default_text') %>"><div>?</div></div></th>
+                  <th><%= t(a_label_key + 'text') %><div class="help-inline" title="<%= t(a_hint_key + 'text') %>"><div>?</div></div></th>
+                  <th><%= t('tabbed_translation_form.default_text') %><div class="help-inline" title="<%= t(a_hint_key + 'default_text') %>"><div>?</div></div></th>
                 <% end %>
               </tr>
             </thead>

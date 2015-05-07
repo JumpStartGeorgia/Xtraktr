@@ -26,11 +26,15 @@
       <%= f.input :status_other %>
 
       <%= f.input :description, :as => :text, :input_html => { :class => 'autogrow', :rows => 5, :cols => 80  } %>
-      
-      <div class="boolean input optional checkbox form-group" id="user_terms_input">
-            <input name="user[terms]" type="hidden" value="0">
-            <label class="  control-label" for="user_terms">
-               <input id="user_terms" name="user[terms]" type="checkbox" value="1">
+      <% if !reg %>
+        <%= f.input :dataset_id, :as => :hidden,  :input_html => { id: "dataset_id" } %>
+        <%= f.input :dataset_type, :as => :hidden,  :input_html => { id: "dataset_type" } %>        
+        <%= f.input :dataset_locale, :as => :hidden,  :input_html => { id: "dataset_locale" } %>        
+      <% end %>
+      <div class="boolean input optional checkbox form-group" id="agreement_terms_input">
+            <input name="agreement[terms]" type="hidden" value="0">
+            <label class="  control-label" for="agreement_terms">
+               <input id="agreement_terms" name="agreement[terms]" type="checkbox" value="1">
                <%= t('app.common.terms').html_safe %>
             </label>
       </div>    
