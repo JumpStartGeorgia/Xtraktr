@@ -31,6 +31,8 @@ BootstrapStarter::Application.configure do
 
 	# devise requires
 	config.action_mailer.default_url_options = { :host => 'localhost:3000' }
+  # need this so can use url_helpers in modules
+  Rails.application.routes.default_url_options = config.action_mailer.default_url_options
 
 	# small smtp server for dev, http://mailcatcher.me/
   config.action_mailer.delivery_method = :smtp

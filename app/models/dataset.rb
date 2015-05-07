@@ -45,9 +45,10 @@ class Dataset < CustomTranslation
   field :private_share_key, type: String
   field :languages, type: Array
   field :default_language, type: String
+  field :reset_download_files, type: Boolean, default: true
 
 
-  embeds_many :questions do
+  embeds_many :questions, cascade_callbacks: true do
     # these are functions that will query the questions documents
 
     # get the question that has the provided code
@@ -237,19 +238,25 @@ class Dataset < CustomTranslation
   has_one :stats, class_name: "Stats"
   accepts_nested_attributes_for :stats
 
+  # related files for the dataset
+  embeds_one :urls, class_name: 'DatasetFiles', cascade_callbacks: true
+  accepts_nested_attributes_for :urls
+
   #############################
 
   attr_accessible :title, :description, :methodology, :user_id, :has_warnings, 
       :data_items_attributes, :questions_attributes, :reports_attributes, :questions_with_bad_answers, 
       :datafile, :public, :private_share_key, #:codebook, 
       :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at,
-      :languages, :default_language,
-      :title_translations, :description_translations, :methodology_translations, :source_translations, :source_url_translations
+      :languages, :default_language, :stats_attributes, :urls_attributes, 
+      :title_translations, :description_translations, :methodology_translations, :source_translations, :source_url_translations,
+      :reset_download_files
 
   TYPE = {:onevar => 'onevar', :crosstab => 'crosstab'}
 
-  FOLDER_PATH = "/system/datasets"
-  JS_FILE = "shapes.js"
+  FOLDER_PATH = '/system/datasets'
+  JS_FILE = 'shapes.js'
+  DOWNLOAD_FOLDER = 'data_download'
 
   #############################
   # indexes
@@ -368,11 +375,14 @@ class Dataset < CustomTranslation
   # Callbacks
   
   before_create :process_file
+  after_create :create_quick_data_downloads
+  before_save :create_urls_object
   before_create :create_private_share_key
   after_destroy :delete_dataset_files
   before_save :update_flags
   after_save :update_stats
   before_save :set_public_at
+  before_save :check_if_dirty
 
   # process the datafile and save all of the information from it
   def process_file
@@ -381,6 +391,21 @@ class Dataset < CustomTranslation
     # udpate meta data
     update_flags
 
+    return true
+  end
+
+  # create quick data files downloads using csv from processing
+  def create_quick_data_downloads
+    require 'export_data'
+    ExportData.create_all_files(self, true)
+
+    return true
+  end
+
+  # create the urls object on create so have place to store urls
+  def create_urls_object
+    self.build_urls if self.urls.nil?
+    return true
   end
 
   # create private share key that allows people to access this dataset if it is not public
@@ -449,6 +474,10 @@ class Dataset < CustomTranslation
     # else, delete the js file
     if self.is_mappable?
       logger.debug "=== creating js file"
+
+      # make sure the urls object exists
+      create_urls_object
+
       # create hash of shapes in format: {code => geojson, code => geojson}
       shapes = {}
       self.questions.are_mappable.each do |question|
@@ -471,11 +500,18 @@ class Dataset < CustomTranslation
         gz.close
       end
 
+      # record the shape file url
+      self.urls.shape_file = js_shapefile_url_path
+
     else
       # delete js file
       logger.debug "==== deleting shape js file at #{js_shapefile_file_path}"
       FileUtils.rm js_shapefile_file_path if File.exists?(js_shapefile_file_path)
       FileUtils.rm js_gz_shapefile_file_path + ".gz" if File.exists?(js_gz_shapefile_file_path)
+
+      # remove the shape file url
+      self.urls.shape_file = nil
+
     end
 
     return true
@@ -490,7 +526,22 @@ class Dataset < CustomTranslation
     elsif !self.public?
       self.public_at = nil
     end
+    return true
   end
+
+  # if the dataset changed, make sure the reset_download_files flag is set to true
+  # if change is only reset_download_files and reset_download_files = false, do nothing
+  def check_if_dirty
+    logger.debug "======= dataset changed? #{self.changed?}; changed: #{self.changed}"
+    logger.debug "======= languages changed? #{self.languages_changed?}; change: #{self.languages_change}"
+    logger.debug "======= reset_download_files changed? #{self.reset_download_files_changed?} change: #{self.reset_download_files_change}"
+    if self.changed? && !(self.changed.include?('reset_download_files') && self.reset_download_files == false)
+      logger.debug "========== dataset changed!, setting reset_download_files = true"
+      self.reset_download_files = true
+    end
+    return true
+  end
+
 
   #############################
   # Scopes
@@ -557,8 +608,13 @@ class Dataset < CustomTranslation
     return ds
   end
 
+  # get the datasets that are missing download files or needs to have their files recreated due to changes
+  def self.needs_download_files
+    self.or({:reset_download_files => true}, {:urls.exists => false}, {:'urls.codebook'.exists => false})
+  end
 
   #############################
+  ## paths to dataset related files
 
   # get the js shape file path
   def js_shapefile_file_path
@@ -571,6 +627,14 @@ class Dataset < CustomTranslation
 
   def js_shapefile_url_path
     "#{FOLDER_PATH}/#{self.id}/#{JS_FILE}"
+  end
+
+  def data_download_path
+    "#{FOLDER_PATH}/#{self.id}/#{DOWNLOAD_FOLDER}"
+  end
+
+  def data_download_staging_path
+    "#{FOLDER_PATH}/#{self.id}/#{DOWNLOAD_FOLDER}/staging"
   end
 
   #############################

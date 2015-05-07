@@ -464,7 +464,7 @@ function get_explore_time_series(is_back_button){
 
     // change the browser URL to the given link location
     if (!is_back_button && new_url != window.location.href){
-      window.history.pushState({path:new_url}, '', new_url);
+      window.history.pushState({path:new_url}, $('title').html(), new_url);
     }
 
     $('#explore-data-loader').fadeOut('slow');

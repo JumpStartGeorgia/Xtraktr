@@ -145,6 +145,28 @@ en:
         public_at: Released At
         updated_at: Last Updated At
         sort_order: Sort Order
+      api_request:
+        api_key_id: API Key ID
+        user_id: User ID
+        dataset_id: Dataset ID
+        time_series_id: Time Series ID
+        ip_address: IP Address
+        locale: API Locale
+        api_version: API Version
+        action: API Action
+        question_code: Question Code
+        broken_down_by_code: Broken Down By Code
+        filtered_by_code: Filtered By Code
+        can_exclude: Can Exclude
+        with_title: With Title
+        with_chart_data: With Chart Data
+        with_map_data: With Map Data
+        browser: Browser
+        version: Browser Version
+        os: OS
+        platform: OS Platform
+        app: App
+        is_mobile: Is Mobile Device?
     hints:
       dataset:
         title: The title of your dataset
@@ -414,7 +436,8 @@ en:
       change_category: Change Category
     common:
       app_name: UNICEF Georgia Data Portal #X-Traktr
-      app_description: ''
+      app_slogan: 'UNICEF Georgia Open Data: Helping to solve by measuring UNICEF'
+      app_description: 'In collaboration with a wide range of partners, UNICEF Georgia gathers evidence on the situation of children in Georgia. It uses this knowledge to inform national and global decision-making with the objective of improving children’s well-being.'
       added_on: "Added on: %{date}" 
       jumpstart: JumpStart Georgia
       js_link_title: JumpStart Georgia - We communicate data better!
@@ -525,6 +548,7 @@ en:
       datasets: Datasets
       shapesets: Shapesets
       api_documentation: API Version Documentation
+      download_api_requests: Download API Request History
     users:
       edit:
         title: Editing User
@@ -546,8 +570,10 @@ en:
     index:
       header_latest_datasets: Latest Datasets
       no_datasets: 'At this time, no datasets have been loaded into the site.'
+      no_match_datasets: 'Sorry, no datasets match your search request.'
       header_latest_time_series: Latest Time Series
       no_time_series: 'At this time, no time series have been created in the site.'
+      no_match_time_series: 'Sorry, no time series match your search request.'
     contact:
       title: Contact
     instructions:
@@ -770,14 +796,50 @@ en:
         reports: Reports
         licensing: Licensing
         datasets: Datasets
+  export_data:
+    dataset: 'Dataset: %{title}'
+    download_from: 'Downloaded From: %{app_name} at %{url}.'
+    last_update: 'Data Last Updated: %{date}'
+    instructions:
+      codebook: 'The codebook is a list of all questions and answers available in this dataset. It is provided as a reference to help you quickly find items of interest.'
+      csv_main: 'The CSV file is a spreadsheet of all of the data in the dataset. You can open this file in OpenOffice, Excel, Google Spreadsheets or any other spreadsheet software. '
+      csv: |
+        The CSV download contains 2 files:
+        - Codebook: %{codebook}
+
+        - CSV: %{csv} The CSV is formatted with headers (format: code - name) and the answers are the answer text, not the answer value.
+      spss: |
+        The SPSS download contains 3 files:
+        - Codebook: %{codebook}
+
+        - CSV: %{csv} The CSV is formatted to be loaded into SPSS, so it does not contain headers and the answers are the answer values, not the answer text.
+        
+        - SPS: The SPS file is a script file that you run in SPSS that will load the data from the CSV file and also create each variable and it's possible values. 
+               IMPORTANT - Before runing the script file in SPSS, you will need to update the line with 'DATA LIST FILE' to include the full path to the CSV file.
+      stata: |
+        The STATA download contains 3 files:
+        - Codebook: %{codebook}
+
+        - CSV: %{csv} The CSV is formatted to be loaded into STATA, so it does not contain headers and the answers are the answer text, not the answer values.
+        
+        - DO: The STATA DO file is a script file that you run in STATA that will load the data from the CSV file and also create each variable and it's possible values. 
+               IMPORTANT - Before runing the script file in STATA, you will need to update the line with 'using' at the end of the file to include the full path to the CSV file.
+      r: |
+        The R download contains 3 files:
+        - Codebook: %{codebook}
+
+        - CSV: %{csv} The CSV is formatted to be loaded into R, so the headers are the variables and the answers are the answer values, not the answer text.
+        
+        - R: The R file is a script file that you run in R that will load the data from the CSV file and also create each variable. 
+               IMPORTANT - Before runing the script file in R, you will need to update the 'setwd' line to include the full path to the CSV file.
   download_data_options:
-     text:
-       csv: CSV
-       spss: SPSS
-       stata: STATA
-       r: R
-     title:
-       csv: Data formatted for spreadsheets
-       spss: Data formatted for SPSS 
-       stata: Data formatted for STATA
-       r: Data formatted for R
+    text:
+      csv: CSV
+      spss: SPSS
+      stata: STATA
+      r: R
+    title:
+      csv: Data formatted for spreadsheets
+      spss: Data formatted for SPSS 
+      stata: Data formatted for STATA
+      r: Data formatted for R
