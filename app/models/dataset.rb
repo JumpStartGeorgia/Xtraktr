@@ -46,7 +46,7 @@ class Dataset < CustomTranslation
   field :reset_download_files, type: Boolean, default: true
 
 
-  embeds_many :questions do
+  embeds_many :questions, cascade_callbacks: true do
     # these are functions that will query the questions documents
 
     # get the question that has the provided code
@@ -244,7 +244,8 @@ class Dataset < CustomTranslation
       :datafile, :public, :private_share_key, #:codebook, 
       :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at,
       :languages, :default_language, :stats_attributes, :urls_attributes, 
-      :title_translations, :description_translations, :methodology_translations, :source_translations, :source_url_translations
+      :title_translations, :description_translations, :methodology_translations, :source_translations, :source_url_translations,
+      :reset_download_files
 
   TYPE = {:onevar => 'onevar', :crosstab => 'crosstab'}
 
@@ -369,6 +370,7 @@ class Dataset < CustomTranslation
   # Callbacks
   
   before_create :process_file
+  after_create :create_quick_data_downloads
   before_save :create_urls_object
   before_create :create_private_share_key
   after_destroy :delete_dataset_files
@@ -383,6 +385,14 @@ class Dataset < CustomTranslation
 
     # udpate meta data
     update_flags
+
+    return true
+  end
+
+  # create quick data files downloads using csv from processing
+  def create_quick_data_downloads
+    require 'export_data'
+    ExportData.create_all_files(self, true)
 
     return true
   end
@@ -515,8 +525,13 @@ class Dataset < CustomTranslation
   end
 
   # if the dataset changed, make sure the reset_download_files flag is set to true
+  # if change is only reset_download_files and reset_download_files = false, do nothing
   def check_if_dirty
-    if self.changed?
+    logger.debug "======= dataset changed? #{self.changed?}; changed: #{self.changed}"
+    logger.debug "======= languages changed? #{self.languages_changed?}; change: #{self.languages_change}"
+    logger.debug "======= reset_download_files changed? #{self.reset_download_files_changed?} change: #{self.reset_download_files_change}"
+    if self.changed? && !(self.changed.include?('reset_download_files') && self.reset_download_files == false)
+      logger.debug "========== dataset changed!, setting reset_download_files = true"
       self.reset_download_files = true
     end
     return true
@@ -585,6 +600,10 @@ class Dataset < CustomTranslation
     return ds
   end
 
+  # get the datasets that are missing download files or needs to have their files recreated due to changes
+  def self.needs_download_files
+    self.or({:reset_download_files => true}, {:urls.exists => false}, {:'urls.codebook'.exists => false})
+  end
 
   #############################
   ## paths to dataset related files

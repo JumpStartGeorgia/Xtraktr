@@ -135,8 +135,11 @@ class Question < CustomTranslation
 
   # if the question changed, make sure the dataset.reset_download_files flag is set to true
   def check_if_dirty
+    logger.debug "======= question changed? #{self.changed?}; changed: #{self.changed}"    
     if self.changed?
+      logger.debug "========== question changed!, setting reset_download_files = true"
       self.dataset.reset_download_files = true
+      self.dataset.save
     end
     return true
   end

@@ -28,6 +28,5 @@ end
 
 # make sure all datasets have download data files
 every :hour do
-  require 'export_data'
-  # ExportData.create_all_dataset_files
+  rake "generate_files:download_data_files"
 end
