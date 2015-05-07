@@ -10,16 +10,18 @@ class FileMapper
       end while self.class.where(key: key).any?
       key
    }
-   field :file, type: String
-   field :file_type, type: String
+   field :dataset_id, type: String
+   field :dataset_type, type: String
+   field :dataset_locale, type: String
 
   #############################
   ## Indexes
 
   index({ :key => 1}, { background: true})
-  index({ :user_id => 1}, { background: true})
+  index({ :dataset_id => 1}, { background: true})
+  index({ :dataset_locale => 1}, { background: true})
 
-  attr_accessible :key, :file, :file_type
+  attr_accessible :key, :dataset_id, :dataset_type, :dataset_locale
 
 end
 

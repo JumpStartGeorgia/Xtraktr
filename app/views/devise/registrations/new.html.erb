@@ -1,5 +1,4 @@
 <%- model_class = User -%>
-<% registration = true %>
 <% title t('helpers.links.sign_up_title', :app_name => t('app.common.app_name')) %> 
 
 <div id="signup-form">
@@ -18,7 +17,6 @@
 	      <% end -%>
       <% end -%>
     </div>
-
 	  <div class="facebook_or_local"><%= t('helpers.links.sign_in_local_or_provider') %></div>
 
   <% end %>
@@ -28,12 +26,6 @@
 
 	  <%= f.inputs do %>
       <%= render :partial => 'shared/agreement', :locals => { f: f, resource: resource, reg: true } %>
-
-      <% if !registration %>
-       <input id="download_file_id" name="download_file_id" type="hidden" value="<%= @file_id %>">  
-       <input id="download_file_type" name="download_file_type" type="hidden" value="<%= @file_type %>">
-      <% end %>
-
     <% end %>
     
 	  <div class="control-group submit-row">

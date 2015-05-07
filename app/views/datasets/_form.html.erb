@@ -15,7 +15,7 @@
       <div class="col-sm-4">
         <div class="file input required form-group" id="dataset_datafile_input">
           <label class="control-label" for="dataset_datafile">
-            <%= t(label_key + 'datafile') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(hint_key + 'datafile') %>"><div>?</div></div>
+            <%= t(label_key + 'datafile') %><abbr title="required">*</abbr><div class="help-inline" title="<%= t(hint_key + 'datafile') %>"><div>?</div></div>
           </label>
           <% if @dataset.datafile.exists? %>
             <p>
@@ -27,7 +27,7 @@
       </div>
       <div class="col-sm-4">
         <div class="radio_buttons input optional form-group" id="dataset_public_input">
-          <label class="  control-label" for="dataset_public"><%= t(label_key + 'public') %><div class="help-inline" original-title="<%= t(hint_key + 'public') %>"><div>?</div></div>
+          <label class="  control-label" for="dataset_public"><%= t(label_key + 'public') %><div class="help-inline" title="<%= t(hint_key + 'public') %>"><div>?</div></div>
           </label>
           <div class="radio">
             <label class="choice" for="dataset_public_true">
@@ -78,7 +78,7 @@
        
         <div class="select input required form-group" id="dataset_default_language_input">
           <label class="control-label" for="dataset_default_language">
-            <%= t(label_key + 'default_language') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(hint_key + 'default_language') %>"><div>?</div></div>
+            <%= t(label_key + 'default_language') %><abbr title="required">*</abbr><div class="help-inline" title="<%= t(hint_key + 'default_language') %>"><div>?</div></div>
           </label>
           <select class="selectpicker-language form-control default-language" data-live-search="true" data-selected-text-format="count>3" data-size="7" data-width="72%" 
                   id="dataset_default_language" name="dataset[default_language]">
@@ -209,19 +209,19 @@
     <thead>
       <tr>
         <th>
-          <%= t(r_label_key + 'title') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(r_hint_key + 'title') %>"><div>?</div></div>
+          <%= t(r_label_key + 'title') %><abbr title="required">*</abbr><div class="help-inline" title="<%= t(r_hint_key + 'title') %>"><div>?</div></div>
         </th>
         <th>
-          <%= t(r_label_key + 'summary') %><div class="help-inline" original-title="<%= t(r_hint_key + 'summary') %>"><div>?</div></div>
+          <%= t(r_label_key + 'summary') %><div class="help-inline" title="<%= t(r_hint_key + 'summary') %>"><div>?</div></div>
         </th>
         <th>
-          <%= t(r_label_key + 'released_at') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(r_hint_key + 'released_at') %>"><div>?</div></div>
+          <%= t(r_label_key + 'released_at') %><abbr title="required">*</abbr><div class="help-inline" title="<%= t(r_hint_key + 'released_at') %>"><div>?</div></div>
         </th>
         <th>
-          <%= t(r_label_key + 'language_id') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(r_hint_key + 'language_id') %>"><div>?</div></div>
+          <%= t(r_label_key + 'language_id') %><abbr title="required">*</abbr><div class="help-inline" title="<%= t(r_hint_key + 'language_id') %>"><div>?</div></div>
         </th>
         <th>
-          <%= t(r_label_key + 'file') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(r_hint_key + 'file') %>"><div>?</div></div>
+          <%= t(r_label_key + 'file') %><abbr title="required">*</abbr><div class="help-inline" title="<%= t(r_hint_key + 'file') %>"><div>?</div></div>
         </th>
         <th>
         </th>

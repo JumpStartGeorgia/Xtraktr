@@ -123,13 +123,31 @@ footer {
 
 .tooltip
 {
-  &.right .tooltip-arrow
+  .tooltip-arrow
   {
     border:0 !important;
-    background:transparent url(/assets/svg/tooltip_left.svg) no-repeat center left/6px 18px !important;
+    position:absolute !important;
+    margin:0px !important;
+    padding:0px !important;    
+  }
+  &.top .tooltip-arrow
+  {
+    background:transparent url(/assets/svg/tooltip_top.svg) no-repeat center left/18px 6px !important;
+    width:18px !important;
+    height:6px !important;
+    bottom:0px !important;
+    top:auto !important;
+    left:50% !important;
+    -webkit-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+    right:auto !important;
+  }
+  &.right .tooltip-arrow
+  {
+    background:transparent url(/assets/svg/tooltip_right.svg) no-repeat center left/6px 18px !important;
     width:6px !important;
     height:18px !important;
-    position:absolute !important;
     left:0px !important;
     bottom:auto !important;
     top:50% !important;
@@ -137,17 +155,12 @@ footer {
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
     right:auto !important;
-    // transform:rotate(-90deg) !important;;    
-    margin:0px !important;
-    padding:0px !important;
   }
   &.bottom .tooltip-arrow
   {
-    border:0 !important;
-    background:transparent url(/assets/svg/tooltip_up.svg) no-repeat center left/18px 6px !important;
+    background:transparent url(/assets/svg/tooltip_bottom.svg) no-repeat center left/18px 6px !important;
     width:18px !important;
     height:6px !important;
-    position:absolute !important;
     top:0px !important;
     bottom:auto !important;
     left:50% !important;
@@ -155,16 +168,40 @@ footer {
     -ms-transform: translateX(-50%);
     transform: translateX(-50%);
     right:auto !important;
-    // transform:rotate(-90deg) !important;;    
-    margin:0px !important;
-    padding:0px !important;
+  }
+  &.left .tooltip-arrow
+  {
+    background:transparent url(/assets/svg/tooltip_left.svg) no-repeat center right/6px 18px !important;
+    width:6px !important;
+    height:18px !important;
+    right:0px !important;
+    bottom:auto !important;
+    top:50% !important;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
   }
   .tooltip-inner
   {
     font-family: 'opensans','sans-serif';
     font-size:12px;
-    color:#d95d6a;
+    color:#00adee;
     background-color:#fff;   
     border:1px solid #e0e0e0;  
   }
 }
+.tooltip-time-series
+{
+  .tooltip-inner
+  {
+    color:#d95d6a;
+  }
+}
+.tooltip-download
+{
+    .tooltip-inner
+    {
+      white-space:pre;
+    }
+  }
+

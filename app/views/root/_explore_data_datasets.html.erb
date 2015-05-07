@@ -15,7 +15,7 @@
             <%= I18n.l(dataset.released_at, format: :day_first) if dataset.released_at.present? %>
           </div>
           <% if dataset.time_series_datasets.present? %>
-            <div class="time-series" title="<%= t('app.menu.titles.dataset_to_time_series') %>" data-toggle="tooltip" data-placement="right">
+            <div class="time-series" title="<%= t('app.menu.titles.dataset_to_time_series') %>" data-placement="right"  data-class="tooltip-time-series">
               <%= link_to  image_tag("svg/timeseries.svg", alt: t('app.menu.titles.dataset_to_time_series')), explore_time_series_dashboard_path(dataset.time_series_datasets.first.time_series_id)%>                  
             </div>
           <% end %>
@@ -29,14 +29,15 @@
             <%= simple_format_no_tags(dataset.description, {}, {sanitize: false}) %>
           </div>
         <% end %>
-        <% if dataset.datafile.exists? %>
+
+         <% if dataset.urls.present? && dataset.urls.codebook.present? %>
           <div class="download-wrapper" >
-            <div class="download" data-id="<%= dataset.id.to_s %>" title="<%= t('helpers.links.download_data') %>" data-toggle="tooltip" data-placement="bottom">
+            <div class="download" data-id="<%= dataset.id.to_s %>" data-lang="<%= dataset.current_locale %>" title="<%= t('helpers.links.download_data') %>" data-placement="top" data-class="tooltip-download">
             <ul>
-              <li><div class="type" data-type='csv' title="<%= t('download_data_options.title.csv') %>"><%= t('download_data_options.text.csv') %></div></li>
-              <li><div class="type" data-type='spss' title="<%= t('download_data_options.title.spss') %>"><%= t('download_data_options.text.spss') %></div></li>
-              <li><div class="type" data-type='stata' title="<%= t('download_data_options.title.stata') %>"><%= t('download_data_options.text.stata') %></div></li>
-              <li><div class="type" data-type='r' title="<%= t('download_data_options.title.r') %>"><%= t('download_data_options.text.r') %></div></li>
+              <li><div class="type" data-type='csv' title="<%= t('download_data_options.title.csv') %>" data-placement="left"><%= t('download_data_options.text.csv') %></div></li>
+              <li><div class="type" data-type='r' title="<%= t('download_data_options.title.r') %>" data-placement="left"><%= t('download_data_options.text.r') %></div></li>
+              <li><div class="type" data-type='spss' title="<%= t('download_data_options.title.spss') %>" data-placement="left"><%= t('download_data_options.text.spss') %></div></li>
+              <li><div class="type" data-type='stata' title="<%= t('download_data_options.title.stata') %>" data-placement="left"><%= t('download_data_options.text.stata') %></div></li>
             </ul>                 
           </div>        
         <% end %>

@@ -371,15 +371,15 @@ en:
       reset: Reset
       view: View
       sign_in_facebook: Sign in with Facebook
-      forgot_password: Forgot Password?
+      forgot_password: Forgot Your Password?
       change_password: Change Your Password
       change_password2: Change Password
       password_reset: Reset Password
       sign_in2: Sign In
       sign_in: "Already have an account?"
       sign_up2: Sign Up
-      sign_up_question: "Not a member yet?"
-      sign_up: "Register now"
+      sign_up_question: "Not registered?"
+      sign_up: "Create Account"
       sign_up_title: Join %{app_name}
       sign_out: Sign Out
       sign_in_provider: "Sign in with %{provider}"
@@ -449,7 +449,8 @@ en:
       percent: Percent
       dataset_dashboard: Dataset Dashboard
       time_series_dashboard: Time Series Dashboard
-      terms: "I agree to the <a href='#'>Terms of Use</a> and <a href='#'>Privacy Policy</a>"   
+      terms: "I agree to the <a href='#'>Terms of Use</a> and <a href='#'>Privacy Policy</a>"  
+      or: Or 
     msgs:
       does_not_exist: You tried to access a page that does not exist.
       not_authorized: You are not authorized to view that page.

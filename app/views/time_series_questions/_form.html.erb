@@ -14,7 +14,7 @@
     <thead>
       <tr>
         <th><%= t(tsq_label_key + 'dataset') %></th>
-        <th><%= t(tsq_label_key + 'text') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(tsq_hint_key + 'text') %>"><div>?</div></div></th>
+        <th><%= t(tsq_label_key + 'text') %><abbr title="required">*</abbr><div class="help-inline" title="<%= t(tsq_hint_key + 'text') %>"><div>?</div></div></th>
       </tr>
     </thead>
     <tbody>
@@ -111,16 +111,16 @@
             <thead>
               <tr>
                 <% if index == 0 %>
-                  <th><%= t(a_label_key + 'text') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(a_hint_key + 'text') %>"><div>?</div></div></th>
-                  <th><%= t(a_label_key + 'value') %><abbr title="required">*</abbr><div class="help-inline" original-title="<%= t(a_hint_key + 'value') %>"><div>?</div></div></th>
-                  <th><%= t(a_label_key + 'sort_order') %><div class="help-inline" original-title="<%= t(a_hint_key + 'sort_order') %>"><div>?</div></div></th>
-                  <th><%= t(a_label_key + 'can_exclude') %><div class="help-inline" original-title="<%= t(a_hint_key + 'can_exclude') %>"><div>?</div></div></th>
+                  <th><%= t(a_label_key + 'text') %><abbr title="required">*</abbr><div class="help-inline" title="<%= t(a_hint_key + 'text') %>"><div>?</div></div></th>
+                  <th><%= t(a_label_key + 'value') %><abbr title="required">*</abbr><div class="help-inline" title="<%= t(a_hint_key + 'value') %>"><div>?</div></div></th>
+                  <th><%= t(a_label_key + 'sort_order') %><div class="help-inline" title="<%= t(a_hint_key + 'sort_order') %>"><div>?</div></div></th>
+                  <th><%= t(a_label_key + 'can_exclude') %><div class="help-inline" title="<%= t(a_hint_key + 'can_exclude') %>"><div>?</div></div></th>
                   <% @datasets.each do |dataset| %>
-                    <th><%= dataset.title %><div class="help-inline" original-title="<%= t(a_hint_key + 'dataset') %>"><div>?</div></div></th>
+                    <th><%= dataset.title %><div class="help-inline" title="<%= t(a_hint_key + 'dataset') %>"><div>?</div></div></th>
                   <% end %>
                 <% else %>
-                  <th><%= t(a_label_key + 'text') %><div class="help-inline" original-title="<%= t(a_hint_key + 'text') %>"><div>?</div></div></th>
-                  <th><%= t('tabbed_translation_form.default_text') %><div class="help-inline" original-title="<%= t(a_hint_key + 'default_text') %>"><div>?</div></div></th>
+                  <th><%= t(a_label_key + 'text') %><div class="help-inline" title="<%= t(a_hint_key + 'text') %>"><div>?</div></div></th>
+                  <th><%= t('tabbed_translation_form.default_text') %><div class="help-inline" title="<%= t(a_hint_key + 'default_text') %>"><div>?</div></div></th>
                 <% end %>
               </tr>
             </thead>

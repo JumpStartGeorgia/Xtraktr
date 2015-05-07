@@ -11,7 +11,6 @@
  *= require dataTables/extras/dataTables.tableTools
  *= require bootstrap_and_overrides
  *= require devise
- *= require tipsy
  *= require vendor
  *= require_self
 */
@@ -622,7 +621,7 @@ ul.dropdown-menu.inner.selectpicker li a{
               float:right;
               position: relative;
               top: -9px;
-              margin:0px;
+              margin:0px;         
               img
               {
                 width:36px;
@@ -684,7 +683,7 @@ ul.dropdown-menu.inner.selectpicker li a{
 border-bottom-right-radius: 3px;
 border-bottom-left-radius: 3px;
               outline:none;
-              z-index:9999;
+              z-index:1029;
               li
               {                
                 padding:0px 0px 0px 10px;
@@ -879,6 +878,15 @@ border-bottom-left-radius: 3px;
     padding:0px;
     overflow:auto;
     z-index:9999;
+    border: 1px solid #e0e0e0;
+    border-top:0;
+    padding: 0px 12px 13px 12px;
+    background-color: #fff;  
+    > div
+    {
+      background-color:#f6f7f7;
+      padding:0px 42px 42px;
+    }
   }
   .bg
   {
@@ -1078,8 +1086,8 @@ border-bottom-left-radius: 3px;
 .pagination
 {
   width: 100%;
-  text-align: right;
-  padding:0px 30px 0px 0px;
+  text-align: left;
+  padding:0px 30px 0px 30px;
   .first a { background:transparent url(/assets/svg/paginate_first.svg) no-repeat center/18px; }
   .next a { background:transparent url(/assets/svg/paginate_next.svg) no-repeat center/18px; }
   .prev a { background:transparent url(/assets/svg/paginate_prev.svg) no-repeat center/18px; }

@@ -42,10 +42,10 @@
           <%= link_to t('app.menu.time_series'), url_dataset_to_times_series_dashboard(@dataset.id, @dataset.time_series_datasets.first.time_series_id), class: 'btn btn-primary', title: t('app.menu.titles.dataset_to_time_series') %>
         </li>
       <% end %>
-      <% if @dataset.datafile.exists? %>
+      
+      <% if @dataset.urls.present? && @dataset.urls.codebook.present? %>
         <li>
           <div class="btn btn-default btn-sm download" data-id="<%= @dataset.id.to_s %>"><%= t('helpers.links.download_data') %></div>
-          <% if @dataset.urls.present? %>
             <div id="data-download-list" class="dropdown">
               <button id="data-download-label" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <%= t('helpers.links.download_data') %>
@@ -62,7 +62,6 @@
                         :'data-id' => @dataset.id.to_s, :'data-file-type' => 'stata' %></li>
               </ul>
             </div>          
-          <% end %>
         </li>
       <% end %>
     </ul>

@@ -179,7 +179,7 @@ class User
     super && provider.blank?
   end
 
-  def agreement(file)
+  def agreement(dataset_id, dataset_type, dataset_locale)
     a = Agreement.create({
         email: self.email,
         first_name: self.first_name,
@@ -190,7 +190,9 @@ class User
         status: self.status,
         status_other: self.status_other,
         description: self.description,
-        file: file,
+        dataset_id: Moped::BSON::ObjectId.from_string(dataset_id),
+        dataset_type: dataset_type,
+        dataset_locale: dataset_locale,
         terms: 1
       })
     a.valid?
