@@ -79,4 +79,20 @@ module ApplicationHelper
       <span>' + tt + '</span>').html_safe      
     end
   end
+
+
+  #devise mappings
+  def resource_name
+    :user
+  end
+ 
+  def resource
+    @resource ||= User.new
+  end
+ 
+  def devise_mapping
+    @devise_mapping ||= Devise.mappings[:user]
+  end
+  #devise mappings end
+  
 end

@@ -4,12 +4,12 @@
 <div id="login-form">
    <div class="red-box"><%= t('helpers.links.sign_in2') %></div>
    <%- if devise_mapping.registerable? && controller_name != 'registrations' %>
-      <div class="sign-up-box">
+      <div class="red-box-neighbor">
         <span><%= t('helpers.links.sign_up_question') %></span><br><%= link_to t('helpers.links.sign_up'), new_registration_path(resource_name), :class => 'reattach sign-up-link' %>
       </div>
    <% end -%>   
 
-     <% if true || @is_xtraktr && @enable_omniauth%>
+     <% if @is_xtraktr && @enable_omniauth%>
        <div class="providers">
          <%- if devise_mapping.omniauthable? %>    	    
    	      <%- resource_class.omniauth_providers.each do |provider| %>
@@ -38,8 +38,9 @@
 
 
    <div class="control-group control-group-remember">
-      <% if devise_mapping.rememberable? -%>          
-         <label class="checkbox remember-me"><%= f.check_box :remember_me  %> <%= model_class.human_attribute_name(:remember_me) %></label>            
+      <% if devise_mapping.rememberable? -%>        
+         <%= f.check_box :remember_me, :id => "remember_me"  %> 
+         <label for="remember_me"><%= model_class.human_attribute_name(:remember_me) %></label>            
       <% end -%>
       <%- if devise_mapping.recoverable? && controller_name != 'passwords' %>
         <%= link_to t('helpers.links.forgot_password'), new_password_path(resource_name), :class => 'reattach forgot-link' %>

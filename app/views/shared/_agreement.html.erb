@@ -1,40 +1,71 @@
-<% reg||=false %>
-<div class="row">
-        <div class="col-sm-6"><%= f.input :first_name, :as => :string %></div>
-        <div class="col-sm-6"><%= f.input :last_name, :as => :string %></div>
-      </div>
-      <div class="row">
-        <div class="col-sm-6"><%= f.input :email, :as => :email, :input_html => { :size => 35 , :class => "login-username" } %></div>
-        <% if reg %>
-        <div class="col-sm-6">
-          <% if f.object.password_required? %>
-            <%= f.input :password, :input_html => { :size => 35 , :class => "login-password" } %>
-            <%= f.input :password_confirmation, :input_html => { :size => 35 , :class => "login-password-confirmation" } %>
-          <% end %>
+<div><%= Rails.logger.debug "DEBUG: message #{reg.inspect}"  %></div>
+<% reg = true if reg.nil? %>
+<div><%= Rails.logger.debug "DEBUG: message #{reg.inspect}"  %></div>
+<%- model_class = User -%>
+  <div class="r">
+    <%= f.input :first_name, :as => :string, :placeholder => model_class.human_attribute_name(:first_name).upcase+" *" , :label => false %>
+    <%= f.input :last_name, :as => :string, :placeholder => model_class.human_attribute_name(:last_name).upcase+" *" , :label => false %>
+  </div>
+  <div class="r">
+    <%= f.input :email, :as => :email, :input_html => { :size => 35 , :class => "login-username" }, :placeholder => model_class.human_attribute_name(:email).upcase+" *" , :label => false  %>
+  </div>
+    <% if !reg %>
+      <div class="boolean input optional checkbox form-group wanna_account" id="user_account_input">
+        <input name="user[account]" type="hidden" value="0">
+        <input id="user_account" name="user[account]" type="checkbox" value="1">
+        <label class="control-label" for="user_account"><%= t('user.wanna_account').html_safe %></label>
+      </div>  
+    <% end %>
+
+    <div class="r<%= reg ? '' : ' hide' %>">
+  
+        <%= f.input :password, :input_html => { :size => 35 , :class => "login-password" }, :placeholder => model_class.human_attribute_name(:password).upcase+" *" , :label => false  %>
+        <%= f.input :password_confirmation, :input_html => { :size => 35 , :class => "login-password-confirmation" }, :placeholder => model_class.human_attribute_name(:password_confirmation).upcase+" *" , :label => false  %>
+
+    </div>
+
+    <div class="r">
+      <%= f.input :residence, :as => :string, :placeholder => model_class.human_attribute_name(:residence).upcase+" *" , :label => false  %>
+      <%= f.input :affiliation, :as => :string, :placeholder => model_class.human_attribute_name(:affiliation).upcase+" *" , :label => false  %>
+    </div>
+
+    <div class="radio_buttons input required form-group horizontal" id="user_age_group_input">
+      <label class="  control-label" for="user_age_group"><%= model_class.human_attribute_name(:age_group).upcase %><abbr title="required">*</abbr></label>
+      <% Hash[[1,2,3,4,5,6].map{|k| [t('user.age_group.g' + k.to_s), k] }].each do |d| %>
+        <div class="radio">
+            <input id="user_age_group_<%= d[1] %>" name="user[age_group]" type="radio" value="<%= d[1] %>">
+            <label class="choice" for="user_age_group_<%= d[1] %>"><%= "#{d[0]}" %></label>
         </div>
-        <% end %>
-      </div>
-
-      <%= f.input :age_group, :as => :radio, :collection => Hash[[1,2,3,4,5,6].map{|k| [t('user.age_group.g' + k.to_s), k] }] %>
-
-      <div class="row">
-        <div class="col-sm-6"><%= f.input :residence, :as => :string %></div>
-        <div class="col-sm-6"><%= f.input :affiliation, :as => :string %></div>
-      </div>
-
-      <%= f.input :status, :as => :radio, :collection => Hash[User::STATUS.map{|k,v| [t('user.status.' + v), k] }] %>
-      <%= f.input :status_other %>
-
-      <%= f.input :description, :as => :text, :input_html => { :class => 'autogrow', :rows => 5, :cols => 80  } %>
-      <% if !reg %>
-        <%= f.input :dataset_id, :as => :hidden,  :input_html => { id: "dataset_id" } %>
-        <%= f.input :dataset_type, :as => :hidden,  :input_html => { id: "dataset_type" } %>        
-        <%= f.input :dataset_locale, :as => :hidden,  :input_html => { id: "dataset_locale" } %>        
       <% end %>
-      <div class="boolean input optional checkbox form-group" id="agreement_terms_input">
-            <input name="agreement[terms]" type="hidden" value="0">
-            <label class="  control-label" for="agreement_terms">
-               <input id="agreement_terms" name="agreement[terms]" type="checkbox" value="1">
-               <%= t('app.common.terms').html_safe %>
-            </label>
-      </div>    
+    </div>
+
+    <div class="radio_buttons input required form-group statuses vertical" id="user_status_input">
+      <label class="control-label" for="user_status"><%= model_class.human_attribute_name(:status).upcase %><abbr title="required">*</abbr></label>
+      <% Hash[User::STATUS.map{|k,v| [t('user.status.' + v), k] }].each do |d| %>
+        <div class="radio">
+            <input id="user_status_<%= d[1] %>" name="user[status]" type="radio" value="<%= d[1] %>">
+            <label class="choice" for="user_status_<%= d[1] %>"><%= "#{d[0]}" %></label>
+        </div>
+      <% end %>
+    </div>  
+    <%= f.input :status_other, :placeholder => model_class.human_attribute_name(:status_other).upcase+" *"  , :label => false  %>
+
+    <%= f.input :description, :as => :text, :input_html => { :class => 'autogrow', :rows => 5  }  %>
+
+    <% if !reg %>
+      <input id="dataset_id" name="agreement[dataset_id]" type="hidden" value="<%= @mod.dataset_id %>">
+      <input id="dataset_type" name="agreement[dataset_type]" type="hidden" value="<%= @mod.dataset_type %>">   
+      <input id="dataset_locale" name="agreement[dataset_locale]" type="hidden" value="<%= @mod.dataset_locale %>">      
+    <% end %>
+
+    <div class="boolean input optional checkbox form-group <%= reg ? '' : ' hide' %>" id="user_notifications_input">
+      <input name="user[notifications]" type="hidden" value="0">
+      <input id="user_notifications" name="user[notifications]" type="checkbox" value="1">
+      <label class="  control-label" for="user_notifications"><%= t('user.subscribe').html_safe %></label>
+    </div>  
+    <div class="boolean input optional checkbox form-group" id="agreement_terms_input">
+      <input name="agreement[terms]" type="hidden" value="0">
+      <input id="agreement_terms" name="agreement[terms]" type="checkbox" value="1">
+      <label class="  control-label" for="agreement_terms"><%= t('app.common.terms').html_safe %></label>
+    </div> 
+

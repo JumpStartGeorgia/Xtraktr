@@ -368,6 +368,8 @@ ka:
       sign_up_provider: "დარეგისტრირდით  %{provider}-ით"
       sign_in_local_or_provider: ან შეიყვანეთ თქვენი ელ. ფოსტა და პაროლი
       reset_or_sign_in: შედით facebook-ით ან შეცვალეთ პაროლი
+      explanation: მოხარულნი ვართ, რომ დაინტერესდით ჩვენი მონაცემებით. ჩვენ გვსურს გავიგოთ მცირე ინფორმაცია თქვენს შესახებ. მონაცემთა ცხრილის ჩამოსატვირთად, გთხოვთ შეავსოთ ჩვენი ფორმა.
+      download_and_sign_up: "Download & Create Account"
       like: მოწონება
       likes: მოწონება
       menu: მენიუ
@@ -489,6 +491,25 @@ ka:
         warnings: Warnings
         delete: Delete
         private_share: Share Private Time Series
+  user:
+    age_group:
+      g1: "17-24"
+      g2: "25-34"
+      g3: "35-44"
+      g4: "45-54"
+      g5: "55-64"
+      g6: "above(>65)"
+    status:
+      researcher: Researcher
+      student: Student
+      journalist: Journalist
+      ngo: NGO
+      government_official: Government Official
+      international_organization: International Organization
+      private_sector: Private Sector
+      other: Other
+    subscribe: I want to subscribe to Notifications
+    wanna_account: დაიღალეთ ამ ფორმის შევსებით? მომავალში მისი თავიდან აცილების მიზნის, შექმენით ანგარიში.       
   layouts:
     nav:
       toggle: ნავიგაციის ჩართვა/გამორთვა

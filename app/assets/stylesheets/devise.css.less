@@ -5,19 +5,39 @@
   display:inline-block;
  }
 
-.formtastic
+.formtastic.user
 {
   .input
   {
     text-align: center;
     margin:0px;
-    padding:0px 0px 12px 0px;
+    padding:0px;
+    
   }
+ 
 }
 
-#login-form .submit-row label{
-  // margin-bottom:30px;
-}
+ #login-form
+  {
+    .form-group
+    {    
+      &.email
+      {
+        padding:0px 0px 12px 0px;
+      }
+      &.password
+      {
+        padding:0px 0px 6px 0px;
+      }
+    }
+  }
+  #reset-password-form
+  {
+     .form-group.email
+    { 
+      padding:0px 0px 6px 0px;
+    }
+  }
 #login-form,#reset-password-form,#signup-form{
   .title{
     font-size:30px;
@@ -76,10 +96,7 @@
     margin:0px 40px;
     clear:both;
   }
-  .control-group-remember
-  {
-    margin:0px 40px 22px;
-  }
+
   .login-username, .login-password,.login-password-confirmation {
     font-family:'sourcesans_pro', 'sans-serif';
     font-size:12px !important;
@@ -90,7 +107,7 @@
     text-decoration: none;    
     height:31px;
     min-width:226px;
-    margin:0px 40px !important;
+    
     outline:none;
     -webkit-border-radius: 0 !important;
     -moz-border-radius: 0 !important;
@@ -99,20 +116,22 @@
     -moz-box-shadow: none;
     box-shadow: none;    
   }
+  #login-form,#reset-password-form
+  { 
+    .login-username, .login-password,.login-password-confirmation {
+      margin:0px 40px !important;
+    }
+  }
   .submit-row {
-    // margin-bottom:30px !important; 
-     // max-width: 260px !important;
      text-align:center;
   }
-  .remember-me {
-    font-family:'opensans', 'sans-serif';
-    font-size:12px;
-    font-weight:normal;
-    color:#3c4352; 
-    display:inline-block; 
-    margin:0px;
-    padding:0px;
-    text-align:left;
+  .control-group-remember
+  {
+    margin:0px 40px 22px;    
+  }
+  .control-group-sign-in
+  {  
+    margin: 0px 40px 22px;
   }
   .sign-in {    
     // float:right !important;
@@ -139,11 +158,23 @@
     font-weight:normal;
     color:#00adee; 
     display:inline-block; 
-    margin:0px;
+    margin:2px 0px 0px;
     padding:0px;
     float:right;
   }
-  .sign-up-box
+  .sign-in-link {
+    font-family:'opensans', 'sans-serif';
+    font-size:12px;
+    font-weight:normal;
+    color:#00adee; 
+    display:inline-block; 
+    margin:2px 0px 0px;
+    padding:0px;
+    text-align: right;
+  width: 100%;
+  }
+
+  .red-box-neighbor
   {
     position: absolute;
     right: 50px;
@@ -155,7 +186,7 @@
       font-size:12px;
       color:#3c4352; 
     }
-    .sign-up-link
+    a
     {
       font-family:'opensans-sb', 'sans-serif';
       font-size:12px;
@@ -188,4 +219,160 @@
 .red-box.long
 {
   padding: 9px 10px 0 10px;
+}
+
+#signup-form
+{
+  max-width:680px;
+  .input
+  {
+    text-align:left;
+  }
+  .explanation
+  {
+    font-family:'opensans', 'sans-serif';
+    font-size:12px;
+    color:#3c4352; 
+    margin-bottom:14px;
+  }
+  .r
+  {
+     margin:0px 0px 10px;
+    .form-group
+    {
+      display:inline-block;
+      &:nth-of-type(2)
+      {
+        float:right;
+      }
+    }
+
+  }
+  input[type=text], textarea
+  {
+    font-family:'sourcesans_pro', 'sans-serif';
+    font-size:12px !important;
+    color:#000;            
+    display:inline-block;
+    border:0px !important;
+    background-color:#dceef4;
+    text-decoration: none;    
+    height:31px;
+    min-width:226px;
+
+    outline:none;
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+    border-radius:0 !important;  
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;    
+  }
+  #user_status_other
+  {
+    width:100%;
+  }
+  textarea
+  {
+    height:auto;
+    width:100%;
+  }
+  .statuses .radio
+  {
+    display:block;
+  }
+  .control-label
+  {
+    font-family:'sourcesans_pro', 'sans-serif';
+    font-size:12px;
+    font-weight:normal;
+    color:#3c4352;  
+    text-align:left;
+    
+    margin-top:12px; 
+  }
+  .boolean .control-label
+  {
+    padding:0px;
+  }
+  .checkbox .control-label
+  {
+    text-transform:none;   
+  }
+  .radio_buttons.vertical
+  {
+    .radio {
+      margin:0px;
+      padding:0px;
+    }
+  }
+  .radio_buttons.horizontal
+  {
+    .radio:first-of-type {
+      margin:0px;
+      padding:0px;
+    }
+  }
+}
+
+.checkbox
+{
+  label
+  {
+    font-family:'opensans', 'sans-serif';
+    font-size:12px;
+    font-weight:normal;
+    color:#3c4352; 
+    display:inline-block; 
+    margin:0px;
+    padding:0px; 
+    cursor:pointer;     
+  }
+  input[type="checkbox"] {
+    display:none;
+  }    
+  input[type="checkbox"] + label:before {
+    content:"";
+      display:inline-block;
+      width:14px;
+      height:14px;
+      margin:-3px 4px 0 0;
+      vertical-align:middle;
+      background:url(/assets/svg/check_radio.png) no-repeat left top ;
+  }
+  input[type="checkbox"]:checked + label:before {
+    content:"";
+    background:url(/assets/svg/check_radio.png) no-repeat -15px top;
+  }
+}
+
+.radio
+{
+  label
+  {
+    font-family:'opensans', 'sans-serif';
+    font-size:12px;
+    font-weight:normal;
+    color:#3c4352; 
+    display:inline-block; 
+    margin:0px;
+    padding:0px; 
+    cursor:pointer;     
+  }
+  input[type="radio"] {
+    display:none;
+  }    
+  input[type="radio"] + label:before {
+    content:"";
+      display:inline-block;
+      width:15px;
+      height:14px;
+      margin:-3px 4px 0 0;
+      vertical-align:middle;
+      background:url(/assets/svg/check_radio.png) no-repeat -29px top ;
+  }
+  input[type="radio"]:checked + label:before {
+    content:"";
+    background:url(/assets/svg/check_radio.png) no-repeat -44px top;
+  }
 }

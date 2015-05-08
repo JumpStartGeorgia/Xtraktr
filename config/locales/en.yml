@@ -386,6 +386,8 @@ en:
       sign_up_provider: "Sign up with %{provider}"
       sign_in_local_or_provider: or log in with your email and password
       reset_or_sign_in: sign in with facebook or reset your password
+      explanation: We are excited you are interested in our data. We would like to know a bit about who you are. Please complete our form to continue downloading this dataset.
+      download_and_sign_up: "Download & Create Account"
       like: Like   
       likes: Likes      
       menu: Menu
@@ -526,6 +528,8 @@ en:
       international_organization: International Organization
       private_sector: Private Sector
       other: Other
+    subscribe: I want to subscribe to Notifications
+    wanna_account: Tired of filling out this form? To avoid this form in the future, create an account.    
   layouts:
     nav:
       toggle: Toggle navigation

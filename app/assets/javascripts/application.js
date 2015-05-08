@@ -40,22 +40,63 @@ $(document).ready(function(){
     p.find('a.active').removeClass('active');
     t.addClass('active');
   });
-
+  $(document).on('change','#user_account', function(){
+     console.log($(this).is(":checked"));
+  });
 
   $(document).on('click', '.reattach', function(e){
     var t = $(this);
-
     $.ajax({
       url: t.attr('href')
     }).done(function(d)
     {
        modal(d);      
     });
-
     e.preventDefault();
+    e.stopPropagation();
   });
 
-
+  $('body').on('submit','#new_user', function ()
+  {    
+    var t = $(this).attr('data-form-id');
+    if(t.length)
+    {
+      t="#" + t;
+      $.ajax({
+        type: "POST",
+        url: $(this).attr('action'),
+        data: $(this).serialize(),
+        success: function (data)
+        {      
+         console.log(data); 
+          $(t).parent().find('.alert').remove();  
+          var rhtml = $(data);
+        
+          if (rhtml.length && rhtml.find('#errorExplanation').length)
+          {
+            $(t).replaceWith(rhtml);
+          }
+          else if (rhtml.find('.alert.alert-info').length)
+          {
+            $(t).replaceWith(rhtml.find('.alert.alert-info').children().remove().end());
+            delayed_reload(3000);
+          }
+          else
+          {
+            window.location.reload();
+          }
+        },
+        error: function (data)
+        {     
+        console.log(data);            
+          $(t).parent().find('.alert').remove();  
+          $(t + ' form').before('<div class="alert alert-danger fade in"><span>' + data.responseText + '</span></div>');          
+          $(t + ' :input:visible:enabled:first').focus();
+        }
+      });     
+    }
+    return false;
+  });
 
 $('.download').click(function(e){
     var t = $(this);  
@@ -113,9 +154,9 @@ $('.download').click(function(e){
   });
 
   js_modal =  $('#js_modal');
-  js_modal.find('.bg').click(function(){
-    js_modal_off();
-  });
+  // js_modal.find('.popup').click(function(e){
+  //   e.stopPropagation();   
+  // });
   
 
   $(document).on('change', '#agreement_status_input input[type=radio], #user_status_input input[type=radio]', function()
@@ -226,12 +267,16 @@ function js_modal_on()
       js_modal_off();
     }  
   });
+  $(document).on('click.js_modal',function(e) {
+    if(!$(e.target).closest('.popup').length)        
+      js_modal_off();
+  });
   js_modal.fadeIn(500);
 }
 function js_modal_off() 
 {
   js_modal.fadeOut(500);
-  $(document).off('keyup.js_modal');
+  $(document).off('keyup.js_modal').off('click.js_modal');
 }
 ////////////////////////////////////////////////
 // convert the querystring variables into json
