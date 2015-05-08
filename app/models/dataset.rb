@@ -597,9 +597,14 @@ class Dataset < CustomTranslation
     only(:id, :title, :languages)
   end
 
+  # get all datasets that are mappable
+  def self.are_mappable
+    where(is_mappable: true)
+  end
+
   def self.with_shapeset(shapeset_id)
     ds = []
-    x = where(is_mappable: true)
+    x = are_mappable
     if x.present?
       x.each do |dataset|
         if dataset.questions.has_shapeset?(shapeset_id)
@@ -614,6 +619,7 @@ class Dataset < CustomTranslation
   def self.needs_download_files
     self.or({:reset_download_files => true}, {:urls.exists => false}, {:'urls.codebook'.exists => false})
   end
+
 
   #############################
   ## paths to dataset related files
