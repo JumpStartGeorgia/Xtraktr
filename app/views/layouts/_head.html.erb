@@ -1,23 +1,24 @@
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= content_for?(:title) ? "#{yield(:title)} | #{t('app.common.app_name')}" :
-                t('app.common.app_name') %></title>
-    <%= csrf_meta_tags %>
-    <%= include_gon %>
+    <%-
+      title = content_for?(:title) ? "#{yield(:title)} | #{t('app.common.app_name')}" :
+                "#{t('app.common.app_name')} | #{t('app.common.app_slogan')}".html_safe
 
-    <meta property="og:title" content="<%= content_for?(:title) ? 
-        ("#{yield(:title)} | #{t('app.common.app_name')}").html_safe :
-        t('app.common.app_name').html_safe %>" />
-    <%
       desc = I18n.t('app.common.app_description')
       if @dataset.present? && @dataset.description.present?
         desc = strip_tags_nbsp(@dataset.description)
       elsif @time_series.present? && @time_series.class == 'TimeSeries' && @time_series.description.present?
         desc = strip_tags_nbsp(@time_series.description)
       end
-    %>
-    
+    -%>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= content_for?(:title) ? "#{yield(:title)} | #{t('app.common.app_name')}" :
+                "#{t('app.common.app_name')} | #{t('app.common.app_slogan')}" %></title>
+    <%= csrf_meta_tags %>
+    <%= include_gon %>
+
+    <meta property="og:title" content="<%= title %>">
     <meta name="description" content="<%= desc %>">
     <meta property="og:description" content="<%= desc %>" />
     <meta property="og:type" content="non_profit" />

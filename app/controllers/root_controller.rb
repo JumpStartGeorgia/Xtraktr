@@ -78,6 +78,13 @@ class RootController < ApplicationController
     if @dataset.blank?
       redirect_to explore_data_path, :notice => t('app.msgs.does_not_exist')
     else
+      # if the language parameter exists and it is valid, use it instead of the default current_locale
+      if params[:language].present? && @dataset.languages.include?(params[:language])
+        @dataset.current_locale = params[:language]
+      end
+
+      @license = PageContent.by_name('license')
+
       @css.push("dashboard.css")
       @js.push("live_search.js")
 
@@ -141,6 +148,14 @@ class RootController < ApplicationController
     if @time_series.blank?
       redirect_to explore_time_series_path, :notice => t('app.msgs.does_not_exist')
     else
+
+      # if the language parameter exists and it is valid, use it instead of the default current_locale
+      if params[:language].present? && @time_series.languages.include?(params[:language])
+        @time_series.current_locale = params[:language]
+      end
+
+      @license = PageContent.by_name('license')
+
       @css.push("dashboard.css")
       @js.push("live_search.js")
 

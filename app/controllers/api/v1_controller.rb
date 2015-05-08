@@ -54,7 +54,7 @@ class Api::V1Controller < ApplicationController
   def dataset
     respond_to do |format|
       format.json { 
-        render json: ApiV1.dataset(params[:dataset_id]), each_serializer: DatasetSerializer
+        render json: ApiV1.dataset(params[:dataset_id], request.filtered_parameters), each_serializer: DatasetSerializer
       }
     end
   end
@@ -63,7 +63,7 @@ class Api::V1Controller < ApplicationController
   def dataset_codebook
     respond_to do |format|
       format.json { 
-        render json: ApiV1.dataset_codebook(params[:dataset_id]), each_serializer: QuestionSerializer, root: 'questions'
+        render json: ApiV1.dataset_codebook(params[:dataset_id], request.filtered_parameters), each_serializer: QuestionSerializer, root: 'questions'
       }
     end
   end

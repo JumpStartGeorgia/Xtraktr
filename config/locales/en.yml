@@ -438,7 +438,7 @@ en:
       change_category: Change Category
     common:
       app_name: UNICEF Georgia Data Portal #X-Traktr
-      app_slogan: 'UNICEF Georgia Open Data: Helping to solve by measuring UNICEF'
+      app_slogan: 'Helping to solve by measuring'
       app_description: 'In collaboration with a wide range of partners, UNICEF Georgia gathers evidence on the situation of children in Georgia. It uses this knowledge to inform national and global decision-making with the objective of improving children’s well-being.'
       added_on: "Added on: %{date}" 
       jumpstart: JumpStart Georgia

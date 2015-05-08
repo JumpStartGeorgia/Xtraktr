@@ -67,14 +67,17 @@
             </div>
           <% end %>
 
-          <% if @show_title == true && content_for?(:title) %>
-            <div class="page-header">
-              <h1><%= yield(:title) %></h1>
-            </div>
-          <% end %>
+          <div id="main-content">
+            <% if @show_title == true && content_for?(:title) %>
+              <div class="page-header">
+                <h1><%= yield(:title) %></h1>
+              </div>
+            <% end %>
 
-          <%= yield %>
-      <%= render :partial => 'layouts/footer' %>
+            <%= yield %>
+          </div>
+
+          <%= render :partial => 'layouts/footer' %>
       </div>
     </div> <!-- /container -->
 

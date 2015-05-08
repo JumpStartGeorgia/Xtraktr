@@ -419,8 +419,8 @@ ka:
       choose_category: Choose Category
       change_category: Change Category      
     common:
-      app_name: UNICEF Georgia Data Portal #X-Traktr
-      app_slogan: 'საქართველო ღია მონაცემები: UNICEF-ის დახმარებით პრობლემების გადაჭრა'
+      app_name: UNICEF საქართველოს ღია მონაცემები #X-Traktr
+      app_slogan: 'პრობლემების გადაჭრა საზომით'
       app_description: 'UNICEF საქართველო, სხვა მრავალ პარტნიორთან ერთად აგროვებს მონაცემებს საქართველოში ბავშვთა კეთილდღეობის შესახებ არსებულ სიტუაციაზე. ამ ცოდნას ის გადასცემს ნაციონალურ და გლობალურ გადაწყვეტილების მიმღებ ორგანოებს რათა გაუმჯობესდეს ბავშვა კეთილდღეობა საქართველოში.'
       added_on: "დამატებულია: %{date}" 
       jumpstart: “ჯამპსტარტ ჯორჯია”
@@ -762,7 +762,7 @@ ka:
         methodology: Methodology
         codebook: Codebook
         reports: Reports
-        licensing: Licensing
+        licensing: ნებართვა
       no_methodology: There is no methodology on file for this dataset.
       no_reports: There are no reports on file for this dataset.
     dashboard_time_series:
@@ -771,7 +771,7 @@ ka:
         methodology: Methodology
         codebook: Codebook
         reports: Reports
-        licensing: Licensing
+        licensing: ნებართვა
         datasets: Datasets
   export_data:
     dataset: 'Dataset: %{title}'

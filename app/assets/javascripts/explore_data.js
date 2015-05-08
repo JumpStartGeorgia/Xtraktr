@@ -175,7 +175,7 @@ function build_highmaps(json){
     // remove all existing maps
     $('#container-map').empty();
     // remove all existing map links
-    $('#jumpto-maps #jumpto-maps').hide();
+    $('#jumpto-maps').hide();
     $('#jumpto-maps #jumpto-maps-items .jumpto-items').empty();
 
     var jumpto_text = '';
@@ -223,7 +223,7 @@ function build_highmaps(json){
 
       // show jumpto
       $('#jumpto-maps .jumpto-items').append(jumpto_text);
-      $('#jumpto-maps #jumpto-maps').show();
+      $('#jumpto-maps').show();
       $('#jumpto').show();
 
     }else{
@@ -240,7 +240,7 @@ function build_highmaps(json){
 
         // show jumpto
         $('#jumpto-maps .jumpto-items').append(jumpto_text);
-        $('#jumpto-maps #jumpto-maps').show();
+        $('#jumpto-maps').show();
         $('#jumpto').show();
 
       }else{
@@ -383,7 +383,7 @@ function build_crosstab_charts(json){
     // remove all existing charts
     $('#container-chart').empty();
     // remove all existing chart links
-    $('#jumpto-charts #jumpto-charts').hide();
+    $('#jumpto-charts').hide();
     $('#jumpto-charts #jumpto-charts-items .jumpto-items').empty();
     var jumpto_text = '';
 
@@ -400,7 +400,7 @@ function build_crosstab_charts(json){
 
       // show jumpto links
       $('#jumpto-charts .jumpto-items').append(jumpto_text);
-      $('#jumpto-charts #jumpto-charts').show();
+      $('#jumpto-charts').show();
       $('#jumpto').show();
 
     }else{
@@ -528,7 +528,7 @@ function build_pie_charts(json){
     // remove all existing charts
     $('#container-chart').empty();
     // remove all existing chart links
-    $('#jumpto-charts #jumpto-charts').hide();
+    $('#jumpto-charts').hide();
     $('#jumpto-charts #jumpto-charts-items .jumpto-items').empty();
     var jumpto_text = '';
 
@@ -545,7 +545,7 @@ function build_pie_charts(json){
 
       // show jumpto links
       $('#jumpto-charts .jumpto-items').append(jumpto_text);
-      $('#jumpto-charts #jumpto-charts').show();
+      $('#jumpto-charts').show();
       $('#jumpto').show();
 
     }else{
@@ -1025,7 +1025,8 @@ $(document).ready(function() {
   Highcharts.setOptions({
     lang: {
       contextButtonTitle: gon.highcharts_context_title
-    }
+    },
+    colors: ['#00adee', '#e88d42', '#9674a9', '#f3d952', '#6fa187', '#b2a440', '#d95d6a', '#737d91', '#d694e0', '#80b5bc', '#a6c449', '#1b74cc', '#4eccae']
   });
 
 

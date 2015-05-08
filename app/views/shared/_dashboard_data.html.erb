@@ -7,7 +7,7 @@
 <div id="dashboard-meta" class="row">
   <div class="col-sm-9">
     <div class="row">
-      <div class="col-sm-3" id="meta-dates">
+      <div class="col-sm-6" id="meta-dates">
         <%= model_class.human_attribute_name(:gathered_at) %>:
         <%= format_gathered_dates(@dataset.start_gathered_at, @dataset.end_gathered_at) %>
       </div>
@@ -16,14 +16,9 @@
         <%= I18n.l(@dataset.released_at, format: :day_first) if @dataset.released_at.present?  %>
       </div>
       <% if @is_xtraktr %>
-      <div class="col-sm-3" id="meta-source">
-        <%= model_class.human_attribute_name(:source) %>:
-        <%= @dataset.source %>
-      </div>
-      <% end %>
-      <% if !is_admin_page %>
-        <div class="col-sm-3 pull-right" id="share-links">
-          (share links)
+        <div class="col-sm-3" id="meta-source">
+          <%= model_class.human_attribute_name(:source) %>:
+          <%= @dataset.source %>
         </div>
       <% end %>
     </div>
@@ -40,7 +35,7 @@
   <div class="col-sm-3" style="text-align: right;">
     <ul class="list-unstyled">
       <li>
-        <%= link_to t('app.menu.explore_data'), url_dataset_explore(@dataset), class: 'btn btn-primary', title: t('app.menu.titles.explore_dataset') %>
+        <%= link_to t('app.menu.explore_data'), url_dataset_explore(@dataset, language: params[:language]), class: 'btn btn-primary', title: t('app.menu.titles.explore_dataset') %>
       </li>
       <% if @dataset.time_series_datasets.present? %>
         <li>
@@ -137,7 +132,7 @@
           <li class="row">
             <div class="col-sm-4 question">
               <h3>
-                <%= link_to url_dataset_explore(@dataset, question_code: question.code) do %>
+                <%= link_to url_dataset_explore(@dataset, question_code: question.code, language: params[:language]) do %>
                   <%= question.original_code %>:
                   <br />
                   <%= question.text %>
@@ -234,7 +229,13 @@
     </div>
 
     <div role="tabpanel" class="tab-pane fade" id="licensing">
-      coming soon...
+      <% if @license.present? %>
+        <div class="tinymce_format">
+          <%= simple_format_no_tags(@license.content, {}, {sanitize: false}) %>
+        </div>
+      <% else %>
+        comming soon...
+      <% end %>
     </div>
   </div>
 
