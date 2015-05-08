@@ -741,7 +741,7 @@ ka:
         methodology: Methodology
         codebook: Codebook
         reports: Reports
-        licensing: Licensing
+        licensing: ნებართვა
       no_methodology: There is no methodology on file for this dataset.
       no_reports: There are no reports on file for this dataset.
     dashboard_time_series:
@@ -750,7 +750,7 @@ ka:
         methodology: Methodology
         codebook: Codebook
         reports: Reports
-        licensing: Licensing
+        licensing: ნებართვა
         datasets: Datasets
   export_data:
     dataset: 'Dataset: %{title}'

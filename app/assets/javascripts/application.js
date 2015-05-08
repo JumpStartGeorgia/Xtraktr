@@ -12,6 +12,7 @@
 //= require jquery.ui.effect
 // Do not use twitter/bootstrap/tooltip because it has hack, to have possibility add class with klass options
 //= require twitter/bootstrap/dropdown
+//= require twitter/bootstrap/tab
 //= require bootstrap.tooltip.min
 //= require dataTables/jquery.dataTables
 //= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
