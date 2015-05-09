@@ -154,8 +154,8 @@ class ApiV1
     if broken_down_by.present?
       data[:analysis_type] = ANALYSIS_TYPE[:comparative]
       data[:results] = dataset_comparative_analysis(dataset, data[:question], data[:broken_down_by], data[:filtered_by], with_title)
-      data[:chart] = dataset_comparative_chart(data, with_title) if with_chart_data
-      data[:map] = dataset_comparative_map(question.answers, broken_down_by.answers, data, question.is_mappable?, with_title) if with_map_data && (question.is_mappable? || broken_down_by.is_mappable?)
+      data[:chart] = dataset_comparative_chart(data, with_title, options) if with_chart_data
+      data[:map] = dataset_comparative_map(question.answers, broken_down_by.answers, data, question.is_mappable?, with_title, options) if with_map_data && (question.is_mappable? || broken_down_by.is_mappable?)
     else
       data[:analysis_type] = ANALYSIS_TYPE[:single]
       data[:results] = dataset_single_analysis(dataset, data[:question], data[:filtered_by], with_title)
@@ -455,7 +455,7 @@ private
 
           # create embed id
           # add filter value
-          options[:filter_value] = filter[:filter_answer_value]
+          options[:filtered_by_value] = filter[:filter_answer_value]
           chart_item[:filter_results][:embed_id] = Base64.urlsafe_encode64(options.to_query)
 
           # create data for chart
@@ -535,7 +535,7 @@ private
 
           # create embed id
           # add filter value
-          options[:filter_value] = filter[:filter_answer_value]
+          options[:filtered_by_value] = filter[:filter_answer_value]
           map_item[:filter_results][:map_sets][:embed_id] = Base64.urlsafe_encode64(options.to_query)
 
           map_item[:filter_results][:map_sets][:data] = []
@@ -563,7 +563,7 @@ private
         end
 
         # create embed id
-        map[:map_sets] = Base64.urlsafe_encode64(options.to_query)
+        map[:map_sets][:embed_id] = Base64.urlsafe_encode64(options.to_query)
 
         # load the data
         map[:map_sets][:data] = []
@@ -746,7 +746,7 @@ private
 
           # create embed id
           # add filter value
-          options[:filter_value] = filter[:filter_answer_value]
+          options[:filtered_by_value] = filter[:filter_answer_value]
           chart_item[:filter_results][:embed_id] = Base64.urlsafe_encode64(options.to_query)
 
           chart_item[:filter_results][:labels] = data[:question][:answers].map{|x| x[:text]}
@@ -853,7 +853,7 @@ private
               # create embed id
               # add broken down by value & filter value
               options[:broken_down_value] = bdb_answer.value
-              options[:filter_value] = filter[:filter_answer_value]
+              options[:filtered_by_value] = filter[:filter_answer_value]
               item[:embed_id] = Base64.urlsafe_encode64(options.to_query)                
 
               # load the data
@@ -886,7 +886,7 @@ private
                 # create embed id
                 # add broken down by value & filter value
                 options[:broken_down_value] = q_answer.value
-                options[:filter_value] = filter[:filter_answer_value]
+                options[:filtered_by_value] = filter[:filter_answer_value]
                 item[:embed_id] = Base64.urlsafe_encode64(options.to_query)                
 
                 # load the data
@@ -1176,7 +1176,7 @@ private
   
           # create embed id
           # add filter value
-          options[:filter_value] = filter[:filter_answer_value]
+          options[:filtered_by_value] = filter[:filter_answer_value]
           chart_item[:filter_results][:embed_id] = Base64.urlsafe_encode64(options.to_query)
 
 
