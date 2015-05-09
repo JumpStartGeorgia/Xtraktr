@@ -159,8 +159,8 @@ class ApiV1
     else
       data[:analysis_type] = ANALYSIS_TYPE[:single]
       data[:results] = dataset_single_analysis(dataset, data[:question], data[:filtered_by], with_title)
-      data[:chart] = dataset_single_chart(data, with_title) if with_chart_data
-      data[:map] = dataset_single_map(question.answers, data, with_title) if with_map_data && question.is_mappable?
+      data[:chart] = dataset_single_chart(data, with_title, options) if with_chart_data
+      data[:map] = dataset_single_map(question.answers, data, with_title, options) if with_map_data && question.is_mappable?
     end
 
     return data
@@ -319,16 +319,16 @@ class ApiV1
     end
 
     data[:results] = time_series_single_analysis(data[:datasets], individual_results, data[:question], data[:filtered_by], with_title)
-    data[:chart] = time_series_single_chart(data, with_title) if with_chart_data
+    data[:chart] = time_series_single_chart(data, with_title, options) if with_chart_data
 
     return data
   end
 
 
-  ########################################
-  ########################################
-  ########################################
-  ########################################
+  ################################################################################
+  ################################################################################
+  ################################################################################
+  ################################################################################
 private
   # create question hash for a dataset
   def self.create_dataset_question_hash(question, can_exclude=false)
@@ -434,10 +434,11 @@ private
   end
 
   # convert the results into pie chart format
+  # options are needed to create embed id
   # return format: 
   # - no filter: {:data => [ {name, y(percent), count, answer_value}, ...] }
   # - with filter: [ {filter_answer_value, filter_answer_text, filter_results => [ {:data => [ {name, y(percent), count, answer_value}, ...] } ] } ]
-  def self.dataset_single_chart(data, with_title=false)
+  def self.dataset_single_chart(data, with_title=false, options={})
     if data.present?
       chart = nil
       if data[:filtered_by].present?
@@ -451,7 +452,13 @@ private
             chart_item[:filter_results][:title] = filter[:filter_results][:title]
             chart_item[:filter_results][:subtitle] = filter[:filter_results][:subtitle]
           end
-  
+
+          # create embed id
+          # add filter value
+          options[:filter_value] = filter[:filter_answer_value]
+          chart_item[:filter_results][:embed_id] = Base64.urlsafe_encode64(options.to_query)
+
+          # create data for chart
           chart_item[:filter_results][:data] = []
           data[:question][:answers].each do |answer|
             result_item = {name: answer[:text], data:[]}
@@ -476,6 +483,10 @@ private
           chart[:subtitle] = data[:results][:subtitle]
         end
 
+        # create embed id
+        chart[:embed_id] = Base64.urlsafe_encode64(options.to_query)
+
+        # create data for chart
         chart[:data] = []
         data[:question][:answers].each do |answer|
           data_result = data[:results][:analysis].select{|x| x[:answer_value] == answer[:value]}.first
@@ -501,10 +512,11 @@ private
   end
 
   # convert the results into highmaps map format
+  # options are needed to create embed id
   # return format: 
   # - no filter: {shape_question_code, map_sets => {title, subtitle, data => [ {shape_name, display_name, value, count}, ... ] } }
   # - with filter: [{filter_answer_value, filter_answer_text, shape_question_code, filter_results => [ map_sets => {title, subtitle, data => [ {shape_name, display_name, value, count}, ... ] } ] } ]
-  def self.dataset_single_map(answers, data, with_title=false)
+  def self.dataset_single_map(answers, data, with_title=false, options={})
     if answers.present? && data.present?
       map = nil
 
@@ -520,6 +532,11 @@ private
             map_item[:filter_results][:map_sets][:title] = filter[:filter_results][:title]
             map_item[:filter_results][:map_sets][:subtitle] = filter[:filter_results][:subtitle]
           end
+
+          # create embed id
+          # add filter value
+          options[:filter_value] = filter[:filter_answer_value]
+          map_item[:filter_results][:map_sets][:embed_id] = Base64.urlsafe_encode64(options.to_query)
 
           map_item[:filter_results][:map_sets][:data] = []
           answers.each_with_index do |answer|
@@ -544,6 +561,9 @@ private
           map[:map_sets][:title] = data[:results][:title]
           map[:map_sets][:subtitle] = data[:results][:subtitle]
         end
+
+        # create embed id
+        map[:map_sets] = Base64.urlsafe_encode64(options.to_query)
 
         # load the data
         map[:map_sets][:data] = []
@@ -705,10 +725,11 @@ private
 
 
   # convert the results into stacked bar chart format
+  # options are needed to create embed id
   # return format: 
   # - no filter: {:data => [ {name, y(percent), count, answer_value}, ...] }
   # - with filter: [ {filter_answer_value, filter_results => [ {:data => [ {name, y(percent), count, answer_value}, ...] } ] } ]
-  def self.dataset_comparative_chart(data, with_title=false)
+  def self.dataset_comparative_chart(data, with_title=false, options={})
     if data.present?
       chart = nil
       if data[:filtered_by].present?
@@ -722,6 +743,11 @@ private
             chart_item[:filter_results][:title] = filter[:filter_results][:title]
             chart_item[:filter_results][:subtitle] = filter[:filter_results][:subtitle]
           end
+
+          # create embed id
+          # add filter value
+          options[:filter_value] = filter[:filter_answer_value]
+          chart_item[:filter_results][:embed_id] = Base64.urlsafe_encode64(options.to_query)
 
           chart_item[:filter_results][:labels] = data[:question][:answers].map{|x| x[:text]}
   
@@ -746,7 +772,11 @@ private
           chart[:subtitle] = data[:results][:subtitle]
         end
 
+        # create embed id
+        chart[:embed_id] = Base64.urlsafe_encode64(options.to_query)
+
         chart[:labels] = data[:question][:answers].map{|x| x[:text]}
+
         chart[:data] = []
         # have to transpose the counts for highcharts
         counts = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:count]}}.transpose
@@ -774,10 +804,11 @@ private
 
 
   # convert the results into highmaps map format
+  # options are needed to create embed id
   # return format: 
   # - no filter: {shape_question_code, map_sets => [{title, subtitle, data => [ {shape_name, display_name, value, count}, ... ] } ] }
   # - with filter: [{filter_answer_value, filter_answer_text, shape_question_code, filter_results => [ map_sets => [{title, subtitle, data => [ {shape_name, display_name, value, count}, ... ] } ] } ]
-  def self.dataset_comparative_map(question_answers, broken_down_by_answers, data, question_mappable=true, with_title=false)
+  def self.dataset_comparative_map(question_answers, broken_down_by_answers, data, question_mappable=true, with_title=false, options={})
     if question_answers.present? && broken_down_by_answers.present? && data.present?
       map = nil
       if data[:filtered_by].present?
@@ -819,6 +850,12 @@ private
                 item[:subtitle] = data[:results][:subtitle]
               end
 
+              # create embed id
+              # add broken down by value & filter value
+              options[:broken_down_value] = bdb_answer.value
+              options[:filter_value] = filter[:filter_answer_value]
+              item[:embed_id] = Base64.urlsafe_encode64(options.to_query)                
+
               # load the data
               item[:data] = []
               question_answers.each_with_index do |q_answer, q_index|
@@ -845,6 +882,12 @@ private
                   item[:title][:text] = dataset_comparative_analysis_map_title_text(data[:broken_down_by][:text], data[:question][:text], q_answer.text, data[:filtered_by][:text], filter[:filter_answer_text])
                   item[:subtitle] = data[:results][:subtitle]
                 end
+
+                # create embed id
+                # add broken down by value & filter value
+                options[:broken_down_value] = q_answer.value
+                options[:filter_value] = filter[:filter_answer_value]
+                item[:embed_id] = Base64.urlsafe_encode64(options.to_query)                
 
                 # load the data
                 item[:data] = []
@@ -896,6 +939,11 @@ private
               item[:subtitle] = data[:results][:subtitle]
             end
 
+            # create embed id
+            # add broken down by value
+            options[:broken_down_value] = bdb_answer.value
+            item[:embed_id] = Base64.urlsafe_encode64(options.to_query)
+
             # load the data
             item[:data] = []
             question_answers.each_with_index do |q_answer, q_index|
@@ -920,6 +968,11 @@ private
               item[:title][:text] = dataset_comparative_analysis_map_title_text(data[:question][:text], data[:broken_down_by][:text], q_answer.text)
               item[:subtitle] = data[:results][:subtitle]
             end
+
+            # create embed id
+            # add broken down by value
+            options[:broken_down_value] = q_answer.value
+            item[:embed_id] = Base64.urlsafe_encode64(options.to_query)
             
             # load the data
             item[:data] = []
@@ -1098,10 +1151,11 @@ private
 
 
   # convert the results into pie chart format
+  # options are needed to create embed id
   # return format: 
   # - no filter: {title, subtitle, datasets, data => [ {name, y(percent), count, answer_value}, ...] }
   # - with filter: [ {filter_answer_value, filter_answer_text, filter_results => [ {title, subtitle, datasets, data => [ {name, y(percent), count, answer_value}, ...] } ] } ]
-  def self.time_series_single_chart(data, with_title=false)
+  def self.time_series_single_chart(data, with_title=false, options={})
     if data.present?
       chart = nil
       datasets = data[:datasets].map{|x| x[:label]}
@@ -1120,6 +1174,12 @@ private
 
           chart_item[:filter_results][:datasets] = datasets
   
+          # create embed id
+          # add filter value
+          options[:filter_value] = filter[:filter_answer_value]
+          chart_item[:filter_results][:embed_id] = Base64.urlsafe_encode64(options.to_query)
+
+
           chart_item[:filter_results][:data] = []
           data[:question][:answers].each do |answer|
             result_item = {name: answer[:text], data:[]}
@@ -1147,6 +1207,10 @@ private
         end
 
         chart[:datasets] = datasets
+
+        # create embed id
+        chart[:embed_id] = Base64.urlsafe_encode64(options.to_query)
+
         chart[:data] = []
         data[:question][:answers].each do |answer|
           chart_item = {name: answer[:text], data:[]}
