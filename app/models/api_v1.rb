@@ -865,9 +865,13 @@ private
 
               # load the data
               item[:data] = []
-              question_answers.each_with_index do |q_answer, q_index|
-                item[:data] << dataset_comparative_map_processing(q_answer, percents[bdb_index][q_index], counts[bdb_index][q_index])
+              if counts.present?
+                question_answers.each_with_index do |q_answer, q_index|
+
+                  item[:data] << dataset_comparative_map_processing(q_answer, percents[bdb_index][q_index], counts[bdb_index][q_index])
+                end
               end
+
               map_item[:filter_results][:map_sets] << item
             end        
           else
@@ -955,8 +959,10 @@ private
 
             # load the data
             item[:data] = []
-            question_answers.each_with_index do |q_answer, q_index|
-              item[:data] << dataset_comparative_map_processing(q_answer, percents[bdb_index][q_index], counts[bdb_index][q_index])
+            if counts.present?
+              question_answers.each_with_index do |q_answer, q_index|
+                item[:data] << dataset_comparative_map_processing(q_answer, percents[bdb_index][q_index], counts[bdb_index][q_index])
+              end
             end
             map[:map_sets] << item
           end        
