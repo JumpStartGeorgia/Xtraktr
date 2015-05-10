@@ -20,6 +20,8 @@ class TimeSeries < CustomTranslation
   field :languages, type: Array
   field :default_language, type: String
 
+  has_many :highlights, dependent: :destroy
+
   has_many :datasets, class_name: 'TimeSeriesDataset' do
     def sorted
       order_by([[:sort_order, :asc], [:title, :asc]]).to_a

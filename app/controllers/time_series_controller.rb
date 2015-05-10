@@ -40,8 +40,10 @@ class TimeSeriesController < ApplicationController
 
       @license = PageContent.by_name('license')
 
-      @css.push("dashboard.css")
-      @js.push("live_search.js")
+      @highlights = Highlight.by_time_series(@time_series.id)
+
+      @css.push("dashboard.css", 'highlights.css')
+      @js.push("live_search.js", 'highlights.js')
 
       respond_to do |format|
         format.html # index.html.erb

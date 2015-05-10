@@ -61,3 +61,16 @@
   <% end %>
 </div>
 <% end %>
+
+
+<% if @highlights.present? %>
+  <div id="highlights">
+    <h2><%= t('.header_highlights') %></h2>
+    <% @highlights.each do |highlight| %>
+      <div class="highlight <%= highlight.visual_type_name %>">
+        <h3><%= link_to highlight.title, highlight.dataset_id.present? ? explore_data_dashboard_path(highlight.dataset_id) : explore_time_series_dashboard_path(highlight.time_series_id) %></h3>
+        <iframe src="<%= embed_v1_path(id: highlight.embed_id) %>"></iframe>
+      </div>
+    <% end %>
+  </div>
+<% end %>

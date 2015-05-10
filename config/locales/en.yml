@@ -449,7 +449,7 @@ en:
       percent: Percent
       dataset_dashboard: Dataset Dashboard
       time_series_dashboard: Time Series Dashboard
-      terms: "I agree to the <a href='#'>Terms of Use</a> and <a href='#'>Privacy Policy</a>"  
+      terms: "I agree to the <a href='#'>Terms of Use</a>"  
       or: Or 
     msgs:
       does_not_exist: You tried to access a page that does not exist.
@@ -571,10 +571,9 @@ en:
     index:
       header_latest_datasets: Latest Datasets
       no_datasets: 'At this time, no datasets have been loaded into the site.'
-      no_match_datasets: 'Sorry, no datasets match your search request.'
       header_latest_time_series: Latest Time Series
       no_time_series: 'At this time, no time series have been created in the site.'
-      no_match_time_series: 'Sorry, no time series match your search request.'
+      header_highlights: Highlights
     contact:
       title: Contact
     instructions:
@@ -789,6 +788,7 @@ en:
         licensing: Licensing
       no_methodology: There is no methodology on file for this dataset.
       no_reports: There are no reports on file for this dataset.
+      no_highlights: There are no highlights on file for this dataset.
     dashboard_time_series:
       tabs:
         highlights: Highlights
@@ -797,6 +797,7 @@ en:
         reports: Reports
         licensing: Licensing
         datasets: Datasets
+      no_highlights: There are no highlights on file for this time series.
   export_data:
     dataset: 'Dataset: %{title}'
     download_from: 'Downloaded From: %{app_name} at %{url}.'

@@ -23,6 +23,24 @@ ka:
         sign_in_count: "შემოსვლის რაოდენობა"
         created_at: "შექმნის თარიღი"
         current_sign_in_at: "ბოლო შემოსვლის თარიღი"
+        first_name: First Name
+        last_name: Last Name
+        age_group: Age Group
+        residence: Country of Residence
+        affiliation: Affiliation
+        status: Status
+        status_other: When other(Please specify)
+        description: Short description of research objective (<i>optional</i>)           
+      agreement:
+        email: Email Address
+        first_name: First Name
+        last_name: Last Name
+        age_group: Age Group
+        residence: Country of Residence
+        affiliation: Affiliation
+        status: Status
+        status_other: When other(Please specify)
+        description: Short description of research objective (<i>optional</i>)   
       page_content:
         name: Unique Name
         title: Title
@@ -431,6 +449,8 @@ ka:
       percent: Percent
       dataset_dashboard: Dataset Dashboard
       time_series_dashboard: Time Series Dashboard
+      terms: "I agree to the <a href='#'>Terms of Use</a>"  
+      or: Or 
     msgs:
       does_not_exist: თქვენ ცდილობთ ისეთი გვერდის ნახვას, რომელიც არ არსებობს.
       not_authorized: თქვენ არ გაქვთ ამ გვერდის ნახვის უფლება.
@@ -489,6 +509,23 @@ ka:
         warnings: Warnings
         delete: Delete
         private_share: Share Private Time Series
+  user:
+    age_group:
+      g1: "17-24"
+      g2: "25-34"
+      g3: "35-44"
+      g4: "45-54"
+      g5: "55-64"
+      g6: "above(>65)"
+    status:
+      researcher: Researcher
+      student: Student
+      journalist: Journalist
+      ngo: NGO
+      government_official: Government Official
+      international_organization: International Organization
+      private_sector: Private Sector
+      other: Other
   layouts:
     nav:
       toggle: ნავიგაციის ჩართვა/გამორთვა
@@ -536,6 +573,7 @@ ka:
       no_datasets: 'At this time, no datasets have been loaded into the site.'
       header_latest_time_series: Latest Time Series
       no_time_series: 'At this time, no time series have been created in the site.'
+      header_highlights: Highlights
     contact:
       title: Contact
     instructions:
@@ -544,8 +582,14 @@ ka:
       title: Disclaimer
     explore_data:
       title: Explore the Data
+      search_datasets: Search Datasets
+      sort_by: 
+        this: Sort By
+        title: Title
+        release: Release Date
+        publish: Publish Date
       no_data: 'At this time, no datasets have been loaded into the site.'
-      no_match: 'Sorry, no datasets match your search request.'
+      no_match: 'Sorry, no datasets match your search request.'      
     explore_data_show:
       title: Explore the Data
     explore_time_series:
@@ -744,6 +788,7 @@ ka:
         licensing: ნებართვა
       no_methodology: There is no methodology on file for this dataset.
       no_reports: There are no reports on file for this dataset.
+      no_highlights: There are no highlights on file for this dataset.
     dashboard_time_series:
       tabs:
         highlights: Highlights
@@ -752,6 +797,7 @@ ka:
         reports: Reports
         licensing: ნებართვა
         datasets: Datasets
+      no_highlights: There are no highlights on file for this time series.
   export_data:
     dataset: 'Dataset: %{title}'
     download_from: 'Downloaded From: %{app_name} at %{url}.'

@@ -32,11 +32,20 @@
 
 <div id="dashboard-tabs" role="tabpanel">
 
+    <% 
+      highlight_active = {tab: '', panel: ''}
+      codebook_active = {tab: 'active', panel: 'in active'}
+      if @highlights.present?
+        highlight_active = {tab: 'active', panel: 'in active'}
+        codebook_active = {tab: '', panel: ''}
+      end 
+    %>
+
   <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation">
+    <li role="presentation" class="<%= highlight_active[:tab] %>">
       <a href="#highlights" aria-controls="highlights" role="tab" data-toggle="tab"><%= t('.tabs.highlights') %></a>
     </li>
-    <li role="presentation" class="active">
+    <li role="presentation" class="<%= codebook_active[:tab] %>">
       <a href="#codebook" aria-controls="codebook" role="tab" data-toggle="tab"><%= t('.tabs.codebook') %></a>
     </li>
     <li role="presentation">
@@ -48,11 +57,21 @@
   </ul>
 
   <div class="tab-content">
-    <div role="tabpanel" class="tab-pane fade" id="highlights">
-      coming soon...
+    <div role="tabpanel" class="tab-pane fade <%= highlight_active[:panel] %>" id="highlights">
+      <% if @highlights.present? %>
+        <% @highlights.each do |highlight| %>
+          <div class="highlight <%= highlight.visual_type_name %>">
+            <iframe src="<%= embed_v1_path(id: highlight.embed_id) %>"></iframe>
+          </div>
+        <% end %>
+      <% else %>
+        <p>
+          <%= t('.no_highlights') %>
+        </p>
+      <% end %>
     </div>
     
-    <div role="tabpanel" class="tab-pane fade in active" id="codebook">
+    <div role="tabpanel" class="tab-pane fade <%= codebook_active[:panel] %>" id="codebook">
       <div id="codebook-search" class="input-group">
         <span class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></span>
         <input type="text" class="text-input col-sm-3" id="filter" class="form-control" value="" placeholder="<%= t('helpers.search') %>" />
