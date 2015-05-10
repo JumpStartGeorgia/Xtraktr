@@ -615,6 +615,15 @@ class Dataset < CustomTranslation
     self.or({:reset_download_files => true}, {:urls.exists => false}, {:'urls.codebook'.exists => false})
   end
 
+  # get the shape file url
+  def self.shape_file_url(dataset_id)
+    url = nil
+    x = only('urls.shape_file').find(dataset_id)
+    url = x.urls.shape_file if x.present?
+
+    return url
+  end
+
   #############################
   ## paths to dataset related files
 

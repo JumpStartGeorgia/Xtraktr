@@ -70,9 +70,15 @@ BootstrapStarter::Application.routes.draw do
       match '/v1/time_series_analysis', to: 'v1#time_series_analysis', as: :v1_time_series_analysis, via: :get, :defaults => { :format => 'json' }
     end    
 
-    # root pages
     resources 'agreements', :only => [:new, :create]
 
+    # embed pages
+    match '/embed', to: 'embed#index', as: :embed, via: :get
+    namespace :embed do
+      match '/v1/:id', to: 'v1#index', as: :v1, via: :get
+    end    
+
+    # root pages
     match '/contact', :to => 'root#contact', :as => :contact, :via => :get
     match '/download/:id', :to => 'root#download', :as => :download, :via => :get
     match '/download_request', :to => 'root#download_request', :as => :download_request, :via => :get

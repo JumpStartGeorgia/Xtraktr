@@ -150,6 +150,10 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     filename.strip.latinize.to_ascii.gsub(' ', '_').gsub(/[\\ \/ \: \* \? \" \< \> \| \, \. ]/,'')
   end
 
+  # remove unwanted items from the filtered params
+  def clean_filtered_params(params)
+    params.except('access_token', 'controller', 'action', 'format', 'locale')
+  end
 
   # add options to show the dataset nav bar
   def add_dataset_nav_options(options={})
@@ -240,27 +244,15 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 
         # add the required assets
         @css.push('bootstrap-select.min.css', "explore.css", "datasets.css")
-        @js.push('bootstrap-select.min.js', "explore_data.js", 'highcharts.js', 'highcharts-map.js', 'highcharts-exporting.js')
+        @js.push('bootstrap-select.min.js', "explore.js", "explore_data.js", 'highcharts.js', 'highcharts-map.js', 'highcharts-exporting.js')
 
         # record javascript variables
         gon.hover_region = I18n.t('explore_data.hover_region')
         gon.na = I18n.t('explore_data.na')
         gon.percent = I18n.t('explore_data.percent')
-        gon.datatable_copy_title = I18n.t('datatable.copy.title')
-        gon.datatable_copy_tooltip = I18n.t('datatable.copy.tooltip')
-        gon.datatable_csv_title = I18n.t('datatable.csv.title')
-        gon.datatable_csv_tooltip = I18n.t('datatable.csv.tooltip')
-        gon.datatable_xls_title = I18n.t('datatable.xls.title')
-        gon.datatable_xls_tooltip = I18n.t('datatable.xls.tooltip')
-        gon.datatable_pdf_title = I18n.t('datatable.pdf.title')
-        gon.datatable_pdf_tooltip = I18n.t('datatable.pdf.tooltip')
-        gon.datatable_print_title = I18n.t('datatable.print.title')
-        gon.datatable_print_tooltip = I18n.t('datatable.print.tooltip')
-        gon.highcharts_context_title = I18n.t('highcharts.context_title')
-        gon.highcharts_png = I18n.t('highcharts.png')
-        gon.highcharts_jpg = I18n.t('highcharts.jpg')
-        gon.highcharts_pdf = I18n.t('highcharts.pdf')
-        gon.highcharts_svg = I18n.t('highcharts.svg')
+
+        set_gon_highcharts
+        set_gon_datatables
 
         gon.explore_data = true
         gon.dataset_id = params[:id]
@@ -416,26 +408,14 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
       format.html{
         # add the required assets
         @css.push('bootstrap-select.min.css', "explore.css", "time_series.css")
-        @js.push('bootstrap-select.min.js', "explore_time_series.js", 'highcharts.js', 'highcharts-exporting.js')
+        @js.push('bootstrap-select.min.js', "explore.js", "explore_time_series.js", 'highcharts.js', 'highcharts-exporting.js')
 
         # record javascript variables
         gon.na = I18n.t('explore_time_series.na')
         gon.percent = I18n.t('explore_time_series.percent')
-        gon.datatable_copy_title = I18n.t('datatable.copy.title')
-        gon.datatable_copy_tooltip = I18n.t('datatable.copy.tooltip')
-        gon.datatable_csv_title = I18n.t('datatable.csv.title')
-        gon.datatable_csv_tooltip = I18n.t('datatable.csv.tooltip')
-        gon.datatable_xls_title = I18n.t('datatable.xls.title')
-        gon.datatable_xls_tooltip = I18n.t('datatable.xls.tooltip')
-        gon.datatable_pdf_title = I18n.t('datatable.pdf.title')
-        gon.datatable_pdf_tooltip = I18n.t('datatable.pdf.tooltip')
-        gon.datatable_print_title = I18n.t('datatable.print.title')
-        gon.datatable_print_tooltip = I18n.t('datatable.print.tooltip')
-        gon.highcharts_context_title = I18n.t('highcharts.context_title')
-        gon.highcharts_png = I18n.t('highcharts.png')
-        gon.highcharts_jpg = I18n.t('highcharts.jpg')
-        gon.highcharts_pdf = I18n.t('highcharts.pdf')
-        gon.highcharts_svg = I18n.t('highcharts.svg')
+
+        set_gon_highcharts
+        set_gon_datatables
 
         gon.explore_time_series = true
         gon.time_series_id = params[:id]
@@ -507,6 +487,28 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
   #   end
   #   return t('explore_time_series.subtitle.text', :num => num.join('; '))
   # end 
+
+
+  def set_gon_highcharts
+    gon.highcharts_context_title = I18n.t('highcharts.context_title')
+    gon.highcharts_png = I18n.t('highcharts.png')
+    gon.highcharts_jpg = I18n.t('highcharts.jpg')
+    gon.highcharts_pdf = I18n.t('highcharts.pdf')
+    gon.highcharts_svg = I18n.t('highcharts.svg')
+  end
+
+  def set_gon_datatables
+    gon.datatable_copy_title = I18n.t('datatable.copy.title')
+    gon.datatable_copy_tooltip = I18n.t('datatable.copy.tooltip')
+    gon.datatable_csv_title = I18n.t('datatable.csv.title')
+    gon.datatable_csv_tooltip = I18n.t('datatable.csv.tooltip')
+    gon.datatable_xls_title = I18n.t('datatable.xls.title')
+    gon.datatable_xls_tooltip = I18n.t('datatable.xls.tooltip')
+    gon.datatable_pdf_title = I18n.t('datatable.pdf.title')
+    gon.datatable_pdf_tooltip = I18n.t('datatable.pdf.tooltip')
+    gon.datatable_print_title = I18n.t('datatable.print.title')
+    gon.datatable_print_tooltip = I18n.t('datatable.print.tooltip')
+  end
 
 
   #######################

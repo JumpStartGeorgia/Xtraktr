@@ -4,6 +4,10 @@
 #explore-data{
   margin-top: 20px;
 
+  &.embed-item{
+    margin-top: 0;
+  }
+
   #no-matches{
     font-size: 16px;
     text-align: center;
@@ -219,6 +223,17 @@
       border-bottom: dotted 1px #ccc;
       &:last-of-type{
         border-bottom: none;
+      }
+    }
+    &.embed-item{
+      /* for embeds, make the height and width 100% */
+      .map {
+        margin: 0;
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
       }
     }
   }

@@ -54,7 +54,7 @@ class Api::V1Controller < ApplicationController
   def dataset
     respond_to do |format|
       format.json { 
-        render json: ApiV1.dataset(params[:dataset_id], cleaned_filtered_params(request.filtered_parameters)), each_serializer: DatasetSerializer
+        render json: ApiV1.dataset(params[:dataset_id], clean_filtered_params(request.filtered_parameters)), each_serializer: DatasetSerializer
       }
     end
   end
@@ -63,7 +63,7 @@ class Api::V1Controller < ApplicationController
   def dataset_codebook
     respond_to do |format|
       format.json { 
-        render json: ApiV1.dataset_codebook(params[:dataset_id], cleaned_filtered_params(request.filtered_parameters)), each_serializer: QuestionSerializer, root: 'questions'
+        render json: ApiV1.dataset_codebook(params[:dataset_id], clean_filtered_params(request.filtered_parameters)), each_serializer: QuestionSerializer, root: 'questions'
       }
     end
   end
@@ -77,7 +77,7 @@ class Api::V1Controller < ApplicationController
   def dataset_analysis
     respond_to do |format|
       format.json { 
-        render json: ApiV1.dataset_analysis(params[:dataset_id], params[:question_code], cleaned_filtered_params(request.filtered_parameters))
+        render json: ApiV1.dataset_analysis(params[:dataset_id], params[:question_code], clean_filtered_params(request.filtered_parameters))
       }
     end
   end
@@ -99,7 +99,7 @@ class Api::V1Controller < ApplicationController
   def time_series
     respond_to do |format|
       format.json { 
-        render json: ApiV1.time_series(params[:time_series_id], cleaned_filtered_params(request.filtered_parameters)), each_serializer: TimeSeriesSerializer
+        render json: ApiV1.time_series(params[:time_series_id], clean_filtered_params(request.filtered_parameters)), each_serializer: TimeSeriesSerializer
       }
     end
   end
@@ -108,7 +108,7 @@ class Api::V1Controller < ApplicationController
   def time_series_codebook
     respond_to do |format|
       format.json { 
-        render json: ApiV1.time_series_codebook(params[:time_series_id], cleaned_filtered_params(request.filtered_parameters)), each_serializer: TimeSeriesQuestionSerializer, root: 'questions'
+        render json: ApiV1.time_series_codebook(params[:time_series_id], clean_filtered_params(request.filtered_parameters)), each_serializer: TimeSeriesQuestionSerializer, root: 'questions'
       }
     end
   end
@@ -121,7 +121,7 @@ class Api::V1Controller < ApplicationController
   def time_series_analysis
     respond_to do |format|
       format.json { 
-        render json: ApiV1.time_series_analysis(params[:time_series_id], params[:question_code], cleaned_filtered_params(request.filtered_parameters))
+        render json: ApiV1.time_series_analysis(params[:time_series_id], params[:question_code], clean_filtered_params(request.filtered_parameters))
       }
     end
   end
@@ -130,7 +130,7 @@ class Api::V1Controller < ApplicationController
 
 private
   # remove unwanted items from the filtered params
-  def cleaned_filtered_params(params)
+  def clean_filtered_params(params)
     params.except('access_token', 'controller', 'action', 'format', 'locale')
   end
 
