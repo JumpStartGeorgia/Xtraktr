@@ -162,15 +162,20 @@ $(document).ready(function() {
   });
 
   if (gon.json_data){
-    // test for visual type
-    if (gon.visual_type == 'chart'){
-      if (gon.json_data.analysis_type == 'comparative'){
-        build_crosstab_charts(gon.json_data);
-      }else{
-        build_pie_charts(gon.json_data);
+    // test if time series or dataset
+    if (gon.json_data.time_series){
+      build_time_series_charts(gon.json_data);
+    }else if(gon.json_data.dataset){
+      // test for visual type
+      if (gon.visual_type == 'chart'){
+        if (gon.json_data.analysis_type == 'comparative'){
+          build_crosstab_charts(gon.json_data);
+        }else{
+          build_pie_charts(gon.json_data);
+        }
+      }else if (gon.visual_type == 'map') {
+        build_highmaps(gon.json_data);
       }
-    }else if (gon.visual_type == 'map') {
-      build_highmaps(gon.json_data);
     }
 
     build_page_title(gon.json_data);

@@ -462,13 +462,10 @@ private
           # create data for chart
           chart_item[:filter_results][:data] = []
           data[:question][:answers].each do |answer|
-            result_item = {name: answer[:text], data:[]}
-
             data_result = filter[:filter_results][:analysis].select{|x| x[:answer_value] == answer[:value]}.first
             if data_result.present?
-              result_item[:data] << dataset_single_chart_processing(answer, data_result)
+              chart_item[:filter_results][:data] << dataset_single_chart_processing(answer, data_result)
             end
-            chart_item[:filter_results][:data] << result_item
           end
           if chart_item[:filter_results][:data].present?
             chart << chart_item
