@@ -7,9 +7,10 @@ class RootController < ApplicationController
     @time_series = TimeSeries.is_public.recent.sorted.limit(5) if @is_xtraktr
 
     @css.push('root.css')
-
+    data = { blah: 'bluh'}
     respond_to do |format|
       format.html # index.html.erb
+      format.json { render json: data }
     end
   end
 

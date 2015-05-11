@@ -119,6 +119,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
   end
 
 	def after_sign_in_path_for(resource)
+     Rails.logger.debug("--------------------------------------------#{session[:previous_urls].last || request.env['omniauth.origin'] || root_path(:locale => I18n.locale)}")
 		session[:previous_urls].last || request.env['omniauth.origin'] || root_path(:locale => I18n.locale)
 	end
 

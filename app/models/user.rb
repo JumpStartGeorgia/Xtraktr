@@ -197,5 +197,8 @@ class User
       })
     a.valid?
   end
-
+  def to_json(opts={})  
+    opts.merge!(:only => [:id, :first_name, :last_name])
+    super(opts)
+  end
 end
