@@ -22,14 +22,13 @@ class Embed::V1Controller < ApplicationController
         data = ApiV1.dataset_analysis(options['dataset_id'], options['question_code'], clean_filtered_params(options))
 
         # save dataset title
-        @title = data[:dataset][:title]
+        @title = data[:dataset][:title] if data.present? && data[:dataset].present?
       elsif options['time_series_id'].present?
         data = ApiV1.time_series_analysis(options['time_series_id'], options['question_code'], clean_filtered_params(options))
 
         # save dataset title
-        @title = data[:time_series][:title]
+        @title = data[:time_series][:title] if data.present? && data[:dataset].present?
       end
-
 
       # save data to gon so can be used for charts
       gon.json_data = data

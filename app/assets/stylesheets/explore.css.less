@@ -158,6 +158,7 @@
       height:501px;
       margin-bottom: 30px;
       border-bottom: dotted 1px #ccc;
+      position: relative;
       &:last-of-type{
         border-bottom: none;
       }
@@ -208,6 +209,13 @@
     }
   }
 
+  /* poisition the add highlight button in the visuals */
+  #container-chart .chart a.add-highlight, #container-map .map  a.add-highlight, 
+  #container-chart .chart a.delete-highlight, #container-map .map  a.delete-highlight{
+    position: absolute;
+    top: 5px;
+    left: 5px;
+  }
 
   /* move the subtitle closer to the title */
   .highcharts-subtitle{
@@ -221,6 +229,7 @@
       width: 100%;
       margin: 20px 20px 30px;
       border-bottom: dotted 1px #ccc;
+      position: relative;
       &:last-of-type{
         border-bottom: none;
       }

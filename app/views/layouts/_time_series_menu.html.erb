@@ -29,6 +29,12 @@
                       <%= t('app.menu.admin_time_series.qa') %>
                     <% end %>
                   </li>
+                  <li role="menuitem">
+                    <%= link_to highlights_time_series_path(time_series) do %>
+                      <span class="glyphicon glyphicon-star"></span>
+                      <%= t('app.menu.admin_time_series.highlights') %>
+                    <% end %>
+                  </li>
 <%
 =begin %>
                   <li role="menuitem">

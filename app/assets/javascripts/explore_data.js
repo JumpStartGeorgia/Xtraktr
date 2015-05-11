@@ -550,7 +550,7 @@ function get_explore_data(is_back_button){
     // add each param that was in the url
     $.map(params, function(v, k){
       ajax_data[k] = v;
-      url_querystring.push(l + '=' + v);
+      url_querystring.push(k + '=' + v);
     });
 
   } else{
@@ -794,7 +794,6 @@ $(document).ready(function() {
 
     // when chart tab clicked on, make sure the jumpto block is showing, else, hide it
     $('#explore-tabs li a').click(function(){
-      console.log('tab click!');
       if ($(this).attr('href') == '#tab-chart' && $('#jumpto #jumpto-charts .jumpto-items li').length > 0){
         $('#jumpto').show();
         $('#jumpto #jumpto-charts').show();

@@ -103,4 +103,22 @@ class Highlight
     end
   end
 
+  def question_code
+    decode['question_code']
+  end
+
+  def broken_down_by_code
+    decode['broken_down_by_code']
+  end
+
+  def filtered_by_code
+    decode['filtered_by_code']
+  end
+
+
+private 
+
+  def decode
+    Rack::Utils.parse_query(Base64.urlsafe_decode64(self.embed_id))
+  end
 end

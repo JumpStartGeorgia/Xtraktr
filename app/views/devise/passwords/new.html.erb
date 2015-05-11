@@ -5,7 +5,7 @@
    <div class="red-box long"><%= t('helpers.links.forgot_password') %></div>
   <%= semantic_form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post, :"data-form-id"=>"reset-password-form" }) do |f| %>
   	<%= f.error_messages %>
-  	<%= f.input :email, :as => :email, :input_html => { :size => 35 , :class => "login-username" }, :placeholder => model_class.human_attribute_name(:email) , label: false  %>
+  	<%= f.input :email, :as => :email, :input_html => { :size => 35 , :class => "login-username", :autofocus => true }, :placeholder => model_class.human_attribute_name(:email) , label: false  %>
 
 	  <div class="control-group submit-row">
 		  <%= f.submit t('helpers.links.password_reset'), :class => 'btn btn-default pass-reset' %>

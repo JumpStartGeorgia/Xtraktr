@@ -103,7 +103,7 @@
   <div class="tab-content">
     <div role="tabpanel" class="tab-pane fade <%= highlight_active[:panel] %>" id="highlights">
       <% if @highlights.present? %>
-        <% @highlights.each do |highlight| %>
+        <% @highlights.shuffle.each do |highlight| %>
           <div class="highlight <%= highlight.visual_type_name %>">
             <iframe src="<%= embed_v1_path(id: highlight.embed_id) %>"></iframe>
           </div>

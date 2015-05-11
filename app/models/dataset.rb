@@ -48,7 +48,17 @@ class Dataset < CustomTranslation
   #has_and_belongs_to_many :categories, inverse_of: nil
   has_many :category_mappers, dependent: :destroy
 
-  has_many :highlights, dependent: :destroy
+  has_many :highlights, dependent: :destroy do
+    # get highlight by embed id
+    def with_embed_id(embed_id)
+      where(embed_id: embed_id).first
+    end
+
+    # get embeds id for this dataset
+    def embed_ids
+      pluck(:embed_id)
+    end
+  end
   
   embeds_many :questions, cascade_callbacks: true do
     # these are functions that will query the questions documents
@@ -577,6 +587,7 @@ class Dataset < CustomTranslation
       all
     end
   end
+  
   def self.is_public
     where(public: true)
   end

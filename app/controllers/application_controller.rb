@@ -108,6 +108,9 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 		else
 		  gon.datatable_i18n_url = ""
 		end
+
+    gon.visual_types = Highlight::VISUAL_TYPES
+    
 	end
 
   def layout_by_resource
@@ -132,11 +135,13 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 		session[:previous_urls] ||= []
 		if session[:previous_urls].first != request.fullpath && 
         params[:format] != 'js' && params[:format] != 'json' && !request.xhr? &&
-        request.fullpath.index("/users/").nil?
+        request.fullpath.index("/users/").nil? &&
+        request.fullpath.index("/embed/").nil?
         
 	    session[:previous_urls].unshift request.fullpath
     elsif session[:previous_urls].first != request.fullpath &&
-       request.xhr? && !request.fullpath.index("/users/").nil? &&
+       request.xhr? && !request.fullpath.index("/users/").nil?  &&
+        !request.fullpath.index("/embed/").nil?&&
        params[:return_url].present?
        
       session[:previous_urls].unshift params[:return_url]
@@ -163,7 +168,8 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     @css.push("datasets.css")
     @dataset_url = dataset_path(@dataset) if set_url
     @is_dataset_admin = true
-    
+    gon.is_admin = true
+
     @show_title = show_title
   end
 
@@ -175,6 +181,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     @css.push("time_series.css")
     @time_series_url = time_series_path(@time_series) if set_url
     @is_time_series_admin = true
+    gon.is_admin = true
     
     @show_title = show_title
   end
@@ -495,6 +502,9 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     gon.highcharts_jpg = I18n.t('highcharts.jpg')
     gon.highcharts_pdf = I18n.t('highcharts.pdf')
     gon.highcharts_svg = I18n.t('highcharts.svg')
+
+    gon.add_highlight_text = I18n.t('helpers.links.add_highlight')
+    gon.delete_highlight_text = I18n.t('helpers.links.delete_highlight')
   end
 
   def set_gon_datatables

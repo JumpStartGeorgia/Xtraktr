@@ -71,6 +71,14 @@ module ApplicationHelper
     end
   end
 
+  def format_highlight_home_page_status(show_home_page, small=false)
+    css_small = small == true ? 'small-status' : ''
+    if show_home_page == true
+      return "<div class='publish-status public #{css_small}'>#{t('formtastic.yes')}</div>".html_safe
+    end
+  end
+
+
   def link_to_sidebar path, name, klass='img '
     current = current_page?(path) || (path != root_path && request.path.index(path))
     link_to path, class: (current ? ' active' : '') do

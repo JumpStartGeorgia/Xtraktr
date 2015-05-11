@@ -34,6 +34,52 @@ function time_series_chart_height(json){
 }
 
 
+////////////////////////////////////////////////
+// determine which highlight button to add to chart
+////////////////////////////////////////////////
+function determine_highlight_button(visual_element, embed_id, visual_type){
+  if (gon.embed_ids && gon.embed_ids.indexOf(embed_id) > -1){
+    // already exists, delete btn
+    delete_highlight_button(visual_element, embed_id, visual_type);
+  }else{
+    // not exist, add btn
+    add_highlight_button(visual_element, embed_id, visual_type);
+  }
+}
+
+////////////////////////////////////////////////
+// add add highlight button to chart
+////////////////////////////////////////////////
+function add_highlight_button(visual_element, embed_id, visual_type){
+  if (gon.is_admin){
+    var parent = $(visual_element).parent();
+
+    // create link
+    var link = '<a class="add-highlight btn btn-primary btn-sm" href="' + $(parent).data('add-highlight') + '" data-embed-id="' + embed_id + '" data-visual-type="' + visual_type + '" ';
+    link += 'title="' + gon.add_highlight_text + '" data-placement="right"><span class="glyphicon glyphicon-star" aria-hidden="true"></span></a>';
+
+    // add link to visual
+    $(visual_element).append(link);
+  }
+}
+
+////////////////////////////////////////////////
+// add delete highlight button to chart
+////////////////////////////////////////////////
+function delete_highlight_button(visual_element, embed_id, visual_type){
+  if (gon.is_admin){
+    var parent = $(visual_element).parent();
+
+    // create link
+    var link = '<a class="delete-highlight btn btn-danger btn-sm" href="' + $(parent).data('delete-highlight') + '" data-embed-id="' + embed_id + '" data-visual-type="' + visual_type + '" ';
+    link += 'title="' + gon.delete_highlight_text + '" data-placement="right"><span class="glyphicon glyphicon-star" aria-hidden="true"></span></a>';
+
+    // add link to visual
+    $(visual_element).append(link);
+    
+  }
+}
+
 
 
 ////////////////////////////////////////////////
@@ -310,6 +356,9 @@ function build_crosstab_chart(question_text, broken_down_by_text, json_chart, ch
       }
     }
   });    
+
+  // now add button to add as highlight
+  determine_highlight_button($('#container-chart #' + chart_id), json_chart.embed_id, gon.visual_types.crosstab_chart);  
 }
 
 
@@ -414,6 +463,9 @@ function build_pie_chart(json_chart, chart_height){
       }
     }
   });
+
+  // now add button to add as highlight
+  determine_highlight_button($('#container-chart #' + chart_id), json_chart.embed_id, gon.visual_types.pie_chart);  
 }
 
 
@@ -516,6 +568,9 @@ function build_time_series_chart(json_chart, chart_height){
       }
     }
   });
+
+  // now add button to add as highlight
+  determine_highlight_button($('#container-chart #' + chart_id), json_chart.embed_id, gon.visual_types.line_chart);  
 }
 
 
@@ -536,4 +591,59 @@ function build_page_title(json){
 }
 
 
+////////////////////////////////////////////////
+$(document).ready(function() {
 
+  // record a chart as a highlight
+  $('#tab-chart, #tab-map').on('click', 'a.add-highlight', function(e){
+    e.preventDefault();
+    var link = this;
+
+    $.ajax({
+      type: "POST",
+      url: $(link).attr('href'),
+      data: {embed_id: $(link).data('embed-id'), visual_type: $(link).data('visual-type')},
+      dataType: 'json'
+    }).done(function(success){
+      if (success){
+        // record embed id
+        gon.embed_ids.push($(link).data('embed-id'));
+
+        // show delete button
+        $(link).fadeOut(function(){
+          delete_highlight_button($(link).parent(), $(link).data('embed-id'), $(link).data('visual-type'));
+        });
+      }else{
+      }
+    });
+
+  });
+
+
+  // delete a chart as a highlight
+  $('#tab-chart, #tab-map').on('click', 'a.delete-highlight', function(e){
+    e.preventDefault();
+    var link = this;
+
+    $.ajax({
+      type: "POST",
+      url: $(link).attr('href'),
+      data: {embed_id: $(link).data('embed-id'), visual_type: $(link).data('visual-type')},
+      dataType: 'json'
+    }).done(function(success){
+      if (success){
+        // delete embed id
+        gon.embed_ids.splice( $.inArray($(link).data('embed-id'), gon.embed_ids), 1 );
+        
+        // show delete button
+        $(link).fadeOut(function(){
+          add_highlight_button($(link).parent(), $(link).data('embed-id'), $(link).data('visual-type'));
+        });
+      }else{
+
+      }
+    });
+
+  });
+
+});

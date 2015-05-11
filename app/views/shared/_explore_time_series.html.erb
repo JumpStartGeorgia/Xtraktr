@@ -75,7 +75,13 @@
       <div class="tab-content" id="explore-content">
 
         <div class="tab-pane fade" id="tab-chart">
-          <div id="container-chart"></div>
+          <%
+            data_attr = ''
+            if @is_time_series_admin
+              data_attr = "data-add-highlight=#{add_highlight_time_series_path(id: @time_series.id)} data-delete-highlight=#{remove_highlight_time_series_path(id: @time_series.id)}"
+            end
+          %>
+          <div id="container-chart" <%= data_attr %> ></div>
         </div>
 
 

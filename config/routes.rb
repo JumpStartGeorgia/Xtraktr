@@ -44,6 +44,11 @@ BootstrapStarter::Application.routes.draw do
         post 'mappable_form_edit'
         delete 'remove_mapping'
         post 'question_answers', :defaults => { :format => 'json' }
+        post 'add_highlight'
+        post 'remove_highlight'
+        get 'highlights'
+        post 'highlights'
+        post 'home_page_highlight'
       end
     end
 
@@ -52,6 +57,11 @@ BootstrapStarter::Application.routes.draw do
       member do
         get 'explore'
         get 'automatically_assign_questions'
+        post 'add_highlight'
+        post 'remove_highlight'
+        get 'highlights'
+        post 'highlights'
+        post 'home_page_highlight'
       end
     end
 
