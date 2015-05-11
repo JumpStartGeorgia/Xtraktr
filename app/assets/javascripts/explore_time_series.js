@@ -1,115 +1,13 @@
 var datatables, i, j, json_data;
 
 
-////////////////////////////////////////////////
-// build time series line chart
-function build_time_series_chart(json_chart, chart_height){
-  if (chart_height == undefined){
-    chart_height = 501; // need the 1 for the border bottom line
-  }
 
-  // create a div tag for this chart
-  var chart_id = 'chart-' + ($('#container-chart .chart').length+1);
-  $('#container-chart').append('<div id="' + chart_id + '" class="chart" style="height: ' + chart_height + 'px;"></div>');
-
-  // create chart
-  $('#container-chart #' + chart_id).highcharts({
-    chart: {
-        plotBackgroundColor: null,
-        plotBorderWidth: null,
-        plotShadow: false
-    },
-    title: {
-        text: json_chart.title.html,
-        useHTML: true,
-        style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
-    },
-    subtitle: {
-        text: json_chart.subtitle.html,
-        useHTML: true,
-        style: {'text-align': 'center', 'margin-top': '-15px'}
-    },
-    xAxis: {
-        categories: json_chart.datasets
-    },
-    yAxis: {
-        title: {
-            text: gon.percent
-        },
-        max: 100,
-        min: 0,
-        plotLines: [{
-            value: 0,
-            width: 1,
-            color: '#808080'
-        }]
-    },
-    tooltip: {
-        headerFormat: '<span style="font-size: 13px; font-style: italic; font-weight: bold;">{point.key}</span><br/>',
-        pointFormat: '<span style="font-weight: bold;">{series.name}</span>: {point.count:,.0f} ({point.y:.2f}%)<br/>',
-    },
-    legend: {
-        layout: 'vertical',
-        symbolHeight: 14,
-        itemMarginBottom: 5,
-        itemStyle: { "color": "#333333", "cursor": "pointer", "fontSize": "14px", "fontWeight": "bold" }
-    },
-    series: json_chart.data,
-    exporting: {
-      sourceWidth: 1280,
-      sourceHeight: 720,
-      filename: json_chart.title.text,
-      chartOptions:{
-        title: {
-          text: json_chart.title.text
-        },
-        subtitle: {
-          text: json_chart.subtitle.text
-        }
-      },
-      buttons: {
-        contextButton: {
-          menuItems: [
-            {
-              text: gon.highcharts_png,
-              onclick: function () {
-                  this.exportChart({type: 'image/png'});
-              }
-            }, 
-            {
-              text: gon.highcharts_jpg,
-              onclick: function () {
-                  this.exportChart({type: 'image/jpeg'});
-              }
-            }, 
-            {
-              text: gon.highcharts_pdf,
-              onclick: function () {
-                  this.exportChart({type: 'application/pdf'});
-              }
-            }, 
-            {
-              text: gon.highcharts_svg,
-              onclick: function () {
-                  this.exportChart({type: 'image/svg+xml'});
-              }
-            }
-          ]
-        }
-      }
-    }
-  });
-}
 
 // build time series line chart for each chart item in json
 function build_time_series_charts(json){
   if (json.chart){
     // determine chart height
-    // if there are a lot of answers, scale the height accordingly
-    var chart_height = 501; // need the 1 for the border bottom line
-    if (json.question.answers.length >= 5){
-      chart_height = 425 + json.question.answers.length*21 + 1;
-    }
+    var chart_height = time_series_chart_height(json);
 
     // remove all existing charts
     $('#container-chart').empty();
@@ -330,6 +228,7 @@ function build_details(json){
   // add questions
   if (json.question && json.question.text && json.question.answers){
     $('#tab-details #details-question-code .name-variable').html(json.question.text);    
+    $('#tab-details #details-question-code .name-code').html(json.question.original_code);    
     if (json.question.notes){
       $('#tab-details #details-question-code .notes').html(json.question.notes);    
       $('#tab-details #details-question-code .details-notes').show();
@@ -345,6 +244,7 @@ function build_details(json){
   // add filters
   if (json.filtered_by && json.filtered_by.text && json.filtered_by.answers){
     $('#tab-details #details-filtered-by-code .name-variable').html(json.filtered_by.text);    
+    $('#tab-details #details-filtered-by-code .name-code').html(json.filtered_by.original_code);    
     if (json.filtered_by.notes){
       $('#tab-details #details-filtered-by-code .notes').html(json.filtered_by.notes);    
       $('#tab-details #details-filtered-by-code .details-notes').show();
@@ -357,21 +257,6 @@ function build_details(json){
     $('#tab-details #details-filtered-by-code').show();
   }
 
-}
-
-////////////////////////////////////////////////
-// update the page title to include the title of the analysis
-function build_page_title(json){
-  // get current page title
-  // first index - dataset title
-  // last index - app name
-  var title_parts = $('title').html().split(' | ');
-
-  if (json.results.title.text){
-    $('title').html(title_parts[0] + ' | ' + json.results.title.text + ' | ' + title_parts[title_parts.length-1])
-  }else{
-    $('title').html(title_parts[0] + ' | ' + title_parts[title_parts.length-1])
-  }   
 }
 
 

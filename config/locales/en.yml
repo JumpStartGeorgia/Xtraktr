@@ -409,6 +409,8 @@ en:
       back_dashboard: Back to Dashboard
       api_home: API Home
       agreement: Agreement
+      add_highlight: Add to Highlights
+      delete_highlight: Remove from Highlights
     titles:
       edit: "Edit %{model}"
       save: "Save %{model}"
@@ -445,13 +447,14 @@ en:
       js_link_title: JumpStart Georgia - We communicate data better!
       question: Question
       questions: Questions
+      question_code: Code
       answers: Answers
       notes: Notes
       count: Count
       percent: Percent
       dataset_dashboard: Dataset Dashboard
       time_series_dashboard: Time Series Dashboard
-      terms: "I agree to the <a href='#'>Terms of Use</a> and <a href='#'>Privacy Policy</a>"  
+      terms: "I agree to the <a href='#'>Terms of Use</a>"  
       or: Or 
     msgs:
       does_not_exist: You tried to access a page that does not exist.
@@ -473,6 +476,8 @@ en:
       mass_upload_questions_success: "%{count} questions were updated!"
       mass_upload_answers_error: "The following error occurred while processing the answers: %{msg}"
       mass_upload_answers_success: "%{count} answers were updated!"
+      highlight_show_home_page_success: "The highlight will now always appear on the home page."
+      highlight_deleted: "The highlight has been deleted."
     menu:
       explore_data: Explore Data
       explore_time_series: Explore Time Series
@@ -496,6 +501,7 @@ en:
         heading: Dataset Options
         settings: Settings
         qa: Edit Questions/Answers
+        highlights: Highlights
         warnings: Warnings
         mappable: Make Mappable
         can_exlucde_answers: Answers Can Be Excluded
@@ -508,6 +514,7 @@ en:
         heading: Time Series Options
         settings: Settings
         qa: Edit Questions/Answers
+        highlights: Highlights
         warnings: Warnings
         delete: Delete
         private_share: Share Private Time Series
@@ -575,10 +582,9 @@ en:
     index:
       header_latest_datasets: Latest Datasets
       no_datasets: 'At this time, no datasets have been loaded into the site.'
-      no_match_datasets: 'Sorry, no datasets match your search request.'
       header_latest_time_series: Latest Time Series
       no_time_series: 'At this time, no time series have been created in the site.'
-      no_match_time_series: 'Sorry, no time series match your search request.'
+      header_highlights: Highlights
     contact:
       title: Contact
     instructions:
@@ -673,6 +679,20 @@ en:
     form:
       reports: Reports
       header_add_report: Add a report for this dataset
+    highlights:
+      title: Dataset Highlights
+      instructions: |
+        Highlights are visuals (charts and maps) that highlight interesting aspects of your dataset and are shown on the dashboard page and the home page. 
+
+        To add a highlight, go to the explore page, select the indicators you want, and then in the charts that appear click the star button in the top left corner.
+
+        You can use this page to quickly remove highlights or to indicate which highlight to always show on the home page - only one highlight from all datasets and time series can be selected for this.
+      no_highlights: There are no highlights on file for this dataset.
+      question_code: Question
+      broken_down_by_code: Broken Down By
+      filtered_by_code: Filtered By
+      show_home_page: Always Shows on Home Page
+      btn_show_home_page: Show on Home Page
   questions:
     index:
       title: "Edit Questions and their Answers"
@@ -711,6 +731,20 @@ en:
     form: 
       header_datasets: Datasets
       header_add_dataset: Add a new dataset to this time series
+    highlights:
+      title: Time Series Highlights
+      instructions: |
+        Highlights are visuals (charts and maps) that highlight interesting aspects of your time series and are shown on the dashboard page and the home page. 
+
+        To add a highlight, go to the explore page, select the indicators you want, and then in the charts that appear click the star button in the top left corner.
+
+        You can use this page to quickly remove highlights or to indicate which highlight to always show on the home page - only one highlight from all datasets and time series can be selected for this.
+      no_highlights: There are no highlights on file for this time series.
+      question_code: Question
+      broken_down_by_code: Broken Down By
+      filtered_by_code: Filtered By
+      show_home_page: Always Shows on Home Page
+      btn_show_home_page: Show on Home Page
   time_series_questions:
     index:
       title: "Edit Time Series Questions and their Answers"
@@ -793,6 +827,7 @@ en:
         licensing: Licensing
       no_methodology: There is no methodology on file for this dataset.
       no_reports: There are no reports on file for this dataset.
+      no_highlights: There are no highlights on file for this dataset.
     dashboard_time_series:
       tabs:
         highlights: Highlights
@@ -801,6 +836,7 @@ en:
         reports: Reports
         licensing: Licensing
         datasets: Datasets
+      no_highlights: There are no highlights on file for this time series.
   export_data:
     dataset: 'Dataset: %{title}'
     download_from: 'Downloaded From: %{app_name} at %{url}.'

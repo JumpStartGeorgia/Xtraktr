@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="<%= I18n.locale %>">
+  <head>
+    <%= render :partial => 'layouts/head', locals: {main_css: 'embed'} %>
+  </head>
+  <body>
+
+    <%= yield %>
+
+    <%= render :partial => 'layouts/js', locals: {main_js: 'embed'} %>
+
+  </body>
+</html>

@@ -69,23 +69,27 @@
 </div>
 
 <div id="dashboard-tabs" role="tabpanel">
-
-  <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation">
-      <a href="#highlights" aria-controls="highlights" role="tab" data-toggle="tab"><%= t('.tabs.highlights') %></a>
-    </li>
     <% 
-      method_active = 'active'
-      codebook_active = ''
-      if !@dataset.methodology.present? 
-        method_active = ''
-        codebook_active = 'active'
+      highlight_active = {tab: '', panel: ''}
+      method_active = {tab: 'active', panel: 'in active'}
+      codebook_active = {tab: '', panel: ''}
+      if @highlights.present?
+        highlight_active = {tab: 'active', panel: 'in active'}
+        method_active = {tab: '', panel: ''}
+      elsif !@dataset.methodology.present? 
+        method_active = {tab: '', panel: ''}
+        codebook_active = {tab: 'active', panel: 'in active'}
       end 
     %>
-    <li role="presentation" class="<%= method_active %>">
+
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="<%= highlight_active[:tab] %>">
+      <a href="#highlights" aria-controls="highlights" role="tab" data-toggle="tab"><%= t('.tabs.highlights') %></a>
+    </li>
+    <li role="presentation" class="<%= method_active[:tab] %>">
       <a href="#methodology" aria-controls="methodology" role="tab" data-toggle="tab"><%= t('.tabs.methodology') %></a>
     </li>
-    <li role="presentation" class="<%= codebook_active %>">
+    <li role="presentation" class="<%= codebook_active[:tab] %>">
       <a href="#codebook" aria-controls="codebook" role="tab" data-toggle="tab"><%= t('.tabs.codebook') %></a>
     </li>
     <li role="presentation">
@@ -97,20 +101,21 @@
   </ul>
 
   <div class="tab-content">
-    <% 
-      method_active = 'in active'
-      codebook_active = ''
-      if !@dataset.methodology.present? 
-        method_active = ''
-        codebook_active = 'in active'
-      end 
-    %>
-
-    <div role="tabpanel" class="tab-pane fade" id="highlights">
-      coming soon...
+    <div role="tabpanel" class="tab-pane fade <%= highlight_active[:panel] %>" id="highlights">
+      <% if @highlights.present? %>
+        <% @highlights.shuffle.each do |highlight| %>
+          <div class="highlight <%= highlight.visual_type_name %>">
+            <iframe src="<%= embed_v1_path(id: highlight.embed_id) %>"></iframe>
+          </div>
+        <% end %>
+      <% else %>
+        <p>
+          <%= t('.no_highlights') %>
+        </p>
+      <% end %>
     </div>
     
-    <div role="tabpanel" class="tab-pane fade <%= method_active %>" id="methodology">
+    <div role="tabpanel" class="tab-pane fade <%= method_active[:panel] %>" id="methodology">
       <% if @dataset.methodology.present? %>
         <div class="tinymce_format">
           <%= simple_format_no_tags(@dataset.methodology, {}, {sanitize: false}) %>
@@ -122,7 +127,7 @@
       <% end %>
     </div>
     
-    <div role="tabpanel" class="tab-pane fade <%= codebook_active %>" id="codebook">
+    <div role="tabpanel" class="tab-pane fade <%= codebook_active[:panel] %>" id="codebook">
       <div id="codebook-search" class="input-group">
         <span class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></span>
         <input type="text" class="text-input col-sm-3" id="filter" class="form-control" value="" placeholder="<%= t('helpers.search') %>" />

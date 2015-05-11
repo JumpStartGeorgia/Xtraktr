@@ -44,6 +44,11 @@ BootstrapStarter::Application.routes.draw do
         post 'mappable_form_edit'
         delete 'remove_mapping'
         post 'question_answers', :defaults => { :format => 'json' }
+        post 'add_highlight'
+        post 'remove_highlight'
+        get 'highlights'
+        post 'highlights'
+        post 'home_page_highlight'
       end
     end
 
@@ -52,6 +57,11 @@ BootstrapStarter::Application.routes.draw do
       member do
         get 'explore'
         get 'automatically_assign_questions'
+        post 'add_highlight'
+        post 'remove_highlight'
+        get 'highlights'
+        post 'highlights'
+        post 'home_page_highlight'
       end
     end
 
@@ -70,9 +80,15 @@ BootstrapStarter::Application.routes.draw do
       match '/v1/time_series_analysis', to: 'v1#time_series_analysis', as: :v1_time_series_analysis, via: :get, :defaults => { :format => 'json' }
     end    
 
-    # root pages
     resources 'agreements', :only => [:new, :create]
 
+    # embed pages
+    match '/embed', to: 'embed#index', as: :embed, via: :get
+    namespace :embed do
+      match '/v1/:id', to: 'v1#index', as: :v1, via: :get
+    end    
+
+    # root pages
     match '/contact', :to => 'root#contact', :as => :contact, :via => :get
     match '/download/:id', :to => 'root#download', :as => :download, :via => :get
     match '/download_request', :to => 'root#download_request', :as => :download_request, :via => :get

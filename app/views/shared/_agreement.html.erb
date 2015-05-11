@@ -3,7 +3,7 @@
 <div><%= Rails.logger.debug "DEBUG: message #{reg.inspect}"  %></div>
 <%- model_class = User -%>
   <div class="r">
-    <%= f.input :first_name, :as => :string, :placeholder => model_class.human_attribute_name(:first_name).upcase+" *" , :label => false %>
+    <%= f.input :first_name, :as => :string, :placeholder => model_class.human_attribute_name(:first_name).upcase+" *" , :label => false, :input_html => {:autofocus => true} %>
     <%= f.input :last_name, :as => :string, :placeholder => model_class.human_attribute_name(:last_name).upcase+" *" , :label => false %>
   </div>
   <div class="r">
