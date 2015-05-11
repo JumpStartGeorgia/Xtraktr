@@ -228,6 +228,7 @@ function build_details(json){
   // add questions
   if (json.question && json.question.text && json.question.answers){
     $('#tab-details #details-question-code .name-variable').html(json.question.text);    
+    $('#tab-details #details-question-code .name-code').html(json.question.original_code);    
     if (json.question.notes){
       $('#tab-details #details-question-code .notes').html(json.question.notes);    
       $('#tab-details #details-question-code .details-notes').show();
@@ -243,6 +244,7 @@ function build_details(json){
   // add filters
   if (json.filtered_by && json.filtered_by.text && json.filtered_by.answers){
     $('#tab-details #details-filtered-by-code .name-variable').html(json.filtered_by.text);    
+    $('#tab-details #details-filtered-by-code .name-code').html(json.filtered_by.original_code);    
     if (json.filtered_by.notes){
       $('#tab-details #details-filtered-by-code .notes').html(json.filtered_by.notes);    
       $('#tab-details #details-filtered-by-code .details-notes').show();

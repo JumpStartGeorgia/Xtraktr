@@ -445,6 +445,7 @@ ka:
       js_link_title: “ჯამპსტარტ ჯორჯია” - ჩვენ გაწვდით მონაცემებს უკეთ!
       question: Question
       questions: Questions
+      question_code: Code
       answers: Answers
       notes: Notes
       count: Count
