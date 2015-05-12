@@ -84,14 +84,14 @@ function build_crosstab_charts(json){
       for(var i=0; i<json.chart.length; i++){
         // create chart for filter that matches gon.filtered_by_value
         if (json.chart[i].filter_answer_value == gon.filtered_by_value){          
-          build_crosstab_chart(json.question.text, json.broken_down_by.text, json.chart[i].filter_results, chart_height);
+          build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart[i].filter_results, chart_height);
           break;
         }
       }
 
     }else{
       // no filters
-      build_crosstab_chart(json.question.text, json.broken_down_by.text, json.chart, chart_height);
+      build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart, chart_height);
     }
   }
 } 
@@ -154,14 +154,14 @@ function build_time_series_charts(json){
 /////////////////////////////////////////
 $(document).ready(function() {
 
-  // set languaage text
-  Highcharts.setOptions({
-    lang: {
-      contextButtonTitle: gon.highcharts_context_title
-    }
-  });
-
   if (gon.json_data){
+    // set languaage text
+    Highcharts.setOptions({
+      lang: {
+        contextButtonTitle: gon.highcharts_context_title
+      }
+    });
+
     // test if time series or dataset
     if (gon.json_data.time_series){
       build_time_series_charts(gon.json_data);

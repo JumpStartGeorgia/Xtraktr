@@ -1,5 +1,6 @@
 namespace :create_random_records do
 
+  ##########################################################
   desc "assign random categories to datasets / time series"
   task :categories => :environment do |t, args|
     max = 5
@@ -19,13 +20,24 @@ namespace :create_random_records do
       end
     end
 
-    TimeSeries.all.each do |time_series|
+    puts "--------"
 
+    TimeSeries.all.each do |time_series|
+      # if already have categories, skip it
+      if !time_series.category_mappers.present?
+        random_ids = category_ids.sample(rand(max)+1)
+
+        puts "- adding #{random_ids.length} time series categories for #{time_series.title}"
+
+        random_ids.each do |id|
+          time_series.category_mappers.create(category_id: id)
+        end
+      end
     end
   end
 
 
-
+  ##########################################################
   desc "assign random highlights to datasets / time series"
   task :highlights => :environment do |t, args|
     max = 5
@@ -55,6 +67,8 @@ namespace :create_random_records do
         end
       end
     end
+
+    puts "--------"
 
     TimeSeries.is_public.each do |time_series|
       # if already have highlights, skip it

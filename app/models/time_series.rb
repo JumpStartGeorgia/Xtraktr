@@ -20,6 +20,9 @@ class TimeSeries < CustomTranslation
   field :languages, type: Array
   field :default_language, type: String
 
+  #has_and_belongs_to_many :categories, inverse_of: nil
+  has_many :category_mappers, dependent: :destroy
+
   has_many :highlights, dependent: :destroy do
     # get highlight by embed id
     def with_embed_id(embed_id)
@@ -36,7 +39,11 @@ class TimeSeries < CustomTranslation
     def sorted
       order_by([[:sort_order, :asc], [:title, :asc]]).to_a
     end
-  end
+
+    def dataset_ids
+      only(:dataset_id).order_by([[:sort_order, :asc], [:title, :asc]]).map(:dataset_id)
+    end
+  end 
 
   embeds_many :questions, class_name: 'TimeSeriesQuestion' do
     # get the question that has the provided code
@@ -64,9 +71,7 @@ class TimeSeries < CustomTranslation
     end
 
   end
-  embeds_many :categories do
-    
-  end
+
   #############################
 
   accepts_nested_attributes_for :datasets, reject_if: :all_blank
@@ -221,11 +226,26 @@ class TimeSeries < CustomTranslation
     where(id: id).by_user(user_id).first
   end
 
+  def self.categorize(cat)
+    cat = Category.find_by(permalink: cat) 
+    if cat.present?
+      self.in(id: CategoryMapper.where(category_id: cat.id).pluck(:time_series_id))
+    else
+      all
+    end
+  end
+  
+
   #############################
 
   # get list of all dates included in time series
   def dates_included
     self.datasets.sorted.map{|x| x.title}
+  end
+
+
+  def categories
+    Category.in(id: self.category_mappers.map {|x| x.category_id } ).to_a
   end
 
 

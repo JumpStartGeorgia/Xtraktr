@@ -327,6 +327,11 @@ function get_explore_time_series(is_back_button){
       ajax_data.language = params.language;
       url_querystring.push('language=' + ajax_data.language);
     }
+
+    // private pages require user id
+    if (gon.private_user != undefined){
+      ajax_data.private_user_id = gon.private_user;
+    }
   }
 
   // call ajax
@@ -341,19 +346,28 @@ function get_explore_time_series(is_back_button){
   })
   .success(function( json ) {
     json_data = json;
-    // update content
-    build_explore_time_series_page(json);
 
-    // update url
-    var new_url = [location.protocol, '//', location.host, location.pathname, '?', url_querystring.join('&')].join('');
+    if (json.errors){
+      $('#jumpto-loader').fadeOut('slow');      
+      $('#explore-data-loader').fadeOut('slow', function(){
+        $('#explore-error').fadeIn('slow').delay(3000).fadeOut('slow');
+      });
+    }else{
+      // update content
+      build_explore_time_series_page(json);
 
-    // change the browser URL to the given link location
-    if (!is_back_button && new_url != window.location.href){
-      window.history.pushState({path:new_url}, $('title').html(), new_url);
+      // update url
+      var new_url = [location.protocol, '//', location.host, location.pathname, '?', url_querystring.join('&')].join('');
+
+      // change the browser URL to the given link location
+      if (!is_back_button && new_url != window.location.href){
+        window.history.pushState({path:new_url}, $('title').html(), new_url);
+      }
+
+      $('#explore-data-loader').fadeOut('slow');
+      $('#jumpto-loader').fadeOut('slow');      
     }
 
-    $('#explore-data-loader').fadeOut('slow');
-    $('#jumpto-loader').fadeOut('slow');
 
   });
 }

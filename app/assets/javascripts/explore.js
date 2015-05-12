@@ -83,6 +83,20 @@ function delete_highlight_button(visual_element, embed_id, visual_type){
 
 
 ////////////////////////////////////////////////
+// build title/sub title for chart/map
+// if gon.visual_link is present, turn the title into a link
+////////////////////////////////////////////////
+function build_visual_title(text){
+  var t = '';
+  if (gon.visual_link){
+    t = '<a class="visual-title-link" target="_parent" href="' + gon.visual_link + '">' + text + '</a>';
+  }else{
+    t = text;
+  }
+  return t;
+}
+
+////////////////////////////////////////////////
 // build highmap
 ////////////////////////////////////////////////
 function build_highmap(shape_question_code, json_map_set){
@@ -115,7 +129,7 @@ function build_highmap(shape_question_code, json_map_set){
         }          
       },
       title: {
-          text: json_map_set.title.html,
+          text: build_visual_title(json_map_set.title.html),
           useHTML: true,
           style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
       },
@@ -134,8 +148,8 @@ function build_highmap(shape_question_code, json_map_set){
       colorAxis: {
         min: 0,
         max: 100, 
-//            minColor: '#efeaea',
-//            maxColor: '#662E2E',
+        minColor: '#d2f1f9',
+        maxColor: '#0086a5',
         labels: {
             formatter: function () {
               return this.value + '%';
@@ -163,12 +177,12 @@ function build_highmap(shape_question_code, json_map_set){
               pointFormat: '<b>{point.properties.name_en}:</b> ' + gon.na
               // using name_en in case shape has no data and therefore no display_name
           },
-          borderColor: '#909090',
-          borderWidth: 1,
+          borderColor: '#f6f6f6',
+          borderWidth: 2,
           states: {
               hover: {
-                  color: '#D6E3B5',
-                  borderColor: '#000',
+                  color: '#0086a5',
+                  borderColor: '#3c4352',
                   borderWidth: 2
               }
           }
@@ -184,12 +198,12 @@ function build_highmap(shape_question_code, json_map_set){
               headerFormat: '',
               pointFormat: '<b>{point.display_name}:</b> {point.count:,.0f} ({point.value}%)'    
           },
-          borderColor: '#909090',
-          borderWidth: 1,
+          borderColor: '#f6f6f6',
+          borderWidth: 2,
           states: {
             hover: {
-              color: '#D6E3B5',
-              borderColor: '#000',
+              color: '#0086a5',
+              borderColor: '#3c4352',
               borderWidth: 2
             }
           },
@@ -254,7 +268,7 @@ function build_highmap(shape_question_code, json_map_set){
 ////////////////////////////////////////////////
 // build crosstab chart
 ////////////////////////////////////////////////
-function build_crosstab_chart(question_text, broken_down_by_text, json_chart, chart_height){
+function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by_text, json_chart, chart_height){
   if (chart_height == undefined){
     chart_height = 501; // need the 1 for the border bottom line
   }
@@ -269,7 +283,7 @@ function build_crosstab_chart(question_text, broken_down_by_text, json_chart, ch
         type: 'bar'
     },
     title: {
-        text: json_chart.title.html,
+        text: build_visual_title(json_chart.title.html),
         useHTML: true,
         style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
     },
@@ -281,8 +295,10 @@ function build_crosstab_chart(question_text, broken_down_by_text, json_chart, ch
     xAxis: {
         categories: json_chart.labels,
         title: {
-            text: question_text
-        }
+            text: '<span class="code-highlight">' + question_text + '</span>',
+            useHTML: true,
+            style: { "fontSize": "14px", "fontWeight": "bold" }
+        },
     },
     yAxis: {
         min: 0,
@@ -292,13 +308,15 @@ function build_crosstab_chart(question_text, broken_down_by_text, json_chart, ch
     },
     legend: {
         title: {
-            text: broken_down_by_text
+          text: '<span class="code-highlight">' + broken_down_by_code + '</span> - ' + broken_down_by_text,
+          useHTML: true,
+          style: { "color": "#333333", "fontSize": "14px", "fontWeight": "bold" }
         },
         layout: 'vertical',
         reversed: true,
         symbolHeight: 14,
         itemMarginBottom: 5,
-        itemStyle: { "color": "#333333", "cursor": "pointer", "fontSize": "14px", "fontWeight": "bold" }
+        itemStyle: { "color": "#333333", "cursor": "pointer", "fontSize": "14px" }
     },
     tooltip: {
         pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y:,.0f}</b> ({point.percentage:.2f}%)<br/>',
@@ -385,7 +403,7 @@ function build_pie_chart(json_chart, chart_height){
         plotShadow: false
     },
     title: {
-        text: json_chart.title.html,
+        text: build_visual_title(json_chart.title.html),
         useHTML: true,
         style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
     },
@@ -489,7 +507,7 @@ function build_time_series_chart(json_chart, chart_height){
         plotShadow: false
     },
     title: {
-        text: json_chart.title.html,
+        text: build_visual_title(json_chart.title.html),
         useHTML: true,
         style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
     },

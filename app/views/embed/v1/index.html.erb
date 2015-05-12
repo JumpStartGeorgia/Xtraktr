@@ -1,6 +1,16 @@
 <% title @title if @title %>
 
-<div id="explore-data" class="embed-item">
-  <div id="container-chart"></div>
-  <div id="container-map" class="embed-item"></div>
+<div id="explore-data">
+  <% if @errors %>
+    <div id="explore-error">
+      <p>
+        <%= t('app.msgs.explore_error') %>
+      </p>
+    </div>
+  <% else %>
+    <div id="explore-data" class="embed-item">
+      <div id="container-chart"></div>
+      <div id="container-map" class="embed-item"></div>
+    </div>
+  <% end %>
 </div>

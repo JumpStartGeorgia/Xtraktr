@@ -17,16 +17,16 @@ namespace :migration do
   # end
 
 
-  # desc "load the api documentation written for xtraktr"
-  # task :xtraktr_api_doc => :environment do
-  #   require "./db/migrate/xtraktr_api_doc.rb"
-  # end
+  desc "load the api documentation written for xtraktr"
+  task :xtraktr_api_doc => :environment do
+    require "./db/migrate/xtraktr_api_doc.rb"
+  end
 
 
-  # desc "move time series datasets to own documents (not embed)"
-  # task :move_time_series_datasets => :environment do
-  #   require "./db/migrate/move_time_series_datasets.rb"
-  # end
+  desc "move time series datasets to own documents (not embed)"
+  task :move_time_series_datasets => :environment do
+    require "./db/migrate/move_time_series_datasets.rb"
+  end
 
 
   desc "load dataset urls with shape_file path"

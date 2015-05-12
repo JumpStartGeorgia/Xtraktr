@@ -1,17 +1,32 @@
 <%- 
   model_class = TimeSeries
+  model_class_d = Dataset 
   is_admin_page = request.path == time_series_path(@time_series)
 %>
 
 <div id="dashboard-meta" class="row">
   <div class="col-sm-9">
-    <div class="row">
-      <div class="col-sm-12" id="meta-dates">
-        <%= model_class.human_attribute_name(:dates) %>:
-        <%= @time_series.dates_included.join(', ') %>
+    <% @datasets.each_with_index do |dataset, dataset_index| %>     
+      <div class="row">
+        <div class="col-sm-1" id="meta-dataset-label">
+          <%= @time_series.dates_included[dataset_index] %>
+        </div>
+        <div class="col-sm-6" id="meta-dates">
+          <%= model_class_d.human_attribute_name(:gathered_at) %>:
+          <%= format_gathered_dates(dataset.start_gathered_at, dataset.end_gathered_at) %>
+        </div>
+        <div class="col-sm-3" id="meta-dates">
+          <%= model_class_d.human_attribute_name(:released_at) %>:
+          <%= I18n.l(dataset.released_at, format: :day_first) if dataset.released_at.present?  %>
+        </div>
+        <% if @is_xtraktr %>
+          <div class="col-sm-3" id="meta-source">
+            <%= model_class_d.human_attribute_name(:source) %>:
+            <%= dataset.source %>
+          </div>
+        <% end %>
       </div>
-    </div>
-  </div>
+    <% end %>
 </div>
 <div id="dashboard-description" class="row">
   <div class="col-sm-9">
@@ -133,13 +148,11 @@
     </div>
     
     <div role="tabpanel" class="tab-pane fade" id="datasets">
-      <ul>
-        <% @time_series.datasets.sorted.each do |dataset| %>
-          <li>
-            <%= link_to "#{dataset.title} - #{dataset.dataset_title}", url_dataset_to_datasets_dashboard(@time_series.id, dataset.dataset_id) %>
-          </li>      
-        <% end %>
-      </ul>
+      <div class="article explore">
+        <div class="list">
+          <%= render partial: 'root/explore_data_datasets', locals: {with_pagination: false, with_time_series_link: false} %>
+        </div>
+      </div>
     </div>
     
     <div role="tabpanel" class="tab-pane fade" id="licensing">

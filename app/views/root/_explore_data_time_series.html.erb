@@ -1,0 +1,26 @@
+<%- model_class = TimeSeries -%>
+<ul>
+  <% if @time_series.present? %>
+    <% @time_series.each do |time_series| %>
+      <li>
+        <h2><%= link_to time_series.title, explore_time_series_dashboard_path(time_series) %></h2>
+        <div class="info">
+          <div class="calendar"></div>
+          <div class="timestamp">
+            <span><%= model_class.human_attribute_name(:dates) %>:</span>
+            <%= time_series.datasets.sorted.map{|x| x.title}.join(', ') %>
+          </div>
+        </div>
+
+        <% if time_series.description.present? %>
+          <div class="description">
+            <%= simple_format_no_tags(time_series.description, {}, {sanitize: false}) %>
+          </div>
+        <% end %>
+      </li>
+    <% end %>  
+  <% else %>
+    <li><div class="no-data-found"><%= t('.no_match') %></div></li>
+  <% end %>
+</ul>
+<%= paginate @time_series %>

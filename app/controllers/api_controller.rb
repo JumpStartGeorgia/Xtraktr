@@ -5,7 +5,7 @@ class ApiController < ApplicationController
    @page_content = PageContent.by_name('api')
    @api_versions = ApiVersion.is_public.sorted
 
-   @css.push('api.css')
+   @css.push('api.css', 'list.css')
    @show_title = false
 
    respond_to do |format|

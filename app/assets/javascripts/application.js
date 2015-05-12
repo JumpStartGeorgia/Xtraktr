@@ -282,8 +282,8 @@ function filter()
     // }
   });
    console.log(q,sort,category,url);
-
 }
+
 var js_modal;
 function modal(html)
 {

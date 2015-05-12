@@ -477,7 +477,6 @@ class Dataset < CustomTranslation
   def update_mappable_flag
     logger.debug "==== question mappable = #{self.questions.index{|x| x.is_mappable == true}.present?}"
     self.is_mappable = self.questions.index{|x| x.is_mappable == true}.present?
-    self.save
 
     # if this dataset is mappable, create the js file with the geojson in it
     # else, delete the js file
@@ -516,12 +515,14 @@ class Dataset < CustomTranslation
       # delete js file
       logger.debug "==== deleting shape js file at #{js_shapefile_file_path}"
       FileUtils.rm js_shapefile_file_path if File.exists?(js_shapefile_file_path)
-      FileUtils.rm js_gz_shapefile_file_path + ".gz" if File.exists?(js_gz_shapefile_file_path)
+      FileUtils.rm js_gz_shapefile_file_path if File.exists?(js_gz_shapefile_file_path)
 
       # remove the shape file url
       self.urls.shape_file = nil
 
     end
+
+    self.save
 
     return true
   end
@@ -582,7 +583,7 @@ class Dataset < CustomTranslation
   def self.categorize(cat)
     cat = Category.find_by(permalink: cat) 
     if cat.present?
-      self.in(id: CategoryMapper.where(category_id: cat.id).map(:dataset_id))
+      self.in(id: CategoryMapper.where(category_id: cat.id).pluck(:dataset_id))
     else
       all
     end
@@ -667,6 +668,10 @@ class Dataset < CustomTranslation
   end
 
   #############################
+
+  def categories
+    Category.in(id: self.category_mappers.map {|x| x.category_id } ).to_a
+  end
 
 
   # get list of quesitons with no text
@@ -1721,7 +1726,4 @@ class Dataset < CustomTranslation
     return msg, counts
   end
 
-  def categories
-    Category.in(id: self.category_mappers.map {|x| x.category_id } ).to_a
-  end
 end

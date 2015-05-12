@@ -56,7 +56,7 @@ class RootController < ApplicationController
           @datasets = @datasets.sorted_public_at
         when 'release'
           @datasets = @datasets.sorted_released_at
-        when 'title'
+        else #when 'title'
           @datasets = @datasets.sorted_title
       end
     else
@@ -68,11 +68,15 @@ class RootController < ApplicationController
     end
 
     @datasets = Kaminari.paginate_array(@datasets).page(params[:page]).per(per_page)
+
+    @show_title = false
+
+    @css.push('list.css')
+    @js.push('list.js')
     
-    data = { d: (render_to_string "root/_explore_data_datasets", :layout => false) }
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: data }
+      format.json { render json: { d: (render_to_string "root/_explore_data_datasets", formats: 'html', :layout => false) } }
     end    
   end
   
@@ -129,9 +133,9 @@ class RootController < ApplicationController
     # add sort
     if params[:sort].present?
       case params[:sort].downcase
-        when 'public'
+        when 'publish'
           @time_series = @time_series.sorted_public_at
-        when 'title'
+        else #when 'title'
           @time_series = @time_series.sorted_title
       end
     else
@@ -139,13 +143,22 @@ class RootController < ApplicationController
     end
     # add category
     if params[:category].present?
-
+      @time_series = @time_series.categorize(params[:category])
     end
 
+    @time_series = Kaminari.paginate_array(@time_series).page(params[:page]).per(per_page)
+
+    @datasets = Dataset.is_public.in(id: @time_series.datasets.dataset_ids)
+    
+    @show_title = false
+
+    @css.push('list.css')
+    @js.push('list.js')
 
     respond_to do |format|
       format.html # index.html.erb
-    end
+      format.json { render json: { d: (render_to_string "root/_explore_data_time_series", formats: 'html', :layout => false) } }
+    end    
   end
   
   def explore_time_series_dashboard
