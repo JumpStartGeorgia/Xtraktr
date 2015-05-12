@@ -79,7 +79,20 @@
       <% end %> 
 
       <div id="jumpto">
-        <h3><%= t('.jumpto.header') %></h3>
+        <div id='jumpto-chart'>
+          <h3><%= t('.jumpto.chart') %></h3>
+          <select data-live-search="true" data-width="100%" class="selectpicker"></select>
+        </div>
+
+        <div id='jumpto-map'>
+          <h3><%= t('.jumpto.map') %></h3>
+          <div class='jumpto-map-item'>
+            <h4></h4>
+            <select data-live-search="true" data-width="100%" class="selectpicker"></select>
+          </div>
+      </div>
+
+<!--         <h3><%= t('.jumpto.header') %></h3>
         <ul class="list-unstyled" id="jumpto-charts">
           <li id="jumpto-charts-items" data-href="#container-chart">
             <%= t('.jumpto.charts') %>
@@ -94,6 +107,7 @@
             </ul>
           </li>
         </ul>
+ -->        
         <div id="jumpto-loader"></div>
       </div>
 

@@ -35,7 +35,7 @@ class TimeSeries < CustomTranslation
     end
   end
   
-  has_many :datasets, class_name: 'TimeSeriesDataset' do
+  has_many :datasets, class_name: 'TimeSeriesDataset', dependent: :destroy do
     def sorted
       order_by([[:sort_order, :asc], [:title, :asc]]).to_a
     end

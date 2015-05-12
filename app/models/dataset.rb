@@ -241,10 +241,10 @@ class Dataset < CustomTranslation
   accepts_nested_attributes_for :reports, :reject_if => :all_blank, :allow_destroy => true
 
   # mapping of time series to datasets
-  has_many :time_series_datasets
+  has_many :time_series_datasets, dependent: :destroy
 
   # record stats about this dataset
-  has_one :stats, class_name: "Stats"
+  has_one :stats, class_name: "Stats", dependent: :destroy
   accepts_nested_attributes_for :stats
 
   # related files for the dataset

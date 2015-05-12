@@ -66,14 +66,14 @@
         background-color: @bright-blue-color;
         color: #fff;
         float: right;
-        padding: 8px 50px;
+        padding: 8px 24px;
       }
 
       #btn-reset{
         background-color: #bfbfbf;
         color: #fff;
         float: left;
-        padding: 8px 25px;
+        padding: 8px 16px;
       }
     }
 
@@ -89,25 +89,20 @@
         margin-top: 0;
         margin-bottom: 5px;
       }
-      & > ul{
-        padding-left: 10px;
-        li{
-          & > ul{
-            padding-left: 15px;
-          }
-          &.scroll-link{
-            cursor: pointer;
-            &:hover{
-              background-color: #fff;
-              color: #000;
-            }
-          }
-          &#jumpto-charts-items, &#jumpto-maps-items{
-            .jumpto-items{
-              padding-left: 20px;
-            }
-          }
+      h4{
+        display: none;
+        color: #333;
+        font-size: 14px;
+        font-weight: bold;
+        margin-top: 10px;
+        margin-bottom: 5px;
+        span{
+          color: @bright-blue-color;
         }
+      }
+
+      #jumpto-chart, #jumpto-map{
+        display:none;
       }
 
       #jumpto-loader{

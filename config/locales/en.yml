@@ -799,10 +799,8 @@ en:
         can_exclude: Exclude "Don't know" & "Refuse"
         can_exclude_hint: Remove answers like "Don't know" & "Refuse" from the analysis
       jumpto:
-        header: Jump To
-        table: Data Table
-        charts: Charts
-        maps: Maps
+        chart: Jump to Chart
+        map: Jumpt to Map
       tabs:
         map: Map
         chart: Chart
@@ -825,9 +823,7 @@ en:
         can_exclude: Exclude "Don't know" & "Refuse"
         can_exclude_hint: Remove answers like "Don't know" & "Refuse" from the analysis
       jumpto:
-        header: Jump To
-        table: Data Table
-        charts: Charts
+        chart: Jump to Chart
       tabs:
         chart: Chart
         table: Table
