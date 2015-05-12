@@ -478,6 +478,7 @@ ka:
       mass_upload_answers_success: "%{count} answers were updated!"
       highlight_show_home_page_success: "The highlight will now always appear on the home page."
       highlight_deleted: "The highlight has been deleted."
+      explore_error: "An error occurred while processing your request."
     menu:
       explore_data: Explore Data
       explore_time_series: Explore Time Series

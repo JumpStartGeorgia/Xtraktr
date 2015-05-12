@@ -599,20 +599,26 @@ function get_explore_data(is_back_button){
     console.log( "Request failed: " + textStatus  + ". Error thrown: " + errorThrown);
   })
   .success(function( json ) {
-    json_data = json;
-    // update content
-    build_explore_data_page(json);
+    if (json.errors){
+      $('#jumpto-loader').fadeOut('slow');      
+      $('#explore-data-loader').fadeOut('slow', function(){
+        $('#explore-error').fadeIn('slow').delay(3000).fadeOut('slow');
+      });
+    }else{
+      json_data = json;
+      // update content
+      build_explore_data_page(json);
 
-    // update url
-    var new_url = [location.protocol, '//', location.host, location.pathname, '?', url_querystring.join('&')].join('');
+      // update url
+      var new_url = [location.protocol, '//', location.host, location.pathname, '?', url_querystring.join('&')].join('');
 
-    // change the browser URL to the given link location
-    if (!is_back_button && new_url != window.location.href){
-      window.history.pushState({path:new_url}, $('title').html(), new_url);
+      // change the browser URL to the given link location
+      if (!is_back_button && new_url != window.location.href){
+        window.history.pushState({path:new_url}, $('title').html(), new_url);
+      }
+      $('#explore-data-loader').fadeOut('slow');
+      $('#jumpto-loader').fadeOut('slow');
     }
-
-    $('#explore-data-loader').fadeOut('slow');
-    $('#jumpto-loader').fadeOut('slow');
 
   });
 }
