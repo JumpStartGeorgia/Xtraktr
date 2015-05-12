@@ -838,6 +838,10 @@ en:
       no_methodology: There is no methodology on file for this dataset.
       no_reports: There are no reports on file for this dataset.
       no_highlights: There are no highlights on file for this dataset.
+      filter:
+        all: All Text
+        questions: Question Text
+        answers: Answer Text
     dashboard_time_series:
       tabs:
         highlights: Highlights
@@ -847,6 +851,10 @@ en:
         licensing: Licensing
         datasets: Datasets
       no_highlights: There are no highlights on file for this time series.
+      filter:
+        all: All Text
+        questions: Question Text
+        answers: Answer Text
   export_data:
     dataset: 'Dataset: %{title}'
     download_from: 'Downloaded From: %{app_name} at %{url}.'

@@ -131,6 +131,20 @@
       <div id="codebook-search" class="input-group">
         <span class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></span>
         <input type="text" class="text-input col-sm-3" id="filter" class="form-control" value="" placeholder="<%= t('helpers.search') %>" />
+
+        <label class="filter" for="filter_all">
+          <input checked id="filter_all" name="filter" type="radio" value="all" />
+          <%= t('.filter.all') %>
+        </label>
+        <label class="filter" for="filter_q">
+          <input id="filter_q" name="filter" type="radio" value="q" />
+          <%= t('.filter.questions') %>
+        </label>
+        <label class="filter" for="filter_ans">
+          <input id="filter_ans" name="filter" type="radio" value="ans" />
+          <%= t('.filter.answers') %>
+        </label>
+
       </div>
       <ul class="list-unstyled">
         <% @dataset.questions.for_analysis.each do |question| %>
