@@ -154,14 +154,14 @@ function build_time_series_charts(json){
 /////////////////////////////////////////
 $(document).ready(function() {
 
-  // set languaage text
-  Highcharts.setOptions({
-    lang: {
-      contextButtonTitle: gon.highcharts_context_title
-    }
-  });
-
   if (gon.json_data){
+    // set languaage text
+    Highcharts.setOptions({
+      lang: {
+        contextButtonTitle: gon.highcharts_context_title
+      }
+    });
+
     // test if time series or dataset
     if (gon.json_data.time_series){
       build_time_series_charts(gon.json_data);

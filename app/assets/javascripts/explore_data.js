@@ -586,6 +586,11 @@ function get_explore_data(is_back_button){
       ajax_data.language = params.language;
       url_querystring.push('language=' + ajax_data.language);
     }
+
+    // private pages require user id
+    if (gon.private_user != undefined){
+      ajax_data.private_user_id = gon.private_user;
+    }
   }
 
   // call ajax
@@ -593,19 +598,20 @@ function get_explore_data(is_back_button){
     type: "GET",
     url: gon.api_dataset_analysis_path,
     data: ajax_data,
-    dataType: 'json'
+    dataType: 'json'   
   })
   .error(function( jqXHR, textStatus, errorThrown ) {
     console.log( "Request failed: " + textStatus  + ". Error thrown: " + errorThrown);
   })
   .success(function( json ) {
+    json_data = json;
+
     if (json.errors){
       $('#jumpto-loader').fadeOut('slow');      
       $('#explore-data-loader').fadeOut('slow', function(){
         $('#explore-error').fadeIn('slow').delay(3000).fadeOut('slow');
       });
     }else{
-      json_data = json;
       // update content
       build_explore_data_page(json);
 

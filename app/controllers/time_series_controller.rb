@@ -67,6 +67,7 @@ class TimeSeriesController < ApplicationController
       gon.explore_time_series = true
       gon.explore_time_series_ajax_path = explore_time_series_path(:format => :js)
       gon.embed_ids = @time_series.highlights.embed_ids
+      gon.private_user = Base64.urlsafe_encode64(current_user.id.to_s)
 
       # this method is in application_controller
       # and gets all of the required information

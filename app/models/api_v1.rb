@@ -89,14 +89,24 @@ class ApiV1
     data = {}
 
     # get options
+    private_user_id = options['private_user_id'].present? ? options['private_user_id'] : nil
     can_exclude = options['can_exclude'].present? && options['can_exclude'].to_bool == true
     with_title = options['with_title'].present? && options['with_title'].to_bool == true
     with_chart_data = options['with_chart_data'].present? && options['with_chart_data'].to_bool == true
     with_map_data = options['with_map_data'].present? && options['with_map_data'].to_bool == true
     language = options['language'].present? ? options['language'].downcase : nil
 
-
-    dataset = Dataset.is_public.find_by(id: dataset_id)
+    dataset = nil
+    if private_user_id
+      # decode the id
+      begin
+        user_id = Base64.urlsafe_decode64(private_user_id)
+      end
+      # get the dataset
+      dataset = Dataset.by_id_for_user(dataset_id, user_id) if user_id.present?
+    else
+      dataset = Dataset.is_public.find_by(id: dataset_id)
+    end
 
     # if the dataset could not be found, stop
     if dataset.nil?
@@ -248,13 +258,23 @@ class ApiV1
 
     ########################
     # get options
+    private_user_id = options['private_user_id'].present? ? options['private_user_id'] : nil
     can_exclude = options['can_exclude'].present? && options['can_exclude'].to_bool == true
     with_title = options['with_title'].present? && options['with_title'].to_bool == true
     with_chart_data = options['with_chart_data'].present? && options['with_chart_data'].to_bool == true
     language = options['language'].present? ? options['language'].downcase : nil
 
-
-    time_series = TimeSeries.is_public.find_by(id: time_series_id)
+    time_series = nil
+    if private_user_id
+      # decode the id
+      begin
+        user_id = Base64.urlsafe_decode64(private_user_id)
+      end
+      # get time series
+      time_series = TimeSeries.by_id_for_user(time_series_id, user_id) if user_id.present?
+    else
+      time_series = TimeSeries.is_public.find_by(id: time_series_id)
+    end
 
     # if the time_series could not be found, stop
     if time_series.nil?
