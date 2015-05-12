@@ -39,7 +39,11 @@ class TimeSeries < CustomTranslation
     def sorted
       order_by([[:sort_order, :asc], [:title, :asc]]).to_a
     end
-  end
+
+    def dataset_ids
+      only(:dataset_id).order_by([[:sort_order, :asc], [:title, :asc]]).map(:dataset_id)
+    end
+  end 
 
   embeds_many :questions, class_name: 'TimeSeriesQuestion' do
     # get the question that has the provided code

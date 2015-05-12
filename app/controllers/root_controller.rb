@@ -147,6 +147,8 @@ class RootController < ApplicationController
     end
 
     @time_series = Kaminari.paginate_array(@time_series).page(params[:page]).per(per_page)
+
+    @datasets = Dataset.is_public.in(id: @time_series.datasets.dataset_ids)
     
     @show_title = false
 

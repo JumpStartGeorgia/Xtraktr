@@ -38,11 +38,13 @@ class TimeSeriesController < ApplicationController
         @time_series.current_locale = params[:language]
       end
 
+      @datasets = Dataset.in(id: @time_series.datasets.dataset_ids)
+
       @license = PageContent.by_name('license')
 
       @highlights = Highlight.by_time_series(@time_series.id)
 
-      @css.push("dashboard.css", 'highlights.css')
+      @css.push("dashboard.css", 'highlights.css', 'list.css')
       @js.push("live_search.js", 'highlights.js')
 
       respond_to do |format|

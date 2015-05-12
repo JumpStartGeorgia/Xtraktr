@@ -1,4 +1,6 @@
- <%- model_class = Dataset -%>
+<%- with_pagination = with_pagination.nil? ? true : with_pagination%>
+<%- with_time_series_link = with_time_series_link.nil? ? true : with_time_series_link%>
+<%- model_class = Dataset -%>
 <ul>
   <% if @datasets.present? %>
     <% @datasets.each do |dataset| %>
@@ -14,7 +16,7 @@
             <span><%= model_class.human_attribute_name(:released_at) %>::</span>
             <%= I18n.l(dataset.released_at, format: :day_first) if dataset.released_at.present? %>
           </div>
-          <% if dataset.time_series_datasets.present? %>
+          <% if with_time_series_link && dataset.time_series_datasets.present? %>
             <div class="time-series" title="<%= t('app.menu.titles.dataset_to_time_series') %>" data-placement="right"  data-class="tooltip-time-series">
               <%= link_to  image_tag("svg/timeseries.svg", alt: t('app.menu.titles.dataset_to_time_series')), explore_time_series_dashboard_path(dataset.time_series_datasets.first.time_series_id)%>                  
             </div>
@@ -47,4 +49,7 @@
     <li><div class="no-data-found"><%= t('.no_match') %></div></li>
   <% end %>
 </ul>
-<%= paginate @datasets %>
+
+<% if with_pagination %>
+  <%= paginate @datasets %>
+<% end %>
