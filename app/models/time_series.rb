@@ -20,6 +20,18 @@ class TimeSeries < CustomTranslation
   field :languages, type: Array
   field :default_language, type: String
 
+  has_many :highlights, dependent: :destroy do
+    # get highlight by embed id
+    def with_embed_id(embed_id)
+      where(embed_id: embed_id).first
+    end
+
+    # get embeds id for this tome series
+    def embed_ids
+      pluck(:embed_id)
+    end
+  end
+  
   has_many :datasets, class_name: 'TimeSeriesDataset' do
     def sorted
       order_by([[:sort_order, :asc], [:title, :asc]]).to_a
@@ -45,6 +57,12 @@ class TimeSeries < CustomTranslation
     def codes_for_dataset(dataset_id)
       map{|x| x.dataset_questions}.flatten.select{|x| x.dataset_id == dataset_id}.map{|x| x.code}
     end    
+
+    # get just the codes
+    def unique_codes
+      only(:code).map{|x| x.code}
+    end
+
   end
   embeds_many :categories do
     

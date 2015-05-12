@@ -30,6 +30,12 @@
                     <% end %>
                   </li>
                   <li role="menuitem">
+                    <%= link_to highlights_dataset_path(dataset) do %>
+                      <span class="glyphicon glyphicon-star"></span>
+                      <%= t('app.menu.admin_dataset.highlights') %>
+                    <% end %>
+                  </li>
+                  <li role="menuitem">
                     <%= link_to warnings_dataset_path(dataset) do %>
                       <span class="glyphicon glyphicon-exclamation-sign"></span>
                       <%= t('app.menu.admin_dataset.warnings') %>

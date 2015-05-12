@@ -6,8 +6,11 @@ class RootController < ApplicationController
 
     @time_series = TimeSeries.is_public.recent.sorted.limit(5) if @is_xtraktr
 
-    @css.push('root.css')
-    data = { blah: 'bluh'}
+    @highlights = Highlight.for_home_page
+
+    @css.push('root.css', 'highlights.css')
+    @js.push('highlights.js')
+    data = { test: 'test1' }
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: data }
@@ -86,8 +89,10 @@ class RootController < ApplicationController
 
       @license = PageContent.by_name('license')
 
-      @css.push("dashboard.css")
-      @js.push("live_search.js")
+      @highlights = Highlight.by_dataset(@dataset.id)
+
+      @css.push("dashboard.css", 'highlights.css')
+      @js.push("live_search.js", 'highlights.js')
 
       respond_to do |format|
         format.html # index.html.erb
@@ -157,8 +162,10 @@ class RootController < ApplicationController
 
       @license = PageContent.by_name('license')
 
-      @css.push("dashboard.css")
-      @js.push("live_search.js")
+      @highlights = Highlight.by_time_series(@time_series.id)
+
+      @css.push("dashboard.css", 'highlights.css')
+      @js.push("live_search.js", 'highlights.js')
 
       respond_to do |format|
         format.html # index.html.erb

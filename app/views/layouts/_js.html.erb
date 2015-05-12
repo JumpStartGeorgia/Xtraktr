@@ -1,7 +1,9 @@
+<%- 
+  main_js ||= 'application'
+-%>
     <!-- Javascripts
     ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <%= javascript_include_tag  *(@js.present? ? ["application", @js].flatten : ["application"]), :media => "all" %>      
+    <%= javascript_include_tag  *(@js.present? ? [main_js, @js].flatten : [main_js]), :media => "all" %>      
     <script type="text/javascript">
       I18n.defaultLocale = "<%= I18n.default_locale %>";
       I18n.locale = "<%= I18n.locale %>";

@@ -1,0 +1,55 @@
+<% title t('.title') %>
+
+<%= simple_format(t('.instructions')) %>
+
+<hr />
+
+<% if @highlights.present? %>
+
+  <table id="highlights-datatable" class="table table-striped display">
+    <thead>
+      <tr>
+        <th><%= t('.question_code') %></th>
+        <th><%= t('.filtered_by_code') %></th>
+        <th><%= t('.show_home_page') %></th>
+        <th><%=t '.actions', :default => t("helpers.actions") %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @highlights.each do |highlight| %>
+        <tr>
+          <td>
+            <% q = @time_series.questions.with_code(highlight.question_code) %>
+            <%= "#{q.original_code} - #{q.text}" if q.present?%>
+          </td>
+          <td>
+            <% fb = @time_series.questions.with_code(highlight.filtered_by_code) if highlight.filtered_by_code.present? %>
+            <%= "#{fb.original_code} - #{fb.text}" if fb.present?%>
+          </td>
+          <td>
+            <%= format_highlight_home_page_status(highlight.show_home_page) %>
+          </td>
+          <td>
+            <% if !highlight.show_home_page %>
+              <%= link_to t('.btn_show_home_page'),
+                          home_page_highlight_time_series_path(id: highlight.time_series_id, embed_id: highlight.embed_id), 
+                          :method => :post,
+                          :class => 'btn btn-xs btn-default' %>
+            <% end %>
+            <%= link_to t('app.buttons.delete'),
+                        remove_highlight_time_series_path(id: highlight.time_series_id, embed_id: highlight.embed_id),
+                        :method => :post,
+                        :data => { :confirm => I18n.t("helpers.links.confirm") },
+                        :class => 'btn btn-xs btn-danger' %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+
+  <p>
+    <%= t('.no_highlights') %>
+  </p>
+
+<% end %>

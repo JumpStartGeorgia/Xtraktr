@@ -40,8 +40,10 @@ class TimeSeriesController < ApplicationController
 
       @license = PageContent.by_name('license')
 
-      @css.push("dashboard.css")
-      @js.push("live_search.js")
+      @highlights = Highlight.by_time_series(@time_series.id)
+
+      @css.push("dashboard.css", 'highlights.css')
+      @js.push("live_search.js", 'highlights.js')
 
       respond_to do |format|
         format.html # index.html.erb
@@ -64,6 +66,7 @@ class TimeSeriesController < ApplicationController
 
       gon.explore_time_series = true
       gon.explore_time_series_ajax_path = explore_time_series_path(:format => :js)
+      gon.embed_ids = @time_series.highlights.embed_ids
 
       # this method is in application_controller
       # and gets all of the required information
@@ -207,4 +210,81 @@ end
       return
     end
   end
+
+
+
+  # add highlight to time series
+  def add_highlight
+    time_series = TimeSeries.by_id_for_user(params[:id], current_user.id)
+    success = false
+
+    if time_series.present?
+      success = time_series.highlights.create(embed_id: params[:embed_id], visual_type: params[:visual_type])
+    end
+
+    respond_to do |format|
+      format.json { render json: success }
+    end
+  end
+
+  # remove highlight from time series
+  def remove_highlight
+    time_series = TimeSeries.by_id_for_user(params[:id], current_user.id)
+    success = false
+
+    if time_series.present?
+      h = time_series.highlights.with_embed_id(params[:embed_id])
+      success = h.destroy if h.present?
+    end
+
+    respond_to do |format|
+      format.html { redirect_to highlights_time_series_path(time_series), notice: t('app.msgs.highlight_deleted') }
+      format.json { render json: success }
+    end
+  end
+
+  # indicate highlight should show in home page
+  def home_page_highlight
+    time_series = TimeSeries.by_id_for_user(params[:id], current_user.id)
+    success = false
+
+    if time_series.present?
+      h = time_series.highlights.with_embed_id(params[:embed_id])
+      if h.present?
+        h.show_home_page = true
+        success = h.save
+      end
+    end
+
+    respond_to do |format|
+      format.html { redirect_to highlights_time_series_path(time_series), notice: t('app.msgs.highlight_show_home_page_success') }
+      format.json { render json: success }
+    end
+  end
+
+
+  # manage all highlights
+  def highlights
+    @time_series = TimeSeries.by_id_for_user(params[:id], current_user.id)
+
+    if @time_series.present?
+      @highlights = @time_series.highlights
+
+      add_time_series_nav_options
+
+      @js.push('search.js')
+
+      respond_to do |format|
+        format.html # index.html.erb
+        format.json { render json: @time_series }
+      end
+
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to time_series_path(:locale => I18n.locale)
+      return
+    end
+
+  end
+
 end

@@ -4,6 +4,10 @@
 #explore-data{
   margin-top: 20px;
 
+  &.embed-item{
+    margin-top: 0;
+  }
+
   #no-matches{
     font-size: 16px;
     text-align: center;
@@ -154,6 +158,7 @@
       height:501px;
       margin-bottom: 30px;
       border-bottom: dotted 1px #ccc;
+      position: relative;
       &:last-of-type{
         border-bottom: none;
       }
@@ -204,6 +209,13 @@
     }
   }
 
+  /* poisition the add highlight button in the visuals */
+  #container-chart .chart a.add-highlight, #container-map .map  a.add-highlight, 
+  #container-chart .chart a.delete-highlight, #container-map .map  a.delete-highlight{
+    position: absolute;
+    top: 5px;
+    left: 5px;
+  }
 
   /* move the subtitle closer to the title */
   .highcharts-subtitle{
@@ -217,8 +229,20 @@
       width: 100%;
       margin: 20px 20px 30px;
       border-bottom: dotted 1px #ccc;
+      position: relative;
       &:last-of-type{
         border-bottom: none;
+      }
+    }
+    &.embed-item{
+      /* for embeds, make the height and width 100% */
+      .map {
+        margin: 0;
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
       }
     }
   }
@@ -262,7 +286,7 @@
         color: @bright-blue-color;
         font-size: 20px;
       }
-      .header-variable, .header-notes, .header-answers{
+      .header-variable, .header-code, .header-notes, .header-answers{
         color: @bright-blue-color;
       }
       .details-notes{

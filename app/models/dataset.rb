@@ -14,8 +14,6 @@ class Dataset < CustomTranslation
   # paperclip data file storage
   has_mongoid_attached_file :datafile, :url => "/system/datasets/:id/original/:filename", :use_timestamp => false
 #  has_mongoid_attached_file :codebook, :url => "/system/datasets/:id/codebook/:filename", :use_timestamp => false
-  #has_and_belongs_to_many :categories, inverse_of: nil
-  has_many :category_mappers
 
   field :title, type: String, localize: true
   field :description, type: String, localize: true
@@ -47,7 +45,21 @@ class Dataset < CustomTranslation
   field :default_language, type: String
   field :reset_download_files, type: Boolean, default: true
 
+  #has_and_belongs_to_many :categories, inverse_of: nil
+  has_many :category_mappers, dependent: :destroy
 
+  has_many :highlights, dependent: :destroy do
+    # get highlight by embed id
+    def with_embed_id(embed_id)
+      where(embed_id: embed_id).first
+    end
+
+    # get embeds id for this dataset
+    def embed_ids
+      pluck(:embed_id)
+    end
+  end
+  
   embeds_many :questions, cascade_callbacks: true do
     # these are functions that will query the questions documents
 
@@ -575,6 +587,7 @@ class Dataset < CustomTranslation
       all
     end
   end
+  
   def self.is_public
     where(public: true)
   end
@@ -620,6 +633,14 @@ class Dataset < CustomTranslation
     self.or({:reset_download_files => true}, {:urls.exists => false}, {:'urls.codebook'.exists => false})
   end
 
+  # get the shape file url
+  def self.shape_file_url(dataset_id)
+    url = nil
+    x = only('urls.shape_file').find(dataset_id)
+    url = x.urls.shape_file if x.present?
+
+    return url
+  end
 
   #############################
   ## paths to dataset related files

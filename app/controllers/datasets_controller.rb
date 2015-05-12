@@ -42,8 +42,10 @@ class DatasetsController < ApplicationController
 
       @license = PageContent.by_name('license')
 
-      @css.push("dashboard.css")
-      @js.push("live_search.js")
+      @highlights = Highlight.by_dataset(@dataset.id)
+
+      @css.push("dashboard.css", 'highlights.css')
+      @js.push("live_search.js", 'highlights.js')
 
       respond_to do |format|
         format.html # index.html.erb
@@ -66,6 +68,7 @@ class DatasetsController < ApplicationController
 
       gon.explore_data = true
       gon.api_dataset_analysis_path = api_v1_dataset_analysis_path
+      gon.embed_ids = @dataset.highlights.embed_ids
 
       # this method is in application_controller
       # and gets all of the required information
@@ -548,4 +551,80 @@ class DatasetsController < ApplicationController
   end
 
 
+  # add highlight to dataset
+  def add_highlight
+    dataset = Dataset.by_id_for_user(params[:id], current_user.id)
+    success = false
+
+    if dataset.present?
+      success = dataset.highlights.create(embed_id: params[:embed_id], visual_type: params[:visual_type])
+    end
+
+    respond_to do |format|
+      format.json { render json: success }
+    end
+  end
+
+  # remove highlight from dataset
+  def remove_highlight
+    dataset = Dataset.by_id_for_user(params[:id], current_user.id)
+    success = false
+
+    if dataset.present?
+      h = dataset.highlights.with_embed_id(params[:embed_id])
+      success = h.destroy if h.present?
+    end
+
+    respond_to do |format|
+      format.html { redirect_to highlights_dataset_path(dataset), notice: t('app.msgs.highlight_deleted') }
+      format.json { render json: success }
+    end
+  end
+
+  # indicate highlight should show in home page
+  def home_page_highlight
+    dataset = Dataset.by_id_for_user(params[:id], current_user.id)
+    success = false
+
+    if dataset.present?
+      h = dataset.highlights.with_embed_id(params[:embed_id])
+      if h.present?
+        h.show_home_page = true
+        success = h.save
+      end
+    end
+
+    respond_to do |format|
+      format.html { redirect_to highlights_dataset_path(dataset), notice: t('app.msgs.highlight_show_home_page_success') }
+      format.json { render json: success }
+    end
+  end
+
+
+  # manage all highlights
+  def highlights
+    @dataset = Dataset.by_id_for_user(params[:id], current_user.id)
+
+    if @dataset.present?
+      @highlights = @dataset.highlights
+
+      add_dataset_nav_options
+
+      @js.push('search.js')
+
+      respond_to do |format|
+        format.html # index.html.erb
+        format.json { render json: @dataset }
+      end
+
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to datasets_path(:locale => I18n.locale)
+      return
+    end
+
+  end
+
 end
+
+
