@@ -49,9 +49,11 @@ $(document).ready(function(){
   $(document).on('click', '.reattach', function(e){
     var t = $(this);
     $.ajax({
-      url: t.attr('href')
+      url: t.attr('href'),
+      dataType: 'json',
     }).done(function(d)
     {
+       console.log(d);
        modal(d);      
     });
     e.preventDefault();
@@ -68,9 +70,11 @@ $(document).ready(function(){
         type: "POST",
         url: $(this).attr('action'),
         data: $(this).serialize(),
+        dataType: 'json',
         success: function (data)
         {      
          console.log(data); 
+         return;
           $(t).parent().find('.alert').remove();  
           var rhtml = $(data);
         
@@ -78,11 +82,11 @@ $(document).ready(function(){
           {
             $(t).replaceWith(rhtml);
           }
-          else if (rhtml.find('.alert.alert-info').length)
-          {
-            $(t).replaceWith(rhtml.find('.alert.alert-info').children().remove().end());
-            delayed_reload(3000);
-          }
+          // else if (rhtml.find('.alert.alert-info').length)
+          // {
+          //   $(t).replaceWith(rhtml.find('.alert.alert-info').children().remove().end());
+          //   delayed_reload(3000);
+          // }
           else
           {
             window.location.reload();

@@ -10,9 +10,10 @@ class RootController < ApplicationController
 
     @css.push('root.css', 'highlights.css')
     @js.push('highlights.js')
-
+    data = { test: 'test1' }
     respond_to do |format|
       format.html # index.html.erb
+      format.json { render json: data }
     end
   end
 
