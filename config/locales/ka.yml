@@ -585,7 +585,11 @@ ka:
       no_datasets: 'At this time, no datasets have been loaded into the site.'
       header_latest_time_series: Latest Time Series
       no_time_series: 'At this time, no time series have been created in the site.'
+      wms_title: Welfare <br />Monitoring Survey
+      wms_slogan: Explore something over time....
       header_highlights: Highlights
+      header_categories: Browse Categories
+      search_datasets: Search Datasets
     contact:
       title: Contact
     instructions:

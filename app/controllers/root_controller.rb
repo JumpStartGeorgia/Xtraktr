@@ -2,10 +2,12 @@ class RootController < ApplicationController
   before_filter :set_subnavbar, only: [:explore_data_dashboard, :explore_data_show, :explore_time_series_dashboard, :explore_time_series_show]
 
   def index
-    @datasets = Dataset.is_public.recent.sorted.limit(5)
+    @datasets = Dataset.is_public.recent.sorted.limit(3)
 
-    @time_series = TimeSeries.is_public.recent.sorted.limit(5) if @is_xtraktr
+    @time_series = TimeSeries.is_public.recent.sorted.limit(3) if @is_xtraktr
+    @wms_id = TimeSeries.pluck(:id).first
 
+    @categories = Category.sorted
     @highlights = Highlight.for_home_page
 
     @css.push('root.css', 'highlights.css')
