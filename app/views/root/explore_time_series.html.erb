@@ -19,7 +19,7 @@
           <% Category.sorted.each {|x| %>
             <li class="bright" data-filter-value="<%= x.permalink %>">
               <div class="text"><span><%= x.name %></span></div>
-              <div class="img <%= x.permalink %>" title="<%= x.name %>"></div>
+              <div class="img <%= x.permalink %>" alt="<%= x.name %>"></div>
             </li>
           <% } %>
         </ul>
