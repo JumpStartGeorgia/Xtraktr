@@ -148,8 +148,8 @@ function build_highmap(shape_question_code, json_map_set){
       colorAxis: {
         min: 0,
         max: 100, 
-        minColor: '#aadef2',
-        maxColor: '#00a4d6',
+        minColor: '#d2f1f9',
+        maxColor: '#0086a5',
         labels: {
             formatter: function () {
               return this.value + '%';
@@ -181,7 +181,7 @@ function build_highmap(shape_question_code, json_map_set){
           borderWidth: 2,
           states: {
               hover: {
-                  color: '#00a4d6',
+                  color: '#0086a5',
                   borderColor: '#3c4352',
                   borderWidth: 2
               }
@@ -202,7 +202,7 @@ function build_highmap(shape_question_code, json_map_set){
           borderWidth: 2,
           states: {
             hover: {
-              color: '#00a4d6',
+              color: '#0086a5',
               borderColor: '#3c4352',
               borderWidth: 2
             }
@@ -268,7 +268,7 @@ function build_highmap(shape_question_code, json_map_set){
 ////////////////////////////////////////////////
 // build crosstab chart
 ////////////////////////////////////////////////
-function build_crosstab_chart(question_text, broken_down_by_text, json_chart, chart_height){
+function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by_text, json_chart, chart_height){
   if (chart_height == undefined){
     chart_height = 501; // need the 1 for the border bottom line
   }
@@ -295,8 +295,10 @@ function build_crosstab_chart(question_text, broken_down_by_text, json_chart, ch
     xAxis: {
         categories: json_chart.labels,
         title: {
-            text: question_text
-        }
+            text: '<span class="code-highlight">' + question_text + '</span>',
+            useHTML: true,
+            style: { "fontSize": "14px", "fontWeight": "bold" }
+        },
     },
     yAxis: {
         min: 0,
@@ -306,13 +308,15 @@ function build_crosstab_chart(question_text, broken_down_by_text, json_chart, ch
     },
     legend: {
         title: {
-            text: broken_down_by_text
+          text: '<span class="code-highlight">' + broken_down_by_code + '</span> - ' + broken_down_by_text,
+          useHTML: true,
+          style: { "color": "#333333", "fontSize": "14px", "fontWeight": "bold" }
         },
         layout: 'vertical',
         reversed: true,
         symbolHeight: 14,
         itemMarginBottom: 5,
-        itemStyle: { "color": "#333333", "cursor": "pointer", "fontSize": "14px", "fontWeight": "bold" }
+        itemStyle: { "color": "#333333", "cursor": "pointer", "fontSize": "14px" }
     },
     tooltip: {
         pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y:,.0f}</b> ({point.percentage:.2f}%)<br/>',

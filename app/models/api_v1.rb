@@ -381,8 +381,8 @@ private
         if with_title
           filter_results = {title: {html: nil, text: nil}, subtitle: {html: nil, text: nil}, filter_analysis: []}
 
-          filter_results[:title][:html] = dataset_single_analysis_title_html(question[:text], filtered_by[:text])
-          filter_results[:title][:text] = dataset_single_analysis_title_text(question[:text], filtered_by[:text])
+          filter_results[:title][:html] = dataset_single_analysis_title_html(question, filtered_by)
+          filter_results[:title][:text] = dataset_single_analysis_title_text(question, filtered_by)
         else
           filter_results = {filter_analysis: []}
         end
@@ -390,7 +390,7 @@ private
         filtered_by[:answers].each do |filter_answer|
           filter_item = {filter_answer_value: filter_answer[:value], filter_answer_text: filter_answer[:text]}
 
-          filter_item[:filter_results] = dataset_single_analysis_processing(question, merged_data.select{|x| x[0].to_s == filter_answer[:value].to_s}.map{|x| x[1]}, with_title, filtered_by[:text], filter_answer[:text])
+          filter_item[:filter_results] = dataset_single_analysis_processing(question, merged_data.select{|x| x[0].to_s == filter_answer[:value].to_s}.map{|x| x[1]}, with_title, filtered_by, filter_answer[:text])
 
           filter_results[:filter_analysis] << filter_item
         end
@@ -412,7 +412,7 @@ private
 
 
   # for the given question and it's data, do a single analysis and convert into counts and percents
-  def self.dataset_single_analysis_processing(question, data, with_title=false, filtered_by_text=nil, filtered_by_answer=nil)
+  def self.dataset_single_analysis_processing(question, data, with_title=false, filtered_by=nil, filtered_by_answer=nil)
     results = nil
     if with_title
       results = {title: {html: nil, text: nil}, subtitle: {html: nil, text: nil}, total_responses: 0, analysis: []}
@@ -432,8 +432,8 @@ private
 
         # set the titles
         if with_title
-          results[:title][:html] = dataset_single_analysis_title_html(question[:text], filtered_by_text, filtered_by_answer)
-          results[:title][:text] = dataset_single_analysis_title_text(question[:text], filtered_by_text, filtered_by_answer)
+          results[:title][:html] = dataset_single_analysis_title_html(question, filtered_by, filtered_by_answer)
+          results[:title][:text] = dataset_single_analysis_title_text(question, filtered_by, filtered_by_answer)
           results[:subtitle][:html] = dataset_analysis_subtitle_html(results[:total_responses])
           results[:subtitle][:text] = dataset_analysis_subtitle_text(results[:total_responses])
         end
@@ -634,8 +634,8 @@ private
         if with_title
           filter_results = {title: {html: nil, text: nil}, subtitle: {html: nil, text: nil}, filter_analysis: []}
 
-          filter_results[:title][:html] = dataset_comparative_analysis_title_html(question[:text], broken_down_by[:text], filtered_by[:text])
-          filter_results[:title][:text] = dataset_comparative_analysis_title_text(question[:text], broken_down_by[:text], filtered_by[:text])
+          filter_results[:title][:html] = dataset_comparative_analysis_title_html(question, broken_down_by, filtered_by)
+          filter_results[:title][:text] = dataset_comparative_analysis_title_text(question, broken_down_by, filtered_by)
         else
           filter_results = {filter_analysis: []}
         end
@@ -643,7 +643,7 @@ private
         filtered_by[:answers].each do |filter_answer|
           filter_item = {filter_answer_value: filter_answer[:value], filter_answer_text: filter_answer[:text]}
 
-          filter_item[:filter_results] = dataset_comparative_analysis_processing(question, broken_down_by, merged_data.select{|x| x[0].to_s == filter_answer[:value].to_s}.map{|x| x[1]}, with_title, filtered_by[:text], filter_answer[:text])
+          filter_item[:filter_results] = dataset_comparative_analysis_processing(question, broken_down_by, merged_data.select{|x| x[0].to_s == filter_answer[:value].to_s}.map{|x| x[1]}, with_title, filtered_by, filter_answer[:text])
           
           filter_results[:filter_analysis] << filter_item
         end
@@ -666,7 +666,7 @@ private
 
   # for the given dataset, question and broken down by question, do a comparative analysis and convert into counts and percents
   # data is an array of [question answer, broken down by answer]
-  def self.dataset_comparative_analysis_processing(question, broken_down_by, data, with_title=false, filtered_by_text=nil, filtered_by_answer=nil)
+  def self.dataset_comparative_analysis_processing(question, broken_down_by, data, with_title=false, filtered_by=nil, filtered_by_answer=nil)
     results = nil
     if with_title
       results = {title: {html: nil, text: nil}, subtitle: {html: nil, text: nil}, total_responses: 0, analysis: []}
@@ -733,8 +733,8 @@ private
 
         # set the titles
         if with_title
-          results[:title][:html] = dataset_comparative_analysis_title_html(question[:text], broken_down_by[:text], filtered_by_text, filtered_by_answer)
-          results[:title][:text] = dataset_comparative_analysis_title_text(question[:text], broken_down_by[:text], filtered_by_text, filtered_by_answer)
+          results[:title][:html] = dataset_comparative_analysis_title_html(question, broken_down_by, filtered_by, filtered_by_answer)
+          results[:title][:text] = dataset_comparative_analysis_title_text(question, broken_down_by, filtered_by, filtered_by_answer)
           results[:subtitle][:html] = dataset_analysis_subtitle_html(results[:total_responses])
           results[:subtitle][:text] = dataset_analysis_subtitle_text(results[:total_responses])
         end
@@ -868,8 +868,8 @@ private
               # set the titles
               if with_title
                 item[:title] = {}
-                item[:title][:html] = dataset_comparative_analysis_map_title_html(data[:question][:text], data[:broken_down_by][:text], bdb_answer.text, data[:filtered_by][:text], filter[:filter_answer_text])
-                item[:title][:text] = dataset_comparative_analysis_map_title_text(data[:question][:text], data[:broken_down_by][:text], bdb_answer.text, data[:filtered_by][:text], filter[:filter_answer_text])
+                item[:title][:html] = dataset_comparative_analysis_map_title_html(data[:question], data[:broken_down_by], bdb_answer.text, data[:filtered_by], filter[:filter_answer_text])
+                item[:title][:text] = dataset_comparative_analysis_map_title_text(data[:question], data[:broken_down_by], bdb_answer.text, data[:filtered_by], filter[:filter_answer_text])
                 item[:subtitle] = data[:results][:subtitle]
               end
 
@@ -906,8 +906,8 @@ private
                 # set the titles
                 if with_title
                   item[:title] = {}
-                  item[:title][:html] = dataset_comparative_analysis_map_title_html(data[:broken_down_by][:text], data[:question][:text], q_answer.text, data[:filtered_by][:text], filter[:filter_answer_text])
-                  item[:title][:text] = dataset_comparative_analysis_map_title_text(data[:broken_down_by][:text], data[:question][:text], q_answer.text, data[:filtered_by][:text], filter[:filter_answer_text])
+                  item[:title][:html] = dataset_comparative_analysis_map_title_html(data[:broken_down_by], data[:question], q_answer.text, data[:filtered_by], filter[:filter_answer_text])
+                  item[:title][:text] = dataset_comparative_analysis_map_title_text(data[:broken_down_by], data[:question], q_answer.text, data[:filtered_by], filter[:filter_answer_text])
                   item[:subtitle] = data[:results][:subtitle]
                 end
 
@@ -963,8 +963,8 @@ private
             # set the titles
             if with_title
               item[:title] = {}
-              item[:title][:html] = dataset_comparative_analysis_map_title_html(data[:question][:text], data[:broken_down_by][:text], bdb_answer.text)
-              item[:title][:text] = dataset_comparative_analysis_map_title_text(data[:question][:text], data[:broken_down_by][:text], bdb_answer.text)
+              item[:title][:html] = dataset_comparative_analysis_map_title_html(data[:question], data[:broken_down_by], bdb_answer.text)
+              item[:title][:text] = dataset_comparative_analysis_map_title_text(data[:question], data[:broken_down_by], bdb_answer.text)
               item[:subtitle] = data[:results][:subtitle]
             end
 
@@ -996,8 +996,8 @@ private
             # set the titles
             if with_title
               item[:title] = {}
-              item[:title][:html] = dataset_comparative_analysis_map_title_html(data[:broken_down_by][:text], data[:question][:text], q_answer.text)
-              item[:title][:text] = dataset_comparative_analysis_map_title_text(data[:question][:text], data[:broken_down_by][:text], q_answer.text)
+              item[:title][:html] = dataset_comparative_analysis_map_title_html(data[:broken_down_by], data[:question], q_answer.text)
+              item[:title][:text] = dataset_comparative_analysis_map_title_text(data[:question], data[:broken_down_by], q_answer.text)
               item[:subtitle] = data[:results][:subtitle]
             end
 
@@ -1075,8 +1075,8 @@ private
       if with_title
         filter_results = {title: {html: nil, text: nil}, subtitle: {html: nil, text: nil}, filter_analysis: []}
 
-        filter_results[:title][:html] = time_series_single_analysis_title_html(question[:text], filtered_by[:text])
-        filter_results[:title][:text] = time_series_single_analysis_title_text(question[:text], filtered_by[:text])
+        filter_results[:title][:html] = time_series_single_analysis_title_html(question, filtered_by)
+        filter_results[:title][:text] = time_series_single_analysis_title_text(question, filtered_by)
       else
         filter_results = {filter_analysis: []}
       end
@@ -1084,7 +1084,7 @@ private
       filtered_by[:answers].each do |filter_answer|
         filter_item = {filter_answer_value: filter_answer[:value], filter_answer_text: filter_answer[:text]}
 
-        filter_item[:filter_results] = time_series_single_analysis_processing(datasets, individual_results, question, with_title, filtered_by[:text], filter_answer[:value])
+        filter_item[:filter_results] = time_series_single_analysis_processing(datasets, individual_results, question, with_title, filtered_by, filter_answer[:value])
 
         filter_results[:filter_analysis] << filter_item
       end
@@ -1105,7 +1105,7 @@ private
 
 
   # for the given question and it's data, do a single analysis and convert into counts and percents
-  def self.time_series_single_analysis_processing(datasets, individual_results, question, with_title=false, filter_text=nil, filter_answer_value=nil)
+  def self.time_series_single_analysis_processing(datasets, individual_results, question, with_title=false, filter_by=nil, filter_answer_value=nil)
     results = nil
     if with_title
       results = {title: {html: nil, text: nil}, subtitle: {html: nil, text: nil}, total_responses: [], analysis: []}
@@ -1166,14 +1166,14 @@ private
         # look for any match in filter results with the filter answer value
         filter_result = individual_results.map{|x| x[:dataset_results][:results][:filter_analysis]}.flatten.select{|x| x[:filter_answer_value] == filter_answer_value}.first
         if filter_result.present?
-          results[:title][:html] = time_series_single_analysis_title_html(question[:text], filter_text, filter_result[:filter_answer_text])
-          results[:title][:text] = time_series_single_analysis_title_text(question[:text], filter_text, filter_result[:filter_answer_text])
+          results[:title][:html] = time_series_single_analysis_title_html(question, filter_by, filter_result[:filter_answer_text])
+          results[:title][:text] = time_series_single_analysis_title_text(question, filter_by, filter_result[:filter_answer_text])
           results[:subtitle][:html] = time_series_analysis_subtitle_html(results[:total_responses])
           results[:subtitle][:text] = time_series_analysis_subtitle_text(results[:total_responses])
         end
       else
-        results[:title][:html] = time_series_single_analysis_title_html(question[:text])
-        results[:title][:text] = time_series_single_analysis_title_text(question[:text])
+        results[:title][:html] = time_series_single_analysis_title_html(question)
+        results[:title][:text] = time_series_single_analysis_title_text(question)
         results[:subtitle][:html] = time_series_analysis_subtitle_html(results[:total_responses])
         results[:subtitle][:text] = time_series_analysis_subtitle_text(results[:total_responses])
       end
@@ -1281,75 +1281,77 @@ private
   ########################################
 
 
-  def self.dataset_single_analysis_title_html(question, filtered_by_text=nil, filtered_by_answer=nil)
-    title = I18n.t('explore_data.single.html.title', :question => question)
-    if filtered_by_text.present?
+  def self.dataset_single_analysis_title_html(question, filtered_by=nil, filtered_by_answer=nil)
+    title = I18n.t('explore_data.single.html.title', :code => question[:original_code], :question => question[:text])
+    if filtered_by.present?
       if filtered_by_answer.present?
-        title << I18n.t('explore_data.single.html.title_filter_value', :variable => filtered_by_text, :value => filtered_by_answer )
+        title << I18n.t('explore_data.single.html.title_filter_value', :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer )
       else
-        title << I18n.t('explore_data.single.html.title_filter', :variable => filtered_by_text)
+        title << I18n.t('explore_data.single.html.title_filter', :code => filtered_by[:original_code], :variable => filtered_by[:text])
       end
     end
     return title.html_safe
   end 
 
-  def self.dataset_single_analysis_title_text(question, filtered_by_text=nil, filtered_by_answer=nil)
-    title = I18n.t('explore_data.single.text.title', :question => question)
-    if filtered_by_text.present?
+  def self.dataset_single_analysis_title_text(question, filtered_by=nil, filtered_by_answer=nil)
+    title = I18n.t('explore_data.single.text.title', :code => question[:original_code], :question => question[:text])
+    if filtered_by.present?
       if filtered_by_answer.present?
-        title << I18n.t('explore_data.single.text.title_filter_value', :variable => filtered_by_text, :value => filtered_by_answer )
+        title << I18n.t('explore_data.single.text.title_filter_value', :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer )
       else
-        title << I18n.t('explore_data.single.text.title_filter', :variable => filtered_by_text)
+        title << I18n.t('explore_data.single.text.title_filter', :code => filtered_by[:original_code], :variable => filtered_by[:text])
       end
     end
     return title
   end 
 
-  def self.dataset_comparative_analysis_title_html(question, broken_down_by, filtered_by_text=nil, filtered_by_answer=nil)
-    title = I18n.t('explore_data.comparative.html.title', :question => question, :broken_down_by => broken_down_by)
-    if filtered_by_text.present?
+  def self.dataset_comparative_analysis_title_html(question, broken_down_by, filtered_by=nil, filtered_by_answer=nil)
+    title = I18n.t('explore_data.comparative.html.title', :question_code => question[:original_code], :question => question[:text], 
+              :broken_down_by_code => broken_down_by[:original_code], :broken_down_by => broken_down_by[:text])
+    if filtered_by.present?
       if filtered_by_answer.present?
-        title << I18n.t('explore_data.comparative.html.title_filter_value', :variable => filtered_by_text, :value => filtered_by_answer )
+        title << I18n.t('explore_data.comparative.html.title_filter_value', :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer )
       else
-        title << I18n.t('explore_data.comparative.html.title_filter', :variable => filtered_by_text )
+        title << I18n.t('explore_data.comparative.html.title_filter', :code => filtered_by[:original_code], :variable => filtered_by[:text] )
       end
     end
     return title.html_safe
   end 
 
-  def self.dataset_comparative_analysis_title_text(question, broken_down_by, filtered_by_text=nil, filtered_by_answer=nil)
-    title = I18n.t('explore_data.comparative.text.title', :question => question, :broken_down_by => broken_down_by)
-    if filtered_by_text.present?
+  def self.dataset_comparative_analysis_title_text(question, broken_down_by, filtered_by=nil, filtered_by_answer=nil)
+    title = I18n.t('explore_data.comparative.text.title', :question_code => question[:original_code], :question => question[:text], 
+              :broken_down_by_code => broken_down_by[:original_code], :broken_down_by => broken_down_by[:text])
+    if filtered_by.present?
       if filtered_by_answer.present?
-        title << I18n.t('explore_data.comparative.text.title_filter_value', :variable => filtered_by_text, :value => filtered_by_answer )
+        title << I18n.t('explore_data.comparative.text.title_filter_value', :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer )
       else
-        title << I18n.t('explore_data.comparative.text.title_filter', :variable => filtered_by_text )
+        title << I18n.t('explore_data.comparative.text.title_filter', :code => filtered_by[:original_code], :variable => filtered_by[:text] )
       end
     end
     return title
   end 
 
-  def self.dataset_comparative_analysis_map_title_html(question, broken_down_by, broken_down_by_answer, filtered_by_text=nil, filtered_by_answer=nil)
-    title = I18n.t('explore_data.comparative.html.map.title', :question => question)
-    title << I18n.t('explore_data.comparative.html.map.title_col', :broken_down_by => broken_down_by, :broken_down_by_answer => broken_down_by_answer)
-    if filtered_by_text.present?
+  def self.dataset_comparative_analysis_map_title_html(question, broken_down_by, broken_down_by_answer, filtered_by=nil, filtered_by_answer=nil)
+    title = I18n.t('explore_data.comparative.html.map.title', :code => question[:original_code], :question => question[:text])
+    title << I18n.t('explore_data.comparative.html.map.title_col', :code => broken_down_by[:original_code], :broken_down_by => broken_down_by[:text], :broken_down_by_answer => broken_down_by_answer)
+    if filtered_by.present?
       if filtered_by_answer.present?
-        title << I18n.t('explore_data.comparative.html.map.title_filter_value', :variable => filtered_by_text, :value => filtered_by_answer )
+        title << I18n.t('explore_data.comparative.html.map.title_filter_value', :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer )
       else
-        title << I18n.t('explore_data.comparative.html.map.title_filter', :variable => filtered_by_text )
+        title << I18n.t('explore_data.comparative.html.map.title_filter', :code => filtered_by[:original_code], :variable => filtered_by[:text] )
       end
     end
     return title.html_safe
   end 
 
-  def self.dataset_comparative_analysis_map_title_text(question, broken_down_by, broken_down_by_answer, filtered_by_text=nil, filtered_by_answer=nil)
-    title = I18n.t('explore_data.comparative.text.map.title', :question => question)
-    title << I18n.t('explore_data.comparative.text.map.title_col', :broken_down_by => broken_down_by, :broken_down_by_answer => broken_down_by_answer)
-    if filtered_by_text.present?
+  def self.dataset_comparative_analysis_map_title_text(question, broken_down_by, broken_down_by_answer, filtered_by=nil, filtered_by_answer=nil)
+    title = I18n.t('explore_data.comparative.text.map.title', :code => question[:original_code], :question => question[:text])
+    title << I18n.t('explore_data.comparative.text.map.title_col', :code => broken_down_by[:original_code], :broken_down_by => broken_down_by[:text], :broken_down_by_answer => broken_down_by_answer)
+    if filtered_by.present?
       if filtered_by_answer.present?
-        title << I18n.t('explore_data.comparative.text.map.title_filter_value', :variable => filtered_by_text, :value => filtered_by_answer )
+        title << I18n.t('explore_data.comparative.text.map.title_filter_value', :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer )
       else
-        title << I18n.t('explore_data.comparative.text.map.title_filter', :variable => filtered_by_text )
+        title << I18n.t('explore_data.comparative.text.map.title_filter', :code => filtered_by[:original_code], :variable => filtered_by[:text] )
       end
     end
     return title
@@ -1390,25 +1392,26 @@ private
 
 
 
-  def self.time_series_single_analysis_title_html(question, filtered_by_text=nil, filtered_by_answer=nil)
-    title = I18n.t('explore_time_series.single.html.title', :question => question)
-    if filtered_by_text.present?
+
+  def self.time_series_single_analysis_title_html(question, filtered_by=nil, filtered_by_answer=nil)
+    title = I18n.t('explore_time_series.single.html.title', :code => question[:original_code], :question => question[:text])
+    if filtered_by.present?
       if filtered_by_answer.present?
-        title << I18n.t('explore_time_series.single.html.title_filter_value', :variable => filtered_by_text, :value => filtered_by_answer )
+        title << I18n.t('explore_time_series.single.html.title_filter_value', :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer )
       else
-        title << I18n.t('explore_time_series.single.html.title_filter', :variable => filtered_by_text )
+        title << I18n.t('explore_time_series.single.html.title_filter', :code => filtered_by[:original_code], :variable => filtered_by[:text] )
       end
     end
     return title.html_safe
   end 
 
-  def self.time_series_single_analysis_title_text(question, filtered_by_text=nil, filtered_by_answer=nil)
-    title = I18n.t('explore_time_series.single.text.title', :question => question)
-    if filtered_by_text.present?
+  def self.time_series_single_analysis_title_text(question, filtered_by=nil, filtered_by_answer=nil)
+    title = I18n.t('explore_time_series.single.text.title', :code => question[:original_code], :question => question[:text])
+    if filtered_by.present?
       if filtered_by_answer.present?
-        title << I18n.t('explore_time_series.single.text.title_filter_value', :variable => filtered_by_text, :value => filtered_by_answer )
+        title << I18n.t('explore_time_series.single.text.title_filter_value', :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer )
       else
-        title << I18n.t('explore_time_series.single.text.title_filter', :variable => filtered_by_text )
+        title << I18n.t('explore_time_series.single.text.title_filter', :code => filtered_by[:original_code], :variable => filtered_by[:text] )
       end
     end
     return title

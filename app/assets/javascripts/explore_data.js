@@ -119,7 +119,7 @@ function build_crosstab_charts(json){
       // filters
       for(var i=0; i<json.chart.length; i++){
         // create chart
-        build_crosstab_chart(json.question.text, json.broken_down_by.text, json.chart[i].filter_results, chart_height);
+        build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart[i].filter_results, chart_height);
 
         // add jumpto link
         jumpto_text += '<li class="scroll-link" data-href="#chart-' + (i+1) + '">' + json.filtered_by.text + ' = ' + json.chart[i].filter_answer_text + '</li>';
@@ -132,7 +132,7 @@ function build_crosstab_charts(json){
 
     }else{
       // no filters
-      build_crosstab_chart(json.question.text, json.broken_down_by.text, json.chart, chart_height);
+      build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart, chart_height);
 
       // hide jumpto
       $('#jumpto').hide();
