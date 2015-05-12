@@ -1,10 +1,10 @@
- <%- model_class = Dataset -%>
-  <% #title t('.title') %>
+<%- model_class = Dataset -%>
+<% title t('.title') %>
 
 <div class="article explore">
   <% if @datasets.present? %>
-    <div class="dataset-filters" data-path="<%= explore_data_path %>">
-      <div class="search" data-filter='search'><div class="box"><input type="search" placeholder="<%= t('.search_datasets') %>"><div class="go">GO</div></div></div>
+    <div class="filters" data-path="<%= explore_data_path %>">
+      <div class="search" data-filter='search'><div class="box"><input type="search" placeholder="<%= t('.search_datasets') %>"><div class="go"><%= t('.go') %></div></div></div>
       <div class="sort"  data-filter='sort'>
         <label><%= t('.sort_by.this') %>:</label>         
         <select>
@@ -17,7 +17,7 @@
       <div class="category"  data-filter='category'>
         <div class="selector"><div class="img none" data-selected="none" title="<%= t('app.buttons.choose_category') %>"></div><span data-text-none="<%= t('app.buttons.choose_category') %>" data-text-selected="<%= t('app.buttons.change_category') %>"><%= t('app.buttons.choose_category') %></span></div>
         <ul>
-          <% Category.each {|x| %>
+          <% Category.sorted.each {|x| %>
             <li class="bright" data-filter-value="<%= x.permalink %>">
               <div class="text"><span><%= x.name %></span></div>
               <div class="img <%= x.permalink %>" title="<%= x.name %>"></div>
@@ -26,7 +26,7 @@
         </ul>
       </div>
     </div>
-    <div class="dataset-list">
+    <div class="list">
         <%= render partial: 'explore_data_datasets' %>
     </div>
   <% else %>

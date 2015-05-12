@@ -1,27 +1,36 @@
 <%- model_class = TimeSeries -%>
-
 <% title t('.title') %>
 
-<% if @time_series.present? %>
-  <ul class="list-unstyled">
-    <% @time_series.each do |time_series| %>
-      <li>
-        <h2><%= link_to time_series.title, explore_time_series_dashboard_path(time_series) %></h2>
-        <div>
-          <%= model_class.human_attribute_name(:dates) %>:
-          <%= time_series.datasets.sorted.map{|x| x.title}.join(', ') %>
-        </div>
-        <% if time_series.description.present? %>
-          <div class="tinymce_format">
-            <%= simple_format_no_tags(time_series.description, {}, {sanitize: false}) %>
-          </div>
-        <% end %>
-      </li>
-    <% end %>
-  </ul>
+<div class="article explore">
+  <% if @time_series.present? %>
+    <div class="filters" data-path="<%= explore_time_path %>">
+      <div class="search" data-filter='search'><div class="box"><input type="search" placeholder="<%= t('.search_time_series') %>"><div class="go"><%= t('.go') %></div></div></div>
+      <div class="sort"  data-filter='sort'>
+        <label><%= t('.sort_by.this') %>:</label>         
+        <select>
+          <option value="title"><%= t('.sort_by.title') %></option>
+          <option value="publish"><%= t('.sort_by.publish') %></option>
+        </select>
+      </div>
 
-<% else %>
-  <p>
-    <%= t('.no_data') %>
-  </p>
-<% end %>
+      <div class="category"  data-filter='category'>
+        <div class="selector"><div class="img none" data-selected="none" title="<%= t('app.buttons.choose_category') %>"></div><span data-text-none="<%= t('app.buttons.choose_category') %>" data-text-selected="<%= t('app.buttons.change_category') %>"><%= t('app.buttons.choose_category') %></span></div>
+        <ul>
+          <% Category.sorted.each {|x| %>
+            <li class="bright" data-filter-value="<%= x.permalink %>">
+              <div class="text"><span><%= x.name %></span></div>
+              <div class="img <%= x.permalink %>" title="<%= x.name %>"></div>
+            </li>
+          <% } %>
+        </ul>
+      </div>
+    </div>
+    <div class="list">
+        <%= render partial: 'explore_data_time_series' %>
+    </div>
+  <% else %>
+    <p>
+      <%= t('.no_data') %>
+    </p>
+  <% end %>
+</div>

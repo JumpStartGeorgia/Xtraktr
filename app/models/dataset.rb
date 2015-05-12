@@ -582,7 +582,7 @@ class Dataset < CustomTranslation
   def self.categorize(cat)
     cat = Category.find_by(permalink: cat) 
     if cat.present?
-      self.in(id: CategoryMapper.where(category_id: cat.id).map(:dataset_id))
+      self.in(id: CategoryMapper.where(category_id: cat.id).pluck(:dataset_id))
     else
       all
     end
@@ -667,6 +667,10 @@ class Dataset < CustomTranslation
   end
 
   #############################
+
+  def categories
+    Category.in(id: self.category_mappers.map {|x| x.category_id } ).to_a
+  end
 
 
   # get list of quesitons with no text
@@ -1721,7 +1725,4 @@ class Dataset < CustomTranslation
     return msg, counts
   end
 
-  def categories
-    Category.in(id: self.category_mappers.map {|x| x.category_id } ).to_a
-  end
 end

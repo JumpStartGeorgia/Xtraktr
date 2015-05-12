@@ -194,6 +194,7 @@
     }
   }
 }
+
 .red-box
 {
   font-family:'opensans-sb', 'sans-serif';
@@ -313,66 +314,67 @@
       padding:0px;
     }
   }
+
+  .checkbox
+  {
+    label
+    {
+      font-family:'opensans', 'sans-serif';
+      font-size:12px;
+      font-weight:normal;
+      color:#3c4352; 
+      display:inline-block; 
+      margin:0px;
+      padding:0px; 
+      cursor:pointer;     
+    }
+    input[type="checkbox"] {
+      display:none;
+    }    
+    input[type="checkbox"] + label:before {
+      content:"";
+        display:inline-block;
+        width:14px;
+        height:14px;
+        margin:-3px 4px 0 0;
+        vertical-align:middle;
+        background:url(/assets/svg/check_radio.png) no-repeat left top ;
+    }
+    input[type="checkbox"]:checked + label:before {
+      content:"";
+      background:url(/assets/svg/check_radio.png) no-repeat -15px top;
+    }
+  }
+
+  .radio
+  {
+    label
+    {
+      font-family:'opensans', 'sans-serif';
+      font-size:12px;
+      font-weight:normal;
+      color:#3c4352; 
+      display:inline-block; 
+      margin:0px;
+      padding:0px; 
+      cursor:pointer;     
+    }
+    input[type="radio"] {
+      display:none;
+    }    
+    input[type="radio"] + label:before {
+      content:"";
+        display:inline-block;
+        width:15px;
+        height:14px;
+        margin:-3px 4px 0 0;
+        vertical-align:middle;
+        background:url(/assets/svg/check_radio.png) no-repeat -29px top ;
+    }
+    input[type="radio"]:checked + label:before {
+      content:"";
+      background:url(/assets/svg/check_radio.png) no-repeat -44px top;
+    }
+  }
 }
 
-.checkbox
-{
-  label
-  {
-    font-family:'opensans', 'sans-serif';
-    font-size:12px;
-    font-weight:normal;
-    color:#3c4352; 
-    display:inline-block; 
-    margin:0px;
-    padding:0px; 
-    cursor:pointer;     
-  }
-  input[type="checkbox"] {
-    display:none;
-  }    
-  input[type="checkbox"] + label:before {
-    content:"";
-      display:inline-block;
-      width:14px;
-      height:14px;
-      margin:-3px 4px 0 0;
-      vertical-align:middle;
-      background:url(/assets/svg/check_radio.png) no-repeat left top ;
-  }
-  input[type="checkbox"]:checked + label:before {
-    content:"";
-    background:url(/assets/svg/check_radio.png) no-repeat -15px top;
-  }
-}
-
-.radio
-{
-  label
-  {
-    font-family:'opensans', 'sans-serif';
-    font-size:12px;
-    font-weight:normal;
-    color:#3c4352; 
-    display:inline-block; 
-    margin:0px;
-    padding:0px; 
-    cursor:pointer;     
-  }
-  input[type="radio"] {
-    display:none;
-  }    
-  input[type="radio"] + label:before {
-    content:"";
-      display:inline-block;
-      width:15px;
-      height:14px;
-      margin:-3px 4px 0 0;
-      vertical-align:middle;
-      background:url(/assets/svg/check_radio.png) no-repeat -29px top ;
-  }
-  input[type="radio"]:checked + label:before {
-    content:"";
-    background:url(/assets/svg/check_radio.png) no-repeat -44px top;
-  }
-}

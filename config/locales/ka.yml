@@ -594,19 +594,28 @@ ka:
     explore_data:
       title: Explore the Data
       search_datasets: Search Datasets
+      go: Go
       sort_by: 
         this: Sort By
         title: Title
-        release: Release Date
-        publish: Publish Date
+        release: Date Released
+        publish: Date Published Here
       no_data: 'At this time, no datasets have been loaded into the site.'
+    explore_data_dataset:
       no_match: 'Sorry, no datasets match your search request.'      
     explore_data_show:
       title: Explore the Data
     explore_time_series:
       title: Explore Time Series Data
+      search_time_series: Search Time Series
+      go: Go
+      sort_by: 
+        this: Sort By
+        title: Title
+        publish: Date Published Here
       no_data: 'At this time, no time series have been created in the site.'
-      no_match: 'Sorry, no time series match your search request.'
+    explore_data_dataset:
+      no_match: 'Sorry, no time series match your search request.'      
     explore_data_show:
       title: Explore Time Series Data
   api:
