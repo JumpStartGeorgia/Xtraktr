@@ -148,8 +148,8 @@ function build_highmap(shape_question_code, json_map_set){
       colorAxis: {
         min: 0,
         max: 100, 
-//            minColor: '#efeaea',
-//            maxColor: '#662E2E',
+        minColor: '#aadef2',
+        maxColor: '#00a4d6',
         labels: {
             formatter: function () {
               return this.value + '%';
@@ -177,12 +177,12 @@ function build_highmap(shape_question_code, json_map_set){
               pointFormat: '<b>{point.properties.name_en}:</b> ' + gon.na
               // using name_en in case shape has no data and therefore no display_name
           },
-          borderColor: '#909090',
-          borderWidth: 1,
+          borderColor: '#f6f6f6',
+          borderWidth: 2,
           states: {
               hover: {
-                  color: '#D6E3B5',
-                  borderColor: '#000',
+                  color: '#00a4d6',
+                  borderColor: '#3c4352',
                   borderWidth: 2
               }
           }
@@ -198,12 +198,12 @@ function build_highmap(shape_question_code, json_map_set){
               headerFormat: '',
               pointFormat: '<b>{point.display_name}:</b> {point.count:,.0f} ({point.value}%)'    
           },
-          borderColor: '#909090',
-          borderWidth: 1,
+          borderColor: '#f6f6f6',
+          borderWidth: 2,
           states: {
             hover: {
-              color: '#D6E3B5',
-              borderColor: '#000',
+              color: '#00a4d6',
+              borderColor: '#3c4352',
               borderWidth: 2
             }
           },
