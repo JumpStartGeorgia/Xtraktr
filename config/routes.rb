@@ -1,12 +1,18 @@
 BootstrapStarter::Application.routes.draw do
 
+  devise_for :users, skip: [:session, :password, :registration, :confirmation], :path_names => {:sign_in => 'login', :sign_out => 'logout'}, controllers: { omniauth_callbacks: 'omniauth_callbacks' }
 	#--------------------------------
 	# all resources should be within the scope block below
 	#--------------------------------
 	scope ":locale", locale: /#{I18n.available_locales.join("|")}/ do
 
-		devise_for :users, :path_names => {:sign_in => 'login', :sign_out => 'logout'},
-											 :controllers => {:omniauth_callbacks => "omniauth_callbacks"}
+		# devise_for :users, :path_names => {:sign_in => 'login', :sign_out => 'logout'},
+		# 									 :controllers => {:omniauth_callbacks => "users/omniauth_callbacks"}
+
+
+    get 'omniauth/:provider' => 'omniauth#localized', as: :localized_omniauth
+    devise_for :users, skip: :omniauth_callbacks, :path_names => {:sign_in => 'login', :sign_out => 'logout'}, controllers: { registrations: 'users/registrations'}
+
 
     match '/admin', :to => 'admin#index', :as => :admin, :via => :get
     match '/admin/download_api_requests', :to => 'admin#download_api_requests', :as => :admin_download_api_requests, :via => :get, :defaults => { :format => 'csv' }

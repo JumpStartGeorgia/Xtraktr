@@ -15,3 +15,9 @@
     <% elsif Rails.env.staging? %>
       <!-- insert google analytics for staging site here -->
     <% end %>
+
+
+<% if session[:download_url].present? %>
+  <script>download_request("<%= session[:download_url] %>",{});</script>
+  <% session[:download_url] = nil %>
+<% end %>

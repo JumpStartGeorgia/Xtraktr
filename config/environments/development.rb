@@ -1,4 +1,4 @@
-BootstrapStarter::Application.configure do
+  BootstrapStarter::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
   # In the development environment your application's code is reloaded on
@@ -37,4 +37,8 @@ BootstrapStarter::Application.configure do
 	# small smtp server for dev, http://mailcatcher.me/
   config.action_mailer.delivery_method = :smtp
 	config.action_mailer.smtp_settings = { :address => "127.0.0.1", :port => 1025 }
+
+  config.to_prepare do
+    DeviseController.respond_to :html, :json
+  end
 end

@@ -48,13 +48,18 @@ $(document).ready(function(){
 
   $(document).on('click', '.reattach', function(e){
     var t = $(this);
+     console.log('reattaching');
     $.ajax({
       url: t.attr('href'),
-      dataType: 'json',
-    }).done(function(d)
+      // dataType: 'json',
+    }).success(function(d)
     {
+       console.log('reattaching 2');
        console.log(d);
        modal(d);      
+    }).error(function(d){
+       console.log(d);
+       console.log('reataching 3');
     });
     e.preventDefault();
     e.stopPropagation();
@@ -73,31 +78,53 @@ $(document).ready(function(){
         dataType: 'json',
         success: function (data)
         {      
-         console.log(data); 
-         return;
-          $(t).parent().find('.alert').remove();  
-          var rhtml = $(data);
+           console.log('success function',data);
+           return;
+           if(data.url)
+           {
+               js_modal_off();
+               window.location.href = data.url;
+           }   
+           else 
+           {
+              window.location.reload();
+            }
+         // console.log(data); 
+         // return;
+          // $(t).parent().find('.alert').remove();  
+          // var rhtml = $(data);
         
-          if (rhtml.length && rhtml.find('#errorExplanation').length)
-          {
-            $(t).replaceWith(rhtml);
-          }
-          // else if (rhtml.find('.alert.alert-info').length)
+          // if (rhtml.length && rhtml.find('#errorExplanation').length)
           // {
-          //   $(t).replaceWith(rhtml.find('.alert.alert-info').children().remove().end());
-          //   delayed_reload(3000);
+          //   $(t).replaceWith(rhtml);
           // }
-          else
-          {
-            window.location.reload();
-          }
+          // // else if (rhtml.find('.alert.alert-info').length)
+          // // {
+          // //   $(t).replaceWith(rhtml.find('.alert.alert-info').children().remove().end());
+          // //   delayed_reload(3000);
+          // // }
+          // else
+          // {
+          //   window.location.reload();
+          // }
         },
         error: function (data)
         {     
-        console.log(data);            
-          $(t).parent().find('.alert').remove();  
-          $(t + ' form').before('<div class="alert alert-danger fade in"><span>' + data.responseText + '</span></div>');          
-          $(t + ' :input:visible:enabled:first').focus();
+ console.log('error function',data);
+                        var form = $('#signup-form form');
+ $.each(data.responseJSON.errors, function(k,v){
+   var input = form.find("[name='user[" + k + "]']:not([type=hidden])");
+   input.closest('.form-group').addClass('has-error');
+   input.closest('.form-group').find('> label').append('<abbr class="msg" title="'+ $.map(v,function(m){ return m.charAt(0).toUpperCase() + m.slice(1); }).join("\r\n")+'">!'  + '</abbr>');
+ });
+
+
+
+        // console.log(data);       
+
+        //   $(t).parent().find('.alert').remove();  
+        //   $(t + ' form').before('<div class="alert alert-danger fade in"><span>' + data.responseText + '</span></div>');          
+        //   $(t + ' :input:visible:enabled:first').focus();
         }
       });     
     }
@@ -139,23 +166,10 @@ $('.download').click(function(e){
     
     var id = t.closest('.download').attr('data-id');
     var lang = t.closest('.download').attr('data-lang');
-    $.ajax({
-      url: "/" + document.documentElement.lang + "/download_request",
-      data: { id: id, type: type, lang: lang },      
-    }).done(function(d)
-    {
-      if(d.agreement)
-      {
-        window.location.href = d.url;
-      }
-      else
-      {
-        modal(d.form);
-      }
-    });
-     // t.closest('ul').toggle();
-      t.closest('.download').removeClass('open');
-      $(document).off('click.download');
+    download_request("/" + document.documentElement.lang + "/download_request", { id: id, type: type, lang: lang });
+
+    t.closest('.download').removeClass('open');
+    $(document).off('click.download');
     e.stopPropagation();      
   });
 
@@ -223,7 +237,24 @@ $('.download').click(function(e){
   });
   $('.search .go').click(function(){ filter(); });
   $('.sort select').change(function(){ filter(); });
+
+  $('.message').fadeOut(3000);
 });
+function download_request(url, data)
+{
+  $.ajax({
+    url: url,
+    data:data,
+    dataType: 'json',   
+  }).done(function(d)
+  {
+    if(d.agreement) { window.location.href = d.url; }
+    else { modal(d.form); }
+  }).error(function(d)
+  {
+     console.log('file downloading error',d);
+  });
+}
 function filter()
 {
   var filters = $('.dataset-filters');

@@ -1,6 +1,4 @@
-<div><%= Rails.logger.debug "DEBUG: message #{reg.inspect}"  %></div>
 <% reg = true if reg.nil? %>
-<div><%= Rails.logger.debug "DEBUG: message #{reg.inspect}"  %></div>
 <%- model_class = User -%>
   <div class="r">
     <%= f.input :first_name, :as => :string, :placeholder => model_class.human_attribute_name(:first_name).upcase+" *" , :label => false, :input_html => {:autofocus => true} %>
@@ -9,7 +7,9 @@
   <div class="r">
     <%= f.input :email, :as => :email, :input_html => { :size => 35 , :class => "login-username" }, :placeholder => model_class.human_attribute_name(:email).upcase+" *" , :label => false  %>
   </div>
-    <% if !reg %>
+    <% if reg %>      
+        <input id="user_account" name="user[account]" type="hidden" value="1">
+    <% else %>
       <div class="boolean input optional checkbox form-group wanna_account" id="user_account_input">
         <input name="user[account]" type="hidden" value="0">
         <input id="user_account" name="user[account]" type="checkbox" value="1">
@@ -63,9 +63,9 @@
       <input id="user_notifications" name="user[notifications]" type="checkbox" value="1">
       <label class="  control-label" for="user_notifications"><%= t('user.subscribe').html_safe %></label>
     </div>  
-    <div class="boolean input optional checkbox form-group" id="agreement_terms_input">
-      <input name="agreement[terms]" type="hidden" value="0">
-      <input id="agreement_terms" name="agreement[terms]" type="checkbox" value="1">
-      <label class="  control-label" for="agreement_terms"><%= t('app.common.terms').html_safe %></label>
+    <div class="boolean input optional checkbox form-group" id="user_terms_input">
+      <input name="user[terms]" type="hidden" value="0">
+      <input id="user_terms" name="user[terms]" type="checkbox" value="1">
+      <label class="  control-label" for="user_terms"><%= t('app.common.terms').html_safe %></label>
     </div> 
 

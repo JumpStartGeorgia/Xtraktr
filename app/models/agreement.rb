@@ -14,6 +14,7 @@ class Agreement
   field :status, type: Integer
   field :status_other, type: String
   field :description, type: String
+  field :dataset_id, type: String
   field :dataset_type, type: String
   field :dataset_locale, type: String
 

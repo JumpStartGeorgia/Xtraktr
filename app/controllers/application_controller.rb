@@ -1,11 +1,11 @@
 class ApplicationController < ActionController::Base
 
   layout 'app'
-  protect_from_forgery
+  protect_from_forgery  
 
   PER_PAGE_COUNT = 6
 
-  DEVISE_CONTROLLERS = ['devise/sessions', 'devise/registrations', 'devise/passwords']
+  DEVISE_CONTROLLERS = ['devise/sessions', 'users/registrations', 'devise/passwords']
 
 	before_filter :set_locale
 	before_filter :is_browser_supported?
@@ -121,8 +121,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     end
   end
 
-	def after_sign_in_path_for(resource)
-     Rails.logger.debug("--------------------------------------------#{session[:previous_urls].last || request.env['omniauth.origin'] || root_path(:locale => I18n.locale)}")
+	def after_sign_in_path_for(resource)     
 		session[:previous_urls].last || request.env['omniauth.origin'] || root_path(:locale => I18n.locale)
 	end
 
@@ -134,6 +133,17 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 	# only record the path if this is not an ajax call and not a users page (sign in, sign up, etc)
 	def store_location
 		session[:previous_urls] ||= []
+        
+    if session[:download_url].present? && !request.xhr? && !user_signed_in?
+      session[:download_url] = nil
+    end
+
+    if params[:action] == 'download_request' && request.xhr? && !user_signed_in? 
+      session[:download_url] = request.fullpath
+    end
+
+
+
 		if session[:previous_urls].first != request.fullpath && 
         params[:format] != 'js' && params[:format] != 'json' && !request.xhr? &&
         request.fullpath.index("/users/").nil? &&

@@ -8,7 +8,9 @@ gem "mongoid", "~> 3.1.6"
 
 gem "json"
 gem "jquery-rails", '~> 3.1.0' #"~> 1.0.19" 
-gem "devise", "~> 2.0.4" # user authentication
+gem 'devise', '~> 3.4.1' # user authentication
+#gem 'devise-encryptable'
+#gem "devise", "~> 2.0.4"
 gem 'omniauth' # to login via facebook
 gem 'omniauth-facebook' # to login via facebook
 #gem "cancan", "~> 1.6.8" # user authorization

@@ -223,7 +223,7 @@ class RootController < ApplicationController
       data[:url] = "/#{I18n.locale}/download/#{mapper.key}"
     else
       @mod = Agreement.new({ dataset_id: @dataset_id, dataset_type: @dataset_type, dataset_locale: @dataset_locale  })      
-      data[:form] = render_to_string "devise/registrations/new", :layout => false, :locals => { reg: false }
+      data[:form] = render_to_string "devise/registrations/new", :layout => false, :locals => { reg: false }       
     end    
     respond_to do |format|
       format.json { render json: data }

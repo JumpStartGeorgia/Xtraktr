@@ -1,0 +1,15 @@
+<% if defined?(ok) %>
+   $('.js_modal').remove();
+   $('.js_modal_bg').remove();
+   window.location.href = '<%= "/#{I18n.locale}/download/#{@mapper.key}" %>';
+<% else %>
+ var errors = <%= @errors.html_safe %>;
+ var model_name = "<%= @model_name %>";
+ var form = $('#agreement form');
+ $.each(errors, function(k,v){
+   var input = form.find("[name='"+model_name+"[" + k + "]']:not([type=hidden])");
+   input.closest('.form-group').addClass('has-error');
+   input.closest('.form-group').find('> label').append('<abbr class="msg" title="'+ $.map(v,function(m){ return m.charAt(0).toUpperCase() + m.slice(1); }).join("\r\n")+'">!'  + '</abbr>');
+   //input.closest('.form-group').find('> label').append('<span class="help-block" title="'+ $.map(v,function(m){ return m.charAt(0).toUpperCase() + m.slice(1); }).join("\r\n")+'">!'  + '</span>');
+ });  
+<% end %>
