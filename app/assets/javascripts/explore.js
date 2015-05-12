@@ -83,6 +83,20 @@ function delete_highlight_button(visual_element, embed_id, visual_type){
 
 
 ////////////////////////////////////////////////
+// build title/sub title for chart/map
+// if gon.visual_link is present, turn the title into a link
+////////////////////////////////////////////////
+function build_visual_title(text){
+  var t = '';
+  if (gon.visual_link){
+    t = '<a class="visual-title-link" target="_parent" href="' + gon.visual_link + '">' + text + '</a>';
+  }else{
+    t = text;
+  }
+  return t;
+}
+
+////////////////////////////////////////////////
 // build highmap
 ////////////////////////////////////////////////
 function build_highmap(shape_question_code, json_map_set){
@@ -115,7 +129,7 @@ function build_highmap(shape_question_code, json_map_set){
         }          
       },
       title: {
-          text: json_map_set.title.html,
+          text: build_visual_title(json_map_set.title.html),
           useHTML: true,
           style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
       },
@@ -269,7 +283,7 @@ function build_crosstab_chart(question_text, broken_down_by_text, json_chart, ch
         type: 'bar'
     },
     title: {
-        text: json_chart.title.html,
+        text: build_visual_title(json_chart.title.html),
         useHTML: true,
         style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
     },
@@ -385,7 +399,7 @@ function build_pie_chart(json_chart, chart_height){
         plotShadow: false
     },
     title: {
-        text: json_chart.title.html,
+        text: build_visual_title(json_chart.title.html),
         useHTML: true,
         style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
     },
@@ -489,7 +503,7 @@ function build_time_series_chart(json_chart, chart_height){
         plotShadow: false
     },
     title: {
-        text: json_chart.title.html,
+        text: build_visual_title(json_chart.title.html),
         useHTML: true,
         style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
     },
