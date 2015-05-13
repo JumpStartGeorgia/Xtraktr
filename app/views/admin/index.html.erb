@@ -13,6 +13,9 @@
          <%= link_to t('.shapesets'), admin_shapesets_path %>
         </li>
         <li>
+         <%= link_to t('.download_download_requests'), admin_download_download_requests_path %>
+        </li>
+        <li>
          <%= link_to t('.download_api_requests'), admin_download_api_requests_path %>
         </li>
         <% if current_user.role? User::ROLES[:admin] %>

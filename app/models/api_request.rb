@@ -44,13 +44,14 @@ class ApiRequest
   index({ :created_at => 1}, { background: true})
 
   ####################
-
+  # Scopes
 
   def self.sorted
     order_by([[:created_at, :asc]])
   end
 
 
+  ####################
 
   # record the api request
   def self.record_request(api_key, ip, params, user_agent)
@@ -114,15 +115,15 @@ class ApiRequest
   def self.csv_header
     model = ApiRequest
     return [  
-      model.human_attribute_name("self.api_key_id"), model.human_attribute_name("user_id"), model.human_attribute_name("dataset_id"), model.human_attribute_name("time_series_id"), model.human_attribute_name("ip_address"), 
-      model.human_attribute_name("self.locale"), model.human_attribute_name("api_version"), model.human_attribute_name("action"), model.human_attribute_name("question_code"), model.human_attribute_name("broken_down_by_code"), model.human_attribute_name("filtered_by_code"), model.human_attribute_name("can_exclude"), model.human_attribute_name("with_title"), model.human_attribute_name("with_chart_data"), model.human_attribute_name("with_map_data"), 
-      model.human_attribute_name("self.browser"), model.human_attribute_name("version"), model.human_attribute_name("os"), model.human_attribute_name("platform"), model.human_attribute_name("app"), model.human_attribute_name("is_mobile")
+      model.human_attribute_name("created_at"), model.human_attribute_name("api_key_id"), model.human_attribute_name("user_id"), model.human_attribute_name("dataset_id"), model.human_attribute_name("time_series_id"), model.human_attribute_name("ip_address"), 
+      model.human_attribute_name("locale"), model.human_attribute_name("api_version"), model.human_attribute_name("action"), model.human_attribute_name("question_code"), model.human_attribute_name("broken_down_by_code"), model.human_attribute_name("filtered_by_code"), model.human_attribute_name("can_exclude"), model.human_attribute_name("with_title"), model.human_attribute_name("with_chart_data"), model.human_attribute_name("with_map_data"), 
+      model.human_attribute_name("browser"), model.human_attribute_name("version"), model.human_attribute_name("os"), model.human_attribute_name("platform"), model.human_attribute_name("app"), model.human_attribute_name("is_mobile")
     ]
   end
 
   def csv_data
     return [  
-      self.api_key_id, self.user_id, self.dataset_id, self.time_series_id, self.ip_address, 
+      self.created_at, self.api_key_id, self.user_id, self.dataset_id, self.time_series_id, self.ip_address, 
       self.locale, self.api_version, self.action, self.question_code, self.broken_down_by_code, self.filtered_by_code, self.can_exclude, self.with_title, self.with_chart_data, self.with_map_data, 
       self.browser, self.version, self.os, self.platform, self.app, self.is_mobile
     ]

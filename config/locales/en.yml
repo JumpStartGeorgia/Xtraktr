@@ -41,6 +41,10 @@ en:
         status: Status
         status_other: When other(Please specify)
         description: Short description of research objective (<i>optional</i>)   
+        dataset_id: Dataset
+        dataset_type: Download Type
+        dataset_locale: Download Language
+        created_at: Date
       page_content:
         name: Unique Name
         title: Title
@@ -169,6 +173,7 @@ en:
         platform: OS Platform
         app: App
         is_mobile: Is Mobile Device?
+        created_at: Date
     hints:
       dataset:
         title: The title of your dataset
@@ -530,7 +535,7 @@ en:
       g3: "35-44"
       g4: "45-54"
       g5: "55-64"
-      g6: "above(>65)"
+      g6: "above (>65)"
     status:
       researcher: Researcher
       student: Student
@@ -566,6 +571,7 @@ en:
       shapesets: Shapesets
       api_documentation: API Version Documentation
       download_api_requests: Download API Request History
+      download_download_requests: Download Download Request History
     users:
       edit:
         title: Editing User
