@@ -55,11 +55,12 @@ $(document).ready(function(){
     var v = has ? 'none' : t.attr('data-filter-value');
     $('.category[data-filter=category] ul li').removeClass('active');  
     var selector = $('.category[data-filter=category] .selector');
-    var img  = selector.find('.img');
-    var span  = selector.find('span');
+    selector.find('.item').html(has ? '' : t.html());
+    //var img  = selector.find('.img');
+    //var span  = selector.find('span');
     selector.removeClass('open');
-    img.removeClass(img.attr('data-selected')).addClass(v).attr('data-selected', v).attr('title', (has ? span.attr('data-text-none') : t.find('.img').attr('title')));
-    span.text(span.attr('data-text-' + (has ? v : 'selected')));
+    //img.removeClass(img.attr('data-selected')).addClass(v).attr('data-selected', v);//.attr('title', (has ? span.attr('data-text-none') : t.find('.img').attr('title')));
+    //span.text(span.attr('data-text-' + (has ? v : 'selected')));
     if(!has) t.addClass('active');
     
     t.parent().toggle();
