@@ -1,4 +1,4 @@
-var geojson, datatables, i, j, json_data;
+var datatables, i, j, json_data;
 
 
 
@@ -11,8 +11,17 @@ function build_highmaps(json){
     // remove all existing maps
     $('#container-map').empty();
     // remove all existing map links
-    $('#jumpto-maps').hide();
-    $('#jumpto-maps #jumpto-maps-items .jumpto-items').empty();
+    $('#jumpto #jumpto-map select').empty();
+    $('#jumpto #jumpto-map h4').empty().hide();
+    var template = $('#jumpto #jumpto-map .jumpto-map-item').clone();
+    // remove any existing fancy select list
+    $(template).find('div.bootstrap-select').remove();
+    // remove all extra jumpto map items
+    if ($('#jumpto #jumpto-map .jumpto-map-item').length > 1){
+      for (var i=$('#jumpto #jumpto-map .jumpto-map-item').length; i>0; i--){
+        $('#jumpto #jumpto-map .jumpto-map-item').splice(i-1,1);
+      }
+    }
 
     var jumpto_text = '';
     var non_map_text;
@@ -27,30 +36,34 @@ function build_highmaps(json){
     if (json.map.constructor === Array){
       // filters
       var map_index = 0;
+      var jump_ary = [];
+      var jump_item;
 
       for(var h=0; h<json.map.length; h++){
         if (json.broken_down_by && json.map[h].filter_results.map_sets.constructor === Array){
           // add jumpto link
-          jumpto_text += '<li data-href="#map-' + (map_index+1) + '">' + json.filtered_by.text + ' = ' + json.map[h].filter_answer_text;
-          jumpto_text += '<ul>';          
+          jump_item = $(template).clone();
+          $(jump_item).find('h4').html(json.filtered_by.text + ' = <span>' + json.map[h].filter_answer_text + '</span>');          
+          jumpto_text = '<option></option>';
 
           for(var i=0; i<json.map[h].filter_results.map_sets.length; i++){
             build_highmap(json.map[h].filter_results.shape_question_code, json.map[h].filter_results.map_sets[i]);
 
             // add jumpto link
-            jumpto_text += '<li class="scroll-link" data-href="#map-' + (map_index+1) + '">' + non_map_text + ' = ' + json.map[h].filter_results.map_sets[i].broken_down_answer_text + '</li>';
+            jumpto_text += '<option data-href="#map-' + (map_index+1) + '">' + non_map_text + ' = ' + json.map[h].filter_results.map_sets[i].broken_down_answer_text + '</option>';
 
             // increase the map index
             map_index += 1;        
           }
 
-          jumpto_text += '</ul></li>';          
+          $(jump_item).find('select').append(jumpto_text);
+          jump_ary.push(jump_item);
 
         }else{
           build_highmap(json.map[h].filter_results.shape_question_code, json.map[h].filter_results.map_sets);
 
           // add jumpto link
-          jumpto_text += '<li class="scroll-link" data-href="#map-' + (map_index+1) + '">' + json.filtered_by.text + ' = ' + json.map[h].filter_answer_text + '</li>';
+          jumpto_text += '<option data-href="#map-' + (map_index+1) + '">' + json.filtered_by.text + ' = ' + json.map[h].filter_answer_text + '</option>';
 
           // increase the map index
           map_index += 1;        
@@ -58,31 +71,55 @@ function build_highmaps(json){
       }
 
       // show jumpto
-      $('#jumpto-maps .jumpto-items').append(jumpto_text);
-      $('#jumpto-maps').show();
-      $('#jumpto').show();
+      // - if jump_ary exists (filter and broken down), add a drop down for each filter value
+      if (jump_ary != undefined && jump_ary.length > 0){
+        // remove the existing template
+        $('#jumpto #jumpto-map .jumpto-map-item').remove();  
+        for (var i=0; i<jump_ary.length; i++){
+          $('#jumpto #jumpto-map').append(jump_ary[i]);  
+
+          var select = $('#jumpto #jumpto-map select:last');
+          if (i == 0) {
+            $(select).find('option:eq(1)').prop('selected', true);
+          }
+          $(select).selectpicker();
+        }
+        $('#jumpto #jumpto-map h4').show();
+        $('#jumpto #jumpto-map').show();
+        $('#jumpto').show();
+      }else{
+        $('#jumpto #jumpto-map select').append(jumpto_text);
+        $('#jumpto #jumpto-map select').val($('#jumpto #jumpto-map select option:first').attr('value'));
+        $('#jumpto #jumpto-map select').selectpicker('refresh');
+        $('#jumpto #jumpto-map select').selectpicker('render');
+        $('#jumpto #jumpto-map').show();
+        $('#jumpto').show();
+      }
 
     }else{
 
       // no filters
       if (json.broken_down_by && json.map.map_sets.constructor === Array){
-
         for(var i=0; i<json.map.map_sets.length; i++){
           build_highmap(json.map.shape_question_code, json.map.map_sets[i]);
 
           // add jumpto link
-          jumpto_text += '<li class="scroll-link" data-href="#map-' + (i+1) + '">' + non_map_text + ' = ' + json.map.map_sets[i].broken_down_answer_text + '</li>';
+          jumpto_text += '<option data-href="#map-' + (i+1) + '">' + non_map_text + ' = ' + json.map.map_sets[i].broken_down_answer_text + '</option>';
         }
 
         // show jumpto
-        $('#jumpto-maps .jumpto-items').append(jumpto_text);
-        $('#jumpto-maps').show();
+        $('#jumpto #jumpto-map select').append(jumpto_text);
+        $('#jumpto #jumpto-map select').val($('#jumpto #jumpto-map select option:first').attr('value'));
+        $('#jumpto #jumpto-map select').selectpicker('refresh');
+        $('#jumpto #jumpto-map select').selectpicker('render');
+        $('#jumpto #jumpto-map').show();
         $('#jumpto').show();
 
       }else{
         build_highmap(json.map.shape_question_code, json.map.map_sets);
   
         // hide jumpto
+        $('#jumpto #jumpto-map').hide();
         $('#jumpto').hide();
       }
     }
@@ -110,8 +147,7 @@ function build_crosstab_charts(json){
     // remove all existing charts
     $('#container-chart').empty();
     // remove all existing chart links
-    $('#jumpto-charts').hide();
-    $('#jumpto-charts #jumpto-charts-items .jumpto-items').empty();
+    $('#jumpto #jumpto-chart select').empty();
     var jumpto_text = '';
 
     // test if the filter is being used and build the chart(s) accordingly
@@ -122,12 +158,15 @@ function build_crosstab_charts(json){
         build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart[i].filter_results, chart_height);
 
         // add jumpto link
-        jumpto_text += '<li class="scroll-link" data-href="#chart-' + (i+1) + '">' + json.filtered_by.text + ' = ' + json.chart[i].filter_answer_text + '</li>';
+        jumpto_text += '<option data-href="#chart-' + (i+1) + '">' + json.filtered_by.text + ' = ' + json.chart[i].filter_answer_text + '</option>';
       }
 
       // show jumpto links
-      $('#jumpto-charts .jumpto-items').append(jumpto_text);
-      $('#jumpto-charts').show();
+      $('#jumpto #jumpto-chart select').append(jumpto_text);
+      $('#jumpto #jumpto-chart select').val($('#jumpto #jumpto-chart select option:first').attr('value'));
+      $('#jumpto #jumpto-chart select').selectpicker('refresh');
+      $('#jumpto #jumpto-chart select').selectpicker('render');
+      $('#jumpto #jumpto-chart').show();
       $('#jumpto').show();
 
     }else{
@@ -135,6 +174,7 @@ function build_crosstab_charts(json){
       build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart, chart_height);
 
       // hide jumpto
+      $('#jumpto #jumpt-chart').hide();
       $('#jumpto').hide();
     }
   }
@@ -154,8 +194,7 @@ function build_pie_charts(json){
     // remove all existing charts
     $('#container-chart').empty();
     // remove all existing chart links
-    $('#jumpto-charts').hide();
-    $('#jumpto-charts #jumpto-charts-items .jumpto-items').empty();
+    $('#jumpto #jumpto-chart select').empty();
     var jumpto_text = '';
 
     // test if the filter is being used and build the chart(s) accordingly
@@ -166,12 +205,15 @@ function build_pie_charts(json){
         build_pie_chart(json.chart[i].filter_results, chart_height);
 
         // add jumpto link
-        jumpto_text += '<li class="scroll-link" data-href="#chart-' + (i+1) + '">' + json.filtered_by.text + ' = ' + json.chart[i].filter_answer_text + '</li>';
+        jumpto_text += '<option data-href="#chart-' + (i+1) + '">' + json.filtered_by.text + ' = ' + json.chart[i].filter_answer_text + '</option>';
       }
 
       // show jumpto links
-      $('#jumpto-charts .jumpto-items').append(jumpto_text);
-      $('#jumpto-charts').show();
+      $('#jumpto #jumpto-chart select').append(jumpto_text);
+      $('#jumpto #jumpto-chart select').val($('#jumpto #jumpto-chart select option:first').attr('value'));
+      $('#jumpto #jumpto-chart select').selectpicker('refresh');
+      $('#jumpto #jumpto-chart select').selectpicker('render');
+      $('#jumpto #jumpto-chart').show();
       $('#jumpto').show();
 
     }else{
@@ -179,6 +221,7 @@ function build_pie_charts(json){
       build_pie_chart(json.chart, chart_height);
   
       // hide jumpto
+      $('#jumpto #jumpto-chart').hide();
       $('#jumpto').hide();
     }
   }
@@ -801,27 +844,39 @@ $(document).ready(function() {
     });
 
     // jumpto scrolling
-    $("#jumpto").on('click', 'ul li.scroll-link', function(){
-      var href = $(this).data('href');
+    $("#jumpto").on('change', 'select', function(){
+      var href = $(this).find('option:selected').data('href');
       $('html, body').animate({
         scrollTop: $(href).offset().top - 120
       }, 1500);
+
+      // if this is a map item and there are > 1 map items, make sure the other items are set to nil
+      var select_index = $('#jumpto #jumpto-map select').index($(this));
+      if ($(this).closest('#jumpto-map').length > 0 && $(this).closest('#jumpto-map').find('.jumpto-map-item').length > 1){
+        $('#jumpto #jumpto-map select').each(function(i){
+          if (i != select_index){
+            $(this).find('option:eq(0)').prop('selected', true);
+            $(this).selectpicker('refresh');
+          }
+        });
+      }
     });
 
-    // when chart tab clicked on, make sure the jumpto block is showing, else, hide it
+    // when chart tab/map clicked on, make sure the jumpto block is showing, else, hide it
     $('#explore-tabs li a').click(function(){
-      if ($(this).attr('href') == '#tab-chart' && $('#jumpto #jumpto-charts .jumpto-items li').length > 0){
+      console.log('tab click = ' + $(this).attr('href'));
+      if ($(this).attr('href') == '#tab-chart' && $('#jumpto #jumpto-chart select option').length > 0){
         $('#jumpto').show();
-        $('#jumpto #jumpto-charts').show();
-        $('#jumpto #jumpto-maps').hide();
-      }else if ($(this).attr('href') == '#tab-map' && $('#jumpto #jumpto-maps .jumpto-items li').length > 0){
+        $('#jumpto #jumpto-chart').show();
+        $('#jumpto #jumpto-map').hide();
+      }else if ($(this).attr('href') == '#tab-map' && $('#jumpto #jumpto-map select option').length > 0){
         $('#jumpto').show();
-        $('#jumpto #jumpto-maps').show();
-        $('#jumpto #jumpto-charts').hide();
+        $('#jumpto #jumpto-map').show();
+        $('#jumpto #jumpto-chart').hide();
       }else{
         $('#jumpto').hide();
-        $('#jumpto #jumpto-charts').hide();
-        $('#jumpto #jumpto-maps').hide();
+        $('#jumpto #jumpto-chart').hide();
+        $('#jumpto #jumpto-map').hide();
       }
     });
 

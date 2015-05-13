@@ -65,6 +65,7 @@ en:
         is_mappable: Has questions that are geographic in nature
         created_at: Added On
         reports: Reports
+        category_ids: Categories
       question:
         code: Question Code
         original_code: Question Code
@@ -102,6 +103,7 @@ en:
         created_at: Added On
         datasets: Datasets
         dates: Dates Included
+        category_ids: Categories
       time_series_dataset:
         dataset_id: Dataset
         title: Label
@@ -182,6 +184,7 @@ en:
         public: "Select 'Yes' to make your dataset available to the world"
         languages: "Even though your dataset may be in one language, you can use these forms to translate all of the questions and answers into any language you desire."
         default_language: The dataset language that is shown by default if no specific language is requested by user
+        category_ids: Assign the dataset to one or more categories
       shapeset:
         title: The title of your shapeset
         description: Short summary of what is in the shapeset
@@ -217,6 +220,7 @@ en:
         public: "Select 'Yes' to make your time series available to the world"
         languages: "The languages of your time series are automatically determined by the languages of the datasets"
         default_language: The time series language that is shown by default if no specific language is requested by user
+        category_ids: Assign the time series to one or more categories
       time_series_dataset:
         dataset_id: Select the dataset to add to this time series
         title: "The text that will represent this data set in the time series, most likely a time indicator. For example, if your dataset is from 2015, you could enter 2015; or if it is from January 2015, you can enter January 2015."
@@ -579,13 +583,22 @@ en:
         link_title: Change my password
         p2: "If you didn't request this, please ignore this email."
         p3: "Your password won't change until you access the link above and create a new one."                
+  embed:
+    v1:
+      index:
+        title_site: Go to %{app_name}
+        title_datalist: View All Datasets
   root:
     index:
       header_latest_datasets: Latest Datasets
       no_datasets: 'At this time, no datasets have been loaded into the site.'
       header_latest_time_series: Latest Time Series
       no_time_series: 'At this time, no time series have been created in the site.'
+      wms_title: Welfare <br />Monitoring Survey
+      wms_slogan: Explore something over time....
       header_highlights: Highlights
+      header_categories: Browse Categories
+      search_datasets: Search Datasets
     contact:
       title: Contact
     instructions:
@@ -795,10 +808,8 @@ en:
         can_exclude: Exclude "Don't know" & "Refuse"
         can_exclude_hint: Remove answers like "Don't know" & "Refuse" from the analysis
       jumpto:
-        header: Jump To
-        table: Data Table
-        charts: Charts
-        maps: Maps
+        chart: Jump to Chart
+        map: Jumpt to Map
       tabs:
         map: Map
         chart: Chart
@@ -821,9 +832,7 @@ en:
         can_exclude: Exclude "Don't know" & "Refuse"
         can_exclude_hint: Remove answers like "Don't know" & "Refuse" from the analysis
       jumpto:
-        header: Jump To
-        table: Data Table
-        charts: Charts
+        chart: Jump to Chart
       tabs:
         chart: Chart
         table: Table
@@ -838,6 +847,10 @@ en:
       no_methodology: There is no methodology on file for this dataset.
       no_reports: There are no reports on file for this dataset.
       no_highlights: There are no highlights on file for this dataset.
+      filter:
+        all: All Text
+        questions: Question Text
+        answers: Answer Text
     dashboard_time_series:
       tabs:
         highlights: Highlights
@@ -847,6 +860,12 @@ en:
         licensing: Licensing
         datasets: Datasets
       no_highlights: There are no highlights on file for this time series.
+      filter:
+        all: All Text
+        questions: Question Text
+        answers: Answer Text
+    language_switcher:
+      label: Available Languages
   export_data:
     dataset: 'Dataset: %{title}'
     download_from: 'Downloaded From: %{app_name} at %{url}.'

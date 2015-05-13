@@ -2,13 +2,15 @@ class RootController < ApplicationController
   before_filter :set_subnavbar, only: [:explore_data_dashboard, :explore_data_show, :explore_time_series_dashboard, :explore_time_series_show]
 
   def index
-    @datasets = Dataset.is_public.recent.sorted.limit(5)
+    @datasets = Dataset.is_public.recent.sorted.limit(3)
 
-    @time_series = TimeSeries.is_public.recent.sorted.limit(5) if @is_xtraktr
+    @time_series = TimeSeries.is_public.recent.sorted.limit(3) if @is_xtraktr
+    @wms_id = TimeSeries.pluck(:id).first
 
+    @categories = Category.sorted
     @highlights = Highlight.for_home_page
 
-    @css.push('root.css', 'highlights.css')
+    @css.push('root.css', 'highlights.css', 'boxic.css')
     @js.push('highlights.js')
     data = { test: 'test1' }
     respond_to do |format|
@@ -95,7 +97,7 @@ class RootController < ApplicationController
 
       @highlights = Highlight.by_dataset(@dataset.id)
 
-      @css.push("dashboard.css", 'highlights.css')
+      @css.push("dashboard.css", 'highlights.css', 'boxic.css')
       @js.push("live_search.js", 'highlights.js')
 
       respond_to do |format|
@@ -172,12 +174,12 @@ class RootController < ApplicationController
       end
 
       @datasets = Dataset.is_public.in(id: @time_series.datasets.dataset_ids)
-    
+
       @license = PageContent.by_name('license')
 
       @highlights = Highlight.by_time_series(@time_series.id)
 
-      @css.push("dashboard.css", 'highlights.css', 'list.css')
+      @css.push("dashboard.css", 'highlights.css', 'boxic.css', 'list.css')
       @js.push("live_search.js", 'highlights.js')
 
       respond_to do |format|

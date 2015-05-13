@@ -8,9 +8,32 @@
       </p>
     </div>
   <% else %>
-    <div id="explore-data" class="embed-item">
-      <div id="container-chart"></div>
-      <div id="container-map" class="embed-item"></div>
+    <div class="boxic">
+      <% if params[:exclude_title].nil? || (params[:exclude_title].present? && params[:exclude_title].to_bool != true) %>
+      <div class="embed-title">
+        <h3><%= link_to @title, @link, target: '_parent' %></h3>
+        <% if params[:exclude_links].nil? || (params[:exclude_links].present? && params[:exclude_links].to_bool != true) %>
+          <div class="embed-links">
+            <ul>
+              <li>
+                <%= link_to root_url, target: '_parent' do %>
+                  <%= image_tag '/assets/svg/widget_link.svg', title: t('.title_site', app_name: t('app.common.app_name')) %>
+                <% end %>
+              </li>
+              <li>
+                <%= link_to explore_data_url, target: '_parent' do %>
+                  <%= image_tag '/assets/svg/widget_datalist.svg', title: t('.title_datalist') %>
+                <% end %>
+              </li>
+            </ul>              
+          </div>
+        <% end %>
+      </div>
+      <% end %>
+      <div id="explore-data" class="embed-item">
+        <div id="container-chart"></div>
+        <div id="container-map" class="embed-item"></div>
+      </div>
     </div>
   <% end %>
 </div>

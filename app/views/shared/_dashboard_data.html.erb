@@ -1,8 +1,11 @@
-<% 
+<%- 
   model_class = Dataset 
   r_model_class = Report 
   is_admin_page = request.path == dataset_path(@dataset)
-%>
+
+  subnav_left render(partial: 'shared/language_switcher', locals: {langs: @dataset.language_objects, current_locale: @dataset.current_locale})
+
+-%>
 
 <div id="dashboard-meta" class="row">
   <div class="col-sm-9">
@@ -97,7 +100,7 @@
       <% if @highlights.present? %>
         <% @highlights.shuffle.each do |highlight| %>
           <div class="highlight <%= highlight.visual_type_name %>">
-            <iframe src="<%= embed_v1_path(id: highlight.embed_id) %>"></iframe>
+            <iframe src="<%= embed_v1_path(id: highlight.embed_id, exclude_title: true) %>"></iframe>
           </div>
         <% end %>
       <% else %>
@@ -123,6 +126,20 @@
       <div id="codebook-search" class="input-group">
         <span class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></span>
         <input type="text" class="text-input col-sm-3" id="filter" class="form-control" value="" placeholder="<%= t('helpers.search') %>" />
+
+        <label class="filter" for="filter_all">
+          <input checked id="filter_all" name="filter" type="radio" value="all" />
+          <%= t('.filter.all') %>
+        </label>
+        <label class="filter" for="filter_q">
+          <input id="filter_q" name="filter" type="radio" value="q" />
+          <%= t('.filter.questions') %>
+        </label>
+        <label class="filter" for="filter_ans">
+          <input id="filter_ans" name="filter" type="radio" value="ans" />
+          <%= t('.filter.answers') %>
+        </label>
+
       </div>
       <ul class="list-unstyled">
         <% @dataset.questions.for_analysis.each do |question| %>

@@ -20,8 +20,11 @@ class TimeSeries < CustomTranslation
   field :languages, type: Array
   field :default_language, type: String
 
-  #has_and_belongs_to_many :categories, inverse_of: nil
-  has_many :category_mappers, dependent: :destroy
+  has_many :category_mappers, dependent: :destroy do
+    def category_ids
+      pluck(:category_id)
+    end
+  end
 
   has_many :highlights, dependent: :destroy do
     # get highlight by embed id
@@ -35,7 +38,7 @@ class TimeSeries < CustomTranslation
     end
   end
   
-  has_many :datasets, class_name: 'TimeSeriesDataset' do
+  has_many :datasets, class_name: 'TimeSeriesDataset', dependent: :destroy do
     def sorted
       order_by([[:sort_order, :asc], [:title, :asc]]).to_a
     end
@@ -76,12 +79,16 @@ class TimeSeries < CustomTranslation
 
   accepts_nested_attributes_for :datasets, reject_if: :all_blank
   accepts_nested_attributes_for :questions, reject_if: :all_blank
+  accepts_nested_attributes_for :category_mappers, reject_if: :all_blank, :allow_destroy => true
 
   attr_accessible :title, :description, :user_id, 
       :public, :private_share_key, 
       :datasets_attributes, :questions_attributes,
       :languages, :default_language,
-      :title_translations, :description_translations
+      :title_translations, :description_translations, 
+      :category_mappers_attributes, :category_ids
+
+  attr_accessor :category_ids
 
   #############################
   # indexes
@@ -160,8 +167,14 @@ class TimeSeries < CustomTranslation
 
   #############################
   # Callbacks
+  after_initialize :set_category_ids
   before_create :create_private_share_key
   before_save :set_public_at
+
+  # this is used in the form to set the categories
+  def set_category_ids
+    self.category_ids = self.category_mappers.category_ids
+  end
 
   # create private share key that allows people to access this dataset if it is not public
   def create_private_share_key

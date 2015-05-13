@@ -26,6 +26,9 @@ class Embed::V1Controller < ApplicationController
         # save dataset title
         @title = data[:dataset][:title] if data.present? && data[:dataset].present?
 
+        # create link to dashboard
+        @link = explore_data_dashboard_url(options['dataset_id'])
+
         # create link to this item
         options['id'] = options['dataset_id']
         options['from_embed'] = true
@@ -36,6 +39,9 @@ class Embed::V1Controller < ApplicationController
 
         # save dataset title
         @title = data[:time_series][:title] if data.present? && data[:time_series].present?
+
+        # create link to dashboard
+        @link = explore_time_series_dashboard_url(options['time_series_id'])
 
         # create link to this item
         options['id'] = options['time_series_id']

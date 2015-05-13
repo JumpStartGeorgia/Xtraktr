@@ -2,7 +2,9 @@
   model_class = TimeSeries
   model_class_d = Dataset 
   is_admin_page = request.path == time_series_path(@time_series)
-%>
+
+  subnav_left render(partial: 'shared/language_switcher', locals: {langs: @time_series.language_objects, current_locale: @time_series.current_locale})
+-%>
 
 <div id="dashboard-meta" class="row">
   <div class="col-sm-9">
@@ -76,7 +78,7 @@
       <% if @highlights.present? %>
         <% @highlights.shuffle.each do |highlight| %>
           <div class="highlight <%= highlight.visual_type_name %>">
-            <iframe src="<%= embed_v1_path(id: highlight.embed_id) %>"></iframe>
+            <iframe src="<%= embed_v1_path(id: highlight.embed_id, exclude_title: true ) %>"></iframe>
           </div>
         <% end %>
       <% else %>

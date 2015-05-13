@@ -3,6 +3,10 @@ module ApplicationHelper
     content_for(:title) { page_title.html_safe }
   end
 
+  def subnav_left(text)
+    content_for(:subnav_left) { text.html_safe }
+  end
+
 	def flash_translation(level)
     case level
     when :info then "alert-warning"

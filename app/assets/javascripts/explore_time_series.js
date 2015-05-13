@@ -12,8 +12,7 @@ function build_time_series_charts(json){
     // remove all existing charts
     $('#container-chart').empty();
     // remove all existing chart links
-    $('#jumpto-charts #jumpto-charts-items').hide();
-    $('#jumpto-charts #jumpto-charts-items .jumpto-items').empty();
+    $('#jumpto select').empty();
     var jumpto_text = '';
 
     // test if the filter is being used and build the chart(s) accordingly
@@ -24,12 +23,14 @@ function build_time_series_charts(json){
         build_time_series_chart(json.chart[i].filter_results, chart_height);
 
         // add jumpto link
-        jumpto_text += '<li class="scroll-link" data-href="#chart-' + (i+1) + '">' + json.filtered_by.text + ' = ' + json.chart[i].filter_answer_text + '</li>';
+        jumpto_text += '<option data-href="#chart-' + (i+1) + '">' + json.filtered_by.text + ' = ' + json.chart[i].filter_answer_text + '</option>';
       }
 
       // show jumpto links
-      $('#jumpto-charts .jumpto-items').append(jumpto_text);
-      $('#jumpto-charts #jumpto-charts-items').show();
+      $('#jumpto select').append(jumpto_text);
+      $('#jumpto select').val($('#jumpto select option:first').attr('value'));
+      $('#jumpto select').selectpicker('refresh');
+      $('#jumpto select').selectpicker('render');
       $('#jumpto').show();
 
     }else{
@@ -472,8 +473,8 @@ $(document).ready(function() {
 
 
     // jumpto scrolling
-    $("#jumpto").on('click', 'ul li.scroll-link', function(){
-      var href = $(this).data('href');
+    $("#jumpto").on('change', 'select', function(){
+      var href = $(this).find('option:selected').data('href');
       $('html, body').animate({
         scrollTop: $(href).offset().top - 120
       }, 1500);
@@ -481,7 +482,7 @@ $(document).ready(function() {
 
     // when chart tab clicked on, make sure the jumpto block is showing, else, hide it
     $('#explore-tabs li a').click(function(){
-      if ($(this).attr('href') == '#tab-chart' && $('#jumpto .jumpto-items li').length > 0){
+      if ($(this).attr('href') == '#tab-chart' && $('#jumpto select option').length > 0){
         $('#jumpto').show();
       }else{
         $('#jumpto').hide();

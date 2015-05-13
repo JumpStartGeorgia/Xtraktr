@@ -5,71 +5,122 @@
   <div id="intro-desc"><%= t('app.common.app_description') %></div>
 </div>
 
-<div class="boxic">
-  <div class="title">
-    <h2><%= t('.header_latest_datasets') %></h2>
-    <div class="cell"><div class="line"></div></div>
+<div class="row" id="row1">
+  <div class="col-sm-4">
+    <div class="boxic" id="search-categories">
+
+      <div class="search" data-filter='search'><div class="box"><input type="search" placeholder="<%= t('.search_datasets') %>"><div class="go"><%= t('.go') %></div></div></div>
+
+      <div class="title">
+        <h2><%= t('.header_categories') %></h2>
+        <div class="cell"><div class="line"></div></div>
+      </div>
+      <div id="categories">
+        <% col_num = @categories.length%2 == 0 ? @categories.length/2-1: @categories.length/2 %>
+        <ul class="list-unstyled">
+          <% (0..col_num).each  do |index| %>
+            <li>
+              <%= link_to explore_data_path(category: @categories[index].permalink) do %>
+                <span><%= image_tag "/assets/svg/categories/#{@categories[index].permalink}.svg" %></span>
+                <span><%= @categories[index].name %></span>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+        <ul class="list-unstyled">
+          <% (col_num+1..@categories.length-1).each  do |index| %>
+            <li>
+              <%= link_to explore_data_path(category: @categories[index].permalink) do %>
+                <span><%= image_tag "/assets/svg/categories/#{@categories[index].permalink}.svg" %></span>
+                <span><%= @categories[index].name %></span>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
   </div>
-  <% if @datasets.present? %>
-    <ul class="list-unstyled">
-      <% @datasets.each do |dataset| %>
-        <li>
-          <h2><%= link_to dataset.title, explore_data_dashboard_path(dataset) %></h2>
-          <% if @is_xtraktr %>
-          <div>
-            <%= "#{model_class.human_attribute_name(:source)}: #{dataset.source}" %>
+
+  <div class="col-sm-4">
+    <div class="boxic">
+      <div class="title">
+        <h2><%= t('.header_latest_datasets') %></h2>
+        <div class="cell"><div class="line"></div></div>
+      </div>
+      <% if @datasets.present? %>
+        <ul class="list-unstyled">
+          <% @datasets.each do |dataset| %>
+            <li>
+              <h2><%= link_to dataset.title, explore_data_dashboard_path(dataset) %></h2>
+              <% if @is_xtraktr %>
+              <div>
+                <%= "#{model_class.human_attribute_name(:source)}: #{dataset.source}" %>
+              </div>
+              <% end %>
+              <% if dataset.description.present? %>
+                <div>
+                  <%= truncate(strip_tags_nbsp(dataset.description), length: 150, separator: ' ') %>
+                </div>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p>
+          <%= t('.no_datasets') %>
+        </p>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="col-sm-4">
+    <% if @is_xtraktr %>
+      <div class="boxic">
+        <div class="title">
+          <h2><%= t('.header_latest_time_series') %></h2>
+          <div class="cell"><div class="line"></div></div>
+        </div>
+        <% if @time_series.present? %>
+          <ul class="list-unstyled">
+            <% @time_series.each do |time_series| %>
+              <li>
+                <h2><%= link_to time_series.title, explore_time_series_dashboard_path(time_series) %></h2>
+                <% if time_series.description.present? %>
+                  <div>
+                    <%= truncate(strip_tags_nbsp(time_series.description), length: 150, separator: ' ') %>
+                  </div>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p>
+            <%= t('.no_time_series') %>
+          </p>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="boxic">
+        <%= link_to explore_time_series_dashboard_path(id: @wms_id), id: 'wms_link' do %>
+          <div id="wms_banner">
+            <span id="wms_title"><%= t('.wms_title').html_safe %></span>
+            <span id="wms_slogan"><%= t('.wms_slogan') %></span>
           </div>
-          <% end %>
-          <% if dataset.description.present? %>
-            <div class="tinymce_format">
-              <%= simple_format_no_tags(dataset.description, {}, {sanitize: false}) %>
-            </div>
-          <% end %>
-        </li>
-      <% end %>
-    </ul>
-  <% else %>
-    <p>
-      <%= t('.no_datasets') %>
-    </p>
-  <% end %>
-</div>
-
-<% if @is_xtraktr %>
-<div class="boxic">
-  <div class="title">
-    <h2><%= t('.header_latest_time_series') %></h2>
-    <div class="cell"><div class="line"></div></div>
+        <% end %>
+      </div>
+    <% end %>
   </div>
-  <% if @time_series.present? %>
-    <ul class="list-unstyled">
-      <% @time_series.each do |time_series| %>
-        <li>
-          <h2><%= link_to time_series.title, explore_time_series_dashboard_path(time_series) %></h2>
-          <% if time_series.description.present? %>
-            <div class="tinymce_format">
-              <%= simple_format_no_tags(time_series.description, {}, {sanitize: false}) %>
-            </div>
-          <% end %>
-        </li>
-      <% end %>
-    </ul>
-  <% else %>
-    <p>
-      <%= t('.no_time_series') %>
-    </p>
-  <% end %>
 </div>
-<% end %>
-
 
 <% if @highlights.present? %>
   <div id="highlights">
-    <h2><%= t('.header_highlights') %></h2>
+    <div class="title">
+      <h2><%= t('.header_highlights') %></h2>
+      <div class="cell"><div class="line"></div></div>
+    </div>
     <% @highlights.each do |highlight| %>
       <div class="highlight <%= highlight.visual_type_name %>">
-        <h3><%= link_to highlight.title, highlight.dataset_id.present? ? explore_data_dashboard_path(highlight.dataset_id) : explore_time_series_dashboard_path(highlight.time_series_id) %></h3>
-        <iframe src="<%= embed_v1_path(id: highlight.embed_id) %>"></iframe>
+        <iframe src="<%= embed_v1_path(id: highlight.embed_id, exclude_links: true) %>"></iframe>
       </div>
     <% end %>
   </div>

@@ -221,7 +221,22 @@ $('.download').click(function(e){
       }
     });
 
-  $('.message').fadeOut(3000);
+
+    $('.message').fadeOut(3000);
+
+
+    // language switcher for dataset/time series in dashboard/explore pages
+    // reload the current page with the language param set
+    $('.available-language-switcher').on('change', 'select', function(e){
+      e.preventDefault();
+
+      var querystring = queryStringToJSON(window.location.href);
+      querystring.language = $(this).val();
+
+      window.location.href = location.protocol + '//' + location.host + location.pathname + '?' + $.param(querystring);
+
+    });
+
 });
 function download_request(url, data)
 {
@@ -294,11 +309,11 @@ function js_modal_off()
 // convert the querystring variables into json
 function queryStringToJSON(url) {
   if (url === ''){
-    return '';    
+    return {};    
   }
   var u = url.split('?');
   if (u.length != 2){
-    return '';
+    return {};
   }
   var pairs = u[1].split('&');
   var result = {};

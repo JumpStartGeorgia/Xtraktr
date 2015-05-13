@@ -43,28 +43,48 @@ jQuery.fn.removeHighlight = function() {
  }).end();
 };
 
+function run_search(){
+    // Retrieve the input field text and reset the count to zero
+  var filter = $('#codebook input#filter').val();
+  var filter_by = $('#codebook input[type="radio"]:checked').val();
+console.log(filter_by)
+  // remove all highlights
+  $("#codebook").removeHighlight();
 
+  // Loop through the comment list
+  $("#codebook > ul > li").each(function(){
+    // determine what text to search in
+    var filter_selector = $(this);
+    if (filter_by == 'q'){
+      filter_selector = $(this).find('.question');
+    }else if (filter_by == 'ans'){
+      filter_selector = $(this).find('.answer-row ul');
+    }
+
+    // If the list item does not contain the text phrase fade it out
+    if ($(filter_selector).text().search(new RegExp(filter, "i")) < 0) {
+      $(this).fadeOut();
+
+    // Show the list item if the phrase matches
+    } else {
+      $(filter_selector).highlight(filter).show();
+    }
+  });
+
+}
 
 $(document).ready(function(){
   // taken from: http://www.designchemical.com/blog/index.php/jquery/live-text-search-function-using-jquery/
   $("#codebook input#filter").keyup(debounce(function() {
-    // Retrieve the input field text and reset the count to zero
-    var filter = $(this).val();
-
-    // remove all highlights
-    $("#codebook").removeHighlight();
-
-    // Loop through the comment list
-    $("#codebook > ul > li").each(function(){
-      // If the list item does not contain the text phrase fade it out
-      if ($(this).text().search(new RegExp(filter, "i")) < 0) {
-        $(this).fadeOut();
-
-      // Show the list item if the phrase matches and increase the count by 1
-      } else {
-        $(this).highlight(filter).show();
-      }
-    });
+    run_search();
   }, 250));
+
+  // re-run search when filter option changes
+  $('#codebook input[type="radio"]').change(function(){
+    // if search text exists, run search
+    if ($('#codebook input#filter').val().length > 0){
+      run_search();
+    }
+  });
 });
 
