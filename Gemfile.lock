@@ -110,8 +110,6 @@ GEM
       responders
       thread_safe (~> 0.1)
       warden (~> 1.2.3)
-    devise-encryptable (0.2.0)
-      devise (>= 2.1.0)
     dynamic_form (1.1.4)
     erubis (2.7.0)
     eventmachine (1.0.3)
@@ -319,7 +317,6 @@ DEPENDENCIES
   cocoon (~> 1.1.2)
   coffee-rails (~> 3.2.2)
   devise (~> 3.4.1)
-  devise-encryptable
   dynamic_form (~> 1.1.4)
   exception_notification (~> 2.5.2)
   formtastic (~> 2.2.1)
@@ -337,6 +334,7 @@ DEPENDENCIES
   mongoid (~> 3.1.6)
   mongoid-paperclip
   mongoid_search!
+  omniauth
   omniauth-facebook
   psych (~> 2.0.5)
   rails (= 3.2.18)

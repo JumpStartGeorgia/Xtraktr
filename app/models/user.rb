@@ -130,11 +130,11 @@ class User
   index({ :reset_password_token => 1}, { background: true, unique: true, sparse: true })
 
   #############################
-  attr_accessor :terms
+  attr_accessor :terms, :account, :notifications
   attr_accessible :email, :password, :password_confirmation, :remember_me, 
                   :role, :provider, :uid, :nickname, :avatar,
                   :first_name, :last_name, :age_group, :residence,
-                  :affiliation, :status, :status_other, :description, :terms
+                  :affiliation, :status, :status_other, :description, :terms, :account, :notifications
 
   #############################
   ## Validations
@@ -148,6 +148,8 @@ class User
   validates :status, inclusion: { in: STATUS.keys }
   validates_presence_of :status_other, :if => lambda { |o| o.status == 8 }
   validates :terms, :numericality => { :equal_to => 1 }
+  validates :account, :numericality => { :equal_to => 1 }
+  validates :notifications, :numericality => { :equal_to => 1 }
   
   ####################
 

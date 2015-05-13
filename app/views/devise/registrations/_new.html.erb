@@ -17,7 +17,7 @@
       </div>  
     <% end %>
 
-    <div class="r<%= reg ? '' : ' hide' %>">
+    <div class="r<%= reg ? '' : ' js-hide' %> ghost-box">
   
         <%= f.input :password, :input_html => { :size => 35 , :class => "login-password" }, :placeholder => model_class.human_attribute_name(:password).upcase+" *" , :label => false  %>
         <%= f.input :password_confirmation, :input_html => { :size => 35 , :class => "login-password-confirmation" }, :placeholder => model_class.human_attribute_name(:password_confirmation).upcase+" *" , :label => false  %>
@@ -58,14 +58,14 @@
       <input id="dataset_locale" name="agreement[dataset_locale]" type="hidden" value="<%= @mod.dataset_locale %>">      
     <% end %>
 
-    <div class="boolean input optional checkbox form-group <%= reg ? '' : ' hide' %>" id="user_notifications_input">
+    <div class="boolean input optional checkbox form-group <%= reg ? '' : ' js-hide' %> ghost-box" id="user_notifications_input">
       <input name="user[notifications]" type="hidden" value="0">
       <input id="user_notifications" name="user[notifications]" type="checkbox" value="1">
-      <label class="  control-label" for="user_notifications"><%= t('user.subscribe').html_safe %></label>
+      <label class="control-label" for="user_notifications"><%= t('user.subscribe').html_safe %></label>
     </div>  
     <div class="boolean input optional checkbox form-group" id="user_terms_input">
       <input name="user[terms]" type="hidden" value="0">
       <input id="user_terms" name="user[terms]" type="checkbox" value="1">
-      <label class="  control-label" for="user_terms"><%= t('app.common.terms').html_safe %></label>
+      <label class="control-label" for="user_terms"><%= t('app.common.terms').html_safe %><abbr title="required">*</abbr></label>
     </div> 
 

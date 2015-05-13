@@ -43,7 +43,14 @@ $(document).ready(function(){
     t.addClass('active');
   });
   $(document).on('change','#user_account', function(){
-     console.log($(this).is(":checked"));
+    var t =  $(this);
+    var form = t.closest('form');
+    var checked = t.is(":checked");
+    form.find('.ghost-box').toggleClass('js-hide', !checked);
+    var submit = form.find('input[type=submit]');
+    var tmp = submit.attr('data-text-swap');
+    submit.attr('data-text-swap',submit.val())
+    submit.val(tmp);
   });
 
   $(document).on('click', '.reattach', function(e){
@@ -65,12 +72,14 @@ $(document).ready(function(){
     e.stopPropagation();
   });
 
-  $('body').on('submit','#new_user', function ()
+  $('body').on('submit','#new_user', function (e)
   {    
+     console.log('hereeee',$(this));
+    var form = $(this);
     var t = $(this).attr('data-form-id');
     if(t.length)
     {
-      t="#" + t;
+      t=$("#" + t);
       $.ajax({
         type: "POST",
         url: $(this).attr('action'),
@@ -78,8 +87,8 @@ $(document).ready(function(){
         dataType: 'json',
         success: function (data)
         {      
-           console.log('success function',data);
-           return;
+           // console.log('success function',data);
+           // return;
            if(data.url)
            {
                js_modal_off();
@@ -110,14 +119,33 @@ $(document).ready(function(){
         },
         error: function (data)
         {     
- console.log('error function',data);
-                        var form = $('#signup-form form');
- $.each(data.responseJSON.errors, function(k,v){
-   var input = form.find("[name='user[" + k + "]']:not([type=hidden])");
-   input.closest('.form-group').addClass('has-error');
-   input.closest('.form-group').find('> label').append('<abbr class="msg" title="'+ $.map(v,function(m){ return m.charAt(0).toUpperCase() + m.slice(1); }).join("\r\n")+'">!'  + '</abbr>');
- });
-
+          console.log('error function',data);
+          data = data.responseJSON;
+          var errors = data.errors;
+          if(data.sessions)
+          {
+              form.find('.alert').remove();  
+              form.before('<div class="alert"><span>' + data.errors.alert + '</span></div>');          
+              form.find(':input:visible:enabled:first').focus();
+          }
+          else //data.registration
+          {
+            form.find('.form-group').removeClass('has-error').find('abbr.exclamation').remove();
+             $.each(errors, function(k,v){
+               var input = form.find("[name='user[" + k + "]']:not([type=hidden])");
+               var type = input.attr('type');
+               if(['text','email','password'].indexOf(type) != -1)
+               {
+                input.closest('.form-group').addClass('has-error');
+                input.closest('.form-wrapper').append('<abbr class="exclamation" data-class="tooltip-exclamation" title="'+ $.map(v,function(m){ return m.charAt(0).toUpperCase() + m.slice(1); }).join("\r\n")+'"></abbr>');
+               }
+               else if(['checkbox','radio'].indexOf(type) != -1)
+               {
+                input.closest('.form-group').addClass('has-error');
+                input.closest('.form-group').find('> label').append('<abbr class="exclamation" data-class="tooltip-exclamation" title="'+ $.map(v,function(m){ return m.charAt(0).toUpperCase() + m.slice(1); }).join("\r\n")+'"></abbr>');
+               }
+            });  
+          }
 
 
         // console.log(data);       
@@ -128,7 +156,8 @@ $(document).ready(function(){
         }
       });     
     }
-    return false;
+    e.preventDefault();
+    e.stopPropagation();
   });
 
 $('.download').click(function(e){
@@ -179,15 +208,15 @@ $('.download').click(function(e){
   // });
   
 
-  $(document).on('change', '#agreement_status_input input[type=radio], #user_status_input input[type=radio]', function()
+  $(document).on('change', '#user_status_input input[type=radio]', function()
     {
       if(this.value == 8)
       {
-        $('#agreement_status_other_input, #user_status_other_input').show();
+        $('#user_status_other_input').show();
       }
       else
       {
-        var other = $('#agreement_status_other_input, #user_status_other_input').hide();
+        var other = $('#user_status_other_input').hide();
         other.find('input').val('');
       }
     });
@@ -272,14 +301,6 @@ function filter()
   }).done(function(d)
   {
      $('.dataset-list').html(d.d);
-    // if(d.agreement)
-    // {
-    //   window.location.href = d.url;
-    // }
-    // else
-    // {
-    //   modal(d.form);
-    // }
   });
    console.log(q,sort,category,url);
 }

@@ -31,6 +31,7 @@
       }
     }
   }
+
   #reset-password-form
   {
      .form-group.email
@@ -38,7 +39,13 @@
       padding:0px 0px 6px 0px;
     }
   }
+  #login-form,#reset-password-form
+  {
+    form { padding:0px 30px; }
+  }
+
 #login-form,#reset-password-form,#signup-form{
+  
   .title{
     font-size:30px;
     color:#bdbdbd;
@@ -92,10 +99,10 @@
       float:none;
     }
   }
-  .control-group {
-    margin:0px 40px;
-    clear:both;
-  }
+  // .control-group {
+  //   margin:0px 40px;
+  //   clear:both;
+  // }
 
   .login-username, .login-password,.login-password-confirmation {
     font-family:'sourcesans_pro', 'sans-serif';
@@ -123,20 +130,21 @@
     }
   }
   .submit-row {
+    margin-top:32px;
      text-align:center;
   }
-  .control-group-remember
-  {
-    margin:0px 40px 22px;    
-  }
-  .control-group-sign-in
-  {  
-    margin: 0px 40px 22px;
-  }
-  .sign-in {    
-    // float:right !important;
-  }
-  .sign-in,.pass-reset,.sign-up {
+  // .control-group-remember
+  // {
+  //   margin:0px 40px 22px;    
+  // }
+  // .control-group-sign-in
+  // {  
+  //   margin: 0px 40px 22px;
+  // }
+  // .sign-in {    
+  //   // float:right !important;
+  // }
+  input[type=submit] {
     display:inline-block;
     font-family:'opensans-sb','sans-serif';
     font-size:12px !important;
@@ -171,7 +179,7 @@
     margin:2px 0px 0px;
     padding:0px;
     text-align: right;
-  width: 100%;
+    width: 100%;
   }
 
   .red-box-neighbor
@@ -249,29 +257,14 @@
     }
 
   }
-  input[type=text], textarea
-  {
-    font-family:'sourcesans_pro', 'sans-serif';
-    font-size:12px !important;
-    color:#000;            
-    display:inline-block;
-    border:0px !important;
-    background-color:#dceef4;
-    text-decoration: none;    
-    height:31px;
-    min-width:226px;
-
-    outline:none;
-    -webkit-border-radius: 0 !important;
-    -moz-border-radius: 0 !important;
-    border-radius:0 !important;  
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;    
-  }
+ 
+  
   #user_status_other
   {
+    box-sizing:border-box;
+    height:39px;
     width:100%;
+    margin-top:3px;
   }
   textarea
   {
@@ -289,8 +282,12 @@
     font-weight:normal;
     color:#3c4352;  
     text-align:left;
-    
-    margin-top:12px; 
+    // margin-top:12px; 
+    text-transform:uppercase;
+  }
+  .boolean
+  {
+    margin-bottom:3px;
   }
   .boolean .control-label
   {
@@ -314,10 +311,114 @@
       padding:0px;
     }
   }
-
-  .checkbox
+  .wanna_account
   {
-    label
+    font-family: 'opensans', 'sans-serif';
+    font-size:12px;
+    color:#3c4352;
+    padding:9px;
+    margin:0px 0px 10px;
+    border:1px solid #D95D6A;
+    border-image-slice: 1 1 1 1;
+    border-image-width: 1px 1px 1px 1px; 
+    border-image-outset: 0px 0px 0px 0px;
+    border-image-repeat: repeat repeat; 
+    border-image-source: url(/assets/svg/dotted_red.svg);
+  }
+  
+}
+
+
+
+
+
+.form-wrapper
+{
+    position:relative;
+  .exclamation
+  {
+    position:absolute;
+    right: 5px;
+    top:50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    display: inline-block;
+    cursor:default !important;
+    border:0 !important;
+    width:25px;
+    height:21px;
+    background:transparent url(/assets/svg/exclamation.svg) no-repeat center/25px 21px;
+  }
+}
+.control-label
+{
+  min-height:21px;
+  vertical-align: top;
+  line-height: 21px;
+  .exclamation
+  {
+    position:relative;
+    top:-2px;
+    display: inline-block;
+    cursor:default !important;
+    border:0 !important;
+    width:25px !important;
+    height:21px;
+    margin-left:4px !important;
+    background:transparent url(/assets/svg/exclamation.svg) no-repeat center/25px 21px;
+  }
+  i {
+    font-family:'sourcesans_pro_li', 'sans-serif';
+    font-size:14px;
+    color:#d95d6a;
+    text-transform:none;
+  }
+}
+abbr {   vertical-align: top; }
+label > abbr {
+    margin-left: 3px !important;
+}
+
+
+ input[type=text],input[type=email],input[type=password], textarea
+  {
+    font-family:'sourcesans_pro', 'sans-serif';
+    font-size:12px !important;
+    color:#3C4352;            
+    display:inline-block;
+    border:0px !important;
+    background-color:#dceef4;
+    text-decoration: none;    
+    height:31px;
+    min-width:226px;
+
+    outline:none;
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+    border-radius:0 !important;  
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;    
+    -webkit-transition: 0.3s linear;
+    -moz-transition: 0.3s linear;
+    -o-transition: 0.3s linear;
+    -ms-transition: 0.3s linear;
+    transition: 0.3s linear;
+  }
+  input[type=text]:focus,input[type=email]:focus,input[type=password]:focus, textarea:focus
+  {
+    background-color:#fff;
+    outline:none;
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+    border-radius:0 !important;  
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;    
+  }
+
+    input[type="checkbox"] + label
     {
       font-family:'opensans', 'sans-serif';
       font-size:12px;
@@ -344,11 +445,9 @@
       content:"";
       background:url(/assets/svg/check_radio.png) no-repeat -15px top;
     }
-  }
 
-  .radio
-  {
-    label
+
+    input[type="radio"] + label
     {
       font-family:'opensans', 'sans-serif';
       font-size:12px;
@@ -375,6 +474,16 @@
       content:"";
       background:url(/assets/svg/check_radio.png) no-repeat -44px top;
     }
-  }
-}
 
+
+.has-error
+{
+   input[type=text],input[type=email],input[type=password], textarea
+   {
+      background-color:#f7d0d6 !important;
+   }
+   > label
+   {
+      color:#d95d6a !important;
+   }
+}

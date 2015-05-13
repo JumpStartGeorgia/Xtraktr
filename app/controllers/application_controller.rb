@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
 
   PER_PAGE_COUNT = 6
 
-  DEVISE_CONTROLLERS = ['devise/sessions', 'users/registrations', 'devise/passwords']
+  DEVISE_CONTROLLERS = ['users/sessions', 'users/registrations', 'devise/passwords']
 
 	before_filter :set_locale
 	before_filter :is_browser_supported?
@@ -121,7 +121,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     end
   end
 
-	def after_sign_in_path_for(resource)     
+	def after_sign_in_path_for(resource)    
 		session[:previous_urls].last || request.env['omniauth.origin'] || root_path(:locale => I18n.locale)
 	end
 

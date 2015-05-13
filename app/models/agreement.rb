@@ -41,6 +41,7 @@ class Agreement
   validates :age_group, inclusion: { in: [1,2,3,4,5,6] }
   validates :residence, presence: true
   validates :email, presence: true
+  validates_format_of  :email, with: Devise.email_regexp, allow_blank: false
   validates :affiliation, presence: true
   validates :status, inclusion: { in: STATUS.keys }
   validates_presence_of :status_other, :if => lambda { |o| o.status == 8 }

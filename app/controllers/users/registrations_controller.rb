@@ -1,13 +1,11 @@
 class Users::RegistrationsController < Devise::RegistrationsController
    # POST /resource
+   respond_to :json
    def create
-          Rails.logger.debug("--------------------------------------------#{sign_up_params}")
-          pars = sign_up_params
+      pars = sign_up_params
       if create_user?
              build_resource(sign_up_params)
-
              resource_saved = resource.save
-              Rails.logger.debug("----------------------------#{params}----------------#{resource_saved} #{resource.inspect}")
              yield resource if block_given?
              if resource_saved
                if resource.active_for_authentication?
@@ -35,38 +33,16 @@ class Users::RegistrationsController < Devise::RegistrationsController
          respond_to do |format|
              if @mod.save
                 @mapper = FileMapper.create({ dataset_id: @mod.dataset_id, dataset_type: @mod.dataset_type, dataset_locale: @mod.dataset_locale })         
-               format.json { render json: { url: "/#{I18n.locale}/download/#{@mapper.key}" }, :success => true }
+               format.json { render json: { url: "/#{I18n.locale}/download/#{@mapper.key}", registration: true }, :success => true }
               else
-         Rails.logger.debug("------------------------------------------blahhere2--#{}")
-               format.json { render json: { errors: @mod.errors }, :status => error }
+               format.json { render json: { errors: @mod.errors, registration: true }, :status => :error }
               end
-           end
-        # end
-
-    # a = Agreement.create({
-    #     email: self.email,
-    #     first_name: self.first_name,
-    #     last_name: self.last_name,
-    #     age_group: self.age_group,
-    #     residence: self.residence,
-    #     affiliation: self.affiliation,
-    #     status: self.status,
-    #     status_other: self.status_other,
-    #     description: self.description,
-    #     dataset_id: Moped::BSON::ObjectId.from_string(dataset_id),
-    #     dataset_type: dataset_type,
-    #     dataset_locale: dataset_locale,
-    #     terms: 1
-    #   })
-    # a.valid?
-
-
-
-
-
-
+           end    
       end
    end
+  def sign_up_params
+    devise_parameter_sanitizer.sanitize(:sign_up)
+  end
    def create_user?
       params[:user][:account].present? && params[:user][:account].to_i == 1
    end

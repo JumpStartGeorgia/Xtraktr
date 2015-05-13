@@ -1,6 +1,6 @@
 BootstrapStarter::Application.routes.draw do
 
-  devise_for :users, skip: [:session, :password, :registration, :confirmation], :path_names => {:sign_in => 'login', :sign_out => 'logout'}, controllers: { omniauth_callbacks: 'omniauth_callbacks' }
+  devise_for :users, skip: [:sessions, :passwords, :registrations, :confirmations], :path_names => {:sign_in => 'login', :sign_out => 'logout'}, controllers: { omniauth_callbacks: 'omniauth_callbacks' }
 	#--------------------------------
 	# all resources should be within the scope block below
 	#--------------------------------
@@ -11,7 +11,7 @@ BootstrapStarter::Application.routes.draw do
 
 
     get 'omniauth/:provider' => 'omniauth#localized', as: :localized_omniauth
-    devise_for :users, skip: :omniauth_callbacks, :path_names => {:sign_in => 'login', :sign_out => 'logout'}, controllers: { registrations: 'users/registrations'}
+    devise_for :users, skip: :omniauth_callbacks, :path_names => {:sign_in => 'login', :sign_out => 'logout'}, controllers: { registrations: 'users/registrations', sessions: 'users/sessions'} 
 
 
     match '/admin', :to => 'admin#index', :as => :admin, :via => :get
@@ -85,8 +85,6 @@ BootstrapStarter::Application.routes.draw do
       match '/v1/time_series_codebook', to: 'v1#time_series_codebook', as: :v1_time_series_codebook, via: :get, :defaults => { :format => 'json' }
       match '/v1/time_series_analysis', to: 'v1#time_series_analysis', as: :v1_time_series_analysis, via: :get, :defaults => { :format => 'json' }
     end    
-
-    resources 'agreements', :only => [:new, :create]
 
     # embed pages
     match '/embed', to: 'embed#index', as: :embed, via: :get
