@@ -1,0 +1,18 @@
+<%-
+  langs ||= nil
+  current_locale ||= I18n.locale.to_s
+
+  if langs.present?
+-%>
+  <span class="available-language-switcher">
+    <%= t('.label') %>
+    <select>
+      <% langs.each do |lang| %> 
+        <%-
+          select = lang.locale == current_locale ? 'selected' : ''
+        -%>
+        <option <%= select %> value="<%= lang.locale %>"><%= lang.name %></option>
+      <% end %>
+    </select>
+  </span>
+<% end %>

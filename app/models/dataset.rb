@@ -45,8 +45,12 @@ class Dataset < CustomTranslation
   field :default_language, type: String
   field :reset_download_files, type: Boolean, default: true
 
-  #has_and_belongs_to_many :categories, inverse_of: nil
-  has_many :category_mappers, dependent: :destroy
+  has_many :category_mappers, dependent: :destroy do
+    def category_ids
+      pluck(:category_id)
+    end
+  end
+  accepts_nested_attributes_for :category_mappers, reject_if: :all_blank, :allow_destroy => true
 
   has_many :highlights, dependent: :destroy do
     # get highlight by embed id
@@ -259,7 +263,9 @@ class Dataset < CustomTranslation
       :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at,
       :languages, :default_language, :stats_attributes, :urls_attributes, 
       :title_translations, :description_translations, :methodology_translations, :source_translations, :source_url_translations,
-      :reset_download_files
+      :reset_download_files, :category_mappers_attributes, :category_ids
+
+  attr_accessor :category_ids
 
   TYPE = {:onevar => 'onevar', :crosstab => 'crosstab'}
 
@@ -383,6 +389,7 @@ class Dataset < CustomTranslation
   #############################
   # Callbacks
   
+  after_initialize :set_category_ids
   before_create :process_file
   after_create :create_quick_data_downloads
   before_save :create_urls_object
@@ -392,6 +399,11 @@ class Dataset < CustomTranslation
   after_save :update_stats
   before_save :set_public_at
   before_save :check_if_dirty
+
+  # this is used in the form to set the categories
+  def set_category_ids
+    self.category_ids = self.category_mappers.category_ids
+  end
 
   # process the datafile and save all of the information from it
   def process_file

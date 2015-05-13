@@ -65,6 +65,7 @@ en:
         is_mappable: Has questions that are geographic in nature
         created_at: Added On
         reports: Reports
+        category_ids: Categories
       question:
         code: Question Code
         original_code: Question Code
@@ -102,6 +103,7 @@ en:
         created_at: Added On
         datasets: Datasets
         dates: Dates Included
+        category_ids: Categories
       time_series_dataset:
         dataset_id: Dataset
         title: Label
@@ -182,6 +184,7 @@ en:
         public: "Select 'Yes' to make your dataset available to the world"
         languages: "Even though your dataset may be in one language, you can use these forms to translate all of the questions and answers into any language you desire."
         default_language: The dataset language that is shown by default if no specific language is requested by user
+        category_ids: Assign the dataset to one or more categories
       shapeset:
         title: The title of your shapeset
         description: Short summary of what is in the shapeset
@@ -217,6 +220,7 @@ en:
         public: "Select 'Yes' to make your time series available to the world"
         languages: "The languages of your time series are automatically determined by the languages of the datasets"
         default_language: The time series language that is shown by default if no specific language is requested by user
+        category_ids: Assign the time series to one or more categories
       time_series_dataset:
         dataset_id: Select the dataset to add to this time series
         title: "The text that will represent this data set in the time series, most likely a time indicator. For example, if your dataset is from 2015, you could enter 2015; or if it is from January 2015, you can enter January 2015."
@@ -855,6 +859,8 @@ en:
         all: All Text
         questions: Question Text
         answers: Answer Text
+    language_switcher:
+      label: Available Languages
   export_data:
     dataset: 'Dataset: %{title}'
     download_from: 'Downloaded From: %{app_name} at %{url}.'

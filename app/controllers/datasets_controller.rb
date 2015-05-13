@@ -130,6 +130,11 @@ class DatasetsController < ApplicationController
   def create
     @dataset = Dataset.new(params[:dataset])
 
+    # if there are category_ids, create mapper objects with them
+    params[:dataset][:category_ids].each do |category_id|
+      @dataset.category_mappers.build(category_id: category_id)
+    end
+
     respond_to do |format|
       if @dataset.save
         format.html { redirect_to dataset_path(@dataset), notice: t('app.msgs.success_created', :obj => t('mongoid.models.dataset')) }
@@ -162,6 +167,44 @@ class DatasetsController < ApplicationController
     if @dataset.present?
 
       @dataset.assign_attributes(params[:dataset])
+
+      # if there are category_ids, see if already exist in mapper - if not add
+      # - remove '' from list
+      params[:dataset][:category_ids].delete('')
+      cat_ids = @dataset.category_mappers.category_ids.map{|x| x.to_s}
+      mappers_to_delete = []
+      logger.debug "====== existing categories = #{cat_ids}; class = #{cat_ids.first.class}"
+      if params[:dataset][:category_ids].present?
+        logger.debug "======= cat ids present"
+        # if mapper category is not in list, mark for deletion
+        @dataset.category_mappers.each do |mapper|
+          logger.debug "======= - checking marker cat id #{mapper.category_id} for destroy"
+
+          if !params[:dataset][:category_ids].include?(mapper.category_id.to_s)
+            logger.debug "======= -> marking #{mapper.category_id} for destroy"
+            mappers_to_delete << mapper.id
+          end
+        end
+        # if cateogry id not in mapper, add id
+        params[:dataset][:category_ids].each do |category_id|
+          logger.debug "======= - checking form cat id #{category_id} for addition; class = #{category_id.class}"
+          if !cat_ids.include?(category_id)
+            logger.debug "======= -> adding new category #{category_id}"
+            @dataset.category_mappers.build(category_id: category_id) 
+          end
+        end
+      else
+        logger.debug "======= cat ids not present"
+        # no categories so make sure mapper is nil
+        @dataset.category_mappers.each do |mapper|
+          mappers_to_delete << mapper.id
+        end
+      end
+
+      logger.debug "========== -> need to delete #{mappers_to_delete} mapper records"
+
+      # if any mappers are marked as destroy, destroy them
+      CategoryMapper.in(id: mappers_to_delete).destroy_all
 
       respond_to do |format|
         if @dataset.save

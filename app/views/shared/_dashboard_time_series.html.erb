@@ -2,7 +2,9 @@
   model_class = TimeSeries
   model_class_d = Dataset 
   is_admin_page = request.path == time_series_path(@time_series)
-%>
+
+  subnav_left render(partial: 'shared/language_switcher', locals: {langs: @time_series.language_objects, current_locale: @time_series.current_locale})
+-%>
 
 <div id="dashboard-meta" class="row">
   <div class="col-sm-9">

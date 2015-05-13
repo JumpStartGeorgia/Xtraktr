@@ -47,4 +47,8 @@ $(function() {
     // fancy select box
     $('form.tabbed-translation-form select.selectpicker-dataset').select2({width:'element', allowClear:true});
 
+  // initalize the fancy select box for categories
+  $('form select.selectpicker').select2({width:'element', allowClear:true});
+
+
 });

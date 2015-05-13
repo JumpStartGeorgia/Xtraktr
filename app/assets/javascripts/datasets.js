@@ -88,5 +88,8 @@ $(function() {
     });
   }
 
+  // initalize the fancy select box for categories
+  $('form select.selectpicker').select2({width:'element', allowClear:true});
+
 
 });
