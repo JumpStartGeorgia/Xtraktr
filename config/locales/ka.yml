@@ -583,6 +583,11 @@ ka:
         link_title: პაროლის შეცვლა
         p2: "თუ თქვენ არ მოგითხოვიათ პაროლის შეცვლა, გთხოვთ, არ მიაქციოთ ყურადღება ამ შეტყობინებას."
         p3: "თქვენი პაროლი იგივე დარჩება, სანამ არ გადახვალთ ზემოთ მითითებულ ბმულზე და შექმნით ახალ პაროლს."    
+  embed:
+    v1:
+      index:
+        title_site: Go to %{app_name}
+        title_datalist: View All Datasets
   root:
     index:
       header_latest_datasets: Latest Datasets

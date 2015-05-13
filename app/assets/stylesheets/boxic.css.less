@@ -1,0 +1,185 @@
+.boxic
+{
+  background-color:#fff;
+/*  width:450px;  
+*/  padding:10px 20px;
+/*  margin:10px 10px;
+*/  border:0px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  border-radius: 8px;  
+  -webkit-box-shadow: 1px 1px 0px 1px rgba(235,235,235,1);
+  -moz-box-shadow: 1px 1px 0px 1px rgba(235,235,235,1);
+  box-shadow: 1px 1px 0px 1px rgba(235,235,235,1);
+  ul 
+  {
+    li
+    {
+      font-family:'sourcesans_pro_l';
+      font-size:14px;
+      color:#3c4352;
+      a,h2
+      {
+        font-family:'pfcentroslabpro';
+        font-size:14px;
+        color:#d95d6a;
+        line-height:20px;
+        text-transform:uppercase;
+        &:hover
+        {
+          text-decoration:none;
+        }
+      }
+      &:not(:last-of-type)
+      {
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #e8e8e8;
+      }
+    }
+  }
+  &#search-categories{
+    #categories{
+      ul{
+        vertical-align: top;
+        &:first-of-type{
+          display: inline-block;
+          width: 49%;
+        }
+        &:last-of-type{
+          display: inline-block;
+          width: 49%;
+        }
+        li{
+          margin-bottom: 5px;
+          a{
+            display: block;
+            text-decoration: none;
+            color: #333;
+            &:hover{
+              background-color: #f6f7f7;
+            }
+            span{
+              display: inline-block;
+              &:first-of-type{
+                vertical-align: middle;
+                height: 42px;
+                width: 42px;
+              }
+              &:last-of-type{
+                vertical-align: middle;
+                width: 80px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  #wms_link{
+    display: block;
+    text-decoration: none;
+    #wms_banner{
+      position: relative;
+      background:#fff url(/assets/svg/time_series_banner.svg) no-repeat center center;
+      height: 100%;
+      min-height: 330px;
+      #wms_title{
+        text-transform: uppercase;
+        position: absolute;
+        bottom: 25%;
+        right: 15%;
+        color: #fff;
+        font-size: 16px;
+      }
+      #wms_slogan{
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        color: #f65252;
+      }
+    }
+  }
+
+  .search
+  {
+    margin-bottom: 20px; 
+    .box
+    {
+      display:table;
+    }
+    input
+    {
+      
+      font-family: 'sourcesans_pro_l', 'sans-serif';
+      font-size: 13px;
+      color: #3c4352;
+      height:33px;
+      min-width:290px;
+      border:1px solid #ddd;
+      border-right:0;
+      background: #fff url(/assets/svg/search.svg) 10px center/ 13px no-repeat;
+      outline:none;
+      padding:0px 0px 0px 30px;
+      display:table-cell;
+      &::-webkit-input-placeholder { font-family:'opensans_li', 'sans-serif'; font-size:13px; color:#9da1a8; }
+      &:-moz-placeholder { font-family:'opensans_li', 'sans-serif'; font-size:13px; color:#9da1a8; }
+      &::-moz-placeholder { font-family:'opensans_li', 'sans-serif'; font-size:13px; color:#9da1a8; }
+      &:-ms-input-placeholder { font-family:'opensans_li', 'sans-serif'; font-size:13px; color:#9da1a8; }
+    }
+    .go
+    {
+      display:table-cell;
+      font-family:'opensans', 'sans-serif';
+      font-size:12px;
+      color:#fff;
+      background-color:#80d3ed;
+      text-align: center;
+      width:33px;
+      height:33px;
+      line-height: 33px;
+      cursor:pointer;
+      text-transform: uppercase;
+      &:hover
+      {
+        background-color:#29bfed;
+      }
+
+    }
+  }
+
+  .embed-title{
+    position: relative;
+    h3 {
+      font-family:'pfcentroslabpro';
+      font-size:14px;
+      color:#d95d6a;
+      line-height:20px;
+      margin:0px;
+      padding:5px 10px;
+      text-transform:uppercase;
+      background: #f6f7f7 url(/assets/svg/pattern.svg) repeat;      
+      a{
+        color:#d95d6a;
+        text-decoration: none;
+        &:hover{
+          text-decoration: underline;
+        }
+      }
+    }
+    .embed-links{
+      position: absolute;
+      top: 8px;
+      right: 16px;
+      ul {
+        margin: 0;
+        list-style-type: none;
+        li{
+          display: inline-block;
+          border-bottom: none;
+        }
+      }
+    }
+  }
+}

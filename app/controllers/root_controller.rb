@@ -10,7 +10,7 @@ class RootController < ApplicationController
     @categories = Category.sorted
     @highlights = Highlight.for_home_page
 
-    @css.push('root.css', 'highlights.css')
+    @css.push('root.css', 'highlights.css', 'boxic.css')
     @js.push('highlights.js')
     data = { test: 'test1' }
     respond_to do |format|
@@ -97,7 +97,7 @@ class RootController < ApplicationController
 
       @highlights = Highlight.by_dataset(@dataset.id)
 
-      @css.push("dashboard.css", 'highlights.css')
+      @css.push("dashboard.css", 'highlights.css', 'boxic.css')
       @js.push("live_search.js", 'highlights.js')
 
       respond_to do |format|
@@ -179,7 +179,7 @@ class RootController < ApplicationController
 
       @highlights = Highlight.by_time_series(@time_series.id)
 
-      @css.push("dashboard.css", 'highlights.css')
+      @css.push("dashboard.css", 'highlights.css', 'boxic.css')
       @js.push("live_search.js", 'highlights.js')
 
       respond_to do |format|

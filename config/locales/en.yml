@@ -583,6 +583,11 @@ en:
         link_title: Change my password
         p2: "If you didn't request this, please ignore this email."
         p3: "Your password won't change until you access the link above and create a new one."                
+  embed:
+    v1:
+      index:
+        title_site: Go to %{app_name}
+        title_datalist: View All Datasets
   root:
     index:
       header_latest_datasets: Latest Datasets
