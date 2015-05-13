@@ -148,8 +148,6 @@ class RootController < ApplicationController
 
     @time_series = Kaminari.paginate_array(@time_series).page(params[:page]).per(per_page)
 
-    @datasets = Dataset.is_public.in(id: @time_series.datasets.dataset_ids)
-    
     @show_title = false
 
     @css.push('list.css')
@@ -165,7 +163,7 @@ class RootController < ApplicationController
     @time_series = TimeSeries.is_public.find_by(id: params[:id])
 
     if @time_series.blank?
-      redirect_to explore_time_series_path, :notice => t('app.msgs.does_not_exist')
+      redirect_to explore_time_path, :notice => t('app.msgs.does_not_exist')
     else
 
       # if the language parameter exists and it is valid, use it instead of the default current_locale
@@ -173,11 +171,13 @@ class RootController < ApplicationController
         @time_series.current_locale = params[:language]
       end
 
+      @datasets = Dataset.is_public.in(id: @time_series.datasets.dataset_ids)
+    
       @license = PageContent.by_name('license')
 
       @highlights = Highlight.by_time_series(@time_series.id)
 
-      @css.push("dashboard.css", 'highlights.css')
+      @css.push("dashboard.css", 'highlights.css', 'list.css')
       @js.push("live_search.js", 'highlights.js')
 
       respond_to do |format|
@@ -191,7 +191,7 @@ class RootController < ApplicationController
     @time_series = TimeSeries.is_public.find_by(id: params[:id])
 
     if @time_series.blank?
-      redirect_to explore_time_series_path, :notice => t('app.msgs.does_not_exist')
+      redirect_to explore_time_path, :notice => t('app.msgs.does_not_exist')
     else
       @show_title = false
       @is_admin = false

@@ -35,33 +35,25 @@
   <div class="col-sm-3" style="text-align: right;">
     <ul class="list-unstyled">
       <li>
-        <%= link_to t('app.menu.explore_data'), url_dataset_explore(@dataset, language: params[:language]), class: 'btn btn-primary', title: t('app.menu.titles.explore_dataset') %>
+        <%= link_to t('app.menu.explore_data'), url_dataset_explore(@dataset, language: params[:language]), class: 'btn btn-primary btn-sm', title: t('app.menu.titles.explore_dataset') %>
       </li>
       <% if @dataset.time_series_datasets.present? %>
         <li>
-          <%= link_to t('app.menu.time_series'), url_dataset_to_times_series_dashboard(@dataset.id, @dataset.time_series_datasets.first.time_series_id), class: 'btn btn-primary', title: t('app.menu.titles.dataset_to_time_series') %>
+          <%= link_to t('app.menu.time_series'), url_dataset_to_times_series_dashboard(@dataset.id, @dataset.time_series_datasets.first.time_series_id), class: 'btn btn-primary btn-sm', title: t('app.menu.titles.dataset_to_time_series') %>
         </li>
       <% end %>
       
       <% if @dataset.urls.present? && @dataset.urls.codebook.present? %>
         <li>
-          <div class="btn btn-default btn-sm download" data-id="<%= @dataset.id.to_s %>"><%= t('helpers.links.download_data') %></div>
-            <div id="data-download-list" class="dropdown">
-              <button id="data-download-label" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <%= t('helpers.links.download_data') %>
-                <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" role="menu" aria-labelledby="data-download-label">
-                <li><%= link_to t('download_data_options.text.csv'), @dataset.urls.csv, title: t('download_data_options.title.csv'), 
-                        :'data-id' => @dataset.id.to_s, :'data-file-type' => 'csv' %></li>
-                <li><%= link_to t('download_data_options.text.r'), @dataset.urls.r, title: t('download_data_options.title.r'), 
-                        :'data-id' => @dataset.id.to_s, :'data-file-type' => 'r' %></li>
-                <li><%= link_to t('download_data_options.text.spss'), @dataset.urls.spss, title: t('download_data_options.title.spss'), 
-                        :'data-id' => @dataset.id.to_s, :'data-file-type' => 'spss' %></li>
-                <li><%= link_to t('download_data_options.text.stata'), @dataset.urls.stata, title: t('download_data_options.title.stata'), 
-                        :'data-id' => @dataset.id.to_s, :'data-file-type' => 'stata' %></li>
-              </ul>
-            </div>          
+          <div class="download-wrapper" >
+            <div class="download" data-id="<%= @dataset.id.to_s %>" data-lang="<%= @dataset.current_locale %>" title="<%= t('helpers.links.download_data') %>" data-placement="top" data-class="tooltip-download">
+            <ul>
+              <li><div class="type" data-type='csv' title="<%= t('download_data_options.title.csv') %>" data-placement="left"><%= t('download_data_options.text.csv') %></div></li>
+              <li><div class="type" data-type='r' title="<%= t('download_data_options.title.r') %>" data-placement="left"><%= t('download_data_options.text.r') %></div></li>
+              <li><div class="type" data-type='spss' title="<%= t('download_data_options.title.spss') %>" data-placement="left"><%= t('download_data_options.text.spss') %></div></li>
+              <li><div class="type" data-type='stata' title="<%= t('download_data_options.title.stata') %>" data-placement="left"><%= t('download_data_options.text.stata') %></div></li>
+            </ul>                 
+          </div>        
         </li>
       <% end %>
     </ul>

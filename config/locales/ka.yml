@@ -454,7 +454,7 @@ ka:
       percent: Percent
       dataset_dashboard: Dataset Dashboard
       time_series_dashboard: Time Series Dashboard
-      terms: "I agree to the <a href='#'>Terms of Use</a>"  
+      terms: "I agree to the <a href='http://www.unicef.org/about/legal_terms.html' target='_blank'>Terms of Use</a>"  
       or: Or 
     msgs:
       does_not_exist: თქვენ ცდილობთ ისეთი გვერდის ნახვას, რომელიც არ არსებობს.
