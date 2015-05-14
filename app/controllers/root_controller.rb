@@ -1,6 +1,4 @@
 class RootController < ApplicationController
-  before_filter :set_subnavbar, only: [:explore_data_dashboard, :explore_data_show, :explore_time_series_dashboard, :explore_time_series_show]
-
   def index
     @datasets = Dataset.is_public.recent.sorted.limit(3)
 

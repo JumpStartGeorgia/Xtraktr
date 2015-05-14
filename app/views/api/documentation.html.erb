@@ -1,9 +1,10 @@
 <% title "#{@api_version.title} - #{@api_method.title}" %>
 
-<div class="api">
+<div class="api-documentation article">
   <div class="col-left">
       <h1><%= yield(:title) %></h1>
     <div id="api-dates">
+      <div class="calendar"></div>
       <%= format_api_method_dates(@api_method) %>
     </div>
     <% if @api_method.content.present? %>

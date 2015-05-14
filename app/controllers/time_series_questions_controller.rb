@@ -3,8 +3,6 @@ class TimeSeriesQuestionsController < ApplicationController
   before_filter do |controller_instance|
     controller_instance.send(:valid_role?, @data_editor_role)
   end
-  before_filter :set_subnavbar
-
 
   # layout "explore_time_series"
 

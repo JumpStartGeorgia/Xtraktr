@@ -9,20 +9,20 @@ module ApiHelper
       if api_method.public_at == api_method.updated_at.to_date
         text << "<span>"
         text << model_class.human_attribute_name(:public_at)
-        text << ": "
+        text << ": <i>"
         text << I18n.l(api_method.public_at, format: :day_first)
-        text << "</span>"
+        text << "</i></span>"
       else
         text << "<span>"
         text << model_class.human_attribute_name(:public_at)
-        text << ": "
+        text << ": <i>"
         text << I18n.l(api_method.public_at, format: :day_first)
-        text << "</span>"
+        text << "</i></span>"
         text << "<span>"
         text << model_class.human_attribute_name(:updated_at)
-        text << ": "
+        text << ": <i>"
         text << I18n.l(api_method.updated_at.to_date, format: :day_first)
-        text << "</span>"
+        text << "</i></span>"
       end
     end
     return text.html_safe
