@@ -66,24 +66,26 @@ class Highlight
   def self.for_home_page(limit=2)
     items = []
 
-    # get the required highlight
-    required = where(show_home_page: true).first
-    if required.present?
-      items << required
-    end
+    if self.count > 0
+      # get the required highlight
+      required = where(show_home_page: true).first
+      if required.present?
+        items << required
+      end
 
-    # now get random highlights until reach the size of limit
-    index = items.length
-    while index < limit
-      random = with_out_home_page.skip(rand(Highlight.count)).first
+      # now get random highlights until reach the size of limit
+      index = items.length
+      while index < limit
+        random = with_out_home_page.skip(rand(Highlight.count)).first
 
-      # make sure random is not already in items
-      if random.present? && !items.include?(random)
-        items << random
-        index += 1 
+        # make sure random is not already in items
+        if random.present? && !items.include?(random)
+          items << random
+          index += 1 
+        end
       end
     end
-
+    
     return items
   end
 
