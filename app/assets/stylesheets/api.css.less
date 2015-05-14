@@ -7,7 +7,8 @@
 @light-grey-border:#c4c4c4;
 @dark-grey-text:#49505E;
 
-.api, .tinymce_format, .mce-content-body {
+.api-documentation { margin-right:-50px; }
+.api,.api-documentation, .tinymce_format, .mce-content-body {
   a{
     font-family:'sourcesans_pro_l', 'sans-serif';
     font-size:15px;
@@ -58,10 +59,21 @@
       font-family:'sourcesans_pro', 'sans-serif';   
       font-size:17px; 
       color:@bright-blue-color;
+      .calendar
+      {
+        display:inline-block;
+        margin-left:20px;
+        background:transparent url(/assets/svg/calendar.svg) no-repeat;
+        width:21px;
+        height:22px;
+        vertical-align: bottom;
+        position: relative;
+        top: 2px;
+      }
       span{
-        font-size: 13px;
-        font-style: italic;
-        padding-left: 10px;
+        display:inline-block;
+        font-family:'sourcesans_pro_li', 'sans-serif';   
+        font-size:16px;         
       }
     }
     ul{
@@ -164,17 +176,24 @@
   #api-dates{
     margin-bottom: 10px;
     text-align:left;
+    .calendar
+    {
+      display:inline-block;
+      background:transparent url(/assets/svg/calendar.svg) no-repeat;
+      width:21px;
+      height:22px;
+      vertical-align: bottom;      
+    }
     span{
-      padding: 13px 13px;
-      color: #7b8483;
-      font-family:'dejavusans';
-      font-size:12px;
-      font-style:italic;
+      padding: 0px 4px;
+      font-family:'sourcesans_pro_sbi', 'sans-serif';   
+      font-size:16px; 
+      color: #00adee;
       line-height:22px;
-      &:lang(en)
+      i
       {
-         font-family: 'oxygen';
-      }         
+        font-family:'sourcesans_pro_li', 'sans-serif';   
+      }      
     }
   }
 
@@ -249,7 +268,7 @@
   }
 }
 @media (min-width: 768px) { 
-  .api {
+  .api, .api-documentation {
     .col-left{
       display:table-cell;
       vertical-align:top;

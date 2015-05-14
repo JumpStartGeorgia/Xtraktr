@@ -1,7 +1,6 @@
 <% if @page_content.present? %>
-  <%= title @page_content.title %>
-
-  <div class="tinymce_format article">
+  <%= title @page_content.title %>  
+  <div class="api article">
     <%= simple_format_no_tags(@page_content.content, {}, {sanitize: false}) %>
 
     <div class="version-links">
@@ -9,6 +8,7 @@
         <% @api_versions.each do |version| %>
           <h3>
             <%= version.title %>
+            <div class="calendar"></div>
             <span>(<%= I18n.l(version.public_at, format: :day_first) %>)</span>
           </h3>
           <% if version.api_methods.is_public.present? %>

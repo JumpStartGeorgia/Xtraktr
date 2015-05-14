@@ -10,7 +10,7 @@ class Api::V1Controller < ApplicationController
   end
 
   def documentation
-    
+    @klass=' white'
     redirect = false
     redirect = params[:method].nil?
 
@@ -151,7 +151,6 @@ private
   end
 
   def set_background
-    @show_subnav_navbar = true
     @show_title = false
     @api = true
   end

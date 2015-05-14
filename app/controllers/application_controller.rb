@@ -87,15 +87,6 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 
     # get public question count
     @public_question_count = Stats.public_question_count
-
-    # show subnav bar
-    @show_subnav_navbar = false
-  end
-
-  # show the subnavbar
-  # this is called from before_filters in controllers
-  def set_subnavbar
-    @show_subnav_navbar = true
   end
 
 	def initialize_gon
@@ -117,7 +108,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     if !DEVISE_CONTROLLERS.index(params[:controller]).nil? && request.xhr?
       nil
     else
-      "app"
+      "application"
     end
   end
 
