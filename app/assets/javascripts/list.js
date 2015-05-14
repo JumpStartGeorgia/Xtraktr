@@ -3,7 +3,7 @@ function filter()
   var filters = $('.filters');
   var q = filters.find('.search input').val();
   var sort = filters.find('.sort select').val();
-  var category = filters.find('.category .selector .img').attr('data-selected');
+  var category = filters.find('.category .selector').attr('data-selected');
   var url = filters.attr('data-path');
   var data = { sort: sort };
 
@@ -17,17 +17,7 @@ function filter()
   }).done(function(d)
   {
      $('.list').html(d.d);
-    // if(d.agreement)
-    // {
-    //   window.location.href = d.url;
-    // }
-    // else
-    // {
-    //   modal(d.form);
-    // }
   });
-   console.log(q,sort,category,url);
-
 }
 
 $(document).ready(function(){
@@ -54,13 +44,9 @@ $(document).ready(function(){
     var has = t.hasClass('active');
     var v = has ? 'none' : t.attr('data-filter-value');
     $('.category[data-filter=category] ul li').removeClass('active');  
-    var selector = $('.category[data-filter=category] .selector');
-    selector.find('.item').html(has ? '' : t.html());
-    //var img  = selector.find('.img');
-    //var span  = selector.find('span');
+    var selector = $('.category[data-filter=category] .selector').attr('data-selected', v);
+    selector.find('.item').empty().append(has ? '' : t.html());
     selector.removeClass('open');
-    //img.removeClass(img.attr('data-selected')).addClass(v).attr('data-selected', v);//.attr('title', (has ? span.attr('data-text-none') : t.find('.img').attr('title')));
-    //span.text(span.attr('data-text-' + (has ? v : 'selected')));
     if(!has) t.addClass('active');
     
     t.parent().toggle();

@@ -134,29 +134,30 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 	def store_location
 		session[:previous_urls] ||= []
         
-    if session[:download_url].present? && !request.xhr? && !user_signed_in?
+    if session[:download_url].present? && !user_signed_in? && !params[:d].present?
       session[:download_url] = nil
     end
 
-    if params[:action] == 'download_request' && request.xhr? && !user_signed_in? 
+    if params[:action] == 'download_request' && request.xhr? && !user_signed_in? &&
       session[:download_url] = request.fullpath
     end
 
 
-
-		if session[:previous_urls].first != request.fullpath && 
-        params[:format] != 'js' && params[:format] != 'json' && !request.xhr? &&
-        request.fullpath.index("/users/").nil? &&
-        request.fullpath.index("/embed/").nil?
-        
-	    session[:previous_urls].unshift request.fullpath
-    elsif session[:previous_urls].first != request.fullpath &&
-       request.xhr? && !request.fullpath.index("/users/").nil?  &&
-        !request.fullpath.index("/embed/").nil?&&
-       params[:return_url].present?
-       
-      session[:previous_urls].unshift params[:return_url]
-		end
+    if request.fullpath.index("/download/").nil?
+  		if session[:previous_urls].first != request.fullpath && 
+          params[:format] != 'js' && params[:format] != 'json' && !request.xhr? &&
+          request.fullpath.index("/users/").nil? &&
+          request.fullpath.index("/embed/").nil?
+          
+  	    session[:previous_urls].unshift request.fullpath
+      elsif session[:previous_urls].first != request.fullpath &&
+         request.xhr? && !request.fullpath.index("/users/").nil?  &&
+          !request.fullpath.index("/embed/").nil?&&
+         params[:return_url].present?
+         
+        session[:previous_urls].unshift params[:return_url]
+  		end
+    end
 
 		session[:previous_urls].pop if session[:previous_urls].count > 1
     #Rails.logger.debug "****************** prev urls session = #{session[:previous_urls]}"

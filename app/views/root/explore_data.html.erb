@@ -15,23 +15,23 @@
       </div>
 
       <div class="category"  data-filter='category'>
-        <div class="selector"><div class="item"></div><div class="text"><%= t('app.buttons.choose_category') %></div></div>
-<%
-=begin # keeping this here as reminder that need to test for category param when page loads to set current category %>
-        <%-
-          current = 'none'
-          text = t('app.buttons.choose_category')
-          if params[:category].present? 
-            current = params[:category]
-            text = t('app.buttons.change_category')
-          end
-        -%>
-        <div class="selector"><div class="img <%=current %>" data-selected="<%=current %>" title="<%= text %>"></div><span data-text-none="<%= t('app.buttons.choose_category') %>" data-text-selected="<%= t('app.buttons.change_category') %>"><%= text %></span></div>
-<%
-=end %>
+      <%-
+          current = params[:category].present? ? params[:category] : 'none'
+          cat = Category.by_permalink(current)
+      -%>
+        <div class="selector" data-selected="<%= current %>">
+         <div class="bright item">
+        <%- if cat.present? -%>
+            <div class="text"><span><%= cat.name %></span></div>
+            <div class="img <%= cat.permalink %>" alt="<%= cat.name %>"></div>
+        <%- end -%>
+        </div>
+          <div class="text"><%= t('app.buttons.choose_category') %></div>
+        </div>
+
         <ul>
           <% Category.sorted.each {|x| %>
-            <li class="bright" data-filter-value="<%= x.permalink %>">
+            <li class="bright item<%= ' active' if x.permalink == current %>" data-filter-value="<%= x.permalink %>">
               <div class="text"><span><%= x.name %></span></div>
               <div class="img <%= x.permalink %>" alt="<%= x.name %>"></div>
             </li>
