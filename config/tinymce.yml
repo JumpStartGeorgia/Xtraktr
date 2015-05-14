@@ -4,10 +4,10 @@ default:
   convert_urls: false
   width: "100%"
   menubar: false
-  plugins: "autolink paste fullscreen code link anchor lists hr"
+  plugins: "autolink paste fullscreen table code link anchor lists hr"
   toolbar_items_size: 'small'
   toolbar1: "cut copy paste searchreplace | undo redo | removeformat | fullscreen code"
-  toolbar2: "bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent blockquote | link unlink anchor | hr"
+  toolbar2: "formatselect | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent blockquote | link unlink anchor | hr | table"
   content_css: /css/tinymce.css
   paste_auto_cleanup_on_paste: true
   paste_remove_spans: true
