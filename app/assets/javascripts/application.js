@@ -56,8 +56,14 @@ $(document).ready(function(){
   $(document).on('click', '.reattach', function(e){
     var t = $(this);
      console.log('reattaching');
+    var data = {};
+    if(downloading)
+    {
+      data = { d:1 }
+    }
     $.ajax({
       url: t.attr('href'),
+      data: data,
       // dataType: 'json',
     }).success(function(d)
     {
@@ -74,7 +80,6 @@ $(document).ready(function(){
 
   $('body').on('submit','#new_user', function (e)
   {    
-     console.log('hereeee',$(this));
     var form = $(this);
     var t = $(this).attr('data-form-id');
     if(t.length)
@@ -124,7 +129,7 @@ $(document).ready(function(){
           var errors = data.errors;
           if(data.sessions)
           {
-              form.find('.alert').remove();  
+              form.parent().find('.alert').remove();  
               form.before('<div class="alert"><span>' + data.errors.alert + '</span></div>');          
               form.find(':input:visible:enabled:first').focus();
           }
@@ -160,33 +165,36 @@ $(document).ready(function(){
     e.stopPropagation();
   });
 
-$('.download').click(function(e){
-    var t = $(this);  
-    var open = !t.hasClass('open');
-      
-    $('.download.open').each(function(){
-      $(document).off('click.download');
-      $(this).removeClass('open');
-    });
+ $(document).on('keyup.checkbox-radio-box', '.checkbox-box, .radio-box',function(e) {
+    if (e.keyCode == 32) {  // space      
+      $(this).find('label').trigger('click');     
+    }  
+  });
 
-    if(t.offset().top+146 > $(document).height())
-    {
-      t.find('ul').css('top', -132);
-    }
-  t.toggleClass('open',open);
-  if(open)
-  {
-    $(document).on('click.download',function(){
-       t.removeClass('open');
-       // t.find('ul').toggle();
-       $(document).off('click.download');
-    });
-  }
-  else $(document).off('click.download');
-  // t.find('ul').toggle();
+  $('.download').click(function(e){
+      var t = $(this);  
+      var open = !t.hasClass('open');
+        
+      $('.download.open').each(function(){
+        $(document).off('click.download');
+        $(this).removeClass('open');
+      });
 
-  e.stopPropagation();
-});
+      if(t.offset().top+146 > $(document).height())
+      {
+        t.find('ul').css('top', -132);
+      }
+      t.toggleClass('open',open);
+      if(open)
+      {
+        $(document).on('click.download',function(){
+           t.removeClass('open');
+           $(document).off('click.download');
+        });
+      }
+      else $(document).off('click.download');
+      e.stopPropagation();
+  });
 
 
   $('.download li div.type').click(function(e){
@@ -203,10 +211,6 @@ $('.download').click(function(e){
   });
 
   js_modal =  $('#js_modal');
-  // js_modal.find('.popup').click(function(e){
-  //   e.stopPropagation();   
-  // });
-  
 
   $(document).on('change', '#user_status_input input[type=radio]', function()
     {
@@ -238,6 +242,7 @@ $('.download').click(function(e){
     });
 
 });
+var downloading = false;
 function download_request(url, data)
 {
   $.ajax({
@@ -246,32 +251,18 @@ function download_request(url, data)
     dataType: 'json',   
   }).done(function(d)
   {
-    if(d.agreement) { window.location.href = d.url; }
-    else { modal(d.form); }
+    if(d.agreement) 
+    { 
+     window.location.href = d.url; 
+    }
+    else { 
+      modal(d.form);
+      downloading = true;
+    }
   }).error(function(d)
   {
      console.log('file downloading error',d);
   });
-}
-function filter()
-{
-  var filters = $('.dataset-filters');
-  var q = filters.find('.search input').val();
-  var sort = filters.find('.sort select').val();
-  var category = filters.find('.category .selector .img').attr('data-selected');
-  var url = filters.attr('data-path');
-  var data = { sort: sort };
-  if(q != "") data["q"] = q;
-  if(category != "none") data["category"] = category;
-  $.ajax({
-    url: url,
-    data: data,
-    dataType: 'json',    
-  }).done(function(d)
-  {
-     $('.dataset-list').html(d.d);
-  });
-   console.log(q,sort,category,url);
 }
 
 var js_modal;
@@ -304,6 +295,7 @@ function js_modal_off()
 {
   js_modal.fadeOut(500);
   $(document).off('keyup.js_modal').off('click.js_modal');
+   downloading = false;
 }
 ////////////////////////////////////////////////
 // convert the querystring variables into json

@@ -5,17 +5,7 @@
   display:inline-block;
  }
 
-.formtastic.user
-{
-  .input
-  {
-    text-align: center;
-    margin:0px;
-    padding:0px;
-    
-  }
- 
-}
+
 
  #login-form
   {
@@ -115,13 +105,7 @@
   //   height:31px;
   //   min-width:226px;
     
-  //   outline:none;
-  //   -webkit-border-radius: 0 !important;
-  //   -moz-border-radius: 0 !important;
-  //   border-radius:0 !important;  
-  //   -webkit-box-shadow: none;
-  //   -moz-box-shadow: none;
-  //   box-shadow: none;    
+
   // }
   #login-form,#reset-password-form
   { 
@@ -133,17 +117,6 @@
     margin-top:32px;
      text-align:center;
   }
-  // .control-group-remember
-  // {
-  //   margin:0px 40px 22px;    
-  // }
-  // .control-group-sign-in
-  // {  
-  //   margin: 0px 40px 22px;
-  // }
-  // .sign-in {    
-  //   // float:right !important;
-  // }
   input[type=submit] {
     display:inline-block;
     font-family:'opensans-sb','sans-serif';
@@ -306,8 +279,13 @@
   }
   .radio_buttons.horizontal
   {
+    .radio
+    {
+        margin:0px 0px 0px 20px !important;
+      padding:0px !important;
+    }
     .radio:first-of-type {
-      margin:0px;
+       margin:0px !important;
       padding:0px;
     }
   }
@@ -381,6 +359,17 @@ label > abbr {
 }
 
 
+.formtastic.user
+{
+  .input
+  {
+    text-align: center;
+    margin:0px;
+    padding:0px;
+    
+  }
+ 
+
  input[type=text],input[type=email],input[type=password], textarea
   {
     font-family:'sourcesans_pro', 'sans-serif';
@@ -388,7 +377,7 @@ label > abbr {
     color:#3C4352;            
     display:inline-block;
     border:0px !important;
-    background-color:#dceef4;
+    background-color:#dceef4 !important;
     text-decoration: none;    
     height:31px;
     min-width:226px;
@@ -397,9 +386,9 @@ label > abbr {
     -webkit-border-radius: 0 !important;
     -moz-border-radius: 0 !important;
     border-radius:0 !important;  
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;    
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;    
     -webkit-transition: 0.3s linear;
     -moz-transition: 0.3s linear;
     -o-transition: 0.3s linear;
@@ -408,45 +397,48 @@ label > abbr {
   }
   input[type=text]:focus,input[type=email]:focus,input[type=password]:focus, textarea:focus
   {
-    background-color:#fff;
+    background-color:#fff !important;
     outline:none;
     -webkit-border-radius: 0 !important;
     -moz-border-radius: 0 !important;
     border-radius:0 !important;  
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;    
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;     
   }
-
-    input[type="checkbox"] + label
-    {
-      font-family:'opensans', 'sans-serif';
-      font-size:12px;
-      font-weight:normal;
-      color:#3c4352; 
-      display:inline-block; 
-      margin:0px;
-      padding:0px; 
-      cursor:pointer;     
-    }
-    input[type="checkbox"] {
-      display:none;
-    }    
-    input[type="checkbox"] + label:before {
-      content:"";
-        display:inline-block;
-        width:14px;
-        height:14px;
-        margin:-3px 4px 0 0;
-        vertical-align:middle;
-        background:url(/assets/svg/check_radio.png) no-repeat left top ;
-    }
-    input[type="checkbox"]:checked + label:before {
-      content:"";
-      background:url(/assets/svg/check_radio.png) no-repeat -15px top;
-    }
-
-
+  .checkbox-box
+  {
+      display:inline-block;
+      input[type="checkbox"] + label
+      {
+        font-family:'opensans', 'sans-serif';
+        font-size:12px;
+        font-weight:normal;
+        color:#3c4352; 
+        display:inline-block; 
+        margin:0px;
+        padding:0px; 
+        cursor:pointer;     
+      }
+      input[type="checkbox"] {
+        display:none;
+      }    
+      input[type="checkbox"] + label:before {
+        content:"";
+          display:inline-block;
+          width:14px;
+          height:14px;
+          margin:-3px 4px 0 0;
+          vertical-align:middle;
+          background:url(/assets/svg/check_radio.png) no-repeat left top ;
+      }
+      input[type="checkbox"]:checked + label:before {
+        content:"";
+        background:url(/assets/svg/check_radio.png) no-repeat -15px top;
+      }
+  }
+  .radio-box
+  {
     input[type="radio"] + label
     {
       font-family:'opensans', 'sans-serif';
@@ -474,16 +466,16 @@ label > abbr {
       content:"";
       background:url(/assets/svg/check_radio.png) no-repeat -44px top;
     }
-
-
-.has-error
-{
-   input[type=text],input[type=email],input[type=password], textarea
-   {
-      background-color:#f7d0d6 !important;
-   }
-   > label
-   {
-      color:#d95d6a !important;
-   }
+  }
+  .has-error
+  {
+     input[type=text],input[type=email],input[type=password], textarea
+     {
+        background-color:#f7d0d6 !important;
+     }
+     > label
+     {
+        color:#d95d6a !important;
+     }
+  }
 }
