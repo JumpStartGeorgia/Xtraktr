@@ -7,9 +7,15 @@
 
 <div class="row" id="row1">
   <div class="col-sm-4">
-    <div class="boxic" id="search-categories">
+    <div class="boxic">
 
-      <div class="search" data-filter='search'><div class="box"><input type="search" placeholder="<%= t('.search_datasets') %>"><div class="go"><%= t('.go') %></div></div></div>
+        <form role="search" class="search" action="<%= explore_data_path %>">
+          <div class="box">
+            <input type="search" placeholder="<%= t('.search_datasets') %>" name="q">
+            <div class="go-submit"><%= t('app.common.go') %></div>
+          </div>
+        </form>
+
 
       <div class="title">
         <h2><%= t('.header_categories') %></h2>

@@ -2,9 +2,9 @@
 <% title t('.title') %>
 
 <div class="article explore">
-  <% if @datasets.present? %>
+
     <div class="filters" data-path="<%= explore_data_path %>">
-      <div class="search" data-filter='search'><div class="box"><input type="search" placeholder="<%= t('.search_datasets') %>"><div class="go"><%= t('.go') %></div></div></div>
+      <div class="search" data-filter='search'><div class="box"><input type="search" placeholder="<%= t('.search_datasets') %>" value="<%=params[:q]%>"><div class="go"><%= t('.go') %></div></div></div>
       <div class="sort"  data-filter='sort'>
         <label><%= t('.sort_by.this') %>:</label>         
         <select>
@@ -39,12 +39,12 @@
         </ul>
       </div>
     </div>
+
     <div class="list">
+      <% if @datasets.present? %>
         <%= render partial: 'explore_data_datasets' %>
+      <% else %>
+        <p><%= t('.no_data') %></p>
+      <% end %>
     </div>
-  <% else %>
-    <p>
-      <%= t('.no_data') %>
-    </p>
-  <% end %>
 </div>

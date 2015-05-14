@@ -240,7 +240,7 @@ $(document).ready(function(){
       window.location.href = location.protocol + '//' + location.host + location.pathname + '?' + $.param(querystring);
 
     });
-
+  $('.search .go-submit').click(function(){ $(this).closest('form').submit(); });
 });
 var downloading = false;
 function download_request(url, data)

@@ -465,6 +465,7 @@ en:
       time_series_dashboard: Time Series Dashboard
       terms: "I agree to the <a href='http://www.unicef.org/about/legal_terms.html' target='_blank'>Terms of Use</a>"  
       or: Or 
+      go: Go
     msgs:
       does_not_exist: You tried to access a page that does not exist.
       not_authorized: You are not authorized to view that page.

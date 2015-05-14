@@ -17,10 +17,10 @@
       </p>
     <% end %>
   </div>
-  <div class="col-right documentation-links">
+  <div class="col-right doc-links">
     <div class="box">
       <div class="header">
-        <h2><%= @api_version.title %></h2>
+        <div><%= @api_version.title %></div>
         <div class="line"></div>
       </div>
       <ul class="list-unstyled">
@@ -30,7 +30,11 @@
           </li>
         <% end %>
       </ul>
-      <h2><%= link_to t('helpers.links.api_home'), api_path %></h2>
+      <%= link_to api_path do%>
+            <div class="back"></div>
+            <%= t('helpers.links.api_home') %>
+      <% end %>
+      
     </div>
   </div>
 </div>
