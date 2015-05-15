@@ -128,18 +128,7 @@ PageContent.create(name: 'instructions', title: 'Instructions', content: '<p>UNI
 <h2><strong>API</strong></h2>
 <p>While it is possible to download the datasets, you are welcome access the data in JSON format using the API to create your own interactive applications or visualizations. This is most relevant for time series data that can be updated in the future with additional sets of data. By using the API, you can ensure that when a new dataset is added, your application can automatically adjust based on the new data.</p>
 <p>Just as when you download the data, you\'ll need to create an account to use the API. Once you create an account, you\'ll have access to your API key, which is required to use the API. For more information about the API, please visit our API page.</p>') if PageContent.by_name('instructions').nil?
-PageContent.create(name: 'contact', title_translations: {'en' => 'Contact', 'ka' => 'კონტაქტი'}, content_translations: {'en' => '<p>If you would like to find out more about our data or have questions about datasets on this site, please send us an email or call us at:</p>
-<p>
-tbilisi@unicef.org
-<br/>
-+995 32 2 23 23 88 or +995 32 2 25 11 30 
-</p>
-', 'ka' => '<p>თუ გაქვთ რაიმე სახის შეკითხვა ან გსურთ მონაცემების შესახებ უფრო მეტი ინფორმაციის მიღება, გთხოვთ დაგვიკავშრდეთ ქვემოთ მითითებული ელ-ფოსტის ან ტელეფონის საშუალებით:</p>
-<p>
-tbilisi@unicef.org
-<br/>
-+995 32 2 23 23 88 or +995 32 2 25 11 30 
-</p>'}) if PageContent.by_name('contact').nil?
+PageContent.create(name: 'contact', title_translations: {'en' => 'Contact', 'ka' => 'კონტაქტი'}, content_translations: {'en' => 'If you would like to find out more about our data or have questions about datasets on this site, please send us an email or call us.', 'ka' => 'თუ გაქვთ რაიმე სახის შეკითხვა ან გსურთ მონაცემების შესახებ უფრო მეტი ინფორმაციის მიღება, გთხოვთ დაგვიკავშრდეთ ქვემოთ მითითებული ელ-ფოსტის ან ტელეფონის საშუალებით'}) if PageContent.by_name('contact').nil?
 
 PageContent.create(name: 'disclaimer', title: 'Disclaimer', content: 'coming soon...') if PageContent.by_name('disclaimer').nil?
 if ENV['reload_api_docs'] && PageContent.by_name('api').present?

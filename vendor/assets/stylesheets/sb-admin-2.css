@@ -121,7 +121,7 @@ body {
     text-decoration:underline;
     text-align:center;
     display: block;
-    margin-bottom:17px
+    margin:2px 0px 17px;
 }
 .sidebar .sidebar-nav.navbar-collapse {
     padding-right: 0;

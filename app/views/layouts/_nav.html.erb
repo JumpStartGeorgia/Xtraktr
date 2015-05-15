@@ -86,19 +86,12 @@
           </ul>
           <div class="sidebar-bottom">
             <div class="share">
-              
-            </div>
-
-            <%= link_to "https://www.facebook.com/sharer/sharer.php?u=" +  root_url, class: 'share-facebook', onclick:"javascript:window.open(this.href,
-                        '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;" do %>
-                        f
-                        <% end %>
+              <%= link_to '', "https://www.facebook.com/sharer/sharer.php?u=" +  root_url, class: 'facebook', onclick:"javascript:window.open(this.href,
+                          '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;" %>
               <% title = content_for?(:title) ? "#{yield(:title)} | #{t('app.common.app_name')}" : "#{t('app.common.app_name')} | #{t('app.common.app_slogan')}".html_safe %>
-            <%= link_to "https://twitter.com/share?text=#{title}" , class: 'share-twitter', onclick:"javascript:window.open(this.href,
-                        '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;" do %>
-                        t
-                        <% end %>
-
+              <%= link_to '',"https://twitter.com/share?text=#{title}" , class: 'twitter', onclick:"javascript:window.open(this.href,
+                          '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;" %>
+            </div>
             <%= link_to t('app.menu.disclaimer'), disclaimer_path, class: 'disclaimer',  target:"_blank" %>
           </div>   
         </div>
