@@ -1567,29 +1567,40 @@ class Dataset < CustomTranslation
         # if value exist for exclude, assume it means true
         question.exclude = row[indexes['exclude']].present?
 
+        temp_text = question.text_translations.dup
         locales.each do |locale|
           # if question text is provided and not the same, update it
-          if question.text_translations[locale] != row[indexes[locale]]
-            question.text_will_change!
-            question.text_translations[locale] = row[indexes[locale]].present? ? row[indexes[locale]].strip : nil
+          if row[indexes[locale]].present? && temp_text[locale] != row[indexes[locale]].strip
+            puts "- setting text for #{locale}"
+            # question.text_will_change!
+            temp_text[locale] = row[indexes[locale]].strip
             counts[locale] += 1
           end
         end
-
-        # if the record changed, save the changes
-        if question.changed?
-          if question.save
-            counts['overall'] += 1
-          else
-            msg = I18n.t('mass_uploads_msgs.questions.not_save', n: n, msg: question.errors.full_messages)
-            return msg
-          end
+        puts "--> was #{question.text_translations}; now #{temp_text}"
+        if question.text_translations != temp_text
+          puts "---- text translations changed"
+          question.text_translations = temp_text 
         end
+
+        # # if the record changed, save the changes
+        # if question.changed?
+        #   if question.save
+        #     counts['overall'] += 1
+        #   else
+        #     msg = I18n.t('mass_uploads_msgs.questions.not_save', n: n, msg: question.errors.full_messages)
+        #     return msg
+        #   end
+        # end
 
         puts "******** time to process row: #{Time.now-startRow} seconds"
         puts "************************ total time so far : #{Time.now-start} seconds"
       end
     end  
+
+    puts "=========== valid = #{self.valid?}; errors = #{self.errors.full_messages}"
+
+    self.save
 
     puts "****************** total changes: #{counts.map{|k,v| k + ' - ' + v.to_s}.join(', ')}"
     puts "****************** time to process question csv: #{Time.now-start} seconds for #{n} rows"
