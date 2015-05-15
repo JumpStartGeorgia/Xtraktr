@@ -226,7 +226,7 @@ $(document).ready(function(){
     });
 
 
-    $('.message').fadeOut(3000);
+    $('div.message').fadeOut(3000);
 
 
     // language switcher for dataset/time series in dashboard/explore pages

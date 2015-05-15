@@ -94,7 +94,7 @@ BootstrapStarter::Application.routes.draw do
     end    
 
     # root pages
-    match '/contact', :to => 'root#contact', :as => :contact, :via => :get
+    match '/contact', :to => 'root#contact', :as => :contact, :via => [:get, :post]
     match '/download/:id', :to => 'root#download', :as => :download, :via => :get
     match '/download_request', :to => 'root#download_request', :as => :download_request, :via => :get
     match '/instructions', :to => 'root#instructions', :as => :instructions, :via => :get
