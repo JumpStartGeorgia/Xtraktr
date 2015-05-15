@@ -1515,7 +1515,7 @@ class Dataset < CustomTranslation
     counts = Hash[locales.map{|x| [x,0]}]
     counts['overall'] = 0
 
-    CSV.parse(infile) do |row|
+    CSV.parse(infile.force_encoding('utf-8')) do |row|
       startRow = Time.now
       # translation_changed = false
       n += 1
@@ -1566,6 +1566,7 @@ class Dataset < CustomTranslation
 
         # if value exist for exclude, assume it means true
         question.exclude = row[indexes['exclude']].present?
+        # question.exclude = n%(rand(5)+1) == 0
 
         temp_text = question.text_translations.dup
         locales.each do |locale|
@@ -1581,7 +1582,11 @@ class Dataset < CustomTranslation
         if question.text_translations != temp_text
           puts "---- text translations changed"
           question.text_translations = temp_text 
+          # question.text = row[indexes['en']]
         end
+
+
+        puts "---> question.valid = #{question.valid?}"
 
         # # if the record changed, save the changes
         # if question.changed?
@@ -1631,7 +1636,7 @@ class Dataset < CustomTranslation
     counts = Hash[locales.map{|x| [x,0]}]
     counts['overall'] = 0
 
-    CSV.parse(infile) do |row|
+    CSV.parse(infile.force_encoding('utf-8')) do |row|
       startRow = Time.now
       # translation_changed = false
       n += 1
