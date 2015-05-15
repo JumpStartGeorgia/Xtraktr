@@ -1566,9 +1566,9 @@ class Dataset < CustomTranslation
 
         # if value exist for exclude, assume it means true
         question.exclude = row[indexes['exclude']].present?
-        # question.exclude = n%(rand(5)+1) == 0
 
         temp_text = question.text_translations.dup
+        locale_found = false
         locales.each do |locale|
           # if question text is provided and not the same, update it
           if row[indexes[locale]].present? && temp_text[locale] != row[indexes[locale]].strip
@@ -1576,13 +1576,15 @@ class Dataset < CustomTranslation
             # question.text_will_change!
             temp_text[locale] = row[indexes[locale]].strip
             counts[locale] += 1
+            locale_found = true
           end
         end
+        counts['overall'] += 1 if locale_found
+        
         puts "--> was #{question.text_translations}; now #{temp_text}"
         if question.text_translations != temp_text
           puts "---- text translations changed"
           question.text_translations = temp_text 
-          # question.text = row[indexes['en']]
         end
 
 
@@ -1695,12 +1697,13 @@ class Dataset < CustomTranslation
         if last_question_code != row[indexes['code']]
           # if the record changed, save the changes
           if question.present? && question.changed?
-            if question.save
-              counts['overall'] += 1
-            else
-              msg = I18n.t('mass_uploads_msgs.answers.not_save', n: n, msg: answer.errors.full_messages)
-              return msg
-            end
+            counts['overall'] += 1
+            # if question.save
+            #   counts['overall'] += 1
+            # else
+            #   msg = I18n.t('mass_uploads_msgs.answers.not_save', n: n, msg: answer.errors.full_messages)
+            #   return msg
+            # end
           end
 
           # get question for this row
@@ -1724,13 +1727,24 @@ class Dataset < CustomTranslation
         answer.exclude = row[indexes['exclude']].present?
         answer.can_exclude = row[indexes['can_exclude']].present?
 
+        temp_text = answer.text_translations.dup
+        locale_found = false
         locales.each do |locale|
           # if answer text is provided and not the same, update it
-          if answer.text_translations[locale] != row[indexes[locale]]
-            answer.text_will_change!
-            answer.text_translations[locale] = row[indexes[locale]].present? ? row[indexes[locale]].strip : nil
+          if row[indexes[locale]].present? && temp_text[locale] != row[indexes[locale]].strip
+            puts "- setting text for #{locale}"
+            # question.text_will_change!
+            temp_text[locale] = row[indexes[locale]].strip
             counts[locale] += 1
+            locale_found = true
           end
+        end
+        counts['overall'] += 1 if locale_found
+        
+        puts "--> was #{answer.text_translations}; now #{temp_text}"
+        if answer.text_translations != temp_text
+          puts "---- text translations changed"
+          answer.text_translations = temp_text 
         end
 
         logger.debug "******** time to process row: #{Time.now-startRow} seconds"
@@ -1738,15 +1752,19 @@ class Dataset < CustomTranslation
       end
     end  
 
-    # make sure the last set of questions is change if needed 
-    if question.present? && question.changed?
-      if question.save
-        counts['overall'] += 1
-      else
-        msg = I18n.t('mass_uploads_msgs.answers.not_save', n: n, msg: answer.errors.full_messages)
-        return msg
-      end
-    end
+    puts "=========== valid = #{self.valid?}; errors = #{self.errors.full_messages}"
+
+    self.save
+
+    # # make sure the last set of questions is change if needed 
+    # if question.present? && question.changed?
+    #   if question.save
+    #     counts['overall'] += 1
+    #   else
+    #     msg = I18n.t('mass_uploads_msgs.answers.not_save', n: n, msg: answer.errors.full_messages)
+    #     return msg
+    #   end
+    # end
 
     logger.debug "****************** total changes: #{counts.map{|k,v| k + ' - ' + v.to_s}.join(', ')}"
     logger.debug "****************** time to process answer csv: #{Time.now-start} seconds for #{n} rows"
