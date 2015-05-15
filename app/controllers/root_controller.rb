@@ -28,6 +28,17 @@ class RootController < ApplicationController
   def contact
     @page_content = PageContent.by_name('contact')
     @css.push('root.css')
+
+    @message = Message.new
+    if request.post?
+      @message = Message.new(params[:message])
+      if @message.save
+        # send message
+        ContactMailer.new_message(@message).deliver
+        @email_sent = true
+      end
+    end
+
     respond_to do |format|
       format.html # index.html.erb
     end

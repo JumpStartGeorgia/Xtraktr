@@ -31,6 +31,11 @@ ka:
         status: Status
         status_other: When other(Please specify)
         description: Short description of research objective (<i>optional</i>)           
+      message:
+        name: სახელი
+        email: ელ.ფოსტის მისამართი
+        message: შეტყობინება
+        subject: Subject
       agreement:
         email: Email Address
         first_name: First Name
@@ -362,8 +367,21 @@ ka:
     svg: SVG Vector Image
   mailer:
     closing: "პატივისცემით,"
-    signature: “ჯამპსტარტ ჯორჯია”
+    signature: UNICEF Georgia
     unsubscribe: დააჭირეთ და შეცვალეთ შეტყობინებების პარამეტრები
+    notification:
+      new_user:
+        subject: "Welcome to UNICEF Georgia Data Portal!"
+        message: "Thank you for joining theUNICEF Georgia Data Portal.  You can manage when you would like to receive emails from UNICEF Georgia Data Portal by clicking on the following link."
+      new_dataset:
+        subject: "A new dataset has been added to UNICEF Georgia Data Portal!"
+        message: "A new dataset titled '%{title}' has been added.  This is the description of the dataset:"
+      new_time_series:
+        subject: "A new time series has been added to UNICEF Georgia Data Portal!"
+        message: "A new time series titled '%{title}' has been added.  This is the description of the time series:"
+    contact:
+      contact_form:
+        subject: "UNICEF Georgia Data Portal Contact Form"
   helpers:
     actions: აირჩიეთ
     default_language: This is the default language that will show
@@ -607,6 +625,9 @@ ka:
       search_datasets: Search Datasets
     contact:
       title: Contact
+      message_sent: Thank you for contacting us!
+      send: Send
+      error_title: An error has occurred
     instructions:
       title: Instructions
     disclaimer:

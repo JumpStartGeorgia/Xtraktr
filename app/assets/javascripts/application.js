@@ -228,7 +228,6 @@ $(document).ready(function(){
 
     $('.content > .message').fadeOut(3000);
 
-
     // language switcher for dataset/time series in dashboard/explore pages
     // reload the current page with the language param set
     $('.available-language-switcher').on('change', 'select', function(e){
