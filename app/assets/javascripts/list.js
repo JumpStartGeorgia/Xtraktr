@@ -62,12 +62,6 @@ $(document).ready(function(){
       $('.search .go').trigger('click');
     }  
   });
-  // $(document).on('keyup.dataset_search','.search input', function(e) {
-  //   if (e.keyCode == 13) {  // enter
-  //     $('.search .go').trigger('click');
-  //   }  
-  // });
-  $('.search .go-submit').click(function(){  console.log('here');$(this).closest('form').submit(); });
   $('.sort select').change(function(){ filter(); });
 
 });
