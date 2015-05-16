@@ -570,6 +570,7 @@ ka:
   layouts:
     nav:
       toggle: ნავიგაციის ჩართვა/გამორთვა
+      back: Back to UNICEF.ge
     explore_data:
       private_share_header: "Privately Share '%{title}'"
       private_share_explanation: "You can copy and share the following URL with whomever you want to view '%{title}' even though your dataset is not shared with the public. These people will have the ability to explore your data, but not edit it."

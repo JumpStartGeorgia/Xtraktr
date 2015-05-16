@@ -73,7 +73,7 @@
         <div class="sidebar-nav navbar-collapse">
           <ul class="nav in" id="side-menu">          
             <% if !@is_xtraktr %>
-            <li><%= link_to "Back to UNICEF.org", 'http://www.unicef.org', class: 'unicef' %></li>
+            <li><%= link_to t('.back'), 'http://www.unicef.ge', class: 'unicef' %></li>
             <% end %>
             <li><%= link_to_sidebar root_path, 'home' %></li>
             <li><%= link_to_sidebar explore_data_path, 'datasets' %></li> 

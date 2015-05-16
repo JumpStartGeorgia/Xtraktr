@@ -468,7 +468,7 @@ en:
     common:
       app_name: UNICEF Georgia Data Portal #X-Traktr
       app_slogan: 'Helping to solve by measuring'
-      app_description: 'In collaboration with a wide range of partners, UNICEF Georgia gathers evidence on the situation of children in Georgia. It uses this knowledge to inform national and global decision-making with the objective of improving children’s well-being.'
+      app_description: 'In collaboration with a wide range of partners, UNICEF Georgia gathers evidence on the situation of children in Georgia. It uses this knowledge to inform national and global decision-making with the objective of improving children’s well-being.'      
       added_on: "Added on: %{date}" 
       jumpstart: JumpStart Georgia
       js_link_title: JumpStart Georgia - We communicate data better!
@@ -571,6 +571,7 @@ en:
   layouts:
     nav:
       toggle: Toggle navigation
+      back: Back to UNICEF.ge
     explore_data:
       private_share_header: "Privately Share '%{title}'"
       private_share_explanation: "You can copy and share the following URL with whomever you want to view '%{title}' even though your dataset is not shared with the public. These people will have the ability to explore your data, but not edit it."
