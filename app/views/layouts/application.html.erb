@@ -16,7 +16,7 @@
 
           <% if !current_page?(root_path) %>
             <div id="subnav-navbar" class="row" role="navigation" >
-              <div class="col">
+              <div class="col col-left pull-left">
                 <%= yield(:subnav_left) %>
                 
                 <% if !content_for?(:subnav_left) && @is_dataset_admin && @dataset.present? && @dataset.created_at.present? %>
@@ -30,7 +30,7 @@
                   <%= link_to t('helpers.links.back_dashboard'), url_time_series_dashboard(@time_series) %>  
                 <% end %>
               </div>
-              <div class="col pull-right">
+              <div class="col col-right pull-right">
                 <% if @is_dataset_admin %>
                   <ul class="nav navbar-nav navbar-right">
                     <% if @dataset.present? && @dataset.created_at.present? %>

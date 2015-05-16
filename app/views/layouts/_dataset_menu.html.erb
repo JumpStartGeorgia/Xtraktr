@@ -17,16 +17,11 @@
                       <%= t('app.menu.admin_dataset.explore_data') %>
                     <% end %>
                   </li>
+                  <li class="divider"></li>
                   <li role="menuitem">
                     <%= link_to edit_dataset_path(dataset) do %>
                       <span class="glyphicon glyphicon-cog"></span>
                       <%= t('app.menu.admin_dataset.settings') %>
-                    <% end %>
-                  </li>
-                  <li role="menuitem">
-                    <%= link_to dataset_questions_path(dataset) do %>
-                      <span class="glyphicon glyphicon-question-sign"></span>
-                      <%= t('app.menu.admin_dataset.qa') %>
                     <% end %>
                   </li>
                   <li role="menuitem">
@@ -50,6 +45,18 @@
                     </li>
                   <% end %>
                   <li class="divider"></li>
+                  <li role="menuitem">
+                    <%= link_to dataset_questions_path(dataset) do %>
+                      <span class="glyphicon glyphicon-question-sign"></span>
+                      <%= t('app.menu.admin_dataset.qa') %>
+                    <% end %>
+                  </li>
+                  <li role="menuitem">
+                    <%= link_to mass_changes_dataset_questions_path(dataset) do %>
+                      <span class="glyphicon glyphicon-th-list"></span>
+                      <%= t('app.menu.admin_dataset.mass_changes') %>
+                    <% end %>
+                  </li>
                   <li role="menuitem">
                     <%= link_to exclude_questions_dataset_path(dataset) do %>
                       <span class="glyphicon glyphicon-ban-circle"></span>

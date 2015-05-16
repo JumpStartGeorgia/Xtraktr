@@ -556,9 +556,29 @@ div.message {
     max-height: 31px;
     overflow: visible;
 
-    .navbar-nav > li > a{
-      padding-top: 0;
-      padding-bottom: 0;
+    .col{
+      &.col-left{
+        & > a{
+          font-family: 'sourcesans_pro', 'sans-serif';
+          font-size: 16px;
+          font-weight:normal;
+          margin:0 12px 0 0;
+          padding:0;
+          color: #00adee;
+          line-height: 30px;
+        }
+      }
+      &.col-right{
+        .navbar-nav > li > a{
+          font-family: 'sourcesans_pro', 'sans-serif';
+          font-size: 14px;
+          font-weight:normal;
+          margin:0 12px 0 0;
+          padding:0;
+          color: #00adee;
+          line-height: 30px;
+        }
+      }
     }
   }
 }

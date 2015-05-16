@@ -538,6 +538,7 @@ en:
         exclude_questions: Exclude Questions
         delete: Delete
         private_share: Share Private Dataset
+        mass_changes: Mass Changes
       admin_time_series:
         explore_data: Explore Data
         heading: Time Series Options
