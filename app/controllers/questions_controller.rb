@@ -189,6 +189,7 @@ class QuestionsController < ApplicationController
           logger.debug "****************** total changes: #{counts.map{|k,v| k + ' - ' + v.to_s}.join(', ')}"
           flash[:success] =  t('app.msgs.mass_upload_questions_success', count: counts['overall'])
         else
+          logger.debug "****************** error = #{msg}"
           flash[:error] =  t('app.msgs.mass_upload_questions_error', msg: msg)
         end
       end
