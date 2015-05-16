@@ -1,8 +1,8 @@
 <%- model_class = Dataset -%>
 
 <div id="intro">
-  <div id="intro-slogan"><%= t('app.common.app_name') %>: <%= t('app.common.app_slogan') %></div>
-  <div id="intro-desc"><%= t('app.common.app_description') %></div>
+  <div id="intro-slogan"><%= t("app.common.#{@app_key_name}.app_name") %>: <%= t("app.common.#{@app_key_name}.app_slogan") %></div>
+  <div id="intro-desc"><%= t("app.common.#{@app_key_name}.app_description") %></div>
 </div>
 
 <div class="row" id="row1">

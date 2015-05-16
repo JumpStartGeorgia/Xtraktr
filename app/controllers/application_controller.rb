@@ -68,6 +68,9 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     # flag to indicate if the app is currently running in unicef or xtraktr mode
     @is_xtraktr = false
 
+    # locale key name to get text specific to xtraktr or other
+    @app_key_name = @is_xtraktr ? 'xtraktr' : 'unicef'
+
     # indicate that whether login should allow local and omniauth or just locale
 	  @enable_omniauth = @is_xtraktr
 
@@ -109,7 +112,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
   # - this requirement did not exist when the site was created so some users may not have all fields entered
   # - if this is the case, send them to the settings page
   def check_user_status
-    if user_signed_in? && current_user.terms == false && request.path != settings_path
+    if !@is_xtraktr && user_signed_in? && current_user.terms == false && request.path != settings_path
       redirect_to settings_path, alert: I18n.t('app.msgs.missing_user_info')
     end
   end

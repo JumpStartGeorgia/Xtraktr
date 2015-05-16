@@ -15,7 +15,7 @@ class AdminController < ApplicationController
   def download_api_requests
     require 'csv'
     csv = ApiRequest.generate_csv
-    filename = I18n.t('app.common.app_name')
+    filename = I18n.t("app.common.#{@app_key_name}.app_name")
     filename << " API Requests "
     filename << I18n.l(Time.now, :format => :file)
 
@@ -36,7 +36,7 @@ class AdminController < ApplicationController
   def download_download_requests
     require 'csv'
     csv = Agreement.generate_csv
-    filename = I18n.t('app.common.app_name')
+    filename = I18n.t("app.common.#{@app_key_name}.app_name")
     filename << " Download Requests "
     filename << I18n.l(Time.now, :format => :file)
 

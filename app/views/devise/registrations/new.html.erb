@@ -1,6 +1,6 @@
 <%- model_class = User -%>
 <% reg = true if reg.nil? %>
-<% title t('helpers.links.sign_up_title', :app_name => t('app.common.app_name')) %> 
+<% title t('helpers.links.sign_up_title', :app_name => t("app.common.#{@app_key_name}.app_name")) %> 
 
 <div id="signup-form">
   <div class="red-box"><%= t('helpers.links.sign_up2') %></div>

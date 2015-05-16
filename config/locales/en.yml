@@ -473,9 +473,14 @@ en:
       choose_category: Choose Category
       change_category: Change Category
     common:
-      app_name: UNICEF Georgia Data Portal #X-Traktr
-      app_slogan: 'Helping to solve by measuring'
-      app_description: 'In collaboration with a wide range of partners, UNICEF Georgia gathers evidence on the situation of children in Georgia. It uses this knowledge to inform national and global decision-making with the objective of improving children’s well-being.'      
+      xtraktr:
+        app_name: X-Traktr
+        app_slogan: Insert xtraktr slogn here!
+        app_description: Insert xtraktr description here.      
+      unicef:
+        app_name: UNICEF Georgia Data Portal
+        app_slogan: 'Helping to solve by measuring'
+        app_description: 'In collaboration with a wide range of partners, UNICEF Georgia gathers evidence on the situation of children in Georgia. It uses this knowledge to inform national and global decision-making with the objective of improving children’s well-being.'      
       added_on: "Added on: %{date}" 
       jumpstart: JumpStart Georgia
       js_link_title: JumpStart Georgia - We communicate data better!

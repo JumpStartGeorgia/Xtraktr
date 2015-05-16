@@ -652,7 +652,7 @@ private
       # heading
       output << I18n.t('export_data.dataset', title: dataset.title)
       output << "\n"
-      output << I18n.t('export_data.download_from', app_name: I18n.t('app.common.app_name'), url: url)
+      output << I18n.t('export_data.download_from', app_name: I18n.t("app.common.#{@app_key_name}.app_name"), url: url)
       output << "\n"
       output << I18n.t('export_data.last_update', date: I18n.l(date, format: :long))
       output << "\n\n\n"

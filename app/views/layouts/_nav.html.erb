@@ -16,7 +16,7 @@
             end
           %>
           <%= link_to root_path(:locale => I18n.locale),:class=>"navbar-brand #{link_class}" do %>
-            <%= image_tag img_path, :id => 'logo', :alt => t('app.common.app_name') %>
+            <%= image_tag img_path, :id => 'logo', :alt => t("app.common.#{@app_key_name}.app_name") %>
           <% end %>
         </div>
         <div class="stats navbar-left">
@@ -91,7 +91,7 @@
             <div class="share">
               <%= link_to '', "https://www.facebook.com/sharer/sharer.php?u=" +  root_url, class: 'facebook', onclick:"javascript:window.open(this.href,
                           '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;" %>
-              <% title = content_for?(:title) ? "#{yield(:title)} | #{t('app.common.app_name')}" : "#{t('app.common.app_name')} | #{t('app.common.app_slogan')}".html_safe %>
+              <% title = content_for?(:title) ? "#{yield(:title)} | #{t("app.common.#{@app_key_name}.app_name")}" : "#{t("app.common.#{@app_key_name}.app_name")} | #{t("app.common.#{@app_key_name}.app_slogan")}".html_safe %>
               <%= link_to '',"https://twitter.com/share?text=#{title}" , class: 'twitter', onclick:"javascript:window.open(this.href,
                           '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;" %>
             </div>

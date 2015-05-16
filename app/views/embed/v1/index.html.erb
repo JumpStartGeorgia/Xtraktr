@@ -17,7 +17,7 @@
             <ul>
               <li>
                 <%= link_to root_url, target: '_parent' do %>
-                  <%= image_tag 'svg/widget_link.svg', title: t('.title_site', app_name: t('app.common.app_name')) %>
+                  <%= image_tag 'svg/widget_link.svg', title: t('.title_site', app_name: t("app.common.#{@app_key_name}.app_name")) %>
                 <% end %>
               </li>
               <li>
