@@ -517,6 +517,7 @@ ka:
       user_settings_updated: "Your settings were successfully updated."
       api_key_created: "Your API Access Token was successfully created."
       api_key_deleted: "Your API Access Token was successfully deleted."
+      missing_user_info: "We have made some changes to the site that require you to update your user settings. Sorry for the inconvenience."
     menu:
       explore_data: Explore Data
       explore_time_series: Explore Time Series
