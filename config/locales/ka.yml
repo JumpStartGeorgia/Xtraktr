@@ -534,7 +534,7 @@ ka:
       api: API
       instructions: Instructions
       home: Home
-      disclaimer: Disclaimer
+      disclaimer: Notes
       titles:
         explore_dataset: Explore the dataset data through charts, maps and tables
         explore_time_series: Explore the time series data through charts and tables
@@ -659,8 +659,8 @@ ka:
       error_title: An error has occurred
     instructions:
       title: Instructions
-    disclaimer:
-      title: Disclaimer
+    notes:
+      title: Notes
     explore_data:
       title: Explore the Data
       search_datasets: Search Datasets

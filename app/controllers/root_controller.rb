@@ -44,8 +44,8 @@ class RootController < ApplicationController
     end
   end
 
-  def disclaimer
-    @page_content = PageContent.by_name('disclaimer')
+  def notes
+    @page_content = PageContent.by_name('notes')
 
     respond_to do |format|
       format.html # index.html.erb
