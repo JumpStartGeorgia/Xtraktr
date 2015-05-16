@@ -623,6 +623,10 @@ class Dataset < CustomTranslation
     only(:id, :title, :languages)
   end
 
+  def self.only_id_title_description
+    only(:id, :title, :description)
+  end
+
   # get all datasets that are mappable
   def self.are_mappable
     where(is_mappable: true)

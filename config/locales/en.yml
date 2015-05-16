@@ -379,13 +379,10 @@ en:
     notification:
       new_user:
         subject: "Welcome to UNICEF Georgia Data Portal!"
-        message: "Thank you for joining theUNICEF Georgia Data Portal.  You can manage when you would like to receive emails from UNICEF Georgia Data Portal by clicking on the following link."
-      new_dataset:
+        message: "Thank you for joining the UNICEF Georgia Data Portal.  You can manage when you would like to receive emails from UNICEF Georgia Data Portal by clicking on the following link."
+      new_data:
         subject: "A new dataset has been added to UNICEF Georgia Data Portal!"
-        message: "A new dataset titled '%{title}' has been added.  This is the description of the dataset:"
-      new_time_series:
-        subject: "A new time series has been added to UNICEF Georgia Data Portal!"
-        message: "A new time series titled '%{title}' has been added.  This is the description of the time series:"
+        message: "UNICEF Georgia has just uploaded new data for you to explore, visualize, and share."
     contact:
       contact_form:
         subject: "UNICEF Georgia Data Portal Contact Form"

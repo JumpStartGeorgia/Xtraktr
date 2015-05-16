@@ -30,3 +30,9 @@ end
 every :hour do
   rake "generate_files:download_data_files"
 end
+
+# send notifications
+every 30.minutes do
+  runner "NotificationTrigger.process_all_types"
+end
+
