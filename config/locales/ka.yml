@@ -12,6 +12,7 @@ ka:
       time_series_answer: Answer
       api_version: API Version
       api_method: API Method
+      api_key: API Access Token
       categories: Category
       category_mappers: Categories
     attributes:
@@ -27,6 +28,7 @@ ka:
         current_sign_in_at: "ბოლო შემოსვლის თარიღი"
         first_name: First Name
         last_name: Last Name
+        name: Name
         age_group: Age Group
         residence: Country of Residence
         affiliation: Affiliation
@@ -181,6 +183,9 @@ ka:
         app: App
         is_mobile: Is Mobile Device?
         created_at: Date
+      api_key:
+        key: Access Token
+        created_at: Date Created
     hints:
       dataset:
         title: The title of your dataset
@@ -509,11 +514,15 @@ ka:
       highlight_show_home_page_success: "The highlight will now always appear on the home page."
       highlight_deleted: "The highlight has been deleted."
       explore_error: "An error occurred while processing your request."
+      user_settings_updated: "Your settings were successfully updated."
+      api_key_created: "Your API Access Token was successfully created."
+      api_key_deleted: "Your API Access Token was successfully deleted."
     menu:
       explore_data: Explore Data
       explore_time_series: Explore Time Series
       datasets: Datasets
       time_series: Time Series
+      user_settings: User Settings
       about_dataset: About 
       about_time_series: About 
       all_datasets: All Datasets
@@ -617,6 +626,18 @@ ka:
       index:
         title_site: Go to %{app_name}
         title_datalist: View All Datasets
+  settings:
+    index:
+      title: User Settings
+      tabs:
+        settings: Settings
+        api: API Access Tokens
+      api_explanation1: The API allows you to programmatically get information and run analyses on the datasets and time series available on this site. All API calls require an access token - a key that let's us know who is making the request. To get one, simply press the button below.
+      api_link_text: API Documentation section
+      api_explanation2: You can learn more about the API and how to use the Access Token by going to the [link].
+      no_api_keys: You do not have any API Access Tokens on file.
+      get_api: Get API Access Token
+      delete_api: Delete API Access Token
   root:
     index:
       header_latest_datasets: Latest Datasets

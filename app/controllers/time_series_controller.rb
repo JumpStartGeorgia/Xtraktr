@@ -44,7 +44,7 @@ class TimeSeriesController < ApplicationController
 
       @show_title = false
 
-      @css.push("dashboard.css", 'highlights.css', 'list.css', 'boxic.css')
+      @css.push("dashboard.css", 'highlights.css', 'list.css', 'boxic.css', 'tabs.css')
       @js.push("live_search.js", 'highlights.js')
 
       respond_to do |format|

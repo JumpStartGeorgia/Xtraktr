@@ -108,7 +108,7 @@ class RootController < ApplicationController
 
       @show_title = false
 
-      @css.push("dashboard.css", 'highlights.css', 'boxic.css')
+      @css.push("dashboard.css", 'highlights.css', 'boxic.css', 'tabs.css')
       @js.push("dashboard.js", "live_search.js", 'highlights.js')
 
       respond_to do |format|
@@ -192,7 +192,7 @@ class RootController < ApplicationController
 
       @show_title = false
 
-      @css.push("dashboard.css", 'highlights.css', 'boxic.css', 'list.css')
+      @css.push("dashboard.css", 'highlights.css', 'boxic.css', 'list.css', 'tabs.css')
       @js.push("live_search.js", 'highlights.js')
 
       respond_to do |format|

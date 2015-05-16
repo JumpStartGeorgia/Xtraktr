@@ -9,10 +9,10 @@
           </button>
           <%
             link_class = ''
-            img_path = '/assets/svg/logo.svg'
+            img_path = 'svg/logo.svg'
             if @is_xtraktr
               link_class = 'xtraktr'
-              img_path = '/assets/svg/xtraktr_logo.svg'
+              img_path = 'svg/xtraktr_logo.svg'
             end
           %>
           <%= link_to root_path(:locale => I18n.locale),:class=>"navbar-brand #{link_class}" do %>
@@ -37,7 +37,7 @@
         <% if user_signed_in? %>
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <%= current_user.nickname %>
+              <%= current_user.name %>
               <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" role="menu">
@@ -46,6 +46,9 @@
               </li>
               <li>
                <%= link_to t('app.menu.time_series'), time_series_index_path %>
+              </li>
+              <li>
+               <%= link_to t('app.menu.user_settings'), settings_path %>
               </li>
               <% if current_user.role?(User::ROLES[:admin]) %>
                 <li>

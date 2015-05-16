@@ -107,6 +107,10 @@ BootstrapStarter::Application.routes.draw do
     match '/explore_time_series/:id/explore', :to => 'root#explore_time_series_show', :as => :explore_time_series_show, :via => :get
     match '/private_share/:id', :to => 'root#private_share', :as => :private_share, :via => :get
 
+    match '/settings', :to => 'settings#index', :as => :settings, :via => [:get, :put]
+    match '/settings/get_api_token', :to => 'settings#get_api_token', :as => :settings_get_api_token, :via => :post
+    match '/settings/delete_api_token/:id', :to => 'settings#delete_api_token', :as => :settings_delete_api_token, :via => :delete
+
 		root :to => 'root#index'
 	  match "*path", :to => redirect("/#{I18n.default_locale}") # handles /en/fake/path/whatever
 	end

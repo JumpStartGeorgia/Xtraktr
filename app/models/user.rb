@@ -42,6 +42,7 @@ class User
 
   has_many :datasets
   has_many :api_keys, dependent: :destroy
+  accepts_nested_attributes_for :api_keys, :reject_if => :all_blank, :allow_destroy => true
 
   #############################
 
@@ -84,8 +85,7 @@ class User
   field :current_sign_in_ip, :type => String
   field :last_sign_in_ip,    :type => String
 
-  ## Agreementable
-
+  ## user info
   field :first_name, type: String
   field :last_name, type: String
   field :age_group, type: Integer #{ 1 => '17-24', 2 => '25-34', 3 => '35-44', 4 => '45-54', 5 => '55-64', 6 => 'above'}
@@ -94,6 +94,10 @@ class User
   field :status, type: Integer #{ 1 => 'researcher', 2 => 'student', 3 => 'journalist', 4 => 'ngo', 5 => 'government_official', 6 => 'international_organization', 7 => 'private_sector', 8 => 'other' } 
   field :status_other, type: String
   field :description, type: String
+  field :terms, type: Boolean, default: false
+  field :notifications, type: Boolean, default: false
+  field :notification_locale, type: String, default: I18n.default_locale.to_s
+
 
   ## Encryptable
   # field :password_salt, :type => String
@@ -130,11 +134,12 @@ class User
   index({ :reset_password_token => 1}, { background: true, unique: true, sparse: true })
 
   #############################
-  attr_accessor :terms, :account, :notifications
+  attr_accessor :account
   attr_accessible :email, :password, :password_confirmation, :remember_me, 
                   :role, :provider, :uid, :nickname, :avatar,
                   :first_name, :last_name, :age_group, :residence,
-                  :affiliation, :status, :status_other, :description, :terms, :account, :notifications
+                  :affiliation, :status, :status_other, :description, :terms, :account, 
+                  :notifications, :notification_locale, :api_keys_attributes
 
   #############################
   ## Validations
@@ -147,10 +152,8 @@ class User
   validates :affiliation, presence: true
   validates :status, inclusion: { in: STATUS.keys }
   validates_presence_of :status_other, :if => lambda { |o| o.status == 8 }
-  validates :terms, :numericality => { :equal_to => 1 }
   validates :account, :numericality => { :equal_to => 1 }
-  validates :notifications, :numericality => { :equal_to => 1 }
-  
+  validates :terms, :inclusion => {:in => [true]  }
   ####################
 
   before_create :create_nickname
@@ -162,6 +165,18 @@ class User
   end
 
   #############################
+
+  def name
+    if self.first_name.present?
+      if self.last_name.present?
+        "#{self.first_name} #{self.last_name}"
+      else
+        self.first_name
+      end
+    else
+      self.nickname
+    end
+  end
 
 
   def self.no_admins
@@ -231,7 +246,7 @@ class User
         dataset_id: Moped::BSON::ObjectId.from_string(dataset_id),
         dataset_type: dataset_type,
         dataset_locale: dataset_locale,
-        terms: 1
+        terms: self.terms
       })
     a.valid?
   end

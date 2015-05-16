@@ -8,7 +8,7 @@ $(document).ready(function(){
     "processing": true,
     "serverSide": true,
     "ajax": $('#users-datatable').data('source'),
-    "order": [[4, 'desc']],
+    "order": [[3, 'desc']],
     "language": {
      "url": gon.datatable_i18n_url
     },

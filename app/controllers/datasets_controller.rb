@@ -44,7 +44,7 @@ class DatasetsController < ApplicationController
 
       @show_title = false
 
-      @css.push("dashboard.css", 'highlights.css', 'boxic.css')
+      @css.push("dashboard.css", 'highlights.css', 'boxic.css', 'tabs.css')
       @js.push("live_search.js", 'highlights.js')
 
       respond_to do |format|
