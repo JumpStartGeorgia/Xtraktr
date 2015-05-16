@@ -1690,17 +1690,6 @@ class Dataset < CustomTranslation
 
         # if the question is different, save the previous question before moving on to the new question
         if last_question_code != row[indexes['code']]
-          # if the record changed, save the changes
-          if question.present? && question.changed?
-            counts['overall'] += 1
-            # if question.save
-            #   counts['overall'] += 1
-            # else
-            #   msg = I18n.t('mass_uploads_msgs.answers.not_save', n: n, msg: answer.errors.full_messages)
-            #   return msg
-            # end
-          end
-
           # get question for this row
           question = self.questions.with_original_code(row[indexes['code']])
           if question.nil?

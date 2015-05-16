@@ -124,6 +124,8 @@ end
     @time_series = TimeSeries.new(params[:time_series])
 
     # if there are category_ids, create mapper objects with them
+    params[:time_series][:category_ids].delete('')
+      # - remove '' from list
     params[:time_series][:category_ids].each do |category_id|
       @time_series.category_mappers.build(category_id: category_id)
     end

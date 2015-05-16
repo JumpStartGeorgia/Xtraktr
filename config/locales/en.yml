@@ -12,6 +12,8 @@ en:
       time_series_answer: Answer
       api_version: API Version
       api_method: API Method
+      categories: Category
+      category_mappers: Categories
     attributes:
       user:
         email: Email Address

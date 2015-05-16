@@ -131,6 +131,8 @@ class DatasetsController < ApplicationController
     @dataset = Dataset.new(params[:dataset])
 
     # if there are category_ids, create mapper objects with them
+    params[:dataset][:category_ids].delete('')
+      # - remove '' from list
     params[:dataset][:category_ids].each do |category_id|
       @dataset.category_mappers.build(category_id: category_id)
     end

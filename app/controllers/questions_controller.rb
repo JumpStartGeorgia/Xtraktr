@@ -187,7 +187,7 @@ class QuestionsController < ApplicationController
         # if no msg than there were no errors
         if msg.blank?
           logger.debug "****************** total changes: #{counts.map{|k,v| k + ' - ' + v.to_s}.join(', ')}"
-          flash[:success] =  t('app.msgs.mass_upload_questions_success', count: counts['overall'])
+          flash[:success] =  t('app.msgs.mass_upload_questions_success', count: view_context.number_with_delimiter(counts['overall']))
         else
           logger.debug "****************** error = #{msg}"
           flash[:error] =  t('app.msgs.mass_upload_questions_error', msg: msg)
@@ -214,7 +214,7 @@ class QuestionsController < ApplicationController
         # if no msg than there were no errors
         if msg.blank?
           logger.debug "****************** total changes: #{counts.map{|k,v| k + ' - ' + v.to_s}.join(', ')}"
-          flash[:success] =  t('app.msgs.mass_upload_answers_success', count: counts['overall'])
+          flash[:success] =  t('app.msgs.mass_upload_answers_success', count: view_context.number_with_delimiter(counts['overall']))
         else
           flash[:error] =  t('app.msgs.mass_upload_answers_error', msg: msg)
         end

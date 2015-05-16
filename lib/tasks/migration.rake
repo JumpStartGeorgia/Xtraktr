@@ -34,4 +34,9 @@ namespace :migration do
     require "./db/migrate/set_urls_shapefile.rb"
   end
 
+  desc "load dataset urls with data download paths"
+  task :set_dataset_urls => :environment do
+    require "./db/migrate/set_dataset_urls.rb"
+  end
+
 end
