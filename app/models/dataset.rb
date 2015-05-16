@@ -63,7 +63,7 @@ class Dataset < CustomTranslation
       pluck(:embed_id)
     end
   end
-  
+
   embeds_many :questions, cascade_callbacks: true do
     # these are functions that will query the questions documents
 
@@ -73,7 +73,7 @@ class Dataset < CustomTranslation
     end
 
     def with_codes(codes)
-      where(:code => codes) 
+      where(:code => codes)
     end
 
     def not_in_codes(codes)
@@ -92,12 +92,12 @@ class Dataset < CustomTranslation
     def for_analysis
       where(:exclude => false, :has_code_answers => true).to_a
     end
-    
+
     # get count questions that are not excluded and have code answers
     def for_analysis_count
       where(:exclude => false, :has_code_answers => true).count
     end
-    
+
     # get all of the questions with code answers
     def with_code_answers
       where(:has_code_answers => true).to_a
@@ -257,11 +257,11 @@ class Dataset < CustomTranslation
 
   #############################
 
-  attr_accessible :title, :description, :methodology, :user_id, :has_warnings, 
-      :data_items_attributes, :questions_attributes, :reports_attributes, :questions_with_bad_answers, 
-      :datafile, :public, :private_share_key, #:codebook, 
+  attr_accessible :title, :description, :methodology, :user_id, :has_warnings,
+      :data_items_attributes, :questions_attributes, :reports_attributes, :questions_with_bad_answers,
+      :datafile, :public, :private_share_key, #:codebook,
       :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at,
-      :languages, :default_language, :stats_attributes, :urls_attributes, 
+      :languages, :default_language, :stats_attributes, :urls_attributes,
       :title_translations, :description_translations, :methodology_translations, :source_translations, :source_url_translations,
       :reset_download_files, :category_mappers_attributes, :category_ids
 
@@ -304,10 +304,10 @@ class Dataset < CustomTranslation
   #############################
   # Validations
   validates_presence_of :default_language
-  # validates_attachment :codebook, 
+  # validates_attachment :codebook,
   #     :content_type => { :content_type => ["text/plain", "application/pdf", "application/vnd.oasis.opendocument.text", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/msword"] }
   # validates_attachment_file_name :codebook, :matches => [/txt\Z/i, /pdf\Z/i, /odt\Z/i, /doc?x\Z/i]
-  validates_attachment :datafile, :presence => true, 
+  validates_attachment :datafile, :presence => true,
       :content_type => { :content_type => ["application/x-spss-sav", "application/x-stata-dta", "application/octet-stream", "text/csv", "application/vnd.oasis.opendocument.spreadsheet", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"] }
   validates_attachment_file_name :datafile, :matches => [/sav\Z/i, /dta\Z/i, /csv\Z/i, /ods\Z/i, /xls\Z/i, /xlsx\Z/i]
   validate :validate_languages
@@ -339,26 +339,26 @@ class Dataset < CustomTranslation
       logger.debug "***** - default is present; title = #{self.title_translations[self.default_language]}; source = #{self.source_translations[self.default_language]}"
       if self.title_translations[self.default_language].blank?
         logger.debug "***** -- title not present!"
-        errors.add(:base, I18n.t('errors.messages.translation_default_lang', 
+        errors.add(:base, I18n.t('errors.messages.translation_default_lang',
             field_name: self.class.human_attribute_name('title'),
             language: Language.get_name(self.default_language),
             msg: I18n.t('errors.messages.blank')) )
       end
       if self.source_translations[self.default_language].blank?
         logger.debug "***** -- source not present!"
-        errors.add(:base, I18n.t('errors.messages.translation_default_lang', 
+        errors.add(:base, I18n.t('errors.messages.translation_default_lang',
             field_name: self.class.human_attribute_name('source'),
             language: Language.get_name(self.default_language),
             msg: I18n.t('errors.messages.blank')) )
       end
     end
-  end 
+  end
 
   # have to do custom url validation because validate format with does not work on localized fields
   def validate_url
     self.source_url_translations.keys.each do |key|
       if self.source_url_translations[key].present? && (self.source_url_translations[key] =~ URI::regexp(['http','https'])).nil?
-        errors.add(:base, I18n.t('errors.messages.translation_any_lang', 
+        errors.add(:base, I18n.t('errors.messages.translation_any_lang',
             field_name: self.class.human_attribute_name('source_url'),
             language: Language.get_name(key),
             msg: I18n.t('errors.messages.invalid')) )
@@ -388,7 +388,7 @@ class Dataset < CustomTranslation
 
   #############################
   # Callbacks
-  
+
   after_initialize :set_category_ids
   before_create :process_file
   after_create :create_quick_data_downloads
@@ -447,8 +447,8 @@ class Dataset < CustomTranslation
     logger.debug "==== update_flags"
     logger.debug "==== - bad answers = #{self.questions_with_bad_answers.present?}; no answers = #{self.questions.with_no_code_answers.present?}; no question text = #{self.no_question_text_count}"
     logger.debug "==== - has_warnings was = #{self.has_warnings}"
-    self.has_warnings = self.questions_with_bad_answers.present? || 
-                        self.questions.with_no_code_answers.present? || 
+    self.has_warnings = self.questions_with_bad_answers.present? ||
+                        self.questions.with_no_code_answers.present? ||
                         self.no_question_text_count > 0
 
     logger.debug "==== - has_warnings = #{self.has_warnings}"
@@ -513,7 +513,7 @@ class Dataset < CustomTranslation
       # from: http://stackoverflow.com/a/24497338
       Zlib::GzipWriter.open(js_gz_shapefile_file_path) do |gz|
         File.open(js_shapefile_file_path, 'rb') do |f|
-         while chunk = f.read(16*1024) do 
+         while chunk = f.read(16*1024) do
            gz.write chunk
          end
         end
@@ -593,14 +593,14 @@ class Dataset < CustomTranslation
   end
 
   def self.categorize(cat)
-    cat = Category.find_by(permalink: cat) 
+    cat = Category.find_by(permalink: cat)
     if cat.present?
       self.in(id: CategoryMapper.where(category_id: cat.id).pluck(:dataset_id))
     else
       all
     end
   end
-  
+
   def self.is_public
     where(public: true)
   end
@@ -717,7 +717,7 @@ class Dataset < CustomTranslation
 
   # assign a question to a shapeset
   # - question_id - id of question to update
-  # - shapeset_id - id of shapeset to assign 
+  # - shapeset_id - id of shapeset to assign
   # - mappings - array of arrays containing answer id and shape name
   #   - [ [id, name], [id, name], ... ]
   def map_question_to_shape(question_id, shapeset_id, mappings)
@@ -781,7 +781,7 @@ class Dataset < CustomTranslation
   # #############################
   # #############################
 
-  # ### perform a summary analysis of one question_code in 
+  # ### perform a summary analysis of one question_code in
   # ### the data_items
   # ### - question_code: code of question to analyze and put along row of crosstab
   # # - options:
@@ -867,9 +867,9 @@ class Dataset < CustomTranslation
   #       result[:chart][:data] = []
   #       (0..result[:row_answers].length-1).each do |index|
   #         result[:chart][:data] << {
-  #           name: result[:row_answers][index].text, 
-  #           y: result[:percents][index], 
-  #           count: result[:counts][index], 
+  #           name: result[:row_answers][index].text,
+  #           y: result[:percents][index],
+  #           count: result[:counts][index],
   #           answer_value: result[:row_answers][index].value
   #         }
   #       end
@@ -941,7 +941,7 @@ class Dataset < CustomTranslation
   #     logger.debug "uniq row items = #{row_items}"
   #     logger.debug "uniq col items = #{col_items}"
 
-  #     # merge the data arrays into one array that 
+  #     # merge the data arrays into one array that
   #     # has nested arrays
   #     data = data1.zip(data2)
 
@@ -1065,7 +1065,7 @@ class Dataset < CustomTranslation
   #             (0..result[:row_answers].length-1).each do |index|
   #               # store in highmaps format: {name, value, count}
   #               result[:map][:data][col_answer.value.to_s] << {:shape_name => result[:row_answers][index].shape_name, :display_name => result[:row_answers][index].text, :value => percents[col_index][index], :count => counts[col_index][index]}
-  #             end 
+  #             end
   #           end
 
   #         else
@@ -1081,7 +1081,7 @@ class Dataset < CustomTranslation
   #             (0..result[:column_answers].length-1).each do |index|
   #               # store in highmaps format: {shape_name, display_name, value, count}
   #               result[:map][:data][row_answer.value.to_s] << {:shape_name => result[:column_answers][index].shape_name, :display_name => result[:column_answers][index].text, :value => result[:percents][row_index][index], :count => result[:counts][row_index][index]}
-  #             end 
+  #             end
   #           end
   #         end
   #       end
@@ -1094,7 +1094,7 @@ class Dataset < CustomTranslation
 
 =begin old methods for use with data attribute
 
-  ### perform a summary analysis of one hash key in 
+  ### perform a summary analysis of one hash key in
   ### the data array
   ### - row: name of key to put along row of crosstab
   def data_onevar_analysis1(row, options={})
@@ -1131,7 +1131,7 @@ class Dataset < CustomTranslation
 
           for (var i = 0; i < this.data.length; i++) {
             if (this.data[i]['#{row}'] != null){
-              emit(this.data[i]['#{row}'].toString(), 1 ); 
+              emit(this.data[i]['#{row}'].toString(), 1 );
             }
           }
 
@@ -1196,9 +1196,9 @@ class Dataset < CustomTranslation
         result[:chart][:data] = []
         (0..result[:row_answers].length-1).each do |index|
           result[:chart][:data] << {
-            name: result[:row_answers][index].text, 
-            y: result[:percents][index], 
-            count: result[:counts][index], 
+            name: result[:row_answers][index].text,
+            y: result[:percents][index],
+            count: result[:counts][index],
           }
         end
 
@@ -1221,7 +1221,7 @@ class Dataset < CustomTranslation
     return result
   end
 
-  ### perform a crosstab analysis between two hash keys in 
+  ### perform a crosstab analysis between two hash keys in
   ### the data array
   ### - row: name of key to put along row of crosstab
   ### - col: name of key to put along the columns of crosstab
@@ -1263,7 +1263,7 @@ class Dataset < CustomTranslation
 #        logger.debug "c = #{c}"
 
         # need to make sure the row value and c value are recorded as strings
-        # for if it is an int, the javascript function turns it into a decimal 
+        # for if it is an int, the javascript function turns it into a decimal
         # (2 -> 2.0) and then comparisons do not work!
         # - use the if statement to only emit when the row has this value of c and both the row and col have a value
         map = "
@@ -1273,7 +1273,7 @@ class Dataset < CustomTranslation
              }
              for (var i = 0; i < this.data.length; i++) {
               if (this.data[i]['#{row}'] != null && this.data[i]['#{col}'] != null && this.data[i]['#{col}'].toString() == '#{c}'){
-                emit(this.data[i]['#{row}'].toString(), { '#{col}': '#{c}', count: 1 }); 
+                emit(this.data[i]['#{row}'].toString(), { '#{col}': '#{c}', count: 1 });
               }
              }
           };
@@ -1394,7 +1394,7 @@ class Dataset < CustomTranslation
               (0..result[:row_answers].length-1).each do |index|
                 # store in highmaps format: {name, value, count}
                 result[:map][:data][col_answer.value.to_s] << {:name => result[:row_answers][index].text, :value => percents[col_index][index], :count => counts[col_index][index]}
-              end 
+              end
             end
 
           else
@@ -1410,7 +1410,7 @@ class Dataset < CustomTranslation
               (0..result[:column_answers].length-1).each do |index|
                 # store in highmaps format: {name, value, count}
                 result[:map][:data][row_answer.value.to_s] << {:name => result[:column_answers][index].text, :value => result[:percents][row_index][index], :count => result[:counts][row_index][index]}
-              end 
+              end
             end
           end
         end
@@ -1429,18 +1429,18 @@ class Dataset < CustomTranslation
   ## CSV upload and download
   ##################################
   ##################################
-
+  QUESTION_HEADERS={code: 'Question Code', question: 'Question', exclude: 'Exclude Question from Analysis (leave blank to show question)'}
   # create csv to download questions
   # columns: code, text (for each translation), exclude
   def generate_questions_csv
     csv_data = CSV.generate do |csv|
       # create header for csv
-      header = [I18n.t('mongoid.attributes.question.code')]
+      header = [QUESTION_HEADERS[:code]]
       locales = self.languages_sorted
       locales.each do |locale|
-        header << "#{I18n.t('mongoid.attributes.question.text')} (#{locale})"
+        header << "#{QUESTION_HEADERS[:question]} (#{locale})"
       end
-      header << "#{I18n.t('mongoid.attributes.question.exclude_download_header')}"
+      header << QUESTION_HEADERS[:exclude]
       csv << header
 
       # add questions
@@ -1449,7 +1449,7 @@ class Dataset < CustomTranslation
         locales.each do |locale|
           if question.text_translations[locale].present?
             row << question.text_translations[locale]
-          else 
+          else
             row << ''
           end
         end
@@ -1464,15 +1464,16 @@ class Dataset < CustomTranslation
 
   # create csv to download answers
   # columns: code, value, text (for each translation), exclude, can exclude
+  ANSWER_HEADERS={code: 'Question Code', value: 'Value', sort: 'Sort Order', answer: 'Answer', exclude: 'Exclude Answer from Analysis (leave blank to show answer)', can_exclude: 'Can Exclude During Analysis (leave blank to always show answer)'}
   def generate_answers_csv
     csv_data = CSV.generate do |csv|
       # create header for csv
-      header = [I18n.t('mongoid.attributes.question.code'), I18n.t('mongoid.attributes.answer.value'), I18n.t('mongoid.attributes.answer.sort_order')]
+      header = [ANSWER_HEADERS[:code], ANSWER_HEADERS[:value], ANSWER_HEADERS[:sort]]
       locales = self.languages_sorted
       locales.each do |locale|
-        header << "#{I18n.t('mongoid.attributes.answer.text')} (#{locale})"
+        header << "#{ANSWER_HEADERS[:answer]} (#{locale})"
       end
-      header << [I18n.t('mongoid.attributes.answer.exclude_download_header'), I18n.t('mongoid.attributes.answer.can_exclude_download_header')]
+      header << [ANSWER_HEADERS[:exclude], ANSWER_HEADERS[:can_exclude]]
       csv << header.flatten
 
       # add questions
@@ -1484,7 +1485,7 @@ class Dataset < CustomTranslation
           locales.each do |locale|
             if answer.text_translations[locale].present?
               row << answer.text_translations[locale]
-            else 
+            else
               row << ''
             end
           end
@@ -1494,11 +1495,11 @@ class Dataset < CustomTranslation
         end
       end
     end
-    
+
     return csv_data
   end
 
-  
+
   # read in the csv and update the question text as necessary
   def process_questions_csv(file)
     start = Time.now
@@ -1517,7 +1518,6 @@ class Dataset < CustomTranslation
 
     CSV.parse(infile.force_encoding('utf-8')) do |row|
       startRow = Time.now
-      # translation_changed = false
       n += 1
       puts "@@@@@@@@@@@@@@@@@@ processing row #{n}"
 
@@ -1526,30 +1526,28 @@ class Dataset < CustomTranslation
         # look at headers and set indexes
         # - doing this in case the user re-arranged the columns
         # if header in csv is not known, throw error
-        I18n.available_locales.map{|x| x.to_s}.each do |app_locale|
-          # code
-          idx = row.index(I18n.t('mongoid.attributes.question.code', locale: app_locale))
-          indexes['code'] = idx if idx.present?
-          # exclude
-          idx = row.index(I18n.t('mongoid.attributes.question.exclude_download_header', locale: app_locale))
-          indexes['exclude'] = idx if idx.present?
 
-          # text translations
-          locales.each do |locale|
-            idx = row.index("#{I18n.t('mongoid.attributes.question.text', locale: app_locale)} (#{locale})")
-            indexes[locale] = idx if idx.present?
-          end
+        # code
+        idx = row.index(QUESTION_HEADERS[:code])
+        indexes['code'] = idx if idx.present?
+        # exclude
+        idx = row.index(QUESTION_HEADERS[:exclude])
+        indexes['exclude'] = idx if idx.present?
 
-          if !indexes.values.include?(nil)
-            # found all columns, so can stop
-            foundAllHeaders = true
-            break
-          end
+        # text translations
+        locales.each do |locale|
+          idx = row.index("#{QUESTION_HEADERS[:question]} (#{locale})")
+          indexes[locale] = idx if idx.present?
+        end
 
-        end        
+        if !indexes.values.include?(nil)
+          # found all columns, so can stop
+          foundAllHeaders = true
+        end
 
         if !foundAllHeaders
             msg = I18n.t('mass_uploads_msgs.bad_headers')
+            puts "@@@@@@@@@@> #{msg}"
           return msg
         end
 
@@ -1560,6 +1558,7 @@ class Dataset < CustomTranslation
         question = self.questions.with_original_code(row[indexes['code']])
         if question.nil?
           msg = I18n.t('mass_uploads_msgs.missing_code', n: n, code: row[indexes['code']])
+          puts "@@@@@@@@@@> #{msg}"
           return msg
         end
 
@@ -1580,11 +1579,10 @@ class Dataset < CustomTranslation
           end
         end
         counts['overall'] += 1 if locale_found
-        
-        puts "--> was #{question.text_translations}; now #{temp_text}"
+
         if question.text_translations != temp_text
           puts "---- text translations changed"
-          question.text_translations = temp_text 
+          question.text_translations = temp_text
         end
 
 
@@ -1603,7 +1601,7 @@ class Dataset < CustomTranslation
         puts "******** time to process row: #{Time.now-startRow} seconds"
         puts "************************ total time so far : #{Time.now-start} seconds"
       end
-    end  
+    end
 
     puts "=========== valid = #{self.valid?}; errors = #{self.errors.full_messages}"
 
@@ -1649,36 +1647,33 @@ class Dataset < CustomTranslation
         # look at headers and set indexes
         # - doing this in case the user re-arranged the columns
         # if header in csv is not known, throw error
-        I18n.available_locales.map{|x| x.to_s}.each do |app_locale|
-          # code
-          idx = row.index(I18n.t('mongoid.attributes.question.code', locale: app_locale))
-          indexes['code'] = idx if idx.present?
-          # value
-          idx = row.index(I18n.t('mongoid.attributes.answer.value', locale: app_locale))
-          indexes['value'] = idx if idx.present?
-          # sort_order
-          idx = row.index(I18n.t('mongoid.attributes.answer.sort_order', locale: app_locale))
-          indexes['sort_order'] = idx if idx.present?
-          # exclude
-          idx = row.index(I18n.t('mongoid.attributes.answer.exclude_download_header', locale: app_locale))
-          indexes['exclude'] = idx if idx.present?
-          # can exclude
-          idx = row.index(I18n.t('mongoid.attributes.answer.can_exclude_download_header', locale: app_locale))
-          indexes['can_exclude'] = idx if idx.present?
 
-          # text translations
-          locales.each do |locale|
-            idx = row.index("#{I18n.t('mongoid.attributes.answer.text', locale: app_locale)} (#{locale})")
-            indexes[locale] = idx if idx.present?
-          end
+        # code
+        idx = row.index(ANSWER_HEADERS[:code])
+        indexes['code'] = idx if idx.present?
+        # value
+        idx = row.index(ANSWER_HEADERS[:value])
+        indexes['value'] = idx if idx.present?
+        # sort_order
+        idx = row.index(ANSWER_HEADERS[:sort])
+        indexes['sort_order'] = idx if idx.present?
+        # exclude
+        idx = row.index(ANSWER_HEADERS[:exclude])
+        indexes['exclude'] = idx if idx.present?
+        # can exclude
+        idx = row.index(ANSWER_HEADERS[:can_exclude])
+        indexes['can_exclude'] = idx if idx.present?
 
-          if !indexes.values.include?(nil)
-            # found all columns, so can stop
-            foundAllHeaders = true
-            break
-          end
+        # text translations
+        locales.each do |locale|
+          idx = row.index("#{ANSWER_HEADERS[:answer]} (#{locale})")
+          indexes[locale] = idx if idx.present?
+        end
 
-        end        
+        if !indexes.values.include?(nil)
+          # found all columns, so can stop
+          foundAllHeaders = true
+        end
 
         if !foundAllHeaders
             msg = I18n.t('mass_uploads_msgs.bad_headers')
@@ -1688,10 +1683,10 @@ class Dataset < CustomTranslation
         logger.debug "%%%%%%%%%% col indexes = #{indexes}"
 
       else
-        ######################## 
-        # have to save the question and all of its answers 
+        ########################
+        # have to save the question and all of its answers
         # if try to just save an answer, mongoid uses incorrect index for question
-        ######################## 
+        ########################
 
         # if the question is different, save the previous question before moving on to the new question
         if last_question_code != row[indexes['code']]
@@ -1740,23 +1735,22 @@ class Dataset < CustomTranslation
           end
         end
         counts['overall'] += 1 if locale_found
-        
-        puts "--> was #{answer.text_translations}; now #{temp_text}"
+
         if answer.text_translations != temp_text
           puts "---- text translations changed"
-          answer.text_translations = temp_text 
+          answer.text_translations = temp_text
         end
 
         logger.debug "******** time to process row: #{Time.now-startRow} seconds"
         logger.debug "************************ total time so far : #{Time.now-start} seconds"
       end
-    end  
+    end
 
     puts "=========== valid = #{self.valid?}; errors = #{self.errors.full_messages}"
 
     self.save
 
-    # # make sure the last set of questions is change if needed 
+    # # make sure the last set of questions is change if needed
     # if question.present? && question.changed?
     #   if question.save
     #     counts['overall'] += 1
