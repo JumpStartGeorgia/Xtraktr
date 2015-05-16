@@ -48,3 +48,78 @@
 #highlights{
   margin-top: 30px;
 }
+
+.article.contact
+{  
+  .col
+  {
+    display:table-cell;
+    &:first-of-type
+    {
+
+    }
+  }
+  .email, .phone
+  {
+    background-color:#ace1f4;
+    padding:0px 0px 0px 6px;
+    display:block;
+  }  
+  .email
+  {
+    height:32px;
+    > div 
+    {
+      display:inline-block;
+      vertical-align: top;
+    }
+    .figure
+    {
+      background:#78d1f2 url(/assets/svg/mail.svg) no-repeat center/25px 19px;
+      width:42px;
+      height:32px;
+    }
+    .text
+    {
+      font-family:'sourcesans-pro','sans-serif';
+      font-size:16px;
+      color:#fff;
+      padding:0px 12px 0px 10px;
+      position:relative;
+      top: 50%;
+      -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+      transform: translateY(-50%);
+    }  
+  }
+  .phone
+  {
+    height:43px;
+    > div 
+    {
+      display:inline-block;
+      vertical-align: top;
+    }
+    .figure
+    {
+      background:#78d1f2 url(/assets/svg/phone.svg) no-repeat center/25px 22px;
+      width:42px;
+      height:43px;
+    }
+    .text
+    {
+      font-family:'sourcesans-pro','sans-serif';
+      font-size:16px;
+      color:#fff;
+      padding:0px 12px 0px 10px;
+      position:relative;
+      top: 50%;
+      -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+      transform: translateY(-50%);
+      line-height: 18px;
+
+    }  
+  }
+
+}

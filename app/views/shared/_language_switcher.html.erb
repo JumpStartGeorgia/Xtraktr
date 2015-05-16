@@ -4,8 +4,8 @@
 
   if langs.present?
 -%>
-  <span class="available-language-switcher">
-    <%= t('.label') %>
+  <div class="available-language-switcher">
+    <label><%= t('.label') %></label>
     <select>
       <% langs.each do |lang| %> 
         <%-
@@ -14,5 +14,5 @@
         <option <%= select %> value="<%= lang.locale %>"><%= lang.name %></option>
       <% end %>
     </select>
-  </span>
+  </div>
 <% end %>

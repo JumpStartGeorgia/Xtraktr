@@ -27,6 +27,7 @@ class RootController < ApplicationController
 
   def contact
     @page_content = PageContent.by_name('contact')
+    @css.push('root.css')
 
     @message = Message.new
     if request.post?
@@ -106,7 +107,7 @@ class RootController < ApplicationController
       @highlights = Highlight.by_dataset(@dataset.id)
 
       @css.push("dashboard.css", 'highlights.css', 'boxic.css')
-      @js.push("live_search.js", 'highlights.js')
+      @js.push("dashboard.js", "live_search.js", 'highlights.js')
 
       respond_to do |format|
         format.html # index.html.erb

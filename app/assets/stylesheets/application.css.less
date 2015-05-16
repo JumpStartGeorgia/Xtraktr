@@ -552,17 +552,10 @@ div.message {
     background-size:7px 7px;
     border-bottom: solid 1px #eaeae9;
     min-height: 18px;
-    padding: 6px 0;
+    padding:0px 50px;
     max-height: 31px;
     overflow: visible;
-    .breadcrumbo
-    {
-      line-height:18px;
-      a{
-        line-height:18px;
-        margin-left: 0;
-      }
-    }
+
     .navbar-nav > li > a{
       padding-top: 0;
       padding-bottom: 0;
@@ -709,7 +702,8 @@ div.message {
 
 
 
-
+.article.explore
+{
 .category
 {
   height:90px;
@@ -838,18 +832,7 @@ div.message {
       margin:0px;
       text-align:center;
     }   
-    .img
-    {
-      &.child_protection{ background:transparent url(/assets/svg/categories/child_protection.svg) center top/42px no-repeat; }
-      &.violence{ background:transparent url(/assets/svg/categories/violence.svg) center top/42px no-repeat; }
-      &.disability{ background:transparent url(/assets/svg/categories/disability.svg) center top/42px no-repeat; }
-      &.health{ background:transparent url(/assets/svg/categories/health.svg) center top/42px no-repeat; }
-      &.education{ background:transparent url(/assets/svg/categories/education.svg) center top/42px no-repeat; }
-      &.social_production{ background:transparent url(/assets/svg/categories/social_production.svg) center top/42px no-repeat; }
-      &.wash{ background:transparent url(/assets/svg/categories/wash.svg) center top/42px no-repeat; }
-      &.youth{ background:transparent url(/assets/svg/categories/youth.svg) center top/42px no-repeat; }
-      &.none{ background:transparent url(/assets/svg/categories/none.svg) center center/42px no-repeat; }
-    }
+
     &:after
     {
       content: "";
@@ -863,8 +846,23 @@ div.message {
     }
   } 
 }
+}
 
 
+.img
+{
+  &.child_protection{ background:transparent url(/assets/svg/categories/child_protection.svg) center top/42px no-repeat; }
+  &.violence{ background:transparent url(/assets/svg/categories/violence.svg) center top/42px no-repeat; }
+  &.disability{ background:transparent url(/assets/svg/categories/disability.svg) center top/42px no-repeat; }
+  &.health{ background:transparent url(/assets/svg/categories/health.svg) center top/42px no-repeat; }
+  &.education{ background:transparent url(/assets/svg/categories/education.svg) center top/42px no-repeat; }
+  &.social_production{ background:transparent url(/assets/svg/categories/social_production.svg) center top/42px no-repeat; }
+  &.wash{ background:transparent url(/assets/svg/categories/wash.svg) center top/42px no-repeat; }
+  &.youth{ background:transparent url(/assets/svg/categories/youth.svg) center top/42px no-repeat; }
+  &.none{ background:transparent url(/assets/svg/categories/none.svg) center center/42px no-repeat; }
+}
+
+    
 .pagination
 {
   width: 100%;
@@ -983,3 +981,38 @@ div.message {
 .mce-fullscreen{
   z-index: 1100 !important;
 }    
+
+.sidebar
+{
+  .share
+  {
+    // margin: 0px auto;
+    // display: table;
+    > a
+    {
+      width:65px;
+      height:45px;
+      display: inline-block;
+    }
+    .facebook
+    {
+      background:transparent url(/assets/svg/social.svg) no-repeat left center;  
+      &:hover
+      {
+         background:transparent url(/assets/svg/social.svg) no-repeat -65px center;  
+      }
+    }
+    .twitter
+    {
+      position: absolute;
+      right: 0px;
+      background:transparent url(/assets/svg/social.svg) no-repeat -130px center;  
+      &:hover
+      {
+         background:transparent url(/assets/svg/social.svg) no-repeat -195px center;  
+      }
+    }   
+  }
+}
+
+.col { display:table-cell; vertical-align:top; }
