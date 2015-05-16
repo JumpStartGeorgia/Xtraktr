@@ -42,6 +42,8 @@ class DatasetsController < ApplicationController
 
       @highlights = Highlight.by_dataset(@dataset.id)
 
+      @show_title = false
+
       @css.push("dashboard.css", 'highlights.css', 'boxic.css')
       @js.push("live_search.js", 'highlights.js')
 

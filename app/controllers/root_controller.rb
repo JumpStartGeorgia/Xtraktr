@@ -106,6 +106,8 @@ class RootController < ApplicationController
 
       @highlights = Highlight.by_dataset(@dataset.id)
 
+      @show_title = false
+
       @css.push("dashboard.css", 'highlights.css', 'boxic.css')
       @js.push("dashboard.js", "live_search.js", 'highlights.js')
 
@@ -187,6 +189,8 @@ class RootController < ApplicationController
       @license = PageContent.by_name('license')
 
       @highlights = Highlight.by_time_series(@time_series.id)
+
+      @show_title = false
 
       @css.push("dashboard.css", 'highlights.css', 'boxic.css', 'list.css')
       @js.push("live_search.js", 'highlights.js')

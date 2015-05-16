@@ -6,48 +6,61 @@
   subnav_left render(partial: 'shared/language_switcher', locals: {langs: @time_series.language_objects, current_locale: @time_series.current_locale})
 -%>
 
-<div id="dashboard-meta" class="row">
-  <div class="col-sm-9">
-    <% @datasets.each_with_index do |dataset, dataset_index| %>     
-      <div class="row">
-        <div class="col-sm-1" id="meta-dataset-label">
-          <%= @time_series.dates_included[dataset_index] %>
-        </div>
-        <div class="col-sm-6" id="meta-dates">
-          <%= model_class_d.human_attribute_name(:gathered_at) %>:
-          <%= format_gathered_dates(dataset.start_gathered_at, dataset.end_gathered_at) %>
-        </div>
-        <div class="col-sm-3" id="meta-dates">
-          <%= model_class_d.human_attribute_name(:released_at) %>:
-          <%= I18n.l(dataset.released_at, format: :day_first) if dataset.released_at.present?  %>
-        </div>
-        <% if @is_xtraktr %>
-          <div class="col-sm-3" id="meta-source">
-            <%= model_class_d.human_attribute_name(:source) %>:
-            <%= dataset.source %>
+<div class="article dashboard">
+  <div class="meta">
+    <div class="col bright">
+      <h2>
+        <%= image_tag 'svg/timeseries.svg' %>
+        <%=@time_series.title%>
+      </h2>
+      <% @datasets.each_with_index do |dataset, dataset_index| %>     
+        <div class="info">
+          <div class="time-series-year">
+            <%= @time_series.dates_included[dataset_index] %>
           </div>
+          <div class="calendar"></div>
+          <div class="timestamp">
+            <span><%= model_class_d.human_attribute_name(:gathered_at) %>:</span>
+            <%= format_gathered_dates(dataset.start_gathered_at, dataset.end_gathered_at) %>
+          </div>
+          <div class="timestamp">
+            <span><%= model_class_d.human_attribute_name(:released_at) %>::</span>
+            <%= I18n.l(dataset.released_at, format: :day_first) if dataset.released_at.present? %>
+          </div>   
+          <% if dataset_index == 0 %>
+            <div class="share"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>
+          <% end %>
+        </div>
+      <% end %>      
+      <% if @time_series.description.present? %>
+        <div class="description">
+          <%= simple_format_no_tags(@time_series.description, {}, {sanitize: false}) %>
+        </div>
+      <% end %>
+    </div>
+    <div class="col">
+      <% if @time_series.categories.present? %>
+        <div class="category">
+          <ul>
+            <% @time_series.categories.each {|x| %>
+              <li class="item">
+                <div class="text"><span><%= x.name %></span></div>
+                <div class="img <%= x.permalink %>" alt="<%= x.name %>"></div>
+              </li>
+            <% } %>
+          </ul>         
+        </div>
+      <% end %>
+      <div class="links">
+        <%= link_to url_time_series_explore(@time_series, language: params[:language]), title: t('app.menu.titles.explore_time_series') do %>
+            <%= image_tag 'svg/chart.svg' %>
+            <%= t('app.menu.explore_data') %>
         <% end %>
       </div>
-    <% end %>
-</div>
-<div id="dashboard-description" class="row">
-  <div class="col-sm-9">
-    <% if @time_series.description.present? %>
-      <div class="tinymce_format">
-        <%= simple_format_no_tags(@time_series.description, {}, {sanitize: false}) %>
-      </div>
-    <% end %>
+    </div>
   </div>
-  <div class="col-sm-3" style="text-align: right;">
-    <ul class="list-unstyled">
-      <li>
-        <%= link_to t('app.menu.explore_data'), url_time_series_explore(@time_series, language: params[:language]), class: 'btn btn-primary', title: t('app.menu.titles.explore_time_series') %>
-      </li>
-    </ul>
-  </div>
-</div>
 
-<div id="dashboard-tabs" role="tabpanel">
+<div id="dashboard-tabs" class="tabs" role="tabpanel">
 
     <% 
       highlight_active = {tab: '', panel: ''}

@@ -42,6 +42,8 @@ class TimeSeriesController < ApplicationController
 
       @highlights = Highlight.by_time_series(@time_series.id)
 
+      @show_title = false
+
       @css.push("dashboard.css", 'highlights.css', 'list.css', 'boxic.css')
       @js.push("live_search.js", 'highlights.js')
 
