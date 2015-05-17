@@ -32,11 +32,18 @@
 	# devise requires
 	config.action_mailer.default_url_options = { :host => 'localhost:3000' }
   # need this so can use url_helpers in modules
-  Rails.application.routes.default_url_options = config.action_mailer.default_url_options
+#  Rails.application.routes.default_url_options = config.action_mailer.default_url_options
 
 	# small smtp server for dev, http://mailcatcher.me/
   config.action_mailer.delivery_method = :smtp
-	config.action_mailer.smtp_settings = { :address => "127.0.0.1", :port => 1025 }
+	config.action_mailer.smtp_settings = { :address => "localhost", :port => 1025 }
+
+  config.middleware.use ExceptionNotifier,
+    :email_prefix => "[Xtraktr Dev App Error (#{Rails.env})] ",
+    :sender_address => ENV['APPLICATION_ERROR_FROM_EMAIL'],
+    :exception_recipients => [ENV['APPLICATION_ERROR_TO_EMAIL']]
+
+
 
   config.to_prepare do
     DeviseController.respond_to :html, :json

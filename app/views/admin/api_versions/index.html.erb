@@ -22,7 +22,7 @@
   <tbody>
     <% @api_versions.each do |api_version| %>
       <tr>
-        <td><%= link_to api_version.title, admin_api_version_path(api_version) %></td>
+        <td><%= api_version.title %></td>
         <td><%= api_version.permalink %></td>
         <td><%= format_public_status(api_version.public) %></td>
         <td>

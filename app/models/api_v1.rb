@@ -338,6 +338,8 @@ class ApiV1
       return {errors: [{status: '404', detail: I18n.t('api.msgs.no_time_series_dataset_error') }]}
     end
 
+Rails.logger.debug "================ind results has #{individual_results.length} records; id class = #{individual_results.first[:dataset_id].class}"
+
     data[:results] = time_series_single_analysis(data[:datasets], individual_results, data[:question], data[:filtered_by], with_title)
     data[:chart] = time_series_single_chart(data, with_title, options) if with_chart_data
 
@@ -1117,11 +1119,13 @@ private
       answer_item = {answer_value: answer[:value], answer_text: answer[:text], dataset_results: []}
 
       datasets.each do |dataset|
+        Rails.logger.debug "============== dataset = #{dataset[:label]}; id class = #{dataset[:dataset_id].class}"
         dataset_item = {dataset_label: dataset[:label], dataset_title: dataset[:title], count: 0, percent: 0}
 
         # see if this dataset had results
-        individual_result = individual_results.select{|x| x[:dataset_id] == dataset[:dataset_id]}.first
+        individual_result = individual_results.select{|x| x[:dataset_id].to_s == dataset[:dataset_id].to_s}.first
         if individual_result.present?
+          Rails.logger.debug "============== found result"
           # get results from dataset
           dataset_answer_results = nil
           if filter_answer_value.present?
@@ -1130,6 +1134,8 @@ private
           else
             dataset_answer_results = individual_result[:dataset_results][:results][:analysis].select{|x| x[:answer_value] == answer[:value]}.first
           end
+          Rails.logger.debug "============== answer results = #{dataset_answer_results}"
+
           if dataset_answer_results.present?
             dataset_item[:count] = dataset_answer_results[:count]
             dataset_item[:percent] = dataset_answer_results[:percent]
@@ -1147,7 +1153,7 @@ private
       response_item = {dataset_label: dataset[:label], dataset_title: dataset[:title], count: 0}
 
       # see if this dataset had results
-      individual_result = individual_results.select{|x| x[:dataset_id] == dataset[:dataset_id]}.first
+      individual_result = individual_results.select{|x| x[:dataset_id].to_s == dataset[:dataset_id].to_s}.first
       if individual_result.present?
         if filter_answer_value.present?
           filter_results = individual_result[:dataset_results][:results][:filter_analysis].select{|x| x[:filter_answer_value] == filter_answer_value}.first

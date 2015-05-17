@@ -1,2 +1,6 @@
 <%= simple_format @message.message %>
 
+<%- if @page_content.present? -%>
+  <%= simple_format_no_tags(@page_content.content, {}, {sanitize: false}) %>
+<%- end -%>
+

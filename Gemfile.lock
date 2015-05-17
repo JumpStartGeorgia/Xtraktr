@@ -345,6 +345,7 @@ DEPENDENCIES
   sass-rails (~> 3.2.6)
   spreadsheet (~> 1.0.1)
   therubyracer
+  thin
   tinymce-rails (~> 4.1.6)
   twitter-bootstrap-rails!
   uglifier (>= 1.0.3)

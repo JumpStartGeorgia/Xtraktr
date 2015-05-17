@@ -381,7 +381,7 @@ ka:
     notification:
       new_user:
         subject: "Welcome to UNICEF Georgia Data Portal!"
-        message: "Thank you for joining the UNICEF Georgia Data Portal.  You can manage when you would like to receive emails from UNICEF Georgia Data Portal by clicking on the following link."
+        message: Thank you for creating an account on UNICEF Georgia's open data portal and sharing some information about yourself. It is our hope that the content and data you find adds value to your work and understanding of trends related to the rights of children in Georgia. If you have any questions, you can contact us via our webform or send us an email.
       new_data:
         subject: "A new dataset has been added to UNICEF Georgia Data Portal!"
         message: "UNICEF Georgia has just uploaded new data for you to explore, visualize, and share."

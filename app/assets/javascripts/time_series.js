@@ -13,11 +13,11 @@ $(function() {
     // disable option if it is selected in another list
     function disable_selected_values(){
       // first make all options enabled
-      $('table#time_series_datasets select option').prop('disabled', false);
+      $('form.tabbed-translation-form select.selectpicker-dataset option').prop('disabled', false);
 
-      // now disable selected options
-      $('table#time_series_datasets select').each(function(){
-        $('table#time_series_datasets select option[value="' + $(this).val() + '"]:not(:selected)').prop('disabled', true);
+      // // now disable selected options
+      $('form.tabbed-translation-form select.selectpicker-dataset').each(function(){
+        $('form.tabbed-translation-form select.selectpicker-dataset option[value="' + $(this).val() + '"]:not(:selected)').prop('disabled', true);
       });
     }
 

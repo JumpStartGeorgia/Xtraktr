@@ -1,2 +1,7 @@
 
 <%= @message.message %>
+
+<%- if @page_content.present? -%>
+<%= strip_tags_nbsp(@page_content.content) %>
+<%- end -%>
+

@@ -6,6 +6,10 @@ class NotificationMailer < ActionMailer::Base
   def send_new_user(message)
     puts "=== sending new user!"
     @message = message
+
+    # get instruction text
+    @page_content = PageContent.by_name('instructions')
+
     mail(:to => message.email, :subject => message.subject)
   end
 
