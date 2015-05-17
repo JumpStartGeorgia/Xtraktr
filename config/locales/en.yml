@@ -35,6 +35,8 @@ en:
         status: Status
         status_other: When other(Please specify)
         description: Short description of research objective (<i>optional</i>)           
+        notifications: I want to receive notifications when new datasets are added
+        notification_locale: Notification Language
       message:
         name: Name
         email: Email Address
@@ -580,7 +582,6 @@ en:
       international_organization: International Organization
       private_sector: Private Sector
       other: Other
-    subscribe: I want to subscribe to Notifications
     wanna_account: Tired of filling out this form? To avoid this form in the future, create an account.    
   layouts:
     nav:

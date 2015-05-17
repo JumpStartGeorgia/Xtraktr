@@ -42,7 +42,7 @@ $(document).ready(function(){
     p.find('a.active').removeClass('active');
     t.addClass('active');
   });
-  $(document).on('change','#user_account', function(){
+  $(document).on('change','form.user #user_account', function(){
     var t =  $(this);
     var form = t.closest('form');
     var checked = t.is(":checked");
@@ -51,6 +51,12 @@ $(document).ready(function(){
     var tmp = submit.attr('data-text-swap');
     submit.attr('data-text-swap',submit.val())
     submit.val(tmp);
+  });
+  $(document).on('change', 'form.user #user_notifications', function(){
+    var t =  $(this);
+    var form = t.closest('form');
+    var checked = t.is(":checked");
+    form.find('#user_notification_locale_input').toggleClass('js-hide', !checked);
   });
 
   $(document).on('click', '.reattach', function(e){

@@ -95,7 +95,7 @@ class User
   field :status_other, type: String
   field :description, type: String
   field :terms, type: Boolean, default: false
-  field :notifications, type: Boolean, default: false
+  field :notifications, type: Boolean, default: true
   field :notification_locale, type: String, default: I18n.default_locale.to_s
 
 

@@ -66,9 +66,21 @@
       <div class="checkbox-box" tabindex="0">
         <input name="user[notifications]" type="hidden" value="0">
         <input id="user_notifications" name="user[notifications]" type="checkbox" value="1" <%= resource.notifications == true ? 'checked' : '' %>>
-        <label class="control-label" for="user_notifications"><%= t('user.subscribe').html_safe %></label>
+        <label class="control-label" for="user_notifications"><%= model_class.human_attribute_name(:notifications) %></label>
       </div>
     </div>  
+    <div class="radio_buttons input required form-group horizontal <%= reg && resource.notifications == true ? '' : ' js-hide' %> ghost-box" id="user_notification_locale_input">
+      <label class="  control-label" for="user_notification_locale"><%= model_class.human_attribute_name(:notification_locale).upcase %></label>
+      <%- langs = Language.in(locale: locales_sorted) -%>
+      <% langs.each do |lang| %>
+        <% selected = lang.locale == resource.notification_locale ? 'checked' : '' %>
+        <div class="radio radio-box" tabindex="0">
+          <input id="user_notification_locale_<%= lang.locale %>" name="user[notification_locale]" type="radio" value="<%= lang.locale %>" <%= selected %>>
+          <label class="choice" for="user_notification_locale_<%= lang.locale %>"><%= lang.name %></label>
+        </div>
+      <% end %>
+    </div>
+
     <div class="boolean input optional checkbox form-group" id="user_terms_input">
       <div class="checkbox-box" tabindex="0">
         <input name="user[terms]" type="hidden" value="0">
