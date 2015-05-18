@@ -8,14 +8,14 @@ class Embed::V1Controller < ApplicationController
   def index
     @highlight_data = get_highlight_data(params[:id])
 
-logger.debug "=========== #{@highlight_data}"
-
     if !@highlight_data[:error]
       # save the js data into gon
       gon.highlight_data = {}
-      gon.highlight_data[@highlight_data[:id].to_s] = @highlight_data[:js]
+      gon.highlight_data[@highlight_data[:highlight_id].to_s] = @highlight_data[:js]
 
       set_gon_highcharts
+
+      gon.update_page_title = true
 
       # if the visual is a chart, include the highcharts file
       # if the visual is a map, include the highmaps file

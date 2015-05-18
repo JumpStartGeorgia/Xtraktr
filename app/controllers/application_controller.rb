@@ -339,8 +339,9 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 
   # generate the data needed for the embed_id 
   # output: {type, title, dashboard_link, explore_link, error, visual_type, js}
-  def get_highlight_data(embed_id)
-    output = {id:nil, type:nil, title:nil, dashboard_link:nil, explore_link:nil, error:false, visual_type:nil, js:{}}
+  def get_highlight_data(embed_id, highlight_id=nil)
+    highlight_id ||= SecureRandom.urlsafe_base64
+    output = {highlight_id:highlight_id, id:nil, type:nil, title:nil, dashboard_link:nil, explore_link:nil, error:false, visual_type:nil, js:{}, has_data:false}
     options = nil
 
     begin
@@ -396,11 +397,14 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
       # check if errors exist
       output[:error] = data[:error].present?
 
-      if !output[:error]
+      # record if data exists
+      output[:has_data] = data[:chart][:data].length > 0
+      if !output[:error] && output[:has_data]
         # save data to so can be used for charts
         output[:js] = {}
 
         output[:js][:json_data] = data
+        output[:js][:visual_type] = options['visual_type']
         # save values of filters so can choose correct chart/map to show
         output[:js][:broken_down_by_value] = options['broken_down_by_value'] if options['broken_down_by_value'].present? # only present if doing maps
         output[:js][:filtered_by_value] = options['filtered_by_value'] if options['filtered_by_value'].present?
@@ -409,6 +413,46 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     end
 
     return output
+  end
+
+  # based on the highlight visual types, load the correct js files
+  def load_highlight_assets(embed_ids)
+    embed_ids = [embed_ids] if embed_ids.class != Array
+    visual_types = []
+    dataset_ids = []
+    # decode each embed id and get the visual types
+    embed_ids.each do |embed_id|
+      begin
+        options = Rack::Utils.parse_query(Base64.urlsafe_decode64(embed_id))
+        visual_types << options['visual_type']
+        if options['dataset_id'].present?
+          dataset_ids << options['dataset_id']
+        end
+      end
+    end
+
+    # if the visual is a chart, include the highcharts file
+    # if the visual is a map, include the highmaps file
+    if visual_types.index('chart').present?
+      @js.push('highcharts.js')
+    end
+    if visual_types.index('map').present?
+      @js.push('highcharts.js', 'highcharts-map.js')
+
+      if dataset_ids.present?
+        # have to get the shape file url for this dataset
+        @shapes_url = []
+        dataset_ids.uniq.each do |dataset_id|
+          @shapes_url << Dataset.shape_file_url(dataset_id)
+        end
+      end
+    end
+    @js.push('highcharts-exporting.js')
+
+    @css.push('embed.css')
+    @js.push('embed.js')
+
+    gon.generate_highlights_url = generate_highlights_path
   end
 
   def set_gon_highcharts

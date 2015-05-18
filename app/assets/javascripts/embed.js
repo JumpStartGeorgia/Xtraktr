@@ -150,61 +150,66 @@ function build_time_series_charts(json){
   }
 }
 
+function load_highlights(highlight_data){
+console.log('----------------load_highlights');
+console.log(highlight_data);
+  // pull out all of the keys
+  $.each(highlight_data, function(k,v){ keys.push(k)});
 
+  // build chart for each key
+  var data, key;
+  for(var i=0;i<keys.length;i++){
+    key = keys[i];
+console.log('key = ' + key);      
+    data = highlight_data[key];
+console.log('data');
+console.log(data)
+    gon.highlight_id = key;
+
+    // set fitler_value and broken_down_by_value if exists
+    if (data.broken_down_by_value){
+      gon.broken_down_by_value = data.broken_down_by_value;
+    }
+    if (data.filtered_by_value){
+      gon.filtered_by_value = data.filtered_by_value;
+    }
+
+    // test if time series or dataset
+    if (data.json_data.time_series){
+      build_time_series_charts(data.json_data);
+    }else if(data.json_data.dataset){
+      // test for visual type
+      if (data.visual_type == 'chart'){
+        if (data.json_data.analysis_type == 'comparative'){
+          build_crosstab_charts(data.json_data);
+        }else{
+          build_pie_charts(data.json_data);
+        }
+      }else if (data.visual_type == 'map') {
+        build_highmaps(data.json_data);
+      }
+    }
+
+
+    if (gon.update_page_title){
+      build_page_title(data.json_data);
+    }
+  };
+}
 
 /////////////////////////////////////////
 /////////////////////////////////////////
 $(document).ready(function() {
+  // set languaage text
+  Highcharts.setOptions({
+    lang: {
+      contextButtonTitle: gon.highcharts_context_title
+    },
+  colors: ['#00adee', '#e88d42', '#9674a9', '#f3d952', '#6fa187', '#b2a440', '#d95d6a', '#737d91', '#d694e0', '#80b5bc', '#a6c449', '#1b74cc', '#4eccae']
+  });
 
   if (gon.highlight_data){
-    // set languaage text
-    Highcharts.setOptions({
-      lang: {
-        contextButtonTitle: gon.highcharts_context_title
-      },
-    colors: ['#00adee', '#e88d42', '#9674a9', '#f3d952', '#6fa187', '#b2a440', '#d95d6a', '#737d91', '#d694e0', '#80b5bc', '#a6c449', '#1b74cc', '#4eccae']
-    });
-
-    // pull out all of the keys
-    $.each(gon.highlight_data, function(k,v){ keys.push(k)});
-
-    // build chart for each key
-    var data, key;
-    for(var i=0;i<keys.length;i++){
-      key = keys[i];
-console.log('key = ' + key);      
-      data = gon.highlight_data[key];
-console.log('data');
-console.log(data)
-      gon.highlight_id = key;
-
-      // set fitler_value and broken_down_by_value if exists
-      if (data.broken_down_by_value){
-        gon.broken_down_by_value = data.broken_down_by_value;
-      }
-      if (data.filtered_by_value){
-        gon.filtered_by_value = data.filtered_by_value;
-      }
-
-      // test if time series or dataset
-      if (data.json_data.time_series){
-        build_time_series_charts(data.json_data);
-      }else if(data.json_data.dataset){
-        // test for visual type
-        if (gon.visual_type == 'chart'){
-          if (data.json_data.analysis_type == 'comparative'){
-            build_crosstab_charts(data.json_data);
-          }else{
-            build_pie_charts(data.json_data);
-          }
-        }else if (data.visual_type == 'map') {
-          build_highmaps(data.json_data);
-        }
-      }
-
-console.log('TODO - set flag for setting page title')
-      build_page_title(data.json_data);
-    };
+    load_highlights(gon.highlight_data)
   }
 
   // if (gon.json_data){

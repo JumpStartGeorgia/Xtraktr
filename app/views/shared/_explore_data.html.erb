@@ -2,7 +2,7 @@
   subnav_left render(partial: 'shared/language_switcher', locals: {langs: @dataset.language_objects, current_locale: @dataset.current_locale})
 -%>
 
-<div id="explore-data" class="row">
+<div class="explore-data" class="row">
   <% if @questions.present? %>
     <div id="explore-form" class="col-sm-3">
       <h2>

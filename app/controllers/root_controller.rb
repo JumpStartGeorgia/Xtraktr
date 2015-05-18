@@ -7,6 +7,10 @@ class RootController < ApplicationController
 
     @categories = Category.sorted
     @highlights = Highlight.for_home_page
+    gon.highlight_ids = @highlights.map{|x| x.id} if @highlights.present?
+    gon.highlight_show_title = true
+    gon.highlight_show_links = false
+    load_highlight_assets(@highlights.map{|x| x.embed_id}) if @highlights.present?
 
     @css.push('root.css', 'highlights.css', 'boxic.css')
     @js.push('highlights.js')
@@ -107,6 +111,10 @@ class RootController < ApplicationController
       @license = PageContent.by_name('license')
 
       @highlights = Highlight.by_dataset(@dataset.id)
+      gon.highlight_ids = @highlights.map{|x| x.id}.shuffle if @highlights.present?
+      gon.highlight_show_title = false
+      gon.highlight_show_links = false
+      load_highlight_assets(@highlights.map{|x| x.embed_id}) if @highlights.present?
 
       @show_title = false
 
@@ -191,6 +199,10 @@ class RootController < ApplicationController
       @license = PageContent.by_name('license')
 
       @highlights = Highlight.by_time_series(@time_series.id)
+      gon.highlight_ids = @highlights.map{|x| x.id}.shuffle if @highlights.present?
+      gon.highlight_show_title = false
+      gon.highlight_show_links = false
+      load_highlight_assets(@highlights.map{|x| x.embed_id}) if @highlights.present?
 
       @show_title = false
 
@@ -272,6 +284,41 @@ class RootController < ApplicationController
     rescue
       redirect_to (session[:previous_urls].last || request.env['omniauth.origin'] || root_path(:locale => I18n.locale))
       #render file: "#{Rails.root}/public/404.html", layout: false, status: 404
+    end
+  end
+
+
+  # generate the html code and js data for the passed in highlight ids
+  def generate_highlights
+    # get the highlights
+    highlights = Highlight.in(id: params[:ids].split(','))
+    data = {}
+
+    if highlights.present?
+      logger.debug "------- #{highlights.length} highlights"
+      @highlight_data = []
+      highlights.each do |highlight|
+        @highlight_data << {visual_type_name: highlight.visual_type_name, data: get_highlight_data(highlight.embed_id, highlight.id)}
+      end
+
+      if @highlight_data.map{|x| x[:data]}.flatten.map{|x| x[:error]}.index{|x| x == true}.nil?
+        logger.debug "-------- no errors!"
+
+        # save the html data
+        data[:html] = render_to_string "root/generate_highlights", formats: [:html], layout: false       
+
+        # save the js data
+        data[:js] = {}
+        @highlight_data.each do |highlight|
+          logger.debug "------ adding js highlight #{highlight[:data][:highlight_id].to_s}"
+          data[:js][highlight[:data][:highlight_id].to_s] = highlight[:data][:js]
+        end
+
+      end
+    end
+
+    respond_to do |format|
+      format.json { render json: data }
     end
   end
   

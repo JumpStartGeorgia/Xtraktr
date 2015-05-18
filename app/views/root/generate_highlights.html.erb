@@ -1,0 +1,13 @@
+<%- 
+    @show_title = (params[:show_title].present? && params[:show_title].to_bool == true)
+    @show_links = (params[:show_links].present? && params[:show_links].to_bool == true)
+-%>
+
+
+<% @highlight_data.each do |highlight| %>
+  <% if highlight[:data][:has_data] %>
+    <div class="highlight <%= highlight[:visual_type_name] %>">
+      <%= render :partial => 'shared/embed_v1', :locals => {highlight: highlight[:data]}%>
+    </div>
+  <% end %>
+<% end %>

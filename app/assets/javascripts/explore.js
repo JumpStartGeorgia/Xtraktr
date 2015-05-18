@@ -86,10 +86,10 @@ function delete_highlight_button(visual_element, embed_id, visual_type){
 // build title/sub title for chart/map
 // if gon.visual_link is present, turn the title into a link
 ////////////////////////////////////////////////
-function build_visual_title(text){
+function build_visual_title(highlight_path, text){
   var t = '';
-  if (gon.visual_link){
-    t = '<a class="visual-title-link" target="_parent" href="' + gon.visual_link + '">' + text + '</a>';
+  if ($(highlight_path).data('explore-link') != undefined){
+    t = '<a class="visual-title-link" target="_parent" href="' + $(highlight_path).data('explore-link') + '">' + text + '</a>';
   }else{
     t = text;
   }
@@ -103,8 +103,9 @@ function build_highmap(shape_question_code, json_map_set){
   // create a div tag for this map
   // if gon.highlight_id exist, add it to the jquery selector path
   var selector_path = '#container-map';
+  var highlight_path = '.highlight-data[data-id="' + gon.highlight_id + '"] ';
   if (gon.highlight_id){
-    selector_path = '.highlight-data[data-id="' + gon.highlight_id + '"] ' + selector_path;
+    selector_path = highlight_path + selector_path;
   }
   var map_id = 'map-' + ($('#container-map .map').length+1);
   $(selector_path).append('<div id="' + map_id + '" class="map"></div>');
@@ -134,7 +135,7 @@ function build_highmap(shape_question_code, json_map_set){
         }          
       },
       title: {
-          text: build_visual_title(json_map_set.title.html),
+          text: build_visual_title(highlight_path, json_map_set.title.html),
           useHTML: true,
           style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
       },
@@ -284,8 +285,9 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
   // create a div tag for this chart
   // if gon.highlight_id exist, add it to the jquery selector path
   var selector_path = '#container-chart';
+  var highlight_path = '.highlight-data[data-id="' + gon.highlight_id + '"] ';
   if (gon.highlight_id){
-    selector_path = '.highlight-data[data-id="' + gon.highlight_id + '"] ' + selector_path;
+    selector_path = highlight_path + selector_path;
   }
   var chart_id = 'chart-' + ($('#container-chart .chart').length+1);
   $(selector_path).append('<div id="' + chart_id + '" class="chart" style="height: ' + chart_height + 'px;"></div>');
@@ -296,7 +298,7 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
         type: 'bar'
     },
     title: {
-        text: build_visual_title(json_chart.title.html),
+        text: build_visual_title(highlight_path, json_chart.title.html),
         useHTML: true,
         style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
     },
@@ -407,8 +409,9 @@ function build_pie_chart(json_chart, chart_height){
   // create a div tag for this chart
   // if gon.highlight_id exist, add it to the jquery selector path
   var selector_path = '#container-chart';
+  var highlight_path = '.highlight-data[data-id="' + gon.highlight_id + '"] ';
   if (gon.highlight_id){
-    selector_path = '.highlight-data[data-id="' + gon.highlight_id + '"] ' + selector_path;
+    selector_path = highlight_path + selector_path;
   }
   var chart_id = 'chart-' + ($('#container-chart .chart').length+1);
   $(selector_path).append('<div id="' + chart_id + '" class="chart" style="height: ' + chart_height + 'px;"></div>');
@@ -421,7 +424,7 @@ function build_pie_chart(json_chart, chart_height){
         plotShadow: false
     },
     title: {
-        text: build_visual_title(json_chart.title.html),
+        text: build_visual_title(highlight_path, json_chart.title.html),
         useHTML: true,
         style: {'text-align': 'center', 'font-family':"'sourcesans-pro-l', 'sans-serif'", 'font-size': '16px', 'color': '#3C4352'}
     },
@@ -538,8 +541,9 @@ function build_time_series_chart(json_chart, chart_height){
   // create a div tag for this chart
   // if gon.highlight_id exist, add it to the jquery selector path
   var selector_path = '#container-chart';
+  var highlight_path = '.highlight-data[data-id="' + gon.highlight_id + '"] ';
   if (gon.highlight_id){
-    selector_path = '.highlight-data[data-id="' + gon.highlight_id + '"] ' + selector_path;
+    selector_path = highlight_path + selector_path;
   }
   var chart_id = 'chart-' + ($('#container-chart .chart').length+1);
   $(selector_path).append('<div id="' + chart_id + '" class="chart" style="height: ' + chart_height + 'px;"></div>');
@@ -552,7 +556,7 @@ function build_time_series_chart(json_chart, chart_height){
         plotShadow: false
     },
     title: {
-        text: build_visual_title(json_chart.title.html),
+        text: build_visual_title(highlight_path, json_chart.title.html),
         useHTML: true,
         style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
     },
