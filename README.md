@@ -29,6 +29,10 @@ You will need the following [Environment Variables](https://help.ubuntu.com/comm
 * DEV_FACEBOOK_APP_SECRET - This key stores the facebook application secret for development/testing sites. (optional)
 * FACEBOOK_APP_ID - Facebook is one of the options for logging in to the system and you must have an app account created under facebook developers. This key is for use on production sites. This key stores the application id. (optional)
 * FACEBOOK_APP_SECRET - This key stores the facebook application secret for production sites. (optional)
+* UNICEF_ADDTHIS_PROFILE_ID - ID of addthis profile for UNICEF app
+* XTRAKTR_ADDTHIS_PROFILE_ID - ID of addthis profile for Xtraktr app
+* UNICEF_ADDTHIS_PROFILE_ID_DEV - ID of addthis profile for UNICEF staging app
+* XTRAKTR_ADDTHIS_PROFILE_ID_DEV - ID of addthis profile for Xtraktr staging app
 
 After you add environment variables, do the following in order for your application to be able to see the values:
 * on a dev machine - reboot your computer
