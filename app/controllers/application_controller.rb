@@ -27,7 +27,7 @@ class ApplicationController < ActionController::Base
 		            :with => :render_not_found
 		rescue_from ActionController::UnknownAction,
 		            :with => :render_not_found
-    rescue_from Mongoid::Errors::DocumentNotFound,
+    rescue_from Mongoid::error::DocumentNotFound,
                 :with => :render_not_found
 
 	end
@@ -280,121 +280,11 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
         gon.dataset_id = params[:id]
         gon.api_dataset_analysis_path = api_v1_dataset_analysis_path
 
-#        render layout: 'explore_data'
       } 
-      # format.js{
-#         # get the data
-#         options = {}
-#         options[:broken_down_by_code] = @broken_down_by_code if @broken_down_by_code.present?
-#         options[:filtered_by_code] = @filtered_by_code if @filtered_by_code.present?
-#         options[:language] = params[:language] if params[:language].present?
-#         options[:can_exclude] = params[:can_exclude].to_bool if params[:can_exclude].present?
-#         options[:chart_formatted_data] = params[:chart_formatted_data].to_bool if params[:chart_formatted_data].present?
-#         options[:map_formatted_data] = params[:map_formatted_data].to_bool if params[:map_formatted_data].present?
-
-#         @data = nil
-#         if @questions.present?
-#           # if @broken_down_by_code has data, then this is a crosstab,
-#           # else this is just a single variable lookup
-#           @data = ApiV1.dataset_analysis(dataset.id, @question_code, options)
-#           if @broken_down_by_code.present?
-
-#             @data[:title] = {}
-#             @data[:title][:html] = build_data_crosstab_title_html(@data[:row_question], @data[:column_question], @filtered_by_code, @data[:total_responses])
-#             @data[:title][:text] = build_data_crosstab_title_text(@data[:row_question], @data[:column_question], @filtered_by_code, @data[:total_responses])
-#             # create special map titles so filter of column can be shown in title
-#             # test to see which variable is mappable - that one must go in as the row for the map title
-#             row_index = @questions.select{|x| x.code == params[:question_code] && x.is_mappable?}
-#             if row_index.present?
-#               @data[:title][:map_html] = build_data_crosstab_map_title_html(@data[:row_question], @data[:column_question], @filtered_by_code, @data[:total_responses])
-#               @data[:title][:map_text] = build_data_crosstab_map_title_text(@data[:row_question], @data[:column_question], @filtered_by_code, @data[:total_responses])
-#             else
-#               @data[:title][:map_html] = build_data_crosstab_map_title_html(@data[:column_question], @data[:row_question], @filtered_by_code, @data[:total_responses])
-#               @data[:title][:map_text] = build_data_crosstab_map_title_text(@data[:column_question], @data[:row_question], @filtered_by_code, @data[:total_responses])
-#             end
-#           else
-            
-#             @data[:title] = {}
-#             @data[:title][:html] = build_data_onevar_title_html(@data[:row_question], @filtered_by_code, @data[:total_responses])
-#             @data[:title][:text] = build_data_onevar_title_text(@data[:row_question], @filtered_by_code, @data[:total_responses])
-#             @data[:title][:map_html] = @data[:title][:html]
-#             @data[:title][:map_text] = @data[:title][:text]
-#           end
-#           @data[:subtitle] = {}
-#           @data[:subtitle][:html] = build_data_subtitle_html(@data[:total_responses])
-#           @data[:subtitle][:text] = build_data_subtitle_text(@data[:total_responses])
-#         end
-
-# #        logger.debug "/////////////////////////// #{@data}"
-
-#         status = @data.present? ? :ok : :unprocessable_entity
-#         render json: @data.to_json, status: status
-
-#       }
     end   
   end
 
-  # def build_data_crosstab_title_html(row, col, filter, total)
-  #   title = t('explore_data.crosstab.html.title', :row => row, :col => col)
-  #   if filter.present?
-  #     title << t('explore_data.crosstab.html.title_filter', :variable => filter[:name], :value => filter[:answer] )
-  #   end
-  #   return title.html_safe
-  # end 
 
-  # def build_data_crosstab_title_text(row, col, filter, total)
-  #   title = t('explore_data.crosstab.text.title', :row => row, :col => col)
-  #   if filter.present?
-  #     title << t('explore_data.crosstab.text.title_filter', :variable => filter[:name], :value => filter[:answer] )
-  #   end
-  #   return title
-  # end 
-
-  # def build_data_crosstab_map_title_html(row, col, filter, total)
-  #   title = t('explore_data.crosstab.html.map.title', :row => row)
-  #   title << t('explore_data.crosstab.html.map.title_col', :col => col)
-  #   if filter.present?
-  #     title << t('explore_data.crosstab.html.map.title_filter', :variable => filter[:name], :value => filter[:answer] )
-  #   end
-  #   return title.html_safe
-  # end 
-
-  # def build_data_crosstab_map_title_text(row, col, filter, total)
-  #   title = t('explore_data.crosstab.text.map.title', :row => row)
-  #   title << t('explore_data.crosstab.text.map.title_col', :col => col)
-  #   if filter.present?
-  #     title << t('explore_data.crosstab.text.map.title_filter', :variable => filter[:name], :value => filter[:answer] )
-  #   end
-  #   return title
-  # end 
-
-  # def build_data_onevar_title_html(row, filter, total)
-  #   title = t('explore_data.onevar.html.title', :row => row)
-  #   if filter.present?
-  #     title << t('explore_data.onevar.html.title_filter', :variable => filter[:name], :value => filter[:answer] )
-  #   end
-  #   return title.html_safe
-  # end 
-
-  # def build_data_onevar_title_text(row, filter, total)
-  #   title = t('explore_data.onevar.text.title', :row => row)
-  #   if filter.present?
-  #     title << t('explore_data.onevar.text.title_filter', :variable => filter[:name], :value => filter[:answer] )
-  #   end
-  #   return title
-  # end 
-
-  # def build_data_subtitle_html(total)
-  #   title = "<br /> <span class='total_responses'>"
-  #   title << t('explore_data.subtitle.html', :num => view_context.number_with_delimiter(total))
-  #   title << "</span>"
-  #   return title.html_safe
-  # end 
-
-  # def build_data_subtitle_text(total)
-  #   return t('explore_data.subtitle.text', :num => view_context.number_with_delimiter(total))
-  # end 
-	
 
   #######################
   ## get data for explore view
@@ -443,73 +333,83 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
         gon.time_series_id = params[:id]
         gon.api_time_series_analysis_path = api_v1_time_series_analysis_path
 
-        # render layout: 'explore_time_series'
       } 
-      # format.js{
-      #   # get the data
-      #   options = {}
-      #   options[:filtered_by_code] = @filtered_by_code if @filtered_by_code.present?
-      #   options[:can_exclude] = params[:can_exclude].to_bool if params[:can_exclude].present?
-
-      #   @data = nil
-      #   if @questions.present?
-      #     @data = time_series.data_onevar_analysis(@question_code, options)
-          
-      #     @data[:title] = {}
-      #     @data[:title][:html] = build_time_series_onevar_title_html(@data[:row_question], @filter, @data[:total_responses])
-      #     @data[:title][:text] = build_time_series_onevar_title_text(@data[:row_question], @filter, @data[:total_responses])
-      #     @data[:title][:map_html] = @data[:title][:html]
-      #     @data[:title][:map_text] = @data[:title][:text]
-
-      #     @data[:subtitle] = {}
-      #     @data[:subtitle][:html] = build_time_series_subtitle_html(@data[:column_answers], @data[:total_responses])
-      #     @data[:subtitle][:text] = build_time_series_subtitle_text(@data[:column_answers], @data[:total_responses])
-      #   end
-
-      #   logger.debug "/////////////////////////// #{@data}"
-
-      #   status = @data.present? ? :ok : :unprocessable_entity
-      #   render json: @data.to_json, status: :ok
-
-      # }
     end   
   end
 
-  # def build_time_series_onevar_title_html(row, filter, total)
-  #   title = t('explore_time_series.onevar.html.title', :row => row)
-  #   if filter.present?
-  #     title << t('explore_time_series.onevar.html.title_filter', :variable => filter[:name], :value => filter[:answer] )
-  #   end
-  #   return title.html_safe
-  # end 
+  # generate the data needed for the embed_id 
+  # output: {type, title, dashboard_link, explore_link, error, visual_type, js}
+  def get_highlight_data(embed_id)
+    output = {id:nil, type:nil, title:nil, dashboard_link:nil, explore_link:nil, error:false, visual_type:nil, js:{}}
+    options = nil
 
-  # def build_time_series_onevar_title_text(row, filter, total)
-  #   title = t('explore_time_series.onevar.text.title', :row => row)
-  #   if filter.present?
-  #     title << t('explore_time_series.onevar.text.title_filter', :variable => filter[:name], :value => filter[:answer] )
-  #   end
-  #   return title
-  # end 
+    begin
+      options = Rack::Utils.parse_query(Base64.urlsafe_decode64(embed_id))
+    rescue
+      output[:error] = true
+    end
 
-  # def build_time_series_subtitle_html(datasets, totals)
-  #   title = "<br /> <span class='total_responses'>"
-  #   num = []
-  #   (0..datasets.length-1).each do |index|
-  #     num << "#{datasets[index]}: <span class='number'>#{view_context.number_with_delimiter(totals[index])}</span>"
-  #   end
-  #   title << t('explore_time_series.subtitle.html', :num => num.join('; '))
-  #   title << "</span>"
-  #   return title.html_safe
-  # end 
+    # options must be present with dataset or time series id and question code; all other options are not required
+    if !output[:error] && options.present? && (options['dataset_id'].present? || options['time_series_id'].present?) && options['question_code'].present?
+      options = clean_filtered_params(options)
 
-  # def build_time_series_subtitle_text(datasets, totals)
-  #   num = []
-  #   (0..datasets.length-1).each do |index|
-  #     num << "#{datasets[index]}: #{view_context.number_with_delimiter(totals[index])}"
-  #   end
-  #   return t('explore_time_series.subtitle.text', :num => num.join('; '))
-  # end 
+      output[:visual_type] = options['visual_type']
 
+      if options['dataset_id'].present?
+        output[:type] = 'dataset'
+
+        data = ApiV1.dataset_analysis(options['dataset_id'], options['question_code'], options)
+
+         if data.present? && data[:dataset].present?
+          # save dataset title
+          output[:title] = data[:dataset][:title]
+
+          # create link to dashboard
+          output[:dashboard_link] = explore_data_dashboard_url(options['dataset_id'])
+
+          # create link to this item
+          options['id'] = options['dataset_id']
+          output[:id] =  options['dataset_id']
+          options['from_embed'] = true
+          output[:explore_link] = explore_data_show_url(options)
+        end
+      elsif options['time_series_id'].present?
+        output[:type] = 'time_series'
+
+        data = ApiV1.time_series_analysis(options['time_series_id'], options['question_code'], options)
+
+        if data.present? && data[:time_series].present?
+          # save dataset title
+          output[:title] = data[:time_series][:title]
+
+          # create link to dashboard
+          output[:dashboard_link] = explore_time_series_dashboard_url(options['time_series_id'])
+
+          # create link to this item
+          options['id'] = options['time_series_id']
+          output[:id] =  options['time_series_id']
+          options['from_embed'] = true
+          output[:explore_link] = explore_time_series_show_url(options)
+        end        
+      end
+
+      # check if errors exist
+      output[:error] = data[:error].present?
+
+      if !output[:error]
+        # save data to so can be used for charts
+        output[:js] = {}
+
+        output[:js][:json_data] = data
+        # save values of filters so can choose correct chart/map to show
+        output[:js][:broken_down_by_value] = options['broken_down_by_value'] if options['broken_down_by_value'].present? # only present if doing maps
+        output[:js][:filtered_by_value] = options['filtered_by_value'] if options['filtered_by_value'].present?
+      end
+
+    end
+
+    return output
+  end
 
   def set_gon_highcharts
     gon.highcharts_context_title = I18n.t('highcharts.context_title')

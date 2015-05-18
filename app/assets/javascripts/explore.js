@@ -101,10 +101,15 @@ function build_visual_title(text){
 ////////////////////////////////////////////////
 function build_highmap(shape_question_code, json_map_set){
   // create a div tag for this map
+  // if gon.highlight_id exist, add it to the jquery selector path
+  var selector_path = '#container-map';
+  if (gon.highlight_id){
+    selector_path = '.highlight-data[data-id="' + gon.highlight_id + '"] ' + selector_path;
+  }
   var map_id = 'map-' + ($('#container-map .map').length+1);
-  $('#container-map').append('<div id="' + map_id + '" class="map"></div>');
+  $(selector_path).append('<div id="' + map_id + '" class="map"></div>');
 
-  $('#container-map #' + map_id).highcharts('Map', {
+  $(selector_path + ' #' + map_id).highcharts('Map', {
       chart:{
         events: {
           load: function () {
@@ -259,6 +264,9 @@ function build_highmap(shape_question_code, json_map_set){
         }
       }          
   });
+
+  // now add button to add as highlight
+  determine_highlight_button($(selector_path + ' #' + map_id), json_chart.embed_id, gon.visual_types.map);  
 }
 
 
@@ -274,11 +282,16 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
   }
 
   // create a div tag for this chart
+  // if gon.highlight_id exist, add it to the jquery selector path
+  var selector_path = '#container-chart';
+  if (gon.highlight_id){
+    selector_path = '.highlight-data[data-id="' + gon.highlight_id + '"] ' + selector_path;
+  }
   var chart_id = 'chart-' + ($('#container-chart .chart').length+1);
-  $('#container-chart').append('<div id="' + chart_id + '" class="chart" style="height: ' + chart_height + 'px;"></div>');
+  $(selector_path).append('<div id="' + chart_id + '" class="chart" style="height: ' + chart_height + 'px;"></div>');
 
   // create chart
-  $('#container-chart #' + chart_id).highcharts({
+  $(selector_path + ' #' + chart_id).highcharts({
     chart: {
         type: 'bar'
     },
@@ -376,7 +389,7 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
   });    
 
   // now add button to add as highlight
-  determine_highlight_button($('#container-chart #' + chart_id), json_chart.embed_id, gon.visual_types.crosstab_chart);  
+  determine_highlight_button($(selector_path + ' #' + chart_id), json_chart.embed_id, gon.visual_types.crosstab_chart);  
 }
 
 
@@ -392,11 +405,16 @@ function build_pie_chart(json_chart, chart_height){
   }
 
   // create a div tag for this chart
+  // if gon.highlight_id exist, add it to the jquery selector path
+  var selector_path = '#container-chart';
+  if (gon.highlight_id){
+    selector_path = '.highlight-data[data-id="' + gon.highlight_id + '"] ' + selector_path;
+  }
   var chart_id = 'chart-' + ($('#container-chart .chart').length+1);
-  $('#container-chart').append('<div id="' + chart_id + '" class="chart" style="height: ' + chart_height + 'px;"></div>');
+  $(selector_path).append('<div id="' + chart_id + '" class="chart" style="height: ' + chart_height + 'px;"></div>');
 
   // create chart
-  $('#container-chart #' + chart_id).highcharts({
+  $(selector_path + ' #' + chart_id).highcharts({
     chart: {
         plotBackgroundColor: null,
         plotBorderWidth: null,
@@ -505,7 +523,7 @@ function build_pie_chart(json_chart, chart_height){
   });
 
   // now add button to add as highlight
-  determine_highlight_button($('#container-chart #' + chart_id), json_chart.embed_id, gon.visual_types.pie_chart);  
+  determine_highlight_button($(selector_path + ' #' + chart_id), json_chart.embed_id, gon.visual_types.pie_chart);  
 }
 
 
@@ -518,11 +536,16 @@ function build_time_series_chart(json_chart, chart_height){
   }
 
   // create a div tag for this chart
+  // if gon.highlight_id exist, add it to the jquery selector path
+  var selector_path = '#container-chart';
+  if (gon.highlight_id){
+    selector_path = '.highlight-data[data-id="' + gon.highlight_id + '"] ' + selector_path;
+  }
   var chart_id = 'chart-' + ($('#container-chart .chart').length+1);
-  $('#container-chart').append('<div id="' + chart_id + '" class="chart" style="height: ' + chart_height + 'px;"></div>');
+  $(selector_path).append('<div id="' + chart_id + '" class="chart" style="height: ' + chart_height + 'px;"></div>');
 
   // create chart
-  $('#container-chart #' + chart_id).highcharts({
+  $(selector_path + ' #' + chart_id).highcharts({
     chart: {
         plotBackgroundColor: null,
         plotBorderWidth: null,
@@ -610,7 +633,7 @@ function build_time_series_chart(json_chart, chart_height){
   });
 
   // now add button to add as highlight
-  determine_highlight_button($('#container-chart #' + chart_id), json_chart.embed_id, gon.visual_types.line_chart);  
+  determine_highlight_button($(selector_path + ' #' + chart_id), json_chart.embed_id, gon.visual_types.line_chart);  
 }
 
 

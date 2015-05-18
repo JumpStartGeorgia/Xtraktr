@@ -6,7 +6,42 @@ class Embed::V1Controller < ApplicationController
   # show the embed chart if the id was provided and can be decoded and parsed into hash
   # id - base64 encoded string of a hash of parameters
   def index
-    redirect = params[:id].nil?
+    @highlight_data = get_highlight_data(params[:id])
+
+logger.debug "=========== #{@highlight_data}"
+
+    if !@highlight_data[:error]
+      # save the js data into gon
+      gon.highlight_data = {}
+      gon.highlight_data[@highlight_data[:id].to_s] = @highlight_data[:js]
+
+      set_gon_highcharts
+
+      # if the visual is a chart, include the highcharts file
+      # if the visual is a map, include the highmaps file
+      gon.visual_type = @highlight_data[:visual_type]
+      if @highlight_data[:visual_type] == 'chart'
+        @js.push('highcharts.js')
+      elsif @highlight_data[:visual_type] == 'map'
+        @js.push('highcharts.js', 'highcharts-map.js')
+
+        if @highlight_data[:type] == 'dataset'
+          # have to get the shape file url for this dataset
+          @shapes_url = Dataset.shape_file_url(options['dataset_id'])
+        end
+      end
+      @js.push('highcharts-exporting.js')
+
+    end
+
+    respond_to do |format|
+      format.html # index.html.erb
+    end
+
+  end
+
+
+  def index_old
     options = nil
     @errors = false
 

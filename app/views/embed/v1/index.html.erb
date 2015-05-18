@@ -1,7 +1,7 @@
-<% title @title if @title %>
+<% title @highlight_data[:title] if @highlight_data[:title] %>
 
-<div id="explore-data">
-  <% if @errors %>
+<div class="highlight-data" data-id="<%= @highlight_data[:id] %>" data-explore-link="<%= @highlight_data[:explore_link] %>">
+  <% if @highlight_data[:error] %>
     <div id="explore-error">
       <p>
         <%= t('app.msgs.explore_error') %>
@@ -11,7 +11,7 @@
     <div class="boxic">
       <% if params[:exclude_title].nil? || (params[:exclude_title].present? && params[:exclude_title].to_bool != true) %>
       <div class="embed-title">
-        <h3><%= link_to @title, @link, target: '_parent' %></h3>
+        <h3><%= link_to @highlight_data[:title], @highlight_data[:dashboard_link], target: '_parent' %></h3>
         <% if params[:exclude_links].nil? || (params[:exclude_links].present? && params[:exclude_links].to_bool != true) %>
           <div class="embed-links">
             <ul>
