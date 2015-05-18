@@ -405,7 +405,7 @@ function build_pie_chart(json_chart, chart_height){
     title: {
         text: build_visual_title(json_chart.title.html),
         useHTML: true,
-        style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
+        style: {'text-align': 'center', 'font-family':"'sourcesans-pro-l', 'sans-serif'", 'font-size': '16px', 'color': '#3C4352'}
     },
     subtitle: {
         text: json_chart.subtitle.html,
@@ -451,6 +451,7 @@ function build_pie_chart(json_chart, chart_height){
       },
       buttons: {
         contextButton: {
+          symbol: 'url(/assets/svg/download.svg)',
           menuItems: [
             {
               text: gon.highcharts_png,
@@ -479,7 +480,28 @@ function build_pie_chart(json_chart, chart_height){
           ]
         }
       }
-    }
+    },
+    navigation: {
+          buttonOptions: {
+              theme: {
+                  'stroke-width': 0,
+                  r: 0,
+                  states: {
+                      hover: {
+                          fill: '#fff',
+                          stroke: '#eaeaea',
+                          'stroke-width': 1                            
+                      },
+                      select: {                          
+                          fill: '#fff',
+                          stroke: '#eaeaea',
+                          'stroke-width': 1
+                      }
+                  }
+              }
+          }
+      }
+
   });
 
   // now add button to add as highlight

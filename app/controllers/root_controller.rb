@@ -268,7 +268,6 @@ class RootController < ApplicationController
        :type=>"application/zip", :x_sendfile=>true        
 
     rescue
-       Rails.logger.debug("--------------------------------------------#{(session[:previous_urls].last || request.env['omniauth.origin'] || root_path(:locale => I18n.locale))}")
       redirect_to (session[:previous_urls].last || request.env['omniauth.origin'] || root_path(:locale => I18n.locale))
       #render file: "#{Rails.root}/public/404.html", layout: false, status: 404
     end
