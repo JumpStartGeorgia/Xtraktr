@@ -1,7 +1,7 @@
 $('.info .share').hover(function(){ // on hover do this:
    var t = $(this);
          var at = t.find('.addthis_sharing_toolbox');
-         t.find('.prompt').animate({"right": at.width() }, 500, function(){  });
+         t.find('.prompt').animate({"right": at.width()+15 }, 500, function(){  });
          at.delay( 500 ).animate({"opacity":1}, 100);
       }, function(){ 
            var t = $(this);

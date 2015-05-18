@@ -47,7 +47,7 @@ class Agreement
   validates :dataset_id, presence: true
   validates :dataset_type, presence: true
   validates :dataset_locale, presence: true
-  validates :terms, :numericality => { :equal_to => 1 }
+  validates :terms, :inclusion => {:in => [true]  }
 
 
   ####################

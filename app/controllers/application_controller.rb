@@ -138,14 +138,13 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 	def store_location
 		session[:previous_urls] ||= []
         
-    if session[:download_url].present? && !user_signed_in? && !params[:d].present?
+    if session[:download_url].present? && !user_signed_in? && !params[:d].present? && !(params[:controller] == 'users/registrations' && params[:action] == 'create' )
       session[:download_url] = nil
     end
 
     if params[:action] == 'download_request' && request.xhr? && !user_signed_in? &&
       session[:download_url] = request.fullpath
     end
-
 
     if request.fullpath.index("/download/").nil?
   		if session[:previous_urls].first != request.fullpath && 
