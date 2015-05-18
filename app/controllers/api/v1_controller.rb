@@ -10,7 +10,7 @@ class Api::V1Controller < ApplicationController
   end
 
   def documentation
-    @klass=' white'
+    @klass=@klass_footer=' white'
     redirect = false
     redirect = params[:method].nil?
 

@@ -92,6 +92,8 @@ class RootController < ApplicationController
   end
   
   def explore_data_dashboard
+    @klass=' white'
+    @klass_footer=''
     @dataset = Dataset.is_public.find_by(id: params[:id])
 
     if @dataset.blank?
@@ -108,7 +110,7 @@ class RootController < ApplicationController
 
       @show_title = false
 
-      @css.push("dashboard.css", 'highlights.css', 'boxic.css', 'tabs.css')
+      @css.push("list.css", "dashboard.css", 'highlights.css', 'boxic.css', 'tabs.css')
       @js.push("dashboard.js", "live_search.js", 'highlights.js')
 
       respond_to do |format|

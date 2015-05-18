@@ -11,15 +11,24 @@ body {
 #wrapper {
     width: 100%;
 }
-
 #page-wrapper {
     padding: 0 15px;
     min-height: 568px;
     background-color: #f6f7f7;
+    
 }
 #page-wrapper.white
 {
     background-color:#fff;
+
+}
+footer
+{
+    background-color: #f6f7f7;
+}
+footer.white
+{
+    background-color: #fff;
 }
 
 @media(min-width:768px) {

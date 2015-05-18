@@ -136,8 +136,8 @@
     </div>
     
     <div role="tabpanel" class="tab-pane fade <%= codebook_active[:panel] %>" id="codebook">
-      <div id="codebook-search" class="input-group">
-        <span class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></span>
+      <div id="codebook-search">
+
         <input type="text" class="text-input col-sm-3" id="filter" class="form-control" value="" placeholder="<%= t('helpers.search') %>" />
 
         <label class="filter" for="filter_all">
@@ -152,7 +152,8 @@
           <input id="filter_ans" name="filter" type="radio" value="ans" />
           <%= t('.filter.answers') %>
         </label>
-
+        <%= link_to @dataset.urls.codebook, class: 'download-direct',  title: t("app.common.codebook_title") do %>
+                  <% end %>   
       </div>
       <ul class="list-unstyled">
         <% @dataset.questions.for_analysis.each do |question| %>
@@ -160,11 +161,11 @@
             <div class="col-sm-4 question">
               <h3>
                 <%= link_to url_dataset_explore(@dataset, question_code: question.code, language: params[:language]) do %>
-                  <%= question.original_code %>:
-                  <br />
+                  <span><%= question.original_code %>:</span>
                   <%= question.text %>
                 <% end %>
               </h3>
+
             </div>
             <div class="col-sm-8 details">
               <div class="row question-row">
@@ -210,49 +211,29 @@
       </ul>
     </div>
     
-    <div role="tabpanel" class="tab-pane fade" id="reports">
-      <% if @dataset.reports.present? %>
-        <ul class="list-unstyled">
+    <div role="tabpanel" class="tab-pane fade list" id="reports">
+      <ul>
+        <% if @dataset.reports.present? %>
           <% @dataset.reports.sorted.each do |report| %>
             <li>
-              <h3><%= report.title %></h3>
-              <div class="row">
-                <div class="col-sm-4">
-                  <%= "#{r_model_class.human_attribute_name(:released_at)}: #{l report.released_at, format: :day_first}" %>
-                </div>
-                <div class="col-sm-4">
-                  <% if report.language.present? %>
-                    <%= "#{r_model_class.human_attribute_name(:language_id)}: #{report.language.name}" %>
-                  <% end %>
-                </div>
-                <div class="col-sm-4">
-                  <%= link_to report.file.url, class: 'btn btn-success btn-sm', target: :blank do %>
-                    <%
-                      text = report.file_type
-                      if text.present?
-                        text << " - "
-                      end
-                      text << number_to_human_size(report.file_file_size)
-                    %>
-                    <%= text %>
-                  <% end %>
-                </div>
-              </div>
+              <h2><%= report.title %></h2>
+                  <%= link_to report.file.url, class: 'download-direct', target: :blank, title: "#{report.file_type} - #{number_to_human_size(report.file_file_size).to_s}" do %>
+                  <% end %>                  
+              <div class="info">
+                <div class="calendar"></div>
+                <div class="timestamp"><span><%= "#{r_model_class.human_attribute_name(:released_at)}:"%></span> <%= "#{l report.released_at, format: :day_first}" %></div>
+                <% if report.language.present? %>
+                  <div class="language"><span><%= "#{r_model_class.human_attribute_name(:language_id)}:"%></span> <%= "#{report.language.name}" %></div>
+                <% end %>
               <% if report.summary.present? %>
-                <div>
-                  <div class="tinymce_format">
-                    <%= simple_format(report.summary, {}, {sanitize: false}) %>
-                  </div>
-                </div>
+                <div class="description"><%= simple_format(report.summary, {}, {sanitize: false}) %></div>
               <% end %>
             </li>
           <% end %>
-        </ul>
-      <% else %>
-        <p>
-          <%= t('.no_reports') %>
-        </p>
-      <% end %>
+        <% else %>
+          <li><div class="no-data-found"> <%= t('.no_reports') %></div></li>
+        <% end %>
+       </ul>
     </div>
 
     <div role="tabpanel" class="tab-pane fade" id="licensing">
