@@ -1609,7 +1609,9 @@ class Dataset < CustomTranslation
 
     puts "=========== valid = #{self.valid?}; errors = #{self.errors.full_messages}"
 
-    self.save
+    success = self.save
+
+    puts "=========== successful save = #{success}"
 
     puts "****************** total changes: #{counts.map{|k,v| k + ' - ' + v.to_s}.join(', ')}"
     puts "****************** time to process question csv: #{Time.now-start} seconds for #{n} rows"
