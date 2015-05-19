@@ -617,12 +617,22 @@ div.message {
 }
 .page-header
 {
+  margin:0px -50px;
+  padding:0px;
+  border-bottom:1px solid #fff;
+  &:after
+  {
+    content:"";
+    display:block;
+    border-bottom:1px solid #e8e8e8;
+
+  }  
   h1
   {
-    font-family:'prime';
-    font-size:16px;
-    color:#00adee;
-    text-transform:uppercase;
+    font: 20px 'prime';
+    color:#747984;  
+    margin:0px 50px;
+    padding:26px 0px 16px;
   }
 }
 
