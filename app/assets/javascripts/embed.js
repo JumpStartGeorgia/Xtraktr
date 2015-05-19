@@ -9,9 +9,11 @@ var keys = [];
 // build highmap
 function build_highmaps(json){
   if (json.map){
-    // adjust the height/width of the map to fit its container
-    $('#container-map').width($(document).width());
-    $('#container-map').height($(document).height());
+    // adjust the height/width of the map to fit its container if this is embed
+    if ($('body#embed').length > 0){
+      $('#container-map').width($(document).width());
+      $('#container-map').height($(document).height());
+    }
 
     // test if the filter is being used and build the chart(s) accordingly
     if (json.map.constructor === Array){
