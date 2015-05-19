@@ -1,34 +1,42 @@
 <%- model_class = Message -%>
-<% title @page_content.title %>
-
-<% if @email_sent %>
-
-  <p class="alert alert-success">
-  <%= t(".message_sent") %>
-  </p>
-
-<% end %>
-
-<div class="tinymce_format">
-  <%= simple_format_no_tags(@page_content.content, {}, {sanitize: false}) %>
-</div>
-
-<%= semantic_form_for @message, :url => contact_path, :html => {class: 'contact-form'} do |f| %>
-  <% if @message.errors.present? %>
-    <div class="errorExplanation" id="errorExplanation">
-      <h2><%= t('.error_title') %></h2>
-    </div>
+<div class="article contact">
+  <div class="col">
+  <div class="header"><%= @page_content.title %></div>
+  <% if @email_sent %>
+    <p class="alert alert-success"><%= t(".message_sent") %></p>
   <% end %>
 
-  <%= f.inputs do %>
-    <%= f.input :name, :label => false, :placeholder => model_class.human_attribute_name(:name), input_html: {size: 50} %>
-    <%= f.input :email, :label => false, :placeholder => model_class.human_attribute_name(:email), :required => true, input_html: {size: 50} %>
-    <%= f.input :subject, :label => false, :placeholder => model_class.human_attribute_name(:subject), :required => true, input_html: {size: 75} %>
-    <%= f.input :message, :label => false, :placeholder => model_class.human_attribute_name(:message), :required => true, :as => :text, :input_html => {:rows => 5, cols: 83} %>
-  <% end %>
-
-  <div>
-    <%= f.submit t(".send"), :class => 'btn' %>
+  <div class="intro">
+    <%= simple_format_no_tags(@page_content.content, {}, {sanitize: false}) %>
   </div>
 
-<% end %>
+  <%= semantic_form_for @message, :url => contact_path, :html => {class: 'contact-form'} do |f| %>
+    <% if @message.errors.present? %>
+      <div class="errorExplanation" id="errorExplanation">
+        <h2><%= t('.error_title') %></h2>
+      </div>
+    <% end %>
+
+    <%= f.inputs do %>
+      <%= f.input :name, :label => false, :placeholder => model_class.human_attribute_name(:name).upcase, input_html: {size: 50} %>
+      <%= f.input :email, :label => false, :placeholder => model_class.human_attribute_name(:email).upcase+" *", input_html: {size: 50} %>
+      <%= f.input :subject, :label => false, :placeholder => model_class.human_attribute_name(:subject).upcase, input_html: {size: 75} %>
+      <%= f.input :message, required: true, :as => :text, :input_html => {:class => 'autogrow', :rows => 7} %>
+    <% end %>
+    <div>
+      <%= f.submit t(".send"), :class => 'submit-message' %>
+    </div>
+
+  <% end %>
+  </div>
+  <div class="col">
+    <div class="email">
+      <div class="figure"></div>
+      <div class="text"><%= mail_to "tbilisi@unicef.org", nil, :encode => "hex", :subject => t('mailer.contact.contact_form.subject') %></div> 
+    </div>
+    <div class="phone">
+      <div class="figure"></div>
+      <div class="text">+995 32 2 23 23 88 <br/> +995 32 2 25 11 30</div>
+    </div>
+  </div>
+</div>

@@ -49,14 +49,96 @@
   margin-top: 30px;
 }
 
-.article.contact
-{  
+.article.contact{ 
+  display: table;
+  margin:50px auto 0px;
+
   .col
   {
     display:table-cell;
     &:first-of-type
     {
+      background:transparent url(/assets/svg/vborder.svg) repeat-y center right;
+      padding-right:70px;
+      min-width:500px;
+      max-width:500px;
+    }
+    &:last-of-type
+    {
+      padding-left:50px;
+    }
+  }
+  .header
+  {
+    font: 14px 'nokiasans_s60', 'sans-serif';
+    color:#3c4352;
+    text-transform:uppercase;
+  }
+  .intro
+  {
+    font: 16px 'sourcesans_pro_l', 'sans-serif';
+    color:#3c4352;   
+    margin:18px 0 28px 
+  }
+  form
+  {
+    input[type=text],input[type=email], textarea
+    {
+      font-family:'sourcesans_pro', 'sans-serif';
+      font-size:12px !important;
+      color:#3C4352;            
+      display:inline-block;
+      border:0px !important;
+      background-color:#dceef4 !important;
+      text-decoration: none;    
+      height:31px;
+      width:100%;
+      min-width:100%;
+      max-width:100%;
+      outline:none;
+      -webkit-border-radius: 0 !important;
+      -moz-border-radius: 0 !important;
+      border-radius:0 !important;  
+      -webkit-box-shadow: none !important;
+      -moz-box-shadow: none !important;
+      box-shadow: none !important;    
+      -webkit-transition: 0.3s linear;
+      -moz-transition: 0.3s linear;
+      -o-transition: 0.3s linear;
+      -ms-transition: 0.3s linear;
+      transition: 0.3s linear;
+    }
+    input[type=text]:focus,input[type=email]:focus, textarea:focus
+    {
+      background-color:#fff !important;
+      outline:none;
+      -webkit-border-radius: 0 !important;
+      -moz-border-radius: 0 !important;
+      border-radius:0 !important;  
+      -webkit-box-shadow: none !important;
+      -moz-box-shadow: none !important;
+      box-shadow: none !important;     
+    }
+    label
+    {
+      font:12px 'sourcesans_pro_sb', 'sans-serif';
+      color:#3c4352;
+      text-transform:uppercase;
 
+    }
+    textarea { height: auto; }
+    .submit-message
+    {
+      font:12px 'opensans_sb','sans-serif';
+      color:#fff;
+      background-color:#00adee;
+      border:1px solid #fff;
+      -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+      border-radius: 3px;
+      text-transform:uppercase;
+      padding:6px 20px;
+      outline:none;
     }
   }
   .email, .phone
@@ -68,6 +150,7 @@
   .email
   {
     height:32px;
+    margin:32px 0px 12px;
     > div 
     {
       display:inline-block;
@@ -121,7 +204,6 @@
 
     }  
   }
-
 }
 
 .article.instructions
@@ -130,7 +212,7 @@
   {
     font: 16px 'sourcesans_pro_l', 'sans-serif';
     color:#49505e;
-    margin-bottom:32px;
+    margin:32px 0px;
     a
     {
       font: 16px 'sourcesans_pro_sb', 'sans-serif';
@@ -185,9 +267,13 @@
         cursor:pointer;
       }
     }
-    &:nth-child(odd)
+    &:nth-child(even)
     {
       padding-right:50px;
     }
   }
 }
+::-webkit-input-placeholder { font-family:'sourcesans_pro_sb','sans-serif'; font-size:12px; color: #3c4352 !important; }
+:-moz-placeholder { /* Firefox 18- */ font-family:'sourcesans_pro_sb','sans-serif'; font-size:12px;  color: #3c4352 !important; }
+::-moz-placeholder {  /* Firefox 19+ */ font-family:'sourcesans_pro_sb','sans-serif'; font-size:12px;  color: #3c4352 !important; }
+:-ms-input-placeholder { font-family:'sourcesans_pro_sb','sans-serif'; font-size:12px;  color: #3c4352 !important; }
