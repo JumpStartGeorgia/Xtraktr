@@ -67,8 +67,6 @@ function build_highmaps(json){
         build_highmap(json.map.shape_question_code, json.map.map_sets);
       }
     }
-  }else{
-    // TODO
   }
 }
 
@@ -213,35 +211,6 @@ $(document).ready(function() {
   if (gon.highlight_data){
     load_highlights(gon.highlight_data)
   }
-
-  // if (gon.json_data){
-  //   // set languaage text
-  //   Highcharts.setOptions({
-  //     lang: {
-  //       contextButtonTitle: gon.highcharts_context_title
-  //     },
-  //   colors: ['#00adee', '#e88d42', '#9674a9', '#f3d952', '#6fa187', '#b2a440', '#d95d6a', '#737d91', '#d694e0', '#80b5bc', '#a6c449', '#1b74cc', '#4eccae']
-  //   });
-
-  //   // test if time series or dataset
-  //   if (gon.json_data.time_series){
-  //     build_time_series_charts(gon.json_data);
-  //   }else if(gon.json_data.dataset){
-  //     // test for visual type
-  //     if (gon.visual_type == 'chart'){
-  //       if (gon.json_data.analysis_type == 'comparative'){
-  //         build_crosstab_charts(gon.json_data);
-  //       }else{
-  //         build_pie_charts(gon.json_data);
-  //       }
-  //     }else if (gon.visual_type == 'map') {
-  //       build_highmaps(gon.json_data);
-  //     }
-  //   }
-
-  //   build_page_title(gon.json_data);
-
-  // }
 
 });
 

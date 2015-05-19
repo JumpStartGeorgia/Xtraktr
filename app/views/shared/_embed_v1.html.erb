@@ -1,6 +1,7 @@
 <%-
   highlight ||= nil
   error = highlight.nil? || highlight[:error]
+  embed_class = @is_embed ? 'embed-item' : ''
 -%>
 
 <div class="highlight-data" data-id="<%= highlight[:highlight_id] %>" data-visual-type="<%= highlight[:visual_type] %>" data-explore-link="<%= highlight[:explore_link] %>">
@@ -33,9 +34,10 @@
         <% end %>
       </div>
       <% end %>
-      <div class="explore-data" class="embed-item">
+
+      <div class="explore-data <%= embed_class %>">
         <div id="container-chart"></div>
-        <div id="container-map" class="embed-item"></div>
+        <div id="container-map" class="<%= embed_class %>"></div>
       </div>
     </div>
   <% end %>
