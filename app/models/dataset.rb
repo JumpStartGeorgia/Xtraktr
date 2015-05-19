@@ -3,7 +3,7 @@ class Dataset < CustomTranslation
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::Paperclip
-  # include Mongoid::Search
+  include Mongoid::Search
   include ProcessDataFile # script in lib folder that will convert datafile to csv and then load into appropriate fields
 
   #############################
@@ -299,7 +299,7 @@ class Dataset < CustomTranslation
 
   #############################
   # Full text search
-  # search_in :title, :description, :methodology, :source, :questions => [:original_code, :text, :notes, :answers => [:text]]
+  search_in :title, :description, :methodology, :source, :questions => [:original_code, :text, :notes, :answers => [:text]]
 
   #############################
   # Validations
