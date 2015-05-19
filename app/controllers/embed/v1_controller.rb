@@ -27,7 +27,7 @@ class Embed::V1Controller < ApplicationController
 
         if @highlight_data[:type] == 'dataset'
           # have to get the shape file url for this dataset
-          @shapes_url = Dataset.shape_file_url(options['dataset_id'])
+          @shapes_url = Dataset.shape_file_url(@highlight_data[:id])
         end
       end
       @js.push('highcharts-exporting.js')
