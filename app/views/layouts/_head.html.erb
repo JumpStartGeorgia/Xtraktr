@@ -39,7 +39,10 @@
     <!--[if IE 7]><%= stylesheet_link_tag 'ie7' %><![endif]-->
 
     <% if @shapes_url.present? %>
-      <script src="<%= @shapes_url %>"></script>
+      <% @shapes_url = [@shapes_url] if @shapes_url.class != Array %>
+      <% @shapes_url.each do |url| %>
+        <script src="<%= @shapes_url %>"></script>
+      <% end %>
     <% end %>
 
 

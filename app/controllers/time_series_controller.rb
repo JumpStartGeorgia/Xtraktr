@@ -41,6 +41,10 @@ class TimeSeriesController < ApplicationController
       @license = PageContent.by_name('license')
 
       @highlights = Highlight.by_time_series(@time_series.id)
+      gon.highlight_ids = @highlights.map{|x| x.id}.shuffle if @highlights.present?
+      gon.highlight_show_title = false
+      gon.highlight_show_links = false
+      load_highlight_assets(@highlights.map{|x| x.embed_id}) if @highlights.present?
 
       @show_title = false
 
