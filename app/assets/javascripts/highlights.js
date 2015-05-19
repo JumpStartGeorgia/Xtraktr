@@ -1,3 +1,4 @@
+//= require masonry.pkgd.min
 $(document).ready(function(){
 
   // resize the container .highlight to fit the iframe
@@ -23,19 +24,27 @@ $(document).ready(function(){
       dataType: 'json',
       success: function (data)
       {      
-        xxx = data;
         console.log(data);
         if (data != undefined && data.html != undefined && data.js != undefined){
-          console.log('data exists!');
           // add the html
           $('#highlights').append(data.html);
 
           // create the charts
           load_highlights(data.js);
+
+            // $('#highlights').prepend('<ul><li>blah</li><li>blah</li><li>blah</li><li>blah</li><li>blah</li><li>blah</li></ul>');
+            // $('#highlights > ul > li').wookmark();
+
+            var $container = $('#highlights');
+          // initialize
+            $container.masonry({
+              // columnWidth: 200,
+              itemSelector: '.highlight',
+              "gutter": 10
+            });
         }
       }
     });
   }
 
 });
-var xxx;

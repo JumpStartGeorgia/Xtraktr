@@ -151,7 +151,7 @@
     .chart{
       width:100%; 
       height:501px;
-      margin-bottom: 30px;
+      // margin-bottom: 30px;
       border-bottom: dotted 1px #ccc;
       position: relative;
       &:last-of-type{
@@ -170,7 +170,7 @@
     color: #888;
     text-decoration: none;
     text-align:center;
-    font-family:'sourcesans-pro-l', 'sans-serif';
+    font-family:'sourcesans_pro_l', 'sans-serif';
     font-size:16px;
     color:#3c4352;
   }
@@ -184,12 +184,14 @@
   }
 
   span.total_responses{
-    font-size: 12px;
-    font-style: italic;
-    color: #888;
+    font-family:'sourcesans_pro_li', 'sans-serif';
+    font-size:14px;
+    font-style:normal;
+    color:#3c4352;
     span.number{
-      color: @bright-blue-color;
-      font-weight: bold;
+      font-family:'sourcesans_pro_sbi', 'sans-serif';
+      font-size:14px;
+      color: #00adee;
     }
   }
 
@@ -411,5 +413,14 @@
         -webkit-transform: scaleY(1.0);
       }
     }  
+  }
+}
+
+
+.highcharts-subtitle
+{
+  .number
+  {
+    color:red;
   }
 }
