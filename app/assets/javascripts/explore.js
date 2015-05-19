@@ -428,7 +428,7 @@ function build_pie_chart(json_chart, chart_height){
     title: {
         text: build_visual_title(highlight_path, json_chart.title.html),
         useHTML: true,
-        style: {'text-align': 'center', 'font-family':"'sourcesans-pro-l', 'sans-serif'", 'font-size': '16px', 'color': '#3C4352'}
+        style: {}
     },
     subtitle: {
         text: json_chart.subtitle.html,
@@ -446,15 +446,17 @@ function build_pie_chart(json_chart, chart_height){
             dataLabels: {
                 enabled: false
             },
-            showInLegend: true
+            showInLegend: true,          
         }
     },
     legend: {
         align: 'center',
         layout: 'vertical',
         symbolHeight: 14,
+        symbolWidth: 14,
         itemMarginBottom: 5,
-        itemStyle: { "color": "#333333", "cursor": "pointer", "fontSize": "14px", "fontWeight": "bold" }
+        itemStyle: { "cursor": "pointer", 'font-family':"'sourcesans_pro_l', 'sans-serif'", 'font-size': '12px', 'color': '#3C4352', 'fontWeight': 'normal' },
+        symbolRadius: 100
     },
     series: [{
         type: 'pie',

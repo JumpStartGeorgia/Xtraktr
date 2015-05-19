@@ -81,7 +81,7 @@
     }
     .text
     {
-      font-family:'sourcesans-pro','sans-serif';
+      font-family:'sourcesans_pro','sans-serif';
       font-size:16px;
       color:#fff;
       padding:0px 12px 0px 10px;
@@ -108,7 +108,7 @@
     }
     .text
     {
-      font-family:'sourcesans-pro','sans-serif';
+      font-family:'sourcesans_pro','sans-serif';
       font-size:16px;
       color:#fff;
       padding:0px 12px 0px 10px;
@@ -122,4 +122,31 @@
     }  
   }
 
+}
+.article.instructions
+{ 
+  > h2
+  {
+
+  }
+  .header
+  {}
+  .box
+  {
+    .title
+    {
+      &.datasets:before
+      {
+        content:"";
+        display:inline-block;
+        background:transparent url(/assets/svg/datasets_a.svg.svg) no-repeat left center/16px;
+        width:16px;
+        height:16px;
+      }
+    }
+    .text
+    {
+
+    }
+  }
 }

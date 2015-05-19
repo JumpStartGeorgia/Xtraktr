@@ -23,7 +23,7 @@ class RootController < ApplicationController
 
   def instructions
     @page_content = PageContent.by_name('instructions')
-
+    @css.push('root.css')
     respond_to do |format|
       format.html # index.html.erb
     end
