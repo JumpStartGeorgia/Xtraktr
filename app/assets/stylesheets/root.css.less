@@ -123,30 +123,71 @@
   }
 
 }
-.article.instructions
-{ 
-  > h2
-  {
 
-  }
+.article.instructions
+{   
   .header
-  {}
+  {
+    font: 16px 'sourcesans_pro_l', 'sans-serif';
+    color:#49505e;
+    margin-bottom:32px;
+    a
+    {
+      font: 16px 'sourcesans_pro_sb', 'sans-serif';
+      color:#00adee;
+    }
+  }
   .box
   {
-    .title
+    width:49%;
+    display:inline-block;
+    vertical-align:top;
+    margin-bottom:42px;
+    .caption
     {
-      &.datasets:before
+      margin:0px 0px 12px;
+      > div { display:table-cell; vertical-align:top; }    
+      div.i
       {
-        content:"";
-        display:inline-block;
-        background:transparent url(/assets/svg/datasets_a.svg.svg) no-repeat left center/16px;
-        width:16px;
-        height:16px;
+        min-width: 20px;
+        width:20px;
+        height:20px;
+        position: relative;
+        top: -3px;
+        &.datasets { background:transparent url(/assets/svg/datasets_a.svg) no-repeat left center/20px; } 
+        &.explore-data { background:transparent url(/assets/svg/instruction_data.svg) no-repeat left center/18px; } 
+        &.time-series { background:transparent url(/assets/svg/instruction_time_series.svg) no-repeat left center/20px; } 
+        &.download-data { background:transparent url(/assets/svg/download.svg) no-repeat left center/18px; } 
+        &.api { background:transparent url(/assets/svg/api_a.svg) no-repeat left center/20px; }                         
       }
+      .title
+      {      
+        font: 16px 'nokiasans_s60', 'sans-serif';
+        color:#3C4352;
+        padding: 0px 8px;
+        white-space: nowrap;  
+      }
+      .line
+        {
+          background:transparent url(/assets/svg/hborder.svg) repeat-x center 7px;
+          width:100%; 
+          height:1px;
+        }
     }
     .text
     {
-
+      font: 16px 'sourcesans_pro_l', 'sans-serif';
+      color:#49505e;
+      a
+      {
+        font: 16px 'sourcesans_pro_sb', 'sans-serif';
+        color:#49505e;
+        cursor:pointer;
+      }
+    }
+    &:nth-child(odd)
+    {
+      padding-right:50px;
     }
   }
 }
