@@ -627,11 +627,6 @@ en:
         link_title: Change my password
         p2: "If you didn't request this, please ignore this email."
         p3: "Your password won't change until you access the link above and create a new one."                
-  embed:
-    v1:
-      index:
-        title_site: Go to %{app_name}
-        title_datalist: View All Datasets
   settings:
     index:
       title: User Settings
@@ -925,6 +920,9 @@ en:
         answers: Answer Text
     language_switcher:
       label: Available Languages
+    embed_v1:
+      title_site: Go to %{app_name}
+      title_datalist: View All Datasets
   export_data:
     dataset: 'Dataset: %{title}'
     download_from: 'Downloaded From: %{app_name} at %{url}.'

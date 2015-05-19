@@ -494,6 +494,7 @@ ka:
       time_series_dashboard: Time Series Dashboard
       terms: "I agree to the <a href='http://www.unicef.org/about/legal_terms.html' target='_blank'>Terms of Use</a>"  
       or: Or 
+      go: Go
       share: Share
     msgs:
       does_not_exist: თქვენ ცდილობთ ისეთი გვერდის ნახვას, რომელიც არ არსებობს.
@@ -625,11 +626,6 @@ ka:
         link_title: პაროლის შეცვლა
         p2: "თუ თქვენ არ მოგითხოვიათ პაროლის შეცვლა, გთხოვთ, არ მიაქციოთ ყურადღება ამ შეტყობინებას."
         p3: "თქვენი პაროლი იგივე დარჩება, სანამ არ გადახვალთ ზემოთ მითითებულ ბმულზე და შექმნით ახალ პაროლს."    
-  embed:
-    v1:
-      index:
-        title_site: Go to %{app_name}
-        title_datalist: View All Datasets
   settings:
     index:
       title: User Settings
@@ -923,6 +919,9 @@ ka:
         answers: Answer Text
     language_switcher:
       label: Available Languages
+    embed_v1:
+      title_site: Go to %{app_name}
+      title_datalist: View All Datasets
   export_data:
     dataset: 'Dataset: %{title}'
     download_from: 'Downloaded From: %{app_name} at %{url}.'

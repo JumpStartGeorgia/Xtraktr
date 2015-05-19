@@ -124,10 +124,5 @@
       <h2><%= t('.header_highlights') %></h2>
       <div class="cell"><div class="line"></div></div>
     </div>
-    <% @highlights.each do |highlight| %>
-      <div class="highlight <%= highlight.visual_type_name %>">
-        <iframe src="<%= embed_v1_path(id: highlight.embed_id, exclude_links: true) %>"></iframe>
-      </div>
-    <% end %>
   </div>
 <% end %>

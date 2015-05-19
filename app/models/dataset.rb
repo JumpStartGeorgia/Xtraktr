@@ -1510,6 +1510,7 @@ class Dataset < CustomTranslation
     infile = file.read
     n, msg = 0, ""
     locales = self.languages_sorted
+    orig_locale = I18n.locale
 
     # to indicate where the columns are in the csv doc
     indexes = Hash[locales.map{|x| [x,nil]}]
@@ -1570,25 +1571,18 @@ class Dataset < CustomTranslation
         # if value exist for exclude, assume it means true
         question.exclude = row[indexes['exclude']].present?
 
-        temp_text = question.text_translations.dup
         locale_found = false
         locales.each do |locale|
           # if question text is provided and not the same, update it
-          if row[indexes[locale]].present? && temp_text[locale] != row[indexes[locale]].strip
+          I18n.locale = locale.to_sym
+          if row[indexes[locale]].present? && question.text != row[indexes[locale]].strip
             puts "- setting text for #{locale}"
-            # question.text_will_change!
-            temp_text[locale] = row[indexes[locale]].strip
+            question.text = row[indexes[locale]].strip
             counts[locale] += 1
             locale_found = true
-          end
+          end          
         end
         counts['overall'] += 1 if locale_found
-
-        if question.text_translations != temp_text
-          puts "---- text translations changed"
-          question.text_translations = temp_text
-        end
-
 
         puts "---> question.valid = #{question.valid?}"
 
@@ -1611,10 +1605,12 @@ class Dataset < CustomTranslation
 
     success = self.save
 
-    puts "=========== successful save = #{success}"
+    puts "=========== success save = #{success}"
 
     puts "****************** total changes: #{counts.map{|k,v| k + ' - ' + v.to_s}.join(', ')}"
     puts "****************** time to process question csv: #{Time.now-start} seconds for #{n} rows"
+
+    I18n.locale = orig_locale
 
     return msg, counts
   end
@@ -1629,6 +1625,7 @@ class Dataset < CustomTranslation
     locales = self.languages_sorted
     last_question_code = nil
     question = nil
+    orig_locale = I18n.locale
 
     # to indicate where the columns are in the csv doc
     indexes = Hash[locales.map{|x| [x,nil]}]
@@ -1717,24 +1714,20 @@ class Dataset < CustomTranslation
         answer.exclude = row[indexes['exclude']].present?
         answer.can_exclude = row[indexes['can_exclude']].present?
 
-        temp_text = answer.text_translations.dup
+        # temp_text = answer.text_translations.dup
         locale_found = false
         locales.each do |locale|
+          I18n.locale = locale.to_sym
           # if answer text is provided and not the same, update it
-          if row[indexes[locale]].present? && temp_text[locale] != row[indexes[locale]].strip
+          if row[indexes[locale]].present? && answer.text != row[indexes[locale]].strip
             puts "- setting text for #{locale}"
             # question.text_will_change!
-            temp_text[locale] = row[indexes[locale]].strip
+            answer.text = row[indexes[locale]].strip
             counts[locale] += 1
             locale_found = true
           end
         end
         counts['overall'] += 1 if locale_found
-
-        if answer.text_translations != temp_text
-          puts "---- text translations changed"
-          answer.text_translations = temp_text
-        end
 
         logger.debug "******** time to process row: #{Time.now-startRow} seconds"
         logger.debug "************************ total time so far : #{Time.now-start} seconds"
@@ -1757,6 +1750,8 @@ class Dataset < CustomTranslation
 
     logger.debug "****************** total changes: #{counts.map{|k,v| k + ' - ' + v.to_s}.join(', ')}"
     logger.debug "****************** time to process answer csv: #{Time.now-start} seconds for #{n} rows"
+
+    I18n.locale = orig_locale
 
     return msg, counts
   end

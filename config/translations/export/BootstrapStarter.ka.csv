@@ -1,0 +1,828 @@
+Line #,Key,en Version,ka Translation
+1,ka.mongoid.models.user,User,მომხმარებელი
+2,ka.mongoid.models.page_content,Text for Pages,ტექსტი გვერდებისთვის
+3,ka.mongoid.models.dataset,Dataset,Dataset
+4,ka.mongoid.models.shapeset,Shapeset,Shapeset
+5,ka.mongoid.models.question,Question,Question
+6,ka.mongoid.models.time_series,Time Series,Time Series
+7,ka.mongoid.models.time_series_question,Question,Question
+8,ka.mongoid.models.time_series_answer,Answer,Answer
+9,ka.mongoid.models.api_version,API Version,API Version
+10,ka.mongoid.models.api_method,API Method,API Method
+11,ka.mongoid.models.api_key,API Access Token,API Access Token
+12,ka.mongoid.models.categories,Category,Category
+13,ka.mongoid.models.category_mappers,Categories,Categories
+14,ka.mongoid.attributes.user.email,Email Address,ელ.ფოსტა
+15,ka.mongoid.attributes.user.password,Password,პაროლი
+16,ka.mongoid.attributes.user.password_confirmation,Password Confirmation,გაიმეორეთ პაროლი
+17,ka.mongoid.attributes.user.role,Role,როლი
+18,ka.mongoid.attributes.user.remember_me,Remeber Me,დამიმახსოვრე
+19,ka.mongoid.attributes.user.nickname,Nickname,მომხმარებლის სახელი
+20,ka.mongoid.attributes.user.sign_in_count,Number of Times Logged In,შემოსვლის რაოდენობა
+21,ka.mongoid.attributes.user.created_at,Date Created,შექმნის თარიღი
+22,ka.mongoid.attributes.user.current_sign_in_at,Date Last Logged In,ბოლო შემოსვლის თარიღი
+23,ka.mongoid.attributes.user.first_name,First Name,First Name
+24,ka.mongoid.attributes.user.last_name,Last Name,Last Name
+25,ka.mongoid.attributes.user.name,Name,Name
+26,ka.mongoid.attributes.user.age_group,Age Group,Age Group
+27,ka.mongoid.attributes.user.residence,Country of Residence,Country of Residence
+28,ka.mongoid.attributes.user.affiliation,Affiliation,Affiliation
+29,ka.mongoid.attributes.user.status,Status,Status
+30,ka.mongoid.attributes.user.status_other,When other(Please specify),When other(Please specify)
+31,ka.mongoid.attributes.user.description,Short description of research objective (<i>optional</i>),Short description of research objective (<i>optional</i>)
+32,ka.mongoid.attributes.user.notifications,I want to receive notifications when new datasets are added,I want to receive notifications when new datasets are added
+33,ka.mongoid.attributes.user.notification_locale,Notification Language,Notification Language
+34,ka.mongoid.attributes.message.name,Name,სახელი
+35,ka.mongoid.attributes.message.email,Email Address,ელ.ფოსტის მისამართი
+36,ka.mongoid.attributes.message.message,Message,შეტყობინება
+37,ka.mongoid.attributes.message.subject,Subject,Subject
+38,ka.mongoid.attributes.agreement.email,Email Address,Email Address
+39,ka.mongoid.attributes.agreement.first_name,First Name,First Name
+40,ka.mongoid.attributes.agreement.last_name,Last Name,Last Name
+41,ka.mongoid.attributes.agreement.age_group,Age Group,Age Group
+42,ka.mongoid.attributes.agreement.residence,Country of Residence,Country of Residence
+43,ka.mongoid.attributes.agreement.affiliation,Affiliation,Affiliation
+44,ka.mongoid.attributes.agreement.status,Status,Status
+45,ka.mongoid.attributes.agreement.status_other,When other(Please specify),When other(Please specify)
+46,ka.mongoid.attributes.agreement.description,Short description of research objective (<i>optional</i>),Short description of research objective (<i>optional</i>)
+47,ka.mongoid.attributes.agreement.dataset_id,Dataset,Dataset
+48,ka.mongoid.attributes.agreement.dataset_type,Download Type,Download Type
+49,ka.mongoid.attributes.agreement.dataset_locale,Download Language,Download Language
+50,ka.mongoid.attributes.agreement.created_at,Date,Date
+51,ka.mongoid.attributes.page_content.name,Unique Name,Unique Name
+52,ka.mongoid.attributes.page_content.title,Title,Title
+53,ka.mongoid.attributes.page_content.content,Content,კონტენტი
+54,ka.mongoid.attributes.dataset.title,Title,Title
+55,ka.mongoid.attributes.dataset.description,Description,Description
+56,ka.mongoid.attributes.dataset.methodology,Methodology,Methodology
+57,ka.mongoid.attributes.dataset.source,Source of Data,Source of Data
+58,ka.mongoid.attributes.dataset.source_url,URL to Souce,URL to Souce
+59,ka.mongoid.attributes.dataset.datafile,Data File,Data File
+60,ka.mongoid.attributes.dataset.has_warnings,Issues with Data,Issues with Data
+61,ka.mongoid.attributes.dataset.stats,Dataset Stats,Dataset Stats
+62,ka.mongoid.attributes.dataset.codebook,Codebook,Codebook
+63,ka.mongoid.attributes.dataset.released_at,Date Released,Date Released
+64,ka.mongoid.attributes.dataset.start_gathered_at,Date Started Gathering Data,Date Started Gathering Data
+65,ka.mongoid.attributes.dataset.end_gathered_at,Date Finished Gathering Data,Date Finished Gathering Data
+66,ka.mongoid.attributes.dataset.gathered_at,Dates Collected,Dates Collected
+67,ka.mongoid.attributes.dataset.public,Make Available to the Public,Make Available to Public
+68,ka.mongoid.attributes.dataset.languages,Languages of Dataset,Languages of Dataset
+69,ka.mongoid.attributes.dataset.default_language,Default Language,Default Language
+70,ka.mongoid.attributes.dataset.is_mappable,Has questions that are geographic in nature,Has questions have been setup to show answers on a map
+71,ka.mongoid.attributes.dataset.created_at,Added On,Added On
+72,ka.mongoid.attributes.dataset.reports,Reports,Reports
+73,ka.mongoid.attributes.dataset.category_ids,Categories,Categories
+74,ka.mongoid.attributes.question.code,Question Code,Question Code
+75,ka.mongoid.attributes.question.original_code,Question Code,Question Code
+76,ka.mongoid.attributes.question.text,Question,Question
+77,ka.mongoid.attributes.question.notes,Notes,Notes
+78,ka.mongoid.attributes.question.exclude,Exclude Question from Analysis,Exclude Question from Analysis
+79,ka.mongoid.attributes.question.exclude_download_header,Exclude Question from Analysis (leave blank to show question),Exclude Question from Analysis (leave blank to show question)
+80,ka.mongoid.attributes.question.no_questions,There are no questions on file for this dataset.,There are no questions on file for this dataset.
+81,ka.mongoid.attributes.question.is_mappable,Question has been setup to show answers on a map,Question has been setup to show answers on a map
+82,ka.mongoid.attributes.question.has_code_answers,Has defined list of answers,Has defined list of answers
+83,ka.mongoid.attributes.question.possible_answers,Possible Answer Values,Possible Answer Values
+84,ka.mongoid.attributes.question.data_answers,Answer Values in Data,Answer Values in Data
+85,ka.mongoid.attributes.answer.value,Value,Value
+86,ka.mongoid.attributes.answer.text,Answer,Answer
+87,ka.mongoid.attributes.answer.exclude,Exclude Answer from Analysis,Exclude Answer from Analysis
+88,ka.mongoid.attributes.answer.exclude_download_header,Exclude Answer from Analysis (leave blank to show answer),Exclude Answer from Analysis (leave blank to show answer)
+89,ka.mongoid.attributes.answer.can_exclude,Can Exclude During Analysis,Can Exclude During Analysis
+90,ka.mongoid.attributes.answer.can_exclude_download_header,Can Exclude During Analysis (leave blank to always show answer),Can Exclude During Analysis (leave blank to always show answer)
+91,ka.mongoid.attributes.answer.no_questions,There are no questions on file for this dataset.,There are no questions on file for this dataset.
+92,ka.mongoid.attributes.answer.sort_order,Sort Order,Sort Order
+93,ka.mongoid.attributes.answer.shape_name,Name of Shape,Name of Shape
+94,ka.mongoid.attributes.report.title,Title,Title
+95,ka.mongoid.attributes.report.file,File,File
+96,ka.mongoid.attributes.report.released_at,Date Released,Date Released
+97,ka.mongoid.attributes.report.langauge_id,Language,Language
+98,ka.mongoid.attributes.report.summary,Summary,Summary
+99,ka.mongoid.attributes.time_series.title,Title,Title
+100,ka.mongoid.attributes.time_series.description,Description,Description
+101,ka.mongoid.attributes.time_series.source,Source of Data,Source of Data
+102,ka.mongoid.attributes.time_series.source_url,URL to Souce,URL to Souce
+103,ka.mongoid.attributes.time_series.public,Make Available to the Public,Make Available to the Public
+104,ka.mongoid.attributes.time_series.created_at,Added On,Added On
+105,ka.mongoid.attributes.time_series.datasets,Datasets,Datasets
+106,ka.mongoid.attributes.time_series.dates,Dates Included,Dates Included
+107,ka.mongoid.attributes.time_series.category_ids,Categories,Categories
+108,ka.mongoid.attributes.time_series_dataset.dataset_id,Dataset,Dataset
+109,ka.mongoid.attributes.time_series_dataset.title,Label,Label
+110,ka.mongoid.attributes.time_series_dataset.sort_order,Sort Order,Sort Order
+111,ka.mongoid.attributes.time_series_question.code,Question Code,Question Code
+112,ka.mongoid.attributes.time_series_question.original_code,Question Code,Question Code
+113,ka.mongoid.attributes.time_series_question.text,Question,Question
+114,ka.mongoid.attributes.time_series_question.notes,Notes,Notes
+115,ka.mongoid.attributes.time_series_dataset_question.code,Question Code,Question Code
+116,ka.mongoid.attributes.time_series_dataset_question.text,Question,Question
+117,ka.mongoid.attributes.time_series_dataset_question.notes,Notes,Notes
+118,ka.mongoid.attributes.time_series_dataset_question.dataset,Dataset,Dataset
+119,ka.mongoid.attributes.time_series_answer.value,Value,Value
+120,ka.mongoid.attributes.time_series_answer.text,Answer,Answer
+121,ka.mongoid.attributes.time_series_answer.can_exclude,Can Exclude During Analysis,Can Exclude During Analysis
+122,ka.mongoid.attributes.time_series_answer.sort_order,Sort Order,Sort Order
+123,ka.mongoid.attributes.shapeset.title,Title,Title
+124,ka.mongoid.attributes.shapeset.description,Description,Description
+125,ka.mongoid.attributes.shapeset.source,Source of Shapeset,Source of Shapeset
+126,ka.mongoid.attributes.shapeset.source_url,URL to Souce,URL to Souce
+127,ka.mongoid.attributes.shapeset.shapefile,GeoJSON File,GeoJSON File
+128,ka.mongoid.attributes.shapeset.languages,Languages of Shapeset,Languages of Shapeset
+129,ka.mongoid.attributes.shapeset.default_language,Default Language,Default Language
+130,ka.mongoid.attributes.shapeset.created_at,Added On,Added On
+131,ka.mongoid.attributes.api_version.permalink,Permalink,Permalink
+132,ka.mongoid.attributes.api_version.title,Title,Title
+133,ka.mongoid.attributes.api_version.public,Make Available to the Public,Make Available to the Public
+134,ka.mongoid.attributes.api_version.public_at,Released At,Released At
+135,ka.mongoid.attributes.api_version.updated_at,Last Updated At,Last Updated At
+136,ka.mongoid.attributes.api_version.methods,Methods,Methods
+137,ka.mongoid.attributes.api_method.permalink,Permalink,Permalink
+138,ka.mongoid.attributes.api_method.title,Title,Title
+139,ka.mongoid.attributes.api_method.content,Content,Content
+140,ka.mongoid.attributes.api_method.public,Make Available to the Public,Make Available to the Public
+141,ka.mongoid.attributes.api_method.public_at,Released At,Released At
+142,ka.mongoid.attributes.api_method.updated_at,Last Updated At,Last Updated At
+143,ka.mongoid.attributes.api_method.sort_order,Sort Order,Sort Order
+144,ka.mongoid.attributes.api_request.api_key_id,API Key ID,API Key ID
+145,ka.mongoid.attributes.api_request.user_id,User ID,User ID
+146,ka.mongoid.attributes.api_request.dataset_id,Dataset ID,Dataset ID
+147,ka.mongoid.attributes.api_request.time_series_id,Time Series ID,Time Series ID
+148,ka.mongoid.attributes.api_request.ip_address,IP Address,IP Address
+149,ka.mongoid.attributes.api_request.locale,API Locale,API Locale
+150,ka.mongoid.attributes.api_request.api_version,API Version,API Version
+151,ka.mongoid.attributes.api_request.action,API Action,API Action
+152,ka.mongoid.attributes.api_request.question_code,Question Code,Question Code
+153,ka.mongoid.attributes.api_request.broken_down_by_code,Broken Down By Code,Broken Down By Code
+154,ka.mongoid.attributes.api_request.filtered_by_code,Filtered By Code,Filtered By Code
+155,ka.mongoid.attributes.api_request.can_exclude,Can Exclude,Can Exclude
+156,ka.mongoid.attributes.api_request.with_title,With Title,With Title
+157,ka.mongoid.attributes.api_request.with_chart_data,With Chart Data,With Chart Data
+158,ka.mongoid.attributes.api_request.with_map_data,With Map Data,With Map Data
+159,ka.mongoid.attributes.api_request.browser,Browser,Browser
+160,ka.mongoid.attributes.api_request.version,Browser Version,Browser Version
+161,ka.mongoid.attributes.api_request.os,OS,OS
+162,ka.mongoid.attributes.api_request.platform,OS Platform,OS Platform
+163,ka.mongoid.attributes.api_request.app,App,App
+164,ka.mongoid.attributes.api_request.is_mobile,Is Mobile Device?,Is Mobile Device?
+165,ka.mongoid.attributes.api_request.created_at,Date,Date
+166,ka.mongoid.attributes.api_key.key,Access Token,Access Token
+167,ka.mongoid.attributes.api_key.created_at,Date Created,Date Created
+168,ka.mongoid.hints.dataset.title,The title of your dataset,The title of your dataset
+169,ka.mongoid.hints.dataset.description,Explain what your dataset is about,Explain what your dataset is about
+170,ka.mongoid.hints.dataset.methodology,Explain how the data in the dataset was collected,Explain how the data in the dataset was collected
+171,ka.mongoid.hints.dataset.source,Who collected this data,Who collected this data
+172,ka.mongoid.hints.dataset.source_url,"URL to the Source's website. Please include the http as part of the url (e.g., http://source.com)","URL to the Source's website. Please include the http as part of the url (e.g., http://source.com)"
+173,ka.mongoid.hints.dataset.datafile,"Only sav, dta, csv, xls, xlsx formats are allowed","Only sav, dta, csv, xls, xlsx formats are allowed"
+174,ka.mongoid.hints.dataset.codebook,"Only txt, pdf, doc, docx formats are allowed","Only txt, pdf, doc, docx formats are allowed"
+175,ka.mongoid.hints.dataset.released_at,Date the dataset was released to the public,Date the dataset was released to the public
+176,ka.mongoid.hints.dataset.start_gathered_at,Date the data gathering process began,Date the data gathering process began
+177,ka.mongoid.hints.dataset.end_gathered_at,Date the data gathering process finished,Date the data gathering process finished
+178,ka.mongoid.hints.dataset.public,Select 'Yes' to make your dataset available to the world,Select 'Yes' to make your dataset available to the world
+179,ka.mongoid.hints.dataset.languages,"Even though your dataset may be in one language, you can use these forms to translate all of the questions and answers into any language you desire.","Even though your dataset may be in one language, you can use these forms to translate all of the questions and answers into any language you desire."
+180,ka.mongoid.hints.dataset.default_language,The dataset language that is shown by default if no specific language is requested by user,The dataset language that is shown by default if no specific language is requested by user
+181,ka.mongoid.hints.dataset.category_ids,Assign the dataset to one or more categories,Assign the dataset to one or more categories
+182,ka.mongoid.hints.shapeset.title,The title of your shapeset,The title of your shapeset
+183,ka.mongoid.hints.shapeset.description,Short summary of what is in the shapeset,Short summary of what is in the shapeset
+184,ka.mongoid.hints.shapeset.source,Who put the shapeset together,Who put the shapeset together
+185,ka.mongoid.hints.shapeset.source_url,"URL to the Source's website. Please include the http as part of the url (e.g., http://source.com)","URL to the Source's website. Please include the http as part of the url (e.g., http://source.com)"
+186,ka.mongoid.hints.shapeset.shapefile,Only json and geojson formats are allowed,Only json and geojson formats are allowed
+187,ka.mongoid.hints.shapeset.languages,"Even though your shapeset may be in one language, you can use this form to translate all of the shapeset into any language you desire.","Even though your shapeset may be in one language, you can use this form to translate all of the shapeset into any language you desire."
+188,ka.mongoid.hints.shapeset.default_language,The shapeset language that is used by default if no specific language is requested,The shapeset language that is used by default if no specific language is requested
+189,ka.mongoid.hints.question.text,The text of the question,The text of the question
+190,ka.mongoid.hints.question.notes,Any special notes about the question,Any special notes about the question
+191,ka.mongoid.hints.question.exclude,"If selected, this question will not be available during analysis.","If selected, this question will not be available during analysis."
+192,ka.mongoid.hints.question.is_mappable,"If the question is mappable in nature, you can match the question to a shapeset and be able to analyize the question on a map.","If the question is mappable in nature, you can match the question to a shapeset and be able to analyize the question on a map."
+193,ka.mongoid.hints.answer.value,The value of the answer,The value of the answer
+194,ka.mongoid.hints.answer.text,The text of the answer,The text of the answer
+195,ka.mongoid.hints.answer.exclude,"If selected, this answer will not be available during analysis.","If selected, this answer will not be available during analysis."
+196,ka.mongoid.hints.answer.can_exclude,"If selected, this answer will be available during analysis, but can be turned off if desired by the user.","If selected, this answer will be available during analysis, but can be turned off if desired by the user."
+197,ka.mongoid.hints.answer.sort_order,The order the answers should appear,The order the answers should appear
+198,ka.mongoid.hints.answer.default_text,This is the answer text from the default language which is provided to make it easier to complete the translation,This is the answer text from the default language which is provided to make it easier to complete the translation
+199,ka.mongoid.hints.report.title,The title of the report,The title of the report
+200,ka.mongoid.hints.report.file,"The report file in pdf, doc, odt or txt format","The report file in pdf, doc, odt or txt format"
+201,ka.mongoid.hints.report.released_at,Date the report was released to the public,Date the report was released to the public
+202,ka.mongoid.hints.report.language_id,The language the report is written in,The language the report is written in
+203,ka.mongoid.hints.report.summary,A brief summary of the report,A brief summary of the report
+204,ka.mongoid.hints.mappable.question,Select the question that you want to have the answers appear on a map during analysis.,Select the question that you want to have the answers appear on a map during analysis.
+205,ka.mongoid.hints.mappable.shapeset,Select the shapeset to use for this question.,Select the shapeset to use for this question.
+206,ka.mongoid.hints.time_series.title,The title of your time series,The title of your time series
+207,ka.mongoid.hints.time_series.description,Explain what your time series is about,Explain what your time series is about
+208,ka.mongoid.hints.time_series.public,Select 'Yes' to make your time series available to the world,Select 'Yes' to make your time series available to the world
+209,ka.mongoid.hints.time_series.languages,The languages of your time series are automatically determined by the languages of the datasets,The languages of your time series are automatically determined by the languages of the datasets
+210,ka.mongoid.hints.time_series.default_language,The time series language that is shown by default if no specific language is requested by user,The time series language that is shown by default if no specific language is requested by user
+211,ka.mongoid.hints.time_series.category_ids,Assign the time series to one or more categories,Assign the time series to one or more categories
+212,ka.mongoid.hints.time_series_dataset.dataset_id,Select the dataset to add to this time series,Select the dataset to add to this time series
+213,ka.mongoid.hints.time_series_dataset.title,"The text that will represent this data set in the time series, most likely a time indicator. For example, if your dataset is from 2015, you could enter 2015; or if it is from January 2015, you can enter January 2015.","The text that will represent this data set in the time series, most likely a time indicator. For example, if your dataset is from 2015, you could enter 2015; or if it is from January 2015, you can enter January 2015."
+214,ka.mongoid.hints.time_series_dataset.sort_order,The order the datasets should appear in the time series,The order the datasets should appear in the time series
+215,ka.mongoid.hints.time_series_question.code,The code of the question as you want it to appear in the time series,The code of the question as you want it to appear in the time series
+216,ka.mongoid.hints.time_series_question.text,The text of the question as you want it to appear in the time series,The text of the question as you want it to appear in the time series
+217,ka.mongoid.hints.time_series_question.notes,Any special notes about the question,Any special notes about the question
+218,ka.mongoid.hints.time_series_dataset_question.text,"Only questions from the dataset that are not already assigned to this time series will be shown. When you select a new question, the list of answers for this dataset below will automatically change.","Only questions from the dataset that are not already assigned to this time series will be shown. When you select a new question, the list of answers for this dataset below will automatically change."
+219,ka.mongoid.hints.time_series_dataset_question.notes,Any special notes about the question,Any special notes about the question
+220,ka.mongoid.hints.time_series_answer.value,The value of the answer,The value of the answer
+221,ka.mongoid.hints.time_series_answer.text,The text of the answer,The text of the answer
+222,ka.mongoid.hints.time_series_answer.can_exclude,"If selected, this answer will be available during analysis, but can be turned off if desired by the user.","If selected, this answer will be available during analysis, but can be turned off if desired by the user."
+223,ka.mongoid.hints.time_series_answer.sort_order,The order the answers should appear,The order the answers should appear
+224,ka.mongoid.hints.time_series_answer.default_text,This is the answer text from the default language which is provided to make it easier to complete the translation,This is the answer text from the default language which is provided to make it easier to complete the translation
+225,ka.mongoid.hints.time_series_answer.dataset,The possible answers for the question selected from this dataset,The possible answers for the question selected from this dataset
+226,ka.mongoid.hints.page_content.name,Unique name for content (do not change!),კონტენტის უნიკალური სახელი (არ შეცვალოთ!)
+227,ka.mongoid.hints.page_content.title,Title to show above content,"სათაური, რომელიც გამოჩნდება კონტენტის ზემოთ"
+228,ka.mongoid.hints.page_content.content,Content to be shown on page,Content to be shown on page
+229,ka.mongoid.hints.api_version.permalink,"Abbreviated Name Used in URL (e.g., v1)","Abbreviated Name Used in URL (e.g., v1)"
+230,ka.mongoid.hints.api_version.title,Title of the API Version,Title of the API Version
+231,ka.mongoid.hints.api_version.public,Select 'Yes' to make the API Version documentation available to the world,Select 'Yes' to make the API Version documentation available to the world
+232,ka.mongoid.hints.api_method.permalink,"Abbreviated Name Used in URL (e.g., v1)","Abbreviated Name Used in URL (e.g., v1)"
+233,ka.mongoid.hints.api_method.title,Title of API Method,Title of API Method
+234,ka.mongoid.hints.api_method.content,Explanation of how to use the API Method,Explanation of how to use the API Method
+235,ka.mongoid.hints.api_method.public,Select 'Yes' to make the API Method documentation available to the world,Select 'Yes' to make the API Method documentation available to the world
+236,ka.mongoid.hints.api_method.sort_order,The order the API methods should appear,The order the API methods should appear
+237,ka.errors.messages.required_field,is a required field.,სავალდებულო ველი
+238,ka.errors.messages.already_exists,already exists in the database.,უკვე არსებობს მონაცემთა ბაზაში
+239,ka.errors.messages.translation_default_lang,%{field_name} for Default Language '%{language}' %{msg},%{field_name} for Default Language '%{language}' %{msg}
+240,ka.errors.messages.translation_any_lang,%{field_name} for Language '%{language}' %{msg},%{field_name} for Language '%{language}' %{msg}
+241,ka.errors.messages.invalid_language,'%{lang_locale}' is not a valid language locale,'%{lang_locale}' is not a valid language locale
+242,ka.errors.messages.dataset_length,At least two datasets are needed for a time series to be saved.,At least two datasets are needed for a time series to be saved.
+243,ka.mass_uploads_msgs.bad_headers,The headers in the file do not match the headers from the template so it is not possible to determine what each column of data is. Please download the question template file and use the headers from that file.,The headers in the file do not match the headers from the template so it is not possible to determine what each column of data is. Please download the question template file and use the headers from that file.
+244,ka.mass_uploads_msgs.missing_code,Row %{n}: Could not find question with code '%{code}',Row %{n}: Could not find question with code '%{code}'
+245,ka.mass_uploads_msgs.questions.not_save,Row %{n}: Could not save question: %{msg},Row %{n}: Could not save question: %{msg}
+246,ka.mass_uploads_msgs.answers.missing_answer,Row %{n}: Could not find answer with value '%{value}' for question with code '%{code}',Row %{n}: Could not find answer with value '%{value}' for question with code '%{code}'
+247,ka.mass_uploads_msgs.answers.not_save,Row %{n}: Could not save answer: %{msg},Row %{n}: Could not save answer: %{msg}
+248,ka.publish_status.public,Public,Public
+249,ka.publish_status.private,Private,Private
+250,ka.tabbed_translation_form.default_text,Default Text,Default Text
+251,ka.tabbed_translation_form.default_url,Default URL,Default URL
+252,ka.explore_time_series.na,N/A,N/A
+253,ka.explore_time_series.percent,Percent (%),Percent (%)
+254,ka.explore_time_series.single.html.title,'<span class='code-highlight'>%{code}</span> - %{question}','<span class='code-highlight'>%{code}</span> - %{question}'
+255,ka.explore_time_series.single.html.title_filter,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}',<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'
+256,ka.explore_time_series.single.html.title_filter_value,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = %{value}',<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = %{value}'
+257,ka.explore_time_series.single.text.title,'%{code} - %{question}','%{code} - %{question}'
+258,ka.explore_time_series.single.text.title_filter, filtered by: '%{code} - %{variable}', filtered by: '%{code} - %{variable}'
+259,ka.explore_time_series.single.text.title_filter_value, filtered by: '%{code} - %{variable} = %{value}', filtered by: '%{code} - %{variable} = %{value}'
+260,ka.explore_time_series.subtitle.html.title,Total Responses: %{num},Total Responses: %{num}
+261,ka.explore_time_series.subtitle.html.title_filter,Total Responses Filtered by Answers to %{variable}: %{nums},Total Responses Filtered by Answers to %{variable}: %{nums}
+262,ka.explore_time_series.subtitle.text.title,Total Responses: %{num},Total Responses: %{num}
+263,ka.explore_time_series.subtitle.text.title_filter,Total Responses Filtered by Answers to %{variable}: %{nums},Total Responses Filtered by Answers to %{variable}: %{nums}
+264,ka.explore_data.hover_region,Hover over a Region,Hover over a Region
+265,ka.explore_data.na,N/A,N/A
+266,ka.explore_data.percent,Percent,Percent
+267,ka.explore_data.comparative.html.title,<span class='title-highlight'>Answers to:</span> <br /> '<span class='code-highlight'>%{question_code}</span> - %{question}' <br /> <span class='title-highlight'>broken down by:</span> <br /> '<span class='code-highlight'>%{broken_down_by_code}</span> - %{broken_down_by}',<span class='title-highlight'>Answers to:</span> <br /> '<span class='code-highlight'>%{question_code}</span> - %{question}' <br /> <span class='title-highlight'>broken down by:</span> <br /> '<span class='code-highlight'>%{broken_down_by_code}</span> - %{broken_down_by}'
+268,ka.explore_data.comparative.html.title_filter,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}',<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'
+269,ka.explore_data.comparative.html.title_filter_value,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = %{value}',<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = %{value}'
+270,ka.explore_data.comparative.html.map.title,'<span class='code-highlight'>%{code}</span> - %{question}' ,'<span class='code-highlight'>%{code}</span> - %{question}' 
+271,ka.explore_data.comparative.html.map.title_col,<br /> <span class='title-highlight'>broken down by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{broken_down_by} = %{broken_down_by_answer}' ,<br /> <span class='title-highlight'>broken down by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{broken_down_by} = %{broken_down_by_answer}' 
+272,ka.explore_data.comparative.html.map.title_filter,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}',<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'
+273,ka.explore_data.comparative.html.map.title_filter_value,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = %{value}',<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = %{value}'
+274,ka.explore_data.comparative.text.title,"Answers to: '%{question_code} - %{question}', broken down by: '%{broken_down_by_code} - %{broken_down_by}'","Answers to: '%{question_code} - %{question}', broken down by: '%{broken_down_by_code} - %{broken_down_by}'"
+275,ka.explore_data.comparative.text.title_filter,", filtered by: '%{code} - %{variable}'",", filtered by: '%{code} - %{variable}'"
+276,ka.explore_data.comparative.text.title_filter_value,", filtered by: '%{code} - %{variable} = %{value}'",", filtered by: '%{code} - %{variable} = %{value}'"
+277,ka.explore_data.comparative.text.map.title,'%{code} - %{question}' ,'%{code} - %{question}' 
+278,ka.explore_data.comparative.text.map.title_col,broken down by: '%{code} - %{broken_down_by} = %{broken_down_by_answer}',broken down by: '%{code} - %{broken_down_by} = %{broken_down_by_answer}'
+279,ka.explore_data.comparative.text.map.title_filter,", filtered by: '%{code} - %{variable}'",", filtered by: '%{code} - %{variable}'"
+280,ka.explore_data.comparative.text.map.title_filter_value,", filtered by: '%{code} - %{variable} = %{value}'",", filtered by: '%{code} - %{variable} = %{value}'"
+281,ka.explore_data.single.html.title,Answers to: '<span class='code-highlight'>%{code}</span> - %{question}',Answers to: '<span class='code-highlight'>%{code}</span> - %{question}'
+282,ka.explore_data.single.html.title_filter,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}',<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'
+283,ka.explore_data.single.html.title_filter_value,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = %{value}',<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = %{value}'
+284,ka.explore_data.single.text.title,Answers to: '%{code} - %{question}' ,Answers to: '%{code} - %{question}' 
+285,ka.explore_data.single.text.title_filter,", filtered by: '%{code} - %{variable}'",", filtered by: '%{code} - %{variable}'"
+286,ka.explore_data.single.text.title_filter_value,", filtered by: '%{code} - %{variable} = %{value}'",", filtered by: '%{code} - %{variable} = %{value}'"
+287,ka.explore_data.subtitle.html.title,Total Responses: <span class='number'>%{num}</span>,Total Responses: <span class='number'>%{num}</span>
+288,ka.explore_data.subtitle.html.title_filter,Total Responses Filtered by Answers to %{variable}: %{nums},Total Responses Filtered by Answers to %{variable}: %{nums}
+289,ka.explore_data.subtitle.text.title,Total Responses: %{num},Total Responses: %{num}
+290,ka.explore_data.subtitle.text.title_filter,Total Responses Filtered by Answers to %{variable}: %{nums},Total Responses Filtered by Answers to %{variable}: %{nums}
+291,ka.datatable.copy.title,Copy,Copy
+292,ka.datatable.copy.tooltip,Copy to clipboard,Copy to clipboard
+293,ka.datatable.csv.title,CSV,CSV
+294,ka.datatable.csv.tooltip,Save as CSV,Save as CSV
+295,ka.datatable.xls.title,XLS,XLS
+296,ka.datatable.xls.tooltip,Save as XLS,Save as XLS
+297,ka.datatable.pdf.title,PDF,PDF
+298,ka.datatable.pdf.tooltip,Save as PDF,Save as PDF
+299,ka.datatable.print.title,Print,Print
+300,ka.datatable.print.tooltip,Print the table,Print the table
+301,ka.highcharts.context_title,Save this chart,Save this chart
+302,ka.highcharts.png,PNG Image,PNG Image
+303,ka.highcharts.jpg,JPG Image,JPG Image
+304,ka.highcharts.pdf,PDF Document,PDF Document
+305,ka.highcharts.svg,SVG Vector Image,SVG Vector Image
+306,ka.mailer.closing,"Sincerely,","პატივისცემით,"
+307,ka.mailer.signature,UNICEF Georgia,UNICEF Georgia
+308,ka.mailer.unsubscribe,Click here to change your notification settings,დააჭირეთ და შეცვალეთ შეტყობინებების პარამეტრები
+309,ka.mailer.notification.new_user.subject,Welcome to UNICEF Georgia Data Portal!,Welcome to UNICEF Georgia Data Portal!
+310,ka.mailer.notification.new_user.message,"Thank you for creating an account on UNICEF Georgia's open data portal and sharing some information about yourself. It is our hope that the content and data you find adds value to your work and understanding of trends related to the rights of children in Georgia. If you have any questions, you can contact us via our webform or send us an email.","Thank you for creating an account on UNICEF Georgia's open data portal and sharing some information about yourself. It is our hope that the content and data you find adds value to your work and understanding of trends related to the rights of children in Georgia. If you have any questions, you can contact us via our webform or send us an email."
+311,ka.mailer.notification.new_data.subject,A new dataset has been added to UNICEF Georgia Data Portal!,A new dataset has been added to UNICEF Georgia Data Portal!
+312,ka.mailer.notification.new_data.message,"UNICEF Georgia has just uploaded new data for you to explore, visualize, and share.","UNICEF Georgia has just uploaded new data for you to explore, visualize, and share."
+313,ka.mailer.contact.contact_form.subject,UNICEF Georgia Data Portal Contact Form,UNICEF Georgia Data Portal Contact Form
+314,ka.helpers.actions,Actions,აირჩიეთ
+315,ka.helpers.default_language,This is the default language that will show,This is the default language that will show
+316,ka.helpers.search,Search,Search
+317,ka.helpers.links.admin,Admin Section,ადმინისტრატორის განყოფილება
+318,ka.helpers.links.edit,Edit,შეცვლა
+319,ka.helpers.links.confirm,Are you sure?,დარწმუნებული ხართ?
+320,ka.helpers.links.destroy,Delete,წაშლა
+321,ka.helpers.links.new,New,ახალი
+322,ka.helpers.links.list,View All,ყველას ნახვა
+323,ka.helpers.links.back,View All,ყველას ნახვა
+324,ka.helpers.links.cancel,Cancel,გაუქმება
+325,ka.helpers.links.reset,Reset,საწყის კონფიგურაციაზე დაბრუნება
+326,ka.helpers.links.view,View,ნახვა
+327,ka.helpers.links.sign_in_facebook,Sign in with Facebook,Facebook-ით შესვლა
+328,ka.helpers.links.forgot_password,Forgot Your Password?,დაგავიწყდათ პაროლი?
+329,ka.helpers.links.change_password,Change Your Password,პაროლის შეცვლა
+330,ka.helpers.links.change_password2,Change Password,პაროლის შეცვლა
+331,ka.helpers.links.password_reset,Reset Password,პაროლის აღდგენა
+332,ka.helpers.links.sign_in2,Sign In,შესვლა
+333,ka.helpers.links.sign_in,Already have an account?,უკვე გაქვთ ანგარიში?
+334,ka.helpers.links.sign_up2,Sign Up,რეგისტრაცია
+335,ka.helpers.links.sign_up_question,Not registered?,არ გაქვთ ანგარიში?
+336,ka.helpers.links.sign_up,Create Account,დარეგისტრირდით
+337,ka.helpers.links.sign_up_title,Join %{app_name},შემოგვიერთდი “%{app_name}”
+338,ka.helpers.links.sign_out,Sign Out,გასვლა
+339,ka.helpers.links.sign_in_provider,Sign in with %{provider},შესვლა %{provider}-ით
+340,ka.helpers.links.sign_up_provider,Sign up with %{provider},დარეგისტრირდით  %{provider}-ით
+341,ka.helpers.links.sign_in_local_or_provider,or log in with your email and password,ან შეიყვანეთ თქვენი ელ. ფოსტა და პაროლი
+342,ka.helpers.links.reset_or_sign_in,sign in with facebook or reset your password,შედით facebook-ით ან შეცვალეთ პაროლი
+343,ka.helpers.links.explanation,We are excited you are interested in our data. We would like to know a bit about who you are. Please complete our form to continue downloading this dataset.,"მოხარულნი ვართ, რომ დაინტერესდით ჩვენი მონაცემებით. ჩვენ გვსურს გავიგოთ მცირე ინფორმაცია თქვენს შესახებ. მონაცემთა ცხრილის ჩამოსატვირთად, გთხოვთ შეავსოთ ჩვენი ფორმა."
+344,ka.helpers.links.download_and_sign_up,Download & Create Account,Download & Create Account
+345,ka.helpers.links.like,Like,მოწონება
+346,ka.helpers.links.likes,Likes,მოწონება
+347,ka.helpers.links.menu,Menu,მენიუ
+348,ka.helpers.links.close,Close,Close
+349,ka.helpers.links.select_all,Select All,Select All
+350,ka.helpers.links.select_none,Select None,Select None
+351,ka.helpers.links.make_mappable,Make Mappable,Make Mappable
+352,ka.helpers.links.add_question_text,Add Question Text,Add Question Text
+353,ka.helpers.links.add_answer,Add Answer,Add Answer
+354,ka.helpers.links.add_answers,Add Answers,Add Answers
+355,ka.helpers.links.edit_answers,Edit Answers,Edit Answers
+356,ka.helpers.links.download,Download,Download
+357,ka.helpers.links.view_data,View Data,View Data
+358,ka.helpers.links.add_dataset,Add Dataset,Add Dataset
+359,ka.helpers.links.remove_dataset,Remove Dataset,Remove Dataset
+360,ka.helpers.links.add_report,Add Report,Add Report
+361,ka.helpers.links.remove_report,Remove Report,Remove Report
+362,ka.helpers.links.download_data,Download Data,Download Data
+363,ka.helpers.links.back_dashboard,Back to Dashboard,Back to Dashboard
+364,ka.helpers.links.api_home,API Home,API Home
+365,ka.helpers.links.agreement,Agreement,Agreement
+366,ka.helpers.links.add_highlight,Add to Highlights,Add to Highlights
+367,ka.helpers.links.delete_highlight,Remove from Highlights,Remove from Highlights
+368,ka.helpers.titles.edit,Edit %{model},შეცვლა %{model}
+369,ka.helpers.titles.save,Save %{model},შენახვა %{model}
+370,ka.helpers.titles.new,New %{model},ახალი %{model}
+371,ka.helpers.titles.delete,Delete %{model},წაშლა %{model}
+372,ka.app.language.en,English,English
+373,ka.app.language.ka,ქართული,ქართული
+374,ka.app.buttons.back,View All,იხილეთ ყველა
+375,ka.app.buttons.list,View All,იხილეთ ყველა
+376,ka.app.buttons.admin,Admin Section,ადმინისტრატორის განყოფილება
+377,ka.app.buttons.delete,Delete,წაშლა
+378,ka.app.buttons.edit,Edit,შეცვლა
+379,ka.app.buttons.show,Show,ჩვენება
+380,ka.app.buttons.cancel,Cancel,გაუქმება
+381,ka.app.buttons.update,Update,განახლება
+382,ka.app.buttons.save,Save,შენახვა
+383,ka.app.buttons.create,Create,შექმნა
+384,ka.app.buttons.reset,Reset,საწყის კონფიგურაციაზე დაბრუნება
+385,ka.app.buttons.remove,Remove,ამოშლა
+386,ka.app.buttons.confirm,Are you sure?,დარწმუნებული ხართ?
+387,ka.app.buttons.new,New,ახალი
+388,ka.app.buttons.save_settings,Save Settings,Save Settings
+389,ka.app.buttons.choose_category,Choose Category,Choose Category
+390,ka.app.buttons.change_category,Change Category,Change Category
+391,ka.app.common.xtraktr.app_name,X-Traktr,X-Traktr
+392,ka.app.common.xtraktr.app_slogan,Insert xtraktr slogn here!,Insert xtraktr slogn here!
+393,ka.app.common.xtraktr.app_description,Insert xtraktr description here.,Insert xtraktr description here.
+394,ka.app.common.unicef.app_name,UNICEF Georgia Data Portal,UNICEF საქართველოს ღია მონაცემები
+395,ka.app.common.unicef.app_slogan,Helping to solve by measuring,პრობლემების გადაჭრა საზომით
+396,ka.app.common.unicef.app_description,"In collaboration with a wide range of partners, UNICEF Georgia gathers evidence on the situation of children in Georgia. It uses this knowledge to inform national and global decision-making with the objective of improving children’s well-being.","UNICEF საქართველო, სხვა მრავალ პარტნიორთან ერთად აგროვებს მონაცემებს საქართველოში ბავშვთა კეთილდღეობის შესახებ არსებულ სიტუაციაზე. ამ ცოდნას ის გადასცემს ნაციონალურ და გლობალურ გადაწყვეტილების მიმღებ ორგანოებს რათა გაუმჯობესდეს ბავშვა კეთილდღეობა საქართველოში."
+397,ka.app.common.added_on,Added on: %{date},დამატებულია: %{date}
+398,ka.app.common.jumpstart,JumpStart Georgia,“ჯამპსტარტ ჯორჯია”
+399,ka.app.common.js_link_title,JumpStart Georgia - We communicate data better!,“ჯამპსტარტ ჯორჯია” - ჩვენ გაწვდით მონაცემებს უკეთ!
+400,ka.app.common.question,Question,Question
+401,ka.app.common.questions,Questions,Questions
+402,ka.app.common.question_code,Code,Code
+403,ka.app.common.answers,Answers,Answers
+404,ka.app.common.notes,Notes,Notes
+405,ka.app.common.count,Count,Count
+406,ka.app.common.percent,Percent,Percent
+407,ka.app.common.dataset_dashboard,Dataset Dashboard,Dataset Dashboard
+408,ka.app.common.time_series_dashboard,Time Series Dashboard,Time Series Dashboard
+409,ka.app.common.terms,I agree to the <a href='http://www.unicef.org/about/legal_terms.html' target='_blank'>Terms of Use</a>,I agree to the <a href='http://www.unicef.org/about/legal_terms.html' target='_blank'>Terms of Use</a>
+410,ka.app.common.or,Or,Or
+411,ka.app.common.go,Go,Go
+412,ka.app.common.share,Share,Share
+413,ka.app.msgs.does_not_exist,You tried to access a page that does not exist.,"თქვენ ცდილობთ ისეთი გვერდის ნახვას, რომელიც არ არსებობს."
+414,ka.app.msgs.not_authorized,You are not authorized to view that page.,თქვენ არ გაქვთ ამ გვერდის ნახვის უფლება.
+415,ka.app.msgs.success_created,%{obj} was successfully created.,%{obj} შექმნილია.
+416,ka.app.msgs.success_updated,%{obj} was successfully updated.,%{obj} განახლებულია.
+417,ka.app.msgs.question_exclude_saved,Exclude question selections were saved.,Exclude question selections were saved.
+418,ka.app.msgs.question_exclude_not_saved,An error occurred while saving the exclude question selections.,An error occurred while saving the exclude question selections.
+419,ka.app.msgs.answer_exclude_saved,Exclude answer selections were saved.,Exclude answer selections were saved.
+420,ka.app.msgs.answer_exclude_not_saved,An error occurred while saving the exclude answer selections.,An error occurred while saving the exclude answer selections.
+421,ka.app.msgs.answer_can_exclude_saved,Can exclude answer selections were saved.,Can exclude answer selections were saved.
+422,ka.app.msgs.answer_can_exclude_not_saved,An error occurred while saving the can exclude answer selections.,An error occurred while saving the can exclude answer selections.
+423,ka.app.msgs.mapping_saved,The question was successfully made mappable.,The question was successfully made mappable.
+424,ka.app.msgs.mapping_not_save,An error occurred while making the question mappable.,An error occurred while making the question mappable.
+425,ka.app.msgs.mapping_deleted,The question is no longer mappable.,The question is no longer mappable.
+426,ka.app.msgs.mapping_not_deleted,The question mapping could not be deleted.,The question mapping could not be deleted.
+427,ka.app.msgs.time_series_automatic_match,%{count} questions were added to your time series.,%{count} questions were added to your time series.
+428,ka.app.msgs.mass_upload_questions_error,The following error occurred while processing the questions: %{msg},The following error occurred while processing the questions: %{msg}
+429,ka.app.msgs.mass_upload_questions_success,%{count} questions were updated!,%{count} questions were updated!
+430,ka.app.msgs.mass_upload_answers_error,The following error occurred while processing the answers: %{msg},The following error occurred while processing the answers: %{msg}
+431,ka.app.msgs.mass_upload_answers_success,%{count} answers were updated!,%{count} answers were updated!
+432,ka.app.msgs.highlight_show_home_page_success,The highlight will now always appear on the home page.,The highlight will now always appear on the home page.
+433,ka.app.msgs.highlight_deleted,The highlight has been deleted.,The highlight has been deleted.
+434,ka.app.msgs.explore_error,An error occurred while processing your request.,An error occurred while processing your request.
+435,ka.app.msgs.user_settings_updated,Your settings were successfully updated.,Your settings were successfully updated.
+436,ka.app.msgs.api_key_created,Your API Access Token was successfully created.,Your API Access Token was successfully created.
+437,ka.app.msgs.api_key_deleted,Your API Access Token was successfully deleted.,Your API Access Token was successfully deleted.
+438,ka.app.msgs.missing_user_info,We have made some changes to the site that require you to update your user settings. Sorry for the inconvenience.,We have made some changes to the site that require you to update your user settings. Sorry for the inconvenience.
+439,ka.app.menu.explore_data,Explore Data,Explore Data
+440,ka.app.menu.explore_time_series,Explore Time Series,Explore Time Series
+441,ka.app.menu.datasets,Datasets,Datasets
+442,ka.app.menu.time_series,Time Series,Time Series
+443,ka.app.menu.user_settings,User Settings,User Settings
+444,ka.app.menu.about_dataset,About,About
+445,ka.app.menu.about_time_series,About,About
+446,ka.app.menu.all_datasets,All Datasets,All Datasets
+447,ka.app.menu.all_time_series,All Time Series,All Time Series
+448,ka.app.menu.contact,Contact,Contact
+449,ka.app.menu.api,API,API
+450,ka.app.menu.instructions,Instructions,Instructions
+451,ka.app.menu.home,Home,Home
+452,ka.app.menu.disclaimer,Notes,Notes
+453,ka.app.menu.titles.explore_dataset,"Explore the dataset data through charts, maps and tables","Explore the dataset data through charts, maps and tables"
+454,ka.app.menu.titles.explore_time_series,Explore the time series data through charts and tables,Explore the time series data through charts and tables
+455,ka.app.menu.titles.dataset_to_time_series,Explore this dataset as part of a time series,Explore this dataset as part of a time series
+456,ka.app.menu.admin_dataset.explore_data,Explore Data,Explore Data
+457,ka.app.menu.admin_dataset.heading,Dataset Options,Dataset Options
+458,ka.app.menu.admin_dataset.settings,Settings,Settings
+459,ka.app.menu.admin_dataset.qa,Edit Questions/Answers,Edit Questions/Answers
+460,ka.app.menu.admin_dataset.highlights,Highlights,Highlights
+461,ka.app.menu.admin_dataset.warnings,Warnings,Warnings
+462,ka.app.menu.admin_dataset.mappable,Make Mappable,Make Mappable
+463,ka.app.menu.admin_dataset.can_exlucde_answers,Answers Can Be Excluded,Answers Can Be Excluded
+464,ka.app.menu.admin_dataset.exlucde_answers,Exclude Answers,Exclude Answers
+465,ka.app.menu.admin_dataset.exclude_questions,Exclude Questions,Exclude Questions
+466,ka.app.menu.admin_dataset.delete,Delete,Delete
+467,ka.app.menu.admin_dataset.private_share,Share Private Dataset,Share Private Dataset
+468,ka.app.menu.admin_dataset.mass_changes,Mass Changes,Mass Changes
+469,ka.app.menu.admin_time_series.explore_data,Explore Data,Explore Data
+470,ka.app.menu.admin_time_series.heading,Time Series Options,Time Series Options
+471,ka.app.menu.admin_time_series.settings,Settings,Settings
+472,ka.app.menu.admin_time_series.qa,Edit Questions/Answers,Edit Questions/Answers
+473,ka.app.menu.admin_time_series.highlights,Highlights,Highlights
+474,ka.app.menu.admin_time_series.warnings,Warnings,Warnings
+475,ka.app.menu.admin_time_series.delete,Delete,Delete
+476,ka.app.menu.admin_time_series.private_share,Share Private Time Series,Share Private Time Series
+477,ka.user.age_group.g1,17-24,17-24
+478,ka.user.age_group.g2,25-34,25-34
+479,ka.user.age_group.g3,35-44,35-44
+480,ka.user.age_group.g4,45-54,45-54
+481,ka.user.age_group.g5,55-64,55-64
+482,ka.user.age_group.g6,above (>65),above (>65)
+483,ka.user.status.researcher,Researcher,Researcher
+484,ka.user.status.student,Student,Student
+485,ka.user.status.journalist,Journalist,Journalist
+486,ka.user.status.ngo,NGO,NGO
+487,ka.user.status.government_official,Government Official,Government Official
+488,ka.user.status.international_organization,International Organization,International Organization
+489,ka.user.status.private_sector,Private Sector,Private Sector
+490,ka.user.status.other,Other,Other
+491,ka.user.wanna_account,"Tired of filling out this form? To avoid this form in the future, create an account.","დაიღალეთ ამ ფორმის შევსებით? მომავალში მისი თავიდან აცილების მიზნის, შექმენით ანგარიში."
+492,ka.layouts.nav.toggle,Toggle navigation,ნავიგაციის ჩართვა/გამორთვა
+493,ka.layouts.nav.back,Back to UNICEF.ge,Back to UNICEF.ge
+494,ka.layouts.explore_data.private_share_header,Privately Share '%{title}',Privately Share '%{title}'
+495,ka.layouts.explore_data.private_share_explanation,"You can copy and share the following URL with whomever you want to view '%{title}' even though your dataset is not shared with the public. These people will have the ability to explore your data, but not edit it.","You can copy and share the following URL with whomever you want to view '%{title}' even though your dataset is not shared with the public. These people will have the ability to explore your data, but not edit it."
+496,ka.layouts.unsupported_browser.title,Unsupported Browser,არასათანადო ბრაუზერი
+497,ka.layouts.unsupported_browser.p1,We are sorry to report that your browser is out of date and will not properly render the content from this website.,სამწუხაროდ თქვენი ინტერნეტ ბრაუზერის მოხმარების ვადა გასულია და ვერ მოხდება ვებ-გვერდთან სრულად დაკავშირება.
+498,ka.layouts.unsupported_browser.p2,"On the bright side, there are several free browsers that you can download that are compatible with this site.",არსებობს რამდენიმე უფასო ბრაუზერი რომელის გადმოწერის შემდეგ შეძლებთ ვებ-გვერდით სარგებლობას.
+499,ka.layouts.unsupported_browser.chrome,Chrome,Chrome
+500,ka.layouts.unsupported_browser.firefox,Firefox,Firefox
+501,ka.layouts.unsupported_browser.ie,Internet Explorer (Windows only),Internet Explorer (მხოლოდ Windows-ზე)
+502,ka.layouts.unsupported_browser.opera,Opera,Opera
+503,ka.layouts.unsupported_browser.Safari,Safari,Safari
+504,ka.admin.index.title,Administration Section,ადმინისტრატორის განყოფილება
+505,ka.admin.index.users,Users,მომხმარებლები
+506,ka.admin.index.page_contents,Edit Text on Site,საიტზე ტექსტის რედაქტირება
+507,ka.admin.index.datasets,Datasets,Datasets
+508,ka.admin.index.shapesets,Shapesets,Shapesets
+509,ka.admin.index.api_documentation,API Version Documentation,API Version Documentation
+510,ka.admin.index.download_api_requests,Download API Request History,Download API Request History
+511,ka.admin.index.download_download_requests,Download Download Request History,Download Download Request History
+512,ka.admin.users.edit.title,Editing User,ცვლილებების შეტანა მომხმარებლის გვერდზე
+513,ka.admin.users.index.title,Users,მომხმარებლები
+514,ka.admin.users.new.title,New User,ახალი მომხმარებელი
+515,ka.admin.users.show.title,User Details,მომხმარებლის დეტალები
+516,ka.devise.mailer.reset_password_instructions.title,Hello %{nickname}!,"მოგესალმებით, %{nickname}!"
+517,ka.devise.mailer.reset_password_instructions.p1,"Someone has requested a link to change your password on %{app_name}, and you can do this through the link below.","მივიღეთ მოთხოვნა ""%{app_name}"" თქვენი პაროლის შეცვლის შესახებ. პაროლის შესაცვლელად, მიჰყევით შემდეგ ბმულს."
+518,ka.devise.mailer.reset_password_instructions.link_title,Change my password,პაროლის შეცვლა
+519,ka.devise.mailer.reset_password_instructions.p2,"If you didn't request this, please ignore this email.","თუ თქვენ არ მოგითხოვიათ პაროლის შეცვლა, გთხოვთ, არ მიაქციოთ ყურადღება ამ შეტყობინებას."
+520,ka.devise.mailer.reset_password_instructions.p3,Your password won't change until you access the link above and create a new one.,"თქვენი პაროლი იგივე დარჩება, სანამ არ გადახვალთ ზემოთ მითითებულ ბმულზე და შექმნით ახალ პაროლს."
+521,ka.embed.v1.index.title_site,Go to %{app_name},Go to %{app_name}
+522,ka.embed.v1.index.title_datalist,View All Datasets,View All Datasets
+523,ka.settings.index.title,User Settings,User Settings
+524,ka.settings.index.tabs.settings,Settings,Settings
+525,ka.settings.index.tabs.api,API Access Tokens,API Access Tokens
+526,ka.settings.index.api_explanation1,"The API allows you to programmatically get information and run analyses on the datasets and time series available on this site. All API calls require an access token - a key that let's us know who is making the request. To get one, simply press the button below.","The API allows you to programmatically get information and run analyses on the datasets and time series available on this site. All API calls require an access token - a key that let's us know who is making the request. To get one, simply press the button below."
+527,ka.settings.index.api_link_text,API Documentation section,API Documentation section
+528,ka.settings.index.api_explanation2,You can learn more about the API and how to use the Access Token by going to the [link].,You can learn more about the API and how to use the Access Token by going to the [link].
+529,ka.settings.index.no_api_keys,You do not have any API Access Tokens on file.,You do not have any API Access Tokens on file.
+530,ka.settings.index.get_api,Get API Access Token,Get API Access Token
+531,ka.settings.index.delete_api,Delete API Access Token,Delete API Access Token
+532,ka.root.index.header_latest_datasets,Latest Datasets,Latest Datasets
+533,ka.root.index.no_datasets,"At this time, no datasets have been loaded into the site.","At this time, no datasets have been loaded into the site."
+534,ka.root.index.header_latest_time_series,Latest Time Series,Latest Time Series
+535,ka.root.index.no_time_series,"At this time, no time series have been created in the site.","At this time, no time series have been created in the site."
+536,ka.root.index.wms_title,Welfare <br />Monitoring Survey,Welfare <br />Monitoring Survey
+537,ka.root.index.wms_slogan,Explore something over time....,Explore something over time....
+538,ka.root.index.header_highlights,Highlights,Highlights
+539,ka.root.index.header_categories,Browse Categories,Browse Categories
+540,ka.root.index.search_datasets,Search Datasets,Search Datasets
+541,ka.root.contact.title,Contact,Contact
+542,ka.root.contact.message_sent,Thank you for contacting us!,Thank you for contacting us!
+543,ka.root.contact.send,Send,Send
+544,ka.root.contact.error_title,An error has occurred,An error has occurred
+545,ka.root.instructions.title,Instructions,Instructions
+546,ka.root.notes.title,Notes,Notes
+547,ka.root.explore_data.title,Explore the Data,Explore the Data
+548,ka.root.explore_data.search_datasets,Search Datasets,Search Datasets
+549,ka.root.explore_data.go,Go,Go
+550,ka.root.explore_data.sort_by.this,Sort By,Sort By
+551,ka.root.explore_data.sort_by.title,Title,Title
+552,ka.root.explore_data.sort_by.release,Date Released,Date Released
+553,ka.root.explore_data.sort_by.publish,Date Published Here,Date Published Here
+554,ka.root.explore_data.no_data,"At this time, no datasets have been loaded into the site.","At this time, no datasets have been loaded into the site."
+555,ka.root.explore_data_dataset.no_match,"Sorry, no time series match your search request.","Sorry, no time series match your search request."
+556,ka.root.explore_data_show.title,Explore Time Series Data,Explore Time Series Data
+557,ka.root.explore_time_series.title,Explore Time Series Data,Explore Time Series Data
+558,ka.root.explore_time_series.search_time_series,Search Time Series,Search Time Series
+559,ka.root.explore_time_series.go,Go,Go
+560,ka.root.explore_time_series.sort_by.this,Sort By,Sort By
+561,ka.root.explore_time_series.sort_by.title,Title,Title
+562,ka.root.explore_time_series.sort_by.publish,Date Published Here,Date Published Here
+563,ka.root.explore_time_series.no_data,"At this time, no time series have been created in the site.","At this time, no time series have been created in the site."
+564,ka.api.msgs.no_key,You must provide an API Access Token in order to use the API. You can quickly get an API _____________.,You must provide an API Access Token in order to use the API. You can quickly get an API _____________.
+565,ka.api.msgs.no_dataset,The Dataset could not be found.,The Dataset could not be found.
+566,ka.api.msgs.no_question,The Question cound not be found.,The Question cound not be found.
+567,ka.api.msgs.no_broken_down_by,The Broken Down By Question could not be found.,The Broken Down By Question could not be found.
+568,ka.api.msgs.no_filtered_by,The Filter By Question could not be found.,The Filter By Question could not be found.
+569,ka.api.msgs.no_time_series,The Time Series could not be found.,The Time Series could not be found.
+570,ka.api.msgs.no_time_series_dataset,The Time Series does not have any datasets assigned to it.,The Time Series does not have any datasets assigned to it.
+571,ka.api.msgs.no_time_series_dataset_error,There was an error getting the data for the datasets in the time series.,There was an error getting the data for the datasets in the time series.
+572,ka.api.index.title,API,API
+573,ka.api.index.no_versions,No documentation for the API has been created yet.,No documentation for the API has been created yet.
+574,ka.api.index.no_methods,No documentation for this version has been created yet.,No documentation for this version has been created yet.
+575,ka.api.documentation.no_content,No documentation for this method has been created yet.,No documentation for this method has been created yet.
+576,ka.datasets.index.stats.data_records,Data Records,Data Records
+577,ka.datasets.index.stats.good_questions,Analyzable Questions,Analyzable Questions
+578,ka.datasets.index.stats.no_text,No Question Text,No Question Text
+579,ka.datasets.index.stats.bad_answers,Bad Answers,Bad Answers
+580,ka.datasets.index.stats.no_answers,No Answers,No Answers
+581,ka.datasets.index.view_warnings,View Details,View Details
+582,ka.datasets.warnings.title,Warnings,Warnings
+583,ka.datasets.warnings.tab_bad_answers,Questions with Bad Answers,Questions with Bad Answers
+584,ka.datasets.warnings.tab_no_answers,Questions with No Answers,Questions with No Answers
+585,ka.datasets.warnings.tab_no_text,Questions with No Text,Questions with No Text
+586,ka.datasets.warnings.bad_answers,"The following %{number} questions contain values that were not listed as one of the possible answers. For example, the list of possible answers was 1, 2, 3 or 4 and one record had a value of 5. The records with the extra values will not be used during analysis.",The following %{number} questions contain values that were not listed as one of the possible answers. These records with the extra values will not be used during analysis.
+587,ka.datasets.warnings.no_answers,"The following %{number} questions do not have a list of possible answers. For example, a question 'What is your age?' could come with answers like <20, 20-40, 40-60, >60 and each of these answers would represent a certain value like 1, 2, 3, 4 that is stored in the data. These questions will not be available for analysis unless a list of possible answers are provided.",The following %{number} questions do not have a list of possible answers. These questions will not be available for analysis unless a list of possible answers are provided.
+588,ka.datasets.warnings.no_text,"The following %{number} questions do not have text. For example a code of 'A1' was given, but no text describing what 'A1' represents was provided. These questions will not be available for analysis unless text is provided.",The following %{number} questions do not have text. These questions will not be available for analysis unless text is provided.
+589,ka.datasets.warnings.no_bad_answers,Congratulations! All of the data file data contains valid answers.,Congratulations! All of the data file data contains valid answers.
+590,ka.datasets.warnings.no_no_answers,Congratulations! All of the data file questions have answers.,Congratulations! All of the data file questions have answers.
+591,ka.datasets.warnings.no_no_text,Congratulations! All of the data file questions have text.,Congratulations! All of the data file questions have text.
+592,ka.datasets.warnings.no_warnings,Congratulations! Your data file contains no issues that may effect the way the data is analyzed.,Congratulations! Your data file contains no issues that may effect the way the data is analyzed.
+593,ka.datasets.exclude_questions.title,Questions to Exclude from Analysis,Questions to Exclude from Analysis
+594,ka.datasets.exclude_questions.explanation,Use this page to indicate which questions should not be included during analysis.,Use this page to indicate which questions should not be included during analysis.
+595,ka.datasets.exclude_questions.no_questions,There are no questions on file for this dataset.,There are no questions on file for this dataset.
+596,ka.datasets.exclude_answers.title,Answers to Exclude from Analysis,Answers to Exclude from Analysis
+597,ka.datasets.exclude_answers.explanation,Use this page to indicate which answers should not be included during analysis.,Use this page to indicate which answers should not be included during analysis.
+598,ka.datasets.exclude_answers.no_questions,There are no questions on file for this dataset.,There are no questions on file for this dataset.
+599,ka.datasets.can_exclude_answers.title,Answers That Can Be Excluded During Analysis,Answers That Can Be Excluded During Analysis
+600,ka.datasets.can_exclude_answers.explanation,"Use this page to indicate which answers can be included during analysis, but have the ability to be excluded (e.g., answers like: Don't Know, Refuse to Answer, etc).","Use this page to indicate which answers can be included during analysis, but have the ability to be excluded (e.g., answers like: Don't Know, Refuse to Answer, etc) ."
+601,ka.datasets.can_exclude_answers.no_questions,There are no questions on file for this dataset.,There are no questions on file for this dataset.
+602,ka.datasets.mappable.title,Make Questions Mappable,Make Questions Mappable
+603,ka.datasets.mappable.explanation,Use this page to indicate which questions are geographic in nature so that the analysis screen can include a map.,Use this page to indicate which questions are geographic in nature so that the analysis screen can include a map.
+604,ka.datasets.mappable.no_shapes,"Sorry, at this time there are no pre-defined maps on file that you can use.","Sorry, at this time there are no pre-defined maps on file that you can use."
+605,ka.datasets.mappable.add_shapes,Add Map Shapes,Add Map Shapes
+606,ka.datasets.mappable.add_map_question,Add Mappable Question,Add Mappable Question
+607,ka.datasets.mappable_form.title,Mappable Question Form,Mappable Question Form
+608,ka.datasets.mappable_form.no_questions,There are no questions available in '%{title}' to be made mappable.,There are no questions available in '%{title}' to be made mappable.
+609,ka.datasets.mappable_form.no_shapes,"Sorry, at this time there are no pre-defined maps on file that you can use.","Sorry, at this time there are no pre-defined maps on file that you can use."
+610,ka.datasets.mappable_form.question_label,Question to make mappable,Question to make mappable
+611,ka.datasets.mappable_form.shapeset_label,Map to use,Map to use
+612,ka.datasets.mappable_form.matching_header,Mapping '[question]' to '[shapeset]',Mapping '[question]' to '[shapeset]'
+613,ka.datasets.mappable_form.matching_explanation,"For each answer to '[question]', select the matching map shape from '[shapeset]'.","For each answer to '[question]', select the matching map shape from '[shapeset]'."
+614,ka.datasets.mappable_form_edit.title,Mappable Question Form,Mappable Question Form
+615,ka.datasets.mappable_form_edit.matching_header,Mapping '%{question}' to '%{shapeset}',Mapping '%{question}' to '%{shapeset}'
+616,ka.datasets.mappable_form_edit.matching_explanation,"For each answer to '%{question}', select the matching map shape from '%{shapeset}'.","For each answer to '%{question}', select the matching map shape from '%{shapeset}'."
+617,ka.datasets.form.reports,Reports,Reports
+618,ka.datasets.form.header_add_report,Add a report for this dataset,Add a report for this dataset
+619,ka.datasets.highlights.title,Dataset Highlights,Dataset Highlights
+620,ka.datasets.highlights.instructions,"Highlights are visuals (charts and maps) that highlight interesting aspects of your dataset and are shown on the dashboard page and the home page. 
+
+To add a highlight, go to the explore page, select the indicators you want, and then in the charts that appear click the star button in the top left corner.
+
+You can use this page to quickly remove highlights or to indicate which highlight to always show on the home page - only one highlight from all datasets and time series can be selected for this.
+","Highlights are visuals (charts and maps) that highlight interesting aspects of your dataset and are shown on the dashboard page and the home page. 
+
+To add a highlight, go to the explore page, select the indicators you want, and then in the charts that appear click the star button in the top left corner.
+
+You can use this page to quickly remove highlights or to indicate which highlight to always show on the home page - only one highlight from all datasets can be selected for this.
+"
+621,ka.datasets.highlights.no_highlights,There are no highlights on file for this dataset.,There are no highlights on file for this dataset.
+622,ka.datasets.highlights.question_code,Question,Question
+623,ka.datasets.highlights.broken_down_by_code,Broken Down By,Broken Down By
+624,ka.datasets.highlights.filtered_by_code,Filtered By,Filtered By
+625,ka.datasets.highlights.show_home_page,Always Shows on Home Page,Always Shows on Home Page
+626,ka.datasets.highlights.btn_show_home_page,Show on Home Page,Show on Home Page
+627,ka.questions.index.title,Edit Questions and their Answers,Edit Questions and their Answers
+628,ka.questions.index.explanation,Use this page to select a question to edit it and/or it's answers.,Use this page to select a question to edit it and/or it's answers.
+629,ka.questions.index.mass_changes,You can also use the %{link} to change multiple items at once via a spreadsheet upload.,You can also use the %{link} to change multiple items at once via a spreadsheet upload.
+630,ka.questions.index.mass_changes_link,Mass Changes page,Mass Changes page
+631,ka.questions.index.no_questions,There are no questions on file for this dataset.,There are no questions on file for this dataset.
+632,ka.questions.show.title,Question: %{question},Question: %{question}
+633,ka.questions.show.header_answers,Answers,Answers
+634,ka.questions.show.no_answers,There are no pre-defined list of answers for this question.,There are no pre-defined list of answers for this question.
+635,ka.questions.form.header_answers,Answers,Answers
+636,ka.questions.form.explanation_answers,"The answer settings fields (value, sort order, etc) are only shown in the '%{lang}' tab.","The answer settings fields (value, sort order, etc) are only shown in the '%{lang}' tab."
+637,ka.questions.form.default_text,Default Text,Default Text
+638,ka.questions.form.header_add_answer,Add a new answer for this question,Add a new answer for this question
+639,ka.questions.form.header_add_missing_answer,The following values are in the data but are not provided as one of the answers. <br/>Select a value to add it as an answer and have it included in the analysis.,The following values are in the data but are not provided as one of the answers. <br/>Select a value to add it as an answer and have it included in the analysis.
+640,ka.questions.mass_changes.title,Mass Changes for Questions/Answers,Mass Changes for Questions/Answers
+641,ka.questions.mass_changes.explanation,Use this page to upload a spreadsheet of Questions or Answers to quickly change the text or settings for many records at once.,Use this page to upload a spreadsheet of Questions or Answers to quickly change the text or settings for many records at once.
+642,ka.questions.mass_changes.template,Template,Template
+643,ka.questions.mass_changes.upload,Upload Your Spreadsheet of Changes,Upload Your Spreadsheet of Changes
+644,ka.questions.mass_changes.questions.header,Questions,Questions
+645,ka.questions.mass_changes.questions.template,Clicking the button below will download a template of all questions in this dataset. Make the desired changes in the spreadsheet and then use the form below to update your changes.,Clicking the button below will download a template of all questions in this dataset. Make the desired changes in the spreadsheet and then use the form below to update your changes.
+646,ka.questions.mass_changes.questions.template2,The only columns that cannot be changed are: %{code},The only columns that cannot be changed are: %{code}
+647,ka.questions.mass_changes.questions.template_link,Download Questions Template,Download Questions Template
+648,ka.questions.mass_changes.questions.submit,Update Questions,Update Questions
+649,ka.questions.mass_changes.answers.header,Answers,Answers
+650,ka.questions.mass_changes.answers.template,Clicking the button below will download a template of all answers in this dataset. Make the desired changes in the spreadsheet and then use the form below to update your changes.,Clicking the button below will download a template of all answers in this dataset. Make the desired changes in the spreadsheet and then use the form below to update your changes.
+651,ka.questions.mass_changes.answers.template2,"The only columns that cannot be changed are: %{code}, %{value}","The only columns that cannot be changed are: %{code}, %{value}"
+652,ka.questions.mass_changes.answers.template_link,Download Answers Template,Download Answers Template
+653,ka.questions.mass_changes.answers.submit,Update Answers,Update Answers
+654,ka.time_series.form.header_datasets,Datasets,Datasets
+655,ka.time_series.form.header_add_dataset,Add a new dataset to this time series,Add a new dataset to this time series
+656,ka.time_series.highlights.title,Time Series Highlights,Time Series Highlights
+657,ka.time_series.highlights.instructions,"Highlights are visuals (charts and maps) that highlight interesting aspects of your time series and are shown on the dashboard page and the home page. 
+
+To add a highlight, go to the explore page, select the indicators you want, and then in the charts that appear click the star button in the top left corner.
+
+You can use this page to quickly remove highlights or to indicate which highlight to always show on the home page - only one highlight from all datasets and time series can be selected for this.
+","Highlights are visuals (charts and maps) that highlight interesting aspects of your time series and are shown on the dashboard page and the home page. 
+
+To add a highlight, go to the explore page, select the indicators you want, and then in the charts that appear click the star button in the top left corner.
+
+You can use this page to quickly remove highlights or to indicate which highlight to always show on the home page - only one highlight from all datasets and time series can be selected for this.
+"
+658,ka.time_series.highlights.no_highlights,There are no highlights on file for this time series.,There are no highlights on file for this time series.
+659,ka.time_series.highlights.question_code,Question,Question
+660,ka.time_series.highlights.broken_down_by_code,Broken Down By,Broken Down By
+661,ka.time_series.highlights.filtered_by_code,Filtered By,Filtered By
+662,ka.time_series.highlights.show_home_page,Always Shows on Home Page,Always Shows on Home Page
+663,ka.time_series.highlights.btn_show_home_page,Show on Home Page,Show on Home Page
+664,ka.time_series_questions.index.title,Edit Time Series Questions and their Answers,Edit Time Series Questions and their Answers
+665,ka.time_series_questions.index.explanation,Use this page to add questions to the time series or edit questions already in the time series.,Use this page to add questions to the time series or edit questions already in the time series.
+666,ka.time_series_questions.index.no_questions,There are no questions on file for this time series yet.,There are no questions on file for this time series yet.
+667,ka.time_series_questions.index.btn_add_question,Add a Question,Add a Question
+668,ka.time_series_questions.index.btn_add_question_hint,Match a question from each dataset and add the question to the time series.,Match a question from each dataset and add the question to the time series.
+669,ka.time_series_questions.index.btn_automatic,Automatically Assign Matching Questions,Automatically Assign Matching Questions
+670,ka.time_series_questions.index.btn_automatic_hint,Questions with the same Question Code in each dataset will automatically be added to the time series. This will take a few seconds to complete.,Questions with the same Question Code in each dataset will automatically be added to the time series. This will take a few seconds to complete.
+671,ka.time_series_questions.index.header_dataset_question,%{title} Question,%{title} Question
+672,ka.time_series_questions.form.header_answers,Answers,Answers
+673,ka.time_series_questions.form.explanation_answers,"The answer settings fields (value, sort order, etc) are only shown in the '%{lang}' tab.","The answer settings fields (value, sort order, etc) are only shown in the '%{lang}' tab."
+674,ka.time_series_questions.form.default_text,Default Text,Default Text
+675,ka.time_series_questions.form.header_add_answer,Add a new answer for this question,Add a new answer for this question
+676,ka.time_series_questions.show.title,Question: %{question},Question: %{question}
+677,ka.time_series_questions.show.header_answers,Answers,Answers
+678,ka.time_series_questions.show.no_answers,There are no answers for this question yet.,There are no answers for this question yet.
+679,ka.shared.explore_data.no_matches,Your selections returned no data. Please try again with a different selection.,Your selections returned no data. Please try again with a different selection.
+680,ka.shared.explore_data.no_data,'%{title}' does not have any data that is analyzable at this time.,'%{title}' does not have any data that is analyzable at this time.
+681,ka.shared.explore_data.hover_region,Hover over a Region,Hover over a Region
+682,ka.shared.explore_data.na,N/A,N/A
+683,ka.shared.explore_data.percent,Percent,Percent
+684,ka.shared.explore_data.dataset_title,Dataset,Dataset
+685,ka.shared.explore_data.form.question_code,Explore Answers To,Explore Answers To
+686,ka.shared.explore_data.form.broken_down_by_code,Broken Down By,Broken Down By
+687,ka.shared.explore_data.form.optional,optional,optional
+688,ka.shared.explore_data.form.no_comparison,No Comparison,No Comparison
+689,ka.shared.explore_data.form.swap,Swap the Questions,Swap the Questions
+690,ka.shared.explore_data.form.submit,Generate,Generate
+691,ka.shared.explore_data.form.reset,Reset,Reset
+692,ka.shared.explore_data.form.filtered_by_code,Filtered By,Filtered By
+693,ka.shared.explore_data.form.no_filter,No Filter,No Filter
+694,ka.shared.explore_data.form.can_exclude,"Exclude ""Don't know"" & ""Refuse""","Exclude ""Don't know"" & ""Refuse"""
+695,ka.shared.explore_data.form.can_exclude_hint,"Remove answers like ""Don't know"" & ""Refuse"" from the analysis","Remove answers like ""Don't know"" & ""Refuse"" from the analysis"
+696,ka.shared.explore_data.jumpto.chart,Jump to Chart,Jump to Chart
+697,ka.shared.explore_data.jumpto.map,Jumpt to Map,Jumpt to Map
+698,ka.shared.explore_data.tabs.map,Map,Map
+699,ka.shared.explore_data.tabs.chart,Chart,Chart
+700,ka.shared.explore_data.tabs.table,Table,Table
+701,ka.shared.explore_data.tabs.details,Details,Details
+702,ka.shared.explore_data.map.filter,Filter map by selecting an answer to '%{text}':,Filter map by selecting an answer to '%{text}':
+703,ka.shared.explore_time_series.no_matches,Your selections returned no data. Please try again with a different selection.,Your selections returned no data. Please try again with a different selection.
+704,ka.shared.explore_time_series.no_data,'%{title}' does not have any data that is analyzable at this time.,'%{title}' does not have any data that is analyzable at this time.
+705,ka.shared.explore_time_series.na,N/A,N/A
+706,ka.shared.explore_time_series.percent,Percent,Percent
+707,ka.shared.explore_time_series.time_series_title,Time Series,Time Series
+708,ka.shared.explore_time_series.form.question_code,Explore Answers To,Explore Answers To
+709,ka.shared.explore_time_series.form.submit,Generate,Generate
+710,ka.shared.explore_time_series.form.reset,Reset,Reset
+711,ka.shared.explore_time_series.form.filtered_by_code,Filtered By,Filtered By
+712,ka.shared.explore_time_series.form.no_filter,No Filter,No Filter
+713,ka.shared.explore_time_series.form.can_exclude,"Exclude ""Don't know"" & ""Refuse""","Exclude ""Don't know"" & ""Refuse"""
+714,ka.shared.explore_time_series.form.can_exclude_hint,"Remove answers like ""Don't know"" & ""Refuse"" from the analysis","Remove answers like ""Don't know"" & ""Refuse"" from the analysis"
+715,ka.shared.explore_time_series.jumpto.chart,Jump to Chart,Jump to Chart
+716,ka.shared.explore_time_series.tabs.chart,Chart,Chart
+717,ka.shared.explore_time_series.tabs.table,Table,Table
+718,ka.shared.explore_time_series.tabs.details,Details,Details
+719,ka.shared.dashboard_data.tabs.highlights,Highlights,Highlights
+720,ka.shared.dashboard_data.tabs.methodology,Methodology,Methodology
+721,ka.shared.dashboard_data.tabs.codebook,Codebook,Codebook
+722,ka.shared.dashboard_data.tabs.reports,Reports,Reports
+723,ka.shared.dashboard_data.tabs.licensing,Licensing,ნებართვა
+724,ka.shared.dashboard_data.no_methodology,There is no methodology on file for this dataset.,There is no methodology on file for this dataset.
+725,ka.shared.dashboard_data.no_reports,There are no reports on file for this dataset.,There are no reports on file for this dataset.
+726,ka.shared.dashboard_data.no_highlights,There are no highlights on file for this dataset.,There are no highlights on file for this dataset.
+727,ka.shared.dashboard_data.filter.all,All Text,All Text
+728,ka.shared.dashboard_data.filter.questions,Question Text,Question Text
+729,ka.shared.dashboard_data.filter.answers,Answer Text,Answer Text
+730,ka.shared.dashboard_time_series.tabs.highlights,Highlights,Highlights
+731,ka.shared.dashboard_time_series.tabs.methodology,Methodology,Methodology
+732,ka.shared.dashboard_time_series.tabs.codebook,Codebook,Codebook
+733,ka.shared.dashboard_time_series.tabs.reports,Reports,Reports
+734,ka.shared.dashboard_time_series.tabs.licensing,Licensing,ნებართვა
+735,ka.shared.dashboard_time_series.tabs.datasets,Datasets,Datasets
+736,ka.shared.dashboard_time_series.no_highlights,There are no highlights on file for this time series.,There are no highlights on file for this time series.
+737,ka.shared.dashboard_time_series.filter.all,All Text,All Text
+738,ka.shared.dashboard_time_series.filter.questions,Question Text,Question Text
+739,ka.shared.dashboard_time_series.filter.answers,Answer Text,Answer Text
+740,ka.shared.language_switcher.label,Available Languages,Available Languages
+741,ka.export_data.dataset,Dataset: %{title},Dataset: %{title}
+742,ka.export_data.download_from,Downloaded From: %{app_name} at %{url}.,Downloaded From: %{app_name} at %{url}.
+743,ka.export_data.last_update,Data Last Updated: %{date},Data Last Updated: %{date}
+744,ka.export_data.instructions.codebook,The codebook is a list of all questions and answers available in this dataset. It is provided as a reference to help you quickly find items of interest.,The codebook is a list of all questions and answers available in this dataset. It is provided as a reference to help you quickly find items of interest.
+745,ka.export_data.instructions.csv_main,"The CSV file is a spreadsheet of all of the data in the dataset. You can open this file in OpenOffice, Excel, Google Spreadsheets or any other spreadsheet software. ","The CSV file is a spreadsheet of all of the data in the dataset. You can open this file in OpenOffice, Excel, Google Spreadsheets or any other spreadsheet software. "
+746,ka.export_data.instructions.csv,"The CSV download contains 2 files:
+- Codebook: %{codebook}
+
+- CSV: %{csv} The CSV is formatted with headers (format: code - name) and the answers are the answer text, not the answer value.
+","The CSV download contains 2 files:
+- Codebook: %{codebook}
+
+- CSV: %{csv} The CSV is formatted with headers (variable code and name) and the answers use answer text, not the answer value.
+"
+747,ka.export_data.instructions.spss,"The SPSS download contains 3 files:
+- Codebook: %{codebook}
+
+- CSV: %{csv} The CSV is formatted to be loaded into SPSS, so it does not contain headers and the answers are the answer values, not the answer text.
+
+- SPS: The SPS file is a script file that you run in SPSS that will load the data from the CSV file and also create each variable and it's possible values. 
+       IMPORTANT - Before runing the script file in SPSS, you will need to update the line with 'DATA LIST FILE' to include the full path to the CSV file.
+","The SPSS download contains 3 files:
+- Codebook: %{codebook}
+
+- CSV: %{csv} The CSV is formatted to be loaded into SPSS, so it does not contain headers and the answers use answer values, not the answer text.
+
+- SPS: The SPS file is a script file that you run in SPSS that will load the data from the CSV file and also create each variable and it's possible values. 
+       IMPORTANT - Before runing the script file in SPSS, you will need to update the line with 'DATA LIST FILE' to include the full path to the CSV file.
+"
+748,ka.export_data.instructions.stata,"The STATA download contains 3 files:
+- Codebook: %{codebook}
+
+- CSV: %{csv} The CSV is formatted to be loaded into STATA, so it does not contain headers and the answers are the answer text, not the answer values.
+
+- DO: The STATA DO file is a script file that you run in STATA that will load the data from the CSV file and also create each variable and it's possible values. 
+       IMPORTANT - Before runing the script file in STATA, you will need to update the line with 'using' at the end of the file to include the full path to the CSV file.
+","The STATA download contains 3 files:
+- Codebook: %{codebook}
+
+- CSV: %{csv} The CSV is formatted to be loaded into STATA, so it does not contain headers and the answers use answer text, not the answer values.
+
+- DO: The STATA DO file is a script file that you run in STATA that will load the data from the CSV file and also create each variable and it's possible values. 
+       IMPORTANT - Before runing the script file in STATA, you will need to update the line with 'using' at the end of the file to include the full path to the CSV file.
+"
+749,ka.export_data.instructions.r,"The R download contains 3 files:
+- Codebook: %{codebook}
+
+- CSV: %{csv} The CSV is formatted to be loaded into R, so the headers are the variables and the answers are the answer values, not the answer text.
+
+- R: The R file is a script file that you run in R that will load the data from the CSV file and also create each variable. 
+       IMPORTANT - Before runing the script file in R, you will need to update the 'setwd' line to include the full path to the CSV file.
+","The R download contains 3 files:
+- Codebook: %{codebook}
+
+- CSV: %{csv} The CSV is formatted to be loaded into R, so the headers are the variables and the answers use answer values, not the answer text.
+
+- R: The R file is a script file that you run in R that will load the data from the CSV file and also create each variable. 
+       IMPORTANT - Before runing the script file in R, you will need to update the 'setwd' line to include the full path to the CSV file.
+"
+750,ka.download_data_options.text.csv,CSV,CSV
+751,ka.download_data_options.text.spss,SPSS,SPSS
+752,ka.download_data_options.text.stata,STATA,STATA
+753,ka.download_data_options.text.r,R,R
+754,ka.download_data_options.title.csv,Data formatted for spreadsheets,Data formatted for spreadsheets
+755,ka.download_data_options.title.spss,Data formatted for SPSS,Data formatted for SPSS
+756,ka.download_data_options.title.stata,Data formatted for STATA,Data formatted for STATA
+757,ka.download_data_options.title.r,Data formatted for R,Data formatted for R
