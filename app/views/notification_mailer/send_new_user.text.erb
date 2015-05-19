@@ -2,6 +2,6 @@
 <%= @message.message %>
 
 <%- if @page_content.present? -%>
-<%= strip_tags_nbsp(@page_content.content) %>
+<%= strip_tags_nbsp(@page_content.content).gsub("\n", "\n\n") %>
 <%- end -%>
 

@@ -1,27 +1,27 @@
 <%= simple_format @message.message %>
 
 <%- if @datasets.present? -%>
-  <h3><%= I18n.t('app.menu.datasets', locale: @message.locale) %>:</h3>
+  <h2><%= I18n.t('app.menu.datasets', locale: @message.locale) %>:</h2>
   <%- @datasets.each do |dataset| -%>
     <%- dataset.current_locale = @message.locale -%>
-    <p>
+    <h3>
       <%= link_to dataset.title, explore_data_dashboard_url(id: dataset.id, locale: @message.locale) %>
-    </p>
+    </h3>
     <%= simple_format_no_tags(dataset.description, {}, {sanitize: false}) %>
-    <br /><br /><br /><br /><br />
+    <br /><br />
   <%- end -%>
 <%- end -%>
 
 
 <%- if @time_series.present? -%>
-  <h3><%= I18n.t('app.menu.time_series', locale: @message.locale) %>:</h3>
+  <h2><%= I18n.t('app.menu.time_series', locale: @message.locale) %>:</h2>
   <%- @time_series.each do |time_series| -%>
     <%- time_series.current_locale = @message.locale -%>
     <p>
       <%= link_to time_series.title, explore_time_series_dashboard_url(id: time_series.id, locale: @message.locale) %>
     </p>
     <%= simple_format_no_tags(time_series.description, {}, {sanitize: false}) %>
-    <br /><br /><br /><br /><br />
+    <br /><br />
   <%- end -%>
 <%- end -%>
 

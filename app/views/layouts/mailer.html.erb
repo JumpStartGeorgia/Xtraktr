@@ -1,14 +1,33 @@
-<%= yield %>
+<!DOCTYPE html>
+<html lang="<%= I18n.locale %>">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title><%= @message.subject %></title>
+    <style="text/css">
+      body, td { color:#000000; font-size:14px; font-family:Verdana,Helvetica,Arial; }
+      hr { margin: 10px, 0;}
+      p.footer {font-size: 10px;}
+      h2 {font-size: 16px;}
+      h3 {font-size: 14px;}
+      a {color: #000;}
+      a:visited {color: #000;}
+    </style>
+  </head>
+  <body>
 
+    <%= yield %>
 
-<p>
-  <%= t('mailer.closing', :locale => @message.locale) %>
-  <br />
-  <%= t('mailer.signature', :locale => @message.locale) %>
-</p>
+    <p>
+      <%= t('mailer.closing', :locale => @message.locale) %>
+      <br />
+      <%= t('mailer.signature', :locale => @message.locale) %>
+    </p>
 
-<hr style="margin: 10px 0;" />
+    <hr />
 
-<p style="font-size: 10px;">
-  <%= link_to t('mailer.unsubscribe', :locale => @message.locale), settings_url(:locale => @message.locale) %>
-</p>
+    <p class="footer">
+      <%= link_to t('mailer.unsubscribe', :locale => @message.locale), settings_url(:locale => @message.locale) %>
+    </p>
+
+  </body>
+</html>

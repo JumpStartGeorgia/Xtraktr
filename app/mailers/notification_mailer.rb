@@ -1,5 +1,5 @@
 class NotificationMailer < ActionMailer::Base
-  default :from => ENV['APPLICATION_FROM_EMAIL']
+  default :from => ENV['APPLICATION_FEEDBACK_FROM_EMAIL']
   layout 'mailer'
   add_template_helper(ApplicationHelper)
 
@@ -10,7 +10,7 @@ class NotificationMailer < ActionMailer::Base
     # get instruction text
     @page_content = PageContent.by_name('instructions')
 
-    mail(:to => message.email, :subject => message.subject)
+    mail(:bcc => message.bcc, :subject => message.subject)
   end
 
   def send_new_data(message, dataset_ids, time_series_ids)
@@ -25,8 +25,8 @@ class NotificationMailer < ActionMailer::Base
     # get time series
     @time_series = TimeSeries.is_public.only_id_title_description.sorted.in(id: time_series_ids) if time_series_ids.present?
 
-    puts "===- dataset ids = #{dataset_ids}; found #{@datasets.length} dataset"
-    puts "===- time series ids = #{time_series_ids}; found #{@time_series.length} time series"
+    puts "===- dataset ids = #{dataset_ids}"
+    puts "===- time series ids = #{time_series_ids}"
 
     mail(:bcc => message.bcc, :subject => message.subject)
   end
