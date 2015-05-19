@@ -27,7 +27,7 @@ class ApplicationController < ActionController::Base
 		            :with => :render_not_found
 		rescue_from ActionController::UnknownAction,
 		            :with => :render_not_found
-    rescue_from Mongoid::error::DocumentNotFound,
+    rescue_from Mongoid::Errors::DocumentNotFound,
                 :with => :render_not_found
 
 	end
