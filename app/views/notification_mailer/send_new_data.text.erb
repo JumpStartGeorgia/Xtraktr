@@ -1,0 +1,29 @@
+<%= @message.message %>
+
+<%- if @datasets.present? -%>
+<%= I18n.t('app.menu.datasets', locale: @message.locale) %>:
+-----------------------------------------
+
+<%- @datasets.each do |dataset| -%>
+<%- dataset.current_locale = @message.locale -%>
+<%= dataset.title %>
+<%= explore_data_dashboard_url(id: dataset.id, locale: @message.locale) %>
+<%= strip_tags_nbsp(dataset.description).gsub("\n", "\n\n") %>
+
+
+<%- end -%>
+<%- end -%>
+
+<%- if @time_series.present? -%>
+<%= I18n.t('app.menu.time_series', locale: @message.locale) %>:
+-----------------------------------------
+
+<%- @time_series.each do |time_series| -%>
+<%- time_series.current_locale = @message.locale -%>
+<%= time_series.title %>
+<%= explore_time_series_dashboard_url(id: time_series.id, locale: @message.locale) %>
+<%= strip_tags_nbsp(time_series.description).gsub("\n", "\n\n") %>
+
+
+<%- end -%>
+<%- end -%>

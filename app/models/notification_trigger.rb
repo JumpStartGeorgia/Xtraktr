@@ -66,14 +66,14 @@ class NotificationTrigger
             .in(:id => triggers.map{|x| x.user_id}.uniq)
         if emails.present?
           puts "----- sending to #{emails.length} users"
-          emails = emails.map{|x| x.email}.join(';')
+          emails_string = emails.map{|x| x.email}.join(';')
 
           message = Message.new
-          message.bcc = emails
+          message.bcc = emails_string
           message.locale = locale
           message.subject = I18n.t("mailer.notification.new_user.subject", :locale => locale)
           message.message = I18n.t("mailer.notification.new_user.message", :locale => locale)                  
-          puts " ---> message: #{message.inspect}"
+          puts " ---> message: #{message.inspect}; bcc = #{message.bcc}; locale = #{message.locale}"
           NotificationMailer.send_new_user(message).deliver if !Rails.env.staging?
         end
       end

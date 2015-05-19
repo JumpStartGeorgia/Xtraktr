@@ -3,7 +3,7 @@ class Dataset < CustomTranslation
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::Paperclip
-  include Mongoid::Search
+  # include Mongoid::Search
   include ProcessDataFile # script in lib folder that will convert datafile to csv and then load into appropriate fields
 
   #############################
@@ -299,7 +299,7 @@ class Dataset < CustomTranslation
 
   #############################
   # Full text search
-  search_in :title, :description, :methodology, :source, :questions => [:original_code, :text, :notes, :answers => [:text]]
+  # search_in :title, :description, :methodology, :source, :questions => [:original_code, :text, :notes, :answers => [:text]]
 
   #############################
   # Validations
@@ -1521,7 +1521,7 @@ class Dataset < CustomTranslation
     counts = Hash[locales.map{|x| [x,0]}]
     counts['overall'] = 0
 
-    CSV.parse(infile.force_encoding('utf-8')) do |row|
+    CSV.parse(infile) do |row|
       startRow = Time.now
       n += 1
       puts "@@@@@@@@@@@@@@@@@@ processing row #{n}"
@@ -1577,7 +1577,7 @@ class Dataset < CustomTranslation
           I18n.locale = locale.to_sym
           if row[indexes[locale]].present? && question.text != row[indexes[locale]].strip
             puts "- setting text for #{locale}"
-            question.text = row[indexes[locale]].strip
+            question.text = clean_text(row[indexes[locale]].strip)
             counts[locale] += 1
             locale_found = true
           end          
@@ -1755,5 +1755,26 @@ class Dataset < CustomTranslation
 
     return msg, counts
   end
+
+
+# private
+
+  # strip the string and fix any bad characters
+  # some text is in microsoft ansi encoding and needs to be fixed
+  # reference: https://msdn.microsoft.com/en-us/library/cc195054.aspx
+  # - <91> = ‘
+  # - <92> = ’
+  # - <93> = “
+  # - <94> = ”
+  # - <97> = —
+  # - \xa0 = space
+  # if string = '' or '\\N' return nil
+  def clean_text(str)
+    # str.gsub(/\\x(\h{2})/) { $1.hex.chr }
+    x = str.gsub(/\\x../) {|s| [s[2..-1].hex].pack("C")}.force_encoding("UTF-8")
+    # x = str.gsub('(','\x28').gsub(')','\x29').gsub(/\\x../) {|s| [s[2..-1].hex].pack("C")}.force_encoding("UTF-8")
+
+  end 
+
 
 end

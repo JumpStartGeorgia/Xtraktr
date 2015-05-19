@@ -38,12 +38,14 @@ function time_series_chart_height(json){
 // determine which highlight button to add to chart
 ////////////////////////////////////////////////
 function determine_highlight_button(visual_element, embed_id, visual_type){
-  if (gon.embed_ids && gon.embed_ids.indexOf(embed_id) > -1){
-    // already exists, delete btn
-    delete_highlight_button(visual_element, embed_id, visual_type);
-  }else{
-    // not exist, add btn
-    add_highlight_button(visual_element, embed_id, visual_type);
+  if (gon.embed_ids){
+    if (gon.embed_ids.indexOf(embed_id) > -1){
+      // already exists, delete btn
+      delete_highlight_button(visual_element, embed_id, visual_type);
+    }else{
+      // not exist, add btn
+      add_highlight_button(visual_element, embed_id, visual_type);
+    }
   }
 }
 
@@ -267,7 +269,7 @@ function build_highmap(shape_question_code, json_map_set){
   });
 
   // now add button to add as highlight
-  determine_highlight_button($(selector_path + ' #' + map_id), json_chart.embed_id, gon.visual_types.map);  
+  determine_highlight_button($(selector_path + ' #' + map_id), json_map_set.embed_id, gon.visual_types.map);  
 }
 
 
@@ -323,7 +325,7 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
     },
     legend: {
         title: {
-          text: '<span class="code-highlight">' + broken_down_by_code + '</span> - ' + broken_down_by_text,
+          text: '<span class="code-highlight">' + broken_down_by_code + '</span> - ',
           useHTML: true,
           style: { "color": "#333333", "fontSize": "14px", "fontWeight": "bold" }
         },

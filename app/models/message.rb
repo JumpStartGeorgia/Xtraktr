@@ -9,7 +9,7 @@ class Message
   field :subject, type: String
   field :message, type: String
 
-  attr_accessible :name, :email, :subject, :message
+  attr_accessible :name, :email, :subject, :message, :bcc, :locale
   
   attr_accessor :bcc, :locale
 

@@ -41,7 +41,7 @@
     <% if @shapes_url.present? %>
       <% @shapes_url = [@shapes_url] if @shapes_url.class != Array %>
       <% @shapes_url.each do |url| %>
-        <script src="<%= @shapes_url %>"></script>
+        <script src="<%= url %>"></script>
       <% end %>
     <% end %>
 

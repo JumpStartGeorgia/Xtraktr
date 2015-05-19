@@ -1,5 +1,5 @@
 class ContactMailer < ActionMailer::Base
-  default :from => ENV['APPLICATION_FROM_EMAIL']
+  default :from => ENV['APPLICATION_FEEDBACK_FROM_EMAIL']
   default :to => ENV['APPLICATION_ERROR_TO_EMAIL']
 
   def new_message(message)

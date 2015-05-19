@@ -14,7 +14,7 @@
   config.action_controller.perform_caching = false
 
   # Don't care if the mailer can't send
-  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true
 
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log
@@ -32,7 +32,7 @@
 	# devise requires
 	config.action_mailer.default_url_options = { :host => 'localhost:3000' }
   # need this so can use url_helpers in modules
-#  Rails.application.routes.default_url_options = config.action_mailer.default_url_options
+  Rails.application.routes.default_url_options = config.action_mailer.default_url_options
 
 	# small smtp server for dev, http://mailcatcher.me/
   config.action_mailer.delivery_method = :smtp
