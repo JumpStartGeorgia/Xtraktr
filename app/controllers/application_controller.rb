@@ -400,7 +400,8 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
       # record if data exists
       output[:has_data] = data[:results].present? && 
         ((data[:results][:analysis].present? && data[:results][:analysis].length > 0) || 
-         (data[:results][:filtered_analysis].present? && data[:results][:filtered_analysis].length > 0)) if !output[:error]
+         (data[:results][:filter_analysis].present? && data[:results][:filter_analysis].length > 0)) if !output[:error]
+
       if !output[:error] && output[:has_data]
         # save data to so can be used for charts
         output[:js] = {}
