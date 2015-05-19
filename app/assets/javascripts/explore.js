@@ -308,7 +308,7 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
     },
     legend: {
         title: {
-          text: '<span class="code-highlight">' + broken_down_by_code + '</span> - ' + broken_down_by_text,
+          text: '<span class="code-highlight">' + broken_down_by_code + '</span> - ',
           useHTML: true,
           style: { "color": "#333333", "fontSize": "14px", "fontWeight": "bold" }
         },
