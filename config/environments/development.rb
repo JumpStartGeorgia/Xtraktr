@@ -41,7 +41,7 @@
   config.middleware.use ExceptionNotifier,
     :email_prefix => "[Xtraktr Dev App Error (#{Rails.env})] ",
     :sender_address => ENV['APPLICATION_ERROR_FROM_EMAIL'],
-    :exception_recipients => [ENV['APPLICATION_ERROR_TO_EMAIL']]
+    :exception_recipients => [ENV['APPLICATION_FEEDBACK_TO_EMAIL']]
 
 
 

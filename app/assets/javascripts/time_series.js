@@ -26,6 +26,7 @@ $(function() {
       disable_selected_values();
       $('form.tabbed-translation-form select.selectpicker-dataset:last').select2({width:'element', allowClear:true});
     });
+
     $('table#time_series_datasets').on('cocoon:after-remove', function(e,to_delete) {
        // enable items in list that was just deleted
       disable_selected_values();
@@ -39,16 +40,16 @@ $(function() {
       update_dataset_languages()
     });
 
-    // diable selected items when page loads
-    $('table#time_series_datasets select').each(function(){
-      disable_selected_values();
-    });
+
+    // initalize the fancy select box for categories
+    $('form.tabbed-translation-form select.selectpicker').select2({width:'element', allowClear:true});
 
     // fancy select box
     $('form.tabbed-translation-form select.selectpicker-dataset').select2({width:'element', allowClear:true});
 
-  // initalize the fancy select box for categories
-  $('form.tabbed-translation-form select.selectpicker').select2({width:'element', allowClear:true});
-
+    // diable selected items when page loads
+    $('table#time_series_datasets select').each(function(){
+      disable_selected_values();
+    });
 
 });
