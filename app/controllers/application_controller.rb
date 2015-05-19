@@ -453,6 +453,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     @js.push('embed.js')
 
     gon.generate_highlights_url = generate_highlights_path
+    set_gon_highcharts
   end
 
   def set_gon_highcharts
