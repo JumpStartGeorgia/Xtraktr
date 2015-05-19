@@ -4,12 +4,31 @@
 {
   margin:0px -50px;
 
+  font-family: 'sourcesans_pro_l', 'sans-serif';
+  font-size:16px;
+  color:#3c4352;
+  a { color:#00adee; }
+
   .meta
   {
     background-color: #f6f7f7;
     width:100%;
     padding:0px 50px;
-
+    overflow-x:auto;
+    &::-webkit-scrollbar-track {
+      background-color: #f6f6f6;
+    }
+    &::-webkit-scrollbar {
+      height: 12px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: #bfbfbf;
+      border: 2px solid #f6f6f6;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: #b1b1b1;
+      cursor: pointer;
+    }
     .col
     {
       position:relative;
@@ -447,18 +466,153 @@
 }
 
 #codebook{
-  .question-row, .answer-row
+  #codebook-search{
+    position:relative;
+    margin-bottom:50px;
+  }
+  input.codebook-search
   {
+
+    font-family:'opensans_li';
+    font-size:13px;
+    color:#3c4352;
+     -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;  
+    outline:none;
+    border:0px;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    height:31px;
+    width:350px;
+    background: #f6f7f7 url(/assets/svg/search.svg) no-repeat 14px center / 16px 16px;
+    padding-left: 42px;
+    &:focus,&:active {
+      outline: none;
+      -webkit-box-shadow: none;
+      -moz-box-shadow: none;
+      box-shadow: none;
+    }
+  }
+  .radio-box
+  {
+    display:inline-block;
+    margin-left:30px;
+    input[type="radio"] + label
+    {
+      font-family:'opensans', 'sans-serif';
+      font-size:13px;
+      font-weight:normal;
+      color:#777c86; 
+      display:inline-block; 
+      margin:0px;
+      padding:0px; 
+      cursor:pointer;     
+    }
+    input[type="radio"] {
+      display:none;
+    }    
+    input[type="radio"] + label:before {
+      content:"";
+        display:inline-block;
+        width:15px;
+        height:14px;
+        margin:-3px 4px 0 0;
+        vertical-align:middle;
+        background:url(/assets/svg/check_radio.png) no-repeat -29px top ;
+    }
+    input[type="radio"]:checked + label:before {
+      content:"";
+      background:url(/assets/svg/check_radio.png) no-repeat -44px top;
+    }
+  }
+  > ul 
+  {
+    > li
+    {
+      padding:20px 0px;
+      &:after
+      {
+        content: "";
+        background: transparent url(/assets/svg/hborder.svg) repeat-x center bottom;
+        width: 100%;
+        height:1px;
+        display: block;   
+        position: relative;
+        top: 20px;     
+      }
+    }
+    .highlight
+    {
+      background-color:#9de4ff;
+      color:#3c4352;
+      border:0px;
+    }
+  }
+  .question
+  {
+    min-width:350px;
+    a
+    {
+      font-family: 'sourcesans_pro_sb', 'sans-serif';
+      font-size:16px;
+      color:#3c4352;
+      text-decoration:none;
+      display:block;
+      position:relative;
+      line-height: 18px;
+      > div { display:inline-block; width:300px; }
+      &:before
+      {
+        content:"";
+        display:inline-block;
+        width:34px;
+        height:34px;
+        background:transparent url(/assets/svg/chart_blue.svg) no-repeat center/34px;
+        position:relative;
+        left:0px;
+        top:0px;
+        vertical-align:top;
+        margin-right:10px;
+      }
+      span
+      {
+        text-transform:uppercase;
+        display:inline-block;
+      }
+    }
+  }
+  .details
+  {
+    position:relative;
+    width:100%;
     font-family: 'sourcesans_pro_l', 'sans-serif';
     font-size:16px;
     color:#3c4352;
-    .headers
+    padding-left:25px;
+    > div 
+    {
+      margin-bottom:20px;
+    }
+    .k
     {
        color:#00adee;
+       min-width:100px;
+
     }
-  }
-  .answer-row
-  {
+    &:before
+    {
+      content: "";
+      background: transparent url(/assets/svg/vborder.svg) repeat-y left center;
+      width: 1px;
+      height:100%;
+      display: block;   
+      position: absolute;
+      top: 0px;
+      bottom: 0px;    
+      left:0px;
+    }
     ul
     {
       list-style:none;
@@ -477,23 +631,6 @@
           line-height: 1.4em;
           padding-right: 0.5em;
         }
-      }
-    }
-  }
-  > ul 
-  {
-    > li
-    {
-      padding:20px 0px;
-      &:after
-      {
-        content: "";
-        background: transparent url(/assets/svg/hborder.svg) repeat-x center bottom;
-        width: 100%;
-        height:1px;
-        display: block;   
-        position: relative;
-        top: 20px;     
       }
     }
   }
@@ -582,9 +719,5 @@
 //         }
 //       }
 //     }
-
-    #reports{
-
-    }
 //   }
 // }

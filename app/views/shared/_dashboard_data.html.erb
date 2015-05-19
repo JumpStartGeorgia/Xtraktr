@@ -138,69 +138,52 @@
     <div role="tabpanel" class="tab-pane fade <%= codebook_active[:panel] %>" id="codebook">
       <div id="codebook-search">
 
-        <input type="text" class="text-input col-sm-3" id="filter" class="form-control" value="" placeholder="<%= t('helpers.search') %>" />
-
-        <label class="filter" for="filter_all">
+        <input type="text" class="codebook-search" id="filter" value="" placeholder="<%= t('helpers.search') %>" />
+        <div class="radio-box" tabindex="0">
           <input checked id="filter_all" name="filter" type="radio" value="all" />
-          <%= t('.filter.all') %>
-        </label>
-        <label class="filter" for="filter_q">
+          <label class="filter" for="filter_all"><%= t('.filter.all') %></label>
+        </div>
+        <div class="radio-box" tabindex="0">
           <input id="filter_q" name="filter" type="radio" value="q" />
-          <%= t('.filter.questions') %>
-        </label>
-        <label class="filter" for="filter_ans">
+          <label class="filter" for="filter_q"><%= t('.filter.questions') %></label>
+        </div>
+        <div class="radio-box" tabindex="0">
           <input id="filter_ans" name="filter" type="radio" value="ans" />
-          <%= t('.filter.answers') %>
-        </label>
+          <label class="filter" for="filter_ans"><%= t('.filter.answers') %></label>
+        </div>  
         <%= link_to @dataset.urls.codebook, class: 'download-direct',  title: t("app.common.codebook_title") do %>
                   <% end %>   
       </div>
       <ul class="list-unstyled">
         <% @dataset.questions.for_analysis.each do |question| %>
-          <li class="row">
-            <div class="col-sm-4 question">
-              <h3>
+          <li>
+            <div class="col question">
                 <%= link_to url_dataset_explore(@dataset, question_code: question.code, language: params[:language]) do %>
-                  <span><%= question.original_code %>:</span>
-                  <%= question.text %>
+                  <div><span><%= question.original_code %>:</span><br/>
+                  <%= question.text %></div>
                 <% end %>
-              </h3>
-
             </div>
-            <div class="col-sm-8 details">
-              <div class="row question-row">
-                <div class="col-sm-1 headers">
-                  <%= t('app.common.question') %>:                  
-                </div>
-                <div class="col-sm-11">
-                  <%= question.text %>
-                </div>
+            <div class="col details">
+              <div>
+                <div class="col k"><%= t('app.common.question') %>: </div>
+                <div class="col"><%= question.text %></div>
               </div>
               <% if question.notes.present? %>
-                <div class="row notes-row">
-                  <div class="col-sm-1 headers">
-                    <%= t('app.common.notes') %>:                  
-                  </div>
-                  <div class="col-sm-11">
-                    <%= question.notes %>
-                  </div>
+                <div>
+                  <div class="col k"><%= t('app.common.notes') %>: </div>
+                  <div class="col"><%= question.notes %></div>
                 </div>
               <% end %>
-              <div class="row answer-row">
-                <div class="col-sm-1 headers">
-                  <%= t('app.common.answers') %>:                  
-                </div>
-                <div class="col-sm-11">
-                  <%
-                    answers = question.answers.all_for_analysis
+              <div>
+                <div class="col k"><%= t('app.common.answers') %>: </div>
+                <div class="col">
+                  <%- answers = question.answers.all_for_analysis
                     if answers.present? 
-                  %>
+                  -%>
                     <ul>
-                      <% answers.each do |answer| %>
-                        <li>
-                        <%= answer.text %>
-                        </li> 
-                      <% end %>
+                      <%- answers.each do |answer| -%>
+                        <li><%= answer.text %></li> 
+                      <%- end -%>
                     </ul>
                   <% end %>
                 </div>
