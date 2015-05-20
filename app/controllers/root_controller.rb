@@ -50,7 +50,7 @@ class RootController < ApplicationController
 
   def notes
     @page_content = PageContent.by_name('notes')
-
+    @css.push('root.css')
     respond_to do |format|
       format.html # index.html.erb
     end

@@ -1,13 +1,11 @@
 .boxic
 {
   background-color:#fff;
-/*  width:450px;  
-*/  padding:0px;//10px 20px;
-/*  margin:10px 10px;
-*/
-  // -webkit-box-shadow: 1px 1px 0px 1px rgba(235,235,235,1);
-  // -moz-box-shadow: 1px 1px 0px 1px rgba(235,235,235,1);
-  // box-shadow: 1px 1px 0px 1px rgba(235,235,235,1);
+  border:1px solid #eaeaea;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;  
+  padding:18px 21px;
   ul 
   {
     li
@@ -17,11 +15,9 @@
       color:#3c4352;
       a,h2
       {
-        font-family:'pfcentroslabpro';
-        font-size:14px;
-        color:#d95d6a;
-        line-height:20px;
-        text-transform:uppercase;
+        font:14px 'sourcesans_pro', 'sans-serif';
+        color:#636975;
+        line-height:17px;
         &:hover
         {
           text-decoration:none;
@@ -29,14 +25,13 @@
       }
       &:not(:last-of-type)
       {
-        padding-bottom: 10px;
-        margin-bottom: 10px;
-        border-bottom: 1px solid #e8e8e8;
+        // padding-bottom: 10px;
+        // margin-bottom: 10px;
       }
     }
   }
 
-    #categories{
+    .list{
       ul{
         vertical-align: top;
         &:first-of-type{
@@ -48,21 +43,24 @@
           width: 49%;
         }
         li{
-          margin-bottom: 5px;
+          text-align:center;
+          margin-bottom:13px;
           a{
             display: block;
             text-decoration: none;
             color: #333;
             &:hover{
-              background-color: #f6f7f7;
+              img {transform:scale(1.1,1.1);} 
+            }
+           img {
+              vertical-align: middle;
+              height: 42px;
+              width: 42px;
             }
             span{
               display: inline-block;
-              &:first-of-type{
-                vertical-align: middle;
-                height: 42px;
-                width: 42px;
-              }
+              text-align: left;
+              padding:0px 0px 0px 10px;
               &:last-of-type{
                 vertical-align: middle;
                 width: 80px;
@@ -99,11 +97,7 @@
     }
   }
 
-  .search
-  {
-    margin-bottom: 20px; 
-  }
-    
+ 
 
   .embed-title{
     position: relative;
