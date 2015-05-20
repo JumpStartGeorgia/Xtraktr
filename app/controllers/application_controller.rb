@@ -268,6 +268,8 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
         @css.push('bootstrap-select.min.css', "explore.css", "datasets.css")
         @js.push('bootstrap-select.min.js', "explore.js", "explore_data.js", 'highcharts.js', 'highcharts-map.js', 'highcharts-exporting.js')
 
+        gon.embed_button_link = embed_v1_path('replace')
+
         # record javascript variables
         gon.hover_region = I18n.t('explore_data.hover_region')
         gon.na = I18n.t('explore_data.na')
@@ -321,6 +323,8 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
         # add the required assets
         @css.push('bootstrap-select.min.css', "explore.css", "time_series.css")
         @js.push('bootstrap-select.min.js', "explore.js", "explore_time_series.js", 'highcharts.js', 'highcharts-exporting.js')
+
+        gon.embed_button_link = embed_v1_path('replace')
 
         # record javascript variables
         gon.na = I18n.t('explore_time_series.na')
@@ -467,6 +471,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     gon.highcharts_svg = I18n.t('highcharts.svg')
 
     gon.add_highlight_text = I18n.t('helpers.links.add_highlight')
+    gon.embed_chart_text = I18n.t('helpers.links.embed_chart') 
     gon.delete_highlight_text = I18n.t('helpers.links.delete_highlight')
   end
 

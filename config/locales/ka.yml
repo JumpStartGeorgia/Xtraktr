@@ -444,6 +444,7 @@ ka:
       agreement: Agreement      
       add_highlight: Add to Highlights
       delete_highlight: Remove from Highlights
+      embed_chart: Embed Chart
     titles:
       edit: "შეცვლა %{model}"
       save: "შენახვა %{model}"

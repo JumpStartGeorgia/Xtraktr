@@ -444,6 +444,7 @@ en:
       agreement: Agreement
       add_highlight: Add to Highlights
       delete_highlight: Remove from Highlights
+      embed_chart: Embed Chart
     titles:
       edit: "Edit %{model}"
       save: "Save %{model}"
