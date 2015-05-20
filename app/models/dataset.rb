@@ -623,6 +623,10 @@ class Dataset < CustomTranslation
     only(:id, :title, :languages)
   end
 
+  def self.meta_only
+    without(:questions)
+  end
+
   def self.only_id_title_description
     only(:id, :title, :description)
   end

@@ -10,7 +10,7 @@ class DatasetsController < ApplicationController
   # GET /datasets
   # GET /datasets.json
   def index
-    @datasets = Dataset.by_user(current_user.id).sorted_title
+    @datasets = Dataset.meta_only.by_user(current_user.id).sorted_title
 
     @css.push("datasets.css")
     @js.push("search.js")

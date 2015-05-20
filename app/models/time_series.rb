@@ -205,6 +205,10 @@ class TimeSeries < CustomTranslation
     only(:id, :title, :description)
   end
 
+  def self.meta_only
+    without(:questions)
+  end
+
   def self.search(q)
     full_text_search(q)
   end

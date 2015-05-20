@@ -58,7 +58,7 @@ class RootController < ApplicationController
 
 
   def explore_data
-    @datasets = Dataset.is_public
+    @datasets = Dataset.meta_only.is_public
 
     # add search
     if params[:q].present?
@@ -147,7 +147,7 @@ class RootController < ApplicationController
 
 
   def explore_time_series
-    @time_series = TimeSeries.is_public
+    @time_series = TimeSeries.meta_only.is_public
 
     # add search
     if params[:q].present?
