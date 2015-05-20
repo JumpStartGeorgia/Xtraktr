@@ -338,7 +338,7 @@ en:
           title_filter_value: ", filtered by: '%{code} - %{variable} = %{value}'"
     single:
       html:
-        title: "<span class='title-highlight'>Answers to:</span> '<span class='code-highlight'>%{code}</span> - %{question}'"
+        title: "<span class='title-highlight'>Answers to:</span> <br />'<span class='code-highlight'>%{code}</span> - %{question}'"
         title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
         title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'"
       text:
