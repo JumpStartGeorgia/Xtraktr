@@ -338,7 +338,7 @@ en:
           title_filter_value: ", filtered by: '%{code} - %{variable} = %{value}'"
     single:
       html:
-        title: "<span class='title-highlight'>Answers to:</span> <br />'<span class='code-highlight'>%{code}</span> - %{question}'"
+        title: "<span class='title-highlight'>Answers to:</span><br /> '<span class='code-highlight'>%{code}</span> - %{question}'"
         title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
         title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'"
       text:
@@ -445,6 +445,9 @@ en:
       add_highlight: Add to Highlights
       delete_highlight: Remove from Highlights
       embed_chart: Embed Chart
+      embed_chart_prompt: "Copy and paste this embed code into your web page:"
+      embed_chart_wide: px wide
+      embed_chart_high: px high
     titles:
       edit: "Edit %{model}"
       save: "Save %{model}"

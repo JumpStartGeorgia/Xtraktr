@@ -685,8 +685,9 @@ div.message {
 #dashboard-tabs
 {
   ul.nav-tabs
-  {
-    border-bottom: 1px solid #cecece;
+  {    
+    display:inline;
+    border-bottom: 0;
     > li
     {
       > a
@@ -697,6 +698,10 @@ div.message {
         text-transform:uppercase;
       }
     }
+  }
+  .tab-content
+  {
+    border-top: 1px solid #cecece;
   }
 }
 
@@ -724,6 +729,14 @@ div.message {
     padding: 0px 12px 13px 12px;
     background-color: #fff;  
     min-width:420px;
+    &.center
+    {
+      top: 50%;
+      left: 50%;
+      -webkit-transform: translateX(-50%) translateY(-50%);
+      -ms-transform: translateX(-50%) translateY(-50%);
+      transform: translateX(-50%) translateY(-50%);
+    }
     > div
     {
       background-color:#f6f7f7;

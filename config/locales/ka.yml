@@ -445,6 +445,9 @@ ka:
       add_highlight: "გამორჩეულში დამატება"
       delete_highlight: "გამორჩეულიდან წაშლა"
       embed_chart: ჩასმული გრაფიკი
+      embed_chart_prompt: "Copy and paste this embed code into your web page:"
+      embed_chart_wide: px wide
+      embed_chart_high: px high
     titles:
       edit: "შეცვლა %{model}"
       save: "შენახვა %{model}"

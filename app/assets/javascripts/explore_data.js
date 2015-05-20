@@ -133,6 +133,40 @@ function build_highmaps(json){
     // make sure these are not active
     $('#explore-tabs #nav-map, #explore-content #tab-map').removeClass('active');
   }
+
+  $(document).on('click', '.embed-chart', function(){
+    var url = $(this).attr('data-href');
+     modal(gon.embed_chart,
+      {
+        position:'center', 
+        events: [
+          { 
+            event:'change',
+            element: '.wide input', 
+            callback:function()
+            {  
+              var t = $(this);
+              var par = t.closest('.box');
+              par.find('textarea').val(gon.embed_chart_url.replace('{path}',url).replace('{wide}',t.val()).replace('{high}',par.find('.high input').val()));
+            }
+          },
+          {  event:'change',
+             element: '.high input',
+             callback:function()
+             {
+                var t = $(this);
+                var par = t.closest('.box');
+                par.find('textarea').val(gon.embed_chart_url.replace('{path}',url).replace('{wide}',par.find('.wide input').val()).replace('{high}',t.val()));
+             }
+          }
+        ],
+        before: function(t)
+        {
+          t.find('textarea').val(gon.embed_chart_url.replace('{path}',url).replace('{wide}',t.find('.wide input').val()).replace('{high}',t.find('.high input').val()));
+        }
+      }
+    );
+  });
 }
 
 
