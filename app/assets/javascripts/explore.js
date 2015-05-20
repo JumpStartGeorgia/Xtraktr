@@ -92,7 +92,7 @@ function add_embed_button(visual_element, embed_id){
     var parent = $(visual_element).parent();
 
     // create link
-    var link = '<span class="embed-chart" data-href="' + gon.embed_button_link.replace('replace', embed_id) + '" data-embed-id="' + embed_id + '"';
+    var link = '<span class="embed-chart" data-href="' + gon.embed_button_link.replace('replace', embed_id) + '"';
     link += 'title="' + gon.embed_chart_text + '" data-placement="bottom"><img src="/assets/svg/embed.svg" alt="' + gon.embed_chart_text + '" /></span>';
 
     // add link to visual
@@ -130,6 +130,7 @@ function build_highmap(shape_question_code, json_map_set){
   $(selector_path).append('<div id="' + map_id + '" class="map"></div>');
 
   $(selector_path + ' #' + map_id).highcharts('Map', {
+      credits: { enabled: false },
       chart:{
         events: {
           load: function () {
@@ -254,6 +255,7 @@ function build_highmap(shape_question_code, json_map_set){
         },
         buttons: {
           contextButton: {
+            symbol: 'url(/assets/svg/download.svg)',
             menuItems: [
               {
                 text: gon.highcharts_png,
@@ -316,6 +318,7 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
 
   // create chart
   $(selector_path + ' #' + chart_id).highcharts({
+    credits: { enabled: false },
     chart: {
         type: 'bar'
     },
@@ -336,24 +339,37 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
             useHTML: true,
             style: { "fontSize": "14px", "fontWeight": "bold" }
         },
+        labels:
+        {
+          style: { "color": "#3c4352", "fontSize": "14px", "fontFamily":"'sourcesans_pro', 'sans-serif'", "fontWeight": "normal" },
+          useHTML: true
+        }
     },
     yAxis: {
         min: 0,
         title: {
-            text: gon.percent
-        }
+            text: gon.percent,
+            style: { "fontSize": "14px", "fontWeight": "bold" }
+        },
+        labels:
+        {
+          style: { "color": "#777c86", "fontSize": "14px", "fontFamily":"'sourcesans_pro', 'sans-serif'", "fontWeight": "normal" },
+          useHTML: true
+        }       
     },
     legend: {
         title: {
-          text: '<span class="code-highlight">' + broken_down_by_code + '</span> - ',
-          useHTML: true,
-          style: { "color": "#333333", "fontSize": "14px", "fontWeight": "bold" }
+          text: broken_down_by_code,
+          style: { "color": "#00adee", "fontSize": "18px", "fontFamily":"'sourcesans_pro_sb', 'sans-serif'", "fontWeight": "normal" }
         },
+        useHTML: true,
         layout: 'vertical',
         reversed: true,
+        symbolWidth: 14,
         symbolHeight: 14,
         itemMarginBottom: 5,
-        itemStyle: { "color": "#333333", "cursor": "pointer", "fontSize": "14px" }
+        itemStyle: { "cursor": "pointer", 'font-family':"'sourcesans_pro_l', 'sans-serif'", 'font-size': '12px', 'color': '#3C4352', 'fontWeight': 'normal' },
+        symbolRadius: 100
     },
     tooltip: {
         pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y:,.0f}</b> ({point.percentage:.2f}%)<br/>',
@@ -381,6 +397,7 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
       },
       buttons: {
         contextButton: {
+          symbol: 'url(/assets/svg/download.svg)',
           menuItems: [
             {
               text: gon.highcharts_png,
@@ -443,6 +460,7 @@ function build_pie_chart(json_chart, chart_height){
 
   // create chart
   $(selector_path + ' #' + chart_id).highcharts({
+    credits: { enabled: false },
     chart: {
         plotBackgroundColor: null,
         plotBorderWidth: null,
@@ -580,6 +598,7 @@ function build_time_series_chart(json_chart, chart_height){
 
   // create chart
   $(selector_path + ' #' + chart_id).highcharts({
+    credits: { enabled: false },
     chart: {
         plotBackgroundColor: null,
         plotBorderWidth: null,
@@ -616,9 +635,11 @@ function build_time_series_chart(json_chart, chart_height){
     },
     legend: {
         layout: 'vertical',
+        symbolWidth: 14,
         symbolHeight: 14,
         itemMarginBottom: 5,
-        itemStyle: { "color": "#333333", "cursor": "pointer", "fontSize": "14px", "fontWeight": "bold" }
+        itemStyle: { "cursor": "pointer", 'font-family':"'sourcesans_pro_l', 'sans-serif'", 'font-size': '12px', 'color': '#3C4352', 'fontWeight': 'normal' },
+        symbolRadius: 100
     },
     series: json_chart.data,
     exporting: {
@@ -635,6 +656,7 @@ function build_time_series_chart(json_chart, chart_height){
       },
       buttons: {
         contextButton: {
+          symbol: 'url(/assets/svg/download.svg)',
           menuItems: [
             {
               text: gon.highcharts_png,

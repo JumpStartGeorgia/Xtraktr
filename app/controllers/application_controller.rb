@@ -268,7 +268,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
         @css.push('bootstrap-select.min.css', "explore.css", "datasets.css")
         @js.push('bootstrap-select.min.js', "explore.js", "explore_data.js", 'highcharts.js', 'highcharts-map.js', 'highcharts-exporting.js')
 
-        gon.embed_button_link = embed_v1_path('replace')
+        gon.embed_button_link = embed_v1_url('replace')
 
         # record javascript variables
         gon.hover_region = I18n.t('explore_data.hover_region')
@@ -324,7 +324,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
         @css.push('bootstrap-select.min.css', "explore.css", "time_series.css")
         @js.push('bootstrap-select.min.js', "explore.js", "explore_time_series.js", 'highcharts.js', 'highcharts-exporting.js')
 
-        gon.embed_button_link = embed_v1_path('replace')
+        gon.embed_button_link = embed_v1_url('replace')
 
         # record javascript variables
         gon.na = I18n.t('explore_time_series.na')

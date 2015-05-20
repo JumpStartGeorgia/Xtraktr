@@ -39,7 +39,7 @@ $(document).ready(function(){
             $container.masonry({
               // columnWidth: 200,
               itemSelector: '.highlight',
-              "gutter": 10
+              "gutter": 20
             });
         }
       }

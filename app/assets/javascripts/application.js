@@ -272,17 +272,36 @@ function download_request(url, data)
 }
 
 var js_modal;
-function modal(html)
+function modal(html,options)
 {
-  if(typeof html !== 'undefined')
+  if(typeof html === 'undefined') return;
+  if(typeof options === 'undefined') options = {};
+  var opt = options;
+  
+  var w = $(window).width();
+  var h = $(window).height();
+  var max_width = (w > 768 ? 768 : w) - 20;
+  var max_height = (h > 1024 ? 1024 : h - 60);
+  var css = {'max-width':max_width, 'max-height':max_height};
+  var klass = "popup";
+  if(typeof opt.position !== 'undefined') 
   {
-    var w = $(window).width();
-    var h = $(window).height();
-    var max_width = (w > 768 ? 768 : w) - 20;
-    var max_height = (h > 1024 ? 1024 : h - 60);
-    js_modal.find('.popup').html(html).css({'max-width':max_width, 'max-height':max_height});
-    js_modal_on();
+    klass += " " + opt.position;
   }
+  var popup = js_modal.find('.popup');
+  popup.html(html).css(css).removeClass().addClass(klass);
+  if(typeof opt.events !== 'undefined' && Array.isArray(opt.events)) 
+  {
+    opt.events.forEach(function(d){
+      popup.on(d.event, d.element, d.callback);
+    });
+  }
+  if(typeof opt.before === 'function' ) 
+  {
+    opt.before(popup);
+  }
+  js_modal_on();
+  
 }
 function js_modal_on() 
 {
@@ -299,9 +318,11 @@ function js_modal_on()
 }
 function js_modal_off() 
 {
-  js_modal.fadeOut(500);
-  $(document).off('keyup.js_modal').off('click.js_modal');
-   downloading = false;
+  js_modal.fadeOut(500,function(){
+    $(document).off('keyup.js_modal').off('click.js_modal');
+    js_modal.find('.popup').empty();
+     downloading = false;
+   });
 }
 ////////////////////////////////////////////////
 // convert the querystring variables into json
@@ -343,6 +364,6 @@ function debounce(func, wait, immediate) {
 };
 function notification(state,text)
 {
-    state = ['success', 'error', 'info'].indexOf(state) != -1 ? state : 'error';
-    return "<div class='notification "+ state + "'><div class='figure'></div><div class='text'>"+text+"</div><div class='closeup'></div></div>";
+  state = ['success', 'error', 'info'].indexOf(state) != -1 ? state : 'error';
+  return "<div class='notification "+ state + "'><div class='figure'></div><div class='text'>"+text+"</div><div class='closeup'></div></div>";
 }
