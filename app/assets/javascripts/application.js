@@ -33,7 +33,7 @@ $(document).ready(function(){
 
   $('body').tooltip({
     selector: '[title]',
-    container: 'body'    
+    container: 'body'
   });
 
   $('#side-menu a').click(function(){

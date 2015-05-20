@@ -1,7 +1,3 @@
-//= require i18n
-//= require i18n/translations
-//= require jquery
-//= require explore
 
 var keys = [];
 
@@ -151,8 +147,6 @@ function build_time_series_charts(json){
 }
 
 function load_highlights(highlight_data){
-console.log('----------------load_highlights');
-console.log(highlight_data);
   // pull out all of the keys
   $.each(highlight_data, function(k,v){ keys.push(k)});
 
@@ -160,10 +154,7 @@ console.log(highlight_data);
   var data, key;
   for(var i=0;i<keys.length;i++){
     key = keys[i];
-console.log('key = ' + key);      
     data = highlight_data[key];
-console.log('data');
-console.log(data)
     if (data.json_data){
       gon.highlight_id = key;
 

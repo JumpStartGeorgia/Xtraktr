@@ -85,6 +85,23 @@ function delete_highlight_button(visual_element, embed_id, visual_type){
 
 
 ////////////////////////////////////////////////
+// add embed button to chart
+////////////////////////////////////////////////
+function add_embed_button(visual_element, embed_id){
+  if (gon.embed_button_link){
+    var parent = $(visual_element).parent();
+
+    // create link
+    var link = '<span class="embed-chart" data-href="' + gon.embed_button_link.replace('replace', embed_id) + '" data-embed-id="' + embed_id + '"';
+    link += 'title="' + gon.embed_chart_text + '" data-placement="bottom"><img src="/assets/svg/embed.svg" alt="' + gon.embed_chart_text + '" /></span>';
+
+    // add link to visual
+    $(visual_element).append(link);
+  }
+}
+
+
+////////////////////////////////////////////////
 // build title/sub title for chart/map
 // if gon.visual_link is present, turn the title into a link
 ////////////////////////////////////////////////
@@ -270,6 +287,9 @@ function build_highmap(shape_question_code, json_map_set){
 
   // now add button to add as highlight
   determine_highlight_button($(selector_path + ' #' + map_id), json_map_set.embed_id, gon.visual_types.map);  
+
+  // add embed chart button
+  add_embed_button($(selector_path + ' #' + map_id), json_map_set.embed_id);
 }
 
 
@@ -394,6 +414,9 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
 
   // now add button to add as highlight
   determine_highlight_button($(selector_path + ' #' + chart_id), json_chart.embed_id, gon.visual_types.crosstab_chart);  
+
+  // add embed chart button
+  add_embed_button($(selector_path + ' #' + chart_id), json_chart.embed_id);
 }
 
 
@@ -531,6 +554,9 @@ function build_pie_chart(json_chart, chart_height){
 
   // now add button to add as highlight
   determine_highlight_button($(selector_path + ' #' + chart_id), json_chart.embed_id, gon.visual_types.pie_chart);  
+
+  // add embed chart button
+  add_embed_button($(selector_path + ' #' + chart_id), json_chart.embed_id);
 }
 
 
@@ -642,6 +668,9 @@ function build_time_series_chart(json_chart, chart_height){
 
   // now add button to add as highlight
   determine_highlight_button($(selector_path + ' #' + chart_id), json_chart.embed_id, gon.visual_types.line_chart);  
+
+  // add embed chart button
+  add_embed_button($(selector_path + ' #' + chart_id), json_chart.embed_id);
 }
 
 

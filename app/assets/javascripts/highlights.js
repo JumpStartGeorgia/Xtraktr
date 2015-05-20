@@ -24,7 +24,6 @@ $(document).ready(function(){
       dataType: 'json',
       success: function (data)
       {      
-        console.log(data);
         if (data != undefined && data.html != undefined && data.js != undefined){
           // add the html
           $('#highlights').append(data.html);

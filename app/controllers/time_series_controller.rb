@@ -8,7 +8,7 @@ class TimeSeriesController < ApplicationController
   # GET /time_series
   # GET /time_series.json
   def index
-    @time_series = TimeSeries.by_user(current_user.id).sorted
+    @time_series = TimeSeries.meta_only.by_user(current_user.id).sorted
 
     @css.push("time_series.css")
     @js.push("search.js")
