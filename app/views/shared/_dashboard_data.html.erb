@@ -131,7 +131,6 @@
     
     <div role="tabpanel" class="tab-pane fade <%= codebook_active[:panel] %>" id="codebook">
       <div id="codebook-search">
-
         <input type="text" class="codebook-search" id="filter" value="" placeholder="<%= t('helpers.search') %>" />
         <div class="radio-box" tabindex="0">
           <input checked id="filter_all" name="filter" type="radio" value="all" />
@@ -170,7 +169,7 @@
               <% end %>
               <div>
                 <div class="col k"><%= t('app.common.answers') %>: </div>
-                <div class="col">
+                <div class="col answers">
                   <%- answers = question.answers.all_for_analysis
                     if answers.present? 
                   -%>
@@ -226,11 +225,3 @@
 
 </div>
 </div>
-
-<%
-  addthis_id =  @is_xtraktr ? (Rails.env.production? ? ENV['XTRAKTR_ADDTHIS_PROFILE_ID'] : ENV['XTRAKTR_ADDTHIS_PROFILE_ID_DEV']) 
-                            : (Rails.env.production? ? ENV['UNICEF_ADDTHIS_PROFILE_ID']  : ENV['UNICEF_ADDTHIS_PROFILE_ID_DEV'])
-  if addthis_id.present?
-%>
-<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=<%= addthis_id %>" async="async"></script>
-<% end %>

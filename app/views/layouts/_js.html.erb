@@ -32,3 +32,7 @@
   <script>download_request("<%= session[:download_url] %>",{});</script>
   <% session[:download_url] = nil %>
 <% end %>
+
+<% if @addthis_id %>
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=<%= @addthis_id %>" async="async"></script>
+<% end %>  
