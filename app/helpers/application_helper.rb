@@ -92,7 +92,14 @@ module ApplicationHelper
     end
   end
 
-
+  def notification(state,text)
+    state = ['success', 'error', 'info'].index(state).present? ? state : 'error'
+    ("<div class='notification #{state}'>
+        <div class='figure'></div>
+        <div class='text'>#{text}</div>
+        <div class='closeup'></div>      
+    </div>").html_safe  
+  end
   #devise mappings
   def resource_name
     :user

@@ -2,21 +2,12 @@
 <div class="article contact">
   <div class="col">
   <div class="header"><%= @page_content.title %></div>
+
   <% if @email_sent %>
-    <p class="alert alert-success"><%= t(".message_sent") %></p>
+    <%= notification('success', t(".message_sent")) %>
   <% end %>
-
-  <div class="intro">
-    <%= simple_format_no_tags(@page_content.content, {}, {sanitize: false}) %>
-  </div>
-
+  <div class="intro"><%= simple_format_no_tags(@page_content.content, {}, {sanitize: false}) %></div>
   <%= semantic_form_for @message, :url => contact_path, :html => {class: 'contact-form'} do |f| %>
-    <% if @message.errors.present? %>
-      <div class="errorExplanation" id="errorExplanation">
-        <h2><%= t('.error_title') %></h2>
-      </div>
-    <% end %>
-
     <%= f.inputs do %>
       <%= f.input :name, :label => false, :placeholder => model_class.human_attribute_name(:name).upcase, input_html: {size: 50} %>
       <%= f.input :email, :label => false, :placeholder => model_class.human_attribute_name(:email).upcase+" *", input_html: {size: 50} %>
@@ -26,7 +17,6 @@
     <div>
       <%= f.submit t(".send"), :class => 'submit-message' %>
     </div>
-
   <% end %>
   </div>
   <div class="col">
