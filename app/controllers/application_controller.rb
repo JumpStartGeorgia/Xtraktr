@@ -452,8 +452,8 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     end
     @js.push('highcharts-exporting.js')
 
-    @css.push('embed.css')
-    @js.push('embed.js')
+    @css.push('embed.css', 'explore.css')
+    @js.push('embed.js', 'explore.js')
 
     gon.generate_highlights_url = generate_highlights_path
     set_gon_highcharts

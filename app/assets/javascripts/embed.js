@@ -1,7 +1,3 @@
-//= require i18n
-//= require i18n/translations
-//= require jquery
-//= require explore
 
 var keys = [];
 
