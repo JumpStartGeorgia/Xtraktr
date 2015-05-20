@@ -324,7 +324,7 @@ en:
         title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'"
         map:
           title: "'<span class='code-highlight'>%{code}</span> - %{question}' "
-          title_col: "<br /> <span class='title-highlight'>broken down by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{broken_down_by} = %{broken_down_by_answer}' "
+          title_col: "<br /> <span class='title-highlight'>broken down by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{broken_down_by} = <span class='code-highlight'>%{broken_down_by_answer}</span>' "
           title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
           title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'"
       text:
@@ -500,7 +500,7 @@ en:
       or: Or 
       go: Go
       share: Share
-      codebook_title: Download the codebook
+      codebook_title: Download the Codebook
     msgs:
       does_not_exist: You tried to access a page that does not exist.
       not_authorized: You are not authorized to view that page.
@@ -650,7 +650,7 @@ en:
       header_latest_time_series: Latest Time Series
       no_time_series: 'At this time, no time series have been created in the site.'
       wms_title: Welfare <br />Monitoring Survey
-      wms_slogan: Explore something over time....
+      wms_slogan: Comparing the <br />well-being of children <br />from 2009, 20011 and 2013
       header_highlights: Highlights
       header_categories: Browse Categories
       search_datasets: Search Datasets
@@ -673,7 +673,6 @@ en:
         release: Date Released
         publish: Date Published Here
       no_data: 'At this time, no datasets have been loaded into the site.'
-    explore_data_dataset:
       no_match: 'Sorry, no datasets match your search request.'      
     explore_data_show:
       title: Explore the Data
@@ -686,13 +685,12 @@ en:
         title: Title
         publish: Date Published Here
       no_data: 'At this time, no time series have been created in the site.'
-    explore_data_dataset:
       no_match: 'Sorry, no time series match your search request.'      
-    explore_data_show:
+    explore_time_series_show:
       title: Explore Time Series Data
   api:
     msgs:
-      no_key: 'You must provide an API Access Token in order to use the API. You can quickly get an API _____________.'
+      no_key: 'You must provide an API Access Token in order to use the API. You can quickly get a API Access Token by going to %{url}.'
       no_dataset: "The Dataset could not be found."
       no_question: "The Question cound not be found."
       no_broken_down_by: "The Broken Down By Question could not be found."

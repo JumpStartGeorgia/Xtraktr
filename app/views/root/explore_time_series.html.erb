@@ -2,48 +2,48 @@
 <% title t('.title') %>
 
 <div class="article explore">
-  <% if @time_series.present? %>
-    <div class="filters" data-path="<%= explore_time_path %>">
-      <div class="search" data-filter='search'><div class="box"><input type="search" placeholder="<%= t('.search_time_series') %>"><div class="go"><%= t('.go') %></div></div></div>
-      <div class="sort"  data-filter='sort'>
-        <label><%= t('.sort_by.this') %>:</label>         
-        <select>
-          <option value="title"><%= t('.sort_by.title') %></option>
-          <option value="publish"><%= t('.sort_by.publish') %></option>
-        </select>
+  <div class="filters" data-path="<%= explore_time_path %>">
+    <div class="search" data-filter='search'><div class="box"><input type="search" placeholder="<%= t('.search_time_series') %>"><div class="go"><%= t('.go') %></div></div></div>
+    <div class="sort"  data-filter='sort'>
+      <label><%= t('.sort_by.this') %>:</label>         
+      <select>
+        <option value="title"><%= t('.sort_by.title') %></option>
+        <option value="publish"><%= t('.sort_by.publish') %></option>
+      </select>
+    </div>
+
+    <div class="category"  data-filter='category'>
+    <%-
+        current = params[:category].present? ? params[:category] : 'none'
+        cat = Category.by_permalink(current)
+    -%>
+      <div class="selector" data-selected="<%= current %>">
+       <div class="bright item">
+      <%- if cat.present? -%>
+          <div class="text"><span><%= cat.name %></span></div>
+          <div class="img <%= cat.permalink %>" alt="<%= cat.name %>"></div>
+      <%- end -%>
+      </div>
+        <div class="text"><%= t('app.buttons.choose_category') %></div>
       </div>
 
-      <div class="category"  data-filter='category'>
-      <%-
-          current = params[:category].present? ? params[:category] : 'none'
-          cat = Category.by_permalink(current)
-      -%>
-        <div class="selector" data-selected="<%= current %>">
-         <div class="bright item">
-        <%- if cat.present? -%>
-            <div class="text"><span><%= cat.name %></span></div>
-            <div class="img <%= cat.permalink %>" alt="<%= cat.name %>"></div>
-        <%- end -%>
-        </div>
-          <div class="text"><%= t('app.buttons.choose_category') %></div>
-        </div>
-
-        <ul>
-          <% Category.sorted.each {|x| %>
-            <li class="bright item<%= ' active' if x.permalink == current %>" data-filter-value="<%= x.permalink %>">
-              <div class="text"><span><%= x.name %></span></div>
-              <div class="img <%= x.permalink %>" alt="<%= x.name %>"></div>
-            </li>
-          <% } %>
-        </ul>
-      </div>
+      <ul>
+        <% Category.sorted.each {|x| %>
+          <li class="bright item<%= ' active' if x.permalink == current %>" data-filter-value="<%= x.permalink %>">
+            <div class="text"><span><%= x.name %></span></div>
+            <div class="img <%= x.permalink %>" alt="<%= x.name %>"></div>
+          </li>
+        <% } %>
+      </ul>
     </div>
-    <div class="list">
-        <%= render partial: 'explore_data_time_series' %>
-    </div>
-  <% else %>
-    <p>
-      <%= t('.no_data') %>
-    </p>
-  <% end %>
+  </div>
+  <div class="list">
+    <% if @time_series.present? %>
+      <%= render partial: 'explore_data_time_series' %>
+    <% else %>
+      <p>
+        <%= t('.no_data') %>
+      </p>
+    <% end %>
+  </div>
 </div>

@@ -2,452 +2,452 @@
 ka:
   mongoid:
     models:
-      user: მომხმარებელი
-      page_content: ტექსტი გვერდებისთვის
-      dataset: Dataset
-      shapeset: Shapeset
-      question: Question
-      time_series: Time Series
-      time_series_question: Question
-      time_series_answer: Answer
-      api_version: API Version
-      api_method: API Method
-      api_key: API Access Token
-      categories: Category
-      category_mappers: Categories
+      user: "მომხმარებელი"
+      page_content: "ტექსტი გვერდებისთვის"
+      dataset: "მონაცემთა ცხრილი"
+      shapeset: "ფორმების ცხრილი"
+      question: "კითხვა"
+      time_series: "პერიოდული შედარება"
+      time_series_question: "შეკითხვა"
+      time_series_answer: "პასუხი"
+      api_version: API ვერსია
+      api_method: API მეთოდი
+      api_key: API დაშვების გასაღები
+      categories: "კატეგორია"
+      category_mappers: "კატეგორიები"
     attributes:
       user:
-        email: ელ.ფოსტა
-        password: პაროლი
-        password_confirmation: გაიმეორეთ პაროლი
-        role: როლი
-        remember_me: დამიმახსოვრე
-        nickname: მომხმარებლის სახელი
+        email: "ელ.ფოსტა"
+        password: "პაროლი"
+        password_confirmation: "გაიმეორეთ პაროლი"
+        role: "როლი"
+        remember_me: "დამიმახსოვრე"
+        nickname: "მომხმარებლის სახელი"
         sign_in_count: "შემოსვლის რაოდენობა"
         created_at: "შექმნის თარიღი"
         current_sign_in_at: "ბოლო შემოსვლის თარიღი"
-        first_name: First Name
-        last_name: Last Name
-        name: Name
-        age_group: Age Group
-        residence: Country of Residence
-        affiliation: Affiliation
-        status: Status
-        status_other: When other(Please specify)
-        description: Short description of research objective (<i>optional</i>)           
-        notifications: I want to receive notifications when new datasets are added
-        notification_locale: Notification Language
+        first_name: "სახელი"
+        last_name: "გვარი"
+        name: "სახელი"
+        age_group: "ასაკობრივი ჯგუფი"
+        residence: "საცხოვრებელი ქვეყანა"
+        affiliation: "დაწესებულება"
+        status: "სტატუსი"
+        status_other: "როდესაც სხვა (გთხოვთ მიუთითოთ)"
+        description: "საკვლევი ობიექტის მოკლე აღწერა (<i>არჩევითი</i>)"
+        notifications: "ახალი მონაცემების დამატების დროს მინდა შეტყობინების მიღება"
+        notification_locale: "შეტყობინების ენა"
       message:
-        name: სახელი
-        email: ელ.ფოსტის მისამართი
-        message: შეტყობინება
-        subject: Subject
+        name: "სახელი"
+        email: "ელ.ფოსტის მისამართი"
+        message: "შეტყობინება"
+        subject: "სათაური"
       agreement:
-        email: Email Address
-        first_name: First Name
-        last_name: Last Name
-        age_group: Age Group
-        residence: Country of Residence
-        affiliation: Affiliation
-        status: Status
-        status_other: When other(Please specify)
-        description: Short description of research objective (<i>optional</i>)   
-        dataset_id: Dataset
-        dataset_type: Download Type
-        dataset_locale: Download Language
-        created_at: Date
+        email: "ელ.ფოსტა"
+        first_name: "სახელი"
+        last_name: "გვარი"
+        age_group: "ასაკობრივი ჯგუფი"
+        residence: "საცხოვრებელი ქვეყანა"
+        affiliation: "დაწესებულება"
+        status: "სტატუსი"
+        status_other: "როდესაც სხვა (გთხოვთ მიუთითოთ)"
+        description: "საკვლევი ობიექტის მოკლე აღწერა (<i>არჩევითი</i>)"
+        dataset_id: "მონაცემთა ცხრილი"
+        dataset_type: "ჩამოტვირთვის ტიპი"
+        dataset_locale: "ჩამოტვირთვის ენა"
+        created_at: "თარიღი"
       page_content:
-        name: Unique Name
-        title: Title
-        content: კონტენტი
+        name: "უნიკალური სახელი"
+        title: "სათაური"
+        content: "კონტენტი"
       dataset:
-        title: Title
-        description: Description
-        methodology: Methodology
-        source: Source of Data
-        source_url: URL to Souce
-        datafile: Data File
-        has_warnings: Issues with Data
-        stats: Dataset Stats
-        codebook: Codebook
-        released_at: Date Released
-        start_gathered_at: Date Started Gathering Data
-        end_gathered_at: Date Finished Gathering Data
-        gathered_at: Dates Collected
-        public: Make Available to Public
-        languages: Languages of Dataset
-        default_language: Default Language
-        is_mappable: Has questions have been setup to show answers on a map
-        created_at: Added On
-        reports: Reports
-        category_ids: Categories
+        title: "სათაური"
+        description: "აღწერა"
+        methodology: "მეთოდოლოგია"
+        source: "მონაცემთა წყარო"
+        source_url: "წყაროს URL"
+        datafile: "მონაცემების ფაილი"
+        has_warnings: "მონაცემების საკითხები"
+        stats: "მონაცემთა ცხრილის სტატისტიკა"
+        codebook: "კოდირება"
+        released_at: "გამოქვეყნების თარიღი"
+        start_gathered_at: "მონაცემთა შეგროვების დაწყების თარიღი"
+        end_gathered_at: "მონაცემთა შეგროვების დასრულების თარიღი"
+        gathered_at: "მონაცემები შეგროვებულია"
+        public: "გავხადოთ საჯაროდ ხელსმისაწვდომი"
+        languages: "მონაცემთა ცხრილის ენა"
+        default_language: "მთავარი ენა"
+        is_mappable: "აქვს კითხვები რომლებიც არიან ბუნებრივად გეოგრაფიული ტიპის"
+        created_at: "დამატებულია"
+        reports: "რეფორთები"
+        category_ids: "კატეგორიები"
       question:
-        code: Question Code
-        original_code: Question Code
-        text: Question
-        notes: Notes
-        exclude: Exclude Question from Analysis
-        exclude_download_header: Exclude Question from Analysis (leave blank to show question)
-        no_questions: There are no questions on file for this dataset.
-        is_mappable: Question has been setup to show answers on a map
-        has_code_answers: Has defined list of answers
-        possible_answers: Possible Answer Values
-        data_answers: Answer Values in Data
+        code: "კითხვის კოდი"
+        original_code: "კითხვის კოდი"
+        text: "კითხვა"
+        notes: "შენიშვნა"
+        exclude: "ანალიზიდან კითხვის გამორიცხვა"
+        exclude_download_header: "ანალიზიდან კითხვის გამორიცხვა (დატოვე ადგილი კითხვი გამოსაჩენად)"
+        no_questions: "მონაცემთა ამ ცხრილისთვის კითხვა ან ფაილი ვერ მოიძებნა"
+        is_mappable: "კითხვის პასუხები რუკაზე გამოჩნდება"
+        has_code_answers: "განსაზღვრა პასუხების სია"
+        possible_answers: "შესაძლო პასუხების მნიშვნელობები"
+        data_answers: "პასუხების მნიშვნელობები მონაცემებში"
       answer:
-        value: Value
-        text: Answer
-        exclude: Exclude Answer from Analysis
-        exclude_download_header: Exclude Answer from Analysis (leave blank to show answer)
-        can_exclude: Can Exclude During Analysis
-        can_exclude_download_header: Can Exclude During Analysis (leave blank to always show answer)
-        no_questions: There are no questions on file for this dataset.
-        sort_order: Sort Order
-        shape_name: Name of Shape
+        value: "მნიშვნელობა"
+        text: "პასუხი"
+        exclude: "ანალიზიდან კითხვის გამორიცხვა"
+        exclude_download_header: "ანალიზიდან კითხვის გამორიცხვა (დატოვე ადგილი პასუხის გამოსაჩენად)"
+        can_exclude: "ანალიზის დროს შეუძლია გამორიცხვა"
+        can_exclude_download_header: "ანალიზის დროს შეუძლია გამორიცხვა (დატოვე ადგილი პასუხის მუდმივად გამოსაჩენად)"
+        no_questions: "მონაცემთა ამ ცხრილისთვის კითხვა ან ფაილი ვერ მოიძებნა"
+        sort_order: "დახარისხების წყობა"
+        shape_name: "ფორმის სახელი"
       report:
-        title: Title
-        file: File
-        released_at: Date Released
-        langauge_id: Language
-        summary: Summary
+        title: "დასახელება"
+        file: "ფაილი"
+        released_at: "გამოქვეყნების თარიღი"
+        langauge_id: "ენა"
+        summary: "მოკლე შეჯამება"
       time_series:
-        title: Title
-        description: Description
-        source: Source of Data
-        source_url: URL to Souce
-        public: Make Available to the Public
-        created_at: Added On
-        datasets: Datasets
-        dates: Dates Included
-        category_ids: Categories
+        title: "დასახელება"
+        description: "აღწერა"
+        source: "მონაცემთა წყარო"
+        source_url: "წყაროს URL"
+        public: "გავხადოთ საჯაროდ ხელსმისაწვდომი"
+        created_at: "დამატებულია"
+        datasets: "მონაცემთა ცხრილი"
+        dates: "მოიცავს თარიღებს"
+        category_ids: "კატეგორიები"
       time_series_dataset:
-        dataset_id: Dataset
-        title: Label
-        sort_order: Sort Order
+        dataset_id: "მონაცემთა ცხრილი"
+        title: "ეტიკეტი"
+        sort_order: "დახარისხების წყობა"
       time_series_question:
-        code: Question Code
-        original_code: Question Code
-        text: Question
-        notes: Notes
+        code: "კითხვის კოდი"
+        original_code: "კითხვის კოდი"
+        text: "კითხვა"
+        notes: "შენიშვნა"
       time_series_dataset_question:
-        code: Question Code
-        text: Question
-        notes: Notes
-        dataset: Dataset
+        code: "კითხვის კოდი"
+        text: "კითხვა"
+        notes: "შენიშვნა"
+        dataset: "მონაცემთა ცხრილი"
       time_series_answer:
-        value: Value
-        text: Answer
-        can_exclude: Can Exclude During Analysis
-        sort_order: Sort Order
+        value: "მნიშვნელობა"
+        text: "პასუხი"
+        can_exclude: "შეუძლია ანალიზის დროს გამორიცხვა"
+        sort_order: "დახარისხების წყობა"
       shapeset:
-        title: Title
-        description: Description
-        source: Source of Shapeset
-        source_url: URL to Souce
-        shapefile: GeoJSON File
-        languages: Languages of Shapeset
-        default_language: Default Language
-        created_at: Added On
+        title: "დასახელება"
+        description: "აღწერა"
+        source: "ფორმების ცხრილის წყარო"
+        source_url: "წყაროს URL"
+        shapefile: GeoJSON ფაილი
+        languages: "ფორმების ცხრილის ენა"
+        default_language: "მთავარი ენა"
+        created_at: "დამატებულია"
       api_version:
-        permalink: Permalink
-        title: Title
-        public: Make Available to the Public
-        public_at: Released At
-        updated_at: Last Updated At
-        methods: Methods
+        permalink: "პერმალინკი"
+        title: "დასახელება"
+        public: "გავხადოთ საჯაროდ ხელსმისაწვდომი"
+        public_at: "გამოქვეყნებულია"
+        updated_at: "ბოლო განახლება"
+        methods: "მეთოდი"
       api_method:
-        permalink: Permalink
-        title: Title
-        content: Content
-        public: Make Available to the Public
-        public_at: Released At
-        updated_at: Last Updated At
-        sort_order: Sort Order
+        permalink: "პერმალინკი"
+        title: "დასახელება"
+        content: "კონტენტი"
+        public: "გავხადოთ საჯაროდ ხელსმისაწვდომი"
+        public_at: "გამოქვეყნებულია"
+        updated_at: "ბოლო განახლება"
+        sort_order: "დახარისხების წყობა"
       api_request:
-        api_key_id: API Key ID
-        user_id: User ID
-        dataset_id: Dataset ID
-        time_series_id: Time Series ID
-        ip_address: IP Address
-        locale: API Locale
-        api_version: API Version
-        action: API Action
-        question_code: Question Code
-        broken_down_by_code: Broken Down By Code
-        filtered_by_code: Filtered By Code
-        can_exclude: Can Exclude
-        with_title: With Title
-        with_chart_data: With Chart Data
-        with_map_data: With Map Data
-        browser: Browser
-        version: Browser Version
+        api_key_id: API-ს გასაღების ID
+        user_id: "მომხმარებლის ID"
+        dataset_id: "მონაცემთა ცხრილის ID"
+        time_series_id: "პერიოდული შედარების ID"
+        ip_address: IP მისამართი
+        locale: API ადგილი
+        api_version: API ვერსია
+        action: API ქმედება
+        question_code: "კითხვის კოდი"
+        broken_down_by_code: "ჩაშლილია კოდით"
+        filtered_by_code: "გაფილტრულია კოდით"
+        can_exclude: "შეუძლია გამორიცხვა"
+        with_title: "სახელით"
+        with_chart_data: "მონაცემების დიაგრამით"
+        with_map_data: "მონაცემების რუკით"
+        browser: "ბრაუზერი"
+        version: "ბრაუზერის ვერსია"
         os: OS
-        platform: OS Platform
+        platform: OS პლატფორმა
         app: App
-        is_mobile: Is Mobile Device?
-        created_at: Date
+        is_mobile: "მობილური მოწყობილობაა?"
+        created_at: "თარიღი"
       api_key:
-        key: Access Token
-        created_at: Date Created
+        key: "დაშვების გასაღები"
+        created_at: "შექმნის თარიღი"
     hints:
       dataset:
-        title: The title of your dataset
-        description: Explain what your dataset is about
-        methodology: Explain how the data in the dataset was collected
-        source: Who collected this data
-        source_url: "URL to the Source's website. Please include the http as part of the url (e.g., http://source.com)"
-        datafile: "Only sav, dta, csv, xls, xlsx formats are allowed"
-        codebook: "Only txt, pdf, doc, docx formats are allowed"
-        released_at: Date the dataset was released to the public
-        start_gathered_at: Date the data gathering process began
-        end_gathered_at: Date the data gathering process finished
-        public: "Select 'Yes' to make your dataset available to the world"
-        languages: "Even though your dataset may be in one language, you can use these forms to translate all of the questions and answers into any language you desire."
-        default_language: The dataset language that is shown by default if no specific language is requested by user
-        category_ids: Assign the dataset to one or more categories
+        title: "მონაცემთა თქვენი ცხრილის დასახელება"
+        description: "გთხოვთ ახსნათ რას ეხება თქვენი მონაცემთა ცხრილი"
+        methodology: "გთხოვთ ახსნათ როგორ მოაგროვეთ თქვენი მონაცემთა ცხრილი"
+        source: "ვინ მოაგროვა მონაცემები"
+        source_url: "წყაროს ვებ გვერდზე URL. გთხოვთ გამოიყენით http როგორც url-ის ნაწილი (მაგ. http://source.com)"
+        datafile: "დასაშვებია მხოლოდ sav, dta, csv, xls, xlsx ფორმატები"
+        codebook: "დასაშვებია მხოლოდ txt, pdf, doc, docx ფორმატები"
+        released_at: "მონაცემების საჯაროდ გამოქვეყნების თარიღი"
+        start_gathered_at: "მონაცემების შეგროვების დაწყების თარიღი"
+        end_gathered_at: "მონაცემების შეგროვების დასრულების თარიღი"
+        public: "მონიშნეთ 'დიახ' რათა თქვენი მონაცემები ხელმისაწვდომი გახდეს მსოფლიოსთვის"
+        languages: "იმ შემთხვევაშიც კი, თუ თქვენი მონაცემები მხოლოდ ერთ ენაზეა, თქვენ შეგიძლიათ ამ ფორმების გამოყენება რათა თარგმნოთ ყველა კითხვა და პასუხი თქვენთვის სასურველ ნებისმიერ ენაზე"
+        default_language: "მონაცემთა ცხრილის ენა რომელიც ნაჩვენებია როგორც მთავარი ენა, თუ რომელიმე კონკრეტული ენა არ არის მოთხოვნილი მომხმარებლის მიერ"
+        category_ids: "აირჩიეთ მონაცემთა ცხრილი ერთი ან მეტი კატეგორიებისთვის"
       shapeset:
-        title: The title of your shapeset
-        description: Short summary of what is in the shapeset
-        source: Who put the shapeset together
-        source_url: "URL to the Source's website. Please include the http as part of the url (e.g., http://source.com)"
-        shapefile:  "Only json and geojson formats are allowed"
-        languages: "Even though your shapeset may be in one language, you can use this form to translate all of the shapeset into any language you desire."
-        default_language: The shapeset language that is used by default if no specific language is requested
+        title: "თქვენი ფორმების ცხრილის დასახელება"
+        description: "ფორმების ცხრილის შინაარსის მოკლე აღწერა"
+        source: "ვინ დააყენა ფორმების ცხრილი ერთად"
+        source_url: "წყაროს ვებ გვერდზე URL. გთხოვთ გამოიყენით http როგორც url-ის ნაწილი (მაგ. http://source.com)"
+        shapefile: "დასაშვებია მხოლოდ json და geojson ფორმატები"
+        languages: "იმ შემთხვევაშიც კი, თუ თქვენი მონაცემები მხოლოდ ერთ ენაზეა, თქვენ შეგიძლიათ ამ ფორმების გამოყენება რათა თარგმნოთ ყველა კითხვა და პასუხი თქვენთვის სასურველ ნებისმიერ ენაზე"
+        default_language: "მონაცემთა ცხრილის ენა რომელიც გამოყენებულია როგორც მთავარი ენა, თუ რომელიმე კონკრეტული ენა არ არის მოთხოვნილი"
       question:
-        text: The text of the question
-        notes: Any special notes about the question
-        exclude: "If selected, this question will not be available during analysis."
-        is_mappable: "If the question is mappable in nature, you can match the question to a shapeset and be able to analyize the question on a map."
+        text: "კითხვის ტექსტი"
+        notes: "რაიმე სპეციალური შენიშვნა კითხვასთან დაკავშრებით"
+        exclude: "მონიშვნის შემთხვევაში ეს კითხვა არ იქნება ხელმისაწვდომი ანალიზის დროს"
+        is_mappable: "თუ კითხვები ბუნებრივად შეიძლება დატანილი იყვნენ რუკაზე, შეგიძლიათ დაამთხვიოთ კითხვა ფორმები ცხრილს და რუკაზე გაანალიზოთ შეკითხვა"
       answer:
-        value: The value of the answer
-        text: The text of the answer
-        exclude: "If selected, this answer will not be available during analysis."
-        can_exclude: "If selected, this answer will be available during analysis, but can be turned off if desired by the user."
-        sort_order: "The order the answers should appear"
-        default_text: "This is the answer text from the default language which is provided to make it easier to complete the translation"
+        value: "პასუხის მნიშვნელობა"
+        text: "პასუხის ტექსტი"
+        exclude: "მონიშვნის შემთხვევაში ეს კითხვა არ იქნება ხელმისაწვდომი ანალიზის დროს"
+        can_exclude: "მონიშვნის შემთხვევაში ეს კითხვა იქნება ხელმისაწვდომი ანალიზის დროს, მაგრამ მომხმარებლის სურვილის შემთხვევაში ის შეიძლება გამოირთოს"
+        sort_order: "გამოსაჩენი პასუხების წყობა"
+        default_text: "ეს არის პასუხის ტექსტი მთავარი ენიდან, რომელიც მოწოდებულია რათა თარგმანის გასაადვილებლად"
       report:
-        title: The title of the report
-        file: "The report file in pdf, doc, odt or txt format"
-        released_at: Date the report was released to the public
-        language_id: The language the report is written in
-        summary: A brief summary of the report
+        title: "რეფორთის დასახელება"
+        file: "რეფორთის ფაილი pdf, doc, odt ან txt დოკუმენტებში"
+        released_at: "რეფორთის საჯაროდ გამოქვეყნების თარიღი"
+        language_id: "ენა რომელშიც რეფორთი არის დაწერილი"
+        summary: "რეფორთის მოკლე აღწერა"
       mappable:
-        question: Select the question that you want to have the answers appear on a map during analysis.
-        shapeset: Select the shapeset to use for this question.
+        question: "აირჩიეთ კითხვა რომელის პასუხიც გსურთ გამოჩნდეს რუკაზე ანალიზის დროს"
+        shapeset: "არიჩიეთ ამ კითხვის გამოსაყენებელი ფორმების ცხრილი"
       time_series:
-        title: The title of your time series
-        description: Explain what your time series is about
-        public: "Select 'Yes' to make your time series available to the world"
-        languages: "The languages of your time series are automatically determined by the languages of the datasets"
-        default_language: The time series language that is shown by default if no specific language is requested by user
-        category_ids: Assign the time series to one or more categories
+        title: "პერიოდული შედარების დასახელება"
+        description: "ახსენით რას ეხება თქვენი პერიოდული შედარება"
+        public: "აირჩიეთ 'დიახ' რათა თქვენი პერიოდული შედარება გახდეს მსოფლიოსთვის ხელმისაწვდომი"
+        languages: "თქვენი პერიოდული შედარების ენები ავტომატურად განისაზღვრება მონაცემთა ცხრილის ენების მიერ"
+        default_language: "პერიოდული შედარების ენა რომელიც ნაჩვენებია მთავარ ენად, თუ სხვა ენა არ არის მოთხოვნილი მომხმარებლის მიერ"
+        category_ids: "აირჩიეთ პერიოდული შედარების ერთი ან მეტი კატეგორია"
       time_series_dataset:
-        dataset_id: Select the dataset to add to this time series
-        title: "The text that will represent this data set in the time series, most likely a time indicator. For example, if your dataset is from 2015, you could enter 2015; or if it is from January 2015, you can enter January 2015."
-        sort_order: The order the datasets should appear in the time series
+        dataset_id: "აირჩიეთ მონაცემთა ცხრილი რათა დაამატოთ პერიოდულ შედარებაში"
+        title: "პერიოდულ შედარებაში ეს ტექსტი წარმოადგენ მონაცემთა ცხრილს, სავარაუდოდ დროის ინდიკატორს. მაგალითად, თუ თქვენი მონაცემთა ცხრილი არის 2015 წლიდან, თქვენ ჩაწერთ 2015 წელს, ან თუ ის იქნება 2015 წლის იანვრიდან, თქვენ ჩაწერთ 2015 წლის იანვარს."
+        sort_order: "პერიოდული შედარებაში უნდა გამოჩნდეს მონაცემთა ცხრილის თანმიმდევრობა"
       time_series_question:
-        code: The code of the question as you want it to appear in the time series
-        text: The text of the question as you want it to appear in the time series
-        notes: Any special notes about the question
+        code: "კითხვის კოდი რომლის გამოჩენაც გსურთ პერიოდული შედარებაში"
+        text: "კითხვის ტექსტი, რომლის გამოჩენაც გსურთ პერიოდული შედარებაში"
+        notes: "რაიმე სპეციალური შენიშვნა კითხვასთან დაკავშრებით"
       time_series_dataset_question:
-        text: 'Only questions from the dataset that are not already assigned to this time series will be shown. When you select a new question, the list of answers for this dataset below will automatically change.'
-        notes: Any special notes about the question
+        text: "მონაცემთა ცხრილიდან მხოლოდ ის კითხვები იქნება ნაჩვენები, რომლებიც არ არიან ჩანიშნულნი პერიოდულ შედარებაში."
+        notes: "რაიმე სპეციალური შენიშვნა კითხვასთან დაკავშრებით"
       time_series_answer:
-        value: The value of the answer
-        text: The text of the answer
-        can_exclude: "If selected, this answer will be available during analysis, but can be turned off if desired by the user."
-        sort_order: "The order the answers should appear"
-        default_text: "This is the answer text from the default language which is provided to make it easier to complete the translation"
-        dataset: The possible answers for the question selected from this dataset
+        value: "პასუხის მნიშვნელობა"
+        text: "ტექსტის მნიშვნელობა"
+        can_exclude: "მონიშვნის შემთხვევაში, ეს პასუხი ხელმისაწვდომი იქნება ანალიზის დროს, მაგრამ შესაძლებელი იქნება მისი გამორთვა მომხმარებლის სურვილის შემთხვევაში."
+        sort_order: "პასუხების გამოჩენის თანმიმდევრობა"
+        default_text: "ეს არის პასუხის ტექსტი მთავარი ენიდან, რომელიც მოწოდებულია რათა თარგმანის გასაადვილებლად"
+        dataset: "მონაცემთა ცხრილიდან არჩეული შეკითხვის სავარაუდო პასუხები"
       page_content:
-        name: კონტენტის უნიკალური სახელი (არ შეცვალოთ!)
-        title: სათაური, რომელიც გამოჩნდება კონტენტის ზემოთ
-        content: Content to be shown on page
+        name: "კონტენტის უნიკალური სახელი (არ შეცვალოთ!)"
+        title: "სათაური, რომელიც გამოჩნდება კონტენტის ზემოთ"
+        content: "გვერდზე გამოსაჩენი კონტენტი"
       api_version:
-        permalink: Abbreviated Name Used in URL (e.g., v1)
-        title: Title of the API Version
-        public: "Select 'Yes' to make the API Version documentation available to the world"
+        permalink: URL-ში გამოყენებული აბრევიატურა (მაგ., v1)
+        title: API ვერსიის დასახელება
+        public: "მონიშნეთ 'დიახ' API ვერსიის საქვეყნოდ ხელმისაწვდომობისთვის"
       api_method:
-        permalink: Abbreviated Name Used in URL (e.g., v1)
-        title: Title of API Method
-        content: Explanation of how to use the API Method
-        public: "Select 'Yes' to make the API Method documentation available to the world"
-        sort_order: The order the API methods should appear
+        permalink: URL-ში გამოყენებული აბრევიატურა (მაგ., v1)
+        title: API ვერსიის დასახელება
+        content: API მეთოდის გამოყენები ახსნა
+        public: "მონიშნეთ 'დიახ' API მეთოდის დოკუმენტაციის საქვეყნოდ ხელმისაწვდომობისთვის"
+        sort_order: API მეთოდის გამოჩენის თანმიმდევრობა
   errors:
     messages:
       required_field: "სავალდებულო ველი"
-      already_exists: 'უკვე არსებობს მონაცემთა ბაზაში'
-      translation_default_lang: "%{field_name} for Default Language '%{language}' %{msg}"
-      translation_any_lang: "%{field_name} for Language '%{language}' %{msg}"
-      invalid_language: "'%{lang_locale}' is not a valid language locale"
-      dataset_length: "At least two datasets are needed for a time series to be saved."
+      already_exists: "უკვე არსებობს მონაცემთა ბაზაში"
+      translation_default_lang: "%{field_name} მთავარი ენისთვის '%{language}' %{msg}"
+      translation_any_lang: "%{field_name} ენისთვის '%{language}' %{msg}"
+      invalid_language: "%{lang_locale}' შეუსაბამო ადგილობრივი ენაა"
+      dataset_length: "პერიოდული შედარების შენახვისთვის სულ მცირე მონაცემთა ორი ცხრილია საჭირო"
   mass_uploads_msgs:
-    bad_headers: The headers in the file do not match the headers from the template so it is not possible to determine what each column of data is. Please download the question template file and use the headers from that file.
-    missing_code: "Row %{n}: Could not find question with code '%{code}'"
+    bad_headers: "ფაილის საწყისი არ ემთხვევა ნიმუშის საწყის, შეუძლებელია მონაცემების თითოეული სვეტის განსაზღვრა. გთხოვთ ჩამოტვირთოთ კითხვის ნიმუშის ფაილი და გამოიყენოთ საწყისი ამ ფაილიდან."
+    missing_code: "რიგი %{n}: ამ კოდით კითხვა არ მოიძებნა '%{code}'"
     questions:
-      not_save: "Row %{n}: Could not save question: %{msg}"
+      not_save: "რიგი %{n}: კითხვის შენახვა შეუძლებელია: %{msg}"
     answers:
-      missing_answer: "Row %{n}: Could not find answer with value '%{value}' for question with code '%{code}'"
-      not_save: "Row %{n}: Could not save answer: %{msg}"
+      missing_answer: "რიგი %{n}: პასუხის მნიშვნელობის მოძებნა შეუძლებელია '%{value}' კითხვისთვის ამ კოდით '%{code}'"
+      not_save: "რიგი %{n}: პასუხის შენახვა შეუძლებელია: %{msg}"
   publish_status:
-    public: Public
-    private: Private
+    public: "საჯარო"
+    private: "კერძო"
   tabbed_translation_form:
-    default_text: Default Text
-    default_url: Default URL
+    default_text: "მთავარი ტექსტი"
+    default_url: "მთავარი URL"
   explore_time_series:
-    na: N/A
-    percent: Percent (%)
+    na: "არ არის ხელმისაწვდომი"
+    percent: "პროცენტი (%)"
     single:
       html:
         title: "'<span class='code-highlight'>%{code}</span> - %{question}'"
-        title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
-        title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'"
+        title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
+        title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = %{value}'"
       text:
         title: "'%{code} - %{question}'"
-        title_filter: " filtered by: '%{code} - %{variable}'"
-        title_filter_value: " filtered by: '%{code} - %{variable} = %{value}'"
+        title_filter: "გაფილტრულია: '%{code} - %{variable}'"
+        title_filter_value: "გაფილტრულია: '%{code} - %{variable} = %{value}'"
     subtitle:
-      html: 
-        title: "Total Responses: %{num}"
-        title_filter: "Total Responses Filtered by Answers to %{variable}: %{nums}"
-      text: 
-        title: "Total Responses: %{num}"
-        title_filter: "Total Responses Filtered by Answers to %{variable}: %{nums}"
+      html:
+        title: "მთლიანი გამოხმაურება: %{num}"
+        title_filter: "პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{variable}: %{nums}"
+      text:
+        title: "მთლიანი პასუხები: %{num}"
+        title_filter: "პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{variable}: %{nums}"
   explore_data:
     hover_region: Hover over a Region
-    na: N/A
-    percent: Percent
+    na: "არ არის ხელმისაწვდომი"
+    percent: "პროცენტი"
     comparative:
       html:
-        title: "<span class='title-highlight'>Answers to:</span> <br /> '<span class='code-highlight'>%{question_code}</span> - %{question}' <br /> <span class='title-highlight'>broken down by:</span> <br /> '<span class='code-highlight'>%{broken_down_by_code}</span> - %{broken_down_by}'"
-        title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
-        title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'"
+        title: "<span class='title-highlight'>პასუხობს:</span> <br /> '<span class='code-highlight'>%{question_code}</span> - %{question}' <br /> <span class='title-highlight'>ჩაშლილია:</span> <br /> '<span class='code-highlight'>%{broken_down_by_code}</span> - %{broken_down_by}'"
+        title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
+        title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'"
         map:
           title: "'<span class='code-highlight'>%{code}</span> - %{question}' "
-          title_col: "<br /> <span class='title-highlight'>broken down by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{broken_down_by} = %{broken_down_by_answer}' "
-          title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
-          title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'"
+          title_col: "<br /> <span class='title-highlight'>ჩაშლილია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{broken_down_by} = <span class=”code-highlight”>%{broken_down_by_answer}</span>' "
+          title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
+          title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'"
       text:
-        title: "Answers to: '%{question_code} - %{question}', broken down by: '%{broken_down_by_code} - %{broken_down_by}'"
-        title_filter: ", filtered by: '%{code} - %{variable}'"
-        title_filter_value: ", filtered by: '%{code} - %{variable} = %{value}'"
+        title: "პასუხობს: '%{question_code} - %{question}', ჩაშლილია: '%{broken_down_by_code} - %{broken_down_by}'"
+        title_filter: ", გაფილტრულია: '%{code} - %{variable}'"
+        title_filter_value: ", გაფილტრულია: '%{code} - %{variable} = %{value}'"
         map:
-          title: "'%{code} - %{question}' "
-          title_col: "broken down by: '%{code} - %{broken_down_by} = %{broken_down_by_answer}'"
-          title_filter: ", filtered by: '%{code} - %{variable}'"
-          title_filter_value: ", filtered by: '%{code} - %{variable} = %{value}'"
+          title: "%{code} - %{question}'"
+          title_col: "ჩაშლილია: '%{code} - %{broken_down_by} = %{broken_down_by_answer}'"
+          title_filter: ", გაფილტრულია: '%{code} - %{variable}'"
+          title_filter_value: ", გაფილტრულია: '%{code} - %{variable} = %{value}'"
     single:
       html:
-        title: "<span class='title-highlight'>Answers to:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{question}'"
-        title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
-        title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'"
+        title: "<span class='title-highlight'>პასუხობს:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{question}'"
+        title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
+        title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'"
       text:
-        title: "Answers to: '%{code} - %{question}' "
-        title_filter: ", filtered by: '%{code} - %{variable}'"
-        title_filter_value: ", filtered by: '%{code} - %{variable} = %{value}'"
+        title: "პასუხობს: '%{code} - %{question}'"
+        title_filter: ", გაფილტრულია: '%{code} - %{variable}'"
+        title_filter_value: ", გაფილტრულია: '%{code} - %{variable} = %{value}'"
     subtitle:
-      html: 
-        title: "Total Responses: <span class='number'>%{num}</span>"
-        title_filter: "Total Responses Filtered by Answers to %{variable}: %{nums}"
-      text: 
-        title: "Total Responses: %{num}"
-        title_filter: "Total Responses Filtered by Answers to %{variable}: %{nums}"
+      html:
+        title: "მთლიანი გამოხმაურება: <span class='number'>%{num}</span>"
+        title_filter: "პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{variable}: %{nums}"
+      text:
+        title: "მთლიანი პასუხები: %{num}"
+        title_filter: "პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{variable}: %{nums}"
   datatable:
-    copy: 
-      title: Copy
-      tooltip: Copy to clipboard
-    csv: 
+    copy:
+      title: "კოპირება"
+      tooltip: "კოპირება ბუფერში"
+    csv:
       title: CSV
-      tooltip: Save as CSV
-    xls: 
+      tooltip: CSV-ში შენახვა
+    xls:
       title: XLS
-      tooltip: Save as XLS
-    pdf: 
+      tooltip: XLS-ში შენახვა
+    pdf:
       title: PDF
-      tooltip: Save as PDF
-    print: 
-      title: Print
-      tooltip: Print the table
+      tooltip: PDF-ში შენახვა
+    print:
+      title: "ბეჭდვა"
+      tooltip: "ცხრილის ბეჭდვა"
   highcharts:
-    context_title: Save this chart
-    png: PNG Image
-    jpg: JPG Image
-    pdf: PDF Document
-    svg: SVG Vector Image
+    context_title: "გრაფიკის შენახვა"
+    png: PNG სურათი
+    jpg: JPG სურათი
+    pdf: PDF დოკუმენტი
+    svg: SVG ვექტორული სურათი
   mailer:
     closing: "პატივისცემით,"
-    signature: UNICEF Georgia
-    unsubscribe: დააჭირეთ და შეცვალეთ შეტყობინებების პარამეტრები
+    signature: UNICEF საქართველო
+    unsubscribe: "დააჭირეთ და შეცვალეთ შეტყობინებების პარამეტრები"
     notification:
       new_user:
-        subject: "Welcome to UNICEF Georgia Data Portal!"
-        message: Thank you for creating an account on UNICEF Georgia's open data portal and sharing some information about yourself. It is our hope that the content and data you find adds value to your work and understanding of trends related to the rights of children in Georgia. If you have any questions, you can contact us via our webform or send us an email.
+        subject: "კეთილი იყოს თქვენი მობრძანება UNICEF საქართველოს მონაცემთა პორტალზე!"
+        message: "მადლობას გიხდით UNICEF საქართველოს ღია მონაცემების პოტალზე ანგარიშის გახსნის და თქვენი მონაცემების გაზიარებისთვის. ვიმედოვნებთ, რომ მონაცემები და შინაარსი დაეხმარება თქვენს საქმიანობას საქართველოში ბავშვთა უფლებების დაცვის სფეროში. ნებისმიერი შეკითხვის შემთხვევაში, თქვენ შეგიძლიათ დაგვიკავშირდეთ ჩვენი ვებ-ფორმის საშუალებით ან მოგვწეროთ ელ-ფოსტაზე."
       new_data:
-        subject: "A new dataset has been added to UNICEF Georgia Data Portal!"
-        message: "UNICEF Georgia has just uploaded new data for you to explore, visualize, and share."
+        subject: UNICEF საქართველოს მონაცემების პორტალს დაემატა მონაცემთა ახალი ცხრილი
+        message: UNICEF საქართველომ დაამატა მონაცემთა ახალი ცხრილი რათა თქვენ შეძლოთ მისი გაცნობა, გაზიარება და ვიზუალიზაცია.
     contact:
       contact_form:
-        subject: "UNICEF Georgia Data Portal Contact Form"
+        subject: UNICEF საქართველოს მონაცემების პორტალის საკონტაქტი ფორმა
   helpers:
-    actions: აირჩიეთ
-    default_language: This is the default language that will show
-    search: Search
+    actions: "აირჩიეთ"
+    default_language: "ეს არის მთავარი ენა, რომელიც გამოჩნდება"
+    search: "ძიება"
     links:
-      admin: ადმინისტრატორის განყოფილება
-      edit: შეცვლა
-      confirm: დარწმუნებული ხართ?
-      destroy: წაშლა
-      new: ახალი
-      list: ყველას ნახვა
-      back: ყველას ნახვა
-      cancel: გაუქმება
-      reset: საწყის კონფიგურაციაზე დაბრუნება
-      view: ნახვა
+      admin: "ადმინისტრატორის განყოფილება"
+      edit: "შეცვლა"
+      confirm: "დარწმუნებული ხართ?"
+      destroy: "წაშლა"
+      new: "ახალი"
+      list: "ყველას ნახვა"
+      back: "ყველას ნახვა"
+      cancel: "გაუქმება"
+      reset: "საწყის კონფიგურაციაზე დაბრუნება"
+      view: "ნახვა"
       sign_in_facebook: Facebook-ით შესვლა
-      forgot_password: დაგავიწყდათ პაროლი?
-      change_password: პაროლის შეცვლა
-      change_password2: პაროლის შეცვლა
-      password_reset: პაროლის აღდგენა
-      sign_in2: შესვლა
-      sign_in: უკვე გაქვთ ანგარიში?      
-      sign_up2: რეგისტრაცია
+      forgot_password: "დაგავიწყდათ პაროლი?"
+      change_password: "პაროლის შეცვლა"
+      change_password2: "პაროლის შეცვლა"
+      password_reset: "პაროლის აღდგენა"
+      sign_in2: "შესვლა"
+      sign_in: "უკვე გაქვთ ანგარიში?"
+      sign_up2: "რეგისტრაცია"
       sign_up_question: "არ გაქვთ ანგარიში?"
-      sign_up: დარეგისტრირდით
-      sign_up_title: შემოგვიერთდი “%{app_name}”
-      sign_out: გასვლა
+      sign_up: "დარეგისტრირდით"
+      sign_up_title: "შემოგვიერთდი “%{app_name}”"
+      sign_out: "გასვლა"
       sign_in_provider: "შესვლა %{provider}-ით"
       sign_up_provider: "დარეგისტრირდით  %{provider}-ით"
-      sign_in_local_or_provider: ან შეიყვანეთ თქვენი ელ. ფოსტა და პაროლი
-      reset_or_sign_in: შედით facebook-ით ან შეცვალეთ პაროლი
-      explanation: მოხარულნი ვართ, რომ დაინტერესდით ჩვენი მონაცემებით. ჩვენ გვსურს გავიგოთ მცირე ინფორმაცია თქვენს შესახებ. მონაცემთა ცხრილის ჩამოსატვირთად, გთხოვთ შეავსოთ ჩვენი ფორმა.
-      download_and_sign_up: "Download & Create Account"
-      like: მოწონება
-      likes: მოწონება
-      menu: მენიუ
-      close: Close
-      select_all: Select All
-      select_none: Select None
-      make_mappable: Make Mappable
-      add_question_text: Add Question Text
-      add_answer: Add Answer
-      add_answers: Add Answers
-      edit_answers: Edit Answers
-      download: Download
-      view_data: View Data
-      add_dataset: Add Dataset
-      remove_dataset: Remove Dataset
-      add_report: Add Report
-      remove_report: Remove Report
-      download_data: Download Data
-      back_dashboard: Back to Dashboard
-      api_home: API Home
-      agreement: Agreement      
-      add_highlight: Add to Highlights
-      delete_highlight: Remove from Highlights
-      embed_chart: Embed Chart
-      embed_chart_prompt: "Copy and paste this embed code into your web page:"
-      embed_chart_wide: px wide
-      embed_chart_high: px high
+      sign_in_local_or_provider: "ან შეიყვანეთ თქვენი ელ. ფოსტა და პაროლი"
+      reset_or_sign_in: "შედით facebook-ით ან შეცვალეთ პაროლი"
+      explanation: "მოხარულნი ვართ, რომ დაინტერესდით ჩვენი მონაცემებით. ჩვენ გვსურს გავიგოთ მცირე ინფორმაცია თქვენს შესახებ. მონაცემთა ცხრილის ჩამოსატვირთად, გთხოვთ შეავსოთ ჩვენი ფორმა."
+      download_and_sign_up: "ჩამოტვირთვა და ანგარიშის გახსნა"
+      like: "მოწონება"
+      likes: "მოწონება"
+      menu: "მენიუ"
+      close: "დახურვა"
+      select_all: "ყველას მონიშვნა"
+      select_none: "არცერთის მონიშვნა"
+      make_mappable: "დაიტანოს რუკაზე"
+      add_question_text: "კითხვის ტექსტის დამატება"
+      add_answer: "პასუხის დამატება"
+      add_answers: "პასუხების დამატება"
+      edit_answers: "პასუხების შესწორება"
+      download: "ჩამოტვირთვა"
+      view_data: "მონაცემების ჩვენება"
+      add_dataset: "მონაცემთა ცხრილის დამატება"
+      remove_dataset: "მონაცემთა ცხრილის წაშლა"
+      add_report: "რეფორთის დამატება"
+      remove_report: "რეფორთის წაშლა"
+      download_data: "მონაცემების ჩამოტვირთვა"
+      back_dashboard: Dashboard-ზე დაბრუნება
+      api_home: API საწყისი გვერდი
+      agreement: "შეთანხმება"
+      add_highlight: "გამორჩეულში დამატება"
+      delete_highlight: "გამორჩეულიდან წაშლა"
+      embed_chart: ჩასმული გრაფიკი
+      embed_chart_prompt: 'დააკოპირეთ და ჩასვით ეს კოდი თქვენ საიტზე:'
+      embed_chart_wide: px ფართო
+      embed_chart_high: px მაღალი
     titles:
       edit: "შეცვლა %{model}"
       save: "შენახვა %{model}"
@@ -456,148 +456,149 @@ ka:
   app:
     language:
       en: English
-      ka: ქართული
+      ka: "ქართული"
     buttons:
-      back: იხილეთ ყველა
-      list: იხილეთ ყველა
-      admin: ადმინისტრატორის განყოფილება
-      delete: წაშლა
-      edit: შეცვლა
-      show: ჩვენება
-      cancel: გაუქმება
-      update: განახლება
-      save: შენახვა
-      create: შექმნა
-      reset: საწყის კონფიგურაციაზე დაბრუნება
-      remove: ამოშლა
-      confirm: დარწმუნებული ხართ?
-      new: ახალი            
-      save_settings: Save Settings
-      choose_category: Choose Category
-      change_category: Change Category      
+      back: "იხილეთ ყველა"
+      list: "იხილეთ ყველა"
+      admin: "ადმინისტრატორის განყოფილება"
+      delete: "წაშლა"
+      edit: "შეცვლა"
+      show: "ჩვენება"
+      cancel: "გაუქმება"
+      update: "განახლება"
+      save: "შენახვა"
+      create: "შექმნა"
+      reset: "საწყის კონფიგურაციაზე დაბრუნება"
+      remove: "ამოშლა"
+      confirm: "დარწმუნებული ხართ?"
+      new: "ახალი"
+      save_settings: "პარამეტრების შენახვა"
+      choose_category: "კატეგორიის არჩევა"
+      change_category: "კატეგორიის შეცვლა"
     common:
       xtraktr:
         app_name: X-Traktr
         app_slogan: Insert xtraktr slogn here!
-        app_description: Insert xtraktr description here.      
+        app_description: Insert xtraktr description here.
       unicef:
         app_name: UNICEF საქართველოს ღია მონაცემები
-        app_slogan: 'პრობლემების გადაჭრა საზომით'
-        app_description: 'UNICEF საქართველო, სხვა მრავალ პარტნიორთან ერთად აგროვებს მონაცემებს საქართველოში ბავშვთა კეთილდღეობის შესახებ არსებულ სიტუაციაზე. ამ ცოდნას ის გადასცემს ნაციონალურ და გლობალურ გადაწყვეტილების მიმღებ ორგანოებს რათა გაუმჯობესდეს ბავშვა კეთილდღეობა საქართველოში.'
-      added_on: "დამატებულია: %{date}" 
-      jumpstart: “ჯამპსტარტ ჯორჯია”
-      js_link_title: “ჯამპსტარტ ჯორჯია” - ჩვენ გაწვდით მონაცემებს უკეთ!
-      question: Question
-      questions: Questions
-      question_code: Code
-      answers: Answers
-      notes: Notes
-      count: Count
-      percent: Percent
-      dataset_dashboard: Dataset Dashboard
-      time_series_dashboard: Time Series Dashboard
-      terms: "I agree to the <a href='http://www.unicef.org/about/legal_terms.html' target='_blank'>Terms of Use</a>"  
-      or: Or 
-      go: Go
-      share: Share
+        app_slogan: "პრობლემების გადაჭრა საზომით"
+        app_description: UNICEF საქართველო, სხვა მრავალ პარტნიორთან ერთად აგროვებს მონაცემებს საქართველოში ბავშვთა კეთილდღეობის შესახებ არსებულ სიტუაციაზე. ამ ცოდნას ის გადასცემს ნაციონალურ და გლობალურ გადაწყვეტილების მიმღებ ორგანოებს რათა გაუმჯობესდეს ბავშვა კეთილდღეობა საქართველოში.
+      added_on: "დამატებულია: %{date}"
+      jumpstart: "“ჯამპსტარტ ჯორჯია”"
+      js_link_title: "“ჯამპსტარტ ჯორჯია” - ჩვენ გაწვდით მონაცემებს უკეთ!"
+      question: "კითხვა"
+      questions: "კითხვები"
+      question_code: "კოდი"
+      answers: "პასუხები"
+      notes: "შენიშვნები"
+      count: "დათვლა"
+      percent: "პროცენტი"
+      dataset_dashboard: "მონაცემთა Dashboard"
+      time_series_dashboard: "პერიოდული შედარების Dashboard"
+      terms: "თანახმა ვარ <a href='http://www.unicef.org/about/legal_terms.html' target='_blank'>გამოყენების წესებზე</a>"
+      or: "ან"
+      go: "გადასვლა"
+      share: "გაზიარება"
+      codebook_title: კოდირების ჩამოტვირთვა
     msgs:
-      does_not_exist: თქვენ ცდილობთ ისეთი გვერდის ნახვას, რომელიც არ არსებობს.
-      not_authorized: თქვენ არ გაქვთ ამ გვერდის ნახვის უფლება.
+      does_not_exist: "თქვენ ცდილობთ ისეთი გვერდის ნახვას, რომელიც არ არსებობს."
+      not_authorized: "თქვენ არ გაქვთ ამ გვერდის ნახვის უფლება."
       success_created: "%{obj} შექმნილია."
       success_updated: "%{obj} განახლებულია."
-      question_exclude_saved: "Exclude question selections were saved."
-      question_exclude_not_saved: "An error occurred while saving the exclude question selections."
-      answer_exclude_saved: "Exclude answer selections were saved."
-      answer_exclude_not_saved: "An error occurred while saving the exclude answer selections."
-      answer_can_exclude_saved: "Can exclude answer selections were saved."
-      answer_can_exclude_not_saved: "An error occurred while saving the can exclude answer selections."
-      mapping_saved: "The question was successfully made mappable."
-      mapping_not_save: "An error occurred while making the question mappable."
-      mapping_deleted: "The question is no longer mappable."
-      mapping_not_deleted: "The question mapping could not be deleted."
-      time_series_automatic_match: "%{count} questions were added to your time series."
-      mass_upload_questions_error: "The following error occurred while processing the questions: %{msg}"
-      mass_upload_questions_success: "%{count} questions were updated!"
-      mass_upload_answers_error: "The following error occurred while processing the answers: %{msg}"
-      mass_upload_answers_success: "%{count} answers were updated!"
-      highlight_show_home_page_success: "The highlight will now always appear on the home page."
-      highlight_deleted: "The highlight has been deleted."
-      explore_error: "An error occurred while processing your request."
-      user_settings_updated: "Your settings were successfully updated."
-      api_key_created: "Your API Access Token was successfully created."
-      api_key_deleted: "Your API Access Token was successfully deleted."
-      missing_user_info: "We have made some changes to the site that require you to update your user settings. Sorry for the inconvenience."
+      question_exclude_saved: "გამორიცხული კითხვის არჩევა შენახულია"
+      question_exclude_not_saved: "გამორიცხული კითხვის შენახვის დროს წარმოიშვა პრობლემა"
+      answer_exclude_saved: "გამორიცხული პასუხის არჩევა შენახულია"
+      answer_exclude_not_saved: "გამორიცხული პასუხის შენახვის დროს წარმოიშვა პრობლემა"
+      answer_can_exclude_saved: "შესაძლებელი გამორიცხული პასუხის არჩევა შენახულია"
+      answer_can_exclude_not_saved: "შესაძლებელი გამორიცხული პასუხის შენახვის დროს წარმოიშვა პრობლემა"
+      mapping_saved: "კითხვა წარმატებით იქნა რუკაზე დასატანი"
+      mapping_not_save: "რუკაზე კითხვის დატანის დროს წარმოიშვა პრობლემა"
+      mapping_deleted: "კითხვა აღარ არის რუკაზე დასატანი"
+      mapping_not_deleted: "კითხვის რუკაზე დატანის წაშლა შეუძლებელია"
+      time_series_automatic_match: "%{count} თქვენს პერიოდული შედარებაში კითხვები დაემატა"
+      mass_upload_questions_error: "კითხვების პროცესირების დროს შემდეგი სახის პრობლემები წარმოიშვა: %{msg}"
+      mass_upload_questions_success: "%{count} კითხვები განახლდა!"
+      mass_upload_answers_error: "პასუხების პროცესირების დროს შემდეგი სახის პრობლემები წარმოიშვა: %{msg}"
+      mass_upload_answers_success: "%{count} პასუხები განახლდა!"
+      highlight_show_home_page_success: "გამორჩეული ყოველთვის გამოჩნდება მთავარ გვერდზე"
+      highlight_deleted: "გამორჩეული წაიშალა"
+      explore_error: "თქვენი მოთხოვნის შერსულების დროს წარმოიშვა პრობლემა"
+      user_settings_updated: "თქვენი პარამეტრები წარამტებით განახლდა"
+      api_key_created: "თქვენი API-ს დაშვების გასაღები წარმატებით შეიქმნა"
+      api_key_deleted: "თქვენი API-ს დაშვების გასაღები წარმატებით წაიშალა"
+      missing_user_info: "საიტზე გარკვეული ცვლილებების გამო გთხოვთ განაახლოთ თქვენი პარამეტრები. ბოდიშს გიხდით გაუგებრობისთვის."
     menu:
-      explore_data: Explore Data
-      explore_time_series: Explore Time Series
-      datasets: Datasets
-      time_series: Time Series
-      user_settings: User Settings
-      about_dataset: About 
-      about_time_series: About 
-      all_datasets: All Datasets
-      all_time_series: All Time Series
-      contact: Contact
+      explore_data: "მონაცემთა გაცნობა"
+      explore_time_series: "პერიოდული შედარების გაცნობა"
+      datasets: "მონაცემთა ცხრილი"
+      time_series: "პერიოდული შედარება"
+      user_settings: "მომხმარებლის პარამეტრები"
+      about_dataset: "შესახებ"
+      about_time_series: "შესახებ"
+      all_datasets: "მონაცემების ყველა ცხრილი"
+      all_time_series: "პერიოდული შედარების ყველა ცხრილი"
+      contact: "კონტაქტი"
       api: API
-      instructions: Instructions
-      home: Home
-      disclaimer: Notes
+      instructions: "ინსტრუქცია"
+      home: "მთავარი გვერდი"
+      disclaimer: "შენიშვნები"
       titles:
-        explore_dataset: Explore the dataset data through charts, maps and tables
-        explore_time_series: Explore the time series data through charts and tables
-        dataset_to_time_series: Explore this dataset as part of a time series 
+        explore_dataset: "მონაცემთა ცხრილში არსებული მონაცემების გაცნობა გრაფიკების, რუკების და ცხრილების საშუალებით"
+        explore_time_series: "პერიოდული შედარებაში არსებული მონაცემების გაცნობა გრაფიკების, რუკების და ცხრილების საშუალებით"
+        dataset_to_time_series: "მონაცემთა ცხრილის გაცნობა როგორც პერიოდული შედარების ნაწილი"
       admin_dataset:
-        explore_data: Explore Data
-        heading: Dataset Options
-        settings: Settings
-        qa: Edit Questions/Answers
-        warnings: Warnings
-        highlights: Highlights
-        mappable: Make Mappable
-        can_exlucde_answers: Answers Can Be Excluded
-        exlucde_answers: Exclude Answers
-        exclude_questions: Exclude Questions
-        delete: Delete
-        private_share: Share Private Dataset
-        mass_changes: Mass Changes
+        explore_data: "მონაცემთა გაცნობა"
+        heading: "მონაცემთა ცხრილის დეტალები"
+        settings: "პარამეტრები"
+        qa: "კითხვების/პასუხების შესწორება"
+        highlights: "გამორჩეული"
+        warnings: "გაფრთხილება"
+        mappable: "რუკაზე დასატანი"
+        can_exlucde_answers: "პასუხი შეიძლება გამოირიცხოს"
+        exlucde_answers: "პასუხის გამორიცხვა"
+        exclude_questions: "კითხვის გამორიცხვა"
+        delete: "წაშლა"
+        private_share: "პირადი მონაცემთა ცხრილის გაზიარება"
+        mass_changes: "ფართო ცვლილებები"
       admin_time_series:
-        explore_data: Explore Data
-        heading: Time Series Options
-        settings: Settings
-        qa: Edit Questions/Answers
-        highlights: Highlights
-        warnings: Warnings
-        delete: Delete
-        private_share: Share Private Time Series
+        explore_data: "მონაცემების გაცნობა"
+        heading: "პერიოდული შედარების დეტალები"
+        settings: "პარამეტრები"
+        qa: "კითხვების/პასუხების შესწორება"
+        highlights: "გამორჩეული"
+        warnings: "გაფრთხილება"
+        delete: "წაშლა"
+        private_share: "პირადი პერიოდული შედარების გაზიარება"
   user:
     age_group:
-      g1: "17-24"
-      g2: "25-34"
-      g3: "35-44"
-      g4: "45-54"
-      g5: "55-64"
-      g6: "above (>65)"
+      g1: 17-24
+      g2: 25-34
+      g3: 35-44
+      g4: 45-54
+      g5: 55-64
+      g6: "(>65)-ზე მეტი "
     status:
-      researcher: Researcher
-      student: Student
-      journalist: Journalist
-      ngo: NGO
-      government_official: Government Official
-      international_organization: International Organization
-      private_sector: Private Sector
-      other: Other
-    wanna_account: დაიღალეთ ამ ფორმის შევსებით? მომავალში მისი თავიდან აცილების მიზნის, შექმენით ანგარიში.       
+      researcher: "მკვლევარი"
+      student: "სტუდენტი"
+      journalist: "ჟურნალისტი"
+      ngo: "არასამთავრობო ორგანიზაცია"
+      government_official: "სამთავრობო სტრუქტურა"
+      international_organization: "საერთაშორისო ორგანიზაცია"
+      private_sector: "კერძო სექტორი"
+      other: "სხვა"
+    wanna_account: "დაიღალეთ ამ ფორმის შევსებით? მომავალში მისი თავიდან აცილების მიზნის, შექმენით ანგარიში."
   layouts:
     nav:
-      toggle: ნავიგაციის ჩართვა/გამორთვა
-      back: Back to UNICEF.ge
+      toggle: "ნავიგაციის ჩართვა/გამორთვა"
+      back: UNICEF.ge-ზე დაბრუნება
     explore_data:
-      private_share_header: "Privately Share '%{title}'"
-      private_share_explanation: "You can copy and share the following URL with whomever you want to view '%{title}' even though your dataset is not shared with the public. These people will have the ability to explore your data, but not edit it."
+      private_share_header: "პირადად გაზიარებული '%{title}'"
+      private_share_explanation: "თქვენ შეგიძლიათ დააკოპიროთ და გაუზიაროთ შემდეგი URL იმას , ვინც გსურთ რომ იხილოს '%{title}' იმ შემთხვევაშიც კი, თუ თქვენი მონაცემთა ცხრილი არ არის საჯაროდ გაზიარებული. ამ ადამიანებს ექნებათ საშუალება გაეცნონ თქვენს მონაცემებს, მაგრამ ვერ შეძლებენ მის შეცვლას და შესწორებას."
     unsupported_browser:
-      title: არასათანადო ბრაუზერი
-      p1: სამწუხაროდ თქვენი ინტერნეტ ბრაუზერის მოხმარების ვადა გასულია და ვერ მოხდება ვებ-გვერდთან სრულად დაკავშირება.
-      p2: არსებობს რამდენიმე უფასო ბრაუზერი რომელის გადმოწერის შემდეგ შეძლებთ ვებ-გვერდით სარგებლობას.
+      title: "არასათანადო ბრაუზერი"
+      p1: "სამწუხაროდ თქვენი ინტერნეტ ბრაუზერის მოხმარების ვადა გასულია და ვერ მოხდება ვებ-გვერდთან სრულად დაკავშირება."
+      p2: "არსებობს რამდენიმე უფასო ბრაუზერი რომელის გადმოწერის შემდეგ შეძლებთ ვებ-გვერდით სარგებლობას."
       chrome: Chrome
       firefox: Firefox
       ie: Internet Explorer (მხოლოდ Windows-ზე)
@@ -605,363 +606,361 @@ ka:
       Safari: Safari
   admin:
     index:
-      title: ადმინისტრატორის განყოფილება
-      users: მომხმარებლები
-      page_contents: საიტზე ტექსტის რედაქტირება
-      datasets: Datasets
-      shapesets: Shapesets
-      api_documentation: API Version Documentation
-      download_api_requests: Download API Request History
-      download_download_requests: Download Download Request History
+      title: "ადმინისტრატორის განყოფილება"
+      users: "მომხმარებლები"
+      page_contents: "საიტზე ტექსტის რედაქტირება"
+      datasets: "მონაცემთა ცხრილი"
+      shapesets: "ფორმების ცხრილი"
+      api_documentation: API ვერსიის დოკუმენტაცია
+      download_api_requests: API-ს მოთხოვნილი ისტორიის ჩამოტვირთვა
+      download_download_requests: "მოთხოვნილი ისტორიის ჩამოტვირთვა"
     users:
       edit:
-        title: ცვლილებების შეტანა მომხმარებლის გვერდზე
+        title: "ცვლილებების შეტანა მომხმარებლის გვერდზე"
       index:
-        title: მომხმარებლები
+        title: "მომხმარებლები"
       new:
-        title: ახალი მომხმარებელი
+        title: "ახალი მომხმარებელი"
       show:
-        title: მომხმარებლის დეტალები
+        title: "მომხმარებლის დეტალები"
   devise:
     mailer:
       reset_password_instructions:
-        title: 'მოგესალმებით, %{nickname}!'
-        p1: 'მივიღეთ მოთხოვნა "%{app_name}" თქვენი პაროლის შეცვლის შესახებ. პაროლის შესაცვლელად, მიჰყევით შემდეგ ბმულს.'
-        link_title: პაროლის შეცვლა
+        title: "მოგესალმებით, %{nickname}!"
+        p1: "მივიღეთ მოთხოვნა '%{app_name}' თქვენი პაროლის შეცვლის შესახებ. პაროლის შესაცვლელად, მიჰყევით შემდეგ ბმულს."
+        link_title: "პაროლის შეცვლა"
         p2: "თუ თქვენ არ მოგითხოვიათ პაროლის შეცვლა, გთხოვთ, არ მიაქციოთ ყურადღება ამ შეტყობინებას."
-        p3: "თქვენი პაროლი იგივე დარჩება, სანამ არ გადახვალთ ზემოთ მითითებულ ბმულზე და შექმნით ახალ პაროლს."    
+        p3: "თქვენი პაროლი იგივე დარჩება, სანამ არ გადახვალთ ზემოთ მითითებულ ბმულზე და შექმნით ახალ პაროლს."
   settings:
     index:
-      title: User Settings
+      title: "მომხმარებლის პარამეტრები"
       tabs:
-        settings: Settings
-        api: API Access Tokens
-      api_explanation1: The API allows you to programmatically get information and run analyses on the datasets and time series available on this site. All API calls require an access token - a key that let's us know who is making the request. To get one, simply press the button below.
-      api_link_text: API Documentation section
-      api_explanation2: You can learn more about the API and how to use the Access Token by going to the [link].
-      no_api_keys: You do not have any API Access Tokens on file.
-      get_api: Get API Access Token
-      delete_api: Delete API Access Token
+        settings: "პარამეტრები"
+        api: API-ს დაშვების გასაღები
+      api_explanation1: API საშუალებას გაძლევთ პროგრამულად მიიღოთ ინფორმაცია და ჩაატაროთ ანალიზი საიტზე არსებულ მონაცემთა ცხრილსა და პერიოდულ შედარებაში. API-ს ყველა გამოძაღება ითხოვს დაშვების გასაღებს, რომელიც გვამცნობს იმას, თუ ვინ აკეთებს მოთხოვნას. გამოძაღებისთვის უბრალოდ დააჭირეთ ქვემოთ მოცემულ ღილაკს.
+      api_link_text: API-ს დოკუმენტაციის სექცია
+      api_explanation2: "[link]-ზე გადასვლით თქვენ შეგიძლია გაიგოთ მეტი API-ს და დაშვების გასაღების შესახებ. "
+      no_api_keys: "თქვენ არ გაქვთ API-ს დაშვების გასაღები ან ფაილი"
+      get_api: API-ს დაშვების გასაღების მიღება
+      delete_api: API-ს დაშვების გასაღების წაშლა
   root:
     index:
-      header_latest_datasets: Latest Datasets
-      no_datasets: 'At this time, no datasets have been loaded into the site.'
-      header_latest_time_series: Latest Time Series
-      no_time_series: 'At this time, no time series have been created in the site.'
-      wms_title: Welfare <br />Monitoring Survey
-      wms_slogan: Explore something over time....
-      header_highlights: Highlights
-      header_categories: Browse Categories
-      search_datasets: Search Datasets
+      header_latest_datasets: "უახლესი მონაცემთა ცხრილი"
+      no_datasets: "ამ მომენტისთვის ვებ-გვერდზე არ ჩატვირთულა მონაცემთა ცხრილი"
+      header_latest_time_series: "უახლესი პერიოდული შედარება"
+      no_time_series: "ამ მომენტისთვის ვებ-გვერდზე არ შექმნილა პერიოდული შედარება."
+      wms_title: "კეთილდღეობის <br />მონიტორინგის კვლევა"
+      wms_slogan: ბავშვთა კეთილდღეობის <br />შედარება <br />2009, 2011 და 2013 წლებში
+      header_highlights: "გამორჩეული"
+      header_categories: "კატეგორიების დათვალიერება"
+      search_datasets: "მონაცემთა ცხრილის ძებნა"
     contact:
-      title: Contact
-      message_sent: Thank you for contacting us!
-      send: Send
-      error_title: An error has occurred
+      title: "კონტაქტი"
+      message_sent: "მადლობას გიხდით ჩვენთან დაკავშირებისთვის"
+      send: "გაგზავნა"
+      error_title: "პრობლემა წარმოიშვა"
     instructions:
-      title: Instructions
+      title: "ინსტრუქცია"
     notes:
-      title: Notes
+      title: "შენიშვნები"
     explore_data:
-      title: Explore the Data
-      search_datasets: Search Datasets
-      go: Go
-      sort_by: 
-        this: Sort By
-        title: Title
-        release: Date Released
-        publish: Date Published Here
-      no_data: 'At this time, no datasets have been loaded into the site.'
-    explore_data_dataset:
-      no_match: 'Sorry, no datasets match your search request.'      
+      title: "მონაცემთა გაცნობა"
+      search_datasets: "მონაცემთა ცხრილის ძებნა"
+      go: "გადასხვა"
+      sort_by:
+        this: "დახარისხება"
+        title: "დასახელება"
+        release: "გამოქვეყნების თარიღი"
+        publish: "აქ გამოქვეყნების თარიღი"
+      no_data: "ამ მომენტისთვის ვებ-გვერდზე არ ჩატვირთულა მონაცემთა ცხრილი"
+      no_match: "უკაცრავად, თქვენი არცერთი მოთხოვნა არ ემთხვევა პერიოდული შედარებას"
     explore_data_show:
-      title: Explore the Data
+      title: "პერიოდული შედარების მონაცემების გაცნობა"
     explore_time_series:
-      title: Explore Time Series Data
-      search_time_series: Search Time Series
-      go: Go
-      sort_by: 
-        this: Sort By
-        title: Title
-        publish: Date Published Here
-      no_data: 'At this time, no time series have been created in the site.'
-    explore_data_dataset:
-      no_match: 'Sorry, no time series match your search request.'      
-    explore_data_show:
-      title: Explore Time Series Data
+      title: "პერიოდული შედარების მონაცემების გაცნობა"
+      search_time_series: "პერიოდული შედარების ძებნა"
+      go: "გადასხვა"
+      sort_by:
+        this: "დახარისხება"
+        title: "დასახელება"
+        publish: "აქ გამოქვეყნების თარიღი"
+      no_data: "ამ მომენტისთვის ვებ-გვერდზე არ შექმნილა პერიოდული შედარება."
+      no_match: 'უკაცრავად, თქვენს მოთხოვნას არცერთი პერიოდული შედარება არ შეესაბამება'      
+    explore_time_series_show:
+      title: გაეცანით პერიოდული შედარების მონაცემებს
   api:
     msgs:
-      no_key: 'You must provide an API Access Token in order to use the API. You can quickly get an API _____________.'
-      no_dataset: "The Dataset could not be found."
-      no_question: "The Question cound not be found."
-      no_broken_down_by: "The Broken Down By Question could not be found."
-      no_filtered_by: "The Filter By Question could not be found."
-      no_time_series: "The Time Series could not be found."
-      no_time_series_dataset: "The Time Series does not have any datasets assigned to it."
-      no_time_series_dataset_error: "There was an error getting the data for the datasets in the time series."
+      no_key: API-ს გამოსაყენებლად თქვენ უნდა წარმაოდგინოთ API-ს დაშვების გასაღები. თქენ მარტივად შეგიძლიათ API-ის დაშვების გასაღების მიღება შემდეგ მისამართზე გადასვლით %{url}.
+      no_dataset: "მონაცემთა ცხრილი ვერ მოიძებნა"
+      no_question: "კითხვა ვერ მოიძებნა"
+      no_broken_down_by: "კითხვებით ჩაშლა ვერ მოიძებნა"
+      no_filtered_by: "კითხვებით გაფილტრვა ვერ მოიძებნა"
+      no_time_series: "პერიოდული შედარება ვერ მოიძებნა"
+      no_time_series_dataset: "პერიოდული შედარებას არ აქვს მასთან დაკავშირებული მონაცემთა ცხრილი."
+      no_time_series_dataset_error: "პერიოდული შედარებაში მონაცემთა ცხრილის მიღების დროს წარმოიშვა პრობლემა."
     index:
       title: API
-      no_versions: 'No documentation for the API has been created yet.'
-      no_methods: "No documentation for this version has been created yet."
+      no_versions: API-სთვის დოკუმენტაცია ჯერ არ შექმნილა
+      no_methods: "ამ ვერსიისთვის დოკუმენტაცია ჯერ არ შექმნილა"
     documentation:
-      no_content: "No documentation for this method has been created yet."
+      no_content: "ამ მეთოდისთვის დოკუმენტაცია ჯერ არ შექმნილა"
   datasets:
     index:
       stats:
-        data_records: Data Records
-        good_questions: Analyzable Questions
-        no_text: No Question Text
-        bad_answers: Bad Answers
-        no_answers: No Answers
-      view_warnings: View Details
+        data_records: "მონაცემთა ჩაწერა"
+        good_questions: "გაანალიზებადი კითხვები"
+        no_text: "კითხვის ტექსტი არ არის"
+        bad_answers: "არასწორი პასუხი"
+        no_answers: "პასუხის გარეშე"
+      view_warnings: "დეტალების ნახვა"
     warnings:
-      title: "Warnings"
-      tab_bad_answers: Questions with Bad Answers
-      tab_no_answers: Questions with No Answers
-      tab_no_text: Questions with No Text
-      bad_answers: 'The following %{number} questions contain values that were not listed as one of the possible answers. These records with the extra values will not be used during analysis.' 
-      no_answers: 'The following %{number} questions do not have a list of possible answers. These questions will not be available for analysis unless a list of possible answers are provided.' 
-      no_text: 'The following %{number} questions do not have text. These questions will not be available for analysis unless text is provided.' 
-      no_bad_answers: Congratulations! All of the data file data contains valid answers.
-      no_no_answers: Congratulations! All of the data file questions have answers.
-      no_no_text: Congratulations! All of the data file questions have text.
-      no_warnings: Congratulations! Your data file contains no issues that may effect the way the data is analyzed.
+      title: "გაფრთხილება"
+      tab_bad_answers: "კითხვა არასწორი პასუხით"
+      tab_no_answers: "კითხვა პასუხის გარეშე"
+      tab_no_text: "კითხვა ტექსტის გარეშე"
+      bad_answers: "წინამდებარე კითხვას %{number} გააჩნია ისეთი მნიშვნელობა, რომელიც არ იყო ჩამოთვლილი ერთ-ერთ სავარაუდო პასუხად. ეს მონაცემები, დამატებითი მნიშნელობებით, არ იქნება გამოყენებული ანალიზი დროს."
+      no_answers: "წინამდებარე კითხვას %{number} გააჩნია ისეთი მნიშვნელობა, რომელიც არ იყო ჩამოთვლილი ერთ-ერთ სავარაუდო პასუხად. ეს მონაცემები, დამატებითი მნიშნელობებით, არ იქნება გამოყენებული ანალიზი დროს ვიდრე სავარაუდო პასუხების სია არ იქნება მოწოდებული."
+      no_text: "წინამდებარე კითხვას %{number} გააჩნია ისეთი მნიშვნელობა, რომელიც არ იყო ჩამოთვლილი ერთ-ერთ სავარაუდო პასუხად. ეს მონაცემები, დამატებითი მნიშნელობებით, არ იქნება გამოყენებული ანალიზი დროს ვიდრე ტექსტი არ იქნება მოწოდებული."
+      no_bad_answers: "გილოცავთ! მონაცემების ფაილის ყველა მონაცემი შეიცავს სწორ პასუხს."
+      no_no_answers: "გილოცავთ! მონაცემების ყველა ფაილს აქვს პასუხი."
+      no_no_text: "გილოცავთ! მონაცემების ყველა ფაილს აქვს ტექსტი."
+      no_warnings: "გილოცავთ! თქენი მონაცემები არ შეიცავენ ისეთ საკითხებს რომლებსაც შეუძლიათ ზეგავლენა მოახდინონ მონაცემთა ანალიზზე."
     exclude_questions:
-      title: "Questions to Exclude from Analysis"
-      explanation: "Use this page to indicate which questions should not be included during analysis."
-      no_questions: There are no questions on file for this dataset.
+      title: "ანალიზიდან გამოსარიცხი კითხვები"
+      explanation: "გამოიყენეთ ეს გვერდი რათა მიუთითოთ რომელ შეკითხვას არ უნდა მოიცავდეს ანალიზი"
+      no_questions: "ამ ცხრილისთვის არ არის კითხვები ან ფაილები"
     exclude_answers:
-      title: "Answers to Exclude from Analysis"
-      explanation: "Use this page to indicate which answers should not be included during analysis."
-      no_questions: There are no questions on file for this dataset.
+      title: "ანალიზიდან გამოსარიცხი პასუხები"
+      explanation: "გამოიყენეთ ეს გვერდი რათა მიუთითოთ რომელ პასუხს არ უნდა მოიცავდეს ანალიზი"
+      no_questions: "ამ ცხრილისთვის არ არის კითხვები ან ფაილები"
     can_exclude_answers:
-      title: "Answers That Can Be Excluded During Analysis"
-      explanation: "Use this page to indicate which answers can be included during analysis, but have the ability to be excluded (e.g., answers like: Don't Know, Refuse to Answer, etc) ."
-      no_questions: There are no questions on file for this dataset.
+      title: "პასუხები რომლებიც ანალიზიდან შეიძლება გამოირიცხონ"
+      explanation: "გამოიყენეთ ეს გვერდი რათა მიუთითოთ რომელი პასუხი შეიძლება იყოს ანალიზის დროს გამოყენებული, მაგრამ ჰქონდეს გამორიცხვის საშუალება (მაგ. ისეთი პასუხები, როგორიცაა არ ვიცი, უარი პასუხზე, ა.შ.)."
+      no_questions: "ამ ცხრილისთვის არ არის კითხვები ან ფაილები"
     mappable:
-      title: "Make Questions Mappable"
-      explanation: "Use this page to indicate which questions are geographic in nature so that the analysis screen can include a map."
-      no_shapes: "Sorry, at this time there are no pre-defined maps on file that you can use."
-      add_shapes: Add Map Shapes
-      add_map_question: Add Mappable Question 
+      title: "გახადოს კითხვა რუკაზე დასატანი"
+      explanation: "გამოყენეთ ეს გვერდი რათა მიუთითოთ როელი კითხვები არიან ბუნებრივად გეოგრაფიული ტიპის, რათა ანალიზის ეკრანს შეეძლოს რუკის გამოყენება."
+      no_shapes: "უკაცრავად, ამ დროისთვის ფაილში არ არის წინასწარ განსაზღვრული რუკები რომლის გამოყენებასაც თქვენ შეძლებდით."
+      add_shapes: "რუკის ფორმის დამატება"
+      add_map_question: "რუკაზე დასატანი კითხვების დამატება"
     mappable_form:
-      title: "Mappable Question Form"
-      no_questions: "There are no questions available in '%{title}' to be made mappable."
-      no_shapes: "Sorry, at this time there are no pre-defined maps on file that you can use."
-      question_label: Question to make mappable
-      shapeset_label: Map to use
-      matching_header: "Mapping '[question]' to '[shapeset]'"
-      matching_explanation: "For each answer to '[question]', select the matching map shape from '[shapeset]'."
+      title: "რუკაზე დასატანი კითხვების ფორმა"
+      no_questions: "%{title}'-ში არ არის ისეთი ხელმისაწვდომი კითხვები, რომელიც შეიძლება იყოს რუკაზე დასატანი"
+      no_shapes: "უკაცრავად, ამ დროისთვის ფაილში არ არის წინასწარ განსაზღვრული რუკები რომლის გამოყენებასაც თქვენ შეძლებდით."
+      question_label: "გახადოს კითხვა რუკაზე დასატანი"
+      shapeset_label: "გამოყენებადი რუკა"
+      matching_header: "[question]' დატანა '[shapeset]' რუკაზე "
+      matching_explanation: "[question]'-ის თითოეული პასუხისთვის, აირჩიეთ შესატყვისი რუკის ფორმა '[shapeset]'-დან."
     mappable_form_edit:
-      title: "Mappable Question Form"
-      matching_header: "Mapping '%{question}' to '%{shapeset}'"
-      matching_explanation: "For each answer to '%{question}', select the matching map shape from '%{shapeset}'."
+      title: "რუკაზე დასატანი კითხვების ფორმა"
+      matching_header: "[question]' დატანა '[shapeset]' რუკაზე "
+      matching_explanation: "[question]'-ის თითოეული პასუხისთვის, აირჩიეთ შესატყვისი რუკის ფორმა '[shapeset]'-დან."
     form:
-      reports: Reports
-      header_add_report: Add a report for this dataset
+      reports: "რეფორთები"
+      header_add_report: "მონაცემთა ცხრილში რეფორთის დამატება"
     highlights:
-      title: Dataset Highlights
+      title: "მონაცემთა ცხრილის გამორჩეულები"
       instructions: |
-        Highlights are visuals (charts and maps) that highlight interesting aspects of your dataset and are shown on the dashboard page and the home page. 
+        გამორჩეული წარმოადგენს ვიზუალს (გრაფები და რუკები) რომელიც თქვენი მონაცემების საინტერესო ასპექტებს უსვამს ხაზს და ნაჩვენებია მთავარ გვერდზე და dashboard-ზე.
 
-        To add a highlight, go to the explore page, select the indicators you want, and then in the charts that appear click the star button in the top left corner.
+        გამორჩეულების დასამატებლად, გადადით მონაცემთა გაცნობის გვერდზე, აირჩიეთ სასურველი ინდიკატორი და შემდეგ გამოჩენილ გრაფიკში დააჭირეთ ვარსკვლავის ღილაკს, რომელიც განთავსებულია ზედა მარცხენა კუთხეში.
 
-        You can use this page to quickly remove highlights or to indicate which highlight to always show on the home page - only one highlight from all datasets can be selected for this.
-      no_highlights: There are no highlights on file for this dataset.
-      question_code: Question
-      broken_down_by_code: Broken Down By
-      filtered_by_code: Filtered By
-      show_home_page: Always Shows on Home Page
-      btn_show_home_page: Show on Home Page
+        თქვენ შეგიძლიათ გამოიყენოთ ეს გვერდი გამორჩეულის მარტივად წასაშლელად ან იმის მისათითებლად თუ რომელი გამორჩეული იყოს მთავარ გვერდზე მუდმივად ნაჩვენები - ყველა ცხრილიდან მხოლოდ ერთი გამორჩეული შეიძლება იყოს არჩეული.
+      no_highlights: "ფაილში ამ ცხრილისთვის არ არის გამორჩეული"
+      question_code: "კითხვა"
+      broken_down_by_code: "ჩაშლილია"
+      filtered_by_code: "გაფილტრულია"
+      show_home_page: "ყოველთვის ჩანს მთავარ გვერდზე"
+      btn_show_home_page: "მთავარ გვერდზე გამოჩენა"
   questions:
     index:
-      title: "Edit Questions and their Answers"
-      explanation: "Use this page to select a question to edit it and/or it's answers."
-      mass_changes: "You can also use the %{link} to change multiple items at once via a spreadsheet upload."
-      mass_changes_link: Mass Changes page
-      no_questions: There are no questions on file for this dataset.
+      title: "კითხვების და მათი პასუხების შესწორება"
+      explanation: "გამოიყენეთ ეს გვერდი კითხვის ან/და მისი პასუხის ჩასასწორებლად"
+      mass_changes: "თქვენ ასევე შეგიძლია გამოიყენოთ %{link} რამდენიმე საკითხის ერთხელ შესაცვლელად, ონლაინ ცხრილის ატვირთვით."
+      mass_changes_link: "ფართო ცვლილებების გვერდი"
+      no_questions: "ამ ცხრილისთვის არ არის კითხვები ან ფაილები"
     show:
-      title: "Question: %{question}"
-      header_answers: Answers
-      no_answers: There are no pre-defined list of answers for this question.
-    form: 
-      header_answers: Answers
-      explanation_answers: "The answer settings fields (value, sort order, etc) are only shown in the '%{lang}' tab."
-      default_text: Default Text
-      header_add_answer: Add a new answer for this question
-      header_add_missing_answer: The following values are in the data but are not provided as one of the answers. <br/>Select a value to add it as an answer and have it included in the analysis.
+      title: "კითხვა: %{question}"
+      header_answers: "პასუხი"
+      no_answers: "ამ კითხვისთვის არ არის წონასწარ განსაზღვრული პასუხების სია"
+    form:
+      header_answers: "პასუხები"
+      explanation_answers: "პასუხის პარამეტრები (მნიშვნელობა, დახარისხების წყობა, ა.შ.) ნაჩვენებია მხოლოდ '%{lang}' ჩანართში."
+      default_text: "ძირითადი ტექსტი"
+      header_add_answer: "ამ კითხვისთვის ახალი პასუხის დამატება"
+      header_add_missing_answer: "აღნიშნული მნიშვნელობები მონაცემებში არიან, მაგრამ არ არიან მოწოდებულნი როგორც პასუხის ერთ ერთი ვარიანტი. <br/>აირჩიეთ მნიშვნელობა რათა დაამატოთ იგირ როგორც პასუხი და ანალიზმა მოიცვას იგი."
     mass_changes:
-      title: Mass Changes for Questions/Answers
-      explanation: Use this page to upload a spreadsheet of Questions or Answers to quickly change the text or settings for many records at once.
-      template: Template
-      upload: Upload Your Spreadsheet of Changes
+      title: "კითხვების/პასუხების ფართო ცვლილებები"
+      explanation: "გამოიყენეთ ეს გვერდი კითხვების ან პასუხების ასატვირთად ან მარავალი ჩანაწერის ტექსტისა და პარამეტრების შესაცვლლეად."
+      template: "ნიმუში"
+      upload: "ატვირთეთ თქვენი შესწორებების ონლაინ ცხრილი"
       questions:
-        header: Questions
-        template: Clicking the button below will download a template of all questions in this dataset. Make the desired changes in the spreadsheet and then use the form below to update your changes.
-        template2: "The only columns that cannot be changed are: %{code}"
-        template_link: Download Questions Template
-        submit: Update Questions
-      answers: 
-        header: Answers
-        template: Clicking the button below will download a template of all answers in this dataset. Make the desired changes in the spreadsheet and then use the form below to update your changes.
-        template2: "The only columns that cannot be changed are: %{code}, %{value}"
-        template_link: Download Answers Template
-        submit: Update Answers
+        header: "კითხვები"
+        template: "ქვემოთ მოცემულ ღილაკზე დაჭერით ჩამოიტვირთება მონაცემთა ცხრილში არსებული ყველა პასუხის ნიმუში. გააკეთეთ თქვენთვის სასურველი ცვლილებები ონლაინ ცხრილში და შემდეგ გამოიყენეთ ქვემოთ მოცემული ფორმა თქვენი ცვლილებების განახლებისთვის."
+        template2: "სვეტები, რომლის შეცვლაც შეუძლებელია: %{code}"
+        template_link: "კითხვების ნიმუშების ჩამოტვირთვა"
+        submit: "კითხვების განახლება"
+      answers:
+        header: "პასუხები"
+        template: "ქვემოთ მოცემულ ღილაკზე დაჭერით ჩამოიტვირთება მონაცემთა ცხრილში არსებული ყველა პასუხის ნიმუში. გააკეთეთ თქვენთვის სასურველი ცვლილებები ონლაინ ცხრილში და შემდეგ გამოიყენეთ ქვემოთ მოცემული ფორმა თქვენი ცვლილებების განახლებისთვის."
+        template2: "სვეტები, რომლის შეცვლაც შეუძლებელია: %{code}, %{value}"
+        template_link: "პასუხების ნიმუშების ჩამოტვირთვა"
+        submit: "პასუხების განახლება"
   time_series:
-    form: 
-      header_datasets: Datasets
-      header_add_dataset: Add a new dataset to this time series
+    form:
+      header_datasets: "მონაცემთა ცხრილები"
+      header_add_dataset: "პერიოდული შედარებაში ახალი მონაცემთა ცხრილების დამატება"
     highlights:
-      title: Time Series Highlights
+      title: "პერიოდული შედარება გამორჩეული"
       instructions: |
-        Highlights are visuals (charts and maps) that highlight interesting aspects of your time series and are shown on the dashboard page and the home page. 
+        გამორჩეული წარმოადგენს ვიზუალს (გრაფები და რუკები) რომელიც თქვენი მონაცემების საინტერესო ასპექტებს უსვამს ხაზს და ნაჩვენებია მთავარ გვერდზე და dashboard-ზე.
 
-        To add a highlight, go to the explore page, select the indicators you want, and then in the charts that appear click the star button in the top left corner.
+        გამორჩეულების დასამატებლად, გადადით მონაცემთა გაცნობის გვერდზე, აირჩიეთ სასურველი ინდიკატორი და შემდეგ გამოჩენილ გრაფიკში დააჭირეთ ვარსკვლავის ღილაკს, რომელიც განთავსებულია ზედა მარცხენა კუთხეში.
 
-        You can use this page to quickly remove highlights or to indicate which highlight to always show on the home page - only one highlight from all datasets and time series can be selected for this.
-      no_highlights: There are no highlights on file for this time series.
-      question_code: Question
-      broken_down_by_code: Broken Down By
-      filtered_by_code: Filtered By
-      show_home_page: Always Shows on Home Page
-      btn_show_home_page: Show on Home Page
+        თქვენ შეგიძლიათ გამოიყენოთ ეს გვერდი გამორჩეულის მარტივად წასაშლელად ან იმის მისათითებლად თუ რომელი გამორჩეული იყოს მთავარ გვერდზე მუდმივად ნაჩვენები - ყველა ცხრილიდან მხოლოდ ერთი გამორჩეული შეიძლება იყოს არჩეული.
+      no_highlights: "ფაილში ამ პერიოდული შედარებისთვის არ არის გამორჩეული"
+      question_code: "კითხვა"
+      broken_down_by_code: "ჩაშლილია"
+      filtered_by_code: "გაფილტრულია"
+      show_home_page: "ყოველთვის ჩანს მთავარ გვერდზე"
+      btn_show_home_page: "მთავარ გვერდზე გამოჩენა"
   time_series_questions:
     index:
-      title: "Edit Time Series Questions and their Answers"
-      explanation: "Use this page to add questions to the time series or edit questions already in the time series."
-      no_questions: There are no questions on file for this time series yet.
-      btn_add_question: Add a Question
-      btn_add_question_hint: Match a question from each dataset and add the question to the time series.
-      btn_automatic: Automatically Assign Matching Questions
-      btn_automatic_hint: Questions with the same Question Code in each dataset will automatically be added to the time series. This will take a few seconds to complete.
-      header_dataset_question: "%{title} Question"
-    form: 
-      header_answers: Answers
-      explanation_answers: "The answer settings fields (value, sort order, etc) are only shown in the '%{lang}' tab."
-      default_text: Default Text
-      header_add_answer: Add a new answer for this question
+      title: "პერიოდული შედარების კითხვების და პასუხების შესწორება"
+      explanation: "გამოიყენეთ ეს გვერდი პერიოდულ შედარებაში ახალი კითხვების დასამატებლად ან არსებული კითხვების შესასწორებლად"
+      no_questions: "პერიოდული შედარებისთვის კითხვა ან ფაილი ვერ მოიძებნა"
+      btn_add_question: "კითხვის დამატება"
+      btn_add_question_hint: "მოანცემთა თითოეული ცხრილიდან დაამთხვიოს კითხვა და დაამატოს პერიოდულ შედარებაში."
+      btn_automatic: "ავტომატურად დააკავშიროს ერთნაირი კითხვები"
+      btn_automatic_hint: "მონაცემთა თითოეული ცხრილიდან ერთი და იმავე კოდის მქონე კითხვები ავტომატურად დაემატება პერიოდულ შედარებაში. ამის დასრულებას დასჭირდება რამდენიმე წამი."
+      header_dataset_question: "%{title} კითხვა"
+    form:
+      header_answers: "პასუხი"
+      explanation_answers: "პასუხის პარამეტრები (მნიშვნელობა, დახარისხების წყობა, ა.შ.) ნაჩვენებია მხოლოდ '%{lang}' ჩანართში."
+      default_text: "მთავარი ტექსტი"
+      header_add_answer: "ამ კითხვისთვის ახალი პასუხის დამატება"
     show:
-      title: "Question: %{question}"
-      header_answers: Answers
-      no_answers: There are no answers for this question yet.
+      title: "კითხვა: %{question}"
+      header_answers: "პასუხი"
+      no_answers: "ამ კითხვისთვის პასუხი ჯერ ვერ მოიძებნა"
   shared:
     explore_data:
-      no_matches: Your selections returned no data. Please try again with a different selection.
-      no_data: "'%{title}' does not have any data that is analyzable at this time."
+      no_matches: "თქვენი მონიშნული დაბრუნდა მონაცემებში. გთხოვთ სცადოთ თავიდან სხვა მონიშვნით."
+      no_data: "%{title}' არ შეიცავს მონაცემებს, რომლებიც გაანალიზებადია ამ დროისთვის."
       hover_region: Hover over a Region
-      na: N/A
-      percent: Percent
-      dataset_title: Dataset
+      na: "არ არის ხელმისაწვდომი"
+      percent: "პროცენტი"
+      dataset_title: "მონაცემთა ცხრილი"
       form:
-        question_code: Explore Answers To
-        broken_down_by_code: Broken Down By
-        optional: optional
-        no_comparison: No Comparison
-        swap: Swap the Questions
-        submit: Generate
-        reset: Reset 
-        filtered_by_code: Filtered By
-        no_filter: No Filter
-        can_exclude: Exclude "Don't know" & "Refuse"
-        can_exclude_hint: Remove answers like "Don't know" & "Refuse" from the analysis
+        question_code: "გაეცანით პასუხებს"
+        broken_down_by_code: "ჩაშლილია"
+        optional: "არჩევითი"
+        no_comparison: "არ არის შედარება"
+        swap: "კითხვის შეცვლა"
+        submit: "დაანგარიშება"
+        reset: "გადატვირთვა"
+        filtered_by_code: "გაფილტრულია"
+        no_filter: "ფილტრი არ არის"
+        can_exclude: გამორიცხე "არ ვიცი" & "უარი პასუხზე"
+        can_exclude_hint: ანალიზიდან წაშალე პასუხები "არ ვიცი" & "უარი პასუხზე"
       jumpto:
-        chart: Jump to Chart
-        map: Jumpt to Map
+        chart: "გრაფაზე გადასვლა"
+        map: "რუკაზე გადასვლა"
       tabs:
-        map: Map
-        chart: Chart
-        table: Table
-        details: Details
+        map: "რუკა"
+        chart: "გრაფა"
+        table: "ცხრილი"
+        details: "დეტალები"
       map:
-        filter: "Filter map by selecting an answer to '%{text}':"
+        filter: "რუკის გაფილტვრა ამ პასუხის არჩევით '%{text}':"
     explore_time_series:
-      no_matches: Your selections returned no data. Please try again with a different selection.
-      no_data: "'%{title}' does not have any data that is analyzable at this time."
-      na: N/A
-      percent: Percent
-      time_series_title: Time Series
+      no_matches: "თქვენი მონიშნული დაბრუნდა მონაცემებში. გთხოვთ სცადოთ თავიდან სხვა მონიშვნით."
+      no_data: "%{title}' არ შეიცავს მონაცემებს, რომლებიც გაანალიზებადია ამ დროისთვის."
+      na: "არ არის ხელმისაწვდომი"
+      percent: "პროცენტი"
+      time_series_title: "პერიოდული შედარება"
       form:
-        question_code: Explore Answers To
-        submit: Generate
-        reset: Reset 
-        filtered_by_code: Filtered By
-        no_filter: No Filter
-        can_exclude: Exclude "Don't know" & "Refuse"
-        can_exclude_hint: Remove answers like "Don't know" & "Refuse" from the analysis
+        question_code: "გაეცანით პასუხებს"
+        submit: "დაანგარიშება"
+        reset: "გადატვირთვა"
+        filtered_by_code: "გაფილტრულია"
+        no_filter: "ფილტრი არ არის"
+        can_exclude: გამორიცხე "არ ვიცი" & "უარი პასუხზე"
+        can_exclude_hint: ანალიზიდან წაშალე პასუხები "არ ვიცი" & "უარი პასუხზე"
       jumpto:
-        chart: Jump to Chart
+        chart: "გრაფაზე გადასვლა"
       tabs:
-        chart: Chart
-        table: Table
-        details: Details
+        chart: "გრაფა"
+        table: "ცხრილი"
+        details: "დეტალები"
     dashboard_data:
       tabs:
-        highlights: Highlights
-        methodology: Methodology
-        codebook: Codebook
-        reports: Reports
-        licensing: ნებართვა
-      no_methodology: There is no methodology on file for this dataset.
-      no_reports: There are no reports on file for this dataset.
-      no_highlights: There are no highlights on file for this dataset.
+        highlights: "გამორჩეული"
+        methodology: "მეთოდოლოგია"
+        codebook: "კოდირება"
+        reports: "რეფორთები"
+        licensing: "ნებართვა"
+      no_methodology: "ამ ცხრილისთვის მეთოდოლოგია არ მოიძებნა"
+      no_reports: "ამ ცხრილისთვის რეფორთები არ მოიძებნა"
+      no_highlights: "ამ ცხრილისთვის გამორჩეული არ მოიძებნა"
       filter:
-        all: All Text
-        questions: Question Text
-        answers: Answer Text
+        all: "ყველა ტექსტი"
+        questions: "კითხვის ტექსტი"
+        answers: "პასუხის ტექსტი"
     dashboard_time_series:
       tabs:
-        highlights: Highlights
-        methodology: Methodology
-        codebook: Codebook
-        reports: Reports
-        licensing: ნებართვა
-        datasets: Datasets
-      no_highlights: There are no highlights on file for this time series.
+        highlights: "გამორჩეული"
+        methodology: "მეთოდოლოგია"
+        codebook: "კოდირება"
+        reports: "რეფორთები"
+        licensing: "ნებართვა"
+        datasets: "მონაცემთა ცხრილი"
+      no_highlights: "ამ პერიოდული შედარებისთვის გამორჩეული არ მოიძებნა"
       filter:
-        all: All Text
-        questions: Question Text
-        answers: Answer Text
+        all: "ყველა ტექსტი"
+        questions: "კითხვის ტექსტი"
+        answers: "პასუხის ტექსტი"
     language_switcher:
-      label: Available Languages
+      label: "ხელმისაწვდომი ენები"
     embed_v1:
-      title_site: Go to %{app_name}
-      title_datalist: View All Datasets
+      title_site: გადასვლა %{app_name} -ზე
+      title_datalist: მონაცემთა ყველა ცხილის ნახვა
   export_data:
-    dataset: 'Dataset: %{title}'
-    download_from: 'Downloaded From: %{app_name} at %{url}.'
-    last_update: 'Data Last Updated: %{date}'
+    dataset: "მონაცემთა ცხრილი: %{title}"
+    download_from: "ჩამოტვირთულია აქედან: %{app_name} at %{url}."
+    last_update: "მონაცემები ბოლოს განახლებულია: %{date}"
     instructions:
-      codebook: 'The codebook is a list of all questions and answers available in this dataset. It is provided as a reference to help you quickly find items of interest.'
-      csv_main: 'The CSV file is a spreadsheet of all of the data in the dataset. You can open this file in OpenOffice, Excel, Google Spreadsheets or any other spreadsheet software. '
+      codebook: "კოდირება არის მონაცემთა ცხრილში არსებული ყველა შესაძლო კითვა და პასუხი. ის წარმოადგენს დამხმარე ცნობარს, რომელიც გეხმარებათ თქვენთვის საინტერესო ინფორმაციის მოძიებაში."
+      csv_main: 'CSV ფაილი არის მონაცემთა ცხრილში არსებული ყველა მონაცემის ონლაინ ცხრილი. თქვენი მისი გახსნა შეგიძლიათ შემდეგი პროგრამების საშუალებით: OpenOffice, Excel, Google Spreadsheets ან სხვა ნებისმიერი ონლაინ ცხრილის პროგრამით.'
       csv: |
-        The CSV download contains 2 files:
-        - Codebook: %{codebook}
+        CSV-ის ჩამოტვირთვა შეიცავს 2 ფაილს:
+        - კოდირება: %{codebook}
 
-        - CSV: %{csv} The CSV is formatted with headers (variable code and name) and the answers use answer text, not the answer value.
-      spss: |
-        The SPSS download contains 3 files:
-        - Codebook: %{codebook}
+        - CSV: %{csv} CSV ფორმატირებულია სათაურებით (ცვლადი კოდი და სახელი) და პასუხები იყენებენ პასუხის ტექსტს და არა პასუხის მნიშვნელობას.
+      spss: |-
+        SPSS-ის ჩამოტვირთვა შეიცავს 3 ფაილს:
+        - კოდირება: %{codebook}
 
-        - CSV: %{csv} The CSV is formatted to be loaded into SPSS, so it does not contain headers and the answers use answer values, not the answer text.
-        
-        - SPS: The SPS file is a script file that you run in SPSS that will load the data from the CSV file and also create each variable and it's possible values. 
-               IMPORTANT - Before runing the script file in SPSS, you will need to update the line with 'DATA LIST FILE' to include the full path to the CSV file.
+        - CSV: %{csv} CSV დაფორმატირებულია SPSS-ის ჩატვირთვის ფორმატში, ამიტომ ის არ შეიცავს სათაურს და პასუხები იყენებენ პასუხის მნიშვნელობას და არა პასუხის ტექსტს.
+
+        - SPS: SPS ფაილი არის კოდირებული ფაილი, რომელიც გაიშვება SPSS-ში და ჩატვირთავს მონაცემებს CSV-დან, აგრეთვე ქმნის თითოეულ ცვლად და მის შესაძლო მნიშვნელობას. მნიშვნელოვანია - SPSS-ში კოდირებული ტექსტის გაშვებამდე, თქვენ უნდა განაახლოთ 'DATA LIST FILE' რათა გქონდეთ სრული ხელმისაწვდომობა CSV ფაილამდე.
       stata: |
-        The STATA download contains 3 files:
-        - Codebook: %{codebook}
+        STATA-ს ჩამოტვირთვა შეიცავს 3 ფაილს:
+        - კოდირება: %{codebook}
 
-        - CSV: %{csv} The CSV is formatted to be loaded into STATA, so it does not contain headers and the answers use answer text, not the answer values.
+        - CSV: %{csv} CSV დაფორმატირებულია STATA-ში ჩასატვირთად, ამიტომ ის არ შეიცავს სათაურებს და პასუხები იყენებენ პასუხის ტექსტს და არა პასუხის მნიშვნელობას.
+
+        - DO: STATA DO ფაილი არის კოდირებული ფაილი, რომელიც გაიშვება STATA-ში და ჩატვირთავს მონაცემებს CSV-დან, აგრეთვე ქმნის თითოეულ ცვლად და მის შესაძლო მნიშვნელობას.
         
-        - DO: The STATA DO file is a script file that you run in STATA that will load the data from the CSV file and also create each variable and it's possible values. 
-               IMPORTANT - Before runing the script file in STATA, you will need to update the line with 'using' at the end of the file to include the full path to the CSV file.
+        IMPORTANT - STATA-ში კოდირებული ტექსტის გაშვებამდე, თქვენ უნდა განაახლოთ 'using' ფაილის ბოლოს რათა გქონდეთ სრული ხელმისაწვდომობა CSV ფაილამდე.
       r: |
-        The R download contains 3 files:
-        - Codebook: %{codebook}
+        R ჩამოტვირთვა შეიცავს 3 ფაილს:
+        - კოდირება: %{codebook}
 
-        - CSV: %{csv} The CSV is formatted to be loaded into R, so the headers are the variables and the answers use answer values, not the answer text.
-        
-        - R: The R file is a script file that you run in R that will load the data from the CSV file and also create each variable. 
-               IMPORTANT - Before runing the script file in R, you will need to update the 'setwd' line to include the full path to the CSV file.
+        - CSV: %{csv} CSV დაფორმატებულია R-ში ჩასატვირთად, ამიტომ სათაურები არიან ცვლადები და პასუხები იყენებენ პასუხის მნიშვნელობას და არა პასუხის ტექსტს.
+
+        - R: R არის კოდირებული ფაილი, რომელიც გაიშვება R-ში რომელიც ტვირთავს მონაცემებს CSV-დან და ქმნის თოთიეულ ცვლადს. 
+             მნიშვნელოვანია - R-ში კოდირებული ტექსტის გაშვებამდე, თქვენ უნდა განაახლოთ 'setwd' რათა გქონდეთ სრული ხელმისაწვდომობა CSV ფაილამდე.
   download_data_options:
     text:
       csv: CSV
@@ -969,7 +968,7 @@ ka:
       stata: STATA
       r: R
     title:
-      csv: Data formatted for spreadsheets
-      spss: Data formatted for SPSS 
-      stata: Data formatted for STATA
-      r: Data formatted for R
+      csv: "ონლაინ ცხრილისთვის დაფორმატებული მონაცემები"
+      spss: SPSS-სთვის დაფორმატებული მონაცემები
+      stata: STATA-სთვის დაფორმატებული მონაცემები
+      r: R-სთვის დაფორმატებული მონაცემები

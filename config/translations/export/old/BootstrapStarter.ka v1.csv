@@ -254,7 +254,7 @@ Line #,Key,en Version,ka Translation
 253,ka.explore_time_series.percent,Percent (%),Percent (%)
 254,ka.explore_time_series.single.html.title,'<span class='code-highlight'>%{code}</span> - %{question}','<span class='code-highlight'>%{code}</span> - %{question}'
 255,ka.explore_time_series.single.html.title_filter,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}',<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'
-256,ka.explore_time_series.single.html.title_filter_value,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>',<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'
+256,ka.explore_time_series.single.html.title_filter_value,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = %{value}',<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = %{value}'
 257,ka.explore_time_series.single.text.title,'%{code} - %{question}','%{code} - %{question}'
 258,ka.explore_time_series.single.text.title_filter, filtered by: '%{code} - %{variable}', filtered by: '%{code} - %{variable}'
 259,ka.explore_time_series.single.text.title_filter_value, filtered by: '%{code} - %{variable} = %{value}', filtered by: '%{code} - %{variable} = %{value}'
@@ -267,11 +267,11 @@ Line #,Key,en Version,ka Translation
 266,ka.explore_data.percent,Percent,Percent
 267,ka.explore_data.comparative.html.title,<span class='title-highlight'>Answers to:</span> <br /> '<span class='code-highlight'>%{question_code}</span> - %{question}' <br /> <span class='title-highlight'>broken down by:</span> <br /> '<span class='code-highlight'>%{broken_down_by_code}</span> - %{broken_down_by}',<span class='title-highlight'>Answers to:</span> <br /> '<span class='code-highlight'>%{question_code}</span> - %{question}' <br /> <span class='title-highlight'>broken down by:</span> <br /> '<span class='code-highlight'>%{broken_down_by_code}</span> - %{broken_down_by}'
 268,ka.explore_data.comparative.html.title_filter,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}',<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'
-269,ka.explore_data.comparative.html.title_filter_value,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>',<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'
+269,ka.explore_data.comparative.html.title_filter_value,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = %{value}',<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = %{value}'
 270,ka.explore_data.comparative.html.map.title,'<span class='code-highlight'>%{code}</span> - %{question}' ,'<span class='code-highlight'>%{code}</span> - %{question}' 
 271,ka.explore_data.comparative.html.map.title_col,<br /> <span class='title-highlight'>broken down by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{broken_down_by} = %{broken_down_by_answer}' ,<br /> <span class='title-highlight'>broken down by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{broken_down_by} = %{broken_down_by_answer}' 
 272,ka.explore_data.comparative.html.map.title_filter,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}',<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'
-273,ka.explore_data.comparative.html.map.title_filter_value,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>',<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'
+273,ka.explore_data.comparative.html.map.title_filter_value,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = %{value}',<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = %{value}'
 274,ka.explore_data.comparative.text.title,"Answers to: '%{question_code} - %{question}', broken down by: '%{broken_down_by_code} - %{broken_down_by}'","Answers to: '%{question_code} - %{question}', broken down by: '%{broken_down_by_code} - %{broken_down_by}'"
 275,ka.explore_data.comparative.text.title_filter,", filtered by: '%{code} - %{variable}'",", filtered by: '%{code} - %{variable}'"
 276,ka.explore_data.comparative.text.title_filter_value,", filtered by: '%{code} - %{variable} = %{value}'",", filtered by: '%{code} - %{variable} = %{value}'"
@@ -279,9 +279,9 @@ Line #,Key,en Version,ka Translation
 278,ka.explore_data.comparative.text.map.title_col,broken down by: '%{code} - %{broken_down_by} = %{broken_down_by_answer}',broken down by: '%{code} - %{broken_down_by} = %{broken_down_by_answer}'
 279,ka.explore_data.comparative.text.map.title_filter,", filtered by: '%{code} - %{variable}'",", filtered by: '%{code} - %{variable}'"
 280,ka.explore_data.comparative.text.map.title_filter_value,", filtered by: '%{code} - %{variable} = %{value}'",", filtered by: '%{code} - %{variable} = %{value}'"
-281,ka.explore_data.single.html.title,<span class='title-highlight'>Answers to:</span> <br />'<span class='code-highlight'>%{code}</span> - %{question}',<span class='title-highlight'>Answers to:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{question}'
+281,ka.explore_data.single.html.title,Answers to: '<span class='code-highlight'>%{code}</span> - %{question}',Answers to: '<span class='code-highlight'>%{code}</span> - %{question}'
 282,ka.explore_data.single.html.title_filter,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}',<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'
-283,ka.explore_data.single.html.title_filter_value,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>',<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'
+283,ka.explore_data.single.html.title_filter_value,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = %{value}',<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = %{value}'
 284,ka.explore_data.single.text.title,Answers to: '%{code} - %{question}' ,Answers to: '%{code} - %{question}' 
 285,ka.explore_data.single.text.title_filter,", filtered by: '%{code} - %{variable}'",", filtered by: '%{code} - %{variable}'"
 286,ka.explore_data.single.text.title_filter_value,", filtered by: '%{code} - %{variable} = %{value}'",", filtered by: '%{code} - %{variable} = %{value}'"
@@ -366,161 +366,161 @@ Line #,Key,en Version,ka Translation
 365,ka.helpers.links.agreement,Agreement,Agreement
 366,ka.helpers.links.add_highlight,Add to Highlights,Add to Highlights
 367,ka.helpers.links.delete_highlight,Remove from Highlights,Remove from Highlights
-368,ka.helpers.links.embed_chart,Embed Chart,Embed Chart
-369,ka.helpers.titles.edit,Edit %{model},შეცვლა %{model}
-370,ka.helpers.titles.save,Save %{model},შენახვა %{model}
-371,ka.helpers.titles.new,New %{model},ახალი %{model}
-372,ka.helpers.titles.delete,Delete %{model},წაშლა %{model}
-373,ka.app.language.en,English,English
-374,ka.app.language.ka,ქართული,ქართული
-375,ka.app.buttons.back,View All,იხილეთ ყველა
-376,ka.app.buttons.list,View All,იხილეთ ყველა
-377,ka.app.buttons.admin,Admin Section,ადმინისტრატორის განყოფილება
-378,ka.app.buttons.delete,Delete,წაშლა
-379,ka.app.buttons.edit,Edit,შეცვლა
-380,ka.app.buttons.show,Show,ჩვენება
-381,ka.app.buttons.cancel,Cancel,გაუქმება
-382,ka.app.buttons.update,Update,განახლება
-383,ka.app.buttons.save,Save,შენახვა
-384,ka.app.buttons.create,Create,შექმნა
-385,ka.app.buttons.reset,Reset,საწყის კონფიგურაციაზე დაბრუნება
-386,ka.app.buttons.remove,Remove,ამოშლა
-387,ka.app.buttons.confirm,Are you sure?,დარწმუნებული ხართ?
-388,ka.app.buttons.new,New,ახალი
-389,ka.app.buttons.save_settings,Save Settings,Save Settings
-390,ka.app.buttons.choose_category,Choose Category,Choose Category
-391,ka.app.buttons.change_category,Change Category,Change Category
-392,ka.app.common.xtraktr.app_name,X-Traktr,X-Traktr
-393,ka.app.common.xtraktr.app_slogan,Insert xtraktr slogn here!,Insert xtraktr slogn here!
-394,ka.app.common.xtraktr.app_description,Insert xtraktr description here.,Insert xtraktr description here.
-395,ka.app.common.unicef.app_name,UNICEF Georgia Data Portal,UNICEF საქართველოს ღია მონაცემები
-396,ka.app.common.unicef.app_slogan,Helping to solve by measuring,პრობლემების გადაჭრა საზომით
-397,ka.app.common.unicef.app_description,"In collaboration with a wide range of partners, UNICEF Georgia gathers evidence on the situation of children in Georgia. It uses this knowledge to inform national and global decision-making with the objective of improving children’s well-being.","UNICEF საქართველო, სხვა მრავალ პარტნიორთან ერთად აგროვებს მონაცემებს საქართველოში ბავშვთა კეთილდღეობის შესახებ არსებულ სიტუაციაზე. ამ ცოდნას ის გადასცემს ნაციონალურ და გლობალურ გადაწყვეტილების მიმღებ ორგანოებს რათა გაუმჯობესდეს ბავშვა კეთილდღეობა საქართველოში."
-398,ka.app.common.added_on,Added on: %{date},დამატებულია: %{date}
-399,ka.app.common.jumpstart,JumpStart Georgia,“ჯამპსტარტ ჯორჯია”
-400,ka.app.common.js_link_title,JumpStart Georgia - We communicate data better!,“ჯამპსტარტ ჯორჯია” - ჩვენ გაწვდით მონაცემებს უკეთ!
-401,ka.app.common.question,Question,Question
-402,ka.app.common.questions,Questions,Questions
-403,ka.app.common.question_code,Code,Code
-404,ka.app.common.answers,Answers,Answers
-405,ka.app.common.notes,Notes,Notes
-406,ka.app.common.count,Count,Count
-407,ka.app.common.percent,Percent,Percent
-408,ka.app.common.dataset_dashboard,Dataset Dashboard,Dataset Dashboard
-409,ka.app.common.time_series_dashboard,Time Series Dashboard,Time Series Dashboard
-410,ka.app.common.terms,I agree to the <a href='http://www.unicef.org/about/legal_terms.html' target='_blank'>Terms of Use</a>,I agree to the <a href='http://www.unicef.org/about/legal_terms.html' target='_blank'>Terms of Use</a>
-411,ka.app.common.or,Or,Or
-412,ka.app.common.go,Go,Go
-413,ka.app.common.share,Share,Share
-414,ka.app.common.codebook_title,Download the codebook,
-415,ka.app.msgs.does_not_exist,You tried to access a page that does not exist.,"თქვენ ცდილობთ ისეთი გვერდის ნახვას, რომელიც არ არსებობს."
-416,ka.app.msgs.not_authorized,You are not authorized to view that page.,თქვენ არ გაქვთ ამ გვერდის ნახვის უფლება.
-417,ka.app.msgs.success_created,%{obj} was successfully created.,%{obj} შექმნილია.
-418,ka.app.msgs.success_updated,%{obj} was successfully updated.,%{obj} განახლებულია.
-419,ka.app.msgs.question_exclude_saved,Exclude question selections were saved.,Exclude question selections were saved.
-420,ka.app.msgs.question_exclude_not_saved,An error occurred while saving the exclude question selections.,An error occurred while saving the exclude question selections.
-421,ka.app.msgs.answer_exclude_saved,Exclude answer selections were saved.,Exclude answer selections were saved.
-422,ka.app.msgs.answer_exclude_not_saved,An error occurred while saving the exclude answer selections.,An error occurred while saving the exclude answer selections.
-423,ka.app.msgs.answer_can_exclude_saved,Can exclude answer selections were saved.,Can exclude answer selections were saved.
-424,ka.app.msgs.answer_can_exclude_not_saved,An error occurred while saving the can exclude answer selections.,An error occurred while saving the can exclude answer selections.
-425,ka.app.msgs.mapping_saved,The question was successfully made mappable.,The question was successfully made mappable.
-426,ka.app.msgs.mapping_not_save,An error occurred while making the question mappable.,An error occurred while making the question mappable.
-427,ka.app.msgs.mapping_deleted,The question is no longer mappable.,The question is no longer mappable.
-428,ka.app.msgs.mapping_not_deleted,The question mapping could not be deleted.,The question mapping could not be deleted.
-429,ka.app.msgs.time_series_automatic_match,%{count} questions were added to your time series.,%{count} questions were added to your time series.
-430,ka.app.msgs.mass_upload_questions_error,The following error occurred while processing the questions: %{msg},The following error occurred while processing the questions: %{msg}
-431,ka.app.msgs.mass_upload_questions_success,%{count} questions were updated!,%{count} questions were updated!
-432,ka.app.msgs.mass_upload_answers_error,The following error occurred while processing the answers: %{msg},The following error occurred while processing the answers: %{msg}
-433,ka.app.msgs.mass_upload_answers_success,%{count} answers were updated!,%{count} answers were updated!
-434,ka.app.msgs.highlight_show_home_page_success,The highlight will now always appear on the home page.,The highlight will now always appear on the home page.
-435,ka.app.msgs.highlight_deleted,The highlight has been deleted.,The highlight has been deleted.
-436,ka.app.msgs.explore_error,An error occurred while processing your request.,An error occurred while processing your request.
-437,ka.app.msgs.user_settings_updated,Your settings were successfully updated.,Your settings were successfully updated.
-438,ka.app.msgs.api_key_created,Your API Access Token was successfully created.,Your API Access Token was successfully created.
-439,ka.app.msgs.api_key_deleted,Your API Access Token was successfully deleted.,Your API Access Token was successfully deleted.
-440,ka.app.msgs.missing_user_info,We have made some changes to the site that require you to update your user settings. Sorry for the inconvenience.,We have made some changes to the site that require you to update your user settings. Sorry for the inconvenience.
-441,ka.app.menu.explore_data,Explore Data,Explore Data
-442,ka.app.menu.explore_time_series,Explore Time Series,Explore Time Series
-443,ka.app.menu.datasets,Datasets,Datasets
-444,ka.app.menu.time_series,Time Series,Time Series
-445,ka.app.menu.user_settings,User Settings,User Settings
-446,ka.app.menu.about_dataset,About,About
-447,ka.app.menu.about_time_series,About,About
-448,ka.app.menu.all_datasets,All Datasets,All Datasets
-449,ka.app.menu.all_time_series,All Time Series,All Time Series
-450,ka.app.menu.contact,Contact,Contact
-451,ka.app.menu.api,API,API
-452,ka.app.menu.instructions,Instructions,Instructions
-453,ka.app.menu.home,Home,Home
-454,ka.app.menu.disclaimer,Notes,Notes
-455,ka.app.menu.titles.explore_dataset,"Explore the dataset data through charts, maps and tables","Explore the dataset data through charts, maps and tables"
-456,ka.app.menu.titles.explore_time_series,Explore the time series data through charts and tables,Explore the time series data through charts and tables
-457,ka.app.menu.titles.dataset_to_time_series,Explore this dataset as part of a time series,Explore this dataset as part of a time series
-458,ka.app.menu.admin_dataset.explore_data,Explore Data,Explore Data
-459,ka.app.menu.admin_dataset.heading,Dataset Options,Dataset Options
-460,ka.app.menu.admin_dataset.settings,Settings,Settings
-461,ka.app.menu.admin_dataset.qa,Edit Questions/Answers,Edit Questions/Answers
-462,ka.app.menu.admin_dataset.highlights,Highlights,Highlights
-463,ka.app.menu.admin_dataset.warnings,Warnings,Warnings
-464,ka.app.menu.admin_dataset.mappable,Make Mappable,Make Mappable
-465,ka.app.menu.admin_dataset.can_exlucde_answers,Answers Can Be Excluded,Answers Can Be Excluded
-466,ka.app.menu.admin_dataset.exlucde_answers,Exclude Answers,Exclude Answers
-467,ka.app.menu.admin_dataset.exclude_questions,Exclude Questions,Exclude Questions
-468,ka.app.menu.admin_dataset.delete,Delete,Delete
-469,ka.app.menu.admin_dataset.private_share,Share Private Dataset,Share Private Dataset
-470,ka.app.menu.admin_dataset.mass_changes,Mass Changes,Mass Changes
-471,ka.app.menu.admin_time_series.explore_data,Explore Data,Explore Data
-472,ka.app.menu.admin_time_series.heading,Time Series Options,Time Series Options
-473,ka.app.menu.admin_time_series.settings,Settings,Settings
-474,ka.app.menu.admin_time_series.qa,Edit Questions/Answers,Edit Questions/Answers
-475,ka.app.menu.admin_time_series.highlights,Highlights,Highlights
-476,ka.app.menu.admin_time_series.warnings,Warnings,Warnings
-477,ka.app.menu.admin_time_series.delete,Delete,Delete
-478,ka.app.menu.admin_time_series.private_share,Share Private Time Series,Share Private Time Series
-479,ka.user.age_group.g1,17-24,17-24
-480,ka.user.age_group.g2,25-34,25-34
-481,ka.user.age_group.g3,35-44,35-44
-482,ka.user.age_group.g4,45-54,45-54
-483,ka.user.age_group.g5,55-64,55-64
-484,ka.user.age_group.g6,above (>65),above (>65)
-485,ka.user.status.researcher,Researcher,Researcher
-486,ka.user.status.student,Student,Student
-487,ka.user.status.journalist,Journalist,Journalist
-488,ka.user.status.ngo,NGO,NGO
-489,ka.user.status.government_official,Government Official,Government Official
-490,ka.user.status.international_organization,International Organization,International Organization
-491,ka.user.status.private_sector,Private Sector,Private Sector
-492,ka.user.status.other,Other,Other
-493,ka.user.wanna_account,"Tired of filling out this form? To avoid this form in the future, create an account.","დაიღალეთ ამ ფორმის შევსებით? მომავალში მისი თავიდან აცილების მიზნის, შექმენით ანგარიში."
-494,ka.layouts.nav.toggle,Toggle navigation,ნავიგაციის ჩართვა/გამორთვა
-495,ka.layouts.nav.back,Back to UNICEF.ge,Back to UNICEF.ge
-496,ka.layouts.explore_data.private_share_header,Privately Share '%{title}',Privately Share '%{title}'
-497,ka.layouts.explore_data.private_share_explanation,"You can copy and share the following URL with whomever you want to view '%{title}' even though your dataset is not shared with the public. These people will have the ability to explore your data, but not edit it.","You can copy and share the following URL with whomever you want to view '%{title}' even though your dataset is not shared with the public. These people will have the ability to explore your data, but not edit it."
-498,ka.layouts.unsupported_browser.title,Unsupported Browser,არასათანადო ბრაუზერი
-499,ka.layouts.unsupported_browser.p1,We are sorry to report that your browser is out of date and will not properly render the content from this website.,სამწუხაროდ თქვენი ინტერნეტ ბრაუზერის მოხმარების ვადა გასულია და ვერ მოხდება ვებ-გვერდთან სრულად დაკავშირება.
-500,ka.layouts.unsupported_browser.p2,"On the bright side, there are several free browsers that you can download that are compatible with this site.",არსებობს რამდენიმე უფასო ბრაუზერი რომელის გადმოწერის შემდეგ შეძლებთ ვებ-გვერდით სარგებლობას.
-501,ka.layouts.unsupported_browser.chrome,Chrome,Chrome
-502,ka.layouts.unsupported_browser.firefox,Firefox,Firefox
-503,ka.layouts.unsupported_browser.ie,Internet Explorer (Windows only),Internet Explorer (მხოლოდ Windows-ზე)
-504,ka.layouts.unsupported_browser.opera,Opera,Opera
-505,ka.layouts.unsupported_browser.Safari,Safari,Safari
-506,ka.admin.index.title,Administration Section,ადმინისტრატორის განყოფილება
-507,ka.admin.index.users,Users,მომხმარებლები
-508,ka.admin.index.page_contents,Edit Text on Site,საიტზე ტექსტის რედაქტირება
-509,ka.admin.index.datasets,Datasets,Datasets
-510,ka.admin.index.shapesets,Shapesets,Shapesets
-511,ka.admin.index.api_documentation,API Version Documentation,API Version Documentation
-512,ka.admin.index.download_api_requests,Download API Request History,Download API Request History
-513,ka.admin.index.download_download_requests,Download Download Request History,Download Download Request History
-514,ka.admin.users.edit.title,Editing User,ცვლილებების შეტანა მომხმარებლის გვერდზე
-515,ka.admin.users.index.title,Users,მომხმარებლები
-516,ka.admin.users.new.title,New User,ახალი მომხმარებელი
-517,ka.admin.users.show.title,User Details,მომხმარებლის დეტალები
-518,ka.devise.mailer.reset_password_instructions.title,Hello %{nickname}!,"მოგესალმებით, %{nickname}!"
-519,ka.devise.mailer.reset_password_instructions.p1,"Someone has requested a link to change your password on %{app_name}, and you can do this through the link below.","მივიღეთ მოთხოვნა ""%{app_name}"" თქვენი პაროლის შეცვლის შესახებ. პაროლის შესაცვლელად, მიჰყევით შემდეგ ბმულს."
-520,ka.devise.mailer.reset_password_instructions.link_title,Change my password,პაროლის შეცვლა
-521,ka.devise.mailer.reset_password_instructions.p2,"If you didn't request this, please ignore this email.","თუ თქვენ არ მოგითხოვიათ პაროლის შეცვლა, გთხოვთ, არ მიაქციოთ ყურადღება ამ შეტყობინებას."
-522,ka.devise.mailer.reset_password_instructions.p3,Your password won't change until you access the link above and create a new one.,"თქვენი პაროლი იგივე დარჩება, სანამ არ გადახვალთ ზემოთ მითითებულ ბმულზე და შექმნით ახალ პაროლს."
+368,ka.helpers.titles.edit,Edit %{model},შეცვლა %{model}
+369,ka.helpers.titles.save,Save %{model},შენახვა %{model}
+370,ka.helpers.titles.new,New %{model},ახალი %{model}
+371,ka.helpers.titles.delete,Delete %{model},წაშლა %{model}
+372,ka.app.language.en,English,English
+373,ka.app.language.ka,ქართული,ქართული
+374,ka.app.buttons.back,View All,იხილეთ ყველა
+375,ka.app.buttons.list,View All,იხილეთ ყველა
+376,ka.app.buttons.admin,Admin Section,ადმინისტრატორის განყოფილება
+377,ka.app.buttons.delete,Delete,წაშლა
+378,ka.app.buttons.edit,Edit,შეცვლა
+379,ka.app.buttons.show,Show,ჩვენება
+380,ka.app.buttons.cancel,Cancel,გაუქმება
+381,ka.app.buttons.update,Update,განახლება
+382,ka.app.buttons.save,Save,შენახვა
+383,ka.app.buttons.create,Create,შექმნა
+384,ka.app.buttons.reset,Reset,საწყის კონფიგურაციაზე დაბრუნება
+385,ka.app.buttons.remove,Remove,ამოშლა
+386,ka.app.buttons.confirm,Are you sure?,დარწმუნებული ხართ?
+387,ka.app.buttons.new,New,ახალი
+388,ka.app.buttons.save_settings,Save Settings,Save Settings
+389,ka.app.buttons.choose_category,Choose Category,Choose Category
+390,ka.app.buttons.change_category,Change Category,Change Category
+391,ka.app.common.xtraktr.app_name,X-Traktr,X-Traktr
+392,ka.app.common.xtraktr.app_slogan,Insert xtraktr slogn here!,Insert xtraktr slogn here!
+393,ka.app.common.xtraktr.app_description,Insert xtraktr description here.,Insert xtraktr description here.
+394,ka.app.common.unicef.app_name,UNICEF Georgia Data Portal,UNICEF საქართველოს ღია მონაცემები
+395,ka.app.common.unicef.app_slogan,Helping to solve by measuring,პრობლემების გადაჭრა საზომით
+396,ka.app.common.unicef.app_description,"In collaboration with a wide range of partners, UNICEF Georgia gathers evidence on the situation of children in Georgia. It uses this knowledge to inform national and global decision-making with the objective of improving children’s well-being.","UNICEF საქართველო, სხვა მრავალ პარტნიორთან ერთად აგროვებს მონაცემებს საქართველოში ბავშვთა კეთილდღეობის შესახებ არსებულ სიტუაციაზე. ამ ცოდნას ის გადასცემს ნაციონალურ და გლობალურ გადაწყვეტილების მიმღებ ორგანოებს რათა გაუმჯობესდეს ბავშვა კეთილდღეობა საქართველოში."
+397,ka.app.common.added_on,Added on: %{date},დამატებულია: %{date}
+398,ka.app.common.jumpstart,JumpStart Georgia,“ჯამპსტარტ ჯორჯია”
+399,ka.app.common.js_link_title,JumpStart Georgia - We communicate data better!,“ჯამპსტარტ ჯორჯია” - ჩვენ გაწვდით მონაცემებს უკეთ!
+400,ka.app.common.question,Question,Question
+401,ka.app.common.questions,Questions,Questions
+402,ka.app.common.question_code,Code,Code
+403,ka.app.common.answers,Answers,Answers
+404,ka.app.common.notes,Notes,Notes
+405,ka.app.common.count,Count,Count
+406,ka.app.common.percent,Percent,Percent
+407,ka.app.common.dataset_dashboard,Dataset Dashboard,Dataset Dashboard
+408,ka.app.common.time_series_dashboard,Time Series Dashboard,Time Series Dashboard
+409,ka.app.common.terms,I agree to the <a href='http://www.unicef.org/about/legal_terms.html' target='_blank'>Terms of Use</a>,I agree to the <a href='http://www.unicef.org/about/legal_terms.html' target='_blank'>Terms of Use</a>
+410,ka.app.common.or,Or,Or
+411,ka.app.common.go,Go,Go
+412,ka.app.common.share,Share,Share
+413,ka.app.msgs.does_not_exist,You tried to access a page that does not exist.,"თქვენ ცდილობთ ისეთი გვერდის ნახვას, რომელიც არ არსებობს."
+414,ka.app.msgs.not_authorized,You are not authorized to view that page.,თქვენ არ გაქვთ ამ გვერდის ნახვის უფლება.
+415,ka.app.msgs.success_created,%{obj} was successfully created.,%{obj} შექმნილია.
+416,ka.app.msgs.success_updated,%{obj} was successfully updated.,%{obj} განახლებულია.
+417,ka.app.msgs.question_exclude_saved,Exclude question selections were saved.,Exclude question selections were saved.
+418,ka.app.msgs.question_exclude_not_saved,An error occurred while saving the exclude question selections.,An error occurred while saving the exclude question selections.
+419,ka.app.msgs.answer_exclude_saved,Exclude answer selections were saved.,Exclude answer selections were saved.
+420,ka.app.msgs.answer_exclude_not_saved,An error occurred while saving the exclude answer selections.,An error occurred while saving the exclude answer selections.
+421,ka.app.msgs.answer_can_exclude_saved,Can exclude answer selections were saved.,Can exclude answer selections were saved.
+422,ka.app.msgs.answer_can_exclude_not_saved,An error occurred while saving the can exclude answer selections.,An error occurred while saving the can exclude answer selections.
+423,ka.app.msgs.mapping_saved,The question was successfully made mappable.,The question was successfully made mappable.
+424,ka.app.msgs.mapping_not_save,An error occurred while making the question mappable.,An error occurred while making the question mappable.
+425,ka.app.msgs.mapping_deleted,The question is no longer mappable.,The question is no longer mappable.
+426,ka.app.msgs.mapping_not_deleted,The question mapping could not be deleted.,The question mapping could not be deleted.
+427,ka.app.msgs.time_series_automatic_match,%{count} questions were added to your time series.,%{count} questions were added to your time series.
+428,ka.app.msgs.mass_upload_questions_error,The following error occurred while processing the questions: %{msg},The following error occurred while processing the questions: %{msg}
+429,ka.app.msgs.mass_upload_questions_success,%{count} questions were updated!,%{count} questions were updated!
+430,ka.app.msgs.mass_upload_answers_error,The following error occurred while processing the answers: %{msg},The following error occurred while processing the answers: %{msg}
+431,ka.app.msgs.mass_upload_answers_success,%{count} answers were updated!,%{count} answers were updated!
+432,ka.app.msgs.highlight_show_home_page_success,The highlight will now always appear on the home page.,The highlight will now always appear on the home page.
+433,ka.app.msgs.highlight_deleted,The highlight has been deleted.,The highlight has been deleted.
+434,ka.app.msgs.explore_error,An error occurred while processing your request.,An error occurred while processing your request.
+435,ka.app.msgs.user_settings_updated,Your settings were successfully updated.,Your settings were successfully updated.
+436,ka.app.msgs.api_key_created,Your API Access Token was successfully created.,Your API Access Token was successfully created.
+437,ka.app.msgs.api_key_deleted,Your API Access Token was successfully deleted.,Your API Access Token was successfully deleted.
+438,ka.app.msgs.missing_user_info,We have made some changes to the site that require you to update your user settings. Sorry for the inconvenience.,We have made some changes to the site that require you to update your user settings. Sorry for the inconvenience.
+439,ka.app.menu.explore_data,Explore Data,Explore Data
+440,ka.app.menu.explore_time_series,Explore Time Series,Explore Time Series
+441,ka.app.menu.datasets,Datasets,Datasets
+442,ka.app.menu.time_series,Time Series,Time Series
+443,ka.app.menu.user_settings,User Settings,User Settings
+444,ka.app.menu.about_dataset,About,About
+445,ka.app.menu.about_time_series,About,About
+446,ka.app.menu.all_datasets,All Datasets,All Datasets
+447,ka.app.menu.all_time_series,All Time Series,All Time Series
+448,ka.app.menu.contact,Contact,Contact
+449,ka.app.menu.api,API,API
+450,ka.app.menu.instructions,Instructions,Instructions
+451,ka.app.menu.home,Home,Home
+452,ka.app.menu.disclaimer,Notes,Notes
+453,ka.app.menu.titles.explore_dataset,"Explore the dataset data through charts, maps and tables","Explore the dataset data through charts, maps and tables"
+454,ka.app.menu.titles.explore_time_series,Explore the time series data through charts and tables,Explore the time series data through charts and tables
+455,ka.app.menu.titles.dataset_to_time_series,Explore this dataset as part of a time series,Explore this dataset as part of a time series
+456,ka.app.menu.admin_dataset.explore_data,Explore Data,Explore Data
+457,ka.app.menu.admin_dataset.heading,Dataset Options,Dataset Options
+458,ka.app.menu.admin_dataset.settings,Settings,Settings
+459,ka.app.menu.admin_dataset.qa,Edit Questions/Answers,Edit Questions/Answers
+460,ka.app.menu.admin_dataset.highlights,Highlights,Highlights
+461,ka.app.menu.admin_dataset.warnings,Warnings,Warnings
+462,ka.app.menu.admin_dataset.mappable,Make Mappable,Make Mappable
+463,ka.app.menu.admin_dataset.can_exlucde_answers,Answers Can Be Excluded,Answers Can Be Excluded
+464,ka.app.menu.admin_dataset.exlucde_answers,Exclude Answers,Exclude Answers
+465,ka.app.menu.admin_dataset.exclude_questions,Exclude Questions,Exclude Questions
+466,ka.app.menu.admin_dataset.delete,Delete,Delete
+467,ka.app.menu.admin_dataset.private_share,Share Private Dataset,Share Private Dataset
+468,ka.app.menu.admin_dataset.mass_changes,Mass Changes,Mass Changes
+469,ka.app.menu.admin_time_series.explore_data,Explore Data,Explore Data
+470,ka.app.menu.admin_time_series.heading,Time Series Options,Time Series Options
+471,ka.app.menu.admin_time_series.settings,Settings,Settings
+472,ka.app.menu.admin_time_series.qa,Edit Questions/Answers,Edit Questions/Answers
+473,ka.app.menu.admin_time_series.highlights,Highlights,Highlights
+474,ka.app.menu.admin_time_series.warnings,Warnings,Warnings
+475,ka.app.menu.admin_time_series.delete,Delete,Delete
+476,ka.app.menu.admin_time_series.private_share,Share Private Time Series,Share Private Time Series
+477,ka.user.age_group.g1,17-24,17-24
+478,ka.user.age_group.g2,25-34,25-34
+479,ka.user.age_group.g3,35-44,35-44
+480,ka.user.age_group.g4,45-54,45-54
+481,ka.user.age_group.g5,55-64,55-64
+482,ka.user.age_group.g6,above (>65),above (>65)
+483,ka.user.status.researcher,Researcher,Researcher
+484,ka.user.status.student,Student,Student
+485,ka.user.status.journalist,Journalist,Journalist
+486,ka.user.status.ngo,NGO,NGO
+487,ka.user.status.government_official,Government Official,Government Official
+488,ka.user.status.international_organization,International Organization,International Organization
+489,ka.user.status.private_sector,Private Sector,Private Sector
+490,ka.user.status.other,Other,Other
+491,ka.user.wanna_account,"Tired of filling out this form? To avoid this form in the future, create an account.","დაიღალეთ ამ ფორმის შევსებით? მომავალში მისი თავიდან აცილების მიზნის, შექმენით ანგარიში."
+492,ka.layouts.nav.toggle,Toggle navigation,ნავიგაციის ჩართვა/გამორთვა
+493,ka.layouts.nav.back,Back to UNICEF.ge,Back to UNICEF.ge
+494,ka.layouts.explore_data.private_share_header,Privately Share '%{title}',Privately Share '%{title}'
+495,ka.layouts.explore_data.private_share_explanation,"You can copy and share the following URL with whomever you want to view '%{title}' even though your dataset is not shared with the public. These people will have the ability to explore your data, but not edit it.","You can copy and share the following URL with whomever you want to view '%{title}' even though your dataset is not shared with the public. These people will have the ability to explore your data, but not edit it."
+496,ka.layouts.unsupported_browser.title,Unsupported Browser,არასათანადო ბრაუზერი
+497,ka.layouts.unsupported_browser.p1,We are sorry to report that your browser is out of date and will not properly render the content from this website.,სამწუხაროდ თქვენი ინტერნეტ ბრაუზერის მოხმარების ვადა გასულია და ვერ მოხდება ვებ-გვერდთან სრულად დაკავშირება.
+498,ka.layouts.unsupported_browser.p2,"On the bright side, there are several free browsers that you can download that are compatible with this site.",არსებობს რამდენიმე უფასო ბრაუზერი რომელის გადმოწერის შემდეგ შეძლებთ ვებ-გვერდით სარგებლობას.
+499,ka.layouts.unsupported_browser.chrome,Chrome,Chrome
+500,ka.layouts.unsupported_browser.firefox,Firefox,Firefox
+501,ka.layouts.unsupported_browser.ie,Internet Explorer (Windows only),Internet Explorer (მხოლოდ Windows-ზე)
+502,ka.layouts.unsupported_browser.opera,Opera,Opera
+503,ka.layouts.unsupported_browser.Safari,Safari,Safari
+504,ka.admin.index.title,Administration Section,ადმინისტრატორის განყოფილება
+505,ka.admin.index.users,Users,მომხმარებლები
+506,ka.admin.index.page_contents,Edit Text on Site,საიტზე ტექსტის რედაქტირება
+507,ka.admin.index.datasets,Datasets,Datasets
+508,ka.admin.index.shapesets,Shapesets,Shapesets
+509,ka.admin.index.api_documentation,API Version Documentation,API Version Documentation
+510,ka.admin.index.download_api_requests,Download API Request History,Download API Request History
+511,ka.admin.index.download_download_requests,Download Download Request History,Download Download Request History
+512,ka.admin.users.edit.title,Editing User,ცვლილებების შეტანა მომხმარებლის გვერდზე
+513,ka.admin.users.index.title,Users,მომხმარებლები
+514,ka.admin.users.new.title,New User,ახალი მომხმარებელი
+515,ka.admin.users.show.title,User Details,მომხმარებლის დეტალები
+516,ka.devise.mailer.reset_password_instructions.title,Hello %{nickname}!,"მოგესალმებით, %{nickname}!"
+517,ka.devise.mailer.reset_password_instructions.p1,"Someone has requested a link to change your password on %{app_name}, and you can do this through the link below.","მივიღეთ მოთხოვნა ""%{app_name}"" თქვენი პაროლის შეცვლის შესახებ. პაროლის შესაცვლელად, მიჰყევით შემდეგ ბმულს."
+518,ka.devise.mailer.reset_password_instructions.link_title,Change my password,პაროლის შეცვლა
+519,ka.devise.mailer.reset_password_instructions.p2,"If you didn't request this, please ignore this email.","თუ თქვენ არ მოგითხოვიათ პაროლის შეცვლა, გთხოვთ, არ მიაქციოთ ყურადღება ამ შეტყობინებას."
+520,ka.devise.mailer.reset_password_instructions.p3,Your password won't change until you access the link above and create a new one.,"თქვენი პაროლი იგივე დარჩება, სანამ არ გადახვალთ ზემოთ მითითებულ ბმულზე და შექმნით ახალ პაროლს."
+521,ka.embed.v1.index.title_site,Go to %{app_name},Go to %{app_name}
+522,ka.embed.v1.index.title_datalist,View All Datasets,View All Datasets
 523,ka.settings.index.title,User Settings,User Settings
 524,ka.settings.index.tabs.settings,Settings,Settings
 525,ka.settings.index.tabs.api,API Access Tokens,API Access Tokens
@@ -759,14 +759,12 @@ You can use this page to quickly remove highlights or to indicate which highligh
 738,ka.shared.dashboard_time_series.filter.questions,Question Text,Question Text
 739,ka.shared.dashboard_time_series.filter.answers,Answer Text,Answer Text
 740,ka.shared.language_switcher.label,Available Languages,Available Languages
-741,ka.shared.embed_v1.title_site,Go to %{app_name},Go to %{app_name}
-742,ka.shared.embed_v1.title_datalist,View All Datasets,View All Datasets
-743,ka.export_data.dataset,Dataset: %{title},Dataset: %{title}
-744,ka.export_data.download_from,Downloaded From: %{app_name} at %{url}.,Downloaded From: %{app_name} at %{url}.
-745,ka.export_data.last_update,Data Last Updated: %{date},Data Last Updated: %{date}
-746,ka.export_data.instructions.codebook,The codebook is a list of all questions and answers available in this dataset. It is provided as a reference to help you quickly find items of interest.,The codebook is a list of all questions and answers available in this dataset. It is provided as a reference to help you quickly find items of interest.
-747,ka.export_data.instructions.csv_main,"The CSV file is a spreadsheet of all of the data in the dataset. You can open this file in OpenOffice, Excel, Google Spreadsheets or any other spreadsheet software. ","The CSV file is a spreadsheet of all of the data in the dataset. You can open this file in OpenOffice, Excel, Google Spreadsheets or any other spreadsheet software. "
-748,ka.export_data.instructions.csv,"The CSV download contains 2 files:
+741,ka.export_data.dataset,Dataset: %{title},Dataset: %{title}
+742,ka.export_data.download_from,Downloaded From: %{app_name} at %{url}.,Downloaded From: %{app_name} at %{url}.
+743,ka.export_data.last_update,Data Last Updated: %{date},Data Last Updated: %{date}
+744,ka.export_data.instructions.codebook,The codebook is a list of all questions and answers available in this dataset. It is provided as a reference to help you quickly find items of interest.,The codebook is a list of all questions and answers available in this dataset. It is provided as a reference to help you quickly find items of interest.
+745,ka.export_data.instructions.csv_main,"The CSV file is a spreadsheet of all of the data in the dataset. You can open this file in OpenOffice, Excel, Google Spreadsheets or any other spreadsheet software. ","The CSV file is a spreadsheet of all of the data in the dataset. You can open this file in OpenOffice, Excel, Google Spreadsheets or any other spreadsheet software. "
+746,ka.export_data.instructions.csv,"The CSV download contains 2 files:
 - Codebook: %{codebook}
 
 - CSV: %{csv} The CSV is formatted with headers (format: code - name) and the answers are the answer text, not the answer value.
@@ -775,7 +773,7 @@ You can use this page to quickly remove highlights or to indicate which highligh
 
 - CSV: %{csv} The CSV is formatted with headers (variable code and name) and the answers use answer text, not the answer value.
 "
-749,ka.export_data.instructions.spss,"The SPSS download contains 3 files:
+747,ka.export_data.instructions.spss,"The SPSS download contains 3 files:
 - Codebook: %{codebook}
 
 - CSV: %{csv} The CSV is formatted to be loaded into SPSS, so it does not contain headers and the answers are the answer values, not the answer text.
@@ -790,7 +788,7 @@ You can use this page to quickly remove highlights or to indicate which highligh
 - SPS: The SPS file is a script file that you run in SPSS that will load the data from the CSV file and also create each variable and it's possible values. 
        IMPORTANT - Before runing the script file in SPSS, you will need to update the line with 'DATA LIST FILE' to include the full path to the CSV file.
 "
-750,ka.export_data.instructions.stata,"The STATA download contains 3 files:
+748,ka.export_data.instructions.stata,"The STATA download contains 3 files:
 - Codebook: %{codebook}
 
 - CSV: %{csv} The CSV is formatted to be loaded into STATA, so it does not contain headers and the answers are the answer text, not the answer values.
@@ -805,7 +803,7 @@ You can use this page to quickly remove highlights or to indicate which highligh
 - DO: The STATA DO file is a script file that you run in STATA that will load the data from the CSV file and also create each variable and it's possible values. 
        IMPORTANT - Before runing the script file in STATA, you will need to update the line with 'using' at the end of the file to include the full path to the CSV file.
 "
-751,ka.export_data.instructions.r,"The R download contains 3 files:
+749,ka.export_data.instructions.r,"The R download contains 3 files:
 - Codebook: %{codebook}
 
 - CSV: %{csv} The CSV is formatted to be loaded into R, so the headers are the variables and the answers are the answer values, not the answer text.
@@ -820,11 +818,11 @@ You can use this page to quickly remove highlights or to indicate which highligh
 - R: The R file is a script file that you run in R that will load the data from the CSV file and also create each variable. 
        IMPORTANT - Before runing the script file in R, you will need to update the 'setwd' line to include the full path to the CSV file.
 "
-752,ka.download_data_options.text.csv,CSV,CSV
-753,ka.download_data_options.text.spss,SPSS,SPSS
-754,ka.download_data_options.text.stata,STATA,STATA
-755,ka.download_data_options.text.r,R,R
-756,ka.download_data_options.title.csv,Data formatted for spreadsheets,Data formatted for spreadsheets
-757,ka.download_data_options.title.spss,Data formatted for SPSS,Data formatted for SPSS
-758,ka.download_data_options.title.stata,Data formatted for STATA,Data formatted for STATA
-759,ka.download_data_options.title.r,Data formatted for R,Data formatted for R
+750,ka.download_data_options.text.csv,CSV,CSV
+751,ka.download_data_options.text.spss,SPSS,SPSS
+752,ka.download_data_options.text.stata,STATA,STATA
+753,ka.download_data_options.text.r,R,R
+754,ka.download_data_options.title.csv,Data formatted for spreadsheets,Data formatted for spreadsheets
+755,ka.download_data_options.title.spss,Data formatted for SPSS,Data formatted for SPSS
+756,ka.download_data_options.title.stata,Data formatted for STATA,Data formatted for STATA
+757,ka.download_data_options.title.r,Data formatted for R,Data formatted for R
