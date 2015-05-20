@@ -62,7 +62,7 @@
                   <% end %>
                   <% if dataset.description.present? %>
                     <div>
-                      <%= truncate(strip_tags_nbsp(dataset.description), length: 150, separator: ' ') %>
+                      <%= truncate(strip_tags_nbsp(dataset.description), length: 150, separator: ' ').html_safe %>
                     </div>
                   <% end %>
                 </li>
@@ -90,7 +90,7 @@
                     <h2><%= link_to time_series.title, explore_time_series_dashboard_path(time_series) %></h2>
                     <% if time_series.description.present? %>
                       <div>
-                        <%= truncate(strip_tags_nbsp(time_series.description), length: 150, separator: ' ') %>
+                        <%= truncate(strip_tags_nbsp(time_series.description), length: 150, separator: ' ').html_safe %>
                       </div>
                     <% end %>
                   </li>
@@ -105,7 +105,7 @@
             <%= link_to explore_time_series_dashboard_path(id: @wms_id), id: 'wms_link' do %>
               <div id="wms_banner">
                 <span id="wms_title"><%= t('.wms_title').html_safe %></span>
-                <span id="wms_slogan"><%= t('.wms_slogan') %></span>
+                <span id="wms_slogan"><%= t('.wms_slogan').html_safe %></span>
               </div>
             <% end %>
         <% end %>
