@@ -21,15 +21,15 @@
 //= require vendor
 
 $(document).ready(function(){
-	// set focus to first text box on page
-	if (gon.highlight_first_form_field){
-	  $(":input:visible:enabled:first").focus();
-	}
+   // set focus to first text box on page
+   if (gon.highlight_first_form_field){
+     $(":input:visible:enabled:first").focus();
+   }
 
-	// workaround to get logout link in navbar to work
-	$('body')
-		.off('click.dropdown touchstart.dropdown.data-api', '.dropdown')
-		.on('click.dropdown touchstart.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() });
+   // workaround to get logout link in navbar to work
+   $('body')
+      .off('click.dropdown touchstart.dropdown.data-api', '.dropdown')
+      .on('click.dropdown touchstart.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() });
 
   $('body').tooltip({
     selector: '[title]',
@@ -135,8 +135,8 @@ $(document).ready(function(){
           var errors = data.errors;
           if(data.sessions)
           {
-              form.parent().find('.alert').remove();  
-              form.before('<div class="alert"><span>' + data.errors.alert + '</span></div>');          
+              form.parent().find('.notification').remove();  
+              form.before(notification('alert', data.errors.alert));          
               form.find(':input:visible:enabled:first').focus();
           }
           else //data.registration
@@ -246,6 +246,7 @@ $(document).ready(function(){
 
     });
   $('.search .go-submit').click(function(){ $(this).closest('form').submit(); });
+  $(document).on('click', '.notification .closeup', function() { $(this).parent().remove(); });
 });
 var downloading = false;
 function download_request(url, data)
@@ -340,3 +341,8 @@ function debounce(func, wait, immediate) {
     if (callNow) func.apply(context, args);
   };
 };
+function notification(state,text)
+{
+    state = ['success', 'error', 'info'].indexOf(state) != -1 ? state : 'error';
+    return "<div class='notification "+ state + "'><div class='figure'></div><div class='text'>"+text+"</div><div class='closeup'></div></div>";
+}

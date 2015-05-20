@@ -44,9 +44,9 @@ module FormtasticBootstrap
             options[:error_class] || builder.default_block_error_class
           end          
           template.content_tag(
-              :div, 
-              template.content_tag(:div, "!"), 
-              :class => error_class,
+              :abbr, 
+              '', 
+              :class => 'exclamation', #error_class + 
               :title => Formtastic::Util.html_safe(errors.to_sentence.html_safe)
             )
         end
@@ -63,14 +63,15 @@ module FormtasticBootstrap
 
         def error_first_html(inline_or_block = :inline)
           error_class = if inline_or_block == :inline
+
             options[:error_class] || builder.default_inline_error_class
           else
             options[:error_class] || builder.default_block_error_class
-          end          
+          end     
           template.content_tag(
-              :div, 
-              template.content_tag(:div, "!"), 
-              :class => error_class,
+              :abbr, 
+              '', 
+              :class => 'exclamation', #error_class + ,
               :title => Formtastic::Util.html_safe(errors.first.untaint)
           )
         end
@@ -121,9 +122,10 @@ module FormtasticBootstrap
             form_group_wrapping do
               (render_label? ? label_html(hint_html, error_html(:block)) : '').html_safe <<
               template.content_tag(:span, :class => 'form-wrapper') do
-                input_content(&block)                         
-              end <<
-                (!render_label? ? label_html(hint_html, error_html(:block)) : '').html_safe
+                input_content(&block) <<
+                 (!render_label? ? label_html(hint_html, error_html(:block)) : '').html_safe
+              end #<<
+                #(!render_label? ? label_html(hint_html, error_html(:block)) : '').html_safe
             end
           end
 

@@ -91,7 +91,7 @@
       border:0px !important;
       background-color:#dceef4 !important;
       text-decoration: none;    
-      height:31px;
+      height:39px;
       width:100%;
       min-width:100%;
       max-width:100%;
@@ -146,6 +146,7 @@
     background-color:#ace1f4;
     padding:0px 0px 0px 6px;
     display:block;
+    min-width: 200px;
   }  
   .email
   {
@@ -204,6 +205,23 @@
 
     }  
   }
+  .formtastic input
+  {
+    box-sizing:border-box;
+  }
+
+  .has-error
+  {
+     input[type=text],input[type=email],input[type=password], textarea
+     {
+        background-color:#f7d0d6 !important;
+     }
+     > label
+     {
+        color:#d95d6a !important;
+     }
+  }
+  .notification { width: 100%; }
 }
 
 .article.instructions
