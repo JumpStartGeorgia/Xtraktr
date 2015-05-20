@@ -1,5 +1,51 @@
 #settings-tabs{
+  margin-top: 20px;
+
   .tab-content {
-    margin-top: 20px;
+    background-color: #f6f7f7;
+  
+    #api{
+      font-family: 'sourcesans_pro_l', 'sans-serif';
+      font-size: 16px;
+      font-weight: normal;
+      color: #49505e;
+    
+      #btn-add-api-key{
+        padding: 20px 0;
+        a{
+          background-color: #d95d6a;
+          font-family: nokiasans_s60;
+          color: #fff;
+          text-transform: uppercase;
+          padding: 15px 30px;
+          -moz-border-radius: 5px;
+          -webkit-border-radius: 5px;
+          border-radius: 5px;
+          -khtml-border-radius: 5px;
+        }
+      }
+
+      table{
+        margin: 0;
+        tr > td{
+          background-color: #fff;
+          a.btn-delete-api-key{
+            color: #d95d6a;
+            background-color: #fff;
+            padding: 5px;
+            &:hover{
+              background-color: #d95d6a;
+              color: #fff;
+              text-decoration: none;
+            }
+          }
+        }
+        tr:hover > td{
+          background-color: transparent;
+        }
+      }
+    }
   }
+
+
 }

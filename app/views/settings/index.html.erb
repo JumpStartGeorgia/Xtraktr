@@ -41,8 +41,8 @@
       <p><%= t('.api_explanation1') %></p>
       <p><%= t('.api_explanation2').gsub('[link]', link_to(t('.api_link_text'), api_path)).html_safe %></p>
 
-      <p>
-        <%= link_to t('.get_api'), settings_get_api_token_path, class: 'btn btn-primary', method: :post %>
+      <p id="btn-add-api-key">
+        <%= link_to t('.get_api'), settings_get_api_token_path, method: :post %>
       </p>
       
       <hr />
@@ -62,11 +62,13 @@
                 <td><%= key.key %></td>
                 <td><%= l(key.created_at.to_date, format: :day_first) %></td>
                 <td>
-                  <%= link_to t('app.buttons.delete'),
+                  <%= link_to 'X',
                               settings_delete_api_token_path(key.id),
+                              :'data-placement' => 'right',
+                              :title => t('.delete_api'),
                               :method => :delete,
                               :data => { :confirm => I18n.t("helpers.links.confirm") },
-                              :class => 'btn btn-xs btn-danger' %>
+                              :class => 'btn-delete-api-key' %>
                 </td>   
               </tr>           
             <% end %>
