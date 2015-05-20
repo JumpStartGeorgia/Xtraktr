@@ -445,9 +445,9 @@ ka:
       add_highlight: "გამორჩეულში დამატება"
       delete_highlight: "გამორჩეულიდან წაშლა"
       embed_chart: ჩასმული გრაფიკი
-      embed_chart_prompt: "Copy and paste this embed code into your web page:"
-      embed_chart_wide: px wide
-      embed_chart_high: px high
+      embed_chart_prompt: 'დააკოპირეთ და ჩასვით ეს კოდი თქვენ საიტზე:'
+      embed_chart_wide: px ფართო
+      embed_chart_high: px მაღალი
     titles:
       edit: "შეცვლა %{model}"
       save: "შენახვა %{model}"
@@ -687,12 +687,12 @@ ka:
         publish: "აქ გამოქვეყნების თარიღი"
       no_data: "ამ მომენტისთვის ვებ-გვერდზე არ შექმნილა პერიოდული შედარება."
     explore_time_series:
-      no_match: 'Sorry, no time series match your search request.'      
+      no_match: 'უკაცრავად, თქვენს მოთხოვნას არცერთი პერიოდული შედარება არ შეესაბამება'      
     explore_time_series_show:
-      title: Explore Time Series Data
+      title: გაეცანით პერიოდული შედარების მონაცემებს
   api:
     msgs:
-      no_key: API-ს გამოსაყენებლად თქვენ უნდა წარმაოდგინოთ API-ს დაშვების გასაღები. თქენ მარტივად შეგიძლიათ API-ს მიღება _____________.
+      no_key: API-ს გამოსაყენებლად თქვენ უნდა წარმაოდგინოთ API-ს დაშვების გასაღები. თქენ მარტივად შეგიძლიათ API-ის დაშვების გასაღების მიღება შემდეგ მისამართზე გადასვლით %{url}.
       no_dataset: "მონაცემთა ცხრილი ვერ მოიძებნა"
       no_question: "კითხვა ვერ მოიძებნა"
       no_broken_down_by: "კითხვებით ჩაშლა ვერ მოიძებნა"
