@@ -673,7 +673,6 @@ en:
         release: Date Released
         publish: Date Published Here
       no_data: 'At this time, no datasets have been loaded into the site.'
-    explore_data:
       no_match: 'Sorry, no datasets match your search request.'      
     explore_data_show:
       title: Explore the Data
@@ -686,7 +685,6 @@ en:
         title: Title
         publish: Date Published Here
       no_data: 'At this time, no time series have been created in the site.'
-    explore_time_series:
       no_match: 'Sorry, no time series match your search request.'      
     explore_time_series_show:
       title: Explore Time Series Data
