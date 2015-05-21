@@ -1,9 +1,22 @@
 @import "twitter/bootstrap/variables.less";
 @import "variables.css.less";
 
-.explore-data{
-  // margin-top: 20px;
+.article.explore-data{
+  margin:0px -50px !important;
 
+  &.r {
+    display:table;
+    width:100%;
+    .c {
+      display:table-cell;
+      vertical-align:top;
+      &:first-of-type
+      {
+        width:300px;
+         max-width:300px;
+      }
+    }
+  }
   &.embed-item{
     margin-top: 0;
   }
@@ -16,16 +29,30 @@
   }
 
   #explore-form{
+   
     background-color: @light-grey-color;
     h2{
-      color: @maroon-color;
-      font-size: 20px;
+      font:16px 'prime','sans-serif';
+      color: #d95d6A;
       margin-bottom: 20px;
       margin-top: 10px;
     }
 
-    select{
-      width: 200px;
+    select
+    {
+      font-family: 'sourcesans_pro', 'sans-serif';
+      font-size: 13px;
+      color: #777c86;
+      background: #ffffff url(/assets/svg/select_arrow.svg) no-repeat center right / 21px 7px;
+      padding: 6px 28px 6px 10px;
+      border:1px solid #ddd;
+      min-width:100px;
+       width: 200px;
+      outline:none;
+      -webkit-appearance: none;
+      moz-appearance:    none;
+      appearance:         none;
+      cursor:pointer;
     }
 
     /* allow the text to wrap in the drop downs for long text will make the drop down too wide */
@@ -148,6 +175,7 @@
   }
 
   #container-chart{
+    width:100%;
     .chart{
       width:100%; 
       height:501px;
@@ -159,11 +187,6 @@
       }
     }
   }
-
-  .tab-content{
-    margin-top: 20px;
-  }
-
 
   /* when chart title is a link */
   a.visual-title-link{
@@ -347,6 +370,24 @@
   #explore-data-content{
     position: relative;
     min-height: 200px;
+    .nav-tabs
+    {
+      border-bottom:0px;
+      li
+      {
+       
+        a
+        {
+          -webkit-border-radius: 0;
+          -moz-border-radius: 0;
+          border-radius: 0;
+        }
+      }
+    }
+    .tab-content
+    {
+      background:transparent url(/assets/svg/hborder.svg) repeat-x top center/100% 1px;
+    }
   }
   #explore-error{
     background-color: rgba(0, 0, 0, 0.4);
