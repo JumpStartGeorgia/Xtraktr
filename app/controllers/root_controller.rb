@@ -160,6 +160,8 @@ class RootController < ApplicationController
 
 
   def explore_time_series
+    @klass=' white'
+    @klass_footer=''
     @time_series = TimeSeries.meta_only.is_public
 
     # add search
@@ -196,6 +198,8 @@ class RootController < ApplicationController
   end
   
   def explore_time_series_dashboard
+    @klass=' white'
+    @klass_footer=''
     @time_series = TimeSeries.is_public.find_by(id: params[:id])
 
     if @time_series.blank?

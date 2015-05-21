@@ -6,7 +6,7 @@
   subnav_left render(partial: 'shared/language_switcher', locals: {langs: @time_series.language_objects, current_locale: @time_series.current_locale})
 -%>
 
-<div class="article dashboard">
+<div class="article timeseries">
   <div class="meta">
     <div class="col bright">
       <h2>
@@ -15,7 +15,7 @@
       </h2>
       <% @datasets.each_with_index do |dataset, dataset_index| %>     
         <div class="info">
-          <div class="time-series-year">
+          <div class="time-series-year<%= dataset_index == @datasets.length-1 ? ' last' : '' %>">
             <%= @time_series.dates_included[dataset_index] %>
           </div>
           <div class="calendar"></div>
@@ -24,7 +24,7 @@
             <%= format_gathered_dates(dataset.start_gathered_at, dataset.end_gathered_at) %>
           </div>
           <div class="timestamp">
-            <span><%= model_class_d.human_attribute_name(:released_at) %>::</span>
+            <span><%= model_class_d.human_attribute_name(:released_at) %>:</span>
             <%= I18n.l(dataset.released_at, format: :day_first) if dataset.released_at.present? %>
           </div>   
           <% if dataset_index == 0 %>
@@ -59,116 +59,114 @@
       </div>
     </div>
   </div>
+  <div id="dashboard-tabs" class="tabs" role="tabpanel">
+      <% 
+        highlight_active = {tab: '', panel: ''}
+        codebook_active = {tab: 'active', panel: 'in active'}
+        if @highlights.present?
+          highlight_active = {tab: 'active', panel: 'in active'}
+          codebook_active = {tab: '', panel: ''}
+        end 
+      %>
+    <ul class="nav nav-tabs" role="tablist">
+      <li role="presentation" class="<%= highlight_active[:tab] %>">
+        <a href="#highlights" aria-controls="highlights" role="tab" data-toggle="tab"><%= t('.tabs.highlights') %></a>
+      </li>
+      <li role="presentation" class="<%= codebook_active[:tab] %>">
+        <a href="#codebook" aria-controls="codebook" role="tab" data-toggle="tab"><%= t('.tabs.codebook') %></a>
+      </li>
+      <li role="presentation">
+        <a href="#datasets" aria-controls="datasets" role="tab" data-toggle="tab"><%= t('.tabs.datasets') %></a>
+      </li>
+      <li role="presentation">
+        <a href="#licensing" aria-controls="licensing" role="tab" data-toggle="tab"><%= t('.tabs.licensing') %></a>
+      </li>
+    </ul>
 
-<div id="dashboard-tabs" class="tabs" role="tabpanel">
-
-    <% 
-      highlight_active = {tab: '', panel: ''}
-      codebook_active = {tab: 'active', panel: 'in active'}
-      if @highlights.present?
-        highlight_active = {tab: 'active', panel: 'in active'}
-        codebook_active = {tab: '', panel: ''}
-      end 
-    %>
-
-  <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="<%= highlight_active[:tab] %>">
-      <a href="#highlights" aria-controls="highlights" role="tab" data-toggle="tab"><%= t('.tabs.highlights') %></a>
-    </li>
-    <li role="presentation" class="<%= codebook_active[:tab] %>">
-      <a href="#codebook" aria-controls="codebook" role="tab" data-toggle="tab"><%= t('.tabs.codebook') %></a>
-    </li>
-    <li role="presentation">
-      <a href="#datasets" aria-controls="datasets" role="tab" data-toggle="tab"><%= t('.tabs.datasets') %></a>
-    </li>
-    <li role="presentation">
-      <a href="#licensing" aria-controls="licensing" role="tab" data-toggle="tab"><%= t('.tabs.licensing') %></a>
-    </li>
-  </ul>
-
-  <div class="tab-content">
-    <div role="tabpanel" class="tab-pane fade <%= highlight_active[:panel] %>" id="highlights">
-      <% if !@highlights.present? %>
-        <p>
-          <%= t('.no_highlights') %>
-        </p>
-      <% end %>
-    </div>
-    
-    <div role="tabpanel" class="tab-pane fade <%= codebook_active[:panel] %>" id="codebook">
-      <div id="codebook-search">
-        <input type="text" class="codebook-search" id="filter" value="" placeholder="<%= t('helpers.search') %>" />
-        <div class="radio-box" tabindex="0">
-          <input checked id="filter_all" name="filter" type="radio" value="all" />
-          <label class="filter" for="filter_all"><%= t('.filter.all') %></label>
-        </div>
-        <div class="radio-box" tabindex="0">
-          <input id="filter_q" name="filter" type="radio" value="q" />
-          <label class="filter" for="filter_q"><%= t('.filter.questions') %></label>
-        </div>
-        <div class="radio-box" tabindex="0">
-          <input id="filter_ans" name="filter" type="radio" value="ans" />
-          <label class="filter" for="filter_ans"><%= t('.filter.answers') %></label>
-        </div>  
-      </div>
-
-      <ul class="list-unstyled">
-        <% @time_series.questions.sorted.each do |question| %>
-          <li>
-            <div class="col question">
-              <%= link_to url_time_series_explore(@time_series, question_code: question.code, language: params[:language]) do %>
-                <div><span><%= question.original_code %>:</span><br/>
-                <%= question.text %></div>
-              <% end %>
-            </div>
-            <div class="col details">
-              <div>
-                <div class="col k"><%= t('app.common.question') %>: </div>
-                <div class="col"><%= question.text %></div>
-              </div>
-              <% if question.notes.present? %>
-                <div>
-                  <div class="col k"><%= t('app.common.notes') %>: </div>
-                  <div class="col"><%= question.notes %></div>
-                </div>
-              <% end %>
-              <div>
-                <div class="col k"><%= t('app.common.answers') %>: </div>
-                <div class="col answers">
-                  <%- answers = question.answers.sorted
-                    if answers.present? 
-                  -%>
-                    <ul>
-                      <%- answers.each do |answer| -%>
-                        <li><%= answer.text %></li> 
-                      <%- end -%>
-                    </ul>
-                  <% end %>
-                </div>
-              </div>
-            </div>
-          </li>
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade <%= highlight_active[:panel] %>" id="highlights">
+        <% if !@highlights.present? %>
+          <p>
+            <%= t('.no_highlights') %>
+          </p>
         <% end %>
-      </ul>
-    </div>
-    
-    <div role="tabpanel" class="tab-pane fade" id="datasets">
-      <div class="article explore">
-        <div class="list">
-          <%= render partial: 'root/explore_data_datasets', locals: {with_pagination: false, with_time_series_link: false} %>
+      </div>
+      
+      <div role="tabpanel" class="tab-pane fade <%= codebook_active[:panel] %>" id="codebook">
+        <div id="codebook-search">
+          <input type="text" class="codebook-search" id="filter" value="" placeholder="<%= t('helpers.search') %>" />
+          <div class="radio-box" tabindex="0">
+            <input checked id="filter_all" name="filter" type="radio" value="all" />
+            <label class="filter" for="filter_all"><%= t('.filter.all') %></label>
+          </div>
+          <div class="radio-box" tabindex="0">
+            <input id="filter_q" name="filter" type="radio" value="q" />
+            <label class="filter" for="filter_q"><%= t('.filter.questions') %></label>
+          </div>
+          <div class="radio-box" tabindex="0">
+            <input id="filter_ans" name="filter" type="radio" value="ans" />
+            <label class="filter" for="filter_ans"><%= t('.filter.answers') %></label>
+          </div>  
+        </div>
+
+        <ul class="list-unstyled">
+          <% @time_series.questions.sorted.each do |question| %>
+            <li>
+              <div class="col question">
+                <%= link_to url_time_series_explore(@time_series, question_code: question.code, language: params[:language]) do %>
+                  <div><span><%= question.original_code %>:</span><br/>
+                  <%= question.text %></div>
+                <% end %>
+              </div>
+              <div class="col details">
+                <div>
+                  <div class="col k"><%= t('app.common.question') %>: </div>
+                  <div class="col"><%= question.text %></div>
+                </div>
+                <% if question.notes.present? %>
+                  <div>
+                    <div class="col k"><%= t('app.common.notes') %>: </div>
+                    <div class="col"><%= question.notes %></div>
+                  </div>
+                <% end %>
+                <div>
+                  <div class="col k"><%= t('app.common.answers') %>: </div>
+                  <div class="col answers">
+                    <%- answers = question.answers.sorted
+                      if answers.present? 
+                    -%>
+                      <ul>
+                        <%- answers.each do |answer| -%>
+                          <li><%= answer.text %></li> 
+                        <%- end -%>
+                      </ul>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+      
+      <div role="tabpanel" class="tab-pane fade" id="datasets">
+        <div class="article explore">
+          <div class="list">
+            <%= render partial: 'root/explore_data_datasets', locals: {with_pagination: false, with_time_series_link: false} %>
+          </div>
         </div>
       </div>
+      
+      <div role="tabpanel" class="tab-pane fade" id="licensing">
+        <% if @license.present? %>
+          <div class="tinymce_format">
+            <%= simple_format_no_tags(@license.content, {}, {sanitize: false}) %>
+          </div>
+        <% else %>
+          comming soon...
+        <% end %>
+      </div>
     </div>
-    
-    <div role="tabpanel" class="tab-pane fade" id="licensing">
-      <% if @license.present? %>
-        <div class="tinymce_format">
-          <%= simple_format_no_tags(@license.content, {}, {sanitize: false}) %>
-        </div>
-      <% else %>
-        comming soon...
-      <% end %>
-    </div>
-  </div>
 
+  </div>
 </div>
