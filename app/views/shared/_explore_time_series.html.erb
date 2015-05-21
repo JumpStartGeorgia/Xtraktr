@@ -1,7 +1,7 @@
 <%- 
   subnav_left render(partial: 'shared/language_switcher', locals: {langs: @time_series.language_objects, current_locale: @time_series.current_locale})
 -%>
-<div class="explore-data" class="row">
+<div class="explore-data row">
   <% if @questions.present? %>
     <div id="explore-form" class="col-sm-3">
       <h2>
