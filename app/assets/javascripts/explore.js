@@ -162,7 +162,7 @@ function build_highmap(shape_question_code, json_map_set){
       subtitle: {
           text: json_map_set.subtitle.html,
           useHTML: true,
-          style: {'text-align': 'center', 'margin-top': '-15px'}
+          style: {'text-align': 'center'}
       },
 
       mapNavigation: {
@@ -330,7 +330,7 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
     subtitle: {
         text: json_chart.subtitle.html,
         useHTML: true,
-        style: {'text-align': 'center', 'margin-top': '-15px'}
+        style: {'text-align': 'center'}
     },
     xAxis: {
         categories: json_chart.labels,
@@ -469,12 +469,12 @@ function build_pie_chart(json_chart, chart_height){
     title: {
         text: build_visual_title(highlight_path, json_chart.title.html),
         useHTML: true,
-        style: {}
+        style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
     },
     subtitle: {
         text: json_chart.subtitle.html,
         useHTML: true,
-        style: {'text-align': 'center', 'margin-top': '-15px'}
+        style: {'text-align': 'center'}
     },
     tooltip: {
         formatter: function () {
@@ -612,7 +612,7 @@ function build_time_series_chart(json_chart, chart_height){
     subtitle: {
         text: json_chart.subtitle.html,
         useHTML: true,
-        style: {'text-align': 'center', 'margin-top': '-15px'}
+        style: {'text-align': 'center'}
     },
     xAxis: {
         categories: json_chart.datasets
