@@ -109,7 +109,7 @@
   </ul>
 
   <div class="tab-content">
-    <div role="tabpanel" class="tab-pane fade <%= highlight_active[:panel] %>" id="highlights">
+    <div role="tabpanel" class="tab-pane fade <%= highlight_active[:panel] %> masonry" id="highlights">
       <% if !@highlights.present? %>
         <p>
           <%= t('.no_highlights') %>

@@ -1,8 +1,8 @@
 class RootController < ApplicationController
   def index
-    @datasets = Dataset.is_public.recent.sorted.limit(6)
+    @datasets = Dataset.meta_only.is_public.recent.sorted.limit(6)
 
-    @time_series = TimeSeries.is_public.recent.sorted.limit(3) if @is_xtraktr
+    @time_series = TimeSeries.meta_only.is_public.recent.sorted.limit(3) if @is_xtraktr
     @wms_id = TimeSeries.pluck(:id).first
 
     @categories = Category.sorted

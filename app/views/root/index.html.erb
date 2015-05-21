@@ -4,81 +4,97 @@
     <div class="slogan"><span><%= t("app.common.#{@app_key_name}.app_name") %>:</span> <%= t("app.common.#{@app_key_name}.app_slogan") %></div>
     <div class="desc"><%= t("app.common.#{@app_key_name}.app_description") %></div>
   </div>
-
   <div class="jsrow">
-      <div class="categories">
-        <div class="boxic">
-          <form role="search" class="search" action="<%= explore_data_path %>">
-            <div class="box">
-              <input type="search" placeholder="<%= t('.search_datasets') %>" name="q">
-              <div class="go-submit"><%= t('app.common.go') %></div>
-            </div>
-          </form>
-          <div class="header">
-            <h2><%= t('.header_categories') %></h2>
-            <div class="cell"><div class="line"></div></div>
+    <div class="categories">
+      <div class="boxic">
+        <form role="search" class="search" action="<%= explore_data_path %>">
+          <div class="box">
+            <input type="search" placeholder="<%= t('.search_datasets') %>" name="q">
+            <div class="go-submit"><%= t('app.common.go') %></div>
           </div>
-          <div class="list">
-            <% col_num = @categories.length%2 == 0 ? @categories.length/2-1: @categories.length/2 %>
-            <ul class="list-unstyled">
-              <% (0..col_num).each  do |index| %>
-                <li>
-                  <%= link_to explore_data_path(category: @categories[index].permalink) do %>
-                    <%= image_tag "/assets/svg/categories/#{@categories[index].permalink}.svg" %>
-                    <span><%= @categories[index].name %></span>
-                  <% end %>
-                </li>
-              <% end %>
-            </ul>
-            <ul class="list-unstyled">
-              <% (col_num+1..@categories.length-1).each  do |index| %>
-                <li>
-                  <%= link_to explore_data_path(category: @categories[index].permalink) do %>
-                    <%= image_tag "/assets/svg/categories/#{@categories[index].permalink}.svg" %>
-                    <span><%= @categories[index].name %></span>
-                  <% end %>
-                </li>
-              <% end %>
-            </ul>
-          </div>
+        </form>
+        <div class="header">
+          <h2><%= t('.header_categories') %></h2>
+          <div class="cell"><div class="line"></div></div>
         </div>
-      </div>
 
-      <div class="recents">
-        <div class="boxic">      
-          <div class="header">
-            <h2><%= t('.header_latest_datasets') %></h2>
-            <div class="cell"><div class="line"></div></div>
-          </div>
-          <% if @datasets.present? %>
-            <% for i in 0..1 %>
-                <ul class="col col<%= i+1 %>">                
-              <% for j in 0..2 %>
-                <% dataset = @datasets[i*3+j] %>
-                  <li>
-                    <h2><%= link_to dataset.title, explore_data_dashboard_path(dataset) %></h2>
-                    <% if @is_xtraktr %>
-                    <div>
-                      <%= "#{model_class.human_attribute_name(:source)}: #{dataset.source}" %>
-                    </div>
-                    <% end %>
-                    <% if dataset.description.present? %>
-                      <div>
-                        <%= truncate(strip_tags_nbsp(dataset.description), length: 150, separator: ' ') %>
-                      </div>
-                    <% end %>
-                  </li>
-              <% end %>
-                </ul>
+          <div class="t">
+          <% plusone = !(@categories.length%2 == 0) %>
+          <% rows = @categories.length/2 %>
+
+            <% for i in 0..rows-1 %>
+              <div class="r">
+                  <div class="c">
+                        <%= link_to explore_data_path(category: @categories[i].permalink) do %>
+                          <%= image_tag "/assets/svg/categories/#{@categories[i].permalink}.svg" %>
+                          <span><%= @categories[i].name %></span>
+                        <% end %>
+                  </div>                  
+                  <div class="c">
+                        <%= link_to explore_data_path(category: @categories[i+rows].permalink) do %>
+                          <%= image_tag "/assets/svg/categories/#{@categories[i+rows].permalink}.svg" %>
+                          <span><%= @categories[i+rows].name %></span>
+                        <% end %>
+                  </div> 
+              </div>
+            <% end %> 
+            <% if plusone %>
+              <div class="r">
+                <div class="c">
+                  <%= link_to explore_data_path(category: @categories[@categories.length-1].permalink) do %>
+                    <%= image_tag "/assets/svg/categories/#{@categories[@categories.length-1].permalink}.svg" %>
+                    <span><%= @categories[@categories.length-1].name %></span>
+                  <% end %>
+                </div> 
+              </div>            
             <% end %>
-          <% else %>
-            <p>
-              <%= t('.no_datasets') %>
-            </p>
-          <% end %>
-        </div>
+          </div>  
       </div>
-
+    </div><div class="banner banner2">
+      <div class="boxic">
+        <%= link_to explore_time_series_dashboard_path(id: @wms_id), class: 'wms' do %>
+          <div class="figure">
+            <span class="title"><%= t('.wms_title').html_safe %></span>
+            <span class="slogan"><%= t('.wms_slogan').html_safe %></span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <div class="recents">
+      <div class="boxic">      
+        <div class="header">
+          <h2><%= t('.header_latest_datasets') %></h2>
+          <div class="cell"><div class="line"></div></div>
+        </div>
+        <% if @datasets.present? %>
+          <div class="t">
+            <% for i in 0..2 %>
+              <div class="r">
+                <% if i < @datasets.length %>
+                  <% dataset = @datasets[i] %>
+                  <div class="c">
+                      <%= link_to dataset.title, explore_data_dashboard_path(dataset) %>
+                      <%= "<div class='desc'>#{truncate(strip_tags_nbsp(dataset.description), length: 90, separator: ' ')}</div>".html_safe if dataset.description.present? %>
+                  </div>
+                <% end %>
+                <% if i+3 < @datasets.length %>
+                  <% dataset = @datasets[i+3] %>
+                  <div class="c c2">
+                      <%= link_to dataset.title, explore_data_dashboard_path(dataset) %>
+                      <%= "<div class='desc'>#{truncate(strip_tags_nbsp(dataset.description), length: 90, separator: ' ')}</div>".html_safe if dataset.description.present? %>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>   
+          </div>                    
+        <% else %>
+          <p>
+            <%= t('.no_datasets') %>
+          </p>
+        <% end %>
+        <div class="vborder"></div>
+      </div>
+    </div>
     <div class="banner">
       <div class="boxic"> 
         <% if @is_xtraktr %>
@@ -105,10 +121,10 @@
               </p>
             <% end %>
         <% else %>
-            <%= link_to explore_time_series_dashboard_path(id: @wms_id), id: 'wms_link' do %>
-              <div id="wms_banner">
-                <span id="wms_title"><%= t('.wms_title').html_safe %></span>
-                <span id="wms_slogan"><%= t('.wms_slogan').html_safe %></span>
+            <%= link_to explore_time_series_dashboard_path(id: @wms_id), class: 'wms' do %>
+              <div class="figure">
+                <span class="title"><%= t('.wms_title').html_safe %></span>
+                <span class="slogan"><%= t('.wms_slogan').html_safe %></span>
               </div>
             <% end %>
         <% end %>
@@ -116,12 +132,15 @@
     </div>
   </div>
 
-  <% if @highlights.present? %>
-    <div id="highlights" class="highlights">
-      <div class="title">
-        <h2><%= t('.header_highlights') %></h2>
-        <div class="cell"><div class="line"></div></div>
-      </div>
+  <div class="jsrow">
+    <div class="highlights-header">
+      <h2><%= t('.header_highlights') %></h2>
+      <div class="cell"><div class="line"></div></div>
     </div>
-  <% end %>
+    <% if @highlights.present? %>    
+      <div id="highlights" class="highlights">
+
+      </div>
+    <% end %>
+  </div>
 </div>

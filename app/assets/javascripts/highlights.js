@@ -34,7 +34,7 @@ $(document).ready(function(){
             // $('#highlights').prepend('<ul><li>blah</li><li>blah</li><li>blah</li><li>blah</li><li>blah</li><li>blah</li></ul>');
             // $('#highlights > ul > li').wookmark();
 
-            var $container = $('#highlights');
+            var $container = $('#highlights.masonry');
           // initialize
             $container.masonry({
               // columnWidth: 200,
