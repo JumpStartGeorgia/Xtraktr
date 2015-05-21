@@ -47,30 +47,33 @@ function run_search(){
     // Retrieve the input field text and reset the count to zero
   var filter = $('#codebook input#filter').val();
   var filter_by = $('#codebook input[type="radio"]:checked').val();
-console.log(filter_by)
   // remove all highlights
   $("#codebook").removeHighlight();
 
   // Loop through the comment list
-  $("#codebook > ul > li").each(function(){
-    // determine what text to search in
-    var filter_selector = $(this);
-    if (filter_by == 'q'){
-      filter_selector = $(this).find('.question');
-    }else if (filter_by == 'ans'){
-      filter_selector = $(this).find('.answer-row ul');
-    }
+  if (filter != undefined && filter != ''){
+    $("#codebook > ul > li").each(function(){
+      // determine what text to search in
+      var filter_selector = $(this);
+      if (filter_by == 'q'){
+        filter_selector = $(this).find('.question');
+      }else if (filter_by == 'ans'){
+        filter_selector = $(this).find('.answers ul');
+      }
 
-    // If the list item does not contain the text phrase fade it out
-    if ($(filter_selector).text().search(new RegExp(filter, "i")) < 0) {
-      $(this).fadeOut();
+      // If the list item does not contain the text phrase fade it out
+      if ($(filter_selector).text().search(new RegExp(filter, "i")) < 0) {
+        $(this).fadeOut();
 
-    // Show the list item if the phrase matches
-    } else {
-      $(filter_selector).highlight(filter).show();
-    }
-  });
-
+      // Show the list item if the phrase matches
+      } else {
+        $(filter_selector).highlight(filter);
+        $(this).fadeIn();
+      }
+    });
+  }else{
+    $("#codebook > ul > li").fadeIn();
+  }  
 }
 
 $(document).ready(function(){

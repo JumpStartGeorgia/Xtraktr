@@ -96,56 +96,52 @@
     </div>
     
     <div role="tabpanel" class="tab-pane fade <%= codebook_active[:panel] %>" id="codebook">
-      <div id="codebook-search" class="input-group">
-        <span class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></span>
-        <input type="text" class="text-input col-sm-3" id="filter" class="form-control" value="" placeholder="<%= t('helpers.search') %>" />
+      <div id="codebook-search">
+        <input type="text" class="codebook-search" id="filter" value="" placeholder="<%= t('helpers.search') %>" />
+        <div class="radio-box" tabindex="0">
+          <input checked id="filter_all" name="filter" type="radio" value="all" />
+          <label class="filter" for="filter_all"><%= t('.filter.all') %></label>
+        </div>
+        <div class="radio-box" tabindex="0">
+          <input id="filter_q" name="filter" type="radio" value="q" />
+          <label class="filter" for="filter_q"><%= t('.filter.questions') %></label>
+        </div>
+        <div class="radio-box" tabindex="0">
+          <input id="filter_ans" name="filter" type="radio" value="ans" />
+          <label class="filter" for="filter_ans"><%= t('.filter.answers') %></label>
+        </div>  
       </div>
+
       <ul class="list-unstyled">
         <% @time_series.questions.sorted.each do |question| %>
-          <li class="row">
-            <div class="col-sm-4 question">
-              <h3>
-                <%= link_to url_time_series_explore(@time_series, question_code: question.code, language: params[:language]) do %>
-                  <%= question.original_code %>:
-                  <br />
-                  <%= question.text %>
-                <% end %>
-              </h3>
+          <li>
+            <div class="col question">
+              <%= link_to url_time_series_explore(@time_series, question_code: question.code, language: params[:language]) do %>
+                <div><span><%= question.original_code %>:</span><br/>
+                <%= question.text %></div>
+              <% end %>
             </div>
-            <div class="col-sm-8 details">
-              <div class="row question-row">
-                <div class="col-sm-1 headers">
-                  <%= t('app.common.question') %>:                  
-                </div>
-                <div class="col-sm-11">
-                  <%= question.text %>
-                </div>
+            <div class="col details">
+              <div>
+                <div class="col k"><%= t('app.common.question') %>: </div>
+                <div class="col"><%= question.text %></div>
               </div>
               <% if question.notes.present? %>
-                <div class="row notes-row">
-                  <div class="col-sm-1 headers">
-                    <%= t('app.common.notes') %>:                  
-                  </div>
-                  <div class="col-sm-11">
-                    <%= question.notes %>
-                  </div>
+                <div>
+                  <div class="col k"><%= t('app.common.notes') %>: </div>
+                  <div class="col"><%= question.notes %></div>
                 </div>
               <% end %>
-              <div class="row answer-row">
-                <div class="col-sm-1 headers">
-                  <%= t('app.common.answers') %>:                  
-                </div>
-                <div class="col-sm-11">
-                  <%
-                    answers = question.answers.sorted
+              <div>
+                <div class="col k"><%= t('app.common.answers') %>: </div>
+                <div class="col answers">
+                  <%- answers = question.answers.sorted
                     if answers.present? 
-                  %>
+                  -%>
                     <ul>
-                      <% answers.each do |answer| %>
-                        <li>
-                        <%= answer.text %>
-                        </li> 
-                      <% end %>
+                      <%- answers.each do |answer| -%>
+                        <li><%= answer.text %></li> 
+                      <%- end -%>
                     </ul>
                   <% end %>
                 </div>

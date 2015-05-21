@@ -74,6 +74,11 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     # indicate that whether login should allow local and omniauth or just locale
 	  @enable_omniauth = @is_xtraktr
 
+    # get the id for addthis sharing
+    @addthis_id =  @is_xtraktr ? (Rails.env.production? ? ENV['XTRAKTR_ADDTHIS_PROFILE_ID'] : ENV['XTRAKTR_ADDTHIS_PROFILE_ID_DEV']) 
+                            : (Rails.env.production? ? ENV['UNICEF_ADDTHIS_PROFILE_ID']  : ENV['UNICEF_ADDTHIS_PROFILE_ID_DEV'])
+
+
     # indicate which role has access to edit datasets/time series
     @data_editor_role = @is_xtraktr ? User::ROLES[:user] : User::ROLES[:data_editor]
     @site_admin_role = @is_xtraktr ? User::ROLES[:admin] : User::ROLES[:site_admin]
