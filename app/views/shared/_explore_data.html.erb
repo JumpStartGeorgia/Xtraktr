@@ -2,9 +2,9 @@
   subnav_left render(partial: 'shared/language_switcher', locals: {langs: @dataset.language_objects, current_locale: @dataset.current_locale})
 -%>
 
-<div class="explore-data row">
+<div class="article explore-data r">
   <% if @questions.present? %>
-    <div id="explore-form" class="col-sm-3">
+    <div id="explore-form" class="c">
       <h2>
         <%= @dataset.title %>
       </h2>
@@ -117,7 +117,7 @@
 
     </div>
 
-    <div id="explore-data-content" class="col-sm-9">
+    <div id="explore-data-content" class="c">
       <ul class="nav nav-tabs" id="explore-tabs" role="tablist">
         <li id="nav-chart"><a href="#tab-chart" role="tab" data-toggle="tab"><%= t('.tabs.chart') %></a></li>
         <li id="nav-map" style="display:none;"><a href="#tab-map" role="tab" data-toggle="tab"><%= t('.tabs.map') %></a></li>
@@ -220,13 +220,13 @@
       </div>
 
       <div id="explore-data-loader">
-        <div class="spinner">
+      <!--   <div class="spinner">
           <div class="rect1"></div>
           <div class="rect2"></div>
           <div class="rect3"></div>
           <div class="rect4"></div>
           <div class="rect5"></div>
-        </div>      
+        </div>       -->
       </div>
 
       <div id="explore-error">
