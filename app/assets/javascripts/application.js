@@ -61,7 +61,6 @@ $(document).ready(function(){
 
   $(document).on('click', '.reattach', function(e){
     var t = $(this);
-     console.log('reattaching');
     var data = {};
     if(downloading)
     {
@@ -73,12 +72,8 @@ $(document).ready(function(){
       // dataType: 'json',
     }).success(function(d)
     {
-       console.log('reattaching 2');
-       console.log(d);
        modal(d);      
     }).error(function(d){
-       console.log(d);
-       console.log('reataching 3');
     });
     e.preventDefault();
     e.stopPropagation();
@@ -108,29 +103,10 @@ $(document).ready(function(){
            else 
            {
               window.location.reload();
-            }
-         // console.log(data); 
-         // return;
-          // $(t).parent().find('.alert').remove();  
-          // var rhtml = $(data);
-        
-          // if (rhtml.length && rhtml.find('#errorExplanation').length)
-          // {
-          //   $(t).replaceWith(rhtml);
-          // }
-          // // else if (rhtml.find('.alert.alert-info').length)
-          // // {
-          // //   $(t).replaceWith(rhtml.find('.alert.alert-info').children().remove().end());
-          // //   delayed_reload(3000);
-          // // }
-          // else
-          // {
-          //   window.location.reload();
-          // }
+            }    
         },
         error: function (data)
         {     
-          console.log('error function',data);
           data = data.responseJSON;
           var errors = data.errors;
           if(data.sessions)
@@ -145,6 +121,7 @@ $(document).ready(function(){
              $.each(errors, function(k,v){
                var input = form.find("[name='user[" + k + "]']:not([type=hidden])");
                var type = input.attr('type');
+
                if(['text','email','password'].indexOf(type) != -1)
                {
                 input.closest('.form-group').addClass('has-error');
@@ -152,8 +129,9 @@ $(document).ready(function(){
                }
                else if(['checkbox','radio'].indexOf(type) != -1)
                {
+                console.log(k,v,type,input,input.closest('.form-group').find('> label'));
                 input.closest('.form-group').addClass('has-error');
-                input.closest('.form-group').find('> label').append('<abbr class="exclamation" data-class="tooltip-exclamation" title="'+ $.map(v,function(m){ return m.charAt(0).toUpperCase() + m.slice(1); }).join("\r\n")+'"></abbr>');
+                input.closest('.form-group').find('label').append('<abbr class="exclamation" data-class="tooltip-exclamation" title="'+ $.map(v,function(m){ return m.charAt(0).toUpperCase() + m.slice(1); }).join("\r\n")+'"></abbr>');
                }
             });  
           }

@@ -9,7 +9,7 @@ function filter()
 
   if(q != "") data["q"] = q;
   if(category != "none") data["category"] = category;
-
+  $('body').append("<div class='loading'></div>");
   $.ajax({
     url: url,
     data: data,
@@ -17,6 +17,8 @@ function filter()
   }).done(function(d)
   {
      $('.list').html(d.d);
+  }).always(function(){
+    $('.loading').fadeOut(500, function(){ $(this).remove() });
   });
 }
 
