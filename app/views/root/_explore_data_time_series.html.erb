@@ -14,7 +14,7 @@
 
         <% if time_series.description.present? %>
           <div class="description">
-            <%= simple_format_no_tags(time_series.description, {}, {sanitize: false}) %>
+            <%= strip_tags_nbsp(time_series.description) %> 
           </div>
         <% end %>
       </li>

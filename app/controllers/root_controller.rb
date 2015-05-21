@@ -1,6 +1,6 @@
 class RootController < ApplicationController
   def index
-    @datasets = Dataset.is_public.recent.sorted.limit(3)
+    @datasets = Dataset.is_public.recent.sorted.limit(6)
 
     @time_series = TimeSeries.is_public.recent.sorted.limit(3) if @is_xtraktr
     @wms_id = TimeSeries.pluck(:id).first
@@ -119,7 +119,7 @@ class RootController < ApplicationController
       @show_title = false
 
       @css.push("list.css", "dashboard.css", 'highlights.css', 'boxic.css', 'tabs.css')
-      @js.push("dashboard.js", "live_search.js", 'highlights.js')
+      @js.push("live_search.js", 'highlights.js')
 
       respond_to do |format|
         format.html # index.html.erb
@@ -160,6 +160,8 @@ class RootController < ApplicationController
 
 
   def explore_time_series
+    @klass=' white'
+    @klass_footer=''
     @time_series = TimeSeries.meta_only.is_public
 
     # add search
@@ -196,6 +198,8 @@ class RootController < ApplicationController
   end
   
   def explore_time_series_dashboard
+    @klass=' white'
+    @klass_footer=''
     @time_series = TimeSeries.is_public.find_by(id: params[:id])
 
     if @time_series.blank?

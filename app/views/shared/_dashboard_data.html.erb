@@ -17,7 +17,7 @@
           <%= format_gathered_dates(@dataset.start_gathered_at, @dataset.end_gathered_at) %>
         </div>
         <div class="timestamp">
-          <span><%= model_class.human_attribute_name(:released_at) %>::</span>
+          <span><%= model_class.human_attribute_name(:released_at) %>:</span>
           <%= I18n.l(@dataset.released_at, format: :day_first) if @dataset.released_at.present? %>
         </div>   
         <div class="share"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>

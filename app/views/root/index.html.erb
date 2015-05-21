@@ -6,7 +6,7 @@
   </div>
 
   <div class="jsrow">
-      <div class="col categories">
+      <div class="categories">
         <div class="boxic">
           <form role="search" class="search" action="<%= explore_data_path %>">
             <div class="box">
@@ -44,30 +44,28 @@
         </div>
       </div>
 
-      <div class="col recents">
+      <div class="recents">
         <div class="boxic">      
           <div class="header">
             <h2><%= t('.header_latest_datasets') %></h2>
             <div class="cell"><div class="line"></div></div>
           </div>
           <% if @datasets.present? %>
-            <ul class="list-unstyled">
-              <% @datasets.each do |dataset| %>
+            <% for i in 0..1 %>
+                <ul class="col col<%= i+1 %>">                
+              <% for j in 0..2 %>
+                <% dataset = @datasets[i*3+j] %>
                 <li>
                   <h2><%= link_to dataset.title, explore_data_dashboard_path(dataset) %></h2>
-                  <% if @is_xtraktr %>
-                  <div>
-                    <%= "#{model_class.human_attribute_name(:source)}: #{dataset.source}" %>
-                  </div>
-                  <% end %>
                   <% if dataset.description.present? %>
                     <div>
-                      <%= truncate(strip_tags_nbsp(dataset.description), length: 150, separator: ' ').html_safe %>
+                    <%= truncate(strip_tags_nbsp(dataset.description), length: 150, separator: ' ').html_safe %>
                     </div>
                   <% end %>
                 </li>
               <% end %>
-            </ul>
+                </ul>
+            <% end %>
           <% else %>
             <p>
               <%= t('.no_datasets') %>
@@ -76,7 +74,7 @@
         </div>
       </div>
 
-    <div class="col banner">
+    <div class="banner">
       <div class="boxic"> 
         <% if @is_xtraktr %>
             <div class="title">
