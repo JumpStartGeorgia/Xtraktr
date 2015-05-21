@@ -635,19 +635,19 @@ function get_explore_data(is_back_button){
 
   } else{
     // question code
-    if ($('select#question_code').val() != ''){
+    if ($('select#question_code').val() != null && $('select#question_code').val() != ''){
       ajax_data.question_code = $('select#question_code').val();
       url_querystring.push('question_code=' + ajax_data.question_code);
     }
 
     // broken down by
-    if ($('select#broken_down_by_code').val() != ''){
+    if ($('select#broken_down_by_code').val() != null && $('select#broken_down_by_code').val() != ''){
       ajax_data.broken_down_by_code = $('select#broken_down_by_code').val();
       url_querystring.push('broken_down_by_code=' + ajax_data.broken_down_by_code);
     }
 
     // filtered by
-    if ($('select#filtered_by_code').val() != ''){
+    if ($('select#filtered_by_code').val() != null && $('select#filtered_by_code').val() != ''){
       ajax_data.filtered_by_code = $('select#filtered_by_code').val();
       url_querystring.push('filtered_by_code=' + ajax_data.filtered_by_code);
     }

@@ -17,8 +17,7 @@
           <h2><%= t('.header_categories') %></h2>
           <div class="cell"><div class="line"></div></div>
         </div>
-
-          <div class="t">
+         <div class="t">
           <% plusone = !(@categories.length%2 == 0) %>
           <% rows = @categories.length/2 %>
 
@@ -109,7 +108,7 @@
                     <h2><%= link_to time_series.title, explore_time_series_dashboard_path(time_series) %></h2>
                     <% if time_series.description.present? %>
                       <div>
-                        <%= truncate(strip_tags_nbsp(time_series.description), length: 150, separator: ' ') %>
+                        <%= truncate(strip_tags_nbsp(time_series.description), length: 150, separator: ' ').html_safe %>
                       </div>
                     <% end %>
                   </li>

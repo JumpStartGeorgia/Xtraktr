@@ -299,7 +299,7 @@ class Dataset < CustomTranslation
 
   #############################
   # Full text search
-  search_in :title, :description, :methodology, :source, :questions => [:original_code, :text, :notes, :answers => [:text]]
+  # search_in :title, :description, :methodology, :source, :questions => [:original_code, :text, :notes, :answers => [:text]]
 
   #############################
   # Validations
