@@ -131,7 +131,7 @@ module EncodingHell
       I18n.locale = :ka
       q = d.questions[index-1]
       # q.text = d.clean_text((d.clean_text(row[2]).latinize(String::LANG_MAP_TO_GEO3)).georgianize(String::LANG_MAP_TO_GEO4))
-      text = row[2].latinize(String::LANG_MAP1).georgianize(String::LANG_MAP2)
+      text = d.clean_text((d.clean_text(row[2]).latinize).georgianize)
       q.text = text
       d.save
       d.reload
@@ -147,9 +147,9 @@ module EncodingHell
         puts "--> **** en not match"
       end
 
-      puts "--- #{q.text_translations['ka']}"
-      puts "--- #{row[2]}"
-      puts "--- #{text}"
+      puts "--- db = #{q.text_translations['ka']}"
+      puts "--- csv = #{row[2]}"
+      puts "--- txt = #{text}"
       if (q.text_translations['ka'] == text)
         puts "--> KA GOOD!"
       else
