@@ -294,22 +294,27 @@ function build_datatable(json){
 
       // question code question   count percent count percent .....
       table += "<tr class='th-center'>";
-      table += "<th class='var1-col'></th>";
-      table += "<th colspan='" + (2*(json.broken_down_by.answers.length+1)).toString() + "'>";
-      table += json.broken_down_by.text;
+      table += "<th class='var1-col'>" + gon.table_questions_header + "</th>";
+      table += "<th class='code-highlight' colspan='" + (2*(json.broken_down_by.answers.length+1)).toString() + "'>";
+      table += json.broken_down_by.original_code;
       table += "</th>";
       table += "</tr>";
+      
       table += "<tr class='th-center'>";
-      table += "<th class='var1-col'></th>";
+      table += "<th class='var1-col code-highlight' rowspan='2'>";
+      table += json.question.original_code;
+      table += "</th>";
+
       for(i=0; i<json.broken_down_by.answers.length;i++){
         table += "<th colspan='2'>";
         table += json.broken_down_by.answers[i].text.toString();
         table += "</th>"
       }
       table += "</tr>";
+
       table += "<tr>";
-      table += "<th class='var1-col'>";
-      table += json.question.text;
+      table += "<th class='var1-col code-highlight'>";
+      table += json.question.original_code;
       table += "</th>";
       for(i=0; i<json.broken_down_by.answers.length;i++){
         table += "<th>";
@@ -323,8 +328,8 @@ function build_datatable(json){
     }else{
       // 1 header of: question code question, count, percent
       table += "<tr class='th-center'>";
-      table += "<th class='var1-col'>";
-      table += json.question.text;
+      table += "<th class='var1-col code-highlight'>";
+      table += json.question.original_code;
       table += "</th><th>";
       table += $('#container-table table').data('count');
       table += "</th><th>";
@@ -339,26 +344,27 @@ function build_datatable(json){
 
       // filter question   count percent count percent .....
       table += "<tr class='th-center'>";
-      table += "<th class='var1-col' colspan='2'></th>";
-      table += "<th colspan='" + (2*(json.broken_down_by.answers.length+1)).toString() + "'>";
-      table += json.broken_down_by.text;
+      table += "<th class='var1-col' colspan='2'>" + gon.table_questions_header + "</th>";
+      table += "<th class='code-highlight' colspan='" + (2*(json.broken_down_by.answers.length+1)).toString() + "'>";
+      table += json.broken_down_by.original_code;
       table += "</th>";
       table += "</tr>";
+
       table += "<tr class='th-center'>";
-      table += "<th class='var1-col' colspan='2'></th>";
+      table += "<th class='var1-col code-highlight' rowspan='2'>";
+      table += json.filtered_by.original_code;
+      table += "</th>";
+      table += "<th class='var1-col code-highlight' rowspan='2'>";
+      table += json.question.original_code;
+      table += "</th>";
       for(i=0; i<json.broken_down_by.answers.length;i++){
         table += "<th colspan='2'>";
         table += json.broken_down_by.answers[i].text.toString();
         table += "</th>"
       }
       table += "</tr>";
+      
       table += "<tr>";
-      table += "<th class='var1-col'>";
-      table += json.filtered_by.text;
-      table += "</th>";
-      table += "<th class='var1-col'>";
-      table += json.question.text;
-      table += "</th>";
       for(i=0; i<json.broken_down_by.answers.length;i++){
         table += "<th>";
         table += $('#container-table table').data('count');
@@ -374,10 +380,10 @@ function build_datatable(json){
       // 1 header of: filter question, count, percent
       table += "<tr class='th-center'>";
       table += "<th class='var1-col'>";
-      table += json.filtered_by.text;
+      table += json.filtered_by.original_code;
       table += "</th>";
-      table += "<th class='var1-col'>";
-      table += json.question.text;
+      table += "<th class='var1-col code-highlight'>";
+      table += json.question.original_code;
       table += "</th><th>";
       table += $('#container-table table').data('count');
       table += "</th><th>";
@@ -830,9 +836,12 @@ $(document).ready(function() {
       }   
       // mark selected items as disabled
       $('select#filtered_by_code option[disabled="disabled"]').removeAttr('disabled');  
-      $('select#filtered_by_code option[value="' + q + '"]').attr('disabled','disabled');
-      $('select#filtered_by_code option[value="' + bdb + '"]').attr('disabled','disabled');
-
+      if (q != ''){
+        $('select#filtered_by_code option[value="' + q + '"]').attr('disabled','disabled');
+      }
+      if (bdb != ''){
+        $('select#filtered_by_code option[value="' + bdb + '"]').attr('disabled','disabled');
+      }
       $('select#filtered_by_code').selectpicker('refresh');
       $('select#filtered_by_code').selectpicker('render');
     });  
