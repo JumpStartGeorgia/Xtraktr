@@ -933,7 +933,7 @@ class Dataset < CustomTranslation
           I18n.locale = locale.to_sym
           if row[indexes[locale]].present? && question.text != row[indexes[locale]].strip
             puts "- setting text for #{locale}"
-            question.text = clean_text(row[indexes[locale]].strip)
+            question.text = clean_string(row[indexes[locale]].strip)
             counts[locale] += 1
             locale_found = true
           end          
@@ -1068,7 +1068,7 @@ class Dataset < CustomTranslation
           if row[indexes[locale]].present? && answer.text != row[indexes[locale]].strip
             puts "- setting text for #{locale}"
             # question.text_will_change!
-            answer.text = row[indexes[locale]].strip
+            answer.text = clean_string(row[indexes[locale]].strip)
             counts[locale] += 1
             locale_found = true
           end
@@ -1098,16 +1098,9 @@ class Dataset < CustomTranslation
   # strip the string and fix any bad characters
   # some text is in microsoft ansi encoding and needs to be fixed
   # reference: https://msdn.microsoft.com/en-us/library/cc195054.aspx
-  # - <91> = ‘
-  # - <92> = ’
-  # - <93> = “
-  # - <94> = ”
-  # - <97> = —
-  # - \xa0 = space
-  # if string = '' or '\\N' return nil
-  def clean_text(str)
+  def clean_string(str)
     if str.class == String && str.present?
-      str.gsub(/\\x../) {|s| [s[2..-1].hex].pack("C")}.force_encoding("UTF-8")
+      str.gsub(/\\x../) {|s| [s[2..-1].hex].pack("C")}.force_encoding("UTF-8").strip.chomp
     else
       str
     end

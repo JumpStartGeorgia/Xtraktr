@@ -71,16 +71,16 @@ function build_datatable(json){
     //                dataset label
     // question   count percent count percent .....
     table += "<tr class='th-center'>";
-    table += "<th class='var1-col'></th>";
+    table += "<th class='var1-col'>" + gon.table_questions_header + "</th>";
     for(i=0; i<json.datasets.length;i++){
-      table += "<th colspan='2'>";
+      table += "<th class='code-highlight' colspan='2'>";
       table += json.datasets[i].label;
       table += "</th>"
     }
     table += "</tr>";
     table += "<tr>";
-    table += "<th class='var1-col'>";
-    table += json.question.text;
+    table += "<th class='var1-col code-highlight'>";
+    table += json.question.original_code;
     table += "</th>";
     for(i=0; i<json.datasets.length;i++){
       table += "<th>";
@@ -121,19 +121,20 @@ function build_datatable(json){
     //                dataset label
     // filter   question   count percent count percent .....
     table += "<tr class='th-center'>";
-    table += "<th class='var1-col' colspan='2'></th>";
+    table += "<th class='var1-col' colspan='2'>" + gon.table_questions_header + "</th>";
     for(i=0; i<json.datasets.length;i++){
-      table += "<th colspan='2'>";
+      table += "<th class='code-highlight' colspan='2'>";
       table += json.datasets[i].label;
       table += "</th>"
     }
     table += "</tr>";
+
     table += "<tr>";
-    table += "<th class='var1-col'>";
-    table += json.filtered_by.text;
+    table += "<th class='var1-col code-highlight'>";
+    table += json.filtered_by.original_code;
     table += "</th>";
-    table += "<th class='var1-col'>";
-    table += json.question.text;
+    table += "<th class='var1-col code-highlight'>";
+    table += json.question.original_code;
     table += "</th>";
     for(i=0; i<json.datasets.length;i++){
       table += "<th>";
@@ -459,7 +460,9 @@ $(document).ready(function() {
       }   
       // mark selected items as disabled
       $('select#filtered_by_code option[disabled="disabled"]').removeAttr('disabled');  
-      $('select#filtered_by_code option[value="' + question_code + '"]').attr('disabled','disabled');
+      if (question_code != ''){
+        $('select#filtered_by_code option[value="' + question_code + '"]').attr('disabled','disabled');
+      }
 
       // refresh the filter list
       $('select#filtered_by_code').selectpicker('refresh');

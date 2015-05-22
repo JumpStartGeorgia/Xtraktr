@@ -279,7 +279,8 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
         gon.hover_region = I18n.t('explore_data.hover_region')
         gon.na = I18n.t('explore_data.na')
         gon.percent = I18n.t('explore_data.percent')
-
+        gon.table_questions_header = I18n.t('app.common.questions')
+        
         set_gon_highcharts
         set_gon_datatables
 
@@ -334,6 +335,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
         # record javascript variables
         gon.na = I18n.t('explore_time_series.na')
         gon.percent = I18n.t('explore_time_series.percent')
+        gon.table_questions_header = I18n.t('app.common.questions')
 
         set_gon_highcharts
         set_gon_datatables

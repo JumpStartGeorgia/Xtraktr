@@ -1,9 +1,9 @@
 <%- 
   subnav_left render(partial: 'shared/language_switcher', locals: {langs: @time_series.language_objects, current_locale: @time_series.current_locale})
 -%>
-<div class="explore-data row">
+<div class="article explore-data r">
   <% if @questions.present? %>
-    <div id="explore-form" class="col-sm-3">
+    <div id="explore-form" class="c">
       <h2>
         <%= @time_series.title %>
       </h2>
@@ -62,7 +62,7 @@
 
     </div>
 
-    <div id="explore-data-content" class="col-sm-9">
+    <div id="explore-data-content" class="c">
       <ul class="nav nav-tabs" id="explore-tabs" role="tablist">
         <li id="nav-chart"><a href="#tab-chart" role="tab" data-toggle="tab"><%= t('.tabs.chart') %></a></li>
         <li id="nav-table"><a href="#tab-table" role="tab" data-toggle="tab"><%= t('.tabs.table') %></a></li>

@@ -42,7 +42,7 @@ module EncodingHell
       I18n.locale = :ka
       q = d.questions[index-1]
       if q.present?
-        text = d.clean_text(row[2])
+        text = d.clean_string(row[2])
         q.text = text
         d.save
         d.reload
@@ -127,7 +127,7 @@ module EncodingHell
       if q.present?
         answer = q.answers.with_value(row[1])
         if answer.present?
-          text = d.clean_text(row[4])
+          text = d.clean_string(row[4])
           answer.text = text
           d.save
           d.reload
@@ -212,7 +212,7 @@ module EncodingHell
       I18n.locale = :ka
       q = d.questions[index-1]
       if q.present?
-        text = d.clean_text(row[2])
+        text = d.clean_string(row[2])
         q.text = text
         d.save
         d.reload
@@ -305,7 +305,7 @@ module EncodingHell
     #   puts '-- en = ' + row[1]
 
     #   q = d.questions[index-1]
-    #   q.text = d.clean_text(row[1].latinize)
+    #   q.text = d.clean_string(row[1].latinize)
 
     # end
     # d.save
@@ -320,7 +320,7 @@ module EncodingHell
     #   puts '-- ka = ' + row[2]
 
     #   q = d.questions[index-1]
-    #   q.text = d.clean_text(row[2].latinize)
+    #   q.text = d.clean_string(row[2].latinize)
 
     # end
     # d.save
@@ -335,7 +335,7 @@ module EncodingHell
     #   puts '-- ka = ' + row[2]
 
     #   q = d.questions[index-1]
-    #   q.text = d.clean_text(row[2].georgianize)
+    #   q.text = d.clean_string(row[2].georgianize)
 
     # end
     # d.save
@@ -379,14 +379,14 @@ module EncodingHell
       # set the text
       I18n.locale = :en
       q = d.questions[index-1]
-      q.text = d.clean_text(row[1])
+      q.text = d.clean_string(row[1])
       d.save
       d.reload
 
       I18n.locale = :ka
       q = d.questions[index-1]
-      # q.text = d.clean_text((d.clean_text(row[2]).latinize(String::LANG_MAP_TO_GEO3)).georgianize(String::LANG_MAP_TO_GEO4))
-      text = d.clean_text((d.clean_text(row[2]).latinize).georgianize)
+      # q.text = d.clean_string((d.clean_string(row[2]).latinize(String::LANG_MAP_TO_GEO3)).georgianize(String::LANG_MAP_TO_GEO4))
+      text = d.clean_string((d.clean_string(row[2]).latinize).georgianize)
       q.text = text
       d.save
       d.reload
