@@ -42,7 +42,7 @@
 
         <div class="row">
           <div class="col-xs-6 col-sm-12">
-            <%= label_tag 'can_exclude', :id => 'lbl_can_exclude', :title => t('.form.can_exclude_hint') do %>
+            <%= label_tag 'can_exclude', :title => t('.form.can_exclude_hint') do %>
               <%= check_box_tag 'can_exclude', true, params[:can_exclude].present? ? params[:can_exclude].to_bool : false %>
               <%= t('.form.can_exclude') %>
             <% end %>

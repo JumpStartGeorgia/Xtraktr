@@ -11,30 +11,31 @@
         &:first-of-type{
           padding:0px 25px 0px 50px;
         }
-        &.active a, &:hover a
+        cursor:pointer;
+        &.active, &:hover
         {
-          border-bottom:3px solid #00adee;
-         // -webkit-transition: all 1s ease-in-out;
-         //  -moz-transition: all 1s ease-in-out;
-         //  -o-transition: all 1s ease-in-out;
-         //  transition: all 1s ease-in-out;
-          &:after
+          cursor:pointer;
+          a
           {
-            content:"";
-            background:transparent url(/assets/svg/tab_arrow.svg) no-repeat center/12px 4px;
-            width:12px;
-            height:4px;
-            position: absolute;
-            bottom: -7px;
-            left: 50%;
-            margin-left: -6px;
+            border-bottom:3px solid #00adee;
+            &:after
+            {
+              content:"";
+              background:transparent url(/assets/svg/tab_arrow.svg) no-repeat center/12px 4px;
+              width:12px;
+              height:4px;
+              position: absolute;
+              bottom: -7px;
+              left: 50%;
+              margin-left: -6px;
 
-          }
-          &:focus, &:hover
-          {
-            background-color:transparent;
-            border:0;
-            border-bottom:3px solid #00adee;           
+            }
+            &:focus, &:hover
+            {
+              background-color:transparent;
+              border:0;
+              border-bottom:3px solid #00adee;           
+            }
           }
         }
         &:hover a:after { background:transparent url(/assets/svg/tab_arrow.svg) no-repeat center/12px 4px !important; }

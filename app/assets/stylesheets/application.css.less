@@ -330,6 +330,12 @@ ul.dropdown-menu.inner.selectpicker li a{
     font-weight: 200;
 }
 @font-face {
+    font-family: "nokiasans_s60_sb";    
+    src: url( '/assets/fonts/nokiasans_s60_sb.ttf') format("truetype");           
+    font-style: normal;
+    font-weight: 200;
+}
+@font-face {
     font-family: "prime";    
     src: url( '/assets/fonts/prime.otf') format("opentype");         
     font-style: normal;
@@ -613,6 +619,30 @@ div.message {
           padding:0;
           color: #00adee;
           line-height: 30px;
+        }
+      }
+    }
+    .back {
+      display:inline-block;
+      vertical-align: top;
+      a 
+      {
+        font:12px 'nokiasans_s60_sb', 'sans-serif';
+        color:#747984;
+        line-height: 34px;
+        text-transform:uppercase;
+        vertical-align: top;
+        height: 30px;
+        display:inline-block;
+        &:hover,&:focus{text-decoration:none;}
+        &:before
+        {
+          content:"";
+          display:inline-block;
+          background:transparent url(/assets/svg/back.svg) no-repeat center/7px 11px;
+          width:7px;
+          height:30px;
+          margin:0px 11px 0px 10px;
         }
       }
     }
@@ -1066,7 +1096,7 @@ div.message {
     // display: table;
     > a
     {
-      width:65px;
+      width:64px;
       height:45px;
       display: inline-block;
     }

@@ -20,7 +20,7 @@
           <span><%= model_class.human_attribute_name(:released_at) %>:</span>
           <%= I18n.l(@dataset.released_at, format: :day_first) if @dataset.released_at.present? %>
         </div>   
-        <div class="share"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>
+        <div class="share share-box"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>
       </div>
       
       <% if @is_xtraktr %>

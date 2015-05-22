@@ -769,7 +769,7 @@ $(document).ready(function() {
   });
 
 // share button with slide effect used on dashboard, timeseries and explore page
-  $('.info .share').hover(function(){ // on hover do this:
+  $('.share-box').hover(function(){ // on hover do this:
     var t = $(this);
    var at = t.find('.addthis_sharing_toolbox');
    t.find('.prompt').animate({"right": at.width()+15 }, 500, function(){  });
@@ -780,4 +780,8 @@ $(document).ready(function() {
     at.stop().animate({"opacity":0}, 100);
     t.find('.prompt').stop().delay( 100 ).animate({"right":0}, 250);
   }); 
+// tabs - on li click fire inner a tag
+  $(document).on('click', '.tabs li', function() {    
+    $(this).find('a').tab('show');
+  });
 });
