@@ -69,7 +69,7 @@ module BootstrapStarter
     config.assets.precompile += %w( bootstrap-select.min.css select2.css select2-bootstrap.css shCore.css shThemeDefault.css )    
 
     config.assets.precompile += %w( jquery.ui.datepicker.js cocoon.js )    
-    config.assets.precompile += %w( jquery.ui.datepicker.css )    
+    config.assets.precompile += %w( jquery.ui.datepicker.css fen.css fka.css )    
 
 
     # from: https://robots.thoughtbot.com/content-compression-with-rack-deflater
