@@ -33,6 +33,7 @@
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
     <![endif]-->
 
+    <%= stylesheet_link_tag  "f#{I18n.locale}", :media => "all" %>      
     <%= stylesheet_link_tag  *(@css.present? ? [main_css,@css].flatten : [main_css]), :media => "all" %>      
 
     <!--[if IE 6]><%= stylesheet_link_tag 'ie6' %><![endif]-->
