@@ -26,6 +26,11 @@
             <div class="questions"><%= t('app.common.questions') %></div>
           </div>
         </div>
+        <% I18n.available_locales.each do |locale| %>
+          <% if locale != I18n.locale %>
+            <div class="lang-icon"><%= link_to t("app.language.#{locale}"), params.merge(:locale => locale) %></div>
+          <% end %>
+        <% end %>
         <form class="navbar-form navbar-left" role="search" action="<%= explore_data_path %>">
           <div class="form-group">
             <input type="search" class="form-control" placeholder="Search" name="q">
@@ -69,7 +74,7 @@
         <% end %>
         <% I18n.available_locales.each do |locale| %>
           <% if locale != I18n.locale %>
-            <li><%= link_to t("app.language.#{locale}"), params.merge(:locale => locale) %></li>
+            <li class="lang-link"><%= link_to t("app.language.#{locale}"), params.merge(:locale => locale) %></li>
           <% end %>
         <% end %>
       </ul>
