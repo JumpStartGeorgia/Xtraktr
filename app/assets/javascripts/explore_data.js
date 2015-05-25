@@ -6,7 +6,7 @@ var datatables, i, j, json_data;
 function build_highmaps(json){
   if (json.map){
     // adjust the width of the map to fit its container
-    $('#container-map').width($('#explore-tabs').width());
+    // $('#container-map').width($('#explore-tabs').width());
 
     // remove all existing maps
     $('#container-map').empty();
@@ -304,18 +304,18 @@ function build_datatable(json){
       table += "<th class='var1-col code-highlight' rowspan='2'>";
       table += json.question.original_code;
       table += "</th>";
-
-      for(i=0; i<json.broken_down_by.answers.length;i++){
-        table += "<th colspan='2'>";
+      var ln = json.broken_down_by.answers.length;
+      for(i=0; i<ln;i++){
+        table += "<th colspan='2' class='color"+(ln-i%13)+"'>";
         table += json.broken_down_by.answers[i].text.toString();
         table += "</th>"
       }
       table += "</tr>";
 
       table += "<tr>";
-      table += "<th class='var1-col code-highlight'>";
-      table += json.question.original_code;
-      table += "</th>";
+      // table += "<th class='var1-col code-highlight'>";
+      // table += json.question.original_code;
+      // table += "</th>";
       for(i=0; i<json.broken_down_by.answers.length;i++){
         table += "<th>";
         table += $('#container-table table').data('count');
@@ -498,8 +498,17 @@ function build_datatable(json){
     datatables.push($(this).dataTable({
       "dom": '<"top"fl>t<"bottom"p><"clear">',
       "language": {
-        "url": gon.datatable_i18n_url
+        "url": gon.datatable_i18n_url,
+        "search": "_INPUT_",
+        "searchPlaceholder": gon.datatable_search,
+        "paginate": {
+            "first": " ",
+            "previous": " ",
+            "next": " ",
+            "last": " "
+        }
       },
+      "pagingType": "full_numbers",
       "columnDefs": [
           { "type": "formatted-num", targets: sort_array }
       ],
@@ -531,55 +540,58 @@ function build_datatable(json){
 // build details (question and possible answers)
 function build_details(json){
   // clear out existing content and hide
-  $('#tab-details .details-item .name-variable, #tab-details .details-item .notes, #tab-details .details-item .list-answers').empty();
-  $('#tab-details .details-item').hide();
-
+  var details_item = $('#tab-details .details-item').hide(), tmp;
+  details_item.find('.name-variable, .notes, .list-answers').empty();
+  
   // add questions
   if (json.question && json.question.text && json.question.answers){
-    $('#tab-details #details-question-code .name-variable').html(json.question.text);    
-    $('#tab-details #details-question-code .name-code').html(json.question.original_code);    
+    tmp = $('#tab-details #details-question-code');
+    tmp.find('.name-variable').html(json.question.text);    
+    tmp.find('.name-code').html(json.question.original_code);    
     if (json.question.notes){
-      $('#tab-details #details-question-code .notes').html(json.question.notes);    
-      $('#tab-details #details-question-code .details-notes').show();
+      tmp.find('.notes').html(json.question.notes);    
+      tmp.find('.details-notes').show();
     }else{
-      $('#tab-details #details-question-code .details-notes').hide();
+      tmp.find('.details-notes').hide();
     }
     for(var i=0;i<json.question.answers.length;i++){
-      $('#tab-details #details-question-code .list-answers').append('<li>' + json.question.answers[i].text + '</li>');
+      tmp.find('.list-answers').append('<li>' + json.question.answers[i].text + '</li>');
     }
-    $('#tab-details #details-question-code').show();
+    tmp.show();
   }
 
   // add broken down by
   if (json.broken_down_by && json.broken_down_by.text && json.broken_down_by.answers){
-    $('#tab-details #details-broken-down-by-code .name-variable').html(json.broken_down_by.text);    
-    $('#tab-details #details-broken-down-by-code .name-code').html(json.broken_down_by.original_code);    
+    tmp = $('#tab-details #details-broken-down-by-code');
+    tmp.find('.name-variable').html(json.broken_down_by.text);    
+    tmp.find('.name-code').html(json.broken_down_by.original_code);    
     if (json.broken_down_by.notes){
-      $('#tab-details #details-broken-down-by-code .notes').html(json.broken_down_by.notes);    
-      $('#tab-details #details-broken-down-by-code .details-notes').show();
+      tmp.find('.notes').html(json.broken_down_by.notes);    
+      tmp.find('.details-notes').show();
     }else{
-      $('#tab-details #details-broken-down-by-code .details-notes').hide();
+      tmp.find('.details-notes').hide();
     }
     for(var i=0;i<json.broken_down_by.answers.length;i++){
-      $('#tab-details #details-broken-down-by-code .list-answers').append('<li>' + json.broken_down_by.answers[i].text + '</li>');
+      tmp.find('.list-answers').append('<li>' + json.broken_down_by.answers[i].text + '</li>');
     }
-    $('#tab-details #details-broken-down-by-code').show();
+    tmp.show();
   }
 
   // add filters
   if (json.filtered_by && json.filtered_by.text && json.filtered_by.answers){
-    $('#tab-details #details-filtered-by-code .name-variable').html(json.filtered_by.text);    
-    $('#tab-details #details-filtered-by-code .name-code').html(json.filtered_by.original_code);    
+    tmp = $('#tab-details #details-broken-down-by-code');
+    tmp.find('.name-variable').html(json.filtered_by.text);    
+    tmp.find('.name-code').html(json.filtered_by.original_code);    
     if (json.filtered_by.notes){
-      $('#tab-details #details-filtered-by-code .notes').html(json.filtered_by.notes);    
-      $('#tab-details #details-filtered-by-code .details-notes').show();
+      tmp.find('.notes').html(json.filtered_by.notes);    
+      tmp.find('.details-notes').show();
     }else{
-      $('#tab-details #details-filtered-by-code .details-notes').hide();
+      tmp.find('.details-notes').hide();
     }
     for(var i=0;i<json.filtered_by.answers.length;i++){
-      $('#tab-details #details-filtered-by-code .list-answers').append('<li>' + json.filtered_by.answers[i].text + '</li>');
+      tmp.find('.list-answers').append('<li>' + json.filtered_by.answers[i].text + '</li>');
     }
-    $('#tab-details #details-filtered-by-code').show();
+    tmp.show();
   }
 
 }
@@ -980,4 +992,3 @@ $(document).ready(function() {
     });  
   }
 });
-

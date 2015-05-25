@@ -483,6 +483,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
   end
 
   def set_gon_datatables
+    gon.datatable_search = I18n.t('datatable.search')
     gon.datatable_copy_title = I18n.t('datatable.copy.title')
     gon.datatable_copy_tooltip = I18n.t('datatable.copy.tooltip')
     gon.datatable_csv_title = I18n.t('datatable.csv.title')

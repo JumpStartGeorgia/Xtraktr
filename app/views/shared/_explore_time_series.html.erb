@@ -1,55 +1,44 @@
 <%- 
   subnav_left render(partial: 'shared/language_switcher', locals: {langs: @time_series.language_objects, current_locale: @time_series.current_locale})
 -%>
-<div class="article explore-data r">
+<div class="article explore-data">
   <% if @questions.present? %>
     <div id="explore-form" class="c">
-      <h2>
-        <%= @time_series.title %>
-      </h2>
-
+      <h2><%= @time_series.title %></h2>
       <%= form_tag(explore_time_path, :id => 'form-explore-time-series') do %>
-
-        <div class="row">
-          <div class="col-xs-6 col-sm-12">
-            <%= label_tag 'question_code', t('.form.question_code') %>
-            <select data-live-search="true" data-hide-disabled='true' data-width="100%" class="selectpicker" id="question_code" name="question_code">
-              <% @questions.each_with_index do |question, index| %>
-                <% 
-                  selected = (@question_code.present? && @question_code == question.code) ? 'selected=selected ' : ''
-                %>
-                <option value="<%= question.code %>" <%= selected %> ><%= "#{question.original_code} - #{question.text}" %></option>
-              <% end %>
-            </select>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-xs-6 col-sm-12">
-            <%= label_tag 'filtered_by_code', t('.form.filtered_by_code') %>
-            <select data-live-search="true" data-hide-disabled='true' data-width="100%" class="selectpicker-filter" id="filtered_by_code" name="filtered_by_code">
-              <option value=""><%= t('.form.no_filter') %></option>
-              <% @questions.each do |question| %>
-                <% 
-                  selected = @filtered_by_code == question.code ? 'selected=selected ' : ''
-                  disabled = @question_code == question.code ? 'disabled=disabled ' : ''
-                %>
-                <option value="<%= question.code %>" <%= selected %><%= disabled %>><%= "#{question.original_code} - #{question.text}" %></option>
-              <% end %>
-            </select>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-xs-6 col-sm-12">
-            <%= label_tag 'can_exclude', :title => t('.form.can_exclude_hint') do %>
-              <%= check_box_tag 'can_exclude', true, params[:can_exclude].present? ? params[:can_exclude].to_bool : false %>
-              <%= t('.form.can_exclude') %>
+        <div class="form-explore-question-code">
+          <%= label_tag 'question_code', t('.form.question_code') %>
+          <select data-live-search="true" data-hide-disabled='true' data-width="100%" class="selectpicker" id="question_code" name="question_code">
+            <% @questions.each_with_index do |question, index| %>
+              <% selected = (@question_code.present? && @question_code == question.code) ? 'selected=selected ' : ''
+              %>
+              <option value="<%= question.code %>" <%= selected %> ><%= "#{question.original_code} - #{question.text}" %></option>
             <% end %>
-          </div>
-          <div class="col-xs-3 col-xs-offset-3 col-sm-12 col-sm-offset-0 clear" id="buttons">
-            <%= submit_tag t('.form.reset'), :class => 'btn', :id => 'btn-reset' %>
-            <%= submit_tag t('.form.submit'), :class => 'btn', :id => 'btn-submit' %>
+          </select>
+        </div>
+
+        <div class="form-explore-filter-by">
+          <%= label_tag 'filtered_by_code', t('.form.filtered_by_code') %>
+          <select data-live-search="true" data-hide-disabled='true' data-width="100%" class="selectpicker-filter" id="filtered_by_code" name="filtered_by_code">
+            <option value=""><%= t('.form.no_filter') %></option>
+            <% @questions.each do |question| %>
+              <% 
+                selected = @filtered_by_code == question.code ? 'selected=selected ' : ''
+                disabled = @question_code == question.code ? 'disabled=disabled ' : ''
+              %>
+              <option value="<%= question.code %>" <%= selected %><%= disabled %>><%= "#{question.original_code} - #{question.text}" %></option>
+            <% end %>
+          </select>
+        </div>
+
+        <div class="checkbox-box" tabindex="0">
+          <%= check_box_tag 'can_exclude', true, params[:can_exclude].present? ? params[:can_exclude].to_bool : false %>
+          <%= label_tag 'can_exclude', t('.form.can_exclude'), :title => t('.form.can_exclude_hint') %>
+        </div>
+        <div class="submit-box" id="buttons"> 
+          <%= submit_tag t('.form.reset'), :class => 'btn btn-reset', :id => 'btn-reset' %>
+          <div class="submit-btn-box">
+            <%= submit_tag t('.form.submit'), :class => 'btn btn-submit', :id => 'btn-submit' %>
           </div>
         </div>
       <% end %> 
@@ -62,13 +51,13 @@
 
     </div>
 
-    <div id="explore-data-content" class="c">
+    <div id="explore-data-content" class="c tabs">
       <ul class="nav nav-tabs" id="explore-tabs" role="tablist">
         <li id="nav-chart"><a href="#tab-chart" role="tab" data-toggle="tab"><%= t('.tabs.chart') %></a></li>
         <li id="nav-table"><a href="#tab-table" role="tab" data-toggle="tab"><%= t('.tabs.table') %></a></li>
         <li id="nav-details"><a href="#tab-details" role="tab" data-toggle="tab"><%= t('.tabs.details') %></a></li>
       </ul>      
-
+      <div class="share share-box"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>
       <div class="tab-content" id="explore-content">
 
         <div class="tab-pane fade" id="tab-chart">
@@ -95,71 +84,52 @@
         <div class="tab-pane fade" id="tab-details">
           <div class="details-item" id="details-question-code">
             <h3><%= t('.form.question_code') %></h3>
-            <p>
-              <span class="header-variable"><%= t('app.common.question') %>:</span>
-              <span class="name-variable"></span>
-            </p>
-            <p>
-              <span class="header-code"><%= t('app.common.question_code') %>:</span>
-              <span class="name-code"></span>
-            </p>
-            <p class="details-notes">
-              <span class="header-notes"><%= t('app.common.notes') %>:</span>
-              <span class="notes"></span>
-            </p>
-            <p>
-              <span class="header-answers"><%= t('app.common.answers') %></span>
-            </p>
-            <ul class="list-answers">
+            <div>
+              <div class="k"><%= t('app.common.question') %>:</div>
+              <div class="name-variable"></div>
+            </div>
+            <div>
+              <div class="k"><%= t('app.common.question_code') %>:</div>
+              <div class="name-code"></div>
+            </div>
+            <div class="details-notes">
+              <div class="k"><%= t('app.common.notes') %>:</div>
+              <div class="notes"></div>
+            </div>
+            <div>
+              <div class="k"><%= t('app.common.answers') %></div>
+              <ul class="list-answers">
+            </div>
             </ul> 
           </div>
           <div class="details-item" id="details-filtered-by-code">
             <h3><%= t('.form.filtered_by_code') %></h3>
-            <p>
-              <span class="header-variable"><%= t('app.common.question') %>:</span>
-              <span class="name-variable"></span>
-            </p>
-            <p>
-              <span class="header-code"><%= t('app.common.question_code') %>:</span>
-              <span class="name-code"></span>
-            </p>
-            <p class="details-notes">
-              <span class="header-notes"><%= t('app.common.notes') %>:</span>
-              <span class="notes"></span>
-            </p>
-            <p>
-              <span class="header-answers"><%= t('app.common.answers') %></span>
-            </p>
-            <ul class="list-answers">
+            <div>
+              <div class="k"><%= t('app.common.question') %>:</div>
+              <div class="name-variable"></div>
+            </div>
+            <div>
+              <div class="k"><%= t('app.common.question_code') %>:</div>
+              <div class="name-code"></div>
+            </div>
+            <div class="details-notes">
+              <div class="k"><%= t('app.common.notes') %>:</div>
+              <div class="notes"></div>
+            </div>
+            <div>
+              <div class="k"><%= t('app.common.answers') %></div>
+              <ul class="list-answers">
+            </div>
             </ul> 
           </div>
         </div>
       </div>
-
-
-      <div id="explore-data-loader">
-        <div class="spinner">
-          <div class="rect1"></div>
-          <div class="rect2"></div>
-          <div class="rect3"></div>
-          <div class="rect4"></div>
-          <div class="rect5"></div>
-        </div>      
-      </div>
-
+      <div id="explore-data-loader"></div>
       <div id="explore-error">
-        <p>
-          <%= t('app.msgs.explore_error') %>
-        </p>
+        <p><%= t('app.msgs.explore_error') %></p>
       </div>
-
     </div>
-
   <% else %>
-
-    <p>
-      <%= t('.no_data', title: @time_series.title) %>
-    </p>
-
+    <p><%= t('.no_data', title: @time_series.title) %></p>
   <% end %>
 </div>

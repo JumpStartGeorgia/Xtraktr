@@ -11,8 +11,7 @@
             <%= label_tag 'question_code', t('.form.question_code') %>
             <select data-live-search="true" data-hide-disabled='true' data-width="100%" class="selectpicker" id="question_code" name="question_code">
               <% @questions.each_with_index do |question, index| %>
-                <% 
-                  selected = (@question_code.present? && @question_code == question.code) || (@broken_down_by_code.blank? && index == 0) ? 'selected=selected ' : ''
+                <% selected = (@question_code.present? && @question_code == question.code) || (@broken_down_by_code.blank? && index == 0) ? 'selected=selected ' : ''
                   disabled = @broken_down_by_code == question.code ? 'disabled=disabled ' : ''
                 %>
                 <option value="<%= question.code %>" <%= selected %><%= disabled %>><%= "#{question.original_code} - #{question.text}" %></option>
@@ -80,7 +79,7 @@
             <h4></h4>
             <select data-live-search="true" data-width="100%" class="selectpicker"></select>
           </div>
-      </div>
+        </div>
         <div id="jumpto-loader"></div>
       </div>
     </div>
@@ -122,63 +121,61 @@
         <div class="tab-pane fade" id="tab-details">
           <div class="details-item" id="details-question-code">
             <h3><%= t('.form.question_code') %></h3>
-            <p>
-              <span class="header-variable"><%= t('app.common.question') %>:</span>
-              <span class="name-variable"></span>
-            </p>
-            <p>
-              <span class="header-code"><%= t('app.common.question_code') %>:</span>
-              <span class="name-code"></span>
-            </p>
-            <p class="details-notes">
-              <span class="header-notes"><%= t('app.common.notes') %>:</span>
-              <span class="notes"></span>
-            </p>
-            <p>
-              <span class="header-answers"><%= t('app.common.answers') %></span>
-            </p>
-            <ul class="list-answers">
-            </ul> 
+            <div>
+              <div class="k"><%= t('app.common.question') %>:</div>
+              <div class="name-variable"></div>
+            </div>
+            <div>
+              <div class="k"><%= t('app.common.question_code') %>:</div>
+              <div class="name-code"></div>
+            </div>
+            <div class="details-notes">
+              <div class="k"><%= t('app.common.notes') %>:</div>
+              <div class="notes"></div>
+            </div>
+            <div>
+              <div class="k"><%= t('app.common.answers') %>:</div>
+              <ul class="list-answers"></ul> 
+            </div>
           </div>
           <div class="details-item" id="details-broken-down-by-code">
             <h3><%= t('.form.broken_down_by_code') %></h3>
-            <p>
-              <span class="header-variable"><%= t('app.common.question') %>:</span>
-              <span class="name-variable"></span>
-            </p>
-            <p>
-              <span class="header-code"><%= t('app.common.question_code') %>:</span>
-              <span class="name-code"></span>
-            </p>
-            <p class="details-notes">
-              <span class="header-notes"><%= t('app.common.notes') %>:</span>
-              <span class="notes"></span>
-            </p>
-            <p>
-              <span class="header-answers"><%= t('app.common.answers') %></span>
-            </p>
-            <ul class="list-answers">
-            </ul> 
+            <div>
+              <div class="k"><%= t('app.common.question') %>:</div>
+              <div class="name-variable"></div>
+            </div>
+            <div>
+              <div class="k"><%= t('app.common.question_code') %>:</div>
+              <div class="name-code"></div>
+            </div>
+            <div class="details-notes">
+              <div class="k"><%= t('app.common.notes') %>:</div>
+              <div class="notes"></div>
+            </div>
+            <div>
+              <div class="k"><%= t('app.common.answers') %>:</div>
+              <ul class="list-answers"></ul> 
+            </div>
           </div>
           <div class="details-item" id="details-filtered-by-code">
             <h3><%= t('.form.filtered_by_code') %></h3>
-            <p>
-              <span class="header-variable"><%= t('app.common.question') %>:</span>
-              <span class="name-variable"></span>
-            </p>
-            <p>
-              <span class="header-code"><%= t('app.common.question_code') %>:</span>
-              <span class="name-code"></span>
-            </p>
-            <p class="details-notes">
-              <span class="header-notes"><%= t('app.common.notes') %>:</span>
-              <span class="notes"></span>
-            </p>
-            <p>
-              <span class="header-answers"><%= t('app.common.answers') %></span>
-            </p>
-            <ul class="list-answers">
-            </ul> 
+            <div>
+              <div class="header-variable"><%= t('app.common.question') %>:</div>
+              <div class="name-variable"></div>
+            </div>
+            <div>
+              <div class="k"><%= t('app.common.question_code') %>:</div>
+              <div class="name-code"></div>
+            </div>
+            <div class="details-notes">
+              <div class="k"><%= t('app.common.notes') %>:</div>
+              <div class="notes"></div>
+            </div>
+            <div>
+              <div class="k"><%= t('app.common.answers') %>:</div>
+              <ul class="list-answers"></ul> 
+            </div>
+            
           </div>
         </div>
 

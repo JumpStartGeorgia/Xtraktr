@@ -18,18 +18,15 @@
             <div id="subnav-navbar" class="row" role="navigation" >
               <div class="col col-left pull-left">
                 <%= yield(:subnav_left) %>
-                <div class="back">
                   <% if !content_for?(:subnav_left) && @is_dataset_admin && @dataset.present? && @dataset.created_at.present? %>
-                    <%= link_to @dataset.title, url_dataset_dashboard(@dataset) %>
+                    <div class="back"><%= link_to @dataset.title, url_dataset_dashboard(@dataset) %></div>
                   <% elsif @dataset.present? && @dataset.created_at.present? && !((request.path == explore_data_dashboard_path(@dataset) || request.path == dataset_path(@dataset))) %>
-                    <%= link_to t('helpers.links.back_dashboard'), url_dataset_dashboard(@dataset) %>
-
+                    <div class="back"><%= link_to t('helpers.links.back_dashboard'), url_dataset_dashboard(@dataset) %></div>
                   <% elsif !content_for?(:subnav_left) && @is_time_series_admin && @time_series.present? && @time_series.created_at.present? %>
-                    <%= link_to @time_series.title, url_time_series_dashboard(@time_series) %>  
+                    <div class="back"><%= link_to @time_series.title, url_time_series_dashboard(@time_series) %></div>
                   <% elsif @is_time_series_admin && @time_series.present? && @time_series.created_at.present? && !(request.path == explore_time_series_dashboard_path(@time_series) || request.path == time_series_path(@time_series))%>
-                    <%= link_to t('helpers.links.back_dashboard'), url_time_series_dashboard(@time_series) %>  
+                    <div class="back"><%= link_to t('helpers.links.back_dashboard'), url_time_series_dashboard(@time_series) %></div>
                   <% end %>
-                </div>
               </div>
               <div class="col col-right pull-right">
                 <% if @is_dataset_admin %>

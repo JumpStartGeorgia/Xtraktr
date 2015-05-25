@@ -353,6 +353,7 @@ en:
         title: "Total Responses: %{num}"
         title_filter: "Total Responses Filtered by Answers to %{variable}: %{nums}"
   datatable:
+    search: Search
     copy: 
       title: Copy
       tooltip: Copy to clipboard

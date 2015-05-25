@@ -92,8 +92,8 @@ function add_embed_button(visual_element, embed_id){
     var parent = $(visual_element).parent();
 
     // create link
-    var link = '<span class="embed-chart" data-href="' + gon.embed_button_link.replace('replace', embed_id) + '"';
-    link += 'title="' + gon.embed_chart_text + '" data-placement="bottom"><img src="/assets/svg/embed.svg" alt="' + gon.embed_chart_text + '" /></span>';
+    var link = '<div class="embed-chart" data-href="' + gon.embed_button_link.replace('replace', embed_id) + '"';
+    link += 'title="' + gon.embed_chart_text + '" data-placement="bottom"><img src="/assets/svg/embed.svg" alt="' + gon.embed_chart_text + '" /></div>';
 
     // add link to visual
     $(visual_element).append(link);
@@ -712,7 +712,14 @@ function build_page_title(json){
    
 }
 
-
+function resizeExploreData(){
+    var w = $(window).width(),
+        h = $(window).height(),
+        expform = $('#explore-form'),
+        offset = expform.offset(),
+        expformWidth = expform.width();
+    $('#explore-data-content  .tab-pane').css({'width': w-442, 'height':h-(51+31+40+41+2)  });
+}
 ////////////////////////////////////////////////
 $(document).ready(function() {
 
@@ -784,4 +791,8 @@ $(document).ready(function() {
   $(document).on('click', '.tabs li', function() {    
     $(this).find('a').tab('show');
   });
+
+  
+  resizeExploreData();
+  $( window ).resize(function() { resizeExploreData(); });
 });

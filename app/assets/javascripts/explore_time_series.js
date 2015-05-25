@@ -72,6 +72,8 @@ function build_datatable(json){
     // question   count percent count percent .....
     table += "<tr class='th-center'>";
     table += "<th class='var1-col'>" + gon.table_questions_header + "</th>";
+
+
     for(i=0; i<json.datasets.length;i++){
       table += "<th class='code-highlight' colspan='2'>";
       table += json.datasets[i].label;
@@ -190,8 +192,17 @@ function build_datatable(json){
     datatables.push($(this).dataTable({
       "dom": '<"top"fl>t<"bottom"p><"clear">',
       "language": {
-        "url": gon.datatable_i18n_url
+        "url": gon.datatable_i18n_url,
+        "search": "_INPUT_",
+        "searchPlaceholder": gon.datatable_search,
+        "paginate": {
+            "first": " ",
+            "previous": " ",
+            "next": " ",
+            "last": " "
+        }
       },
+      "pagingType": "full_numbers",
       "columnDefs": [
           { "type": "formatted-num", targets: sort_array }
       ],

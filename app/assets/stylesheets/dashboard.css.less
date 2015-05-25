@@ -13,22 +13,7 @@
   {
     background-color: #f6f7f7;
     width:100%;
-    padding:0px 50px;
-    overflow-x:auto;
-    &::-webkit-scrollbar-track {
-      background-color: #f6f6f6;
-    }
-    &::-webkit-scrollbar {
-      height: 12px;
-    }
-    &::-webkit-scrollbar-thumb {
-      background-color: #bfbfbf;
-      border: 2px solid #f6f6f6;
-    }
-    &::-webkit-scrollbar-thumb:hover {
-      background-color: #b1b1b1;
-      cursor: pointer;
-    }
+    padding:0px 50px;   
     .col
     {
       position:relative;
@@ -272,6 +257,8 @@
     clear: both;
     ul
     {
+      max-width: 363px;
+      overflow-y:auto;
       list-style:none;
       margin:0px;
       padding:0px;

@@ -733,7 +733,7 @@ div.message {
   }
   .tab-content
   {
-    border-top: 1px solid #cecece;
+    border-top: 1px solid #cecece;    
   }
 }
 
@@ -980,20 +980,20 @@ div.message {
   // padding:0px 30px 0px 30px;
   .first a { background:transparent url(/assets/svg/paginate_first.svg) no-repeat center/18px; }
   .next a { background:transparent url(/assets/svg/paginate_next.svg) no-repeat center/18px; }
-  .prev a { background:transparent url(/assets/svg/paginate_prev.svg) no-repeat center/18px; }
+  .prev a, .previous a { background:transparent url(/assets/svg/paginate_prev.svg) no-repeat center/18px; }
   .last a { background:transparent url(/assets/svg/paginate_last.svg) no-repeat center/18px; }
-  span, a
+  span, a, a:hover
   {
-    font-family: 'sourcesans_pro', 'sans-serif';
-    font-size:14px;
+    font:14px 'sourcesans_pro', 'sans-serif';
     width:18px;
     height:18px;
     display:inline-block;
     vertical-align:top;
     text-decoration:none;
-
+    border:0 !important;
+    padding:0px !important;
   }
-  .page
+  .page, li
   {
     display: inline-block;
     min-width:18px;
@@ -1002,8 +1002,7 @@ div.message {
     top:-1px;
     a
     {
-      font-family: 'sourcesans_pro', 'sans-serif';
-      font-size:14px;
+      font:14px 'sourcesans_pro', 'sans-serif';
       color:#000;
       line-height:18px;
       min-width:18px;
@@ -1012,23 +1011,24 @@ div.message {
       text-align:center;
       margin:0px 3px;
     }
-    &.current, a:hover, a:focus, a:active
+    &.current, a:hover, a:focus, a:active, &.active a
     {
-      font-family: 'sourcesans_pro', 'sans-serif';
-      font-size:14px;
-      color:#fff;
-      background-color:#00adee;
+      font:14px 'sourcesans_pro', 'sans-serif';
       line-height:18px;
+      color:#fff;
+      text-align:center;      
+      text-decoration:none;
+      background-color:#00adee;
+      display: inline-block;
+      height:18px;
+      min-width:18px;
+      padding: 0px;
       -webkit-border-radius: 100%;
       -moz-border-radius: 100%;
       border-radius: 100%;
-      min-width:18px;
-      height:18px;
-      display: inline-block;
-      text-align:center;
       margin:0px 3px;
-      text-decoration:none;
     }
+
   }
 }
 

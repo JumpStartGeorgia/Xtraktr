@@ -353,6 +353,7 @@ ka:
         title: "მთლიანი პასუხები: %{num}"
         title_filter: "პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{variable}: %{nums}"
   datatable:
+    search: Search  
     copy:
       title: "კოპირება"
       tooltip: "კოპირება ბუფერში"
