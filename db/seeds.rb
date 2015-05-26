@@ -1231,6 +1231,11 @@ if d.present? && d.permalink.nil?
   d.permalink = 'preschool census'
   d.save
 end
+d = Dataset.meta_only.find("5564ca282c17430adb000002")
+if d.present? && d.permalink.nil?
+  d.permalink = 'preschool census teacher profiles'
+  d.save
+end
 d = Dataset.meta_only.find("551cf0022c17430337000002")
 if d.present? && d.permalink.nil?
   d.permalink = 'barriers social services'

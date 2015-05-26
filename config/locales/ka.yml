@@ -904,7 +904,7 @@ ka:
         methodology: "მეთოდოლოგია"
         codebook: "კოდირება"
         reports: "რეფორთები"
-        licensing: "ნებართვა"
+        licensing: Legal
       no_methodology: "ამ ცხრილისთვის მეთოდოლოგია არ მოიძებნა"
       no_reports: "ამ ცხრილისთვის რეფორთები არ მოიძებნა"
       no_highlights: "ამ ცხრილისთვის გამორჩეული არ მოიძებნა"
@@ -918,7 +918,7 @@ ka:
         methodology: "მეთოდოლოგია"
         codebook: "კოდირება"
         reports: "რეფორთები"
-        licensing: "ნებართვა"
+        licensing: Legal
         datasets: "მონაცემთა ცხრილი"
       no_highlights: "ამ პერიოდული შედარებისთვის გამორჩეული არ მოიძებნა"
       filter:
