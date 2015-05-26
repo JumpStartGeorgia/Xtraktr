@@ -647,6 +647,11 @@ class Dataset < CustomTranslation
     without(:questions)
   end
 
+  def self.get_slug(id)
+    x = only(:_slugs).find(id)
+    x.present? ? x.slug : nil
+  end
+
   def self.only_id_title_description
     only(:id, :title, :description)
   end

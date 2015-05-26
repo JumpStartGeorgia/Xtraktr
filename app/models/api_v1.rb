@@ -118,9 +118,6 @@ class ApiV1
       dataset.current_locale = language
     end
 
-    # set the permalink
-    options[:permalink] = dataset.slug.present? ? dataset.slug : dataset.id.to_s
-
     # get the questions
     question = dataset.questions.with_code(question_code)
 
@@ -283,9 +280,6 @@ class ApiV1
     if time_series.nil?
       return {errors: [{status: '404', detail: I18n.t('api.msgs.no_time_series') }]}
     end
-
-    # set the permalink
-    options[:permalink] = time_series.slug.present? ? time_series.slug : time_series.id.to_s
 
     # if language provided, set it
     if language.present? && time_series.languages.include?(language)

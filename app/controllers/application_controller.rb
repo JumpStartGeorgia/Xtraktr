@@ -377,7 +377,8 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
           output[:title] = data[:dataset][:title]
 
           # set permalink to dataset
-          permalink = options['permalink'].present? ? options['permalink'] : options['dataset_id']
+          permalink = Dataset.get_slug(options['dataset_id'])
+          permalink = options['dataset_id'] if permalink.blank?
 
           # create link to dashboard
           output[:dashboard_link] = explore_data_dashboard_url(permalink)
@@ -398,7 +399,8 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
           output[:title] = data[:time_series][:title]
 
           # set permalink to dataset
-          permalink = options['permalink'].present? ? options['permalink'] : options['time_series_id']
+          permalink = TimeSeries.get_slug(options['time_series_id'])
+          permalink = options['time_series_id'] if permalink.blank?
 
           # create link to dashboard
           output[:dashboard_link] = explore_time_series_dashboard_url(permalink)

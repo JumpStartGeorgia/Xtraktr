@@ -226,6 +226,11 @@ class TimeSeries < CustomTranslation
     without(:questions)
   end
 
+  def self.get_slug(id)
+    x = only(:_slugs).find(id)
+    x.present? ? x.slug : nil
+  end
+
   def self.search(q)
     full_text_search(q)
   end

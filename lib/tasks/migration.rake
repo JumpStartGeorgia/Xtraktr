@@ -39,4 +39,11 @@ namespace :migration do
     require "./db/migrate/set_dataset_urls.rb"
   end
 
+  desc "remove permalink key from embed id in highlights"
+  task :remove_highlight_permalink => :environment do
+    require "./db/migrate/remove_highlight_permalink.rb"
+  end
+
+
+
 end
