@@ -42,6 +42,7 @@ gem 'mongoid_search', :git => 'https://github.com/mauriciozaffari/mongoid_search
 gem 'whenever' # schedule cron jobs
 gem 'zipruby', '~> 0.3.6' # create zip files
 gem 'roadie', '~> 2.4.3' # apply easy styling to html emails
+gem 'mongoid_slug', '~> 4.0.0' # permalink urls with mongoid
 
 # Gems used only for assets and not required
 # in production environments by default.

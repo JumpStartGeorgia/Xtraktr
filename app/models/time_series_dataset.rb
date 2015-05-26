@@ -34,6 +34,26 @@ class TimeSeriesDataset
     TimeSeries.only_id_title.find(self.time_series_id)
   end
 
+  # get time series permalink
+  def time_series_permalink
+    x = TimeSeries.only(:_slugs).find(self.time_series_id)
+    if x.present? && x.slug.present?
+      x.slug
+    else
+      self.time_series_id
+    end
+  end
+
+  # get dataset permalink
+  def dataset_permalink
+    x = Dataset.only(:_slugs).find(self.dataset_id)
+    if x.present? && x.slug.present?
+      x.slug
+    else
+      self.dataset_id
+    end
+  end
+
   def dataset_title
     x = Dataset.only_id_title_languages.find(self.dataset_id)
     if x.present?

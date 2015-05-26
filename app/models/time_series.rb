@@ -2,6 +2,7 @@ class TimeSeries < CustomTranslation
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::Search
+  include Mongoid::Slug
 
   #############################
 
@@ -19,6 +20,7 @@ class TimeSeries < CustomTranslation
   field :private_share_key, type: String
   field :languages, type: Array
   field :default_language, type: String
+  field :permalink, type: String
 
   has_many :category_mappers, dependent: :destroy do
     def category_ids
@@ -86,7 +88,7 @@ class TimeSeries < CustomTranslation
       :datasets_attributes, :questions_attributes,
       :languages, :default_language,
       :title_translations, :description_translations, 
-      :category_mappers_attributes, :category_ids
+      :category_mappers_attributes, :category_ids, :permalink
 
   attr_accessor :category_ids
 
@@ -106,6 +108,21 @@ class TimeSeries < CustomTranslation
   #############################
   # Full text search
   search_in :title, :description, :questions => [:original_code, :text, :notes, :answers => [:text]]
+
+  #############################
+  # permalink slug
+  # if the dataset is public, use the permalink field value if it exists, else the default lang title
+  slug :permalink, :title, :public, history: true do |d|
+    if d.public?
+      if d.permalink.present?
+        d.permalink.to_url
+      else
+        d.title_translations[d.default_language].to_url
+      end
+    else
+      return nil
+    end
+  end
 
   #############################
   # Validations
@@ -244,7 +261,8 @@ class TimeSeries < CustomTranslation
 
   # get the record if the user is the owner
   def self.by_id_for_user(id, user_id)
-    where(id: id).by_user(user_id).first
+    # where(id: id).by_user(user_id).first
+    by_user(user_id).find(id)
   end
 
   def self.categorize(cat)

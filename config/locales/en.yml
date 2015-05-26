@@ -81,6 +81,7 @@ en:
         created_at: Added On
         reports: Reports
         category_ids: Categories
+        permalink: URL to Dataset
       question:
         code: Question Code
         original_code: Question Code
@@ -119,6 +120,7 @@ en:
         datasets: Datasets
         dates: Dates Included
         category_ids: Categories
+        permalink: URL to Time Series
       time_series_dataset:
         dataset_id: Dataset
         title: Label
@@ -204,6 +206,7 @@ en:
         languages: "Even though your dataset may be in one language, you can use these forms to translate all of the questions and answers into any language you desire."
         default_language: The dataset language that is shown by default if no specific language is requested by user
         category_ids: Assign the dataset to one or more categories
+        permalink: "An abbreviated name of the dataset that you want to appear in the URL (e.g., 'wms' for 'Welfare Monitoring Survey'). All special characters will be automatically removed."
       shapeset:
         title: The title of your shapeset
         description: Short summary of what is in the shapeset
@@ -240,6 +243,7 @@ en:
         languages: "The languages of your time series are automatically determined by the languages of the datasets"
         default_language: The time series language that is shown by default if no specific language is requested by user
         category_ids: Assign the time series to one or more categories
+        permalink: "An abbreviated name of the time series that you want to appear in the URL (e.g., 'wms' for 'Welfare Monitoring Survey'). All special characters will be automatically removed."
       time_series_dataset:
         dataset_id: Select the dataset to add to this time series
         title: "The text that will represent this data set in the time series, most likely a time indicator. For example, if your dataset is from 2015, you could enter 2015; or if it is from January 2015, you can enter January 2015."

@@ -119,13 +119,13 @@ PageContent.create(name: 'instructions', title_translations: {'en' => 'Instructi
 <div class="box"><div class="caption"><div class="i explore-data">&nbsp;</div><div class="title">Explore Data</div><div class="line">&nbsp;</div></div><div class="text"><p>You don\'t need to be a statistician to explore UNICEF Georgia\'s data. While it is possible to download the raw data for more advanced analysis, here you can easily explore and visualize a single question or the relationship between two questions by comparing them. You can even filter the results by a third question.</p><p>To help you make sense of the numbers, single variables are visualized in pie charts, tables, and possibly maps if relevant. Comparing two questions gives a bar chart, a table, and if possible a map. You can export the charts and graphs in a variety of formats (png, jpeg, pdf, svg) depending on your needs. You can also embed the visuals into other web pages. For you developers out there, you can even access data in JSON format using the <a href="/en/api">API</a>.</p></div></div>
 <div class="box"><div class="caption"><div class="i time-series">&nbsp;</div><div class="title">Time Series</div><div class="line">&nbsp;</div></div><div class="text"><p>UNICEF Georgia sometimes asks people the same questions at regular time intervals to see how attitudes and opinions change over time such as in the case of the <a href="/en/explore_time_series/5525001a2c1743bfc8002689">Welfare Monitoring Survey</a>. Time series data is visualized using line charts to make it easy to understand how responses to a question change over time. Like individual datasets, you can export the graphs, embed them in other web pages, and access the data in JSON format using the <a href="/en/api">API</a>.</p></div></div>
 <div class="box"><div class="caption"><div class="i download-data">&nbsp;</div><div class="title">Download Data</div><div class="line">&nbsp;</div></div><div class="text"><p>UNICEF Georgia enables you to download the raw data and codebook of any of its datasets. You are required to provide some basic information about yourself, but if you\'d like to avoid this each time you download a dataset, go ahead and <a href="/en/users/sign_up" class="reattach sign_in">create an account</a> on this site. In addition, with an account, you can opt in to receive notifications when new datasets are added.</p></div></div>
-<div class="box"><div class="caption"><div class="i api">&nbsp;</div><div class="title">API</div><div class="line">&nbsp;</div></div><div class="text"><p>While it is possible to download the datasets, you are welcome to access the data in JSON format using the <a href="/en/api">API</a> to create your own interactive applications or visualizations. The API allows you to get a catalog of all datasets, detailed information about a dataset, a dataset codebook, and even run analyses on a dataset just like on the explore pages. All of the same calls are also available for time series data.</p><p>Just as when you download the data, you'll need to create an account to use the API. Once you create an account, you'll be able to <a href="/en/settings?page=api">create an API access token</a>, which is required to use the API. Please visit the <a href="/en/api">API section</a> for detailed documentation on all of the API calls.</p></div></div>',
+<div class="box"><div class="caption"><div class="i api">&nbsp;</div><div class="title">API</div><div class="line">&nbsp;</div></div><div class="text"><p>While it is possible to download the datasets, you are welcome to access the data in JSON format using the <a href="/en/api">API</a> to create your own interactive applications or visualizations. The API allows you to get a catalog of all datasets, detailed information about a dataset, a dataset codebook, and even run analyses on a dataset just like on the explore pages. All of the same calls are also available for time series data.</p><p>Just as when you download the data, you\'ll need to create an account to use the API. Once you create an account, you\'ll be able to <a href="/en/settings?page=api">create an API access token</a>, which is required to use the API. Please visit the <a href="/en/api">API section</a> for detailed documentation on all of the API calls.</p></div></div>',
 'ka' => '<div class="header"><a href="http://www.unicef.ge" target="_blank">UNICEF საქართველო</a> გაძლევთ საშუალებას გაეცნოთ მათ მონაცებემს. ამ მონაცემების გამოყენება თქვენ შეგიძლიათ ინგლისურ და ქართულ ენებზე:</div>
 <div class="box"><div class="caption"><div class="i datasets">&nbsp;</div><div class="title">მონაცემთა ცხრილი</div><div class="line">&nbsp;</div></div><div class="text"><p>ყველა ხელმისაწყვოდმი ცხრილის სანახავად, გთხოვთ ეწვიოთ [მონაცემთა ცხრილის ინდექსს]. თქვენ სიტყვის საძიებო სისტემით და კატეგორიების არჩევით შეგიძლიათ მოიძიოთ სასურველი ინფორმაცია, როგორც მხოლოდ მონაცემთა ცხრილის, ისე პერიოდული შედარების კატალოგის შესახებ.</p><p>ვებ გვერდი მოგაწვდით უამრავ კონტექსტუალურ ინფორმაციას მონაცემთა თითოეული ცხრილის შესახებ, მათ შორის ისეთებს, როგორებიცაა მეტადატა, მონაცემთა პრიორიტეტულობა, კოდები, ნებართვა და შესაბამისი ანგარიში. კოდების საძიებო სისტემის გამოყენებით მოძებნეთ თქვენთვის საინტერესო შეკითხვა და მისი ვიზუალიზაციისთვის გახსენით შეკითხვა. ეს მარტივია.</p></div></div>
 <div class="box"><div class="caption"><div class="i explore-data">&nbsp;</div><div class="title">მონაცემთა გაცნობა</div><div class="line">&nbsp;</div></div><div class="text"><p>UNICEF საქართველოს მონაცემების გასაცნობად თქვენ არ გჭირდებათ იყოთ სტატისტიკოსი. მაშინ როდესაც უფრო სიღრმისეული ანალიზისთვის აუცილებელია მონაცემების ჩამოტვირთვა, აქ თქვენ მარტივად შეგიძლიათ გაეცნოთ თითოეულ შეკითხვას ან გაანალიზოთ ორი შეკითხვის მიმართება ერთმანეთთან მათი შედარებით. თქვენ ასევე შეგიძლიათ მონაცემების ფილტრაცია მესამე შეკითხვის გამოყენებით.</p><p>იმისათვის, რომ თქვენ ციფრებს და რაოდენობებს კარგად გაეცნოთ, ცალკეული ცვლადები გამოსახულია წრიულ დიაგრამაში, ცხრილებში და რუკებში თუ შეესაბამება. ორი კითხვის შედარება შეგვიძლია დიაგრამით, ცხრილით და თუ შესაძლებელია რუკით. თქვენი საჭიროებისამებრ, შეგიძლიათ მონაცემების ექსპორტირება სხვადასხვა ფორმატებით (png, jpeg, pdf, svg). გარდა ამისა, თქვენ შეგიძლიათ მონაცემების ჩასმა სხვა ვებ-გვერდებზე. დეველოპერებს <a href="/ka/api">API-ს</a> გამოყენებით წვდომა ექნებათ JSON ფორმატის მონაცემებზე.</p></div></div>
 <div class="box"><div class="caption"><div class="i time-series">&nbsp;</div><div class="title">პერიოდული შედარება</div><div class="line">&nbsp;</div></div><div class="text"><p>UNICEF საქართველო დრო და დრო იყენებს ერთსა და იმავე შეკითხვას რამდენიმე კვლევაში, რათა დაინახოს როგორ იცვლება საზოგადოების დამოკიდებულება და აზრი გარკვეული საკითხის მიმართ, მაგალითად როგორც ეს მოხდა <a href="/ka/explore_time_series/5525001a2c1743bfc8002689">მოსახლეობის კეთილდღეობის კვლევის</a> შემთხვევაში. პერიოდული შედარების მონაცემები გამოსახულია წრფივი დიაგრამის საშუალებით, რათა ადვილად გასაგები გახდეს გარკვეული დროის განმავლობაში დამოკიდებულების და აზრის ცვლილების დანახვა. თქვენ შეგიძლიათ გააკეთოთ გრაფიკების ექსპორტირება და სხვა ვებ-საიტებზე ჩასმა, ისევე როგორც თითოეული მონაცემთა ცხრილის შემთხვევაში და <a href="/ka/api">API-ს</a> საშუალებით გაეცნოთ მონაცემებს JSON ფორმატში.</p></div></div>
 <div class="box"><div class="caption"><div class="i download-data">&nbsp;</div><div class="title">მონაცემთა ჩამოტვირთვა</div><div class="line">&nbsp;</div></div><div class="text"><p>UNICEF საქართველო საშუალებას გაძლევთ ჩამოტვირთოთ ნებისმიერი მონაცემთა ცხრილი და კოდები. ამისთვის თქვენ უნდა მოგვაწოდოთ მცირეოდენი ინფორმაცია თქვენს შესახებ, მაგრამ თუ გსურთ თითოეული ჩამოტვირთვის დროს ამ პროცედურის თავიდან აცილება, შეგიძლიათ ვერბ-გვერდზე მარტივად [შექმნათ თქვენი ანგარიში]. აგრეთვე, თქვენი ანგარიშის საშუალებით მიიღებთ შეტყობინებას ახალი მონაცემების დამატების დროს.</p></div></div>
-<div class="box"><div class="caption"><div class="i api">&nbsp;</div><div class="title">API</div><div class="line">&nbsp;</div></div><div class="text"><p>მონაცემების ჩამოტვირთვის დროს, <a href="/ka/api">API-ს</a> გამოყენებით თქვენ შეგიძლიათ გაეცნოთ მონაცემებს JSON ფორმატში, რათა შექმნათ საკუთარი ინტერაქტიული აპლიკაცია ან ვიზუალიზაცია. API საშუალებას გაძლევთ მიიღოთ ყველა მონაცემთა ცხრილის კატალოგი, დეტალური ინფორმაცია მონაცემთა ცხრილის შესახებ, მონაცემთა ცხრილის კოდირება და მონაცემთა ცხრილში ანალიზის გაკეთების საშუალებაც კი, როგორც ეს არის გაცნობის გვერდზე. ყველა ეს გამოძახება შესაძლებელი იქნება პერიოდული შედარების მონაცემებში.</p><p>მონაცემების ჩამოტვირთის დროს API-ის გამოსაყენებლად თქვენ უნდა შექმნათ ანგარიში. ანგარიშის შექმნის შემდეგ თქვენ შეძლებთ <a href="/ka/settings?page=api">შექმნათ API-ს დაშვების გასაღები</a> რომელიც აუცილებელია API-ის გამოსაყენებლად. API-ს გამოძახების შესახებ დეტალური დოკუმენტაციის მისაღებად, გთხოვთ ეწიოთ ჩვენს <a href="/ka/api">API-ს სექციას</a>.</p></div></div>') if PageContent.by_name('instructions').nil?
+<div class="box"><div class="caption"><div class="i api">&nbsp;</div><div class="title">API</div><div class="line">&nbsp;</div></div><div class="text"><p>მონაცემების ჩამოტვირთვის დროს, <a href="/ka/api">API-ს</a> გამოყენებით თქვენ შეგიძლიათ გაეცნოთ მონაცემებს JSON ფორმატში, რათა შექმნათ საკუთარი ინტერაქტიული აპლიკაცია ან ვიზუალიზაცია. API საშუალებას გაძლევთ მიიღოთ ყველა მონაცემთა ცხრილის კატალოგი, დეტალური ინფორმაცია მონაცემთა ცხრილის შესახებ, მონაცემთა ცხრილის კოდირება და მონაცემთა ცხრილში ანალიზის გაკეთების საშუალებაც კი, როგორც ეს არის გაცნობის გვერდზე. ყველა ეს გამოძახება შესაძლებელი იქნება პერიოდული შედარების მონაცემებში.</p><p>მონაცემების ჩამოტვირთის დროს API-ის გამოსაყენებლად თქვენ უნდა შექმნათ ანგარიში. ანგარიშის შექმნის შემდეგ თქვენ შეძლებთ <a href="/ka/settings?page=api">შექმნათ API-ს დაშვების გასაღები</a> რომელიც აუცილებელია API-ის გამოსაყენებლად. API-ს გამოძახების შესახებ დეტალური დოკუმენტაციის მისაღებად, გთხოვთ ეწიოთ ჩვენს <a href="/ka/api">API-ს სექციას</a>.</p></div></div>'}) if PageContent.by_name('instructions').nil?
 
 PageContent.create(name: 'contact', title_translations: {'en' => 'Contact', 'ka' => 'კონტაქტი'}, content_translations: {'en' => 'If you would like to find out more about our data or have questions about datasets on this site, please send us an email or call us.', 
   'ka' => 'თუ გსურთ მონაცემთა ცხრილებზე უფრო მეტი ინფორმაციის მიღება ან გაქვთ შეკითხვა საიტზე არსებული მონაცემების შესახებ, გთხოვთ მოგვწეროთ ელ-ფოსტის საშუალებით ან დაგვიკავშირდეთ ტელეფონით.'}) if PageContent.by_name('contact').nil?
@@ -1220,3 +1220,76 @@ Category.create(permalink: 'education',         name_translations:{'en' => 'Educ
 Category.create(permalink: 'social_production', name_translations:{'en' => 'Social Protection', 'ka' => 'სოციალური დაცვა'},                         sort_order: 6) if Category.by_permalink('social_production').nil?
 Category.create(permalink: 'wash',              name_translations:{'en' => 'Water, Sanitation and Hygiene', 'ka' => 'წყალი, სანიტარია და ჰიგიენა'}, sort_order: 7) if Category.by_permalink('wash').nil?
 Category.create(permalink: 'youth',             name_translations:{'en' => 'Youth', 'ka' => 'ახალგაზრდობა'},                                        sort_order: 8) if Category.by_permalink('youth').nil?
+
+
+#####################
+## Add permalinks
+#####################
+puts 'Add missing permalinks'
+d = Dataset.meta_only.find("551934b92c17430657000001")
+if d.present? && d.permalink.nil?
+  d.permalink = 'preschool census'
+  d.save
+end
+d = Dataset.meta_only.find("551cf0022c17430337000002")
+if d.present? && d.permalink.nil?
+  d.permalink = 'barriers social services'
+  d.save
+end
+d = Dataset.meta_only.find("552501722c174377a8008cc3")
+if d.present? && d.permalink.nil?
+  d.permalink = 'violence against children'
+  d.save
+end
+d = Dataset.meta_only.find("552501ae2c1743bfc800268f")
+if d.present? && d.permalink.nil?
+  d.permalink = 'youth'
+  d.save
+end
+d = Dataset.meta_only.find("555105f12c1743ef65000002")
+if d.present? && d.permalink.nil?
+  d.permalink = 'wash public schools behavior'
+  d.save
+end
+d = Dataset.meta_only.find("5551057f2c1743ed71000001")
+if d.present? && d.permalink.nil?
+  d.permalink = 'wash public schools interviews'
+  d.save
+end
+d = Dataset.meta_only.find("5551064f2c1743ed710006be")
+if d.present? && d.permalink.nil?
+  d.permalink = 'wash preschools interviews'
+  d.save
+end
+d = Dataset.meta_only.find("555106d42c1743ed71001d7a")
+if d.present? && d.permalink.nil?
+  d.permalink = 'wash preschools infrastructure'
+  d.save
+end
+d = Dataset.meta_only.find("555107d82c1743ef650003ae")
+if d.present? && d.permalink.nil?
+  d.permalink = 'wash preschools behavior'
+  d.save
+end
+d = Dataset.meta_only.find("5524eb992c174377a8000002")
+if d.present? && d.permalink.nil?
+  d.permalink = '2009 wms'
+  d.save
+end
+d = Dataset.meta_only.find("5524faa32c1743bfc8000004")
+if d.present? && d.permalink.nil?
+  d.permalink = '2011 wms'
+  d.save
+end
+d = Dataset.meta_only.find("5524fbe42c174377a8001e47")
+if d.present? && d.permalink.nil?
+  d.permalink = '2013 wms'
+  d.save
+end
+ts = TimeSeries.meta_only.find("5525001a2c1743bfc8002689")
+if d.present? && d.permalink.nil?
+  d.permalink = 'wms'
+  d.save
+end
+
+

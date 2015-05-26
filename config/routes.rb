@@ -26,7 +26,7 @@ BootstrapStarter::Application.routes.draw do
       end
     end
 
-    resources :datasets do
+    resources :datasets, path: :manage_datasets do
       resources :questions, :only => [:index, :show, :edit, :update] do
         collection do
           get 'mass_changes'
@@ -59,7 +59,7 @@ BootstrapStarter::Application.routes.draw do
       end
     end
 
-    resources :time_series do
+    resources :time_series, path: :manage_time_series do
       resources :time_series_questions, :only => [:index, :show, :new, :create, :edit, :update], :path => 'questions', :as => 'questions'
       member do
         get 'explore'
@@ -99,12 +99,12 @@ BootstrapStarter::Application.routes.draw do
     match '/download_request', :to => 'root#download_request', :as => :download_request, :via => :get
     match '/instructions', :to => 'root#instructions', :as => :instructions, :via => :get
     match '/notes', :to => 'root#notes', :as => :notes, :via => :get
-		match '/explore_data', :to => 'root#explore_data', :as => :explore_data, :via => :get
-		match '/explore_data/:id', :to => 'root#explore_data_dashboard', :as => :explore_data_dashboard, :via => :get
-    match '/explore_data/:id/explore', :to => 'root#explore_data_show', :as => :explore_data_show, :via => :get
-    match '/explore_time_series', :to => 'root#explore_time_series', :as => :explore_time, :via => :get
-    match '/explore_time_series/:id', :to => 'root#explore_time_series_dashboard', :as => :explore_time_series_dashboard, :via => :get
-    match '/explore_time_series/:id/explore', :to => 'root#explore_time_series_show', :as => :explore_time_series_show, :via => :get
+		match '/datasets', :to => 'root#explore_data', :as => :explore_data, :via => :get
+		match '/datasets/:id', :to => 'root#explore_data_dashboard', :as => :explore_data_dashboard, :via => :get
+    match '/datasets/:id/explore', :to => 'root#explore_data_show', :as => :explore_data_show, :via => :get
+    match '/time_series', :to => 'root#explore_time_series', :as => :explore_time, :via => :get
+    match '/time_series/:id', :to => 'root#explore_time_series_dashboard', :as => :explore_time_series_dashboard, :via => :get
+    match '/time_series/:id/explore', :to => 'root#explore_time_series_show', :as => :explore_time_series_show, :via => :get
     match '/private_share/:id', :to => 'root#private_share', :as => :private_share, :via => :get
     match '/generate_highlights', :to => 'root#generate_highlights', :as => :generate_highlights, :via => :post, :defaults => { :format => 'json' }
 

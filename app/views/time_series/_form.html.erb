@@ -42,38 +42,6 @@
       </table>
     </div>
 
-    <div class="row">
-      <div class="col-sm-6">
-        <%= f.input :category_ids, as: :check_boxes, hint: t(hint_key + 'category_ids'), 
-              :collection => Category.sorted.map{|x| [x.name, x.id]} %>
-        <%#= f.input :category_ids, as: :select, hint: t(hint_key + 'category_ids'), 
-              :collection => Category.sorted.map{|x| [x.name, x.id]}, multiple: true, 
-              :input_html => {class: 'selectpicker', 
-              :'data-live-search' => "true", :'data-selected-text-format' => "count>3", :'data-size' => "7",
-              :'data-width' => "72%"} %>
-      </div>
-      <div class="col-sm-6">
-        <div class="radio_buttons input optional form-group" id="time_series_public_input">
-          <label class="  control-label" for="time_series_public"><%= t(label_key + 'public') %><div class="help-inline" title="<%= t(hint_key + 'public') %>"><div>?</div></div>
-          </label>
-          <div class="radio">
-            <label class="choice" for="time_series_public_true">
-              <% checked = @time_series.public? ? 'checked=checked' : '' %>
-              <input <%= checked %> id="time_series_public_true" name="time_series[public]" type="radio" value="true" />
-              <%= t('formtastic.yes') %>
-            </label>
-          </div>
-          <div class="radio">
-            <label class="choice" for="time_series_public_false">
-              <% checked = @time_series.public? ? '' : 'checked=checked' %>
-              <input <%= checked %> id="time_series_public_false" name="time_series[public]" type="radio" value="false" />
-              <%= t('formtastic.no') %>
-            </label>
-          </div>
-        </div>
-      </div>
-
-    </div>
 
     <div class="row">
       <div class="col-sm-6">
@@ -186,6 +154,45 @@
 
   </div>
 
+  <hr />
+
+  <%= f.inputs do %>
+    <div class="row">
+      <div class="col-sm-4">
+        <%= f.input :permalink, :as => :string, hint: t(hint_key + 'permalink'), :input_html => { :size => 40 } %>
+      </div>
+      <div class="col-sm-4">
+        <%= f.input :category_ids, as: :check_boxes, hint: t(hint_key + 'category_ids'), 
+              :collection => Category.sorted.map{|x| [x.name, x.id]} %>
+        <%#= f.input :category_ids, as: :select, hint: t(hint_key + 'category_ids'), 
+              :collection => Category.sorted.map{|x| [x.name, x.id]}, multiple: true, 
+              :input_html => {class: 'selectpicker', 
+              :'data-live-search' => "true", :'data-selected-text-format' => "count>3", :'data-size' => "7",
+              :'data-width' => "72%"} %>
+      </div>
+      <div class="col-sm-4">
+        <div class="radio_buttons input optional form-group" id="time_series_public_input">
+          <label class="  control-label" for="time_series_public"><%= t(label_key + 'public') %><div class="help-inline" title="<%= t(hint_key + 'public') %>"><div>?</div></div>
+          </label>
+          <div class="radio">
+            <label class="choice" for="time_series_public_true">
+              <% checked = @time_series.public? ? 'checked=checked' : '' %>
+              <input <%= checked %> id="time_series_public_true" name="time_series[public]" type="radio" value="true" />
+              <%= t('formtastic.yes') %>
+            </label>
+          </div>
+          <div class="radio">
+            <label class="choice" for="time_series_public_false">
+              <% checked = @time_series.public? ? '' : 'checked=checked' %>
+              <input <%= checked %> id="time_series_public_false" name="time_series[public]" type="radio" value="false" />
+              <%= t('formtastic.no') %>
+            </label>
+          </div>
+        </div>
+      </div>
+
+    </div>  
+  <% end %>
 
   <div class="form-group">
     <%= f.submit nil, :class => 'btn btn-primary' %>

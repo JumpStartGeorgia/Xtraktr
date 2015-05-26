@@ -4,7 +4,9 @@ class Dataset < CustomTranslation
   include Mongoid::Timestamps
   include Mongoid::Paperclip
   include Mongoid::Search
+  include Mongoid::Slug
   include ProcessDataFile # script in lib folder that will convert datafile to csv and then load into appropriate fields
+
 
   #############################
 
@@ -44,6 +46,7 @@ class Dataset < CustomTranslation
   field :languages, type: Array
   field :default_language, type: String
   field :reset_download_files, type: Boolean, default: true
+  field :permalink, type: String
 
   has_many :category_mappers, dependent: :destroy do
     def category_ids
@@ -263,7 +266,7 @@ class Dataset < CustomTranslation
       :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at,
       :languages, :default_language, :stats_attributes, :urls_attributes,
       :title_translations, :description_translations, :methodology_translations, :source_translations, :source_url_translations,
-      :reset_download_files, :category_mappers_attributes, :category_ids
+      :reset_download_files, :category_mappers_attributes, :category_ids, :permalink
 
   attr_accessor :category_ids
 
@@ -300,6 +303,22 @@ class Dataset < CustomTranslation
   #############################
   # Full text search
   search_in :title, :description, :methodology, :source, :questions => [:original_code, :text, :notes, :answers => [:text]]
+
+
+  #############################
+  # permalink slug
+  # if the dataset is public, use the permalink field value if it exists, else the default lang title
+  slug :permalink, :title, :public, history: true do |d|
+    if d.public?
+      if d.permalink.present?
+        d.permalink.to_url
+      else
+        d.title_translations[d.default_language].to_url
+      end
+    else
+      return nil
+    end
+  end
 
   #############################
   # Validations
@@ -616,7 +635,8 @@ class Dataset < CustomTranslation
 
   # get the record if the user is the owner
   def self.by_id_for_user(id, user_id)
-    where(id: id).by_user(user_id).first
+    # where(id: id).by_user(user_id).first
+    by_user(user_id).find(id)
   end
 
   def self.only_id_title_languages
