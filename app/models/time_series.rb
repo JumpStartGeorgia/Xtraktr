@@ -120,7 +120,7 @@ class TimeSeries < CustomTranslation
         d.title_translations[d.default_language].to_url
       end
     else
-      return nil
+      d.id.to_s
     end
   end
 
