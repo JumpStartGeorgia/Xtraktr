@@ -3,7 +3,7 @@ class RootController < ApplicationController
     @datasets = Dataset.meta_only.is_public.recent.sorted.limit(6)
 
     @time_series = TimeSeries.meta_only.is_public.recent.sorted.limit(3) if @is_xtraktr
-    @wms_id = TimeSeries.pluck(:id).first
+    @wms_id = TimeSeries.pluck(:_slugs).first.first
 
     @categories = Category.sorted
     @highlights = Highlight.for_home_page
