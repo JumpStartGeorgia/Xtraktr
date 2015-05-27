@@ -98,7 +98,7 @@ class RootController < ApplicationController
   def explore_data_dashboard
     @klass=' white'
     @klass_footer=''
-    @dataset = Dataset.is_public.find_by(id: params[:id])
+    @dataset = Dataset.is_public.find(params[:id])
 
     if @dataset.blank?
       redirect_to explore_data_path, :notice => t('app.msgs.does_not_exist')
@@ -128,7 +128,7 @@ class RootController < ApplicationController
   end
   
   def explore_data_show
-    @dataset = Dataset.is_public.find_by(id: params[:id])
+    @dataset = Dataset.is_public.find(params[:id])
 
     if @dataset.blank?
       redirect_to explore_data_path, :notice => t('app.msgs.does_not_exist')
@@ -200,7 +200,7 @@ class RootController < ApplicationController
   def explore_time_series_dashboard
     @klass=' white'
     @klass_footer=''
-    @time_series = TimeSeries.is_public.find_by(id: params[:id])
+    @time_series = TimeSeries.is_public.find(params[:id])
 
     if @time_series.blank?
       redirect_to explore_time_path, :notice => t('app.msgs.does_not_exist')
@@ -234,7 +234,7 @@ class RootController < ApplicationController
   
 
   def explore_time_series_show
-    @time_series = TimeSeries.is_public.find_by(id: params[:id])
+    @time_series = TimeSeries.is_public.find(params[:id])
 
     if @time_series.blank?
       redirect_to explore_time_path, :notice => t('app.msgs.does_not_exist')

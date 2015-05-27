@@ -376,12 +376,16 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
           # save dataset title
           output[:title] = data[:dataset][:title]
 
+          # set permalink to dataset
+          permalink = Dataset.get_slug(options['dataset_id'])
+          permalink = options['dataset_id'] if permalink.blank?
+
           # create link to dashboard
-          output[:dashboard_link] = explore_data_dashboard_url(options['dataset_id'])
+          output[:dashboard_link] = explore_data_dashboard_url(permalink)
 
           # create link to this item
-          options['id'] = options['dataset_id']
-          output[:id] =  options['dataset_id']
+          options['id'] = permalink
+          output[:id] = options['id']
           options['from_embed'] = true
           output[:explore_link] = explore_data_show_url(options)
         end
@@ -394,12 +398,16 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
           # save dataset title
           output[:title] = data[:time_series][:title]
 
+          # set permalink to dataset
+          permalink = TimeSeries.get_slug(options['time_series_id'])
+          permalink = options['time_series_id'] if permalink.blank?
+
           # create link to dashboard
-          output[:dashboard_link] = explore_time_series_dashboard_url(options['time_series_id'])
+          output[:dashboard_link] = explore_time_series_dashboard_url(permalink)
 
           # create link to this item
-          options['id'] = options['time_series_id']
-          output[:id] =  options['time_series_id']
+          options['id'] = permalink
+          output[:id] = options['id']
           options['from_embed'] = true
           output[:explore_link] = explore_time_series_show_url(options)
         end        

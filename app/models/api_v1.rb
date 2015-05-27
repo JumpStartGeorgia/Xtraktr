@@ -20,7 +20,7 @@ class ApiV1
     language = options['language'].present? ? options['language'].downcase : nil
 
     # get dataset
-    dataset = Dataset.is_public.find_by(id: dataset_id)
+    dataset = Dataset.is_public.find(dataset_id)
 
     if dataset.nil?
       return {errors: [{status: '404', detail: I18n.t('api.msgs.no_dataset') }]}
@@ -45,7 +45,7 @@ class ApiV1
     language = options['language'].present? ? options['language'].downcase : nil
 
     # get dataset
-    dataset = Dataset.is_public.find_by(id: dataset_id)
+    dataset = Dataset.is_public.find(dataset_id)
 
     if dataset.nil?
       return {errors: [{status: '404', detail: I18n.t('api.msgs.no_dataset') }]}
@@ -105,7 +105,7 @@ class ApiV1
       # get the dataset
       dataset = Dataset.by_id_for_user(dataset_id, user_id) if user_id.present?
     else
-      dataset = Dataset.is_public.find_by(id: dataset_id)
+      dataset = Dataset.is_public.find(dataset_id)
     end
 
     # if the dataset could not be found, stop
@@ -193,7 +193,7 @@ class ApiV1
     # get options
     language = options['language'].present? ? options['language'].downcase : nil
 
-    time_series = TimeSeries.is_public.find_by(id: time_series_id)
+    time_series = TimeSeries.is_public.find(time_series_id)
 
     if time_series.nil?
       return {errors: [{status: '404', detail: I18n.t('api.msgs.no_time_series') }]}
@@ -217,7 +217,7 @@ class ApiV1
     # get options
     language = options['language'].present? ? options['language'].downcase : nil
 
-    time_series = TimeSeries.is_public.find_by(id: time_series_id)
+    time_series = TimeSeries.is_public.find(time_series_id)
 
     if time_series.nil?
       return {errors: [{status: '404', detail: I18n.t('api.msgs.no_time_series') }]}
@@ -273,7 +273,7 @@ class ApiV1
       # get time series
       time_series = TimeSeries.by_id_for_user(time_series_id, user_id) if user_id.present?
     else
-      time_series = TimeSeries.is_public.find_by(id: time_series_id)
+      time_series = TimeSeries.is_public.find(time_series_id)
     end
 
     # if the time_series could not be found, stop
