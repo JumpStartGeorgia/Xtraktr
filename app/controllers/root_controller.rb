@@ -118,8 +118,8 @@ class RootController < ApplicationController
 
       @show_title = false
 
-      @css.push("list.css", "dashboard.css", 'highlights.css', 'boxic.css', 'tabs.css')
-      @js.push("live_search.js", 'highlights.js')
+      @css.push("list.css", "dashboard.css", 'highlights.css', 'boxic.css', 'tabs.css', 'explore.css')
+      @js.push("live_search.js", 'highlights.js', 'explore.js')
 
       respond_to do |format|
         format.html # index.html.erb
@@ -223,8 +223,8 @@ class RootController < ApplicationController
 
       @show_title = false
 
-      @css.push("dashboard.css", 'highlights.css', 'boxic.css', 'list.css', 'tabs.css')
-      @js.push("live_search.js", 'highlights.js')
+      @css.push("dashboard.css", 'highlights.css', 'boxic.css', 'list.css', 'tabs.css', 'explore.css')
+      @js.push("live_search.js", 'highlights.js', 'explore.js')
 
       respond_to do |format|
         format.html # index.html.erb

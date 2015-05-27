@@ -162,3 +162,19 @@ footer {
   background-color: #b1b1b1;
   cursor: pointer;
 }
+
+
+
+nav
+{
+  .stats { display:none; }
+  .sidebar { display:none; }
+  .lang-icon { display:table-cell;}
+  .lang-link { display:none !important;}
+  @media (min-width: 768px) {
+    .stats { display:table-cell; }
+    .sidebar { display:block; }
+    .lang-icon { display:none !important; }
+    .lang-link { display:inline-block !important; }
+  }
+}

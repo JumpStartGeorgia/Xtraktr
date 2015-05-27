@@ -73,9 +73,9 @@ function build_datatable(json){
     table += "<tr class='th-center'>";
     table += "<th class='var1-col'>" + gon.table_questions_header + "</th>";
 
-
-    for(i=0; i<json.datasets.length;i++){
-      table += "<th class='code-highlight' colspan='2'>";
+    var ln = json.datasets.length;
+    for(i=0; i<ln;i++){
+      table += "<th colspan='2' class='code-highlight color"+(ln-i%13)+"'>";
       table += json.datasets[i].label;
       table += "</th>"
     }
@@ -124,8 +124,9 @@ function build_datatable(json){
     // filter   question   count percent count percent .....
     table += "<tr class='th-center'>";
     table += "<th class='var1-col' colspan='2'>" + gon.table_questions_header + "</th>";
-    for(i=0; i<json.datasets.length;i++){
-      table += "<th class='code-highlight' colspan='2'>";
+    var ln = json.datasets.length;
+    for(i=0; i<ln;i++){
+      table += "<th colspan='2' class='code-highlight color"+(ln-i%13)+"'>";
       table += json.datasets[i].label;
       table += "</th>"
     }
@@ -405,6 +406,7 @@ function reset_filter_form(){
 $(document).ready(function() {
   // set languaage text
   Highcharts.setOptions({
+    chart: { spacingRight: 30 },
     lang: {
       contextButtonTitle: gon.highcharts_context_title
     },
@@ -489,7 +491,7 @@ $(document).ready(function() {
     // jumpto scrolling
     $("#jumpto").on('change', 'select', function(){
       var href = $(this).find('option:selected').data('href');
-      $('html, body').animate({
+      $('.tab-pane').animate({
         scrollTop: $(href).offset().top - 120
       }, 1500);
     });

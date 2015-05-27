@@ -195,6 +195,7 @@ function load_highlights(highlight_data){
 $(document).ready(function() {
   // set languaage text
   Highcharts.setOptions({
+    chart: { spacingRight: 30 },
     lang: {
       contextButtonTitle: gon.highcharts_context_title
     },
