@@ -11,6 +11,8 @@ class Admin::ShapesetsController < ApplicationController
 
     @js.push("search.js")
 
+    set_gon_datatables
+
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @shapesets }

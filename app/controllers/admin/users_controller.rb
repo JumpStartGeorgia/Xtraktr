@@ -8,6 +8,8 @@ class Admin::UsersController < ApplicationController
   # GET /admin/users.json
   def index
     @js.push('search.js')
+
+    set_gon_datatables
     
     respond_to do |format|
       format.html # index.html.erb

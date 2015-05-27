@@ -3,14 +3,23 @@ $(document).ready(function(){
 
   // datatable for time series questions index page
   datatable = $('#time-series-questions').dataTable({
-    "dom": '<"top"f>t<"bottom"lpi><"clear">',
+    "dom": '<"top"fli>t<"bottom"p><"clear">',
     "columnDefs": [
       { orderable: false, targets: [0,5] }
     ],
     "order": [[1, 'asc']],
     "language": {
-      "url": gon.datatable_i18n_url
-    }
+      "url": gon.datatable_i18n_url,
+      "search": "_INPUT_",
+      "searchPlaceholder": gon.datatable_search,
+      "paginate": {
+          "first": " ",
+          "previous": " ",
+          "next": " ",
+          "last": " "
+      }
+    },
+    "pagingType": "full_numbers"
   });
 
 

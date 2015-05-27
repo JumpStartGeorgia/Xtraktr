@@ -13,6 +13,8 @@ class TimeSeriesController < ApplicationController
     @css.push("time_series.css")
     @js.push("search.js")
 
+    set_gon_datatables
+
     respond_to do |format|
       format.html 
       format.json { render json: @time_series }
@@ -325,6 +327,8 @@ end
       add_time_series_nav_options
 
       @js.push('search.js')
+
+      set_gon_datatables
 
       respond_to do |format|
         format.html # index.html.erb
