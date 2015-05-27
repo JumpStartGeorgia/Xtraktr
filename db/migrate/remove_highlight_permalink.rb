@@ -5,8 +5,6 @@ Highlight.each do |highlight|
   puts "highlight #{highlight.id}"
   options = Rack::Utils.parse_query(Base64.urlsafe_decode64(highlight.embed_id))
 
-  puts options
-
   if options.has_key?('permalink')
     puts "- has permalink, removing"
     options.delete('permalink')
