@@ -130,7 +130,7 @@ PageContent.create(name: 'instructions', title_translations: {'en' => 'Instructi
 PageContent.create(name: 'contact', title_translations: {'en' => 'Contact', 'ka' => 'კონტაქტი'}, content_translations: {'en' => 'If you would like to find out more about our data or have questions about datasets on this site, please send us an email or call us.', 
   'ka' => 'თუ გსურთ მონაცემთა ცხრილებზე უფრო მეტი ინფორმაციის მიღება ან გაქვთ შეკითხვა საიტზე არსებული მონაცემების შესახებ, გთხოვთ მოგვწეროთ ელ-ფოსტის საშუალებით ან დაგვიკავშირდეთ ტელეფონით.'}) if PageContent.by_name('contact').nil?
 
-PageContent.create(name: 'notes', title_translations: {'en' => 'Notes', 'ka' => 'შენიშვნები'}, content_translations: {'en'=>'<ul>
+PageContent.create(name: 'disclaimer', title_translations: {'en' => 'Disclaimer', 'ka' => 'განაცხადი'}, content_translations: {'en'=>'<ul>
 <li>Please be cautious in handling the data, particularly as the data is related to children.</li>
 <li>Please take sample size and other variables that potentially have an impact into account in interpreting the data.</li>
 <li>Please make reference to this website when its data and/or the analysis result is used.</li>
@@ -140,7 +140,7 @@ PageContent.create(name: 'notes', title_translations: {'en' => 'Notes', 'ka' => 
 <li>გთხოვთ აიღოთ ისეთი შერჩევის ზომა და სხვა ცვლადები, რომლებიც პოტენციურად მონაცემთა ინტერპრეტირებაზე ახდენენ გავლენას.</li>
 <li>ჩვენი მონაცემების ან/და ანალიზის გამოყენების შემთხვევაში, გთხოვთ მიუთითოთ ეს ვებ-გვერდი.</li>
 <li>UNICEF არ აგებს პასუხს მონაცემების გამოყენებას შედეგად წარმოშობილ ნებისმიერი სახის გაუგებრობაზე.</li>
-</ul>'}) if PageContent.by_name('notes').nil?
+</ul>'}) if PageContent.by_name('disclaimer').nil?
 if ENV['reload_api_docs'] && PageContent.by_name('api').present?
   PageContent.by_name('api').destroy
 end

@@ -35,6 +35,23 @@ function time_series_chart_height(json){
 
 
 ////////////////////////////////////////////////
+// add disclaimer link
+////////////////////////////////////////////////
+function add_disclaimer_link(visual_element){
+  if (gon.disclaimer_link && gon.disclaimer_text){
+    var parent = $(visual_element).parent();
+
+    // create link
+    var link = '<a class="chart-disclaimer" href="' + gon.disclaimer_link + '" target="_blank">' + gon.disclaimer_text + '</a>';
+
+    // add link to visual
+    $(visual_element).append(link);
+  }
+}
+
+
+
+////////////////////////////////////////////////
 // determine which highlight button to add to chart
 ////////////////////////////////////////////////
 function determine_highlight_button(visual_element, embed_id, visual_type){
@@ -292,6 +309,9 @@ function build_highmap(shape_question_code, json_map_set){
 
   // add embed chart button
   add_embed_button($(selector_path + ' #' + map_id), json_map_set.embed_id);
+
+  // add disclaimer link
+  add_disclaimer_link($(selector_path + ' #' + map_id));
 }
 
 
@@ -434,6 +454,9 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
 
   // add embed chart button
   add_embed_button($(selector_path + ' #' + chart_id), json_chart.embed_id);
+
+  // add disclaimer link
+  add_disclaimer_link($(selector_path + ' #' + chart_id));
 }
 
 
@@ -575,6 +598,9 @@ function build_pie_chart(json_chart, chart_height){
 
   // add embed chart button
   add_embed_button($(selector_path + ' #' + chart_id), json_chart.embed_id);
+
+  // add disclaimer link
+  add_disclaimer_link($(selector_path + ' #' + chart_id));
 }
 
 
@@ -693,6 +719,9 @@ function build_time_series_chart(json_chart, chart_height){
 
   // add embed chart button
   add_embed_button($(selector_path + ' #' + chart_id), json_chart.embed_id);
+
+  // add disclaimer link
+  add_disclaimer_link($(selector_path + ' #' + chart_id));
 }
 
 

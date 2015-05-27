@@ -48,8 +48,8 @@ class RootController < ApplicationController
     end
   end
 
-  def notes
-    @page_content = PageContent.by_name('notes')
+  def disclaimer
+    @page_content = PageContent.by_name('disclaimer')
     @css.push('root.css')
     respond_to do |format|
       format.html # index.html.erb
