@@ -357,8 +357,10 @@ function build_datatable(json){
       table += "<th class='var1-col code-highlight' rowspan='2'>";
       table += json.question.original_code;
       table += "</th>";
-      for(i=0; i<json.broken_down_by.answers.length;i++){
-        table += "<th colspan='2'>";
+
+      var ln = json.broken_down_by.answers.length;
+      for(i=0; i<ln;i++){
+        table += "<th colspan='2' class='color"+(ln-i%13)+"'>";
         table += json.broken_down_by.answers[i].text.toString();
         table += "</th>"
       }
@@ -748,6 +750,7 @@ function reset_filter_form(){
 $(document).ready(function() {
   // set languaage text
   Highcharts.setOptions({
+    chart: { spacingRight: 30 },
     lang: {
       contextButtonTitle: gon.highcharts_context_title
     },
@@ -901,7 +904,7 @@ $(document).ready(function() {
     // jumpto scrolling
     $("#jumpto").on('change', 'select', function(){
       var href = $(this).find('option:selected').data('href');
-      $('html, body').animate({
+      $('.tab-pane').animate({
         scrollTop: $(href).offset().top - 120
       }, 1500);
 

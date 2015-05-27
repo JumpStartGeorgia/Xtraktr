@@ -305,8 +305,7 @@ div.message {
     border:0px;
     a
     {
-      font-family: 'nokiasans_s60';
-      font-size:14px;
+      font:14px 'nokiasans_s60', 'sans-serif';
       color:#fff;
       background-color:#3c4352;
       text-align:center;
@@ -314,15 +313,13 @@ div.message {
       opacity:0.7;
       span
       {
-        font-family:'nokiasans_s60';
-        font-size:14px;
+        font:14px 'nokiasans_s60', 'sans-serif';
         color:#fff;
         display:block;
       }
       &.unicef
       {
-        font-family:'opensans';
-        font-size:12px;
+        font:12px 'sourcesans_pro', 'sans-serif';
         color:#00adee;
         white-space: nowrap;
       }
@@ -382,7 +379,7 @@ div.message {
   }
    input[type=search],input[type=text]
   {
-    font-family:'opensans_li';
+    font-family:'sourcesans_pro_li', 'sans-serif';
     font-size:13px;
     color:#3c4352;
      -webkit-border-radius: 0px;
@@ -439,13 +436,13 @@ div.message {
     top: -2px;
     .number
     {
-      font-family:'opensans_b';
+      font-family:'sourcesans_pro_sb', 'sans-serif';
       font-size:16px;
       color:#3c4352;
     }
     .questions
     {
-      font-family:'opensans';
+      font-family:'sourcesans_pro', 'sans-serif';
       font-size:10px;
       color:#3c4352;      
     }
@@ -574,7 +571,7 @@ div.message {
 
 .navbar
 {
-  .navbar-header,.stats,.navbar-form,.navbar-top-links
+  .navbar-header,.stats,.navbar-form, .lang-icon, .navbar-top-links
   {
     // display:table-cell;
     float:none !important;
@@ -587,7 +584,12 @@ div.message {
   }
   .stats
   {
+    display:table-cell;
     min-width:130px;
+  }
+  .lang-icon
+  {
+    display:table-cell;
   }
   .navbar-form
   {
@@ -952,8 +954,7 @@ div.message {
         display:table;
         input[type=search]
         {          
-          font-family: 'sourcesans_pro_l', 'sans-serif';
-          font-size: 13px;
+          font:13px 'sourcesans_pro_l', 'sans-serif';
           color: #3c4352;
           height:33px;
           min-width:290px;
@@ -967,8 +968,7 @@ div.message {
         .go,.go-submit
         {
           display:table-cell;
-          font-family:'opensans', 'sans-serif';
-          font-size:12px;
+          font:12px 'sourcesans_pro', 'sans-serif';
           color:#fff;
           background-color:#80d3ed;
           text-align: center;
@@ -1105,8 +1105,8 @@ div.message {
 input[type=search]
 {          
 
-  &::-webkit-input-placeholder { font-family:'opensans_li', 'sans-serif'; font-size:13px; color:#9da1a8; }
-  &:-moz-placeholder { font-family:'opensans_li', 'sans-serif'; font-size:13px; color:#9da1a8; }
-  &::-moz-placeholder { font-family:'opensans_li', 'sans-serif'; font-size:13px; color:#9da1a8; }
-  &:-ms-input-placeholder { font-family:'opensans_li', 'sans-serif'; font-size:13px; color:#9da1a8; }
+  &::-webkit-input-placeholder { font-family:'sourcesans_pro_li', 'sans-serif'; font-size:13px; color:#9da1a8; }
+  &:-moz-placeholder { font-family:'sourcesans_pro_li', 'sans-serif'; font-size:13px; color:#9da1a8; }
+  &::-moz-placeholder { font-family:'sourcesans_pro_li', 'sans-serif'; font-size:13px; color:#9da1a8; }
+  &:-ms-input-placeholder { font-family:'sourcesans_pro_li', 'sans-serif'; font-size:13px; color:#9da1a8; }
 }

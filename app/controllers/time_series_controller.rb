@@ -48,8 +48,8 @@ class TimeSeriesController < ApplicationController
 
       @show_title = false
 
-      @css.push("dashboard.css", 'highlights.css', 'list.css', 'boxic.css', 'tabs.css')
-      @js.push("live_search.js", 'highlights.js')
+      @css.push("dashboard.css", 'highlights.css', 'list.css', 'boxic.css', 'tabs.css', 'explore.css')
+      @js.push("live_search.js", 'highlights.js', 'explore.js')
 
       respond_to do |format|
         format.html # index.html.erb

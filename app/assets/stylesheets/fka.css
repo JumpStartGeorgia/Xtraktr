@@ -1,29 +1,4 @@
 @font-face {
-    font-family: "opensans";    
-    src: url( '/assets/fonts/opensans.ttf') format("truetype");           
-    font-style: normal;
-    font-weight: 200;
-}
-@font-face {
-    font-family: "opensans_li";    
-    src: url( '/assets/fonts/opensans_li.ttf') format("truetype");           
-    font-style: normal;
-    font-weight: 200;
-}
-@font-face {
-    font-family: "opensans_b";    
-    src: url( '/assets/fonts/opensans_b.ttf') format("truetype");           
-    font-style: normal;
-    font-weight: 200;
-}
-@font-face {
-    font-family: "opensans_sb";    
-    src: url( '/assets/fonts/opensans_sb.ttf') format("truetype");           
-    font-style: normal;
-    font-weight: 200;
-}
-
-@font-face {
     font-family: "nokiasans_s60";    
     src: url( '/assets/fonts/ka/bpgns.ttf') format("truetype");           
     font-style: normal;
@@ -36,21 +11,19 @@
     font-weight: 200;
 }
 
-
 @font-face {
     font-family: "prime";    
-    src: url( '/assets/fonts/prime.otf') format("opentype");         
+    src: url( '/assets/fonts/ka/dejavusansm_book_c.ttf') format("truetype");         
     font-style: normal;
     font-weight: 200;
 }
 
 @font-face {
     font-family: "sourcesans_pro_i";    
-    src: url( '/assets/fonts/sourcesans_pro_i.otf') format("opentype");         
+    src: url( '/assets/fonts/ka/dejavusans_c_i.ttf') format("truetype");         
     font-style: normal;
     font-weight: 200;
 }
-
 @font-face {
     font-family: "sourcesans_pro_l";    
     src: url( '/assets/fonts/ka/dejavusans_el.ttf') format("truetype");   
@@ -59,7 +32,7 @@
 }
 @font-face {
     font-family: "sourcesans_pro_li";    
-    src: url( '/assets/fonts/sourcesans_pro_li.otf') format("opentype");         
+    src: url( '/assets/fonts/ka/dejavusans_i.ttf') format("truetype");         
     font-style: normal;
     font-weight: 200;
 }
@@ -71,13 +44,13 @@
 }
 @font-face {
     font-family: "sourcesans_pro_sb";    
-    src: url( '/assets/fonts/sourcesans_pro_sb.otf') format("opentype");         
+    src: url( '/assets/fonts/ka/dejavusans_c_b.ttf') format("truetype");         
     font-style: normal;
     font-weight: 200;
 }
 @font-face {
     font-family: "sourcesans_pro_sbi";    
-    src: url( '/assets/fonts/sourcesans_pro_sbi.otf') format("opentype");         
+    src: url( '/assets/fonts/ka/dejavusans_c_bi.ttf') format("truetype");         
     font-style: normal;
     font-weight: 200;
 }

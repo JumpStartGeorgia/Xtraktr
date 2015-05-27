@@ -157,7 +157,7 @@ function build_highmap(shape_question_code, json_map_set){
       title: {
           text: build_visual_title(highlight_path, json_map_set.title.html),
           useHTML: true,
-          style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
+          style: {'text-align': 'center', 'font-family':"'sourcesans_pro_l', 'sans-serif'", 'font-size': '18px', 'color': '#3c4352'}
       },
       subtitle: {
           text: json_map_set.subtitle.html,
@@ -325,7 +325,7 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
     title: {
         text: build_visual_title(highlight_path, json_chart.title.html),
         useHTML: true,
-        style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
+        style: {'text-align': 'center', 'font-family':"'sourcesans_pro_l', 'sans-serif'", 'font-size': '18px', 'color': '#3c4352'}
     },
     subtitle: {
         text: json_chart.subtitle.html,
@@ -469,7 +469,7 @@ function build_pie_chart(json_chart, chart_height){
     title: {
         text: build_visual_title(highlight_path, json_chart.title.html),
         useHTML: true,
-        style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
+        style: {'text-align': 'center', 'font-family':"'sourcesans_pro_l', 'sans-serif'", 'font-size': '18px', 'color': '#3c4352'}
     },
     subtitle: {
         text: json_chart.subtitle.html,
@@ -607,7 +607,7 @@ function build_time_series_chart(json_chart, chart_height){
     title: {
         text: build_visual_title(highlight_path, json_chart.title.html),
         useHTML: true,
-        style: {'text-align': 'center', 'font-size': '16px', 'color': '#888'}
+        style: {'text-align': 'center', 'font-family':"'sourcesans_pro_l', 'sans-serif'", 'font-size': '18px', 'color': '#3c4352' }
     },
     subtitle: {
         text: json_chart.subtitle.html,
