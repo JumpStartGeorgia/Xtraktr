@@ -9,7 +9,9 @@
       color:#3c4352;    
       text-align:center;
       margin:0px 0px 7px;
-      span { font:26px 'sourcesans_pro_sb', 'sans-serif'; } 
+      &:lang(ka) { font-size: 22px; }
+      span { font:26px 'sourcesans_pro_sb', 'sans-serif';
+      &:lang(ka) { font-size: 22px; } } 
     }
     .desc{
       font:16px 'sourcesans_pro', 'sans-serif';
@@ -211,6 +213,9 @@
           position: absolute;
           bottom: 100px;
           right: 20px;
+          &:lang(ka) { 
+            font:16px 'nokiasans_s60_sb', 'sans-serif';           
+          }
         }
         .slogan{
           font:18px 'sourcesans_pro', 'sans-serif';
@@ -219,6 +224,11 @@
           top: 12px;
           right: 20px;
           text-align:left;
+          &:lang(ka) { 
+            font:15px 'sourcesans_pro_l', 'sans-serif'; 
+            top: 28px;
+            right: 9px;
+          }
         }
       }
     }
@@ -228,11 +238,9 @@
   
   .header, .highlights-header
   {
- 
     h2
     {
-      font-family:'nokiasans_s60';
-      font-size:14px;
+      font:14px 'nokiasans_s60', 'sans-serif';
       color:#00adee;
       margin:0px;
       text-align:left;
@@ -240,6 +248,7 @@
       white-space:pre;
       padding:0px 10px 0px 0px;
       text-transform:uppercase;
+      &:lang(ka) { font:16px 'nokiasans_s60_sb', 'sans-serif'; }
     }
     .cell
     {
@@ -343,9 +352,10 @@
   }
   .header
   {
-    font: 14px 'nokiasans_s60', 'sans-serif';
+    font: 16px 'nokiasans_s60', 'sans-serif';
     color:#3c4352;
     text-transform:uppercase;
+    &:lang(ka) { font: 16px 'nokiasans_s60_sb', 'sans-serif';}
   }
   .intro
   {
@@ -536,7 +546,8 @@
         font: 16px 'nokiasans_s60', 'sans-serif';
         color:#3C4352;
         padding: 0px 8px;
-        white-space: nowrap;  
+        white-space: nowrap; 
+        &:lang(ka) { font: 16px 'nokiasans_s60_sb', 'sans-serif';} 
       }
       .line
         {

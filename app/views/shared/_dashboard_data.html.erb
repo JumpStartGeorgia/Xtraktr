@@ -12,13 +12,15 @@
       <h2><%=@dataset.title%></h2>
       <div class="info">
         <div class="calendar"></div>
-        <div class="timestamp">
-          <span><%= model_class.human_attribute_name(:gathered_at) %>:</span>
-          <%= format_gathered_dates(@dataset.start_gathered_at, @dataset.end_gathered_at) %>
-        </div>
-        <div class="timestamp">
-          <span><%= model_class.human_attribute_name(:released_at) %>:</span>
-          <%= I18n.l(@dataset.released_at, format: :day_first) if @dataset.released_at.present? %>
+        <div class="timestamps">
+          <div class="timestamp">
+            <span><%= model_class.human_attribute_name(:gathered_at) %>:</span>
+            <%= format_gathered_dates(@dataset.start_gathered_at, @dataset.end_gathered_at) %>
+          </div>
+          <div class="timestamp">
+            <span><%= model_class.human_attribute_name(:released_at) %>:</span>
+            <%= I18n.l(@dataset.released_at, format: :day_first) if @dataset.released_at.present? %>
+          </div>
         </div>   
         <div class="share share-box"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>
       </div>
@@ -33,18 +35,18 @@
       <% end %>
     </div>
     <div class="col">
-      <% if @dataset.categories.present? %>
-        <div class="category">
-          <ul>
-            <% @dataset.categories.each {|x| %>
-              <li class="item">
-                <div class="text"><span><%= x.name %></span></div>
-                <div class="img <%= x.permalink %>" alt="<%= x.name %>"></div>
-              </li>
-            <% } %>
-          </ul>         
-        </div>
-      <% end %>
+      <div class="category">
+        <% if @dataset.categories.present? %>
+            <ul>
+              <% @dataset.categories.each {|x| %>
+                <li class="item">
+                  <div class="text"><span><%= x.name %></span></div>
+                  <div class="img <%= x.permalink %>" alt="<%= x.name %>"></div>
+                </li>
+              <% } %>
+            </ul>         
+        <% end %>
+      </div>
       <div class="links">
         <%= link_to url_dataset_explore(@dataset, language: params[:language]), title: t('app.menu.titles.explore_dataset') do %>
             <%= image_tag 'svg/chart.svg' %>
@@ -192,12 +194,16 @@
         <% if @dataset.reports.present? %>
           <% @dataset.reports.sorted.each do |report| %>
             <li>
-              <h2><%= report.title %></h2>
-                  <%= link_to report.file.url, class: 'download-direct', target: :blank, title: "#{report.file_type} - #{number_to_human_size(report.file_file_size).to_s}" do %>
-                  <% end %>                  
+              <div class="caption">
+                <div class="title"><%= report.title %></div>
+                <%= link_to report.file.url, class: 'download-direct', target: :blank, title: "#{report.file_type} - #{number_to_human_size(report.file_file_size).to_s}" do %>
+                <% end %>
+              </div>                  
               <div class="info">
                 <div class="calendar"></div>
-                <div class="timestamp"><span><%= "#{r_model_class.human_attribute_name(:released_at)}:"%></span> <%= "#{l report.released_at, format: :day_first}" %></div>
+                <div class="timestamps">
+                  <div class="timestamp"><span><%= "#{r_model_class.human_attribute_name(:released_at)}:"%></span> <%= "#{l report.released_at, format: :day_first}" %></div>
+                </div>
                 <% if report.language.present? %>
                   <div class="language"><span><%= "#{r_model_class.human_attribute_name(:language_id)}:"%></span> <%= "#{report.language.name}" %></div>
                 <% end %>

@@ -43,35 +43,39 @@
       <ul class="nav navbar-right navbar-top-links">
         
         <% if user_signed_in? %>
-          <li class="dropdown">
+          <li class="dropdown user">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <%= current_user.name %>
               <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" role="menu">
               <% if current_user.role?(@data_editor_role) %>
-                <li>
-                 <%= link_to t('app.menu.datasets'), datasets_path %>
+                <li><%= link_to datasets_path do %>
+                  <i class="menu_datasets"></i>
+                  <%= t('app.menu.datasets') %>
+                  <% end %>
                 </li>
-                <li>
-                 <%= link_to t('app.menu.time_series'), time_series_index_path %>
-                </li>
+                <li><%= link_to time_series_index_path do %>
+                  <i class="menu_time_series"></i>
+                  <%= t('app.menu.time_series') %>
+                  <% end %></li>
               <% end %>
-              <li>
-               <%= link_to t('app.menu.user_settings'), settings_path %>
-              </li>
+              <li><%= link_to settings_path  do %>
+                  <i class="menu_user_settings"></i>
+                  <%= t('app.menu.user_settings') %>
+                  <% end %></li>
               <% if current_user.role?(@site_admin_role) %>
-                <li>
-                 <%= link_to t('helpers.links.admin'), admin_path %>
-                </li>
+                <li><%= link_to admin_path  do %>
+                  <i class="menu_admin"></i>
+                  <%= t('helpers.links.admin') %>
+                  <% end %></li>
               <% end %>
-   
             </ul>
+          </li><li class="user">
+            <%= link_to destroy_user_session_path, :method => :delete, title: t('helpers.links.sign_out'), class:"signout" do %>
+              <%= image_tag 'svg/signout.svg', :alt => t('helpers.links.sign_out') %>
+            <% end %>
           </li>
-             <li><%= link_to destroy_user_session_path, :method => :delete, title: t('helpers.links.sign_out') do %>
-              <%= image_tag 'svg/signout.svg', :alt => t('helpers.links.sign_out') %></li>
-          <% end %>
-
         <% else %>
           <li role="menuitem" class="sign">
             <%= link_to(t('helpers.links.sign_in2'), new_user_session_path, class: 'reattach sign_in')  %>/

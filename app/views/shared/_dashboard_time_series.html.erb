@@ -19,14 +19,16 @@
             <%= @time_series.dates_included[dataset_index] %>
           </div>
           <div class="calendar"></div>
-          <div class="timestamp">
-            <span><%= model_class_d.human_attribute_name(:gathered_at) %>:</span>
-            <%= format_gathered_dates(dataset.start_gathered_at, dataset.end_gathered_at) %>
+          <div class="timestamps">
+            <div class="timestamp">
+              <span><%= model_class_d.human_attribute_name(:gathered_at) %>:</span>
+              <%= format_gathered_dates(dataset.start_gathered_at, dataset.end_gathered_at) %>
+            </div>
+            <div class="timestamp">
+              <span><%= model_class_d.human_attribute_name(:released_at) %>:</span>
+              <%= I18n.l(dataset.released_at, format: :day_first) if dataset.released_at.present? %>
+            </div>   
           </div>
-          <div class="timestamp">
-            <span><%= model_class_d.human_attribute_name(:released_at) %>:</span>
-            <%= I18n.l(dataset.released_at, format: :day_first) if dataset.released_at.present? %>
-          </div>   
           <% if dataset_index == 0 %>
             <div class="share"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>
           <% end %>
@@ -39,18 +41,18 @@
       <% end %>
     </div>
     <div class="col">
-      <% if @time_series.categories.present? %>
-        <div class="category">
-          <ul>
-            <% @time_series.categories.each {|x| %>
-              <li class="item">
-                <div class="text"><span><%= x.name %></span></div>
-                <div class="img <%= x.permalink %>" alt="<%= x.name %>"></div>
-              </li>
-            <% } %>
-          </ul>         
-        </div>
-      <% end %>
+      <div class="category">
+        <% if @time_series.categories.present? %>
+            <ul>
+              <% @time_series.categories.each {|x| %>
+                <li class="item">
+                  <div class="text"><span><%= x.name %></span></div>
+                  <div class="img <%= x.permalink %>" alt="<%= x.name %>"></div>
+                </li>
+              <% } %>
+            </ul>         
+        <% end %>
+      </div>
       <div class="links">
         <%= link_to url_time_series_explore(@time_series, language: params[:language]), title: t('app.menu.titles.explore_time_series') do %>
             <%= image_tag 'svg/chart.svg' %>
@@ -149,12 +151,8 @@
         </ul>
       </div>
       
-      <div role="tabpanel" class="tab-pane fade" id="datasets">
-        <div class="article explore">
-          <div class="list">
+      <div role="tabpanel" class="tab-pane fade list" id="datasets">
             <%= render partial: 'root/explore_data_datasets', locals: {with_pagination: false, with_time_series_link: false} %>
-          </div>
-        </div>
       </div>
       
       <div role="tabpanel" class="tab-pane fade" id="licensing">

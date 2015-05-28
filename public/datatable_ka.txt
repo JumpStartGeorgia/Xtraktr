@@ -8,7 +8,8 @@
   "sLengthMenu":   "აჩვენე _MENU_ ჩანაწერი",
   "sLoadingRecords": "იტვირთება...",
   "sProcessing":   "მიმდინარეობს დამუშავება...",
-  "sSearch":       "ძიება:",
+  "sSearch":       "_INPUT_",
+  "sSearchPlaceholder":"ძიება:",
   "sZeroRecords":  "არაფერი მოიძებნა",
   "oPaginate": {
       "sFirst":    "პირველი",

@@ -24,7 +24,7 @@
                     <div class="back"><%= link_to t('helpers.links.back_dashboard'), url_dataset_dashboard(@dataset) %></div>
                   <% elsif !content_for?(:subnav_left) && @is_time_series_admin && @time_series.present? && @time_series.created_at.present? %>
                     <div class="back"><%= link_to @time_series.title, url_time_series_dashboard(@time_series) %></div>
-                  <% elsif @is_time_series_admin && @time_series.present? && @time_series.created_at.present? && !(request.path == explore_time_series_dashboard_path(@time_series) || request.path == time_series_path(@time_series))%>
+                  <% elsif @time_series.present? && @time_series.created_at.present? && !(request.path == explore_time_series_dashboard_path(@time_series) || request.path == time_series_path(@time_series))%>
                     <div class="back"><%= link_to t('helpers.links.back_dashboard'), url_time_series_dashboard(@time_series) %></div>
                   <% end %>
               </div>
