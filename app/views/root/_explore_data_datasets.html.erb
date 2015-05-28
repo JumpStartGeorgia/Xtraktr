@@ -5,28 +5,32 @@
   <% if @datasets.present? %>
     <% @datasets.each do |dataset| %>
       <li>
-        <% if dataset.urls.present? && dataset.urls.codebook.present? %>
-          <div class="download-wrapper" >
-            <div class="download" data-id="<%= dataset.id.to_s %>" data-lang="<%= dataset.current_locale %>" title="<%= t('helpers.links.download_data') %>" data-placement="top" data-class="tooltip-download">
-              <ul>
-                <li><div class="type" data-type='csv' title="<%= t('download_data_options.title.csv') %>" data-placement="left"><%= t('download_data_options.text.csv') %></div></li>
-                <li><div class="type" data-type='r' title="<%= t('download_data_options.title.r') %>" data-placement="left"><%= t('download_data_options.text.r') %></div></li>
-                <li><div class="type" data-type='spss' title="<%= t('download_data_options.title.spss') %>" data-placement="left"><%= t('download_data_options.text.spss') %></div></li>
-                <li><div class="type" data-type='stata' title="<%= t('download_data_options.title.stata') %>" data-placement="left"><%= t('download_data_options.text.stata') %></div></li>
-              </ul> 
-            </div>                
-          </div>        
-        <% end %>
-        <h2><%= link_to dataset.title, explore_data_dashboard_path(dataset) %></h2>
+        <div class="caption">
+          <div class="title"><%= link_to dataset.title, explore_data_dashboard_path(dataset) %></div>
+          <% if dataset.urls.present? && dataset.urls.codebook.present? %>
+            <div class="download-wrapper" >
+              <div class="download" data-id="<%= dataset.id.to_s %>" data-lang="<%= dataset.current_locale %>" title="<%= t('helpers.links.download_data') %>" data-placement="top" data-class="tooltip-download">
+                <ul>
+                  <li><div class="type" data-type='csv' title="<%= t('download_data_options.title.csv') %>" data-placement="left"><%= t('download_data_options.text.csv') %></div></li>
+                  <li><div class="type" data-type='r' title="<%= t('download_data_options.title.r') %>" data-placement="left"><%= t('download_data_options.text.r') %></div></li>
+                  <li><div class="type" data-type='spss' title="<%= t('download_data_options.title.spss') %>" data-placement="left"><%= t('download_data_options.text.spss') %></div></li>
+                  <li><div class="type" data-type='stata' title="<%= t('download_data_options.title.stata') %>" data-placement="left"><%= t('download_data_options.text.stata') %></div></li>
+                </ul> 
+              </div>                
+            </div>   
+          <% end %>
+        </div>    
         <div class="info">
           <div class="calendar"></div>
-          <div class="timestamp">
-            <span><%= model_class.human_attribute_name(:gathered_at) %>:</span>
-            <%= format_gathered_dates(dataset.start_gathered_at, dataset.end_gathered_at) %>
-          </div>
-          <div class="timestamp">
-            <span><%= model_class.human_attribute_name(:released_at) %>:</span>
-            <%= I18n.l(dataset.released_at, format: :day_first) if dataset.released_at.present? %>
+          <div class="timestamps">
+            <div class="timestamp">
+              <span><%= model_class.human_attribute_name(:gathered_at) %>:</span>
+              <%= format_gathered_dates(dataset.start_gathered_at, dataset.end_gathered_at) %>
+            </div>
+            <div class="timestamp">
+              <span><%= model_class.human_attribute_name(:released_at) %>:</span>
+              <%= I18n.l(dataset.released_at, format: :day_first) if dataset.released_at.present? %>
+            </div>
           </div>
           <% if with_time_series_link && dataset.time_series_datasets.present? %>
             <div class="time-series" title="<%= t('app.menu.titles.dataset_to_time_series') %>" data-placement="right"  data-class="tooltip-time-series">

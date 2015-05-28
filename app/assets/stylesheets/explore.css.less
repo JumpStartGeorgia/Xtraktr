@@ -99,7 +99,7 @@
         color:#fff;
         padding:6px 26px;
         display:inline-block;
-
+        &:lang(ka) { padding: 6px 9px; }
       }
       .btn-reset{
          background-color: #bfbfbf;
@@ -636,11 +636,12 @@
           color:#3c4352;
           list-style: none;
           &:before {
+            font:1em Arial,'sans-serif';
             content: "\2022";
             color:#D95D6A;
-            font-size: 1em;
-            line-height: 1.4em;
             padding-right: 0.5em;
+            vertical-align:middle;
+            line-height: 1.4em;            
           }
         }
       }
@@ -733,6 +734,7 @@
            -webkit-border-radius: 0;
           -moz-border-radius: 0;
           border-radius: 0;
+          &:lang(ka) { font:14px 'nokiasans_s60_sb', 'sans-serif'; } 
         }
       }
       &:hover 

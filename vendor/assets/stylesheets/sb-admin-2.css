@@ -54,11 +54,6 @@ footer.white
     display: inline-block;
 }
 
-.navbar-top-links li.lang-link {
-    margin-right: 15px;
-  float: right;
-}
-
 .navbar-top-links li a {
     padding: 15px;
     min-height: 50px;

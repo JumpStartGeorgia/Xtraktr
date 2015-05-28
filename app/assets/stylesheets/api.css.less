@@ -82,11 +82,12 @@
         text-indent: -.7em;
         line-height: 1;
         &:before {
+          font:1em Arial,'sans-serif';
           content: "\2022";
-          color: @bright-blue-color;
-          font-size: 1em;
-          line-height: 1.4em;
+          color:@bright-blue-color;
           padding-right: 0.5em;
+          vertical-align:middle;
+          line-height: 1.4em;
         }
       }
     }    
@@ -106,12 +107,12 @@
     > div { display:table-cell; vertical-align:top;}
     div
     {
-      font-family:'nokiasans_s60';
-      font-size:14px;
+      font:14px 'nokiasans_s60', 'sans-serif';
       color:@bright-blue-color;
       padding:0;
       margin:0;
       white-space: nowrap;
+      &:lang(ka) { font:14px 'nokiasans_s60_sb', 'sans-serif'; }
     }
 
     .line
@@ -122,9 +123,10 @@
     }
   }
   > a{
-    font-family:'nokiasans_s60';
+    font:14px 'nokiasans_s60', 'sans-serif';
     font-size:14px;
     color:@bright-blue-color;
+    &:lang(ka) { font:14px 'nokiasans_s60_sb', 'sans-serif'; }
   }
   .back{
      display:inline-block;
@@ -137,11 +139,12 @@
   li
   {
     &:before {
+      font:1em Arial,'sans-serif';
       content: "\2022";
-      color: #666e7c;
-      font-size: 1em;
-      line-height: 1.4em;
+      color:#666e7c;
       padding-right: 0.5em;
+      vertical-align:middle;
+      line-height: 1.4em;
     }
     &:hover:before
     {
@@ -173,10 +176,8 @@
     }
     span{
       padding: 0px 4px;
-      font-family:'sourcesans_pro_sbi', 'sans-serif';   
-      font-size:16px; 
+      font:16px/22px 'sourcesans_pro_sbi', 'sans-serif';   
       color: #00adee;
-      line-height:22px;
       i
       {
         font-family:'sourcesans_pro_li', 'sans-serif';   
@@ -195,34 +196,20 @@
       vertical-align:top;
       &, p, li, a
       {
-        font-family:'dejavusans';
-        font-size:14px;
-        line-height:22px;
+        font:14px/22px 'sourcesans_pro_l', 'sans-serif';
         color: #49505e;
-        &:lang(en) { font-family:'sourcesans_pro_l', 'sans-serif'; }      
       }    
       a
       { text-decoration:underline; }
     }
     thead th{
+      font:14px/22px 'sourcesans_pro', 'sans-serif';  
       color: #d95d6a;
-      font-family:'dejavusans-b';
-      font-size:14px;
       text-align:left;
-      &:lang(en)
-      {
-        font-family:'sourcesans_pro', 'sans-serif';  
-      }         
     }
     tbody tr td:first-of-type, strong{
+      font:normal 14px/22px 'sourcesans_pro', 'sans-serif';
       color: #3c4352;
-      font-family:'dejavusans-b';
-      font-size:14px;
-      font-weight:normal;
-      &:lang(en)
-      {
-        font-family:'sourcesans_pro', 'sans-serif';
-      }         
     }
   }
 }

@@ -671,7 +671,6 @@ en:
     explore_data:
       title: Explore the Data
       search_datasets: Search Datasets
-      go: Go
       sort_by: 
         this: Sort By
         title: Title
@@ -684,7 +683,6 @@ en:
     explore_time_series:
       title: Explore Time Series Data
       search_time_series: Search Time Series
-      go: Go
       sort_by: 
         this: Sort By
         title: Title

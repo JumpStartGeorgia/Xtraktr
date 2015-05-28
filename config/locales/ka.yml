@@ -396,7 +396,7 @@ ka:
   helpers:
     actions: "აირჩიეთ"
     default_language: "ეს არის მთავარი ენა, რომელიც გამოჩნდება"
-    search: "ძიება"
+    search: "ძებნა"
     links:
       admin: "ადმინისტრატორის განყოფილება"
       edit: "შეცვლა"
@@ -503,7 +503,7 @@ ka:
       time_series_dashboard: "პერიოდული შედარების Dashboard"
       terms: "თანახმა ვარ <a href='http://www.unicef.org/about/legal_terms.html' target='_blank'>გამოყენების წესებზე</a>"
       or: "ან"
-      go: "გადასვლა"
+      go: "ძებნა"
       share: "გაზიარება"
       codebook_title: კოდირების ჩამოტვირთვა
     msgs:
@@ -655,7 +655,7 @@ ka:
       header_latest_time_series: "უახლესი პერიოდული შედარება"
       no_time_series: "ამ მომენტისთვის ვებ-გვერდზე არ შექმნილა პერიოდული შედარება."
       wms_title: "კეთილდღეობის <br />მონიტორინგის კვლევა"
-      wms_slogan: ბავშვთა კეთილდღეობის <br />შედარება <br />2009, 2011 და 2013 წლებში
+      wms_slogan: ბავშვთა კეთილდღეობის <br />შედარება <br />2009, 2011 და <br/>2013 წლებში
       header_highlights: "გამორჩეული"
       header_categories: "კატეგორიების დათვალიერება"
       search_datasets: "მონაცემთა ცხრილის ძებნა"
@@ -671,7 +671,6 @@ ka:
     explore_data:
       title: "მონაცემთა გაცნობა"
       search_datasets: "მონაცემთა ცხრილის ძებნა"
-      go: "გადასხვა"
       sort_by:
         this: "დახარისხება"
         title: "დასახელება"
@@ -684,7 +683,6 @@ ka:
     explore_time_series:
       title: "პერიოდული შედარების მონაცემების გაცნობა"
       search_time_series: "პერიოდული შედარების ძებნა"
-      go: "გადასხვა"
       sort_by:
         this: "დახარისხება"
         title: "დასახელება"
