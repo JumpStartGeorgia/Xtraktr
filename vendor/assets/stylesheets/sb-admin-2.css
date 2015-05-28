@@ -47,14 +47,14 @@ footer.white
 }
 
 .navbar-top-links {
-    margin-right: 0;
+    margin-right: 0;    
 }
 
 .navbar-top-links li {
     display: inline-block;
 }
 
-.navbar-top-links li:last-child {
+.navbar-top-links li.lang-link {
     margin-right: 15px;
   float: right;
 }

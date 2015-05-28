@@ -177,10 +177,12 @@
       border-radius: 2px;
       background-color:#fff;
       height:36px;
-      width:160px;
+      min-width:160px;
       display: block;
       vertical-align:top;
       margin-bottom:4px;
+      white-space:nowrap;
+      padding-right:10px;
       &:hover 
       {
         text-decoration:none;
@@ -355,7 +357,8 @@
           border-top:1px solid #e8e8e8;
           border-bottom:1px solid #fff;
           content:'';
-          display:block;       
+          display:block;  
+          margin:24px 0px 18px;     
         }
         > li:last-of-type:after
         {

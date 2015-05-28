@@ -36,7 +36,7 @@
         <% end %>
         <form class="navbar-form navbar-left" role="search" action="<%= explore_data_path %>">
           <div class="form-group">
-            <input type="search" class="form-control" placeholder="Search" name="q">
+            <input type="search" class="form-control" placeholder="<%= t('helpers.search') %>" name="q">
           </div>
         </form>
 
@@ -65,11 +65,13 @@
                  <%= link_to t('helpers.links.admin'), admin_path %>
                 </li>
               <% end %>
-              <li>
-               <%= link_to t('helpers.links.sign_out'), destroy_user_session_path, :method => :delete %>
-              </li>
+   
             </ul>
           </li>
+             <li><%= link_to destroy_user_session_path, :method => :delete, title: t('helpers.links.sign_out') do %>
+              <%= image_tag 'svg/signout.svg', :alt => t('helpers.links.sign_out') %></li>
+          <% end %>
+
         <% else %>
           <li role="menuitem" class="sign">
             <%= link_to(t('helpers.links.sign_in2'), new_user_session_path, class: 'reattach sign_in')  %>/
