@@ -255,7 +255,7 @@ end
       count = @time_series.automatically_assign_questions
 
       respond_to do |format|
-        format.html { redirect_to time_series_questions_path(@time_series), flash: {success:  t('app.msgs.time_series_automatic_match', :count => count) }
+        format.html { redirect_to time_series_questions_path(@time_series), flash: {success:  t('app.msgs.time_series_automatic_match', :count => count) } }
         format.json { head :no_content }
       end
     else
@@ -292,7 +292,7 @@ end
     end
 
     respond_to do |format|
-      format.html { redirect_to highlights_time_series_path(time_series), flash: {success:  t('app.msgs.highlight_deleted') }
+      format.html { redirect_to highlights_time_series_path(time_series), flash: {success:  t('app.msgs.highlight_deleted') } }
       format.json { render json: success }
     end
   end
@@ -311,7 +311,7 @@ end
     end
 
     respond_to do |format|
-      format.html { redirect_to highlights_time_series_path(time_series), flash: {success:  t('app.msgs.highlight_show_home_page_success') }
+      format.html { redirect_to highlights_time_series_path(time_series), flash: {success:  t('app.msgs.highlight_show_home_page_success') } }
       format.json { render json: success }
     end
   end
