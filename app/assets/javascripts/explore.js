@@ -361,7 +361,7 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
         },
         labels:
         {
-          style: { "color": "#3c4352", "fontSize": "14px", "fontFamily":"'sourcesans_pro', 'sans-serif'", "fontWeight": "normal" },
+          style: { "color": "#3c4352", "fontSize": "14px", "fontFamily":"'sourcesans_pro', 'sans-serif'", "fontWeight": "normal", 'textAlign': 'right' },
           useHTML: true
         }
     },
