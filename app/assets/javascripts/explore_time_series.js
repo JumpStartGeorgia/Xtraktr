@@ -485,7 +485,7 @@ $(document).ready(function() {
     $("#jumpto").on('change', 'select', function(){
       var href = $(this).find('option:selected').data('href');
       $('.tab-pane').animate({
-        scrollTop: $(href).offset().top - 120
+        scrollTop: Math.abs($('.tab-pane.active > div > div:first').offset().top - $('.tab-pane.active ' + href).offset().top)
       }, 1500);
     });
 

@@ -312,11 +312,11 @@ en:
         title_filter_value: " filtered by: '%{code} - %{variable} = %{value}'"
     subtitle:
       html: 
-        title: "Total Responses: %{num}"
-        title_filter: "Total Responses Filtered by Answers to %{variable}: %{nums}"
+        title: "Total Responses: <span class='number'>%{num}</span>"
+        title_filter: "Total Responses Filtered by Answers to '<span class='number'>%{code}</span> - %{variable}': %{nums}"
       text: 
         title: "Total Responses: %{num}"
-        title_filter: "Total Responses Filtered by Answers to %{variable}: %{nums}"
+        title_filter: "Total Responses Filtered by Answers to '%{code} - %{variable}': %{nums}"
   explore_data:
     hover_region: Hover over a Region
     na: N/A
@@ -352,10 +352,10 @@ en:
     subtitle:
       html: 
         title: "Total Responses: <span class='number'>%{num}</span>"
-        title_filter: "Total Responses Filtered by Answers to %{variable}: %{nums}"
+        title_filter: "Total Responses Filtered by Answers to '<span class='number'>%{code}</span> - %{variable}': %{nums}"
       text: 
         title: "Total Responses: %{num}"
-        title_filter: "Total Responses Filtered by Answers to %{variable}: %{nums}"
+        title_filter: "Total Responses Filtered by Answers to '%{code} - %{variable}': %{nums}"
   datatable:
     search: Search
     copy: 

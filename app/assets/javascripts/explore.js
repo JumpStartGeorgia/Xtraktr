@@ -33,7 +33,6 @@ function time_series_chart_height(json){
   return chart_height;
 }
 
-
 ////////////////////////////////////////////////
 // add disclaimer link
 ////////////////////////////////////////////////
@@ -184,6 +183,7 @@ function build_highmap(shape_question_code, json_map_set){
 
       mapNavigation: {
           enabled: true,
+          enableMouseWheelZoom: false,
           buttonOptions: {
               verticalAlign: 'top'
           }
@@ -734,9 +734,9 @@ function build_page_title(json){
   var title_parts = $('title').html().split(' | ');
 
   if (json.results.title.text){
-    $('title').html(title_parts[0] + ' | ' + json.results.title.text + ' | ' + title_parts[title_parts.length-1])
+    $('head title').html(title_parts[0] + ' | ' + json.results.title.text + ' | ' + title_parts[title_parts.length-1])
   }else{
-    $('title').html(title_parts[0] + ' | ' + title_parts[title_parts.length-1])
+    $('head title').html(title_parts[0] + ' | ' + title_parts[title_parts.length-1])
   }
    
 }

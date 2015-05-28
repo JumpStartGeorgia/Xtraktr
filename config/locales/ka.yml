@@ -81,7 +81,7 @@ ka:
         created_at: "დამატებულია"
         reports: "რეფორთები"
         category_ids: "კატეგორიები"
-        permalink: URL to Dataset
+        permalink: მონაცემთა URL-ი
       question:
         code: "კითხვის კოდი"
         original_code: "კითხვის კოდი"
@@ -120,7 +120,7 @@ ka:
         datasets: "მონაცემთა ცხრილი"
         dates: "მოიცავს თარიღებს"
         category_ids: "კატეგორიები"
-        permalink: URL to Time Series
+        permalink: პერიოდული შედარების URL-ი
       time_series_dataset:
         dataset_id: "მონაცემთა ცხრილი"
         title: "ეტიკეტი"
@@ -206,7 +206,7 @@ ka:
         languages: "იმ შემთხვევაშიც კი, თუ თქვენი მონაცემები მხოლოდ ერთ ენაზეა, თქვენ შეგიძლიათ ამ ფორმების გამოყენება რათა თარგმნოთ ყველა კითხვა და პასუხი თქვენთვის სასურველ ნებისმიერ ენაზე"
         default_language: "მონაცემთა ცხრილის ენა რომელიც ნაჩვენებია როგორც მთავარი ენა, თუ რომელიმე კონკრეტული ენა არ არის მოთხოვნილი მომხმარებლის მიერ"
         category_ids: "აირჩიეთ მონაცემთა ცხრილი ერთი ან მეტი კატეგორიებისთვის"
-        permalink: "An abbreviated name of the dataset that you want to appear in the URL (e.g., 'wms' for 'Welfare Monitoring Survey'). All special characters will be automatically removed."
+        permalink: "მონაცემთა ცხრილის შემოკლებული სახელი, რომელიც გსურთ, რომ გამოჩნდეს URL-ში (მაგალითად, 'wms', რომელიც გულისხმობს 'Welfare Monitoring Survey'). ყველა სპეციალური სიმბოლოების ავტომატურად წაიშლება."
       shapeset:
         title: "თქვენი ფორმების ცხრილის დასახელება"
         description: "ფორმების ცხრილის შინაარსის მოკლე აღწერა"
@@ -243,7 +243,7 @@ ka:
         languages: "თქვენი პერიოდული შედარების ენები ავტომატურად განისაზღვრება მონაცემთა ცხრილის ენების მიერ"
         default_language: "პერიოდული შედარების ენა რომელიც ნაჩვენებია მთავარ ენად, თუ სხვა ენა არ არის მოთხოვნილი მომხმარებლის მიერ"
         category_ids: "აირჩიეთ პერიოდული შედარების ერთი ან მეტი კატეგორია"
-        permalink: "An abbreviated name of the time series that you want to appear in the URL (e.g., 'wms' for 'Welfare Monitoring Survey'). All special characters will be automatically removed."
+        permalink: "პერიოდული შედარების შემოკლებული სახელი, რომელიც გსურთ, რომ გამოჩნდეს URL-ში (მაგალითად, 'wms', რომელიც გულისხმობს 'Welfare Monitoring Survey'). ყველა სპეციალური სიმბოლოების ავტომატურად წაიშლება."
       time_series_dataset:
         dataset_id: "აირჩიეთ მონაცემთა ცხრილი რათა დაამატოთ პერიოდულ შედარებაში"
         title: "პერიოდულ შედარებაში ეს ტექსტი წარმოადგენ მონაცემთა ცხრილს, სავარაუდოდ დროის ინდიკატორს. მაგალითად, თუ თქვენი მონაცემთა ცხრილი არის 2015 წლიდან, თქვენ ჩაწერთ 2015 წელს, ან თუ ის იქნება 2015 წლის იანვრიდან, თქვენ ჩაწერთ 2015 წლის იანვარს."
@@ -313,10 +313,10 @@ ka:
     subtitle:
       html:
         title: "მთლიანი გამოხმაურება: %{num}"
-        title_filter: "პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{variable}: %{nums}"
+        title_filter: "პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{code} - %{variable}: %{nums}"
       text:
         title: "მთლიანი პასუხები: %{num}"
-        title_filter: "პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{variable}: %{nums}"
+        title_filter: "პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{code} - %{variable}: %{nums}"
   explore_data:
     hover_region: Hover over a Region
     na: "არ არის ხელმისაწვდომი"
@@ -352,10 +352,10 @@ ka:
     subtitle:
       html:
         title: "მთლიანი გამოხმაურება: <span class='number'>%{num}</span>"
-        title_filter: "პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{variable}: %{nums}"
+        title_filter: "პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{code} - %{variable}: %{nums}"
       text:
         title: "მთლიანი პასუხები: %{num}"
-        title_filter: "პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{variable}: %{nums}"
+        title_filter: "პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{code} - %{variable}: %{nums}"
   datatable:
     search: ძიება
     copy:
@@ -904,7 +904,7 @@ ka:
         methodology: "მეთოდოლოგია"
         codebook: "კოდირება"
         reports: "რეფორთები"
-        licensing: Legal
+        licensing: ლეგალური
       no_methodology: "ამ ცხრილისთვის მეთოდოლოგია არ მოიძებნა"
       no_reports: "ამ ცხრილისთვის რეფორთები არ მოიძებნა"
       no_highlights: "ამ ცხრილისთვის გამორჩეული არ მოიძებნა"
@@ -918,7 +918,7 @@ ka:
         methodology: "მეთოდოლოგია"
         codebook: "კოდირება"
         reports: "რეფორთები"
-        licensing: Legal
+        licensing: ლეგალური
         datasets: "მონაცემთა ცხრილი"
       no_highlights: "ამ პერიოდული შედარებისთვის გამორჩეული არ მოიძებნა"
       filter:
