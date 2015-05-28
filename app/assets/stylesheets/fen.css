@@ -1,55 +1,55 @@
 @font-face {
     font-family: "nokiasans_s60";    
-    src: url( '/assets/fonts/nokiasans_s60.ttf') format("truetype");           
+    src: url( '/assets/fonts/en/nokiasans_s60.ttf') format("truetype");           
     font-style: normal;
     font-weight: 200;
 }
 @font-face {
     font-family: "nokiasans_s60_sb";    
-    src: url( '/assets/fonts/nokiasans_s60_sb.ttf') format("truetype");           
+    src: url( '/assets/fonts/en/nokiasans_s60_sb.ttf') format("truetype");           
     font-style: normal;
     font-weight: 200;
 }
 @font-face {
     font-family: "prime";    
-    src: url( '/assets/fonts/prime.otf') format("opentype");         
+    src: url( '/assets/fonts/en/prime.otf') format("opentype");         
     font-style: normal;
     font-weight: 200;
 }
 
 @font-face {
     font-family: "sourcesans_pro_i";    
-    src: url( '/assets/fonts/sourcesans_pro_i.otf') format("opentype");         
+    src: url( '/assets/fonts/en/sourcesans_pro_i.otf') format("opentype");         
     font-style: normal;
     font-weight: 200;
 }
 @font-face {
     font-family: "sourcesans_pro_l";    
-    src: url( '/assets/fonts/sourcesans_pro_l.otf') format("opentype");         
+    src: url( '/assets/fonts/en/sourcesans_pro_l.otf') format("opentype");         
     font-style: normal;
     font-weight: 200;
 }
 @font-face {
     font-family: "sourcesans_pro_li";    
-    src: url( '/assets/fonts/sourcesans_pro_li.otf') format("opentype");         
+    src: url( '/assets/fonts/en/sourcesans_pro_li.otf') format("opentype");         
     font-style: normal;
     font-weight: 200;
 }
 @font-face {
     font-family: "sourcesans_pro";    
-    src: url( '/assets/fonts/sourcesans_pro.otf') format("opentype");         
+    src: url( '/assets/fonts/en/sourcesans_pro.otf') format("opentype");         
     font-style: normal;
     font-weight: 200;
 }
 @font-face {
     font-family: "sourcesans_pro_sb";    
-    src: url( '/assets/fonts/sourcesans_pro_sb.otf') format("opentype");         
+    src: url( '/assets/fonts/en/sourcesans_pro_sb.otf') format("opentype");         
     font-style: normal;
     font-weight: 200;
 }
 @font-face {
     font-family: "sourcesans_pro_sbi";    
-    src: url( '/assets/fonts/sourcesans_pro_sbi.otf') format("opentype");         
+    src: url( '/assets/fonts/en/sourcesans_pro_sbi.otf') format("opentype");         
     font-style: normal;
     font-weight: 200;
 }
