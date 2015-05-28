@@ -131,7 +131,7 @@
     
     <div role="tabpanel" class="tab-pane fade <%= codebook_active[:panel] %>" id="codebook">
       <div id="codebook-search">
-        <input type="text" class="codebook-search" id="filter" value="" placeholder="<%= t('helpers.search') %>" />
+        <input type="search" class="codebook-search" id="filter" value="" placeholder="<%= t('helpers.search') %>" />
         <div class="radio-box" tabindex="0">
           <input checked id="filter_all" name="filter" type="radio" value="all" />
           <label class="filter" for="filter_all"><%= t('.filter.all') %></label>
@@ -201,6 +201,7 @@
                 <% if report.language.present? %>
                   <div class="language"><span><%= "#{r_model_class.human_attribute_name(:language_id)}:"%></span> <%= "#{report.language.name}" %></div>
                 <% end %>
+              </div>
               <% if report.summary.present? %>
                 <div class="description"><%= simple_format(report.summary, {}, {sanitize: false}) %></div>
               <% end %>
