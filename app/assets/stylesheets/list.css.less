@@ -98,6 +98,7 @@
       {
         max-width:1024px;
         margin-bottom:7px;
+        position: relative;
         > div
         {
           display:inline-block;
@@ -140,8 +141,14 @@
         }
         .time-series
         {
-          float:left;
-          margin:10px 10px 0px 0px;         
+          display:table-cell;
+          // float:right;
+          // margin:10px 10px 0px 0px;  
+            position: absolute;
+  right: 0px;
+  top:-6px;
+          margin: 0px;
+
           img
           {
             width:36px;
