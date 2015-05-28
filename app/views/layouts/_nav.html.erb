@@ -77,9 +77,10 @@
             <% end %>
           </li>
         <% else %>
-          <li role="menuitem" class="sign">
-            <%= link_to(t('helpers.links.sign_in2'), new_user_session_path, class: 'reattach sign_in')  %>/
-            <%= link_to(t('helpers.links.sign_up'),  new_registration_path(resource_name), class: 'reattach sign_in')  %></li>
+          <li role="menuitem" class="sign user">
+            <%= link_to(t('helpers.links.sign_in2'), new_user_session_path, class: 'reattach sign_in')  %></li>
+            <li class="user">/</li>
+            <li role="menuitem" class="sign user"><%= link_to(t('helpers.links.sign_up'),  new_registration_path(resource_name), class: 'reattach sign_in')  %></li>
         <% end %>
         <% I18n.available_locales.each do |locale| %>
           <% if locale != I18n.locale %>
