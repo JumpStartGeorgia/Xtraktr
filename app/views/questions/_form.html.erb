@@ -40,10 +40,10 @@
     </label>
     <% if @question.is_mappable? %>
       <%= t('formtastic.yes') %>
-      <%= link_to image_tag('svg/edit.svg'),
+      <%= link_to '',
             mappable_form_edit_dataset_path(:id => @dataset, :question_id => @question.id), 
             :title => t('helpers.links.edit'),
-            target: :blank, class: 'btn btn-sm btn-edit' %>
+            target: :blank, class: 'btn btn-edit' %>
     <% else %>
       <%= t('formtastic.no') %>
       <%= link_to t('helpers.links.make_mappable'), mappable_form_dataset_path(:id => @dataset, :question_id => @question.id), 

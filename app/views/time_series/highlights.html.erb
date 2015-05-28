@@ -36,12 +36,12 @@
                           :method => :post,
                           :class => 'btn btn-xs btn-default' %>
             <% end %>
-            <%= link_to 'X',
+            <%= link_to '',
                         remove_highlight_time_series_path(id: highlight.time_series_id, embed_id: highlight.embed_id),
                         :title => t("helpers.links.destroy"),
                         :method => :post,
                         :data => { :confirm => I18n.t("helpers.links.confirm") },
-                        :class => 'btn btn-xs btn-danger' %>
+                        :class => 'btn btn-xs btn-delete' %>
           </td>
         </tr>
       <% end %>

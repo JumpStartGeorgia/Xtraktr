@@ -22,16 +22,16 @@
             <td><%= question.text %></td>
             <td><%= question.shapeset.title_with_source %></td>
             <td>
-              <%= link_to image_tag('svg/edit.svg'),
+              <%= link_to '',
                           mappable_form_edit_dataset_path(:id => @dataset, :question_id => question.id), 
                           :title => t('helpers.links.edit'),
-                          :class => 'btn btn-xs btn-edit' %>
-              <%= link_to 'X',
+                          :class => 'btn btn-edit btn-xs' %>
+              <%= link_to '',
                           remove_mapping_dataset_path(:id => @dataset, :question_id => question.id),
                           :title => t("helpers.links.destroy"),
                           :method => :delete,
                           :data => { :confirm => I18n.t("helpers.links.confirm") },
-                          :class => 'btn btn-xs btn-danger' %>
+                          :class => 'btn btn-delete btn-xs' %>
             </td>
           </tr>
         <% end %>

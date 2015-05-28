@@ -23,6 +23,6 @@
                         <%= f.input :sort_order, as: :string, :input_html => {:size =>3, :value => default_sort_order}, :label => false %>
                       </td>
                       <td>
-                        <%= link_to_remove_association 'X', f, {class: 'btn btn-danger', title: t('helpers.links.remove_dataset')} %>
+                        <%= link_to_remove_association '', f, {class: 'btn btn-delete', title: t('helpers.links.remove_dataset')} %>
                       </td>
                     </tr>

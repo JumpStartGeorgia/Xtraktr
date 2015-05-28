@@ -38,17 +38,17 @@ private
 
   def action_links(user)
     x = ''
-    x << link_to(image_tag('svg/edit.svg'),
+    x << link_to('',
                       edit_admin_user_path(user, :locale => I18n.locale), 
                       :title => I18n.t("helpers.links.edit"),
                       :class => 'btn btn-edit btn-xs')
     x << " "
-    x << link_to('X',
+    x << link_to('',
                       admin_user_path(user, :locale => I18n.locale),
                       :title => I18n.t("helpers.links.destroy"),
                       :method => :delete,
 											:data => { :confirm => I18n.t("helpers.links.confirm") },
-                      :class => 'btn btn-xs btn-danger')
+                      :class => 'btn btn-delete btn-xs')
     return x.html_safe
   end
 
