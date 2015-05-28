@@ -108,7 +108,7 @@ en:
         title: Title
         file: File
         released_at: Date Released
-        langauge_id: Language
+        language_id: Language
         summary: Summary
       time_series:
         title: Title
@@ -547,7 +547,7 @@ en:
       api: API
       instructions: Instructions
       home: Home
-      disclaimer: Notes
+      disclaimer: Disclaimer
       titles:
         explore_dataset: Explore the dataset data through charts, maps and tables
         explore_time_series: Explore the time series data through charts and tables

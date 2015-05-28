@@ -15,6 +15,8 @@ class DatasetsController < ApplicationController
     @css.push("datasets.css")
     @js.push("search.js")
 
+    set_gon_datatables
+
     respond_to do |format|
       format.html 
       format.json { render json: @datasets }
@@ -661,6 +663,8 @@ class DatasetsController < ApplicationController
       add_dataset_nav_options
 
       @js.push('search.js')
+
+      set_gon_datatables
 
       respond_to do |format|
         format.html # index.html.erb

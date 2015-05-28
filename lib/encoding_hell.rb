@@ -84,10 +84,9 @@ module EncodingHell
   end
 
 
-
-  def self.barriers_answers
+  def self.barriers_questions_ka_fixed
     start = Time.now
-    file = "/home/jason/Projects/datasets/unicef\ datsets/1\ -\ spreadsheet translations/Barriers-Answers-2015_05_16_132400.csv"
+    file = "/home/jason/Projects/datasets/unicef\ datsets/1\ -\ spreadsheet translations/Barriers\ -\ fixed\ ka\ -\ questions.csv"
 
     if !File.exists? file
       puts "!!!!! file does not exist (#{file})"
@@ -102,7 +101,7 @@ module EncodingHell
     end
 
 
-    bad_file = "/home/jason/Downloads/barrier_answers_bad.csv"
+    bad_file = "/home/jason/Downloads/barrier_questions_bad.csv"
     bad_text = []
     bad_text_count = 0
 
@@ -110,7 +109,7 @@ module EncodingHell
     rows = CSV.read(file)
 
     (1..rows.length-1).each do |index|
-      if index%100 == 0
+      if index%20 == 0
         puts "==================="
         puts "- #{Time.now-start} seconds so far; #{bad_text_count} bad rows so far"
         puts "==================="
@@ -125,28 +124,28 @@ module EncodingHell
       I18n.locale = :ka
       q = d.questions.with_code(row[0])
       if q.present?
-        answer = q.answers.with_value(row[1])
-        if answer.present?
-          text = d.clean_string(row[4])
-          answer.text = text
+        text = d.clean_string(row[2])
+        q.text = text
+        d.save
+        d.reload
+
+
+        # see if actually saved
+        q = d.questions.with_code(row[0])
+        puts "--- db = #{q.text_translations['ka']}"
+        puts "--- csv = #{row[2]}"
+        puts "--- txt = #{text}"
+        if (q.text_translations['ka'] == text)
+          puts "--> KA GOOD!"
+        else
+          puts "--> @@@@@@@@ ka not match"
+          # save this bad text
+          bad_text << row
+          bad_text_count += 1
+
+          q.text = nil
           d.save
           d.reload
-
-
-          # see if actually saved
-          q = d.questions.with_code(row[0])
-          answer = q.answers.with_value(row[1])
-          puts "--- db = #{answer.text_translations['ka']}"
-          puts "--- csv = #{row[4]}"
-          puts "--- txt = #{text}"
-          if (answer.text_translations['ka'] == text)
-            puts "--> KA GOOD!"
-          else
-            puts "--> @@@@@@@@ ka not match"
-            # save this bad text
-            bad_text << row
-            bad_text_count += 1
-          end
         end
       end
     end
@@ -230,6 +229,92 @@ module EncodingHell
           # save this bad text
           bad_text << row
           bad_text_count += 1
+        end
+      end
+    end
+
+    puts '-----------------'
+    puts '-----------------'
+    puts "#{bad_text_count} rows had bad text :("
+    puts '-----------------'
+    puts '-----------------'
+
+    CSV.open(bad_file, 'w') do |csv|
+      csv << rows[0]
+      bad_text.each do |bad|
+        csv << bad
+      end
+    end
+
+    puts "==================="
+    puts "- it took #{Time.now-start} seconds"
+    puts "==================="
+    return nil
+  end
+
+
+  def self.youth_questions_ka_fixed
+    start = Time.now
+    file = "/home/jason/Projects/datasets/unicef\ datsets/1\ -\ spreadsheet translations/Youth_Survey\ -\ fixed\ ka\ -\ questions.csv"
+
+    if !File.exists? file
+      puts "!!!!! file does not exist (#{file})"
+      return
+    end
+
+    d = Dataset.find('552501ae2c1743bfc800268f')
+
+    if !d.present?
+      puts "!!!!! dataset not found"
+      return
+    end
+
+
+    bad_file = "/home/jason/Downloads/youth_questions_bad.csv"
+    bad_text = []
+    bad_text_count = 0
+
+    # read in file
+    rows = CSV.read(file)
+
+    (1..rows.length-1).each do |index|
+      if index%20 == 0
+        puts "==================="
+        puts "- #{Time.now-start} seconds so far; #{bad_text_count} bad rows so far"
+        puts "==================="
+      end
+
+      puts "------------------------"
+      puts "- index = #{index}"
+
+      row = rows[index]
+
+      # set the text
+      I18n.locale = :ka
+      q = d.questions.with_code(row[0])
+      if q.present?
+        text = d.clean_string(row[2])
+        q.text = text
+        d.save
+        d.reload
+
+
+        # see if actually saved
+        q = d.questions.with_code(row[0])
+        puts "--- db = #{q.text_translations['ka']}"
+        puts "--- csv = #{row[2]}"
+        puts "--- txt = #{text}"
+        if (q.text_translations['ka'] == text)
+          puts "--> KA GOOD!"
+        else
+          puts "--> @@@@@@@@ ka not match"
+          # save this bad text
+          bad_text << row
+          bad_text_count += 1
+
+          q.text = nil
+          d.save
+          d.reload
         end
       end
     end

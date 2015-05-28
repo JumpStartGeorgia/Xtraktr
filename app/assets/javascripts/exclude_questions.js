@@ -27,7 +27,7 @@ $(document).ready(function(){
 
   // datatable for exclude questions page
   datatable = $('#dataset-exclude-questions').dataTable({
-    "dom": '<"top"f>t<"bottom"lpi><"clear">',
+    "dom": '<"top"fli>t<"bottom"p><"clear">',
     "columns": [
       { "orderDataType": "dom-checkbox" },
       null,
@@ -35,8 +35,17 @@ $(document).ready(function(){
     ],
     "order": [[1, 'asc']],
     "language": {
-      "url": gon.datatable_i18n_url
-    }
+      "url": gon.datatable_i18n_url,
+      "search": "_INPUT_",
+      "searchPlaceholder": gon.datatable_search,
+      "paginate": {
+          "first": " ",
+          "previous": " ",
+          "next": " ",
+          "last": " "
+      }
+    },
+    "pagingType": "full_numbers"
   });
 
 

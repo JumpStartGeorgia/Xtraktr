@@ -3,7 +3,7 @@ class RootController < ApplicationController
     @datasets = Dataset.meta_only.is_public.recent.sorted.limit(6)
 
     @time_series = TimeSeries.meta_only.is_public.recent.sorted.limit(3) if @is_xtraktr
-    @wms_id = TimeSeries.pluck(:id).first
+    @wms_id = TimeSeries.pluck(:_slugs).first.first
 
     @categories = Category.sorted
     @highlights = Highlight.for_home_page
@@ -48,8 +48,8 @@ class RootController < ApplicationController
     end
   end
 
-  def notes
-    @page_content = PageContent.by_name('notes')
+  def disclaimer
+    @page_content = PageContent.by_name('disclaimer')
     @css.push('root.css')
     respond_to do |format|
       format.html # index.html.erb
