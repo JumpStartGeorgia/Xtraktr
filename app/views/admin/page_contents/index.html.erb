@@ -23,10 +23,13 @@
         <td><%= link_to page.name, admin_page_content_path(page) %></td>
         <td><%= page.title %></td>
         <td>
-          <%= link_to t('app.buttons.edit'),
-                      edit_admin_page_content_path(page), :class => 'btn btn-xs btn-default' %>
-          <%= link_to t('app.buttons.delete'),
+          <%= link_to image_tag('svg/edit.svg'),
+                      edit_admin_page_content_path(page), 
+                      :title => t('helpers.links.edit'),
+                      :class => 'btn btn-xs btn-edit' %>
+          <%= link_to 'X',
                       admin_page_content_path(page),
+                      :title => t("helpers.links.destroy"),
                       :method => :delete,
                       :data => { :confirm => I18n.t("helpers.links.confirm") },
                       :class => 'btn btn-xs btn-danger' %>

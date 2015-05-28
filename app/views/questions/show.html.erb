@@ -6,8 +6,10 @@
 <div class="form-group form-group-admin-buttons">
   <%= link_to t('.back', :default => t("helpers.links.back")),
               dataset_questions_path, :class => 'btn btn-default'  %>
-  <%= link_to t('.edit', :default => t("helpers.links.edit")),
-              edit_dataset_question_path(@dataset, @question), :class => 'btn btn-default' %>
+  <%= link_to image_tag('svg/edit.svg'),
+              edit_dataset_question_path(@dataset, @question), 
+              :title => t('helpers.links.edit'),
+              :class => 'btn btn-edit' %>
 </div>
 
 <div class="tabbed-translation-show">

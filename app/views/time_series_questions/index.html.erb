@@ -48,8 +48,10 @@
             </td>
           <% end %>
           <td>
-            <%= link_to t('app.buttons.edit'),
-                      edit_time_series_question_path(@time_series, question), :class => 'btn btn-default' %>
+            <%= link_to image_tag('svg/edit.svg'),
+                      edit_time_series_question_path(@time_series, question), 
+                      :title => t('helpers.links.edit'),
+                      :class => 'btn btn-edit' %>
           </td>
         </tr>
       <% end %>

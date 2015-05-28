@@ -119,8 +119,10 @@
                   <%= @dataset.data_items.unique_code_data(item).delete_if{|x| x.nil?}.sort.join(', ') %>
                 </td>
                 <td>
-                  <%= link_to t('helpers.links.edit_answers'),
-                            edit_dataset_question_path(@dataset, question), :class => 'btn btn-default' %>
+                  <%= link_to image_tag('svg/edit.svg'),
+                            edit_dataset_question_path(@dataset, question), 
+                            :title => t('helpers.links.edit_answers'),
+                            :class => 'btn btn-edit' %>
                 </td>
               </tr>
             <% end %>
