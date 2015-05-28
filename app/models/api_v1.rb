@@ -399,8 +399,8 @@ private
 
         if with_title
           # needed to run all anaylsis in order to have all total responses for subtitle
-          filter_results[:subtitle][:html] = dataset_analysis_subtitle_html_filtered(filtered_by[:text], filter_results[:filter_analysis])
-          filter_results[:subtitle][:text] = dataset_analysis_subtitle_text_filtered(filtered_by[:text], filter_results[:filter_analysis])
+          filter_results[:subtitle][:html] = dataset_analysis_subtitle_html_filtered(filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis])
+          filter_results[:subtitle][:text] = dataset_analysis_subtitle_text_filtered(filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis])
         end
 
         return filter_results
@@ -652,8 +652,8 @@ private
 
         if with_title
           # needed to run all anaylsis in order to have all total responses for subtitle
-          filter_results[:subtitle][:html] = dataset_analysis_subtitle_html_filtered(filtered_by[:text], filter_results[:filter_analysis])
-          filter_results[:subtitle][:text] = dataset_analysis_subtitle_text_filtered(filtered_by[:text], filter_results[:filter_analysis])
+          filter_results[:subtitle][:html] = dataset_analysis_subtitle_html_filtered(filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis])
+          filter_results[:subtitle][:text] = dataset_analysis_subtitle_text_filtered(filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis])
         end
 
         return filter_results
@@ -872,7 +872,10 @@ private
                 item[:title] = {}
                 item[:title][:html] = dataset_comparative_analysis_map_title_html(data[:question], data[:broken_down_by], bdb_answer.text, data[:filtered_by], filter[:filter_answer_text])
                 item[:title][:text] = dataset_comparative_analysis_map_title_text(data[:question], data[:broken_down_by], bdb_answer.text, data[:filtered_by], filter[:filter_answer_text])
-                item[:subtitle] = data[:results][:subtitle]
+                item[:subtitle] = {}
+                subtitle_count = counts[bdb_index].present? ? counts[bdb_index].inject(:+) : 0
+                item[:subtitle][:html] = dataset_analysis_subtitle_html(subtitle_count)
+                item[:subtitle][:text] = dataset_analysis_subtitle_text(subtitle_count)
               end
 
               # create embed id
@@ -910,7 +913,10 @@ private
                   item[:title] = {}
                   item[:title][:html] = dataset_comparative_analysis_map_title_html(data[:broken_down_by], data[:question], q_answer.text, data[:filtered_by], filter[:filter_answer_text])
                   item[:title][:text] = dataset_comparative_analysis_map_title_text(data[:broken_down_by], data[:question], q_answer.text, data[:filtered_by], filter[:filter_answer_text])
-                  item[:subtitle] = data[:results][:subtitle]
+                  item[:subtitle] = {}
+                  subtitle_count = counts[q_index].present? ? counts[q_index].inject(:+) : 0
+                  item[:subtitle][:html] = dataset_analysis_subtitle_html(subtitle_count)
+                  item[:subtitle][:text] = dataset_analysis_subtitle_text(subtitle_count)
                 end
 
                 # create embed id
@@ -967,7 +973,10 @@ private
               item[:title] = {}
               item[:title][:html] = dataset_comparative_analysis_map_title_html(data[:question], data[:broken_down_by], bdb_answer.text)
               item[:title][:text] = dataset_comparative_analysis_map_title_text(data[:question], data[:broken_down_by], bdb_answer.text)
-              item[:subtitle] = data[:results][:subtitle]
+              item[:subtitle] = {}
+              subtitle_count = counts[bdb_index].present? ? counts[bdb_index].inject(:+) : 0
+              item[:subtitle][:html] = dataset_analysis_subtitle_html(subtitle_count)
+              item[:subtitle][:text] = dataset_analysis_subtitle_text(subtitle_count)
             end
 
             # create embed id
@@ -1000,7 +1009,10 @@ private
               item[:title] = {}
               item[:title][:html] = dataset_comparative_analysis_map_title_html(data[:broken_down_by], data[:question], q_answer.text)
               item[:title][:text] = dataset_comparative_analysis_map_title_text(data[:question], data[:broken_down_by], q_answer.text)
-              item[:subtitle] = data[:results][:subtitle]
+              item[:subtitle] = {}
+              subtitle_count = counts[q_index].present? ? counts[q_index].inject(:+) : 0
+              item[:subtitle][:html] = dataset_analysis_subtitle_html(subtitle_count)
+              item[:subtitle][:text] = dataset_analysis_subtitle_text(subtitle_count)
             end
 
             # create embed id
@@ -1093,8 +1105,8 @@ private
 
       if with_title
         # needed to run all anaylsis in order to have all total responses for subtitle
-        filter_results[:subtitle][:html] = time_series_analysis_subtitle_html_filtered(filtered_by[:text], filter_results[:filter_analysis])
-        filter_results[:subtitle][:text] = time_series_analysis_subtitle_text_filtered(filtered_by[:text], filter_results[:filter_analysis])
+        filter_results[:subtitle][:html] = time_series_analysis_subtitle_html_filtered(filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis])
+        filter_results[:subtitle][:text] = time_series_analysis_subtitle_text_filtered(filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis])
       end
 
       return filter_results
@@ -1374,25 +1386,25 @@ private
     return I18n.t('explore_data.subtitle.text.title', :num => number_with_delimiter(total))
   end 
 
-  def self.dataset_analysis_subtitle_html_filtered(filtered_by_text, results)
+  def self.dataset_analysis_subtitle_html_filtered(filtered_by_code, filtered_by_text, results)
     title = "<br /> <span class='total_responses'>"
     filter_responses = []
     results.each do |result|
       text = "<br /> - #{result[:filter_answer_text]}: <span class='number'>#{number_with_delimiter(result[:filter_results][:total_responses])}</span>"
       filter_responses << text
     end
-    title << I18n.t('explore_data.subtitle.html.title_filter', :variable => filtered_by_text, :nums => filter_responses.join)
+    title << I18n.t('explore_data.subtitle.html.title_filter', :code => filtered_by_code, :variable => filtered_by_text, :nums => filter_responses.join)
     title << "</span>"
     return title.html_safe
   end 
 
-  def self.dataset_analysis_subtitle_text_filtered(filtered_by_text, results)
+  def self.dataset_analysis_subtitle_text_filtered(filtered_by_code, filtered_by_text, results)
     filter_responses = []
     results.each do |result|
       text = " #{result[:filter_answer_text]}: #{number_with_delimiter(result[:filter_results][:total_responses])}"
       filter_responses << text
     end
-    return I18n.t('explore_data.subtitle.text.title_filter', :variable => filtered_by_text, :nums => filter_responses.join('; '))
+    return I18n.t('explore_data.subtitle.text.title_filter', :code => filtered_by_code, :variable => filtered_by_text, :nums => filter_responses.join('; '))
   end 
 
 
@@ -1442,7 +1454,7 @@ private
     return I18n.t('explore_time_series.subtitle.text.title', :num => num.join('; '))
   end 
 
-  def self.time_series_analysis_subtitle_html_filtered(filtered_by_text, results)
+  def self.time_series_analysis_subtitle_html_filtered(filtered_by_code, filtered_by_text, results)
     title = "<br /> <span class='total_responses'>"
     filter_responses = []
     results.each do |result|
@@ -1454,12 +1466,12 @@ private
       text << num.join('; ')
       filter_responses << text
     end
-    title << I18n.t('explore_time_series.subtitle.html.title_filter', :variable => filtered_by_text, :nums => filter_responses.join)
+    title << I18n.t('explore_time_series.subtitle.html.title_filter', :code => filtered_by_code, :variable => filtered_by_text, :nums => filter_responses.join)
     title << "</span>"
     return title.html_safe
   end 
 
-  def self.time_series_analysis_subtitle_text_filtered(filtered_by_text, results)
+  def self.time_series_analysis_subtitle_text_filtered(fitlered_by_code, filtered_by_text, results)
     filter_responses = []
     results.each do |result|
       text = " #{result[:filter_answer_text]}: "
@@ -1470,7 +1482,7 @@ private
       text << num.join('; ')
       filter_responses << text
     end
-    return I18n.t('explore_time_series.subtitle.text.title_filter', :variable => filtered_by_text, :nums => filter_responses.join('; '))
+    return I18n.t('explore_time_series.subtitle.text.title_filter', :code => filtered_by_code, :variable => filtered_by_text, :nums => filter_responses.join('; '))
   end 
 
 end

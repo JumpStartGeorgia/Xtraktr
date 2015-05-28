@@ -33,7 +33,6 @@ function time_series_chart_height(json){
   return chart_height;
 }
 
-
 ////////////////////////////////////////////////
 // add disclaimer link
 ////////////////////////////////////////////////
@@ -184,6 +183,7 @@ function build_highmap(shape_question_code, json_map_set){
 
       mapNavigation: {
           enabled: true,
+          enableMouseWheelZoom: false,
           buttonOptions: {
               verticalAlign: 'top'
           }
@@ -361,7 +361,7 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
         },
         labels:
         {
-          style: { "color": "#3c4352", "fontSize": "14px", "fontFamily":"'sourcesans_pro', 'sans-serif'", "fontWeight": "normal" },
+          style: { "color": "#3c4352", "fontSize": "14px", "fontFamily":"'sourcesans_pro', 'sans-serif'", "fontWeight": "normal", 'textAlign': 'right' },
           useHTML: true
         }
     },
@@ -734,9 +734,9 @@ function build_page_title(json){
   var title_parts = $('title').html().split(' | ');
 
   if (json.results.title.text){
-    $('title').html(title_parts[0] + ' | ' + json.results.title.text + ' | ' + title_parts[title_parts.length-1])
+    $('head title').html(title_parts[0] + ' | ' + json.results.title.text + ' | ' + title_parts[title_parts.length-1])
   }else{
-    $('title').html(title_parts[0] + ' | ' + title_parts[title_parts.length-1])
+    $('head title').html(title_parts[0] + ' | ' + title_parts[title_parts.length-1])
   }
    
 }

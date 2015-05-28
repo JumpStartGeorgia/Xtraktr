@@ -194,14 +194,7 @@ function build_datatable(json){
       "dom": '<"top"fl>t<"bottom"p><"clear">',
       "language": {
         "url": gon.datatable_i18n_url,
-        "search": "_INPUT_",
-        "searchPlaceholder": gon.datatable_search,
-        "paginate": {
-            "first": " ",
-            "previous": " ",
-            "next": " ",
-            "last": " "
-        }
+        "searchPlaceholder": gon.datatable_search
       },
       "pagingType": "full_numbers",
       "columnDefs": [
@@ -492,7 +485,7 @@ $(document).ready(function() {
     $("#jumpto").on('change', 'select', function(){
       var href = $(this).find('option:selected').data('href');
       $('.tab-pane').animate({
-        scrollTop: $(href).offset().top - 120
+        scrollTop: Math.abs($('.tab-pane.active > div > div:first').offset().top - $('.tab-pane.active ' + href).offset().top)
       }, 1500);
     });
 

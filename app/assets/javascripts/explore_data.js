@@ -468,14 +468,7 @@ function build_datatable(json){
       "dom": '<"top"fl>t<"bottom"p><"clear">',
       "language": {
         "url": gon.datatable_i18n_url,
-        "search": "_INPUT_",
-        "searchPlaceholder": gon.datatable_search,
-        "paginate": {
-            "first": " ",
-            "previous": " ",
-            "next": " ",
-            "last": " "
-        }
+        "searchPlaceholder": gon.datatable_search
       },
       "pagingType": "full_numbers",
       "columnDefs": [
@@ -871,8 +864,8 @@ $(document).ready(function() {
     // jumpto scrolling
     $("#jumpto").on('change', 'select', function(){
       var href = $(this).find('option:selected').data('href');
-      $('.tab-pane').animate({
-        scrollTop: $(href).offset().top - 120
+      $('.tab-pane.active').animate({
+        scrollTop: Math.abs($('.tab-pane.active > div > div:first').offset().top - $('.tab-pane.active ' + href).offset().top)
       }, 1500);
 
       // if this is a map item and there are > 1 map items, make sure the other items are set to nil
@@ -889,7 +882,6 @@ $(document).ready(function() {
 
     // when chart tab/map clicked on, make sure the jumpto block is showing, else, hide it
     $('#explore-tabs li a').click(function(){
-      console.log('tab click = ' + $(this).attr('href'));
       if ($(this).attr('href') == '#tab-chart' && $('#jumpto #jumpto-chart select option').length > 0){
         $('#jumpto').show();
         $('#jumpto #jumpto-chart').show();

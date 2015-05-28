@@ -1,0 +1,10 @@
+{
+  "sSearch": "_INPUT_",
+  "oPaginate": {
+      "sFirst": " ",
+      "sPrevious": " ",
+      "sNext": " ",
+      "sLast": " "
+  }
+}
+
