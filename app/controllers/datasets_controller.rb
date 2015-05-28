@@ -628,7 +628,7 @@ class DatasetsController < ApplicationController
     end
 
     respond_to do |format|
-      format.html { redirect_to highlights_dataset_path(dataset), flash: {success:  t('app.msgs.highlight_deleted') }
+      format.html { redirect_to highlights_dataset_path(dataset), flash: {success:  t('app.msgs.highlight_deleted') } }
       format.json { render json: success }
     end
   end
@@ -647,7 +647,7 @@ class DatasetsController < ApplicationController
     end
 
     respond_to do |format|
-      format.html { redirect_to highlights_dataset_path(dataset), flash: {success:  t('app.msgs.highlight_show_home_page_success') }
+      format.html { redirect_to highlights_dataset_path(dataset), flash: {success:  t('app.msgs.highlight_show_home_page_success') } }
       format.json { render json: success }
     end
   end
