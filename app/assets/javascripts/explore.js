@@ -744,12 +744,15 @@ function build_page_title(json){
 function resizeExploreData(){
     var w = $(window).width(),
         h = $(window).height(),
-        expform = $('#explore-form'),
-        offset = expform.offset(),
-        expformWidth = expform.width();
+        expform = $('#explore-form');
+    if(expform.length)
+    {
+      var offset = expform.offset(),
+      expformWidth = expform.width();
       var tmp = expform.find('form');
       $('#explore-form #jumpto').css({'height':h-(tmp.offset().top+tmp.height()+41+2)  });
-      $('#explore-data-content  .tab-pane').css({'width': w-442, 'height':h-(51+31+40+41+2)  });
+      $('#explore-data-content  .tab-pane').css({'width': w-442, 'height':h-(51+31+40+41+2)});
+    }
 }
 ////////////////////////////////////////////////
 $(document).ready(function() {
