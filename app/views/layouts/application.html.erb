@@ -7,12 +7,14 @@
     <%= render :partial => 'layouts/nav' %>
     <div id="page-wrapper" class='wrappers<%=@klass%>'>
       <div class="content">
-					<% flash.each do |key, msg| %>
-						<div class="message alert <%= flash_translation(key) %> fade in">
-							<a href="#" data-dismiss="alert" class="close">×</a>
-							<%= msg %>
-						</div>
-					<% end %>
+
+          <% flash.each do |key, msg| %>
+            <div class='message notification <%= notification_translation(key) %>'>
+              <div class='figure'></div>
+              <div class='text'><%= msg %></div>
+              <div class='closeup'></div>      
+            </div>
+          <% end %>
 
           <% if !current_page?(root_path) %>
             <div id="subnav-navbar" class="row" role="navigation" >

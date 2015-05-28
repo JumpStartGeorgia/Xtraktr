@@ -83,7 +83,7 @@ class QuestionsController < ApplicationController
 
   #   respond_to do |format|
   #     if @question.save
-  #       format.html { redirect_to @question, notice: t('app.msgs.success_created', :obj => t('mongoid.models.question')) }
+  #       format.html { redirect_to @question, flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.question'))} }
   #       format.json { render json: @question, status: :created, location: @question }
   #     else
   #       format.html { render action: "new" }
@@ -103,7 +103,7 @@ class QuestionsController < ApplicationController
       if @question.present?
         respond_to do |format|
           if @question.update_attributes(params[:question])
-            format.html { redirect_to dataset_question_path(@dataset, @question), notice: t('app.msgs.success_updated', :obj => t('mongoid.models.question')) }
+            format.html { redirect_to dataset_question_path(@dataset, @question), flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.question'))} }
             format.json { head :no_content }
           else
             add_common_options
@@ -132,7 +132,7 @@ class QuestionsController < ApplicationController
   #   @question.destroy
 
   #   respond_to do |format|
-  #     format.html { redirect_to questions_url }
+  #     format.html { redirect_to questions_url, flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.question'))} }
   #     format.json { head :no_content }
   #   end
   # end

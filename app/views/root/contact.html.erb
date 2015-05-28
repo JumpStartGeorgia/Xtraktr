@@ -3,9 +3,6 @@
   <div class="col">
   <div class="header"><%= @page_content.title %></div>
 
-  <% if @email_sent %>
-    <%= notification('success', t(".message_sent")) %>
-  <% end %>
   <div class="intro"><%= simple_format_no_tags(@page_content.content, {}, {sanitize: false}) %></div>
   <%= semantic_form_for @message, :url => contact_path, :html => {class: 'contact-form'} do |f| %>
     <%= f.inputs do %>

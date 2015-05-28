@@ -55,7 +55,7 @@ class Admin::PageContentsController < ApplicationController
 
     respond_to do |format|
       if @page_content.save
-        format.html { redirect_to admin_page_content_path(@page_content), notice: t('app.msgs.success_created', :obj => t('mongoid.models.page_content')) }
+        format.html { redirect_to admin_page_content_path(@page_content), flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.page_content'))} }
         format.json { render json: @page_content, status: :created, location: @page_content }
       else
         set_tabbed_translation_form_settings('advanced')
@@ -74,7 +74,7 @@ class Admin::PageContentsController < ApplicationController
 
     respond_to do |format|
       if @page_content.save
-        format.html { redirect_to admin_page_content_path(@page_content), notice: t('app.msgs.success_updated', :obj => t('mongoid.models.page_content')) }
+        format.html { redirect_to admin_page_content_path(@page_content), flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.page_content'))} }
         format.json { head :no_content }
       else
         set_tabbed_translation_form_settings('advanced')
@@ -91,7 +91,7 @@ class Admin::PageContentsController < ApplicationController
     @page_content.destroy
 
     respond_to do |format|
-      format.html { redirect_to admin_page_contents_url }
+      format.html { redirect_to admin_page_contents_url, flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.page_content'))} }
       format.json { head :no_content }
     end
   end

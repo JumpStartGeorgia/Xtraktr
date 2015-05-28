@@ -46,7 +46,7 @@ class Admin::ApiMethodsController < ApplicationController
 
     respond_to do |format|
       if @api_method.save
-        format.html { redirect_to admin_api_version_api_method_path(@api_version, @api_method), notice: t('app.msgs.success_created', :obj => t('mongoid.models.api_method')) }
+        format.html { redirect_to admin_api_version_api_method_path(@api_version, @api_method), flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.api_method'))} }
         format.json { render json: @api_method, status: :created, location: @api_method }
       else
         set_tabbed_translation_form_settings('advanced')
@@ -63,7 +63,7 @@ class Admin::ApiMethodsController < ApplicationController
 
     respond_to do |format|
       if @api_method.update_attributes(params[:api_method])
-        format.html { redirect_to admin_api_version_api_method_path(@api_version, @api_method), notice: t('app.msgs.success_updated', :obj => t('mongoid.models.api_method')) }
+        format.html { redirect_to admin_api_version_api_method_path(@api_version, @api_method), flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.api_method'))} }
         format.json { head :no_content }
       else
         set_tabbed_translation_form_settings('advanced')
@@ -80,7 +80,7 @@ class Admin::ApiMethodsController < ApplicationController
     @api_method.destroy
 
     respond_to do |format|
-      format.html { redirect_to admin_api_versions_url }
+      format.html { redirect_to admin_api_versions_url, flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.api_method'))} }
       format.json { head :no_content }
     end
   end
