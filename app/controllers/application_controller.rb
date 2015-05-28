@@ -103,11 +103,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 		gon.highlight_first_form_field = false
     gon.app_api_key = @app_api_key
 
-		if I18n.locale == :ka
-		  gon.datatable_i18n_url = "/datatable_ka.txt"
-		else
-		  gon.datatable_i18n_url = ""
-		end
+	  gon.datatable_i18n_url = "/datatable_#{I18n.locale}.txt"
 
     gon.visual_types = Highlight::VISUAL_TYPES
     

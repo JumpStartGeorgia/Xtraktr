@@ -10,15 +10,9 @@ $(document).ready(function(){
     "ajax": $('#users-datatable').data('source'),
     "order": [[3, 'desc']],
     "language": {
-     "url": gon.datatable_i18n_url,
-      "search": "_INPUT_",
-      "searchPlaceholder": gon.datatable_search,
-      "paginate": {
-          "first": " ",
-          "previous": " ",
-          "next": " ",
-          "last": " "
-      }
+      "url": gon.datatable_i18n_url,
+      "searchPlaceholder": gon.datatable_search
+
     },
     "columnDefs": [
       { orderable: false, targets: [-1] }
@@ -32,14 +26,7 @@ $(document).ready(function(){
     "processing": true,
     "language": {
       "url": gon.datatable_i18n_url,
-      "search": "_INPUT_",
-      "searchPlaceholder": gon.datatable_search,
-      "paginate": {
-          "first": " ",
-          "previous": " ",
-          "next": " ",
-          "last": " "
-      }
+      "searchPlaceholder": gon.datatable_search
     },
     "columnDefs": [
       { orderable: false, "targets": [5,7] }
@@ -52,14 +39,7 @@ $(document).ready(function(){
     "processing": true,
     "language": {
       "url": gon.datatable_i18n_url,
-      "search": "_INPUT_",
-      "searchPlaceholder": gon.datatable_search,
-      "paginate": {
-          "first": " ",
-          "previous": " ",
-          "next": " ",
-          "last": " "
-      }
+      "searchPlaceholder": gon.datatable_search
     },
     "columnDefs": [
       { orderable: false, "targets": [1,5] }
@@ -72,14 +52,7 @@ $(document).ready(function(){
     "processing": true,
     "language": {
       "url": gon.datatable_i18n_url,
-      "search": "_INPUT_",
-      "searchPlaceholder": gon.datatable_search,
-      "paginate": {
-          "first": " ",
-          "previous": " ",
-          "next": " ",
-          "last": " "
-      }
+      "searchPlaceholder": gon.datatable_search
     },
     "columnDefs": [
       { orderable: false, "targets": [5] }
@@ -92,14 +65,7 @@ $(document).ready(function(){
     "processing": true,
     "language": {
       "url": gon.datatable_i18n_url,
-      "search": "_INPUT_",
-      "searchPlaceholder": gon.datatable_search,
-      "paginate": {
-          "first": " ",
-          "previous": " ",
-          "next": " ",
-          "last": " "
-      }
+      "searchPlaceholder": gon.datatable_search
     },
     "columnDefs": [
       { orderable: false, "targets": [-1] }

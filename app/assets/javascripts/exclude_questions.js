@@ -36,14 +36,7 @@ $(document).ready(function(){
     "order": [[1, 'asc']],
     "language": {
       "url": gon.datatable_i18n_url,
-      "search": "_INPUT_",
-      "searchPlaceholder": gon.datatable_search,
-      "paginate": {
-          "first": " ",
-          "previous": " ",
-          "next": " ",
-          "last": " "
-      }
+      "searchPlaceholder": gon.datatable_search
     },
     "pagingType": "full_numbers"
   });

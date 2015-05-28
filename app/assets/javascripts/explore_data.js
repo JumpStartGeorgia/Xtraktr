@@ -501,14 +501,7 @@ function build_datatable(json){
       "dom": '<"top"fl>t<"bottom"p><"clear">',
       "language": {
         "url": gon.datatable_i18n_url,
-        "search": "_INPUT_",
-        "searchPlaceholder": gon.datatable_search,
-        "paginate": {
-            "first": " ",
-            "previous": " ",
-            "next": " ",
-            "last": " "
-        }
+        "searchPlaceholder": gon.datatable_search
       },
       "pagingType": "full_numbers",
       "columnDefs": [
