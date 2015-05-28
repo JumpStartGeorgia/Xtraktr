@@ -1,6 +1,6 @@
 class UsersDatatable
   include Rails.application.routes.url_helpers
-  delegate :params, :h, :link_to, :number_to_currency, :number_with_delimiter, to: :@view
+  delegate :params, :h, :link_to, :number_to_currency, :image_tag, :number_with_delimiter, to: :@view
   delegate :current_user, to: :@current_user
 
   def initialize(view, current_user)
@@ -38,11 +38,14 @@ private
 
   def action_links(user)
     x = ''
-    x << link_to(I18n.t("helpers.links.edit"),
-                      edit_admin_user_path(user, :locale => I18n.locale), :class => 'btn btn-default btn-xs')
+    x << link_to(image_tag('svg/edit.svg'),
+                      edit_admin_user_path(user, :locale => I18n.locale), 
+                      :title => I18n.t("helpers.links.edit"),
+                      :class => 'btn btn-edit btn-xs')
     x << " "
-    x << link_to(I18n.t("helpers.links.destroy"),
+    x << link_to('X',
                       admin_user_path(user, :locale => I18n.locale),
+                      :title => I18n.t("helpers.links.destroy"),
                       :method => :delete,
 											:data => { :confirm => I18n.t("helpers.links.confirm") },
                       :class => 'btn btn-xs btn-danger')

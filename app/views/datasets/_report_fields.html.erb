@@ -18,7 +18,7 @@
                       </td>
                       <td> 
                         <% if f.object.present? && f.object.file.exists? %>
-                          <%= link_to t('helpers.links.view'), f.object.file.url, target: :blank, class: 'btn btn-primary btn-sm view-report' %>
+                          <%= link_to t('helpers.links.view'), f.object.file.url, target: :blank, class: 'btn btn-default btn-sm view-report' %>
                         <% end %>
                         <%= f.input :file, :as => :file, :label => false, input_html: {accept: '.pdf,.doc,.docx,.odt,.txt'} %>
                       </td>

@@ -46,7 +46,7 @@
               <%= t('.stats.bad_answers') %>: <%= number_with_delimiter(dataset.stats.questions_bad_answers) %>
               <br />
             <% end %>
-            <%= link_to t('.view_warnings'), warnings_dataset_path(dataset), :class => 'btn btn-xs btn-warning' %>
+            <%= link_to t('.view_warnings'), warnings_dataset_path(dataset), :class => 'btn btn-xs btn-details' %>
           <% end %>
         </td>
         <td><%= l dataset.created_at, format: :date_only %></td>

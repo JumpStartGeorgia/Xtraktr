@@ -41,10 +41,13 @@
           <% end %>
         </td>
         <td>
-          <%= link_to t('app.buttons.edit'),
-                      edit_admin_api_version_path(api_version), :class => 'btn btn-xs btn-default' %>
-          <%= link_to t('app.buttons.delete'),
+          <%= link_to image_tag('svg/edit.svg'),
+                      edit_admin_api_version_path(api_version), 
+                      :title => t('helpers.links.edit'),
+                      :class => 'btn btn-xs btn-edit' %>
+          <%= link_to 'X',
                       admin_api_version_path(api_version),
+                      :title => t("helpers.links.destroy"),
                       :method => :delete,
                       :data => { :confirm => I18n.t("helpers.links.confirm") },
                       :class => 'btn btn-xs btn-danger' %>
