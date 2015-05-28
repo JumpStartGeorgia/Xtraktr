@@ -1292,9 +1292,9 @@ if d.present? && d.permalink.nil?
   d.save
 end
 ts = TimeSeries.meta_only.find("5525001a2c1743bfc8002689")
-if d.present? && d.permalink.nil?
-  d.permalink = 'wms'
-  d.save
+if ts.present? && ts.permalink.nil?
+  ts.permalink = 'wms'
+  ts.save
 end
 
 
