@@ -71,7 +71,7 @@ function build_datatable(json){
     //                dataset label
     // question   count percent count percent .....
     table += "<tr class='th-center'>";
-    table += "<th class='var1-col'>" + gon.table_questions_header + "</th>";
+    table += "<th class='var1-col-red'>" + gon.table_questions_header + "</th>";
 
     var ln = json.datasets.length;
     for(i=0; i<ln;i++){
@@ -123,7 +123,7 @@ function build_datatable(json){
     //                dataset label
     // filter   question   count percent count percent .....
     table += "<tr class='th-center'>";
-    table += "<th class='var1-col' colspan='2'>" + gon.table_questions_header + "</th>";
+    table += "<th class='var1-col-red' colspan='2'>" + gon.table_questions_header + "</th>";
     var ln = json.datasets.length;
     for(i=0; i<ln;i++){
       table += "<th colspan='2' class='code-highlight color"+(ln-i%13)+"'>";

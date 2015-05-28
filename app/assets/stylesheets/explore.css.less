@@ -32,12 +32,14 @@
     h2{
       font:16px 'prime','sans-serif';
       color: #d95d6A;
-      margin:26px 0px 42px;
+      text-transform:uppercase;
+      margin:26px 0px 30px;
     }
     label
     {
       font:12px 'sourcesans_pro_sb', 'sans-serif';
       color:#3C4352;
+      text-transform:uppercase;
       padding-left:10px;
     }
     .form-explore-question-code,
@@ -171,11 +173,12 @@
     #jumpto{
       display: none;
       position: relative;
-      padding-top: 10px;      
+      padding-top: 10px;  
+        overflow-y: auto;    
       h3{
         font:14px 'sourcesans_pro', 'sans-serif';
         color: #62CBF2;
-        margin:40px 0px 14px;
+        margin:0px 0px 5px;
       }
       h4{
         font:14px 'sourcesans_pro', 'sans-serif';
@@ -352,17 +355,18 @@
           border:0px;
           background-color:#e9ecef;
         }
-        th.var1-col
+        th.var1-col-red
         {
-          font: 12px 'sourcesans_pro', 'sans-serif';
-          color:#d95d6a;
+          font: 12px 'sourcesans_pro', 'sans-serif';          
           background-color:#dfe2e5;
+          color:#d95d6a;
+          text-transform:uppercase;
         }
-        th.code-highlight
+        th.var1-col, th.code-highlight
         {
           font: 16px 'sourcesans_pro_sb', 'sans-serif';
           color:#00adee;
-          background-color:#dfe2e5;
+          background-color:#dfe2e5 !important;
         }
         tr:nth-child(2){
 
@@ -719,10 +723,9 @@
         &:hover:not(.active) { border-color:#fafbfb; }
         a
         {
-          font:14px 'nokiasans_s60', 'sans-serif';
+          font:14px/40px 'nokiasans_s60', 'sans-serif';
           color:#9b9fa6;
           height: 40px;
-          line-height: 40px;
           vertical-align:top;
           text-transform:uppercase;
           display:inline-block;
@@ -734,7 +737,7 @@
            -webkit-border-radius: 0;
           -moz-border-radius: 0;
           border-radius: 0;
-          &:lang(ka) { font:14px 'nokiasans_s60_sb', 'sans-serif'; } 
+          &:lang(ka) { font:14px/40px 'nokiasans_s60_sb', 'sans-serif'; } 
         }
       }
       &:hover 

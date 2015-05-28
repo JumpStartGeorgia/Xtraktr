@@ -261,7 +261,7 @@ function build_datatable(json){
 
       // question code question   count percent count percent .....
       table += "<tr class='th-center'>";
-      table += "<th class='var1-col'>" + gon.table_questions_header + "</th>";
+      table += "<th class='var1-col-red'>" + gon.table_questions_header + "</th>";
       table += "<th class='code-highlight' colspan='" + (2*(json.broken_down_by.answers.length+1)).toString() + "'>";
       table += json.broken_down_by.original_code;
       table += "</th>";
@@ -311,7 +311,7 @@ function build_datatable(json){
 
       // filter question   count percent count percent .....
       table += "<tr class='th-center'>";
-      table += "<th class='var1-col' colspan='2'>" + gon.table_questions_header + "</th>";
+      table += "<th class='var1-col-red' colspan='2'>" + gon.table_questions_header + "</th>";
       table += "<th class='code-highlight' colspan='" + (2*(json.broken_down_by.answers.length+1)).toString() + "'>";
       table += json.broken_down_by.original_code;
       table += "</th>";
@@ -671,7 +671,7 @@ function get_explore_data(is_back_button){
     }else{
       // update content
       build_explore_data_page(json);
-
+      resizeExploreData();
       // update url
       var new_url = [location.protocol, '//', location.host, location.pathname, '?', url_querystring.join('&')].join('');
 

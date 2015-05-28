@@ -747,7 +747,9 @@ function resizeExploreData(){
         expform = $('#explore-form'),
         offset = expform.offset(),
         expformWidth = expform.width();
-    $('#explore-data-content  .tab-pane').css({'width': w-442, 'height':h-(51+31+40+41+2)  });
+      var tmp = expform.find('form');
+      $('#explore-form #jumpto').css({'height':h-(tmp.offset().top+tmp.height()+41+2)  });
+      $('#explore-data-content  .tab-pane').css({'width': w-442, 'height':h-(51+31+40+41+2)  });
 }
 ////////////////////////////////////////////////
 $(document).ready(function() {
