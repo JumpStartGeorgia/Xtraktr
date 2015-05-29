@@ -732,6 +732,7 @@ div.message {
           -moz-box-shadow: none;
           box-shadow: none;
           left:0px;
+          right:auto;
           padding:8px 0px 12px;
           li{            
             a{
@@ -1036,21 +1037,7 @@ div.message {
   text-align: left;
   padding:0px;
   // padding:0px 30px 0px 30px;
-  .first a { background:transparent url(/assets/svg/paginate_first.svg) no-repeat center/18px; }
-  .next a { background:transparent url(/assets/svg/paginate_next.svg) no-repeat center/18px; }
-  .prev a, .previous a { background:transparent url(/assets/svg/paginate_prev.svg) no-repeat center/18px; }
-  .last a { background:transparent url(/assets/svg/paginate_last.svg) no-repeat center/18px; }
-  span, a, a:hover
-  {
-    font:14px 'sourcesans_pro', 'sans-serif';
-    width:18px;
-    height:18px;
-    display:inline-block;
-    vertical-align:top;
-    text-decoration:none;
-    border:0 !important;
-    padding:0px !important;
-  }
+  
   .page, li
   {
     display: inline-block;
@@ -1062,6 +1049,7 @@ div.message {
     {
       font:14px 'sourcesans_pro', 'sans-serif';
       color:#000;
+      background-color:transparent;
       line-height:18px;
       min-width:18px;
       height:18px;
@@ -1069,7 +1057,7 @@ div.message {
       text-align:center;
       margin:0px 3px;
     }
-    &.current, a:hover, a:focus, a:active, &.active a
+    &.current, a:hover, a:focus, a:active, &.active a, &.active a:hover
     {
       font:14px 'sourcesans_pro', 'sans-serif';
       line-height:18px;
@@ -1086,6 +1074,30 @@ div.message {
       border-radius: 100%;
       margin:0px 3px;
     }
+    &.disabled
+    {
+       a:hover, a:focus, a:active {
+        background-color:transparent;
+       }
+    }
+
+    &.first a { background:transparent url(/assets/svg/paginate_first.svg) no-repeat center/18px; }
+    &.next a { background:transparent url(/assets/svg/paginate_next.svg) no-repeat center/18px; }
+    &.prev a, &.previous a { background:transparent url(/assets/svg/paginate_prev.svg) no-repeat center/18px; }
+    &.last a { background:transparent url(/assets/svg/paginate_last.svg) no-repeat center/18px; }
+    span, a, a:hover
+    {
+      font:14px 'sourcesans_pro', 'sans-serif';
+      width:18px;
+      height:18px;
+      display:inline-block;
+      vertical-align:top;
+      text-decoration:none;
+      border:0 !important;
+      padding:0px !important;
+
+    }
+
 
   }
 }
