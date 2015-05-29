@@ -5,16 +5,16 @@
 <div class="form-group form-group-admin-buttons">
   <%= link_to t('.back', :default => t("helpers.links.back")),
               admin_api_versions_path, :class => 'btn btn-default'  %>
-  <%= link_to image_tag('svg/edit.svg'),
+  <%= link_to '',
               edit_admin_api_version_api_method_path(@api_version, @api_method), 
               title: t("helpers.links.edit"),
               :class => 'btn btn-edit' %>
-  <%= link_to 'X',
+  <%= link_to '',
               admin_api_version_api_method_path(@api_version, @api_method),
               :title => t("helpers.links.destroy"),
               :method => 'delete',
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm")) },
-              :class => 'btn btn-danger' %>
+              :class => 'btn btn-delete' %>
   <%= link_to t('helpers.links.admin'), admin_path, :class => 'btn btn-default' %>
 </div>
 

@@ -17,6 +17,10 @@ module ApplicationHelper
     end
   end
 
+  def notification_translation(state)
+    ['success', 'error', 'info'].index(state.to_s).present? ? state : 'info'
+  end
+
 	# from http://www.kensodev.com/2012/03/06/better-simple_format-for-rails-3-x-projects/
 	# same as simple_format except it does not wrap all text in p tags
 	def simple_format_no_tags(text, html_options = {}, options = {})
@@ -92,14 +96,6 @@ module ApplicationHelper
     end
   end
 
-  def notification(state,text)
-    state = ['success', 'error', 'info'].index(state).present? ? state : 'error'
-    ("<div class='notification #{state}'>
-        <div class='figure'></div>
-        <div class='text'>#{text}</div>
-        <div class='closeup'></div>      
-    </div>").html_safe  
-  end
   #devise mappings
   def resource_name
     :user

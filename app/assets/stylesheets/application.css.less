@@ -1331,24 +1331,66 @@ input[type=search]
   }
 }
 .btn-danger{
-  color: #d9534f;
-  background-color: #ffffff;
-  border-color: #d43f3a;
+  color: #ffffff;
+  background-color: #d9534f;
+  border-color: #d9534f;
   &:hover{
+    text-decoration: underline;
     color: #ffffff;
     background-color: #d9534f;
-    border-color: #d43f3a;
+    border-color: #d9534f;
+  }
+}
+.btn-delete{
+  color: #d9534f;
+  background-color: #ffffff;
+  border-color: #d9534f;
+  width: 41px;
+  height: 36px;
+  &.btn-xs{
+    width: 30px;
+    height: 26px;    
+  }
+  &:before{
+    content:"";
+    display:inline-block;
+    background:transparent url(/assets/svg/close.svg) no-repeat 0px;
+    width:15px;
+    height:15px;
+    position: relative;
+    top: 3px;
+  }
+  &:hover{
+    text-decoration: underline;
+    color: #d9534f;
+    background-color: #ffffff;
+    border-color: #ffffff;
   }
 }
 .btn-edit{
   color: #00adee;
   background-color: #ffffff;
   border-color: #00adee;
+  width: 41px;
+  height: 36px;
+  &.btn-xs{
+    width: 30px;
+    height: 26px;    
+  }
+  &:before{
+    content:"";
+    display:inline-block;
+    background:transparent url(/assets/svg/edit.svg) no-repeat 0px;
+    width:20px;
+    height:20px;
+    position: relative;
+    top: 1px;
+  }
   &:hover{
     text-decoration: underline;
     color: #00adee;
     background-color: #ffffff;
-    border-color: #00adee;
+    border-color: #ffffff;
   }
 }
 .btn-xs{

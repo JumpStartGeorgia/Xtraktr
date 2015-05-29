@@ -511,6 +511,7 @@ en:
       not_authorized: You are not authorized to view that page.
       success_created: "%{obj} was successfully created."
       success_updated: "%{obj} was successfully updated."
+      success_deleted: "%{obj} was successfully deleted."
       question_exclude_saved: "Exclude question selections were saved."
       question_exclude_not_saved: "An error occurred while saving the exclude question selections."
       answer_exclude_saved: "Exclude answer selections were saved."
@@ -533,6 +534,7 @@ en:
       api_key_created: "Your API Access Token was successfully created."
       api_key_deleted: "Your API Access Token was successfully deleted."
       missing_user_info: "We have made some changes to the site that require you to update your user settings. Sorry for the inconvenience."
+      message_sent: Thank you for contacting us!
     menu:
       explore_data: Explore Data
       explore_time_series: Explore Time Series
@@ -661,7 +663,6 @@ en:
       search_datasets: Search Datasets
     contact:
       title: Contact
-      message_sent: Thank you for contacting us!
       send: Send
       error_title: An error has occurred
     instructions:

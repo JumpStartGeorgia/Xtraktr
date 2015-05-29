@@ -511,6 +511,7 @@ ka:
       not_authorized: "თქვენ არ გაქვთ ამ გვერდის ნახვის უფლება."
       success_created: "%{obj} შექმნილია."
       success_updated: "%{obj} განახლებულია."
+      success_deleted: "%{obj} was successfully deleted."
       question_exclude_saved: "გამორიცხული კითხვის არჩევა შენახულია"
       question_exclude_not_saved: "გამორიცხული კითხვის შენახვის დროს წარმოიშვა პრობლემა"
       answer_exclude_saved: "გამორიცხული პასუხის არჩევა შენახულია"
@@ -533,6 +534,7 @@ ka:
       api_key_created: "თქვენი API-ს დაშვების გასაღები წარმატებით შეიქმნა"
       api_key_deleted: "თქვენი API-ს დაშვების გასაღები წარმატებით წაიშალა"
       missing_user_info: "საიტზე გარკვეული ცვლილებების გამო გთხოვთ განაახლოთ თქვენი პარამეტრები. ბოდიშს გიხდით გაუგებრობისთვის."
+      message_sent: "მადლობას გიხდით ჩვენთან დაკავშირებისთვის"
     menu:
       explore_data: "მონაცემთა გაცნობა"
       explore_time_series: "პერიოდული შედარების გაცნობა"
@@ -661,7 +663,6 @@ ka:
       search_datasets: "მონაცემთა ცხრილის ძებნა"
     contact:
       title: "კონტაქტი"
-      message_sent: "მადლობას გიხდით ჩვენთან დაკავშირებისთვის"
       send: "გაგზავნა"
       error_title: "პრობლემა წარმოიშვა"
     instructions:

@@ -39,7 +39,9 @@ class RootController < ApplicationController
       if @message.save
         # send message
         ContactMailer.new_message(@message).deliver
-        @email_sent = true
+        flash[:success] = I18n.t("app.msgs.message_sent")
+        # reset the message object since msg was sent
+        @message = Message.new
       end
     end
 

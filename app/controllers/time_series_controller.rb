@@ -138,7 +138,7 @@ end
 
     respond_to do |format|
       if @time_series.save
-        format.html { redirect_to time_series_questions_path(@time_series), notice: t('app.msgs.success_created', :obj => t('mongoid.models.time_series')) }
+        format.html { redirect_to time_series_questions_path(@time_series), flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.time_series'))} }
         format.json { render json: @time_series, status: :created, location: @time_series }
       else
         @datasets = Dataset.by_user(current_user.id).only_id_title_languages.sorted
@@ -205,7 +205,7 @@ end
 
       respond_to do |format|
         if @time_series.save
-          format.html { redirect_to @time_series, notice: t('app.msgs.success_updated', :obj => t('mongoid.models.time_series')) }
+          format.html { redirect_to @time_series, flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.time_series'))} }
           format.json { head :no_content }
         else
           @datasets = Dataset.by_user(current_user.id).only_id_title_languages.sorted
@@ -236,7 +236,7 @@ end
       @time_series.destroy
 
       respond_to do |format|
-        format.html { redirect_to time_series_index_url }
+        format.html { redirect_to time_series_index_url, flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.time_series'))} }
         format.json { head :no_content }
       end
     else
@@ -255,7 +255,7 @@ end
       count = @time_series.automatically_assign_questions
 
       respond_to do |format|
-        format.html { redirect_to time_series_questions_path(@time_series), notice: t('app.msgs.time_series_automatic_match', :count => count) }
+        format.html { redirect_to time_series_questions_path(@time_series), flash: {success:  t('app.msgs.time_series_automatic_match', :count => count) } }
         format.json { head :no_content }
       end
     else
@@ -292,7 +292,7 @@ end
     end
 
     respond_to do |format|
-      format.html { redirect_to highlights_time_series_path(time_series), notice: t('app.msgs.highlight_deleted') }
+      format.html { redirect_to highlights_time_series_path(time_series), flash: {success:  t('app.msgs.highlight_deleted') } }
       format.json { render json: success }
     end
   end
@@ -311,7 +311,7 @@ end
     end
 
     respond_to do |format|
-      format.html { redirect_to highlights_time_series_path(time_series), notice: t('app.msgs.highlight_show_home_page_success') }
+      format.html { redirect_to highlights_time_series_path(time_series), flash: {success:  t('app.msgs.highlight_show_home_page_success') } }
       format.json { render json: success }
     end
   end

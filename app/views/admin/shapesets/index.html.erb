@@ -34,16 +34,16 @@
         </td>
         <td><%= l shapeset.created_at, format: :date_only %></td>
         <td>
-          <%= link_to image_tag('svg/edit.svg'),
+          <%= link_to '',
                       edit_admin_shapeset_path(shapeset), 
                       :title => t('helpers.links.edit'),
-                      :class => 'btn btn-xs btn-edit' %>
-          <%= link_to 'X',
+                      :class => 'btn btn-edit btn-xs' %>
+          <%= link_to '',
                       admin_shapeset_path(shapeset),
                       :title => t("helpers.links.destroy"),
                       :method => :delete,
                       :data => { :confirm => I18n.t("helpers.links.confirm") },
-                      :class => 'btn btn-xs btn-danger' %>
+                      :class => 'btn btn-delete btn-xs' %>
         </td>
       </tr>
     <% end %>

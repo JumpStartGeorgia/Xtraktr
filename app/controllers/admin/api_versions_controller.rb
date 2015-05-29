@@ -52,7 +52,7 @@ class Admin::ApiVersionsController < ApplicationController
 
     respond_to do |format|
       if @api_version.save
-        format.html { redirect_to admin_api_versions_path, notice: t('app.msgs.success_created', :obj => t('mongoid.models.api_version')) }
+        format.html { redirect_to admin_api_versions_path, flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.api_version'))} }
         format.json { render json: @api_version, status: :created, location: @api_version }
       else
         set_tabbed_translation_form_settings('advanced')
@@ -69,7 +69,7 @@ class Admin::ApiVersionsController < ApplicationController
 
     respond_to do |format|
       if @api_version.update_attributes(params[:api_version])
-        format.html { redirect_to admin_api_versions_path, notice: t('app.msgs.success_updated', :obj => t('mongoid.models.api_version')) }
+        format.html { redirect_to admin_api_versions_path, flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.api_version'))} }
         format.json { head :no_content }
       else
         set_tabbed_translation_form_settings('advanced')
@@ -86,7 +86,7 @@ class Admin::ApiVersionsController < ApplicationController
     @api_version.destroy
 
     respond_to do |format|
-      format.html { redirect_to admin_api_versions_url }
+      format.html { redirect_to admin_api_versions_url, flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.api_version'))} }
       format.json { head :no_content }
     end
   end

@@ -23,7 +23,7 @@
                         <%= f.input :file, :as => :file, :label => false, input_html: {accept: '.pdf,.doc,.docx,.odt,.txt'} %>
                       </td>
                       <td>
-                        <%= link_to_remove_association 'X', f, 
-                            class: "btn btn-danger btn-sm", title: t('helpers.links.remove_report') %>
+                        <%= link_to_remove_association '', f, 
+                            class: "btn btn-delete", title: t('helpers.links.remove_report') %>
                       </td>
                     </tr>
