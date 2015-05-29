@@ -224,7 +224,32 @@ $(document).ready(function(){
 
     });
   $('.search .go-submit').click(function(){ $(this).closest('form').submit(); });
+
+
+
   $(document).on('click', '.notification .closeup', function() { $(this).parent().remove(); });
+
+  $('.m-lang .figure').on('click', function() {
+     var t = $(this).closest('.m-lang').find('.under-box').toggleClass('open');
+     t.animate({"left": (t.hasClass('open') ? '-':'+') + "="+(t.width()-42) }, 500, function(){  });
+     t.delay( 500 ).animate({"opacity":1}, 100);
+  });
+
+
+  //  $('.m-lang').hover(function(){ // on hover do this:
+  //   var t = $(this);
+  //  var at = t.find('a');
+  //  t.find('.figure').animate({"right": at.width()+15 }, 500, function(){  });
+  //  at.delay( 500 ).animate({"opacity":1}, 100);
+  // }, function(){ 
+  //   var t = $(this);
+  //   var at = t.find('a');
+  //   at.stop().animate({"opacity":0}, 100);
+  //   t.find('.figure').stop().delay( 100 ).animate({"right":0}, 250);
+  // }); 
+
+
+
 });
 var downloading = false;
 function download_request(url, data)
