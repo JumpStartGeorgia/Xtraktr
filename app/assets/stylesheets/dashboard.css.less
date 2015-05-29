@@ -53,26 +53,32 @@
       {
         display:inline-block;
         margin-right:10px;
-        vertical-align:top;
+        vertical-align:middle;
       }
       .calendar
       {
         background:transparent url(/assets/svg/calendar.svg) no-repeat;
-        width:21px;
+        width:31px;
         height:22px;
-        position: relative;
-        top: 2px;
+        display:table-cell;
       }
-      .timestamp
+      .timestamps
       {
-        color:#5faac1;
-        font-family: 'sourcesans_pro_li', 'sans-serif';
-        font-size:16px;
-        span
+        display:table-cell;
+        .timestamp
         {
-          font-family: 'sourcesans_pro_sbi', 'sans-serif';
+          color:#5faac1;
+          font:16px 'sourcesans_pro_li', 'sans-serif';
+          display:inline-block;
+          line-height:18px;
+          span
+          {
+            font:16px 'sourcesans_pro_sbi', 'sans-serif';
+          }
+          &:lang(ka) {line-height:26px;}
+          &:first-child { margin-right: 10px; } 
         }
-      }
+      }         
       .share
       {
         position:absolute;
@@ -214,7 +220,7 @@
         position:absolute;
         top:37px;
         width:158px;
-        font-family: 'sourcesans_pro_l', 'sans-serif';
+        font-family: 'sourcesans_pro', 'sans-serif';
         font-size: 12px;
         color: #3fceef;
         background-color:#fff;
