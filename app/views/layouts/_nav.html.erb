@@ -29,24 +29,21 @@
                           '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;" %>
             </div>
             <div class="m-search">
-              <i></i>
+              <div class="figure"></div>
               <form class="navbar-form navbar-left" role="search" action="<%= explore_data_path %>">
                 <div class="form-group">
                   <input type="search" class="form-control" placeholder="<%= t('helpers.search') %>" name="q">
                 </div>
               </form>
-            </div>
-            <% I18n.available_locales.each do |locale| %>
-              <% if locale != I18n.locale %>
-                <div class="m-lang">
+            </div><%- I18n.available_locales.each do |locale| -%><%- if locale != I18n.locale -%><div class="m-lang">
                   <div class="figure"></div>
                   <div class="under-box">
                     <div class="figure"></div>
                     <%= link_to t("app.language.#{locale}"), params.merge(:locale => locale) %>
                   </div>
                 </div>
-              <% end %>
-            <% end %>
+              <%- end -%>
+            <%- end -%>
           </div>
         </div>
         <div class="stats navbar-left">

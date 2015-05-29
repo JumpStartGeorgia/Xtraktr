@@ -204,8 +204,9 @@ nav.navbar
       float:right;
       .m-search
       {
-        i { 
-          background:transparent url(/assets/svg/mob/search.svg) no-repeat center / 15px;
+         position:relative;
+        .figure { 
+          background:transparent;// url(/assets/svg/mob/search.svg) no-repeat center / 15px;
           display:inline-block;
           vertical-align: top;
           width:42px;
@@ -214,20 +215,27 @@ nav.navbar
           top: 10px;
           cursor:pointer;
         }
-      }
-      .navbar-form
-      {
-        display:none;
-        border:0px;
-        padding:0px;
-        .form-group{ margin:0px; }
-        input 
+        .navbar-form
         {
+          // display:none;
+              position: absolute;
+        top:0px;
+        left: 0px;
           border:0px;
-           width:auto;
+          padding:0px;
+          .form-group{ margin:0px; }
+          input 
+          {
+            background:transparent url(/assets/svg/mob/search.svg) no-repeat 14px center/ 15px;
+            border:0px;
+             width:auto;
+             padding:0px 0px 0px 42px;
+             cursor:pointer;
 
+          }
         }
       }
+
     }
   }
   .stats { display:none; }

@@ -234,6 +234,15 @@ $(document).ready(function(){
      t.animate({"left": (t.hasClass('open') ? '-':'+') + "="+(t.width()-42) }, 500, function(){  });
      t.delay( 500 ).animate({"opacity":1}, 100);
   });
+  $('.m-search input').on('click', function() {
+      var t = $(this);
+      t.css({'background-color':'#fff'});
+      var b = t.closest('.navbar-header').find('.navbar-brand');
+      var p = t.closest('.navbar-form')
+     // var t = $(this).closest('.m-lang').find('.under-box').toggleClass('open');
+     // t.animate({"left": (t.hasClass('open') ? '-':'+') + "="+(t.width()-42) }, 500, function(){  });
+     // t.delay( 500 ).animate({"opacity":1}, 100);
+  });
 
 
   //  $('.m-lang').hover(function(){ // on hover do this:
