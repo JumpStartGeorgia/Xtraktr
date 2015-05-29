@@ -30,11 +30,14 @@
             </div>
             <div class="m-search">
               <div class="figure"></div>
-              <form class="navbar-form navbar-left" role="search" action="<%= explore_data_path %>">
-                <div class="form-group">
-                  <input type="search" class="form-control" placeholder="<%= t('helpers.search') %>" name="q">
-                </div>
-              </form>
+              <div class="under-box">
+                  <div class="figure"></div>
+                  <div class="search-box">
+                  <form role="search" action="<%= explore_data_path %>">
+                    <input type="search" class="form-control" placeholder="<%= t('helpers.search') %>" name="q">
+                  </form>
+                  </div>
+              </div>
             </div><%- I18n.available_locales.each do |locale| -%><%- if locale != I18n.locale -%><div class="m-lang">
                   <div class="figure"></div>
                   <div class="under-box">

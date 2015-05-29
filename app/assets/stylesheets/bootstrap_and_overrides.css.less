@@ -210,30 +210,42 @@ nav.navbar
           display:inline-block;
           vertical-align: top;
           width:42px;
+          min-width:42px;
           height:32px;
           position: relative;
           top: 10px;
           cursor:pointer;
         }
-        .navbar-form
+        .under-box
         {
-          // display:none;
-              position: absolute;
-        top:0px;
-        left: 0px;
-          border:0px;
-          padding:0px;
-          .form-group{ margin:0px; }
-          input 
-          {
-            background:transparent url(/assets/svg/mob/search.svg) no-repeat 14px center/ 15px;
-            border:0px;
-             width:auto;
-             padding:0px 0px 0px 42px;
-             cursor:pointer;
-
+          position: absolute;
+          top:0px;
+          left: 0px;
+          opacity: 1;
+          height:50px;
+          background-color: #00adee;
+          .figure { display:table-cell; top:0px; background:#00adee url(/assets/svg/mob/search.svg) no-repeat center / 15px;}
+          .search-box { display:table-cell; width: 100%; }
+          input {     
+           
+             font-family:'sourcesans_pro_li', 'sans-serif';
+            font-size:13px;
+            color:#3c4352;
+             -webkit-border-radius: 0px;
+            -moz-border-radius: 0px;
+            border-radius: 0px;  
+            outline:none;
+            border:0;
+            -webkit-box-shadow: none;
+            -moz-box-shadow: none;
+            box-shadow: none;
+            min-height:51px;
+            height:100%;
+            padding-left:29px;  
+            margin-left:1px;
           }
         }
+
       }
 
     }
