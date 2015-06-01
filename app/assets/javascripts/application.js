@@ -11,10 +11,11 @@
 //= require jquery.ui.core
 //= require jquery.ui.effect
 // Do not use twitter/bootstrap/tooltip because it has hack, to have possibility add class with klass options
+//= require twitter/bootstrap/alert
 //= require twitter/bootstrap/dropdown
 //= require twitter/bootstrap/tab
-//= require twitter/bootstrap/alert
 //= require bootstrap.tooltip.min
+//= require twitter/bootstrap/collapse
 //= require dataTables/jquery.dataTables
 //= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
 //= require dataTables/extras/dataTables.tableTools
@@ -60,6 +61,7 @@ $(document).ready(function(){
   });
 
   $(document).on('click', '.reattach', function(e){
+    navbarToggle();
     var t = $(this);
     var data = {};
     if(downloading)
@@ -230,20 +232,17 @@ $(document).ready(function(){
   $(document).on('click', '.notification .closeup', function() { $(this).parent().remove(); });
 
   $('.m-lang .figure').on('click', function() {
-     var t = $(this).closest('.m-lang').find('.under-box').toggleClass('open');
-     t.animate({"left": (t.hasClass('open') ? '-':'+') + "="+(t.width()-42) }, 500, function(){  });
-     t.delay( 500 ).animate({"opacity":1}, 100);
+    navbarToggle();
+    var t = $(this).closest('.m-lang').find('.under-box').toggleClass('open');
+    t.animate({"left": (t.hasClass('open') ? '-':'+') + "="+(t.width()-42) }, 500, function(){  });
+    t.delay( 500 ).animate({"opacity":1}, 100);
   });
   $('.m-search .figure').on('click', function() {
+      navbarToggle();
       var t = $(this);
-      // t.css({'background-color':'#fff'});
       var b = t.closest('.navbar-header').find('.navbar-brand');
       var p = t.closest('.under-box').toggleClass('open');
-       //console.log(b.offset(), b.width());
-       //console.log(p.offset(), p.width());
-     // var t = $(this).closest('.m-lang').find('.under-box')
       p.animate({"left": (p.hasClass('open') ? "-="+(p.offset().left-b.width()-42) : 0) }, 500, function(){  });
-     // t.delay( 500 ).animate({"opacity":1}, 100);
   });
 
 
@@ -380,4 +379,9 @@ function notification(state,text)
 {
   state = ['success', 'error', 'info'].indexOf(state) != -1 ? state : 'error';
   return "<div class='notification "+ state + "'><div class='figure'></div><div class='text'>"+text+"</div><div class='closeup'></div></div>";
+}
+function navbarToggle()
+{
+  if (!$(".navbar-toggle").hasClass('collapsed'))
+    $(".navbar-toggle").trigger('click');
 }

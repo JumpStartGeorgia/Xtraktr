@@ -23,7 +23,7 @@
          <div class="bright item">
         <%- if cat.present? -%>
             <div class="text"><span><%= cat.name %></span></div>
-            <div class="img <%= cat.permalink %>" alt="<%= cat.name %>"></div>
+            <div class="box"><div class="img <%= cat.permalink %>" alt="<%= cat.name %>"></div></div>
         <%- end -%>
         </div>
           <div class="text"><%= t('app.buttons.choose_category') %></div>
@@ -33,7 +33,7 @@
           <% Category.sorted.each {|x| %>
             <li class="bright item<%= ' active' if x.permalink == current %>" data-filter-value="<%= x.permalink %>">
               <div class="text"><span><%= x.name %></span></div>
-              <div class="img <%= x.permalink %>" alt="<%= x.name %>"></div>
+              <div class="box"><div class="img <%= x.permalink %>" alt="<%= x.name %>"></div></div>
             </li>
           <% } %>
         </ul>

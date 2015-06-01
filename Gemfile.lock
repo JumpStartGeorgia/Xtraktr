@@ -81,6 +81,9 @@ GEM
       multi_json (~> 1.0)
     addressable (2.3.8)
     arel (3.0.3)
+    autoprefixer-rails (5.2.0)
+      execjs
+      json
     bcrypt (3.1.10)
     builder (3.0.4)
     capistrano (2.12.0)
@@ -324,6 +327,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers (~> 0.9.3)
+  autoprefixer-rails
   bundler
   capistrano (~> 2.12.0)
   cocoon (~> 1.1.2)

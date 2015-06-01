@@ -37,9 +37,15 @@
      > div {  }
     .boxic 
     {
-      width:330px;
+      width:auto;
       height:100%;
       overflow:hidden;
+    }
+    @media (min-width: 768px) 
+    {
+      .boxic {
+        width:330px;
+      }
     }
   }
   .categories{
@@ -54,7 +60,7 @@
       }
 
     }
-    .header { margin:24px 0px 18px; }
+    .header { margin:24px 0px 0px; }
         .t{
         width:100%;
         display:table;
@@ -77,21 +83,28 @@
             display: block;
             text-decoration: none;
             color: #333;
+            height:68px;
             &:hover{
               text-decoration:none;
-              img {transform:scale(1.1,1.1);} 
+              .img {transform:scale(1.1,1.1);} 
             }
-           img {
-              vertical-align: middle;
-              height: 42px;
-              width: 42px;
-            }
+             .img {              
+                height: 42px;
+                width: 42px;
+                position:relative;
+                top:14px;
+                display:inline-block;
+              }
             span{
               display: inline-block;
               text-align: left;
               padding:0px 0px 0px 10px;
+              vertical-align:top;
+              position: relative;
+              top: 50%;
+              transform: translateY(-50%);
               &:last-of-type{
-                vertical-align: middle;
+                // vertical-align: middle;
                 width: 80px;
               }
             }
@@ -196,6 +209,7 @@
     
     display:none; vertical-align:top; height:410px;
     margin-bottom:20px;
+    width:100%;
     .boxic { padding:0px; overflow: hidden;}
     .wms{
       display: block;
@@ -280,7 +294,7 @@
     width:100%;
     height:100% !important;
     .boxic { width:100%; padding:0px; }
-    .highlight:first-of-type { margin-right:20px !important; }
+    .highlight:first-of-type { margin-right:20px; }
   }
   @media (min-width: 940px) {
     .categories { margin-right:20px; }
