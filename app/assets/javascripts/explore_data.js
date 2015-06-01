@@ -574,7 +574,7 @@ function build_explore_data_page(json){
 
   build_page_title(json);
 
-  // if no visible tab is marked as active, mark the first active one
+  // if no visible tab is marked as active, mark the first one active
   if ($('#explore-tabs li.active:visible').length == 0){
     // turn on tab and its content
     $('#explore-tabs li:visible:first a').trigger('click'); 
@@ -728,11 +728,15 @@ $(document).ready(function() {
         case '#tab-map':
           $('#container-map .map').each(function(){
             $(this).highcharts().reflow();        
+            // this is a hack until can figure out why charts are sometimes cut-off
+            $(this).find('.highcharts-container').width($('#container-map').width()-1);
           });
           break;
         case '#tab-chart':
           $('#container-chart .chart').each(function(){
             $(this).highcharts().reflow();        
+            // this is a hack until can figure out why charts are sometimes cut-off
+            $(this).find('.highcharts-container').width($('#container-chart').width()-1);
           });
           break;
         case '#tab-table':
