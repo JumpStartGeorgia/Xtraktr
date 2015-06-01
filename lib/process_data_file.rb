@@ -76,8 +76,10 @@ module ProcessDataFile
           results = process_spreadsheet(file_to_process, file_data, file_questions, file_answers_complete)
       end
 
-      if results.nil?
+      if results.nil? || results == false
         puts "Error was #{$?}"
+        errors.add(:datafile, "bad datafile!")
+        return false
       elsif results
         puts "You made it!"
 
@@ -399,9 +401,18 @@ private
     puts "$$$$$$ process_stata"
     puts "=============================="
     # run the R script
-    result = system 'Rscript', '--default-packages=foreign,MASS', file_r, file_to_process, file_data, file_sps, file_questions, file_answers_complete
+    begin
+      result = system 'Rscript', '--default-packages=foreign,MASS', file_r, file_to_process, file_data, file_sps, file_questions, file_answers_complete
+    rescue => e
+      puts "!!!!!!!!!!!!!!!! an error occurred - #{e.inspect}"
+      result = nil
+    end
 
-    if result.present?
+    puts "Error was #{$?}"
+
+    puts "@@@@@@@ result = #{result}"
+
+    if result == true
       # the questions need to be put into a csv format like is returned from spss so can use the common processing code above
 
       puts "=============================="

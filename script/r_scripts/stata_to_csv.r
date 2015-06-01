@@ -41,6 +41,12 @@ print(paste('text file for answers labels = ', args[5]))
 # - need value.label to be true so that label values are available on export
 data <- read.dta(args[1], convert.factors = T)
 
+# read dta does not detect encoding and force it to utf8, so have to do it manually
+# - this assumes dta files are in windows 1252 encoding
+for (i in 1:length(names(data))){
+  data[[i]] <- iconv(data[[i]], 'CP1252', 'UTF-8', sub="byte")
+}
+
 # basic spss export
 # canont use: write.foreign(data, 'out.csv', 'code.sps', package="SPSS")
 # for may get error: cannot abbreviate the variable names to eight or fewer letters
@@ -53,6 +59,12 @@ foreign:::writeForeignSPSS(data, gsub('.csv$','_bad.csv',args[2]), args[3], varn
 # read in dta
 # - need value.label to be true so that label values are available on export
 data <- read.dta(args[1], convert.factors = F)
+
+# read dta does not detect encoding and force it to utf8, so have to do it manually
+# - this assumes dta files are in windows 1252 encoding
+for (i in 1:length(names(data))){
+  data[[i]] <- iconv(data[[i]], 'CP1252', 'UTF-8', sub="byte")
+}
 
 # basic spss export
 # canont use: write.foreign(data, 'out.csv', 'code.sps', package="SPSS")

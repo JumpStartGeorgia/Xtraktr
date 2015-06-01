@@ -198,6 +198,7 @@ en:
         source: Who collected this data
         source_url: "URL to the Source's website. Please include the http as part of the url (e.g., http://source.com)"
         datafile: "Only sav, dta, csv, xls, xlsx formats are allowed"
+        datafile_read_only: "At this time, you cannot load a new datafile to add or replace existing information"
         codebook: "Only txt, pdf, doc, docx formats are allowed"
         released_at: Date the dataset was released to the public
         start_gathered_at: Date the data gathering process began

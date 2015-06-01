@@ -198,6 +198,7 @@ ka:
         source: "ვინ მოაგროვა მონაცემები"
         source_url: "წყაროს ვებ გვერდზე URL. გთხოვთ გამოიყენით http როგორც url-ის ნაწილი (მაგ. http://source.com)"
         datafile: "დასაშვებია მხოლოდ sav, dta, csv, xls, xlsx ფორმატები"
+        datafile_read_only: "At this time, you cannot load a new datafile to add or replace existing information"
         codebook: "დასაშვებია მხოლოდ txt, pdf, doc, docx ფორმატები"
         released_at: "მონაცემების საჯაროდ გამოქვეყნების თარიღი"
         start_gathered_at: "მონაცემების შეგროვების დაწყების თარიღი"

@@ -14,15 +14,19 @@
     <div class="row">
       <div class="col-sm-4">
         <div class="file input required form-group" id="dataset_datafile_input">
-          <label class="control-label" for="dataset_datafile">
-            <%= t(label_key + 'datafile') %><abbr title="required">*</abbr><div class="help-inline" title="<%= t(hint_key + 'datafile') %>"><div>?</div></div>
-          </label>
           <% if @dataset.datafile.exists? %>
+            <label class="control-label" for="dataset_datafile">
+              <%= t(label_key + 'datafile') %><abbr title="required">*</abbr><div class="help-inline" title="<%= t(hint_key + 'datafile_read_only') %>"><div>?</div></div>
+            </label>
             <p>
               <%= link_to t('helpers.links.download'), @dataset.datafile.url, :target => :blank, :class => 'btn btn-default' %>
             </p>
+          <% else %>
+            <label class="control-label" for="dataset_datafile">
+              <%= t(label_key + 'datafile') %><abbr title="required">*</abbr><div class="help-inline" title="<%= t(hint_key + 'datafile') %>"><div>?</div></div>
+            </label>
+            <input accept=".sav,.dta,.csv,.xls,.xlsx" id="dataset_datafile" name="dataset[datafile]" type="file">
           <% end %>
-          <input accept=".sav,.dta,.csv,.xls,.xlsx" id="dataset_datafile" name="dataset[datafile]" type="file">
         </div>
       </div>
     </div>
