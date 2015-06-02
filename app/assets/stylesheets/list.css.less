@@ -85,8 +85,9 @@
             margin-right: 10px;
           }
         }
+        .item1 { display:none; }
+        .item2 { display:block; }
         .item { 
-          display: block;
           position:static;
           margin-left:31px;
           .text {
@@ -374,6 +375,8 @@
             -moz-border-radius-bottomleft: 3px;
             border-top-left-radius: 3px;
             border-bottom-left-radius: 3px;
+            .item1 { display:block; }
+            .item2 { display:none; }
             .item { margin:0px; padding:0px; position:relative; }
             > .text {
               display:table-cell;
@@ -402,6 +405,7 @@
               width:90px;
               max-width:90px;
               padding:0px;
+              vertical-align:top;
               span {
                 text-transform:uppercase;
                 text-align:center;
