@@ -49,6 +49,11 @@ namespace :migration do
     require "./db/migrate/add_new_questions.rb"
   end
 
+  desc "update api requests with dataset, time series and user name"
+  task :add_missing_names_api_requests => :environment do
+    require "./db/migrate/add_missing_names_api_requests.rb"
+  end
+
 
 
 end

@@ -12,6 +12,9 @@ class ApiRequest
   #############################
 
   field :ip_address, :type => String
+  field :dataset_title, :type => String
+  field :time_series_title, :type => String
+  field :user_name, :type => String
 
   # request info
   field :locale, :type => String
@@ -61,6 +64,10 @@ class ApiRequest
     if api_key.present?
       record.api_key_id = api_key.id
       record.user_id = api_key.user_id
+
+      # get user name
+      user = User.find(record.user_id)
+      record.user_name = user.name if user.present?
     end
 
     # record the ip
@@ -72,7 +79,18 @@ class ApiRequest
       record.api_version = params['controller'].split('/').last if params['controller'].present?
       record.action = params['action'] if params['action'].present?
       record.dataset_id = params['dataset_id'] if params['dataset_id'].present?
+      # get dataset title
+      if record.dataset_id.present?
+        dataset = Dataset.only_id_title_languages.find(record.dataset_id)
+        record.dataset_title = dataset.title if dataset.present?
+      end
+
       record.time_series_id = params['time_series_id'] if params['time_series_id'].present?
+      # get time series title
+      if record.time_series_id.present?
+        time_series = TimeSeries.only_id_title.find(record.time_series_id)
+        record.time_series_title = time_series.title if time_series.present?
+      end
       record.question_code = params['question_code'] if params['question_code'].present?
       record.broken_down_by_code = params['broken_down_by_code'] if params['broken_down_by_code'].present?
       record.filtered_by_code = params['filtered_by_code'] if params['filtered_by_code'].present?
@@ -80,6 +98,8 @@ class ApiRequest
       record.with_title = params['with_title'].to_bool if params['with_title'].present?
       record.with_chart_data = params['with_chart_data'].to_bool if params['with_chart_data'].present?
       record.with_map_data = params['with_map_data'].to_bool if params['with_map_data'].present?
+
+
     end
 
     # record the user agent info
@@ -115,15 +135,17 @@ class ApiRequest
   def self.csv_header
     model = ApiRequest
     return [  
-      model.human_attribute_name("created_at"), model.human_attribute_name("api_key_id"), model.human_attribute_name("user_id"), model.human_attribute_name("dataset_id"), model.human_attribute_name("time_series_id"), model.human_attribute_name("ip_address"), 
+      model.human_attribute_name("created_at"), model.human_attribute_name("api_key_id"), model.human_attribute_name("user_id"), model.human_attribute_name("user_name"), 
+      model.human_attribute_name("dataset_id"), model.human_attribute_name("dataset_title"), model.human_attribute_name("time_series_id"), model.human_attribute_name("time_series_title"), model.human_attribute_name("ip_address"), 
       model.human_attribute_name("locale"), model.human_attribute_name("api_version"), model.human_attribute_name("action"), model.human_attribute_name("question_code"), model.human_attribute_name("broken_down_by_code"), model.human_attribute_name("filtered_by_code"), model.human_attribute_name("can_exclude"), model.human_attribute_name("with_title"), model.human_attribute_name("with_chart_data"), model.human_attribute_name("with_map_data"), 
       model.human_attribute_name("browser"), model.human_attribute_name("version"), model.human_attribute_name("os"), model.human_attribute_name("platform"), model.human_attribute_name("app"), model.human_attribute_name("is_mobile")
     ]
   end
 
   def csv_data
+
     return [  
-      self.created_at, self.api_key_id, self.user_id, self.dataset_id, self.time_series_id, self.ip_address, 
+      self.created_at, self.api_key_id, self.user_id, self.user_name, self.dataset_id, self.dataset_title, self.time_series_id, self.time_series_title, self.ip_address, 
       self.locale, self.api_version, self.action, self.question_code, self.broken_down_by_code, self.filtered_by_code, self.can_exclude, self.with_title, self.with_chart_data, self.with_map_data, 
       self.browser, self.version, self.os, self.platform, self.app, self.is_mobile
     ]

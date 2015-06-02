@@ -167,8 +167,11 @@ en:
       api_request:
         api_key_id: API Key ID
         user_id: User ID
+        user_name: Name
         dataset_id: Dataset ID
+        dataset_title: Dataset
         time_series_id: Time Series ID
+        time_series_title: Time Series
         ip_address: IP Address
         locale: API Locale
         api_version: API Version

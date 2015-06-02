@@ -167,8 +167,11 @@ ka:
       api_request:
         api_key_id: API-ს გასაღების ID
         user_id: "მომხმარებლის ID"
+        user_name: "სახელი"
         dataset_id: "მონაცემთა ცხრილის ID"
+        dataset: "მონაცემთა ცხრილი"
         time_series_id: "პერიოდული შედარების ID"
+        time_series: "პერიოდული შედარება"
         ip_address: IP მისამართი
         locale: API ადგილი
         api_version: API ვერსია
