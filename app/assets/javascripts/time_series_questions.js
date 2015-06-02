@@ -5,7 +5,7 @@ $(document).ready(function(){
   datatable = $('#time-series-questions').dataTable({
     "dom": '<"top"fli>t<"bottom"p><"clear">',
     "columnDefs": [
-      { orderable: false, targets: [0,5] }
+      { orderable: false, targets: [0,-1] }
     ],
     "order": [[1, 'asc']],
     "language": {

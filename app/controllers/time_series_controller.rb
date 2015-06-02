@@ -254,6 +254,10 @@ end
     if @time_series.present?
       count = @time_series.automatically_assign_questions
 
+logger.debug "@@@@@@@@@ there are #{@time_series.questions.length} questions"
+@time_series.reload
+logger.debug "@@@@@@@@@ there are #{@time_series.questions.length} questions"
+
       respond_to do |format|
         format.html { redirect_to time_series_questions_path(@time_series), flash: {success:  t('app.msgs.time_series_automatic_match', :count => count) } }
         format.json { head :no_content }

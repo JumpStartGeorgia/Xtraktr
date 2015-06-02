@@ -135,7 +135,7 @@ class TimeSeries < CustomTranslation
   def validate_languages
     # first remove any empty items
     self.languages.delete("")
-    logger.debug "***** validates languages: #{self.languages.blank?}"
+    logger.debug "***** validates languages: empty languages = #{self.languages.blank?}"
     if self.languages.blank?
       errors.add(:languages, I18n.t('errors.messages.blank'))
     else
@@ -151,7 +151,7 @@ class TimeSeries < CustomTranslation
   # validate the translation fields
   # title field need to be validated for presence
   def validate_translations
-    logger.debug "***** validates dataset translations"
+    logger.debug "***** validates time series translations"
     if self.default_language.present?
       logger.debug "***** - default is present; title = #{self.title_translations[self.default_language]}"
       if self.title_translations[self.default_language].blank?
@@ -191,6 +191,8 @@ class TimeSeries < CustomTranslation
   # this is used in the form to set the categories
   def set_category_ids
     self.category_ids = self.category_mappers.category_ids
+
+    return true
   end
 
   # create private share key that allows people to access this dataset if it is not public
@@ -204,11 +206,13 @@ class TimeSeries < CustomTranslation
   # if public and public at not exist, set it
   # else, make nil
   def set_public_at
+    logger.debug "---- set public at callback"
     if self.public? && self.public_at.nil?
       self.public_at = Time.now.to_date
     elsif !self.public?
       self.public_at = nil
     end
+    return true
   end
 
   #############################
@@ -335,60 +339,72 @@ class TimeSeries < CustomTranslation
     end
 
     # find matches
-    matches = to_compare.values.flatten.group_by{|x| x}.select{|k, v| v.size == dataset_ids.length}.keys
+    # must have at least two items to make a match
+    matches = to_compare.values.flatten.group_by{|x| x}.select{|k, v| v.size.between?(2,dataset_ids.length) }.keys
     puts "- found #{matches.length} matches"
 
     # create record for each match
+    answer_values = []
+    question_answers = {}
     matches.each do |code|
-      puts "- adding question with code #{code}"
-      # create question
-      q = self.questions.build
-      dataset_ids.each do |dataset_id|
-        question = datasets[dataset_id].questions.with_code(code)
-        if question.present?
-          # if the q record has not been populated, do it
-          if q.code.nil?
-            q.code = question.code
-            q.original_code = question.original_code
-            q.text_translations = question.text_translations
-            q.notes_translations = question.notes_translations
+      # see if question already exists
+      q = self.questions.with_code(code)
+      # only continue if this quesiton does not exist in the time series yet
+      if q.nil?
+        puts "- adding question with code #{code}"
+        # create question
+        q = self.questions.build
+
+        dataset_ids.each do |dataset_id|
+          question = datasets[dataset_id].questions.with_code(code)
+          if question.present?
+            # if the q record has not been populated, do it
+            if q.code.nil?
+              q.code = question.code
+              q.original_code = question.original_code
+              q.text_translations = question.text_translations
+              q.notes_translations = question.notes_translations
+            end
+
+            if question.has_code_answers?
+              q.dataset_questions.build(code: question.code, text_translations: question.text_translations, dataset_id: dataset_id)
+
+              # get the answers for this question
+              question_answers[dataset_id] = question.answers.all_for_analysis
+              answer_values << question_answers[dataset_id].map{|x| x.value}
+              puts "- dataset #{dataset_id} has #{question_answers[dataset_id].length} answers"
+            end
           end
-
-          q.dataset_questions.build(code: question.code, text_translations: question.text_translations, dataset_id: dataset_id)
         end
-
       end
 
       # create answers
 
       # get unique list of answer values
-      values = []
-      question_answers = {}
-      dataset_ids.each do |dataset_id|
-        question_answers[dataset_id] = datasets[dataset_id].questions.with_code(code).answers.all_for_analysis
-        values << question_answers[dataset_id].map{|x| x.value}
-        puts "- dataset #{dataset_id} has #{question_answers[dataset_id].length} answers"
-      end
-      # get unique values
-      values.flatten!.uniq!.sort!
+      # -> answers were collected in above block when creating question
+      answer_values.flatten!
+      answer_values.uniq! if answer_values.present?
+      answer_values.sort! if answer_values.present?
 
       # for each value, create a record
-      values.each do |value|
+      answer_values.each do |value|
         a = q.answers.build
         dataset_ids.each do |dataset_id|
-          dataset_answer = question_answers[dataset_id].select{|x| x.value == value}.first
+          if question_answers[dataset_id].present?
+            dataset_answer = question_answers[dataset_id].select{|x| x.value == value}.first
 
-          # create dataset answer record
-          if dataset_answer.present?
-            # if this is the first found answer, use it to create the answer record 
-            if a.value.blank?
-              a.value = dataset_answer.value
-              a.text = dataset_answer.text
-              a.sort_order = dataset_answer.sort_order
-              a.can_exclude = dataset_answer.can_exclude
+            # create dataset answer record
+            if dataset_answer.present?
+              # if this is the first found answer, use it to create the answer record 
+              if a.value.blank?
+                a.value = dataset_answer.value
+                a.text_translations = dataset_answer.text_translations
+                a.sort_order = dataset_answer.sort_order
+                a.can_exclude = dataset_answer.can_exclude
+              end
+
+              a.dataset_answers.build(value: dataset_answer.value, text_translations: dataset_answer.text_translations, dataset_id: dataset_id)
             end
-
-            a.dataset_answers.build(value: dataset_answer.value, text_translations: dataset_answer.text_translations, dataset_id: dataset_id)
           end
         end
       end

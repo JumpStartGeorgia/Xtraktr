@@ -5,7 +5,7 @@ $(document).ready(function(){
   datatable = $('#dataset-questions').dataTable({
     "dom": '<"top"fli>t<"bottom"p><"clear">',
     "columnDefs": [
-      { orderable: false, targets: [0,6] }
+      { orderable: false, targets: [0,-1] }
     ],
     "order": [[1, 'asc']],
     "language": {

@@ -29,7 +29,7 @@ $(document).ready(function(){
       "searchPlaceholder": gon.datatable_search
     },
     "columnDefs": [
-      { orderable: false, "targets": [5,7] }
+      { orderable: false, "targets": [5,-1] }
     ],
     "pagingType": "full_numbers"
   });
@@ -42,7 +42,7 @@ $(document).ready(function(){
       "searchPlaceholder": gon.datatable_search
     },
     "columnDefs": [
-      { orderable: false, "targets": [1,5] }
+      { orderable: false, "targets": [1,-1] }
     ],
     "pagingType": "full_numbers"
   });
@@ -55,7 +55,7 @@ $(document).ready(function(){
       "searchPlaceholder": gon.datatable_search
     },
     "columnDefs": [
-      { orderable: false, "targets": [5] }
+      { orderable: false, "targets": [4,-1] }
     ],
     "pagingType": "full_numbers"
   });
