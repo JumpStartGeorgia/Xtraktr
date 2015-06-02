@@ -480,6 +480,7 @@ ka:
       save_settings: "პარამეტრების შენახვა"
       choose_category: "კატეგორიის არჩევა"
       change_category: "კატეგორიის შეცვლა"
+      categories: Categories
     common:
       xtraktr:
         app_name: X-Traktr

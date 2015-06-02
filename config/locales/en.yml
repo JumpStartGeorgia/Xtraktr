@@ -480,6 +480,7 @@ en:
       save_settings: Save Settings
       choose_category: Choose Category
       change_category: Change Category
+      categories: Categories
     common:
       xtraktr:
         app_name: X-Traktr

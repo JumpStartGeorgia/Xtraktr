@@ -8,7 +8,7 @@
 -%>
 <div class="article dashboard">
   <div class="meta">
-    <div class="col bright">
+    <div class="col">
       <h2><%=@dataset.title%></h2>
       <div class="info">
         <div class="calendar"></div>
@@ -37,11 +37,12 @@
     <div class="col">
       <div class="category">
         <% if @dataset.categories.present? %>
+            <div class="text"><%= t('app.buttons.categories') %>:</div>
             <ul>
               <% @dataset.categories.each {|x| %>
                 <li class="item">
                   <div class="text"><span><%= x.name %></span></div>
-                  <div class="img <%= x.permalink %>" alt="<%= x.name %>"></div>
+                  <div class="box"><div class="img <%= x.permalink %>" alt="<%= x.name %>"></div></div>
                 </li>
               <% } %>
             </ul>         
