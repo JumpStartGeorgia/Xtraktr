@@ -29,7 +29,7 @@ $(document).ready(function(){
       "searchPlaceholder": gon.datatable_search
     },
     "columnDefs": [
-      { orderable: false, "targets": [5,-1] }
+      { orderable: false, "targets": [-3,-1] }
     ],
     "pagingType": "full_numbers"
   });

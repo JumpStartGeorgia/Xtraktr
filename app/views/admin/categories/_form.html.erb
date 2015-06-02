@@ -1,0 +1,72 @@
+<%- 
+  label_key = "mongoid.attributes.category."
+  hint_key = "mongoid.hints.category."
+-%>
+
+<%= semantic_form_for([:admin, @category], html: {class: 'tabbed-translation-form'}) do |f| %>
+  <%= f.error_messages %>
+
+  <div role="tabpanel" class="tabbed-translation-fields">
+    <% 
+      locales = I18n.available_locales
+    %>
+
+    <ul class="nav nav-tabs" role="tablist" 
+        data-default-language-icon="<span class='glyphicon glyphicon-star' title='<%= t('helpers.default_language') %>'></span>">
+      <%
+        default_locale = I18n.default_locale.to_s
+        default_lang = '' 
+      %>
+      <% locales.each_with_index do |locale, index| %>
+        <%
+          lang = @languages.select{|x| x.locale == locale.to_s}.first
+          cls = ''
+          if index == 0
+            cls = 'class=active' 
+            default_locale = locale
+            default_lang = lang.present? ? lang.name : locale 
+          end
+        %>
+        <li role="presentation" <%= cls %> data-locale="<%= locale %>">
+          <a href="#<%= locale %>" aria-controls="home" role="tab" data-toggle="tab">
+            <%= lang.present? ? lang.name : locale %>
+          </a>
+        </li>
+      <% end %>
+    </ul>
+
+    <div class="tab-content">
+      <% locales.each_with_index do |locale, index| %>
+        <%
+          cls = ''
+          cls = 'in active' if index == 0
+        %>
+        <div role="tabpanel" class="tab-pane fade <%= cls %>" id="<%= locale %>" data-locale="<%= locale %>">
+          <%= f.fields_for :name_translations, OpenStruct.new(f.object.name_translations) do |translation| %>
+            <% 
+              label = t(label_key + 'name')
+              hint = t(hint_key + 'name')
+              if index > 0
+                label << show_default_text(@category.name_translations[default_locale])
+              end
+            %>
+            <%= translation.input locale, hint: hint, label: label.html_safe %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+
+  <%= f.inputs do %>
+    <%= f.input :permalink, hint: t(hint_key + 'permalink'), input_html: {size: 25} %>
+    <%= f.input :sort_order, as: :number, hint: t(hint_key + 'sort_order'), min: 1, step: 5 %>
+  <% end %>
+
+
+  <div class="form-group" style="margin-top: 20px;">
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= f.submit t('helpers.links.reset'), :class => 'btn btn-warning', :type => :reset, :name => :reset %>
+    <%= link_to t('helpers.links.cancel'), admin_categories_path, :class => 'btn btn-warning' %>
+  </div>
+<% end %>

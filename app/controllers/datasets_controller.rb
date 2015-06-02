@@ -136,6 +136,11 @@ class DatasetsController < ApplicationController
   def create
     @dataset = Dataset.new(params[:dataset])
 
+    if !@is_xtraktr
+      # just automatically set the source to unicef georgia
+      @dataset.source = 'UNICEF Georgia'  
+    end
+
     # if there are category_ids, create mapper objects with them
     params[:dataset][:category_ids].delete('')
       # - remove '' from list

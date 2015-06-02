@@ -11,7 +11,9 @@
   <thead>
     <tr>
       <th><%= model_class.human_attribute_name(:title) %></th>
-      <th><%= model_class.human_attribute_name(:source) %></th>
+      <% if @is_xtraktr %>
+        <th><%= model_class.human_attribute_name(:source) %></th>
+      <% end %>
       <th><%= model_class.human_attribute_name(:languages) %></th>
       <th><%= model_class.human_attribute_name(:public) %></th>
       <th><%= model_class.human_attribute_name(:stats) %></th>
@@ -24,7 +26,9 @@
     <% @datasets.each do |dataset| %>
       <tr>
         <td><%= link_to dataset.title, dataset_path(dataset) %></td>
-        <td><%= dataset.source %></td>
+        <% if @is_xtraktr %>
+          <td><%= dataset.source %></td>
+        <% end %>
         <td><%= format_languages(dataset) %></td>
         <td><%= format_public_status(dataset.public) %></td>
         <td data-order="<%= dataset.stats.data_records %>">

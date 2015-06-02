@@ -1,0 +1,46 @@
+<%- model_class = Category -%>
+<% title t '.title', :default => model_class.model_name.human.pluralize %>
+
+<div class="form-group form-group-admin-buttons">
+  <%= link_to t('.new', :default => t("helpers.links.new")),
+              new_admin_category_path,
+              :class => 'btn btn-primary' %>
+  <%= link_to t('helpers.links.admin'), admin_path,
+  :class => 'btn btn-default' %>
+</div>
+
+<table class="table table-striped display">
+  <thead>
+    <tr>
+      <th></th>
+      <th><%= model_class.human_attribute_name(:name) %></th>
+      <th><%= model_class.human_attribute_name(:permalink) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @categories.each do |category| %>
+      <tr>
+        <td>
+          <%= image_tag "/assets/svg/categories/#{category.permalink}.svg" %>
+        </td>
+        <td><%= category.name %></td>
+        <td><%= category.permalink %></td>
+        <td>
+          <%= link_to '',
+                      edit_admin_category_path(category), 
+                      :title => t('helpers.links.edit'),
+                      :class => 'btn btn-xs btn-edit' %>
+          <%= link_to '',
+                      admin_category_path(category),
+                      :title => t("helpers.links.destroy"),
+                      :method => :delete,
+                      :data => { :confirm => I18n.t("helpers.links.confirm") },
+                      :class => 'btn btn-xs btn-delete' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+

@@ -7,6 +7,9 @@
          <%= link_to t('.page_contents'), admin_page_contents_path %>
         </li>
         <li>
+         <%= link_to t('.categories'), admin_categories_path %>
+        </li>
+        <li>
          <%= link_to t('.api_documentation'), admin_api_versions_path %>
         </li>
         <li>
@@ -18,11 +21,9 @@
         <li>
          <%= link_to t('.download_api_requests'), admin_download_api_requests_path %>
         </li>
-        <% if current_user.role? User::ROLES[:admin] %>
-          <li>
-           <%= link_to t('.users'), admin_users_path %>
-          </li>
-        <% end %>
+        <li>
+         <%= link_to t('.users'), admin_users_path %>
+        </li>
    		</ul>
     </div>
   <% end %>

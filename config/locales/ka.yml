@@ -190,6 +190,10 @@ ka:
       api_key:
         key: "დაშვების გასაღები"
         created_at: "შექმნის თარიღი"
+      category:
+        name: Name
+        permalink: URL to Category
+        sort_order: Sort Order
     hints:
       dataset:
         title: "მონაცემთა თქვენი ცხრილის დასახელება"
@@ -277,6 +281,10 @@ ka:
         content: API მეთოდის გამოყენები ახსნა
         public: "მონიშნეთ 'დიახ' API მეთოდის დოკუმენტაციის საქვეყნოდ ხელმისაწვდომობისთვის"
         sort_order: API მეთოდის გამოჩენის თანმიმდევრობა
+      category:
+        name: Name of category
+        permalink: This text needs to match the name of the icon image file
+        sort_order: The order the categories should appear
   errors:
     messages:
       required_field: "სავალდებულო ველი"
@@ -622,6 +630,7 @@ ka:
       api_documentation: API ვერსიის დოკუმენტაცია
       download_api_requests: API-ს მოთხოვნილი ისტორიის ჩამოტვირთვა
       download_download_requests: "მოთხოვნილი ისტორიის ჩამოტვირთვა"
+      categories: კატეგორიები
     users:
       edit:
         title: "ცვლილებების შეტანა მომხმარებლის გვერდზე"

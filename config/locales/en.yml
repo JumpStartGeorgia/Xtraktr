@@ -190,6 +190,10 @@ en:
       api_key:
         key: Access Token
         created_at: Date Created
+      category:
+        name: Name
+        permalink: URL to Category
+        sort_order: Sort Order
     hints:
       dataset:
         title: The title of your dataset
@@ -277,6 +281,10 @@ en:
         content: Explanation of how to use the API Method
         public: "Select 'Yes' to make the API Method documentation available to the world"
         sort_order: The order the API methods should appear
+      category:
+        name: Name of category
+        permalink: This text needs to match the name of the icon image file
+        sort_order: The order the categories should appear
   errors:
     messages:
       required_field: "is a required field."
@@ -622,6 +630,7 @@ en:
       api_documentation: API Version Documentation
       download_api_requests: Download API Request History
       download_download_requests: Download Download Request History
+      categories: Categories
     users:
       edit:
         title: Editing User
@@ -716,7 +725,7 @@ en:
         good_questions: Analyzable Questions
         no_text: No Question Text
         bad_answers: Bad Answers
-        no_answers: No Answers
+        no_answers: No Predefined Answers
       view_warnings: View Details
     warnings:
       title: "Warnings"

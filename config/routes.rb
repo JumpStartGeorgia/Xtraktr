@@ -18,6 +18,7 @@ BootstrapStarter::Application.routes.draw do
     match '/admin/download_api_requests', :to => 'admin#download_api_requests', :as => :admin_download_api_requests, :via => :get, :defaults => { :format => 'csv' }
     match '/admin/download_download_requests', :to => 'admin#download_download_requests', :as => :admin_download_download_requests, :via => :get, :defaults => { :format => 'csv' }
     namespace :admin do
+      resources :categories
       resources :shapesets
       resources :page_contents
       resources :users
