@@ -20,16 +20,17 @@
           cat = Category.by_permalink(current)
       -%>
         <div class="selector" data-selected="<%= current %>">
-         <div class="bright item">
-        <%- if cat.present? -%>
-            <div class="text"><span><%= cat.name %></span></div>
-            <div class="box"><div class="img <%= cat.permalink %>" alt="<%= cat.name %>"></div></div>
-        <%- end -%>
-        </div>
+        <div class="bright item">
+            <%- if cat.present? -%>
+                <div class="text"><span><%= cat.name %></span></div>
+                <div class="box"><div class="img <%= cat.permalink %>" alt="<%= cat.name %>"></div></div>
+            <%- end -%>
+          </div>
           <div class="text"><%= t('app.buttons.choose_category') %></div>
+          
         </div>
 
-        <ul>
+        <ul class="js-hide">
           <% Category.sorted.each {|x| %>
             <li class="bright item<%= ' active' if x.permalink == current %>" data-filter-value="<%= x.permalink %>">
               <div class="text"><span><%= x.name %></span></div>

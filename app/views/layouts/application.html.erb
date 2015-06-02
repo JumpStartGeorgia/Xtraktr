@@ -17,7 +17,7 @@
           <% end %>
 
           <% if !current_page?(root_path) %>
-            <div id="subnav-navbar" class="row" role="navigation" >
+            <div id="subnav-navbar" role="navigation" >
               <div class="col col-left pull-left">
                 <%= yield(:subnav_left) %>
                   <% if !content_for?(:subnav_left) && @is_dataset_admin && @dataset.present? && @dataset.created_at.present? %>

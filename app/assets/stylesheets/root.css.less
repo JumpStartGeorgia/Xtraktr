@@ -39,7 +39,7 @@
     {
       width:auto;
       height:100%;
-      overflow:hidden;
+      overflow:hidden;      
     }
     @media (min-width: 768px) 
     {
@@ -50,7 +50,7 @@
   }
   .categories{
     display:inline-block; vertical-align:top; height:410px; margin-bottom:20px;
-    .boxic { margin:0px 0px 20px 0px; }
+    .boxic { margin:0px 0px 20px 0px; max-width:330px; }
     .search {
       margin-bottom:20px;
       padding:0px;
@@ -119,6 +119,7 @@
       margin:0px 0px 20px 0px;
       overflow:auto;
       position:relative;
+      
       &::-webkit-scrollbar-track {
         background-color: #f6f6f6;
       }
@@ -207,10 +208,13 @@
   }
   .banner{
     
-    display:none; vertical-align:top; height:410px;
+    display:none; 
+    vertical-align:top; 
+    height:410px;
+    width:330px;
     margin-bottom:20px;
-    width:100%;
-    .boxic { padding:0px; overflow: hidden;}
+    // width:100%;
+    .boxic { padding:0px; overflow: hidden; max-width:330px;}
     .wms{
       display: block;
       text-decoration: none;
@@ -293,8 +297,10 @@
   {
     width:100%;
     height:100% !important;
+  
     .boxic { width:100%; padding:0px; }
-    .highlight:first-of-type { margin-right:20px; }
+    .highlight { max-width:680px; }
+    .highlight:first-of-type { margin-right:20px;   margin-bottom:20px; }
   }
   @media (min-width: 940px) {
     .categories { margin-right:20px; }

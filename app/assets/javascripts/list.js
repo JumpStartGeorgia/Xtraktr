@@ -25,6 +25,7 @@ function filter()
 $(document).ready(function(){
 
   $('.category[data-filter=category] .selector').click(function(e){
+
     var t = $(this)
     t.toggleClass('open');
     var open = t.hasClass('open');

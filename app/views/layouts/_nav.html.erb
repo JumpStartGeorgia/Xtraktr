@@ -53,7 +53,7 @@
           <div class="img"></div>
           <div class="text">
             <div class="number"><%= number_with_delimiter(@public_question_count) %></div>
-            <div class="questions"><%= t('app.common.questions') %></div>
+            <div class="questions"><%= t('app.common.questions').upcase %></div>
           </div>
         </div>
         
@@ -110,7 +110,7 @@
         <% end %>
         <% I18n.available_locales.each do |locale| %>
           <% if locale != I18n.locale %>
-            <li class="lang"><i></i><%= link_to t("app.language.#{locale}"), params.merge(:locale => locale) %></li>
+            <li class="lang"><%= link_to t("app.language.#{locale}"), params.merge(:locale => locale) %></li>
           <% end %>
         <% end %>
           <li class="sidebaritem sidebar">
