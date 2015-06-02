@@ -99,7 +99,6 @@
   - en.mongoid.attributes.time_series_question.notes
   - en.mongoid.attributes.time_series_dataset_question.notes
   - en.app.common.notes
-  - en.app.menu.disclaimer
   - en.root.notes.title
 - - en.mongoid.attributes.question.no_questions
   - en.mongoid.attributes.answer.no_questions
@@ -159,11 +158,12 @@
   - en.explore_data.comparative.html.map.title_filter_value
   - en.explore_data.single.html.title_filter_value
 - - en.explore_time_series.subtitle.html.title
-  - en.explore_time_series.subtitle.text.title
-  - en.explore_data.subtitle.text.title
+  - en.explore_data.subtitle.html.title
 - - en.explore_time_series.subtitle.html.title_filter
-  - en.explore_time_series.subtitle.text.title_filter
   - en.explore_data.subtitle.html.title_filter
+- - en.explore_time_series.subtitle.text.title
+  - en.explore_data.subtitle.text.title
+- - en.explore_time_series.subtitle.text.title_filter
   - en.explore_data.subtitle.text.title_filter
 - - en.explore_data.hover_region
   - en.shared.explore_data.hover_region
@@ -177,6 +177,8 @@
 - - en.explore_data.comparative.text.title_filter_value
   - en.explore_data.comparative.text.map.title_filter_value
   - en.explore_data.single.text.title_filter_value
+- - en.datatable.search
+  - en.helpers.search
 - - en.datatable.csv.title
   - en.download_data_options.text.csv
 - - en.helpers.links.admin
@@ -211,9 +213,6 @@
   - en.questions.mass_changes.answers.header
   - en.time_series_questions.form.header_answers
   - en.time_series_questions.show.header_answers
-- - en.app.common.go
-  - en.root.explore_data.go
-  - en.root.explore_time_series.go
 - - en.app.menu.explore_data
   - en.app.menu.admin_dataset.explore_data
   - en.app.menu.admin_time_series.explore_data
@@ -248,12 +247,14 @@
   - en.root.explore_time_series.no_data
 - - en.root.index.search_datasets
   - en.root.explore_data.search_datasets
+- - en.root.explore_data.title
+  - en.root.explore_data_show.title
 - - en.root.explore_data.sort_by.this
   - en.root.explore_time_series.sort_by.this
 - - en.root.explore_data.sort_by.publish
   - en.root.explore_time_series.sort_by.publish
-- - en.root.explore_data_show.title
-  - en.root.explore_time_series.title
+- - en.root.explore_time_series.title
+  - en.root.explore_time_series_show.title
 - - en.datasets.mappable.no_shapes
   - en.datasets.mappable_form.no_shapes
 - - en.datasets.mappable_form.title

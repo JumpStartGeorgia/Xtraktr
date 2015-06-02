@@ -21,7 +21,7 @@ en:
         password: Password
         password_confirmation: Password Confirmation
         role: Role
-        remember_me: Remeber Me
+        remember_me: Remember Me
         nickname: Nickname
         sign_in_count: Number of Times Logged In
         created_at: Date Created
@@ -33,7 +33,7 @@ en:
         residence: Country of Residence
         affiliation: Affiliation
         status: Status
-        status_other: When other(Please specify)
+        status_other: When other (Please specify)
         description: Short description of research objective (<i>optional</i>)           
         notifications: I want to receive notifications when new datasets are added
         notification_locale: Notification Language
@@ -65,7 +65,7 @@ en:
         description: Description
         methodology: Methodology
         source: Source of Data
-        source_url: URL to Souce
+        source_url: URL to Source
         datafile: Data File
         has_warnings: Issues with Data
         stats: Dataset Stats
@@ -114,7 +114,7 @@ en:
         title: Title
         description: Description
         source: Source of Data
-        source_url: URL to Souce
+        source_url: URL to Source
         public: Make Available to the Public
         created_at: Added On
         datasets: Datasets
@@ -483,7 +483,7 @@ en:
       change_category: Change Category
     common:
       xtraktr:
-        app_name: X-Traktr
+        app_name: Xtraktr
         app_slogan: Insert xtraktr slogn here!
         app_description: Insert xtraktr description here.      
       unicef:
@@ -697,7 +697,7 @@ en:
     msgs:
       no_key: 'You must provide an API Access Token in order to use the API. You can quickly get a API Access Token by going to %{url}.'
       no_dataset: "The Dataset could not be found."
-      no_question: "The Question cound not be found."
+      no_question: "The Question could not be found."
       no_broken_down_by: "The Broken Down By Question could not be found."
       no_filtered_by: "The Filter By Question could not be found."
       no_time_series: "The Time Series could not be found."
@@ -870,7 +870,7 @@ en:
         can_exclude_hint: Remove answers like "Don't know" & "Refuse" from the analysis
       jumpto:
         chart: Jump to Chart
-        map: Jumpt to Map
+        map: Jump to Map
       tabs:
         map: Map
         chart: Chart
