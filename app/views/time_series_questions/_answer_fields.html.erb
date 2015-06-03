@@ -42,10 +42,10 @@
                           <td class="dataset-question-answer" data-dataset-id="<%= dataset.dataset_id %>">
                             <%= f.semantic_fields_for :dataset_answers, dataset_answer do |f_dataset_answer| %>
                               <%= f_dataset_answer.input :dataset_id, as: :hidden %>
-                              <%= f_dataset_answer.input :text, as: :hidden %>
+                              <%= f_dataset_answer.input :text, as: :hidden, input_html: {class: 'dataset_question_answer_text'} %>
                               <div class="select input required form-group" id="time_series_question_answers_attributes_<%= aindex %>_value_input">
                                 <span class="form-wrapper">
-                                  <select class="dataset-answer form-control" id="time_series_question_answers_attributes_<%= aindex %>_dataset_answers_attributes_<%= dataset_index %>_value" name="time_series_question[answers_attributes][<%= aindex %>][dataset_answers_attributes][<%= dataset_index %>][value]" data-original-value="<%= dataset_answer.value %>">
+                                  <select class="dataset-answer form-control selectpicker" id="time_series_question_answers_attributes_<%= aindex %>_dataset_answers_attributes_<%= dataset_index %>_value" name="time_series_question[answers_attributes][<%= aindex %>][dataset_answers_attributes][<%= dataset_index %>][value]" data-original-value="<%= dataset_answer.value %>">
                                   </select>
                                 </span>
                               </div>

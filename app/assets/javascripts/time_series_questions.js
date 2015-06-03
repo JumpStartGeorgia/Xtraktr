@@ -26,6 +26,9 @@ $(document).ready(function(){
 
     var dataset_id = $(ths_select).closest('tr').find('td:first input[type="hidden"]').val();
 
+    // set the title hidden field
+    $(ths_select).closest('td').find('input.dataset_question_text').val($(ths_select).find('option:selected').text().split(' - ')[1]);
+
     $.ajax({
       method: "POST",
       url: gon.dataset_question_answers_path.replace('%5Bdataset_id%5D', dataset_id),
@@ -50,7 +53,7 @@ $(document).ready(function(){
         tds = $(tr_to_update).find('td.dataset-question-answer[data-dataset-id="' + dataset_id + '"]');
       }
       $(tds).each(function(){
-        var select = $(this).find('select').empty();
+        var select = $(this).find('select');
 
         // remove the existing options
         $(select).empty();
@@ -67,7 +70,13 @@ $(document).ready(function(){
             $(select).val($(this).closest('tr').find('td:nth-child(2) input').val());
           }
         }
+
+        // apply selectpicker
+        $(select).select2({width:'element', allowClear:true});
+
+
       });
+
     });
   }
 
@@ -93,6 +102,21 @@ $(document).ready(function(){
         update_question_answers(this, false, to_add);
       });
     });
+
+    // when original code is entered, update the hidden code field
+    $('form input#time_series_question_original_code').change(function(){
+      $('form input#time_series_question_code').val($(this).val().toLowerCase().replace(/\./g, "|"))
+    });
+
+
+    // save text for selected item
+    $('table#time-series-dataset-answers select.selectpicker').change(function(){
+      $(this).closest('td').find('input.dataset_question_answer_text').val($(this).find('option:selected').text());
+    });
+
+    // turn on fancy select
+    $('form select.selectpicker').select2({width:'element', allowClear:true});
+
 
   }
 

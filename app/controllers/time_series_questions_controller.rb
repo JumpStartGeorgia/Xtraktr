@@ -117,13 +117,25 @@ class TimeSeriesQuestionsController < ApplicationController
     @time_series = TimeSeries.by_id_for_user(params[:time_series_id], current_user.id)
 
     if @time_series.present?
-      @time_series_question = TimeSeriesQuestion.new(params[:time_series_question])
+      @time_series_question = @time_series.questions.build(params[:time_series_question])
 
       respond_to do |format|
         if @time_series_question.save
           format.html { redirect_to time_series_question_path(@time_series, @time_series_question), flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.time_series_question'))} }
           format.json { render json: @time_series_question, status: :created, location: @time_series_question }
         else
+          @datasets = @time_series.datasets.sorted
+
+          # get the list of questions for each dataset in the time series that are not already in the time series
+          @questions = {}
+          @datasets.each do |ts_dataset|
+            @questions[ts_dataset.dataset_id] = ts_dataset.dataset.questions.for_analysis_not_in_codes(@time_series.questions.codes_for_dataset(ts_dataset.dataset_id))
+          end
+
+          add_common_options
+
+          @is_new = true
+
           format.html { render action: "new" }
           format.json { render json: @time_series_question.errors, status: :unprocessable_entity }
         end
@@ -148,6 +160,20 @@ class TimeSeriesQuestionsController < ApplicationController
           format.html { redirect_to time_series_question_path(@time_series, @time_series_question), flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.time_series_question'))} }
           format.json { head :no_content }
         else
+          @datasets = @time_series.datasets.sorted
+
+          # get the list of questions for each dataset in the time series that are not already in the time series
+          @questions = {}
+          @time_series_question.dataset_questions.each do |dataset_question|
+            # get all other questions not being used for this dataset
+            @questions[dataset_question.dataset_id] = dataset_question.dataset.questions.for_analysis_not_in_codes(@time_series.questions.codes_for_dataset(dataset_question.dataset_id)).to_a
+            # get question for this dataset
+            @questions[dataset_question.dataset_id] << dataset_question.dataset.questions.with_code(dataset_question.code)
+            @questions[dataset_question.dataset_id].sort_by!{|x| x.original_code}
+          end
+
+          add_common_options
+
           format.html { render action: "edit" }
           format.json { render json: @time_series_question.errors, status: :unprocessable_entity }
         end
@@ -183,8 +209,8 @@ class TimeSeriesQuestionsController < ApplicationController
 
 private 
   def add_common_options
-    @css.push('tabbed_translation_form.css', "time_series_questions.css")
-    @js.push('cocoon.js', "time_series_questions.js")
+    @css.push('tabbed_translation_form.css', 'select2.css', "time_series_questions.css")
+    @js.push('cocoon.js', 'select2/select2.min.js', "time_series_questions.js")
 
     add_time_series_nav_options()
 
