@@ -60,7 +60,7 @@
         }
         > .text
         {      
-          font:12px 'sourcesans_pro', 'sans-serif';
+          font:14px 'sourcesans_pro', 'sans-serif';
           line-height:16px;
           text-align:center;
           padding:0px;          
@@ -89,7 +89,7 @@
         .item2 { display:block; }
         .item { 
           position:static;
-          margin-left:31px;
+          margin-left:26px;
           .text {
             display:inline-block;
             padding:0px 0px 6px;
@@ -100,12 +100,11 @@
         display:none;
         list-style:none;
         margin:0px;
-        padding:0px 10px 0px 0px;        
-        border:1px solid #f2f2f2;
+        padding:0px 10px 0px 0px;                
         border-right:0;
         border-top:0;
         li {
-          background-color:#fff;
+          background-color:transparent;
           overflow: hidden;
           margin:0px;
           padding:0px;
@@ -123,10 +122,8 @@
             border-bottom-left-radius: 3px;
           }
           &:hover,&.active
-          {
-            background-color:#fafafa;
-            cursor:pointer;
-            
+          {            
+            cursor:pointer;          
           }  
           &:hover .img
           {
@@ -139,12 +136,12 @@
         position:relative;      
        .text  
         {       
-          padding: 6px 10px;
+          padding: 1px 10px 1px 25px;
           span
           {
-            font:12px 'sourcesans_pro', 'sans-serif';
+            font:13px 'sourcesans_pro', 'sans-serif';
             line-height:11px;
-            color:#636975;
+            color:#969fb3;
             width: 100%;
             top: 50%;
             padding:0px 6px;
@@ -168,7 +165,10 @@
             position:relative;
             top:4px;
           }    
-        }       
+        }  
+        &:hover, &.active {
+          .text span { color:#636975; }
+        }     
       }
     }
   }
@@ -391,12 +391,17 @@
             span { padding:0px 6px; }
           }
           ul {
+            border:1px solid #f2f2f2;
             padding:0px;
             position:absolute;
             right:90px;
             top:0px;
             li {
               display:table-cell;
+              &:hover,&.active
+              {
+                background-color:#fafafa;
+              }
             }
           }
           .item {
@@ -407,6 +412,8 @@
               padding:0px;
               vertical-align:top;
               span {
+                font:12px 'sourcesans_pro', 'sans-serif';
+                color:#636975;
                 text-transform:uppercase;
                 text-align:center;
                 display: inline-block;

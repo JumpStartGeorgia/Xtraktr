@@ -248,7 +248,7 @@ div.message {
 
     .col{
       &.col-left{
-        & > a{
+        > a{
           font-family: 'sourcesans_pro', 'sans-serif';
           font-size: 16px;
           font-weight:normal;
@@ -373,36 +373,6 @@ div.message {
   }
 }
 
-.article.explore {
-  .filters
-  {
- 
-}
-}
-
-#dashboard-tabs {
-  ul.nav-tabs
-  {    
-    display:inline;
-    border-bottom: 0;
-    > li
-    {
-      > a
-      {
-        font:14px 'nokiasans_s60','sans-serif';
-        color:#3c4352;
-        text-transform:uppercase;
-        &:lang(ka) { font:14px 'nokiasans_s60_sb', 'sans-serif'; }
-      }
-    }
-  }
-  .tab-content
-  {
-    border-top: 1px solid #cecece;    
-  }
-}
-
-
 .img {
   &.child_protection{ background:transparent url(/assets/svg/categories.svg) no-repeat 0px center; }
   &.violence{ background:transparent url(/assets/svg/categories.svg) no-repeat -42px center; }
@@ -419,8 +389,24 @@ div.message {
   width: 100%;
   text-align: left;
   padding:0px;
-  .page, li
+  span, a, a:hover
   {
+    font:14px 'sourcesans_pro', 'sans-serif';
+    width:18px;
+    height:18px;
+    display:inline-block;
+    vertical-align:top;
+    text-decoration:none;
+    border:0 !important;
+    padding:0px !important;
+
+  }
+  .first a { background:transparent url(/assets/svg/paginate_first.svg) no-repeat center/18px; }
+  .next a { background:transparent url(/assets/svg/paginate_next.svg) no-repeat center/18px; }
+  .prev a, .previous a { background:transparent url(/assets/svg/paginate_prev.svg) no-repeat center/18px; }
+  .last a { background:transparent url(/assets/svg/paginate_last.svg) no-repeat center/18px; }
+
+  .page, li {
     display: inline-block;
     min-width:18px;
     height:18px;
@@ -461,24 +447,6 @@ div.message {
         background-color:transparent;
        }
     }
-    &.first a { background:transparent url(/assets/svg/paginate_first.svg) no-repeat center/18px; }
-    &.next a { background:transparent url(/assets/svg/paginate_next.svg) no-repeat center/18px; }
-    &.prev a, &.previous a { background:transparent url(/assets/svg/paginate_prev.svg) no-repeat center/18px; }
-    &.last a { background:transparent url(/assets/svg/paginate_last.svg) no-repeat center/18px; }
-    span, a, a:hover
-    {
-      font:14px 'sourcesans_pro', 'sans-serif';
-      width:18px;
-      height:18px;
-      display:inline-block;
-      vertical-align:top;
-      text-decoration:none;
-      border:0 !important;
-      padding:0px !important;
-
-    }
-
-
   }
 }
 
@@ -547,11 +515,9 @@ div.message {
       max-height: 31px;
       .col {
         &.col-left {
-          & > a {      
-            .available-language-switcher {  
-              select {
-                display:inline-block;
-              }
+          .available-language-switcher {  
+            select {
+              display:inline-block;
             }
           }
         }
@@ -559,7 +525,6 @@ div.message {
     }
   }
 }
-
 .js-hide { display:none; }
 .js-block { display:block; }
 .js-inline { display:inline-block; }

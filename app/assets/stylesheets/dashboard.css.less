@@ -1,5 +1,79 @@
 @import "variables.css.less";
 
+.article.dashboard,.article.timeseries .share, .share-sub {   
+  float:right;
+  margin-top: 32px;
+  .share-box { display:block; }
+  .prompt
+  {
+    position:absolute;
+    right: 0px;
+    font-family: 'sourcesans_pro', 'sans-serif';
+    font-size:14px;
+    color:#616672;
+    border:1px solid #e2e2e2;
+   -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    background-color:#f4f4f4;
+    padding:3px 10px 3px 32px;
+    background:transparent url(/assets/svg/share.svg) no-repeat 8px center/19px 17px;
+    min-width:77px;
+    margin:0px 10px 0px 0px !important;
+    display: inline-block;
+  }
+ .addthis_sharing_toolbox
+ {      
+    position:absolute;
+    right:0px;
+    opacity:0;          
+    margin:2px 10px 0px 15px;            
+     a.at-svc-compact
+    {
+      background-color:transparent !important;
+      .aticon-compact
+      {      
+        background:transparent url('/assets/svg/plus.svg') no-repeat center/24px 24px !important;    
+        width: 24px !important;
+        height: 24px !important;  
+        line-height:24px !important;
+        opacity:1 !important;
+        font:18px 'sourcesans_pro', 'sans-serif' !important;
+        color:#fff !important;    
+        border:0px solid #fff !important;
+        padding: 0px !important;  
+        display: inline-block !important; 
+      }  
+    }
+    .at-svc-facebook, .at-svc-twitter
+    {
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      border-radius: 5px;
+      border:1px solid #fff;
+    }
+    .at-share-btn
+    {
+    
+      width: 24px !important;
+      height: 24px !important;   
+      max-width: 24px !important;
+      max-height: 24px !important;
+      vertical-align:top !important;
+      .at4-icon
+      {
+        width: 23px !important;
+        height: 23px !important;              
+        vertical-align:top !important;
+        background-position:center !important;
+      }
+    }
+  }
+}
+@media (min-width: 768px) {
+  .share-box { display:none; }
+}
+
 .article.dashboard,.article.timeseries {
   margin:0px -10px;
   font:16px 'sourcesans_pro_l', 'sans-serif';
@@ -69,74 +143,7 @@
           &:first-child { margin-right: 10px; } 
         }
       }         
-      .share
-      { 
-        .prompt
-        {
-          position:absolute;
-          right: 0px;
-          font-family: 'sourcesans_pro', 'sans-serif';
-          font-size:14px;
-          color:#616672;
-          border:1px solid #e2e2e2;
-         -webkit-border-radius: 2px;
-          -moz-border-radius: 2px;
-          border-radius: 2px;
-          background-color:#f4f4f4;
-          padding:3px 10px 3px 32px;
-          background:transparent url(/assets/svg/share.svg) no-repeat 8px center/19px 17px;
-          min-width:77px;
-          margin:0px !important;
-          display: inline-block;
-        }
-       .addthis_sharing_toolbox
-       {      
-          position:absolute;
-          right:0px;
-          opacity:0;          
-          margin:2px 0px 0px 15px;            
-           a.at-svc-compact
-          {
-            background-color:transparent !important;
-            .aticon-compact
-            {      
-              background:transparent url('/assets/svg/plus.svg') no-repeat center/24px 24px !important;    
-              width: 24px !important;
-              height: 24px !important;  
-              line-height:24px !important;
-              opacity:1 !important;
-              font:18px 'sourcesans_pro', 'sans-serif' !important;
-              color:#fff !important;    
-              border:0px solid #fff !important;
-              padding: 0px !important;  
-              display: inline-block !important; 
-            }  
-          }
-          .at-svc-facebook, .at-svc-twitter
-          {
-            -webkit-border-radius: 5px;
-            -moz-border-radius: 5px;
-            border-radius: 5px;
-            border:1px solid #fff;
-          }
-          .at-share-btn
-          {
-          
-            width: 24px !important;
-            height: 24px !important;   
-            max-width: 24px !important;
-            max-height: 24px !important;
-            vertical-align:top !important;
-            .at4-icon
-            {
-              width: 23px !important;
-              height: 23px !important;              
-              vertical-align:top !important;
-              background-position:center !important;
-            }
-          }
-        }
-      }
+      .share { display:none; }
 
     }
     .description
@@ -267,7 +274,7 @@
     }
     > .text
     {      
-      font:12px 'sourcesans_pro', 'sans-serif';
+      font:14px 'sourcesans_pro', 'sans-serif';
       line-height:16px;
       color:#60a9c0;
       text-align:center;
@@ -325,7 +332,7 @@
           padding:0px;
           span
           {
-            font:12px 'sourcesans_pro', 'sans-serif';
+            font:13px 'sourcesans_pro', 'sans-serif';
             line-height:11px;
             color:#636975;
             width: 100%;
@@ -358,20 +365,27 @@
     height:17px;
     display: inline-block;
   }
+
   @media (min-width: 768px) {
     margin:0px -50px;
     .meta 
     {
-      padding:0px 50px;   
+      padding:0px 50px 10px;   
       .info {
         .share {
           position:absolute;
           right:0px;
           top:0px;
           margin:0px; 
+          display:block;    
+          float:none;     
+          .prompt {
+             margin:0px !important;
+          } 
           .addthis_sharing_toolbox
           {
             position:static; 
+            margin:2px 0px 0px 15px;                 
           }
 
         }
@@ -400,7 +414,11 @@
       padding-right:0px;
       display:table;
       width:auto;
-      > .text { display:none; height:100%; }
+      > .text { 
+        display:none;
+        font:12px 'sourcesans_pro', 'sans-serif';
+        height:100%;
+      }
       &:after { content: none; }
 
       ul {
@@ -425,6 +443,7 @@
           top: 50%;
           transform: translateY(-50%);
           span {
+            font:12px 'sourcesans_pro', 'sans-serif';
             text-transform:uppercase;
             text-align:center;
             display: block;
@@ -664,3 +683,4 @@
     }
   }
 }
+

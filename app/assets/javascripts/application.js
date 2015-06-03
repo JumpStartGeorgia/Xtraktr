@@ -246,17 +246,11 @@ $(document).ready(function(){
   });
 
 
-  //  $('.m-lang').hover(function(){ // on hover do this:
-  //   var t = $(this);
-  //  var at = t.find('a');
-  //  t.find('.figure').animate({"right": at.width()+15 }, 500, function(){  });
-  //  at.delay( 500 ).animate({"opacity":1}, 100);
-  // }, function(){ 
-  //   var t = $(this);
-  //   var at = t.find('a');
-  //   at.stop().animate({"opacity":0}, 100);
-  //   t.find('.figure').stop().delay( 100 ).animate({"right":0}, 250);
-  // }); 
+// Caption for selected tab is changed on tab selection from tab list. Caption is visible only for small devices. 
+  $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    $('.tab-caption').html($(e.target).text());
+    tabToggle();
+  })
 
 
 
@@ -384,4 +378,9 @@ function navbarToggle()
 {
   if (!$(".navbar-toggle").hasClass('collapsed'))
     $(".navbar-toggle").trigger('click');
+}
+function tabToggle()
+{
+  if (!$(".tab-toggle").hasClass('collapsed'))
+    $(".tab-toggle").trigger('click');
 }
