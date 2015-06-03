@@ -57,7 +57,9 @@
         <li id="nav-table"><a href="#tab-table" role="tab" data-toggle="tab"><%= t('.tabs.table') %></a></li>
         <li id="nav-details"><a href="#tab-details" role="tab" data-toggle="tab"><%= t('.tabs.details') %></a></li>
       </ul>      
-      <div class="share share-box"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>
+      <% if !@is_time_series_admin %>
+        <div class="share share-box"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>
+      <% end %>
       <div class="tab-content" id="explore-content">
 
         <div class="tab-pane fade" id="tab-chart">

@@ -29,7 +29,7 @@
               <%= I18n.l(dataset.released_at, format: :day_first) if dataset.released_at.present? %>
             </div>   
           </div>
-          <% if dataset_index == 0 %>
+          <% if dataset_index == 0 && !@is_time_series_admin %>
             <div class="share"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>
           <% end %>
         </div>
