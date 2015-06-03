@@ -10,14 +10,12 @@
 .api-documentation { margin-right:-50px; }
 .api,.api-documentation, .tinymce_format, .mce-content-body {
   a{
-    font-family:'sourcesans_pro_l', 'sans-serif';
-    font-size:15px;
+    font:15px 'sourcesans_pro_l', 'sans-serif';
     color: @bright-blue-color;
   }
   p
   {
-    font-family:'sourcesans_pro_l', 'sans-serif';
-    font-size:16px;
+    font:16px 'sourcesans_pro_l', 'sans-serif';
     color:@dark-grey-text;
   }
   h1,h2,h3,h4,h5,h6
@@ -36,15 +34,13 @@
     background-color: @light-grey-color;
     padding: 10px 13px;
     border: solid 1px @light-grey-border;
-    font-family:'sourcesans_pro', 'sans-serif';  
-    font-size:14px;  
+    font:14px 'sourcesans_pro', 'sans-serif';  
     color:@dark-grey-text;  
     margin:0px 0px 10px 0px;
   }
   ul.list-unstyled {
     padding-left: 0.5em;
-    font-family:'sourcesans_pro_l', 'sans-serif';
-    font-size:14px;
+    font:14px 'sourcesans_pro_l', 'sans-serif';
     color:@dark-grey-text;
     li {
       list-style: none;
@@ -52,8 +48,7 @@
   }
   .version-links{
     h3{
-      font-family:'sourcesans_pro', 'sans-serif';   
-      font-size:17px; 
+      font:17px 'sourcesans_pro', 'sans-serif';   
       color:@bright-blue-color;
       .calendar
       {
@@ -68,8 +63,7 @@
       }
       span{
         display:inline-block;
-        font-family:'sourcesans_pro_li', 'sans-serif';   
-        font-size:16px;         
+        font:16px 'sourcesans_pro_li', 'sans-serif';   
       }
     }
     ul{
@@ -82,12 +76,11 @@
         text-indent: -.7em;
         line-height: 1;
         &:before {
-          font:1em Arial,'sans-serif';
+          font:1em/1.4em Arial,'sans-serif';
           content: "\2022";
           color:@bright-blue-color;
           padding-right: 0.5em;
           vertical-align:middle;
-          line-height: 1.4em;
         }
       }
     }    
@@ -95,8 +88,7 @@
   }
 
 
-.doc-links .box   
-{
+.doc-links .box {
   padding:20px;
   .header
   {
@@ -124,7 +116,6 @@
   }
   > a{
     font:14px 'nokiasans_s60', 'sans-serif';
-    font-size:14px;
     color:@bright-blue-color;
     &:lang(ka) { font:14px 'nokiasans_s60_sb', 'sans-serif'; }
   }
@@ -139,12 +130,11 @@
   li
   {
     &:before {
-      font:1em Arial,'sans-serif';
+      font:1em/1.4em Arial,'sans-serif';
       content: "\2022";
       color:#666e7c;
       padding-right: 0.5em;
       vertical-align:middle;
-      line-height: 1.4em;
     }
     &:hover:before
     {
@@ -153,8 +143,7 @@
     a
     {
       color: #666e7c;
-      font-family:'sourcesans_pro', 'sans-serif';   
-      font-size:14px; 
+      font:14px 'sourcesans_pro', 'sans-serif';   
       text-decoration:none;
       &:hover
       {
@@ -221,8 +210,7 @@
   border:1px solid #c4c4c4;
   .gutter
   {
-    font-family:"Courier New";
-    font-size:12px;
+    font-family:12px "Courier New";
     color:#7c7c7c;
     font-weight:bold;
     .line
