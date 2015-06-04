@@ -58,6 +58,7 @@ class Answer < CustomTranslation
     {
       value: self.value,
       text: self.text,
+      text_translations: self.text_translations,
       sort_order: self.sort_order,
       can_exclude: self.can_exclude,
       exclude: self.exclude

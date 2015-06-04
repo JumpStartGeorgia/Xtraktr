@@ -57,6 +57,19 @@
                         <td>
                           <%= link_to_remove_association '', f, {class: 'btn btn-delete', title: t('helpers.links.destroy')} %>
                         </td>
+
+                        <% if is_new_answer %>
+                          <td id="new-answer-other-language-<%= aindex %>" style="display:none;" data-locale="<%= locale %>">
+                            <div class="new-answer-input">
+                              <div class="string input required stringish form-group" id="time_series_question_answers_attributes_<%= aindex %>_text_translations_<%= locale %>_input">
+                                <input class="form-control" id="time_series_question_answers_attributes_<%= aindex %>_text_translations_<%= locale %>" name="time_series_question[answers_attributes][<%= aindex %>][text_translations][<%= locale %>]" type="text" value="<%= text %>">
+                              </div>
+                            </div>
+                            <div class="new-answer-default-text">
+                              <%= original_text %>
+                            </div>
+                          </td>
+                        <% end %>
                       <% else %>
                         <td>
                           <div class="string input required stringish form-group" id="time_series_question_answers_attributes_<%= aindex %>_text_translations_<%= locale %>_input">

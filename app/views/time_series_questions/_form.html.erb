@@ -22,7 +22,7 @@
         <%= f.semantic_fields_for :dataset_questions, dataset_question do |f_dataset_question| %>
           <%= render partial: 'dataset_question_fields', :locals => {f: f_dataset_question, 
               ts_dataset: @datasets.select{|x| x.dataset_id == dataset_question.dataset_id}.first, 
-              questions: @questions[dataset_question.dataset_id]} %>
+              questions: @questions[dataset_question.dataset_id.to_s]} %>
         <% end %>
       <% end %>
     </tbody>
@@ -63,7 +63,6 @@
     </ul>
 
     <div class="tab-content">
-      <% answers = @time_series_question.answers.sorted %>
       <% locales.each_with_index do |locale, index| %>
         <%
           cls = ''
@@ -108,6 +107,11 @@
           <h3><%= t('.header_answers') %></h3>
           <p><%= t('.explanation_answers', lang: default_lang) %></p>
 
+          <%- 
+            answers = []
+            answers = @time_series_question.answers.sorted if @time_series_question.answers.count > 0
+          -%>
+
           <% if index == 0 %>
             <div>
               <%- 
@@ -151,7 +155,7 @@
               <tfoot>
                 <tr>
                   <td colspan="3"><%= t('.header_add_answer') %></td>
-                  <td colspan="<%= 1 + @datasets.length %>">
+                  <td colspan="<%= 2 + @datasets.length %>">
                     <%= link_to_add_association t('helpers.links.add_answer'), f, :answers, 
                         :class => 'btn btn-success',
                         :'data-association-insertion-node' => '.tab-content .tab-pane:first #time-series-dataset-answers tbody',

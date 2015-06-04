@@ -22,11 +22,6 @@ function build_select_lists(dataset_id, answers, is_page_load, tr_to_update){
     is_page_load = false;    
   }
 
-  console.log('==================');
-  console.log('build_select list !');
-  console.log('dataset id = ' + dataset_id);
-  console.log(answers) 
-
   // build the options
   var options = "";
   $(answers).each(function(){
@@ -42,10 +37,12 @@ function build_select_lists(dataset_id, answers, is_page_load, tr_to_update){
   }
   $(tds).each(function(){
     var select = $(this).find('select');
+    var original_value = $(select).data('original-value');
+    var hidden_text = $(this).find('input.dataset_question_answer_text');
 
     // remove the existing options
     $(select).empty();
-    var original_value = $(select).data('original-value');
+    $(hidden_text).val('');
 
     if (answers.length > 0){
       // add options
@@ -57,6 +54,7 @@ function build_select_lists(dataset_id, answers, is_page_load, tr_to_update){
         // if one of these answers has the time series answer value, select it
         $(select).val($(this).closest('tr').find('td:nth-child(2) input').val());
       }
+      $(hidden_text).val($(select).find('option:selected').text());
     }
 
     // apply selectpicker
@@ -87,11 +85,9 @@ function update_question_answers(ths_select, is_page_load, tr_to_update){
 
 // build the answers 
 function build_answers(dataset_answers){
-  console.log('build answers!');
   if ( Object.keys(dataset_answers).length > 0 ){
     // use answers from first dataset as basis for creating answers
     var datasets = Object.keys(dataset_answers);
-    console.log(datasets);
     // get list of answer values
     var answer_values = $.map(dataset_answers[datasets[0]], function(answer, i){
       return answer.value;
@@ -101,9 +97,8 @@ function build_answers(dataset_answers){
     var tr;
     var answer;
     $(answer_values).each(function(i){
-console.log('-------------');
-console.log('-- index = ' + i);
       answer = dataset_answers[datasets[0]][i];
+
       tr = $('table#time-series-dataset-answers tfoot a.add_fields').data('association-insertion-template');
 
       // add index
@@ -129,12 +124,12 @@ console.log('-- index = ' + i);
 
       ///////////////////////////////////////////////////
       // create the rows for the other language tables
+      create_answer_other_languages(tr, answer.text_translations, answer.text);
     });
 
     
     ///////////////////////////////////////////////////
     // populate the select lists
-    console.log(datasets);
     for(var i=0;i<datasets.length;i++){
       build_select_lists(datasets[i], dataset_answers[datasets[i]]);
     }
@@ -144,15 +139,11 @@ console.log('-- index = ' + i);
 
 // once all ajax calls are completed for getting the answers, build them
 function check_for_all_answers(){
-  console.log('build check_for_all_answers!');
-  console.log('dataset ans length = ' + Object.keys(dataset_answers).length + '; count length = ' + datasets_with_question_count);
   timer_calls += 1;
   if ( Object.keys(dataset_answers).length == datasets_with_question_count ){
-    console.log('done!');
     build_answers(dataset_answers);
   }
   else if (timer_calls < 10){
-    console.log('not yet ;(');
     window.setTimeout("check_for_all_answers();",500);
   }
 }
@@ -171,7 +162,6 @@ function auto_create_answers(){
         datasets_with_question_count += 1;
         var dataset_id = $(this).closest('tr').find('td:first input[type="hidden"]').val();
         get_question_answers(dataset_id, $(this).val(), function(answers){
-          console.log('got answers for dataset!');
           dataset_answers[dataset_id] = answers;
         });
       }
@@ -182,6 +172,39 @@ function auto_create_answers(){
   }
 }
 
+// add new answer to all other languages
+function create_answer_other_languages(inserted_row, input_text_translations, default_text){
+  var content = $(inserted_row).find('td:last');
+  var default_locale = $('.tab-content .tab-pane:first').data('locale');
+  var row = '<tr><td>';
+  row += $(content).find('.new-answer-input').html();
+  row += '</td><td>';
+  if (default_text != undefined){
+    row += default_text;
+  }else{
+    row += $(content).find('.new-answer-default-text').html();
+  }
+  row += '</td></tr>';
+
+  // add this new row to all languages
+  for (var i=1; i < $('.tab-content .tab-pane').length; i++){
+    var tab_pane = $('.tab-content .tab-pane')[i];
+    var new_locale = $(tab_pane).data('locale');
+
+    // if the input_text translations is provided and translations exist for this locale, use it
+    if (input_text_translations != undefined && input_text_translations[new_locale] != undefined){
+      row = row.replace('value=""', 'value="' + input_text_translations[new_locale] + '"');
+    }
+
+    // add the row
+    $(tab_pane).find('table#time-series-dataset-answers tbody')
+      .append(row.replace(new RegExp('_' + default_locale, 'g'), '_' + new_locale).replace(new RegExp('\\[' + default_locale + '\\]', 'g'), '[' + new_locale + ']'));
+
+  }
+
+  // now delete the content placeholder so form submital is not effected
+  $('.tab-content .tab-pane:first table#time-series-dataset-answers tbody tr:last td:last').remove();  
+}
 
 
 $(document).ready(function(){
@@ -228,9 +251,35 @@ $(document).ready(function(){
       });
     });
 
+    // when a new answer is added, add row for each of the other languages
+    $('table#time-series-dataset-answers').on('cocoon:after-insert', function(e,inserted_item) {
+      create_answer_other_languages(inserted_item);
+    });
+
+
     // remove the row in all other tables too
-    $('table#time-series-dataset-answers').on('cocoon:after-remove', function(e,to_delete) {
-      console.log('delete row!');
+    $('table#time-series-dataset-answers').on('cocoon:before-remove', function(e,to_delete) {
+      // get index of this row so know which rows in other tables to delete
+      var row_index = $('.tab-content .tab-pane:first table#time-series-dataset-answers tbody').children('tr').index(to_delete);
+
+      for (var i=1; i < $('.tab-content .tab-pane').length; i++){
+        // delete the row
+        var row = $($('.tab-content .tab-pane')[i]).find('table#time-series-dataset-answers tbody tr')[row_index];
+        if (row != undefined){
+          $(row).remove();
+        }
+      }
+    });
+
+    // when text of answer changes in default language, update the other languages default text table cell
+    $('table#time-series-dataset-answers tbody').on('change', 'tr td:first-of-type input', function(){
+      var text = $(this).val();
+      var row_index = $(this).closest('tbody').children('tr').index($(this).closest('tr'));
+
+      // for the other languages, update the 'default text' table cell at row_index
+      for (var i=1; i < $('.tab-content .tab-pane').length; i++){
+        $($($('.tab-content .tab-pane')[i]).find('table#time-series-dataset-answers tbody tr')[row_index]).find('td:last-of-type').html(text);
+      }
     });
 
 
@@ -279,5 +328,6 @@ $(document).ready(function(){
 
     });
   }
+
 
 });
