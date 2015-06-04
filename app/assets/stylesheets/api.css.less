@@ -7,7 +7,7 @@
 @light-grey-border:#c4c4c4;
 @dark-grey-text:#49505E;
 
-.api-documentation { margin-right:-50px; }
+//.api-documentation { margin-right:-50px; }
 .api,.api-documentation, .tinymce_format, .mce-content-body {
   a{
     font:15px 'sourcesans_pro_l', 'sans-serif';
@@ -86,69 +86,85 @@
     }    
 
   }
-
-
-.doc-links .box {
-  padding:20px;
-  .header
-  {
-    width:100%;
-    margin-bottom:10px;
-    border-collapse: separate;
-    border-spacing: 10px 0px;
-    > div { display:table-cell; vertical-align:top;}
-    div
-    {
-      font:14px 'nokiasans_s60', 'sans-serif';
-      color:@bright-blue-color;
-      padding:0;
-      margin:0;
-      white-space: nowrap;
-      &:lang(ka) { font:14px 'nokiasans_s60_sb', 'sans-serif'; }
-    }
-
-    .line
+.doc-links { display:none; }
+.doc-links, .m-doc-links {
+  .box {
+    padding:20px;
+    .header
     {
       width:100%;
-      padding:0px 0px 0px 10px;
-      background:transparent url(/assets/svg/hborder.svg) repeat-x center;
+      margin-bottom:10px;
+      border-collapse: separate;
+      border-spacing: 10px 0px;
+      > div { display:table-cell; vertical-align:top;}
+      div
+      {
+        font:14px 'nokiasans_s60', 'sans-serif';
+        color:@bright-blue-color;
+        padding:0;
+        margin:0;
+        white-space: nowrap;
+        &:lang(ka) { font:14px 'nokiasans_s60_sb', 'sans-serif'; }
+      }
+
+      .line
+      {
+        width:100%;
+        padding:0px 0px 0px 10px;
+        background:transparent url(/assets/svg/hborder.svg) repeat-x center;
+      }
     }
-  }
-  > a{
-    font:14px 'nokiasans_s60', 'sans-serif';
-    color:@bright-blue-color;
-    &:lang(ka) { font:14px 'nokiasans_s60_sb', 'sans-serif'; }
-  }
-  .back{
-     display:inline-block;
-      background:transparent url(/assets/svg/back_home.svg) no-repeat;
-      width:13px;
-      height:8px;
-      vertical-align: middle;
-      margin-right:5px;   
-  }
-  li
-  {
-    &:before {
-      font:1em/1.4em Arial,'sans-serif';
-      content: "\2022";
-      color:#666e7c;
-      padding-right: 0.5em;
-      vertical-align:middle;
+    > a{
+      font:14px 'nokiasans_s60', 'sans-serif';
+      color:@bright-blue-color;
+      &:lang(ka) { font:14px 'nokiasans_s60_sb', 'sans-serif'; }
     }
-    &:hover:before
+    .back{
+       display:inline-block;
+        background:transparent url(/assets/svg/back_home.svg) no-repeat;
+        width:13px;
+        height:8px;
+        vertical-align: middle;
+        margin-right:5px;   
+    }
+    li
     {
-      color: @bright-blue-color;
-    }
-    a
-    {
-      color: #666e7c;
-      font:14px 'sourcesans_pro', 'sans-serif';   
-      text-decoration:none;
-      &:hover
+      &:before {
+        font:1em/1.4em Arial,'sans-serif';
+        content: "\2022";
+        color:#666e7c;
+        padding-right: 0.5em;
+        vertical-align:middle;
+      }
+      &:hover:before
       {
         color: @bright-blue-color;
       }
+      a
+      {
+        color: #666e7c;
+        font:14px 'sourcesans_pro', 'sans-serif';   
+        text-decoration:none;
+        &:hover
+        {
+          color: @bright-blue-color;
+        }
+      }
+    }
+     select
+    {
+      font:13px 'sourcesans_pro', 'sans-serif';
+      color: #777c86;
+      background: #ffffff url(/assets/svg/select_arrow.svg) no-repeat center right / 21px 7px;
+      min-width:100px;
+      padding: 6px 28px 6px 10px;
+      margin-left:20px;
+      border:1px solid #ddd;
+      outline:none;
+      appearance:         none;
+      border-radius:0px;
+      cursor:pointer;
+
     }
   }
 }
@@ -252,7 +268,6 @@
 .col-left{
   display:table-cell;
   vertical-align:top;
-  border-right:1px solid #d6d6d6;
   background-color:#fff;
   padding:0px 30px 0px 0px;
 }
@@ -266,7 +281,9 @@
 
 
 @media (min-width: 992px) { 
+  
   .api, .api-documentation {
+    margin-right:-50px; 
     .col-left{
       display:table-cell;
       vertical-align:top;
@@ -277,6 +294,8 @@
       display:table-cell;
       vertical-align:top;
     }
+    .doc-links { display:table-cell; }
+    .m-doc-links { display:none; }
   }
    table.table{
     th, td {

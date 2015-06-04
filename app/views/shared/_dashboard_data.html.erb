@@ -3,7 +3,7 @@
   r_model_class = Report 
   is_admin_page = request.path == dataset_path(@dataset)
 
-  subnav_left render(partial: 'shared/language_switcher', locals: {langs: @dataset.language_objects, current_locale: @dataset.current_locale})
+  subnav_left render(partial: 'shared/language_switcher', locals: {langs: @dataset.language_objects, current_locale: @dataset.current_locale, share: true})
 
 -%>
 <div class="article dashboard">

@@ -26,6 +26,13 @@
   #explore-form {
     padding:0px 10px;
     background-color: @light-grey-color;
+    &:after {
+      content:"";
+      background:transparent url(/assets/svg/hborder.svg) repeat-x center;
+      display:block;
+      height:1px;
+      margin: 10px 0px 20px;
+    }
     h2{
       font:16px 'prime','sans-serif';
       color: #d95d6A;
@@ -159,7 +166,7 @@
       display: none;
       position: relative;
       padding-top: 10px;  
-        overflow-y: auto;    
+//      overflow-y: auto;    
       h3{
         font:14px 'sourcesans_pro', 'sans-serif';
         color: #62CBF2;
@@ -188,6 +195,9 @@
         width: 100%;
         height: 100%;
         display: none;
+      }
+      .bootstrap-select > .dropdown-menu {
+        position:relative;
       }
     }
 
@@ -753,29 +763,38 @@
           max-width:300px;
         }
       }
-    }
-    #explore-form {
-      padding:0px 30px;
-      .submit-box
-      {        
-        .submit-btn-box
-        {
-          background:url(/assets/svg/generate_arrow.svg) no-repeat right/11px 29px;
-          display:inline-block;
-          position: absolute;
-          right: -21px;
-          z-index:1;
-        }
-        .btn-submit
-        {
-                  border-top-left-radius: 3px;
-        border-bottom-left-radius: 3px;
-        border-top-right-radius: 0px;
-        border-bottom-right-radius: 0px;
+      #explore-form {
+        padding:0px 30px;
+        &:after { content:none; }
+        .submit-box
+        {        
+          .submit-btn-box
+          {
+            background:url(/assets/svg/generate_arrow.svg) no-repeat right/11px 29px;
+            display:inline-block;
+            position: absolute;
+            right: -21px;
+            z-index:1;
+          }
+          .btn-submit
+          {
+                    border-top-left-radius: 3px;
+          border-bottom-left-radius: 3px;
+          border-top-right-radius: 0px;
+          border-bottom-right-radius: 0px;
 
+          }
+        }
+        #jumpto
+        {
+              .bootstrap-select > .dropdown-menu {
+                position:absolute;
+                top:100% !important;
+              }
         }
       }
     }
+    
 }
 
 

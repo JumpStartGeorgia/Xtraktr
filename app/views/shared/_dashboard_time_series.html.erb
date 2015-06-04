@@ -3,7 +3,7 @@
   model_class_d = Dataset 
   is_admin_page = request.path == time_series_path(@time_series)
 
-  subnav_left render(partial: 'shared/language_switcher', locals: {langs: @time_series.language_objects, current_locale: @time_series.current_locale})
+  subnav_left render(partial: 'shared/language_switcher', locals: {langs: @time_series.language_objects, current_locale: @time_series.current_locale, share: true})
 -%>
 
 <div class="article timeseries">
@@ -110,18 +110,20 @@
       <div role="tabpanel" class="tab-pane fade <%= codebook_active[:panel] %>" id="codebook">
         <div id="codebook-search">
           <input type="search" class="codebook-search" id="filter" value="" placeholder="<%= t('helpers.search') %>" />
-          <div class="radio-box" tabindex="0">
-            <input checked id="filter_all" name="filter" type="radio" value="all" />
-            <label class="filter" for="filter_all"><%= t('.filter.all') %></label>
+          <div class="radio-box-group">
+            <div class="radio-box" tabindex="0">
+              <input checked id="filter_all" name="filter" type="radio" value="all" />
+              <label class="filter" for="filter_all"><%= t('.filter.all') %></label>
+            </div>
+            <div class="radio-box" tabindex="0">
+              <input id="filter_q" name="filter" type="radio" value="q" />
+              <label class="filter" for="filter_q"><%= t('.filter.questions') %></label>
+            </div>
+            <div class="radio-box" tabindex="0">
+              <input id="filter_ans" name="filter" type="radio" value="ans" />
+              <label class="filter" for="filter_ans"><%= t('.filter.answers') %></label>
+            </div>  
           </div>
-          <div class="radio-box" tabindex="0">
-            <input id="filter_q" name="filter" type="radio" value="q" />
-            <label class="filter" for="filter_q"><%= t('.filter.questions') %></label>
-          </div>
-          <div class="radio-box" tabindex="0">
-            <input id="filter_ans" name="filter" type="radio" value="ans" />
-            <label class="filter" for="filter_ans"><%= t('.filter.answers') %></label>
-          </div>  
         </div>
 
         <ul class="list-unstyled">

@@ -1,6 +1,23 @@
 <% title "#{@api_version.title} - #{@api_method.title}" %>
 
 <div class="api-documentation article">
+  <div class="m-doc-links">
+    <div class="box">
+      <%= link_to api_path do%>
+            <div class="back"></div>
+            <%= t('helpers.links.api_home') %>
+      <% end %>
+      <select  onchange="location = this.options[this.selectedIndex].value;">
+        <% @api_version.api_methods.is_public.sorted.each do |method| %>
+          <option value='<%=  "/#{I18n.locale}/api/#{@api_version.permalink}/documentation/#{method.permalink}" %>'>
+            <%= method.title %>
+          </option>
+        <% end %>
+      </select>
+
+      
+    </div>
+  </div>
   <div class="col-left">
       <h1><%= yield(:title) %></h1>
     <div id="api-dates">

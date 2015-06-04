@@ -749,9 +749,10 @@ function resizeExploreData(){
     {
       var offset = expform.offset(),
       expformWidth = expform.width();
+      var offsetWidth = offset.left == 0 ? 0 : (offset.left + 302);
       var tmp = expform.find('form');
-      $('#explore-form #jumpto').css({'height':h-(tmp.offset().top+tmp.height()+41+2)  });
-      $('#explore-data-content  .tab-pane').css({'width': w-442, 'height':h-(51+31+40+41+2)});
+      $('#explore-form #jumpto').css({'height': (offset.left != 0 ? (h-(tmp.offset().top+tmp.height()+41+2)) : 'auto')  });
+      $('#explore-data-content  .tab-pane').css({'width': w-offsetWidth, 'height':h-(51+31+40+41+2)});
     }
 }
 ////////////////////////////////////////////////
