@@ -225,7 +225,7 @@
                   <div class="timestamp"><span><%= "#{r_model_class.human_attribute_name(:released_at)}:"%></span> <%= "#{l report.released_at, format: :day_first}" %></div>
                 </div>
                 <% if report.language.present? %>
-                  <div class="language"><span><%= "#{r_model_class.human_attribute_name(:language_id)}:"%></span> <b <%= lng %>><%= "#{report.language.name}" %></div>
+                <div class="language"><span><%= "#{r_model_class.human_attribute_name(:language_id)}:"%></span> <b <%= lng %>><%= "#{report.language.name}" %></b></div>
                 <% end %>
               </div>
               <% if report.summary.present? %>

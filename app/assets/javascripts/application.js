@@ -384,3 +384,9 @@ function tabToggle()
   if (!$(".tab-toggle").hasClass('collapsed'))
     $(".tab-toggle").trigger('click');
 }
+function is_touch_device() {
+ return (('ontouchstart' in window)
+      || (navigator.MaxTouchPoints > 0)
+      || (navigator.msMaxTouchPoints > 0));
+}
+var is_touch = is_touch_device();

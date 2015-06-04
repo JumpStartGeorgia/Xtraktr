@@ -2,7 +2,7 @@
 
 .article.dashboard,.article.timeseries .share, .share-sub {   
   float:right;
-  margin-top: 32px;
+  margin-top: 1px;
   .share-box { display:block; }
   .prompt
   {
@@ -20,13 +20,15 @@
     min-width:77px;
     margin:0px 10px 0px 0px !important;
     display: inline-block;
+    z-index:45;
   }
  .addthis_sharing_toolbox
  {      
     position:absolute;
     right:0px;
     opacity:0;          
-    margin:2px 10px 0px 15px;            
+    margin:1px 10px 0px 15px;   
+    z-index:44;
      a.at-svc-compact
     {
       background-color:transparent !important;
@@ -380,7 +382,7 @@
           .addthis_sharing_toolbox
           {
             position:static; 
-            margin:2px 0px 0px 15px;                 
+            margin:1px 0px 0px 15px;                 
           }
 
         }

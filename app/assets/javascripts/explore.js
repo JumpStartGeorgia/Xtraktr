@@ -810,37 +810,16 @@ $(document).ready(function() {
 
   });
 
+  
 // share button with slide effect used on dashboard, timeseries and explore page
-  $('.share-box').hover(function(){ // on hover do this:
-    var t = $(this);     
-    var at = t.find('.addthis_sharing_toolbox');
-    var atwidth = at.width();
-    var dir = { };
-    var dir2 = { };
-    var tmp = 'right';
-    var tmp2 = 'left';
-    if(at.offset().left < atwidth)
-    {
-      tmp = 'left';
-      tmp2 = 'right';
-    }
-    dir[tmp] = atwidth;
-    dir2[tmp2] = 'initial';
-    t.attr('data-dir',tmp);
-   t.find('.prompt').css(dir2).animate(dir, 500, function(){  });
-   at.delay( 500 ).animate({"opacity":1}, 100);
-  }, function() { 
-    var t = $(this);
-    var at = t.find('.addthis_sharing_toolbox');
-    var dir = { };
-    var dir2 = { };
-    var tmp = t.attr('data-dir');
-    var tmp2 = tmp == 'left' ? 'right' : 'left';
-    dir[tmp] = 0;
-    dir2[tmp2] = 'initial';
-    at.stop().animate({"opacity":0}, 100);
-    t.find('.prompt').css(dir2).stop().delay( 100 ).animate(dir, 250);
-  }); 
+  if(is_touch) {
+    $('.share-box').on('click', function(){ share_toggle(($(this).attr('data-state') == 'in' ? 'out' : 'in'),$(this)); }); 
+  }
+  else {
+    $('.share-box').hover(function(){ 
+      share_toggle('in',$(this));
+    }, function() { share_toggle('out',$(this)); }); 
+  }
 // tabs - on li click fire inner a tag
   $(document).on('click', '.tabs li', function() {    
     $(this).find('a').tab('show');
@@ -884,3 +863,36 @@ $(document).ready(function() {
   resizeExploreData();
   $( window ).resize(function() { resizeExploreData(); });
 });
+function share_toggle(state,t)
+{
+  var at = t.find('.addthis_sharing_toolbox'),
+      dir = { },
+      dir2 = { };
+  
+  if(state == 'in') {   
+    var atwidth = at.width();
+
+    var tmp = 'right';
+    var tmp2 = 'left';
+    if(at.offset().left < atwidth)
+    {
+      tmp = 'left';
+      tmp2 = 'right';
+    }
+    dir[tmp] = atwidth;
+    dir2[tmp2] = 'initial';
+    t.attr('data-dir',tmp);
+    t.find('.prompt').css(dir2).animate(dir, 500, function(){  });
+    at.delay( 500 ).animate({"opacity":1}, 100);
+  }
+  else {
+
+    var tmp = t.attr('data-dir');
+    var tmp2 = tmp == 'left' ? 'right' : 'left';
+    dir[tmp] = 0;
+    dir2[tmp2] = 'initial';
+    at.stop().animate({"opacity":0}, 100);
+    t.find('.prompt').css(dir2).stop().delay( 100 ).animate(dir, 250);
+  }
+  t.attr('data-state', state);
+}
