@@ -69,7 +69,7 @@
     }
   }
 }
-@media (min-width: 768px) {
+@media (min-width: 992px) {
   .share-box { display:none; }
 }
 
@@ -361,7 +361,7 @@
     display: inline-block;
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: 992px) {
     margin:0px -50px;
     .meta 
     {
@@ -496,10 +496,6 @@
         margin:0 10px 1px 1px;        
         &.last
         {
-          -webkit-border-bottom-right-radius: 2px;
-          -webkit-border-bottom-left-radius: 2px;
-          -moz-border-radius-bottomright: 2px;
-          -moz-border-radius-bottomleft: 2px;
           border-bottom-right-radius: 2px;
           border-bottom-left-radius: 2px;
         }
@@ -511,36 +507,40 @@
 #codebook{
   #codebook-search{
     position:relative;
-    margin-bottom:50px;
+    margin-bottom:10px;
+    .download-direct {
+      float:right;
+      width:31px;
+      height:31px;
+    }
   }
-  input.codebook-search
-  {
+  input.codebook-search {
 
     font:13px 'sourcesans_pro_li', 'sans-serif';
     color:#3c4352;
-     -webkit-border-radius: 0px;
-    -moz-border-radius: 0px;
-    border-radius: 0px;  
-    outline:none;
-    border:0px;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
     box-shadow: none;
+    display:inline-block;
     height:31px;
     width:350px;
-    background: #f6f7f7 url(/assets/svg/search.svg) no-repeat 14px center / 16px 16px;
+    border:0px;
+    border-radius: 0px;  
     padding-left: 42px;
+    margin:0px 30px 10px 0px;
+    outline:none;
+    background: #f6f7f7 url(/assets/svg/search.svg) no-repeat 14px center / 16px 16px;
     &:focus,&:active {
       outline: none;
-      -webkit-box-shadow: none;
-      -moz-box-shadow: none;
       box-shadow: none;
     }
   }
-  .radio-box
-  {
+  .radio-box-group {
     display:inline-block;
-    margin-left:30px;
+  }
+  .radio-box {
+    display:inline-block;
+    &:not(:first-of-type){
+      margin-left:30px;
+    }
     input[type="radio"] + label
     {
       font:13px 'sourcesans_pro', 'sans-serif';
@@ -568,8 +568,7 @@
       background:url(/assets/svg/check_radio.png) no-repeat -44px top;
     }
   }
-  > ul 
-  {
+  > ul {
     > li
     {
       padding:20px 0px;
@@ -591,9 +590,10 @@
       border:0px;
     }
   }
-  .question
-  {
-    min-width:350px;
+  .question {
+    display:inline-block;
+    min-width:150px;
+    padding-bottom: 10px;
     a
     {
       font:16px 'sourcesans_pro_sb', 'sans-serif';
@@ -602,7 +602,10 @@
       display:block;
       position:relative;
       line-height: 18px;
-      > div { display:inline-block; width:300px; }
+      > div { 
+        display:inline-block; 
+        width:100px; 
+      }
       &:before
       {
         content:"";
@@ -623,10 +626,9 @@
       }
     }
   }
-  .details
-  {
+  .details {
+    display:inline-block;
     position:relative;
-    width:100%;
     font:16px 'sourcesans_pro_l', 'sans-serif';
     color:#3c4352;
     padding-left:25px;
@@ -674,3 +676,24 @@
   }
 }
 
+@media (min-width: 992px) {
+  #codebook{
+    #codebook-search{
+      margin-bottom:50px;
+        .question {
+          display:table-cell;
+          min-width:350px;
+          a
+          {
+            > div { 
+              width:300px; 
+            }
+          }
+        }
+      .details { 
+        display:table-cell;
+        width:100%;
+      }
+    }
+  }
+}

@@ -46,8 +46,10 @@
             <ul>
               <% @time_series.categories.each {|x| %>
                 <li class="item">
-                  <div class="text"><span><%= x.name %></span></div>
-                  <div class="img <%= x.permalink %>" alt="<%= x.name %>"></div>
+                  <%= link_to explore_data_path(category: x.permalink) do %>
+                    <div class="text"><span><%= x.name %></span></div>
+                    <div class="img <%= x.permalink %>" alt="<%= x.name %>"></div>
+                  <% end %>
                 </li>
               <% } %>
             </ul>         

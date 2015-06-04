@@ -14,8 +14,56 @@
  *= require vendor
  *= require_self
 */
+@font-face {
+    font-family: "prime_en";    
+    src: url( '/assets/fonts/en/prime.otf') format("opentype");         
+    font-style: normal;
+    font-weight: 200;
+}
+@font-face {
+    font-family: "sourcesans_pro_l_en";    
+    src: url( '/assets/fonts/en/sourcesans_pro_l.otf') format("opentype");         
+    font-style: normal;
+    font-weight: 200;
+}
+@font-face {
+    font-family: "sourcesans_pro_li_en";    
+    src: url( '/assets/fonts/en/sourcesans_pro_li.otf') format("opentype");         
+    font-style: normal;
+    font-weight: 200;
+}
+@font-face {
+    font-family: "sourcesans_pro_sbi_en";    
+    src: url( '/assets/fonts/en/sourcesans_pro_sbi.otf') format("opentype");         
+    font-style: normal;
+    font-weight: 200;
+}
 
+@font-face {
+    font-family: "prime_ka";    
+    src: url( '/assets/fonts/ka/dejavusansm_book_c.ttf') format("truetype");         
+    font-style: normal;
+    font-weight: 200;
+}
 
+@font-face {
+    font-family: "sourcesans_pro_l_ka";    
+    src: url( '/assets/fonts/ka/dejavusans_el.ttf') format("truetype");   
+    font-style: normal;
+    font-weight: 200;
+}
+@font-face {
+    font-family: "sourcesans_pro_li_ka";    
+    src: url( '/assets/fonts/ka/dejavusans_i.ttf') format("truetype");         
+    font-style: normal;
+    font-weight: 200;
+}
+@font-face {
+    font-family: "sourcesans_pro_sbi_ka";    
+    src: url( '/assets/fonts/ka/dejavusans_c_bi.ttf') format("truetype");         
+    font-style: normal;
+    font-weight: 200;
+}
 /* clear floats */
 .clearfix:after, .clear:after {
     visibility: hidden;
@@ -348,7 +396,7 @@ div.message {
     padding:26px 0px 16px;
     &:lang(ka) { font:16px 'nokiasans_s60_sb', 'sans-serif'; }
   }
-  @media (min-width: 768px) {
+  @media (min-width: 992px) {
 
     margin:0px -50px 20px;
     h1
@@ -447,18 +495,17 @@ div.message {
 }
 
 .search {
-  padding: 10px 10px 0 10px;
+  padding: 10px 10px 10px 10px;
   .box
   {
-    display:table;
-    width: 100%;
+    display:table;    
     input[type=search]
     {          
       font:13px 'sourcesans_pro_l', 'sans-serif';
       color: #3c4352;
       height:34px;
       display:table-cell;
-      width:100%;
+      min-width: 290px;
       border:1px solid #ddd;
       border-right:0;
       background: #fff url(/assets/svg/search.svg) 10px center/ 13px no-repeat;
@@ -486,8 +533,9 @@ div.message {
       }
     }
   }
-  @media (min-width: 768px) {
+  @media (min-width: 992px) {
     padding: 10px 0 0 50px;
+    display:inline-block;
     .box {
       width:auto;
       input[type=search]
@@ -500,7 +548,7 @@ div.message {
 
 .mce-fullscreen { z-index: 1100 !important; } /* tinymce fullscren */    
 .col { display:block; vertical-align:top; }
-@media (min-width: 768px) {
+@media (min-width: 992px) {
   .col { display:table-cell; }
   .content {
     #subnav-navbar {
@@ -725,22 +773,21 @@ input[type=search]
   &:-ms-input-placeholder { font:13px 'sourcesans_pro_li', 'sans-serif'; color:#9da1a8; }
 }
 
-::-webkit-scrollbar-track {
+*::-webkit-scrollbar-track {
   background-color: #f6f6f6;
 }
-::-webkit-scrollbar {
-  height: 12px;
-  width:12px;
+*::-webkit-scrollbar {
+  height: 8px;
+  width:8px;
 }
-::-webkit-scrollbar-thumb {
+*::-webkit-scrollbar-thumb {
   background-color: #bfbfbf;
   border: 2px solid #f6f6f6;
 }
-::-webkit-scrollbar-thumb:hover {
+*::-webkit-scrollbar-thumb:hover {
   background-color: #b1b1b1;
   cursor: pointer;
 }
-
 /* style for dataset/time series option menu */
 .options-menu {
   color: #333 !important;

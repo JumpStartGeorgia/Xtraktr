@@ -43,8 +43,10 @@
             <ul>
               <% @dataset.categories.each {|x| %>
                 <li class="item">
-                  <div class="text"><span><%= x.name %></span></div>
-                  <div class="box"><div class="img <%= x.permalink %>" alt="<%= x.name %>"></div></div>
+                  <%= link_to explore_data_path(category: x.permalink) do %>
+                    <div class="text"><span><%= x.name %></span></div>
+                    <div class="box"><div class="img <%= x.permalink %>" alt="<%= x.name %>"></div></div>
+                  <% end %>
                 </li>
               <% } %>
             </ul>         
@@ -148,20 +150,23 @@
     <div role="tabpanel" class="tab-pane fade <%= codebook_active[:panel] %>" id="codebook">
       <div id="codebook-search">
         <input type="search" class="codebook-search" id="filter" value="" placeholder="<%= t('helpers.search') %>" />
-        <div class="radio-box" tabindex="0">
-          <input checked id="filter_all" name="filter" type="radio" value="all" />
-          <label class="filter" for="filter_all"><%= t('.filter.all') %></label>
-        </div>
-        <div class="radio-box" tabindex="0">
-          <input id="filter_q" name="filter" type="radio" value="q" />
-          <label class="filter" for="filter_q"><%= t('.filter.questions') %></label>
-        </div>
-        <div class="radio-box" tabindex="0">
-          <input id="filter_ans" name="filter" type="radio" value="ans" />
-          <label class="filter" for="filter_ans"><%= t('.filter.answers') %></label>
-        </div>  
         <%= link_to @dataset.urls.codebook, class: 'download-direct',  title: t("app.common.codebook_title") do %>
-                  <% end %>   
+                  <% end %>  
+        <div class="radio-box-group">
+          <div class="radio-box" tabindex="0">
+            <input checked id="filter_all" name="filter" type="radio" value="all" />
+            <label class="filter" for="filter_all"><%= t('.filter.all') %></label>
+          </div>
+          <div class="radio-box" tabindex="0">
+            <input id="filter_q" name="filter" type="radio" value="q" />
+            <label class="filter" for="filter_q"><%= t('.filter.questions') %></label>
+          </div>
+          <div class="radio-box" tabindex="0">
+            <input id="filter_ans" name="filter" type="radio" value="ans" />
+            <label class="filter" for="filter_ans"><%= t('.filter.answers') %></label>
+          </div>  
+        </div>
+         
       </div>
       <ul class="list-unstyled">
         <% @dataset.questions.for_analysis.each do |question| %>
@@ -207,9 +212,10 @@
       <ul>
         <% if @dataset.reports.present? %>
           <% @dataset.reports.sorted.each do |report| %>
-            <li>
+        <% lng = report.language.present? ? "lang=#{report.language.locale}" : '' %>
+        <li>
               <div class="caption">
-                <div class="title"><%= report.title %></div>
+                <div class="title" <%= lng %>><%= report.title %></div>
                 <%= link_to report.file.url, class: 'download-direct', target: :blank, title: "#{report.file_type} - #{number_to_human_size(report.file_file_size).to_s}" do %>
                 <% end %>
               </div>                  
@@ -219,11 +225,11 @@
                   <div class="timestamp"><span><%= "#{r_model_class.human_attribute_name(:released_at)}:"%></span> <%= "#{l report.released_at, format: :day_first}" %></div>
                 </div>
                 <% if report.language.present? %>
-                  <div class="language"><span><%= "#{r_model_class.human_attribute_name(:language_id)}:"%></span> <%= "#{report.language.name}" %></div>
+                  <div class="language"><span><%= "#{r_model_class.human_attribute_name(:language_id)}:"%></span> <b <%= lng %>><%= "#{report.language.name}" %></div>
                 <% end %>
               </div>
               <% if report.summary.present? %>
-                <div class="description"><%= simple_format(report.summary, {}, {sanitize: false}) %></div>
+                <div class="description"  <%= lng %>><%= simple_format(report.summary, {}, {sanitize: false}) %></div>
               <% end %>
             </li>
           <% end %>

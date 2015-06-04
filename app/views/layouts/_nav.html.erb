@@ -114,6 +114,7 @@
           <% end %>
         <% end %>
           <li class="sidebaritem sidebar">
+            <div class="box">
               <ul class="nav in" id="side-menu">          
                 <% if !@is_xtraktr %>
                 <li><%= link_to t('.back'), 'http://www.unicef.ge', class: 'unicef', :target => :blank %></li>
@@ -136,7 +137,8 @@
                               '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;" %>
                 </div>
                 <%= link_to t('app.menu.disclaimer'), disclaimer_path, class: 'disclaimer' %>
-              </div>   
+              </div> 
+            </div>
         </li>
       </ul>
 

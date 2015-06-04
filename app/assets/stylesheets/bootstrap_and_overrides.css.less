@@ -60,7 +60,7 @@ a {
     &.white { background-color:#fff; }
 }
 
-@media(min-width:768px) {
+@media(min-width:992px) {
     #page-wrapper {
         position:relative;
         margin: 0 0 0 140px;
@@ -74,8 +74,8 @@ a {
 
 /* footer styles */
 footer {
-  // position: absolute;
-  // bottom: 0;
+   position: absolute;
+   bottom: 0;
   width: 100%;
   /* Set the fixed height of the footer here */
   height: 41px;
@@ -394,12 +394,28 @@ footer {
   .navbar-top-links {
 
     height: auto !important;
-    position: absolute;
+    position: fixed;
     top: 61px;
-    background-color: #3c4352;
     right: 10px;
+    bottom:10px;
     left: 10px;
-
+    background-color: #3c4352;
+    overflow-y:auto;
+    &::-webkit-scrollbar-track {
+      background-color: #3c4352;
+    }
+    &::-webkit-scrollbar {
+      height: 4px;
+      width:4px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: #bfbfbf;
+      border: 1px solid #3c4352;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: #b1b1b1;
+      cursor: pointer;
+    }
     > li
     {     
       &.user {
@@ -498,6 +514,21 @@ footer {
       position: static; 
       width:auto;
       background-color:#3c4352;
+      &::-webkit-scrollbar-track {
+        background-color: #3c4352;
+      }
+      &::-webkit-scrollbar {
+        height: 4px;
+        width:4px;
+      }
+      &::-webkit-scrollbar-thumb {
+        background-color: #bfbfbf;
+        border: 1px solid #3c4352;
+      }
+      &::-webkit-scrollbar-thumb:hover {
+        background-color: #b1b1b1;
+        cursor: pointer;
+      }
       li { display: block; }
       #side-menu {
         background-color:#3c4352;
@@ -557,10 +588,8 @@ footer {
           }
         }  
       }
-      .sidebar-bottom
-      {
+      .sidebar-bottom {
           position:static;
-         
           .share
           {
             display:none;
@@ -618,8 +647,17 @@ footer {
     }
   }
 }
-@media (min-width: 768px) {
+@media (min-width: 768px)
+{
+  .navbar-toggle {
+    display: block;
+  }
+}
+@media (min-width: 992px) {
   .content-wrapper { padding: 0 50px; }
+  .navbar-toggle {
+    display: none;
+  }
   .navbar {
     border-bottom:0;
 
@@ -733,6 +771,7 @@ footer {
         &.sidebar { border-bottom:0px; }
       }
       .lang { display: table-cell;  height:51px;  }
+       
       .sidebar { 
         position:fixed;
         display:block; 
@@ -742,8 +781,17 @@ footer {
         bottom:0px;
         left:0px;
         z-index: 1;
+        overflow-x:hidden;
+        overflow-y:auto;
+       .box { 
+           display:table;
+           height:100%;
+           width:100%;           
+       }
         #side-menu
         {
+            display:table-row;
+            height: 100%;
           li 
           {
             border-bottom:0px;
@@ -764,12 +812,13 @@ footer {
           }
         }
         .sidebar-bottom {
-           position:absolute;
-          bottom:0px;
+            display:table-row;
+//           position:absolute;
+//          bottom:0px;
           width:100%;
-          display:block;
+//          display:block;
           .share { display:block; }
-          .disclaimer {margin:2px 0px 17px; }
+          .disclaimer {margin:2px 0px 2px; }
         } 
       }
       .m-lang { display:none; }
