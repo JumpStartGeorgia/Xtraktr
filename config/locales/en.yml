@@ -856,6 +856,10 @@ en:
       explanation_answers: "The answer settings fields (value, sort order, etc) are only shown in the '%{lang}' tab."
       default_text: Default Text
       header_add_answer: Add a new answer for this question
+      auto_create_answers_link: Auto-Create Answers
+      auto_create_answers_title: For each answer in the questions selected above, add it to the list below
+      delete_all_answers_link: Delete All Answers
+      delete_all_answers_title: Delete all answers below
     show:
       title: "Question: %{question}"
       header_answers: Answers

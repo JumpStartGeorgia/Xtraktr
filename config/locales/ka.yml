@@ -856,6 +856,10 @@ ka:
       explanation_answers: "პასუხის პარამეტრები (მნიშვნელობა, დახარისხების წყობა, ა.შ.) ნაჩვენებია მხოლოდ '%{lang}' ჩანართში."
       default_text: "მთავარი ტექსტი"
       header_add_answer: "ამ კითხვისთვის ახალი პასუხის დამატება"
+      auto_create_answers_link: Auto-Create Answers
+      auto_create_answers_title: For each answer in the questions selected above, add it to the list below
+      delete_all_answers_link: Delete All Answers
+      delete_all_answers_title: Delete all answers below
     show:
       title: "კითხვა: %{question}"
       header_answers: "პასუხი"
