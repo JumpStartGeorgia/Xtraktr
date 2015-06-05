@@ -252,7 +252,12 @@ $(document).ready(function(){
     tabToggle();
   })
 
-
+  $(document).on('click', function(e) {    
+    var t = $(event.target);
+    if (!t.is('.navbar-toggle, .navbar-collapse, .tab-collapse') && !t.closest('.navbar-toggle, .navbar-collapse, .tab-collapse').length) {
+      $('.navbar-toggle:not(.collapsed)').trigger('click');
+    }
+  });
 
 });
 var downloading = false;

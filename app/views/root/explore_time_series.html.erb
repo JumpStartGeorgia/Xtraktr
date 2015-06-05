@@ -27,7 +27,7 @@
         <div class="text"><%= t('app.buttons.choose_category') %></div>
       </div>
 
-      <ul>
+      <ul class="js-hide">
         <% Category.sorted.each {|x| %>
           <li class="item<%= ' active' if x.permalink == current %>" data-filter-value="<%= x.permalink %>">
             <div class="text"><span><%= x.name %></span></div>
@@ -35,15 +35,19 @@
           </li>
         <% } %>
       </ul>
+      <select>
+        <option value="none" <%='selected' if current == 'none' %>><%= t('app.buttons.all_categories') %></option>
+        <% Category.sorted.each {|x| %>
+          <option value="<%= x.permalink %>" <%='selected' if current == x.permalink %>><%= x.name %></option>
+        <% } %>
+      </select>
     </div>
   </div>
   <div class="list">
     <% if @time_series.present? %>
       <%= render partial: 'explore_data_time_series' %>
     <% else %>
-      <p>
-        <%= t('.no_data') %>
-      </p>
+      <p><%= t('.no_data') %></p>
     <% end %>
   </div>
 </div>

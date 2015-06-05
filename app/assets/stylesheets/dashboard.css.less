@@ -294,12 +294,16 @@
       {       
         overflow: hidden;
         margin:0px;
-      margin-left:31px;          
+        margin-left:31px;          
         padding:0px;
         border-width:1px;
         vertical-align: top;
         height:100%;
         position:relative;
+        &:hover .img
+        {
+            transform:scale(1.1,1.1);
+        }
       }
     }
     .item
@@ -587,7 +591,6 @@
       line-height: 18px;
       > div { 
         display:inline-block; 
-        width:100%; 
       }
       &:before
       {
@@ -627,7 +630,7 @@
     }
     &:before
     {
-      content: "";
+      content: none;
       background: transparent url(/assets/svg/vborder.svg) repeat-y left center;
       width: 1px;
       height:100%;
@@ -660,23 +663,24 @@
 }
 
 @media (min-width: 992px) {
-  #codebook{
-    #codebook-search{
+  #codebook {
+    #codebook-search {
       margin-bottom:50px;
-        .question {
-          display:table-cell;
-          min-width:350px;
-          a
-          {
-            > div { 
-              width:300px; 
-            }
-          }
+    }
+    .question {
+      display:table-cell;
+      min-width:350px;
+      a
+      {
+        > div { 
+          width:300px; 
         }
-      .details { 
-        display:table-cell;
-        width:100%;
       }
+    }
+    .details { 
+      display:table-cell;
+      width:100%;
+      &:before { content: ""; }
     }
   }
 }

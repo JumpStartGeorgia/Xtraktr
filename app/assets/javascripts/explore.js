@@ -824,7 +824,6 @@ $(document).ready(function() {
   $(document).on('click', '.tabs li', function() {    
     $(this).find('a').tab('show');
   });
-
   $(document).on('click', '.embed-chart', function(){
     var url = $(this).attr('data-href');
      modal(gon.embed_chart,
