@@ -259,7 +259,7 @@ $(document).ready(function(){
         update_block_with_new_locale(values[index], $('form.tabbed-translation-form ul.nav.nav-tabs li:first'), $('form.tabbed-translation-form .tab-content .tab-pane:first'))
       
       }else if ( existing_indexes[index] == -1 ){
-        console.log('--> add new block');
+        //console.log('--> add new block');
         // this is a new locale, need to add it
 
         // first have to turn off all tinymce so clone works nicely
@@ -299,7 +299,7 @@ $(document).ready(function(){
     // make sure the default language is first
     make_default_first();
 
-    console.log('=== load lang tabs end');
+    //console.log('=== load lang tabs end');
   }
 
 
