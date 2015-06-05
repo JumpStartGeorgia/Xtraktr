@@ -11,12 +11,9 @@
     font:14px 'sourcesans_pro', 'sans-serif';
     color:#616672;
     border:1px solid #e2e2e2;
-   -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
     border-radius: 2px;
-    background-color:#f4f4f4;
     padding:3px 10px 3px 32px;
-    background:transparent url(/assets/svg/share.svg) no-repeat 8px center/19px 17px;
+    background:#f4f4f4 url(/assets/svg/share.svg) no-repeat 8px center/19px 17px;
     min-width:77px;
     margin:0px 10px 0px 0px !important;
     display: inline-block;
@@ -48,8 +45,6 @@
     }
     .at-svc-facebook, .at-svc-twitter
     {
-      -webkit-border-radius: 5px;
-      -moz-border-radius: 5px;
       border-radius: 5px;
       border:1px solid #fff;
     }
@@ -129,6 +124,7 @@
       .timestamps
       {
         display:table-cell;
+        padding-right:100px;
         .timestamp
         {
           color:#5faac1;
@@ -170,8 +166,6 @@
       text-align:left;
       text-transform:uppercase;
       border:1px solid #f2f2f2;
-      -webkit-border-radius: 2px;
-      -moz-border-radius: 2px;
       border-radius: 2px;
       background-color:#fff;
       height:36px;
@@ -221,10 +215,6 @@
         background-color:#fff;
         text-transform:uppercase;   
         border:1px solid #e0e0e0;
-        -webkit-border-bottom-right-radius: 3px;
-        -webkit-border-bottom-left-radius: 3px;
-        -moz-border-radius-bottomright: 3px;
-        -moz-border-radius-bottomleft: 3px;
         border-bottom-right-radius: 3px;
         border-bottom-left-radius: 3px;
         outline:none;
@@ -278,11 +268,6 @@
       padding:0px;             
       display:inline-block;
       vertical-align:middle;      
-      -webkit-touch-callout: none;
-      -webkit-user-select: none;
-      -khtml-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
       user-select: none;  
       vertical-align:top; 
       &:before
@@ -303,10 +288,6 @@
       list-style:none;
       margin:0px;
       padding:0px;
-      -webkit-border-bottom-right-radius: 3px;
-      -webkit-border-bottom-left-radius: 3px;
-      -moz-border-radius-bottomright: 3px;
-      -moz-border-radius-bottomleft: 3px;
       border-bottom-right-radius: 3px;
       border-bottom-left-radius: 3px;
       li
@@ -593,7 +574,7 @@
     }
   }
   .question {
-    display:inline-block;
+    display:block;
     min-width:150px;
     padding-bottom: 10px;
     a
@@ -606,7 +587,7 @@
       line-height: 18px;
       > div { 
         display:inline-block; 
-        width:100px; 
+        width:100%; 
       }
       &:before
       {
@@ -629,7 +610,7 @@
     }
   }
   .details {
-    display:inline-block;
+    display:block;
     position:relative;
     font:16px 'sourcesans_pro_l', 'sans-serif';
     color:#3c4352;
