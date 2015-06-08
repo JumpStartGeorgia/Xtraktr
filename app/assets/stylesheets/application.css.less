@@ -14,6 +14,7 @@
  *= require vendor
  *= require_self
 */
+@import "variables.css.less";
 @font-face {
     font-family: "prime_en";    
     src: url( '/assets/fonts/en/prime.otf') format("opentype");         
@@ -281,7 +282,7 @@ div.message {
 
   #subnav-navbar{
     
-    background-color:#f6f7f7;
+    background-color:@f6f7f7;
     padding:0px 10px;    
     overflow: visible;
 
@@ -292,7 +293,7 @@ div.message {
           font-weight:normal;
           margin:0 12px 0 0;
           padding:0;
-          color: #00adee;
+          color: @00adee;
           line-height: 30px;
           vertical-align:top;
         }
@@ -312,7 +313,7 @@ div.message {
           select
           {
             font:14px 'sourcesans_pro', 'sans-serif';
-            color: #00adee;
+            color: @00adee;
             background:rgba(60, 67, 82,0.05) url(/assets/svg/select_arrow.svg) no-repeat center right / 21px 7px;
             padding:5px 28px 6px 10px;
             border:0px solid #ddd;
@@ -333,7 +334,7 @@ div.message {
           font-weight:normal;
           margin:0 12px 0 0;
           padding:0;
-          color: #00adee;
+          color: @00adee;
           line-height: 30px;
         }
       }
@@ -368,13 +369,13 @@ div.message {
 .page-header {
   margin:0px -10px 20px;
   padding:0px;
-  border-bottom:1px solid #fff;
+  border-bottom:1px solid @fff;
 
   &:after
   {
     content:"";
     display:block;
-    border-bottom:1px solid #e8e8e8;
+    border-bottom:1px solid @e8e8e8;
   }  
   h1
   {
@@ -448,7 +449,7 @@ div.message {
     a
     {
       font:14px 'sourcesans_pro', 'sans-serif';
-      color:#000;
+      color:@000;
       background-color:transparent;
       line-height:18px;
       min-width:18px;
@@ -461,10 +462,10 @@ div.message {
     {
       font:14px 'sourcesans_pro', 'sans-serif';
       line-height:18px;
-      color:#fff;
+      color:@fff;
       text-align:center;      
       text-decoration:none;
-      background-color:#00adee;
+      background-color:@00adee;
       display: inline-block;
       height:18px;
       min-width:18px;
@@ -489,13 +490,13 @@ div.message {
     input[type=search]
     {          
       font:13px 'sourcesans_pro_l', 'sans-serif';
-      color: #3c4352;
+      color: @3c4352;
       height:34px;
       display:table-cell;
       min-width: 290px;
-      border:1px solid #ddd;
+      border:1px solid @ddd;
       border-right:0;
-      background: #fff url(/assets/svg/search.svg) 10px center/ 13px no-repeat;
+      background: @fff url(/assets/svg/search.svg) 10px center/ 13px no-repeat;
       outline:none;
       padding:0px 0px 0px 30px;
       border-radius:0px;
@@ -505,7 +506,7 @@ div.message {
     {
       display:table-cell;
       font:12px 'sourcesans_pro', 'sans-serif';
-      color:#fff;
+      color:@fff;
       background-color:#80d3ed;
       text-align: center;
       width:33px;
@@ -539,10 +540,10 @@ div.message {
   .col { display:table-cell; }
   .content {
     #subnav-navbar {
-      background: #f6f7f7 url(/assets/svg/pattern.svg) repeat;
+      background: @f6f7f7 url(/assets/svg/pattern.svg) repeat;
       background-size:7px 7px;
       padding:0px 50px 0px 20px;
-      border-bottom: solid 1px #eaeae9;
+      border-bottom: solid 1px @eaeae9;
       min-height: 18px;
       max-height: 31px;
     }
@@ -562,15 +563,15 @@ div.message {
     // bottom:20px;
     left: 50%;
     transform: translateX(-50%);
-    background-color:#ececec;
+    background-color:@ececec;
     z-index:999;
     padding:0px;
     overflow:auto;
     z-index:1022;
-    border: 1px solid #e0e0e0;
+    border: 1px solid @e0e0e0;
     border-top:0;
     padding: 0px 12px 13px 12px;
-    background-color: #fff;  
+    background-color: @fff;  
     min-width:420px;
     &.center
     {
@@ -609,14 +610,14 @@ div.message {
       }
       input {
         font:13px 'opensans_li';
-        color:#3c4352;
+        color:@3c4352;
         border-radius: 0px;  
         outline:none;
         border:0px;
         box-shadow: none;
         height:31px;
         width:260px;
-        background: #fff url(/assets/svg/search.svg) no-repeat 14px center / 16px 16px;
+        background: @fff url(/assets/svg/search.svg) no-repeat 14px center / 16px 16px;
         padding-left: 42px;
         &:focus,&:active {
           outline: none;
@@ -628,18 +629,18 @@ div.message {
     {
       float: right;
       font:14px 'sourcesans_pro_l', 'sans-serif';
-      color:#3c4352;
+      color:@3c4352;
       /****************************************************/
       /* select box */
       /****************************************************/
       select{
         border:0px;
         font: 14px 'sourcesans_pro', 'sans-serif';
-        color: #3c4352;
-        background: #ffffff url(/assets/svg/select_arrow.svg) no-repeat center right / 21px 7px;
+        color: @3c4352;
+        background: @fff url(/assets/svg/select_arrow.svg) no-repeat center right / 21px 7px;
         padding: 3px 28px 3px 10px;
         margin:0px 10px;
-        border:1px solid #ddd;
+        border:1px solid @ddd;
         height:31px;
         min-width: 70px;
         width: auto !important;
@@ -653,7 +654,7 @@ div.message {
     .dataTables_info{
       text-align: center;
       font:14px 'sourcesans_pro_l', 'sans-serif';
-      color: #3c4352;
+      color: @3c4352;
     }
 }
 
@@ -674,7 +675,7 @@ div.message {
   .text {
     font:14px 'sourcesans_pro', 'sans-serif';
     padding:11px 34px 11px 14px;
-    color:#92b758;
+    color:@92b758;
     display:table-cell;
     // width:100%;
   } 
@@ -690,22 +691,22 @@ div.message {
   &.info
   {
     background-color:#94d9f3;
-    .figure { background:#00adee url(/assets/svg/info_w.svg) no-repeat center/25px 21px; } 
+    .figure { background:@00adee url(/assets/svg/info_w.svg) no-repeat center/25px 21px; } 
     .text { color:#009ac9; } 
     .closeup { background:transparent url(/assets/svg/close.svg) no-repeat -30px; }
   } 
   &.success
   {
     background-color:#ceddb7;
-    .figure { background:#92b758 url(/assets/svg/success_w.svg) no-repeat center/25px 21px; } 
+    .figure { background:@92b758 url(/assets/svg/success_w.svg) no-repeat center/25px 21px; } 
     .text { color:#799143; } 
     .closeup { background:transparent url(/assets/svg/close.svg) no-repeat -15px; }
   }
   &.error
   {
     background-color:#eab9bf;
-    .figure { background:#d95d6a url(/assets/svg/error_w.svg) no-repeat center/25px 21px; } 
-    .text { color:#d95d6a; } 
+    .figure { background:@d95d6a url(/assets/svg/error_w.svg) no-repeat center/25px 21px; } 
+    .text { color:@d95d6a; } 
     .closeup { background:transparent url(/assets/svg/close.svg) no-repeat 0px; }
   }      
 }
@@ -719,10 +720,10 @@ div.message {
   transform: translateX(-50%) translateY(-50%);
 }
 
-::-webkit-input-placeholder { font:12px 'sourcesans_pro','sans-serif'; color: #3c4352 !important; }
-:-moz-placeholder { /* Firefox 18- */ font:12px 'sourcesans_pro','sans-serif'; color: #3c4352 !important; }
-::-moz-placeholder {  /* Firefox 19+ */ font:12px 'sourcesans_pro','sans-serif'; color: #3c4352 !important; }
-:-ms-input-placeholder { font:12px 'sourcesans_pro','sans-serif'; color: #3c4352 !important; }
+::-webkit-input-placeholder { font:12px 'sourcesans_pro','sans-serif'; color: @3c4352 !important; }
+:-moz-placeholder { /* Firefox 18- */ font:12px 'sourcesans_pro','sans-serif'; color: @3c4352 !important; }
+::-moz-placeholder {  /* Firefox 19+ */ font:12px 'sourcesans_pro','sans-serif'; color: @3c4352 !important; }
+:-ms-input-placeholder { font:12px 'sourcesans_pro','sans-serif'; color: @3c4352 !important; }
 input[type=search]
 {          
   &::-webkit-input-placeholder { font:13px 'sourcesans_pro_li', 'sans-serif'; color:#9da1a8; }
@@ -732,18 +733,18 @@ input[type=search]
 }
 
 *::-webkit-scrollbar-track {
-  background-color: #f6f6f6;
+  background-color: @f6f6f6;
 }
 *::-webkit-scrollbar {
   height: 8px;
   width:8px;
 }
 *::-webkit-scrollbar-thumb {
-  background-color: #bfbfbf;
-  border: 2px solid #f6f6f6;
+  background-color: @bfbfbf;
+  border: 2px solid @f6f6f6;
 }
 *::-webkit-scrollbar-thumb:hover {
-  background-color: #b1b1b1;
+  background-color: @b1b1b1;
   cursor: pointer;
 }
 /* style for dataset/time series option menu */
@@ -769,9 +770,9 @@ input[type=search]
   }
 }
 .btn-primary{
-  background-color: #00adee;
+  background-color: @00adee;
   color: #fff;
-  border-color: #00adee;
+  border-color: @00adee;
   &:hover{
     background-color: #00aad1;
     color: #fff;
@@ -834,9 +835,9 @@ input[type=search]
   }
 }
 .btn-edit{
-  color: #00adee;
+  color: @00adee;
   background-color: #ffffff;
-  border-color: #00adee;
+  border-color: @00adee;
   width: 41px;
   height: 36px;
   &.btn-xs{
@@ -853,7 +854,7 @@ input[type=search]
     top: 1px;
   }
   &:hover{
-    color: #00adee;
+    color: @00adee;
     background-color: #ffffff;
     border-color: #ffffff;
   }

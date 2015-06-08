@@ -1,11 +1,10 @@
+@import "variables.css.less";
 .i-facebook { 
   background:transparent url('/assets/svg/facebook.svg') no-repeat center/65px 13px;
   width:65px;
   height:12px;
   display:inline-block;
  }
-
-
 
  #login-form
   {
@@ -47,7 +46,7 @@
     margin:0px 40px !important;
     a.facebook {
       font:12px/32px 'opensans-sb','sans-serif';
-      color:#fff;      
+      color:@fff;      
       background: #4a5e93;      
       display:inline-block;
       height:31px;
@@ -74,7 +73,7 @@
       .or
       {
         font:12px 'sourcesans_pro','sans-serif';
-        color:#3c4352;
+        color:@3c4352;
         text-transform:uppercase;
         text-align: center;
         padding:0px 15px;
@@ -99,8 +98,8 @@
   input[type=submit] {
     display:inline-block;
     font:12px/31px 'opensans-sb','sans-serif' !important;
-    background-color:#00adee;
-    color:#fff;            
+    background-color:@00adee;
+    color:@fff;            
     border:0px;
     border-radius: 3px !important;              
     text-decoration: none;        
@@ -111,7 +110,7 @@
   .forgot-link {
     font:12px 'sourcesans_pro', 'sans-serif';
     font-weight:normal;
-    color:#00adee; 
+    color:@00adee; 
     display:inline-block; 
     margin:2px 0px 0px;
     padding:0px;
@@ -137,12 +136,12 @@
     span
     {
       font:12px 'sourcesans_pro', 'sans-serif';
-      color:#3c4352; 
+      color:@3c4352; 
     }
     a
     {
       font:12px 'opensans-sb', 'sans-serif';
-      color:#00adee; 
+      color:@00adee; 
     }
   }
 }
@@ -182,7 +181,7 @@
   .explanation
   {
     font:12px 'sourcesans_pro', 'sans-serif';
-    color:#3c4352; 
+    color:@3c4352; 
     margin-bottom:14px;
   }
   .r
@@ -220,7 +219,7 @@
   {
     font:12px 'sourcesans_pro', 'sans-serif';
     font-weight:normal;
-    color:#3c4352;  
+    color:@3c4352;  
     text-align:left;
     // margin-top:12px; 
     text-transform:uppercase;
@@ -262,10 +261,10 @@
   .wanna_account
   {
     font:12px 'sourcesans_pro', 'sans-serif';
-    color:#3c4352;
+    color:@3c4352;
     padding:9px;
     margin:0px 0px 10px;
-    border:1px solid #D95D6A;
+    border:1px solid @d95d6a;
     border-image-slice: 1 1 1 1;
     border-image-width: 1px 1px 1px 1px; 
     border-image-outset: 0px 0px 0px 0px;
@@ -315,7 +314,7 @@
   }
   i {
     font:14px 'sourcesans_pro_li', 'sans-serif';
-    color:#d95d6a;
+    color:@d95d6a;
     text-transform:none;
   }
 }
@@ -339,7 +338,7 @@ label > abbr {
  input[type=text],input[type=email],input[type=password], textarea
   {
     font:12px 'sourcesans_pro', 'sans-serif' !important;
-    color:#3C4352;            
+    color:@3c4352;            
     display:inline-block;
     border:0px !important;
     background-color:#dceef4 !important;
@@ -354,7 +353,7 @@ label > abbr {
   }
   input[type=text]:focus,input[type=email]:focus,input[type=password]:focus, textarea:focus
   {
-    background-color:#fff !important;
+    background-color:@fff !important;
     outline:none;
     border-radius:0 !important;  
     box-shadow: none !important;     
@@ -366,7 +365,7 @@ label > abbr {
       {
         font:12px 'sourcesans_pro', 'sans-serif';
         font-weight:normal;
-        color:#3c4352; 
+        color:@3c4352; 
         display:inline-block; 
         margin:0px;
         padding:0px; 
@@ -395,7 +394,7 @@ label > abbr {
     {
       font:12px 'sourcesans_pro', 'sans-serif';
       font-weight:normal;
-      color:#3c4352; 
+      color:@3c4352; 
       display:inline-block; 
       margin:0px;
       padding:0px; 
@@ -426,7 +425,7 @@ label > abbr {
      }
      > label
      {
-        color:#d95d6a !important;
+        color:@d95d6a !important;
      }
   }
 }

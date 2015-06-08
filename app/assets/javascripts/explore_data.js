@@ -184,7 +184,6 @@ function build_crosstab_charts(json){
 
 
 
-
 ////////////////////////////////////////////////
 // build pie chart for each chart item in json
 function build_pie_charts(json){

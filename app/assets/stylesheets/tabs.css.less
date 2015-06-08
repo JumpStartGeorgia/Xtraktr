@@ -1,3 +1,4 @@
+@import "variables.css.less";
 .tabs
 {
   background-color: #f6f7f7;
@@ -6,11 +7,11 @@
     .tab-caption {
       display:inline-block;
       font:14px 'nokiasans_s60','sans-serif';
-      color:#3c4352;
+      color:@3c4352;
       text-transform:uppercase;
       min-height:34px;
       padding:12px 0px 0px;
-      border-bottom:3px solid #00adee;
+      border-bottom:3px solid @00adee;
       position:relative;
       left: 50%;
       transform: translateX(-50%);
@@ -36,13 +37,13 @@
   }
   ul.nav-tabs {
     &.collapse.in {
-        background-color: #f9f9f9;
+        background-color: @f9f9f9;
         display: inline-block;
         width: auto;
         position: absolute;
         right: 0px;
         z-index: 1;
-        border:1px solid #eaeaea;
+        border:1px solid @eaeaea;
         border-radius: 0;
         box-shadow: none;
         padding:9px 0px 9px;
@@ -58,7 +59,7 @@
         cursor:pointer;
         a
         {
-          color: #00adee;
+          color: @00adee;
           &:focus, &:hover
           {
             border:0;
@@ -69,7 +70,7 @@
       a{
         display: block;
         font:16px 'sourcesans_pro', 'sans-serif';
-        color:#5c687a;
+        color:@5c687a;
         background-color:transparent;
         width:100%;   
         padding: 5px 25px;
@@ -78,7 +79,7 @@
         &:hover
         {
           background:none;
-          color:#00adee;
+          color:@00adee;
         }  
       }
     }
@@ -97,7 +98,7 @@
     }
   }
   .tab-content {
-    background-color:#fff;
+    background-color:@fff;
     padding-top:24px;
     .tab-pane{
       margin:0px;
@@ -135,7 +136,7 @@
         > a
         {
           font:14px 'nokiasans_s60','sans-serif';
-          color:#3c4352;
+          color:@3c4352;
           text-transform:uppercase;
           &:lang(ka) { font:14px 'nokiasans_s60_sb', 'sans-serif'; }
         }
@@ -149,7 +150,7 @@
         {
           a
           {
-            color:#3c4352;
+            color:@3c4352;
             border-bottom:3px solid #00adee;
             width:auto;
             &:after
@@ -166,7 +167,7 @@
             }
             &:focus, &:hover
             {                
-              border-bottom:3px solid #00adee;           
+              border-bottom:3px solid @00adee;           
             }
           }
         }
@@ -214,18 +215,18 @@
          
           a
           {
-            color:#3c4352;
-            border-bottom:3px solid #00adee;           
+            color:@3c4352;
+            border-bottom:3px solid @00adee;           
             &:focus, &:hover
             {
               background-color:transparent;
               border:0;
-              border-bottom:3px solid #00adee;           
+              border-bottom:3px solid @00adee;           
             }
           }
           cursor:pointer;
         }
-        &.active {  background-color:#fff;
+        &.active {  background-color:@fff;
           border-width:0px 1px;
           border-style: solid;
           border-color:#d6d6d6;
@@ -255,7 +256,7 @@
         {
           &:hover a
           {
-            border-bottom:3px solid #00adee;
+            border-bottom:3px solid @00adee;
           }
           a
           {
@@ -272,7 +273,7 @@
     .tab-content 
     {
       padding:0px;
-      background-color:#fff;
+      background-color:@fff;
       &:before { 
         content:"";
         display:block;

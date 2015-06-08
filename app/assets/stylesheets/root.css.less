@@ -1,3 +1,4 @@
+@import "variables.css.less";
 .article.root
 {
   .intro{
@@ -7,7 +8,7 @@
     margin: 0px auto;
     .slogan{
       font:26px 'sourcesans_pro_l', 'sans-serif';
-      color:#3c4352;    
+      color:@3c4352;    
       text-align:center;
       margin:0px 0px 7px;
       &:lang(ka) { font-size: 22px; }
@@ -16,7 +17,7 @@
     }
     .desc{
       font:16px 'sourcesans_pro', 'sans-serif';
-      color:#3c4352;  
+      color:@3c4352;  
     }
   }
 
@@ -54,13 +55,14 @@
     .search {
       margin-bottom:20px;
       padding:0px;
+      width:100%;
       .box {
         width:100%;
         input { width:100%; min-width:100%; }
       }
 
     }
-    .header { margin:24px 0px 0px; }
+//    .header { margin:24px 0px 0px; }
         .t{
         width:100%;
         display:table;
@@ -74,10 +76,10 @@
           text-align:center;
           
           font:14px 'sourcesans_pro_l';
-          color:#3c4352;
+          color:@3c4352;
           a{
             font:14px 'sourcesans_pro', 'sans-serif';
-            color:#636975;
+            color:@636975;
             line-height:17px;
             display: block;
             text-decoration: none;
@@ -120,17 +122,17 @@
       position:relative;
       
       &::-webkit-scrollbar-track {
-        background-color: #f6f6f6;
+        background-color: @f6f6f6;
       }
       &::-webkit-scrollbar {
         height: 12px;
       }
       &::-webkit-scrollbar-thumb {
-        background-color: #bfbfbf;
-        border: 2px solid #f6f6f6;
+        background-color: @bfbfbf;
+        border: 2px solid @f6f6f6;
       }
       &::-webkit-scrollbar-thumb:hover {
-        background-color: #b1b1b1;
+        background-color: @b1b1b1;
         cursor: pointer;
       }
       .header { margin:0px 0px 13px 20px;}
@@ -157,13 +159,13 @@
               content:"";
               display:inline-block;
               width:100%;
-              border-bottom:1px solid #e8e8e8;
+              border-bottom:1px solid @e8e8e8;
               margin:0px 0px 8px 13px;
             }
             a
             {
               font:13px 'prime','sans-serif';
-              color:#d95d6a;
+              color:@d95d6a;
               text-align:left;
               text-transform:uppercase;
               display:inline-block;
@@ -173,7 +175,7 @@
             }
             .desc {
               font:16px 'sourcesans_pro_l', 'sans-serif';
-              color:#3c4352; 
+              color:@3c4352; 
               text-align:left; 
               margin:0 0 0 20px;
             }
@@ -217,13 +219,13 @@
       text-decoration: none;
       .figure{
         position: relative;
-        background: #ffffff url(/assets/svg/time_series_banner.svg) no-repeat center 70px;
+        background: @fff url(/assets/svg/time_series_banner.svg) no-repeat center 70px;
         height: 100%;
         min-height: 410px;
 
         .title{
           font:20px 'nokiasans_s60', 'sans-serif';
-          color: #fff;
+          color: @fff;
           text-align: left;
           text-transform: uppercase;
           position: absolute;
@@ -257,7 +259,7 @@
     h2
     {
       font:14px 'nokiasans_s60', 'sans-serif';
-      color:#00adee;
+      color:@00adee;
       margin:0px;
       text-align:left;
       display:table-cell;
@@ -378,14 +380,14 @@
   .header
   {
     font:16px 'nokiasans_s60', 'sans-serif';
-    color:#3c4352;
+    color:@3c4352;
     text-transform:uppercase;
     &:lang(ka) { font:16px 'nokiasans_s60_sb', 'sans-serif';}
   }
   .intro
   {
     font:16px 'sourcesans_pro_l', 'sans-serif';
-    color:#3c4352;   
+    color:@3c4352;   
     margin:18px 0 28px 
   }
   form
@@ -393,7 +395,7 @@
     input[type=text],input[type=email], textarea
     {
       font:12px 'sourcesans_pro', 'sans-serif' !important;
-      color:#3C4352;            
+      color:@3c4352;            
       display:inline-block;
       border:0px !important;
       background-color:#dceef4 !important;
@@ -409,7 +411,7 @@
     }
     input[type=text]:focus,input[type=email]:focus, textarea:focus
     {
-      background-color:#fff !important;
+      background-color:@fff !important;
       outline:none;
       border-radius:0 !important;  
       box-shadow: none !important;     
@@ -417,7 +419,7 @@
     label
     {
       font:12px 'sourcesans_pro_sb', 'sans-serif';
-      color:#3c4352;
+      color:@3c4352;
       text-transform:uppercase;
 
     }
@@ -425,9 +427,9 @@
     .submit-message
     {
       font:12px 'sourcesans_pro_sb', 'sans-serif';
-      color:#fff;
-      background-color:#00adee;
-      border:1px solid #fff;
+      color:@fff;
+      background-color:@00adee;
+      border:1px solid @fff;
       border-radius: 3px;
       text-transform:uppercase;
       padding:6px 20px;
@@ -459,7 +461,7 @@
     .text
     {
       font:16px 'sourcesans_pro','sans-serif';
-      color:#fff;
+      color:@fff;
       padding:0px 12px 0px 10px;
       position:relative;
       top: 50%;
@@ -483,7 +485,7 @@
     .text
     {
       font:16px 'sourcesans_pro','sans-serif';
-      color:#fff;
+      color:@fff;
       padding:0px 12px 0px 10px;
       position:relative;
       top: 50%;
@@ -505,7 +507,7 @@
      }
      > label
      {
-        color:#d95d6a !important;
+        color:@d95d6a !important;
      }
   }
   .notification { width: 100%; }
@@ -514,12 +516,12 @@
   .header
   {
     font: 16px 'sourcesans_pro_l', 'sans-serif';
-    color:#49505e;
+    color:@49505e;
     margin:0px 0px 32px;
     a
     {
       font: 16px 'sourcesans_pro_sb', 'sans-serif';
-      color:#00adee;
+      color:@00adee;
     }
   }
   .box
@@ -556,7 +558,7 @@
       .title
       {      
         font: 16px 'nokiasans_s60', 'sans-serif';
-        color:#3C4352;
+        color:@3c4352;
         padding: 0px 8px;
         white-space: nowrap; 
         &:lang(ka) { font: 16px 'nokiasans_s60_sb', 'sans-serif';} 
@@ -571,11 +573,11 @@
     .text
     {
       font: 16px 'sourcesans_pro_l', 'sans-serif';
-      color:#49505e;
+      color:@49505e;
       a
       {
         font: 16px 'sourcesans_pro_sb', 'sans-serif';
-        color:#49505e;
+        color:@49505e;
         cursor:pointer;
       }
     }
@@ -584,5 +586,5 @@
 }
 .article.notes{ 
   font: 16px 'sourcesans_pro_l', 'sans-serif';
-  color:#49505e;  
+  color:@49505e;  
 }
