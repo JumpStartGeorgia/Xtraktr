@@ -824,7 +824,7 @@ $(document).ready(function() {
   $(document).on('click', '.tabs li', function() {    
     $(this).find('a').tab('show');
   });
-  $(document).on('click', '#codebook .up', function () {    
+  $(document).on('click', '.tab-content .up', function () {    
     $('body').animate({ scrollTop: 0 }, 1500);
   });
   $(document).on('click', '.embed-chart', function () {
