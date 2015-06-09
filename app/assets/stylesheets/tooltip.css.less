@@ -1,3 +1,4 @@
+@import "variables.css.less";
 .tooltip
 {
   &.in
@@ -19,8 +20,6 @@
     bottom:0px !important;
     top:auto !important;
     left:50% !important;
-    -webkit-transform: translateX(-50%);
-    -ms-transform: translateX(-50%);
     transform: translateX(-50%);
     right:auto !important;
   }
@@ -32,8 +31,6 @@
     left:0px !important;
     bottom:auto !important;
     top:50% !important;
-    -webkit-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
     transform: translateY(-50%);
     right:auto !important;
   }
@@ -45,8 +42,6 @@
     top:0px !important;
     bottom:auto !important;
     left:50% !important;
-    -webkit-transform: translateX(-50%);
-    -ms-transform: translateX(-50%);
     transform: translateX(-50%);
     right:auto !important;
   }
@@ -58,31 +53,28 @@
     right:0px !important;
     bottom:auto !important;
     top:50% !important;
-    -webkit-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
     transform: translateY(-50%);
   }
   .tooltip-inner
   {
-    font-family: 'sourcesans_pro','sans-serif';
-    font-size:12px;
-    color:#00adee;
-    background-color:#fff;   
-    border:1px solid #e0e0e0;  
+    font:12px 'sourcesans_pro','sans-serif';
+    color:@00adee;
+    background-color:@fff;   
+    border:1px solid @e0e0e0;  
   }
 }
 .tooltip-exclamation
 {
   .tooltip-inner
   {
-    color:#d95d6a;
+    color:@d95d6a;
   }
 }
 .tooltip-time-series
 {
   .tooltip-inner
   {
-    color:#d95d6a;
+    color:@d95d6a;
   }
 }
 .tooltip-download

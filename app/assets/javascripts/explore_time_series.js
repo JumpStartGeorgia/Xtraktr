@@ -349,7 +349,7 @@ function get_explore_time_series(is_back_button){
     dataType: 'json'
   })
   .error(function( jqXHR, textStatus, errorThrown ) {
-    console.log( "Request failed: " + textStatus  + ". Error thrown: " + errorThrown);
+    //console.log( "Request failed: " + textStatus  + ". Error thrown: " + errorThrown);
   })
   .success(function( json ) {
     json_data = json;

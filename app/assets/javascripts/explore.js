@@ -750,9 +750,10 @@ function resizeExploreData(){
     {
       var offset = expform.offset(),
       expformWidth = expform.width();
+      var offsetWidth = offset.left == 0 ? 0 : (offset.left + 302);
       var tmp = expform.find('form');
-      $('#explore-form #jumpto').css({'height':h-(tmp.offset().top+tmp.height()+41+2)  });
-      $('#explore-data-content  .tab-pane').css({'width': w-442, 'height':h-(51+31+40+41+2)});
+      $('#explore-form #jumpto').css({'height': (offset.left != 0 ? (h-(tmp.offset().top+tmp.height()+41+2)) : 'auto')  });
+      $('#explore-data-content  .tab-pane').css({'width': w-offsetWidth, 'height':h-(51+31+40+41+2)});
     }
 }
 ////////////////////////////////////////////////
@@ -810,24 +811,24 @@ $(document).ready(function() {
 
   });
 
+  
 // share button with slide effect used on dashboard, timeseries and explore page
-  $('.share-box').hover(function(){ // on hover do this:
-    var t = $(this);
-   var at = t.find('.addthis_sharing_toolbox');
-   t.find('.prompt').animate({"right": at.width()+15 }, 500, function(){  });
-   at.delay( 500 ).animate({"opacity":1}, 100);
-  }, function(){ 
-    var t = $(this);
-    var at = t.find('.addthis_sharing_toolbox');
-    at.stop().animate({"opacity":0}, 100);
-    t.find('.prompt').stop().delay( 100 ).animate({"right":0}, 250);
-  }); 
+  if(is_touch) {
+    $('.share-box').on('click', function(){ share_toggle(($(this).attr('data-state') == 'in' ? 'out' : 'in'),$(this)); }); 
+  }
+  else {
+    $('.share-box').hover(function(){ 
+      share_toggle('in',$(this));
+    }, function() { share_toggle('out',$(this)); }); 
+  }
 // tabs - on li click fire inner a tag
   $(document).on('click', '.tabs li', function() {    
     $(this).find('a').tab('show');
   });
-
-  $(document).on('click', '.embed-chart', function(){
+  $(document).on('click', '.tab-content .up', function () {    
+    $('body').animate({ scrollTop: 0 }, 1500);
+  });
+  $(document).on('click', '.embed-chart', function () {
     var url = $(this).attr('data-href');
      modal(gon.embed_chart,
       {
@@ -865,3 +866,36 @@ $(document).ready(function() {
   resizeExploreData();
   $( window ).resize(function() { resizeExploreData(); });
 });
+function share_toggle(state,t)
+{
+  var at = t.find('.addthis_sharing_toolbox'),
+      dir = { },
+      dir2 = { };
+  
+  if(state == 'in') {   
+    var atwidth = at.width();
+
+    var tmp = 'right';
+    var tmp2 = 'left';
+    if(at.offset().left < atwidth)
+    {
+      tmp = 'left';
+      tmp2 = 'right';
+    }
+    dir[tmp] = atwidth;
+    dir2[tmp2] = 'initial';
+    t.attr('data-dir',tmp);
+    t.find('.prompt').css(dir2).animate(dir, 500, function(){  });
+    at.delay( 500 ).animate({"opacity":1}, 100);
+  }
+  else {
+
+    var tmp = t.attr('data-dir');
+    var tmp2 = tmp == 'left' ? 'right' : 'left';
+    dir[tmp] = 0;
+    dir2[tmp2] = 'initial';
+    at.stop().animate({"opacity":0}, 100);
+    t.find('.prompt').css(dir2).stop().delay( 100 ).animate(dir, 250);
+  }
+  t.attr('data-state', state);
+}

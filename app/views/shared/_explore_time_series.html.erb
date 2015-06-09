@@ -51,16 +51,27 @@
 
     </div>
 
-    <div id="explore-data-content" class="c tabs">
-      <ul class="nav nav-tabs" id="explore-tabs" role="tablist">
-        <li id="nav-chart"><a href="#tab-chart" role="tab" data-toggle="tab"><%= t('.tabs.chart') %></a></li>
+    <div id="explore-data-content" class="c tabs style2">
+      <div class="tab-header">
+        <div class="tab-caption"><%= t('.tabs.chart') %></div>
+        <button type="button" class="navbar-toggle tab-toggle collapsed" data-toggle="collapse" data-target=".tab-collapse">
+          <span class="sr-only"><%= t('.toggle') %></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+      <ul class="nav nav-tabs collapse tab-collapse" id="explore-tabs" role="tablist">
+        <li id="nav-chart" class="active"><a href="#tab-chart" role="tab" data-toggle="tab"><%= t('.tabs.chart') %></a></li>
         <li id="nav-table"><a href="#tab-table" role="tab" data-toggle="tab"><%= t('.tabs.table') %></a></li>
         <li id="nav-details"><a href="#tab-details" role="tab" data-toggle="tab"><%= t('.tabs.details') %></a></li>
       </ul>      
-      <div class="share share-box"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>
+      <% if !@is_time_series_admin %>
+        <div class="share share-box"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>
+      <% end %>
       <div class="tab-content" id="explore-content">
 
-        <div class="tab-pane fade" id="tab-chart">
+        <div class="tab-pane fade in active" id="tab-chart">
           <%
             data_attr = ''
             if @is_time_series_admin

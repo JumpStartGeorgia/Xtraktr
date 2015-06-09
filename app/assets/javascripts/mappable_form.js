@@ -59,12 +59,12 @@ function update_mappable_matching_list(){
 }
 
 function highlight_unselected_match(ths_select){
-  console.log('select val = ' + $(ths_select).val());
+  //console.log('select val = ' + $(ths_select).val());
   if ($(ths_select).val() == ''){
-    console.log(' - adding class');
+    //console.log(' - adding class');
     $(ths_select).closest('.match-shapeset').addClass('no-match');
   }else{
-    console.log(' - removing class');
+    //console.log(' - removing class');
     $(ths_select).closest('.match-shapeset').removeClass('no-match');
   }
 }

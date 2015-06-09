@@ -3,12 +3,12 @@
   model_class_d = Dataset 
   is_admin_page = request.path == time_series_path(@time_series)
 
-  subnav_left render(partial: 'shared/language_switcher', locals: {langs: @time_series.language_objects, current_locale: @time_series.current_locale})
+  subnav_left render(partial: 'shared/language_switcher', locals: {langs: @time_series.language_objects, current_locale: @time_series.current_locale, share: true})
 -%>
 
 <div class="article timeseries">
   <div class="meta">
-    <div class="col bright">
+    <div class="col">
       <h2>
         <%= image_tag 'svg/timeseries.svg' %>
         <%=@time_series.title%>
@@ -29,7 +29,7 @@
               <%= I18n.l(dataset.released_at, format: :day_first) if dataset.released_at.present? %>
             </div>   
           </div>
-          <% if dataset_index == 0 %>
+          <% if dataset_index == 0 && !@is_time_series_admin %>
             <div class="share"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>
           <% end %>
         </div>
@@ -46,8 +46,10 @@
             <ul>
               <% @time_series.categories.each {|x| %>
                 <li class="item">
-                  <div class="text"><span><%= x.name %></span></div>
-                  <div class="img <%= x.permalink %>" alt="<%= x.name %>"></div>
+                  <%= link_to explore_data_path(category: x.permalink) do %>
+                    <div class="text"><span><%= x.name %></span></div>
+                    <div class="img <%= x.permalink %>" alt="<%= x.name %>"></div>
+                  <% end %>
                 </li>
               <% } %>
             </ul>         
@@ -61,16 +63,27 @@
       </div>
     </div>
   </div>
-  <div id="dashboard-tabs" class="tabs" role="tabpanel">
+  <div id="dashboard-tabs" class="tabs style1" role="tabpanel">
       <% 
         highlight_active = {tab: '', panel: ''}
         codebook_active = {tab: 'active', panel: 'in active'}
+        active_tab_label = t('.tabs.codebook')
         if @highlights.present?
           highlight_active = {tab: 'active', panel: 'in active'}
           codebook_active = {tab: '', panel: ''}
+          active_tab_label = t('.tabs.highlights')
         end 
       %>
-    <ul class="nav nav-tabs" role="tablist">
+    <div class="tab-header">
+      <div class="tab-caption"><%= active_tab_label %></div>
+      <button type="button" class="navbar-toggle tab-toggle collapsed" data-toggle="collapse" data-target=".tab-collapse">
+        <span class="sr-only"><%= t('.toggle') %></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>      
+    <ul class="nav nav-tabs collapse tab-collapse" role="tablist">
       <li role="presentation" class="<%= highlight_active[:tab] %>">
         <a href="#highlights" aria-controls="highlights" role="tab" data-toggle="tab"><%= t('.tabs.highlights') %></a>
       </li>
@@ -97,20 +110,22 @@
       <div role="tabpanel" class="tab-pane fade <%= codebook_active[:panel] %>" id="codebook">
         <div id="codebook-search">
           <input type="search" class="codebook-search" id="filter" value="" placeholder="<%= t('helpers.search') %>" />
-          <div class="radio-box" tabindex="0">
-            <input checked id="filter_all" name="filter" type="radio" value="all" />
-            <label class="filter" for="filter_all"><%= t('.filter.all') %></label>
+          <div class="radio-box-group">
+            <div class="radio-box" tabindex="0">
+              <input checked id="filter_all" name="filter" type="radio" value="all" />
+              <label class="filter" for="filter_all"><%= t('.filter.all') %></label>
+            </div>
+            <div class="radio-box" tabindex="0">
+              <input id="filter_q" name="filter" type="radio" value="q" />
+              <label class="filter" for="filter_q"><%= t('.filter.questions') %></label>
+            </div>
+            <div class="radio-box" tabindex="0">
+              <input id="filter_ans" name="filter" type="radio" value="ans" />
+              <label class="filter" for="filter_ans"><%= t('.filter.answers') %></label>
+            </div>  
           </div>
-          <div class="radio-box" tabindex="0">
-            <input id="filter_q" name="filter" type="radio" value="q" />
-            <label class="filter" for="filter_q"><%= t('.filter.questions') %></label>
-          </div>
-          <div class="radio-box" tabindex="0">
-            <input id="filter_ans" name="filter" type="radio" value="ans" />
-            <label class="filter" for="filter_ans"><%= t('.filter.answers') %></label>
-          </div>  
         </div>
-
+        <div class="up"></div>
         <ul class="list-unstyled">
           <% @time_series.questions.sorted.each do |question| %>
             <li>

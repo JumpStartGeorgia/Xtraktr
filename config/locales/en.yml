@@ -490,8 +490,9 @@ en:
       confirm: Are you sure?
       new: New
       save_settings: Save Settings
-      choose_category: Choose Category
+      choose_category: "<span>Choose </span>Category"
       change_category: Change Category
+      categories: Categories
     common:
       xtraktr:
         app_name: Xtraktr
@@ -518,6 +519,7 @@ en:
       go: Go
       share: Share
       codebook_title: Download the Codebook
+      all_categories: All Categories
     msgs:
       does_not_exist: You tried to access a page that does not exist.
       not_authorized: You are not authorized to view that page.

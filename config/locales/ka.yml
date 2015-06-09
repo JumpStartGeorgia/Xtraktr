@@ -492,6 +492,8 @@ ka:
       save_settings: "პარამეტრების შენახვა"
       choose_category: "კატეგორიის არჩევა"
       change_category: "კატეგორიის შეცვლა"
+      categories: Categories
+      category: Category
     common:
       xtraktr:
         app_name: X-Traktr
@@ -518,6 +520,7 @@ ka:
       go: "ძებნა"
       share: "გაზიარება"
       codebook_title: კოდირების ჩამოტვირთვა
+      all_categories: All Categories
     msgs:
       does_not_exist: "თქვენ ცდილობთ ისეთი გვერდის ნახვას, რომელიც არ არსებობს."
       not_authorized: "თქვენ არ გაქვთ ამ გვერდის ნახვის უფლება."

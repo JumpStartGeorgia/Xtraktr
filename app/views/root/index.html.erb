@@ -25,13 +25,13 @@
               <div class="r">
                   <div class="c">
                         <%= link_to explore_data_path(category: @categories[i].permalink) do %>
-                          <%= image_tag "/assets/svg/categories/#{@categories[i].permalink}.svg" %>
+                          <div class='img <%= "#{@categories[i].permalink}" %>'></div>
                           <span><%= @categories[i].name %></span>
                         <% end %>
                   </div>                  
                   <div class="c">
                         <%= link_to explore_data_path(category: @categories[i+rows].permalink) do %>
-                          <%= image_tag "/assets/svg/categories/#{@categories[i+rows].permalink}.svg" %>
+                          <div class='img <%= "#{@categories[i+rows].permalink}" %>'></div>
                           <span><%= @categories[i+rows].name %></span>
                         <% end %>
                   </div> 
@@ -41,7 +41,7 @@
               <div class="r">
                 <div class="c">
                   <%= link_to explore_data_path(category: @categories[@categories.length-1].permalink) do %>
-                    <%= image_tag "/assets/svg/categories/#{@categories[@categories.length-1].permalink}.svg" %>
+                    <div class='img <%= "#{@categories[@categories.length-1].permalink}" %>'></div>
                     <span><%= @categories[@categories.length-1].name %></span>
                   <% end %>
                 </div> 

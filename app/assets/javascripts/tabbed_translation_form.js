@@ -32,19 +32,19 @@ $(document).ready(function(){
 
   // update the default language drop down
   function load_default_languages(){
-    console.log('load default langs');
+    //console.log('load default langs');
     // if not items are selected, hide the default language selector
     // else, show it with the options of what is selected in default language
-    console.log('selected languages = ' + $('form.tabbed-translation-form select.languages option:selected').length);
+    //console.log('selected languages = ' + $('form.tabbed-translation-form select.languages option:selected').length);
     var values = $('form.tabbed-translation-form select.languages').val();
 
     if (values == null || values.length == 0){
-      console.log('- no selected, hiding');
+      //console.log('- no selected, hiding');
       $('form.tabbed-translation-form select.default-language').val('');
       $('form.tabbed-translation-form select.default-language option').addClass('hide');
       $('form.tabbed-translation-form select.default-language').next().attr('style', 'visibility: hidden !important');
     }else{
-      console.log('- langs selected, adding');
+      //console.log('- langs selected, adding');
       // turn on all of the languages that are selected
       $('form.tabbed-translation-form select.default-language option').each(function(){
         if (values.indexOf($(this).attr('value')) == -1){
@@ -57,10 +57,10 @@ $(document).ready(function(){
       // update the default language list
       // - if current default lang is not in the language list, reset the value to the first selected lang
       var default_language = $('form.tabbed-translation-form select.default-language').val();
-      console.log('- current default selection is ' + default_language);
+      //console.log('- current default selection is ' + default_language);
       if ( (default_language == null || default_language == '') || (default_language != null && default_language != '' && values.indexOf(default_language) == -1) ) {
 
-        console.log('@@@@ reseting default language selection');
+        //console.log('@@@@ reseting default language selection');
         $('form.tabbed-translation-form select.default-language').val(values[0]);
       }
     }
@@ -71,19 +71,19 @@ $(document).ready(function(){
   // - tab = jquery reference to tab that needs to be updated
   // - form = jquery reference to form that needs to be updated
   function update_block_with_new_locale(new_locale, tab, form){
-    console.log('++++ update block with new locale');
+    //console.log('++++ update block with new locale');
     // get old locale
     var old_locale = $(form).attr('id');
 
-    console.log('--> old_locale = ' + old_locale + '; new locale = ' + new_locale);
+    //console.log('--> old_locale = ' + old_locale + '; new locale = ' + new_locale);
     // if the new locale is the same as the old one, do nothing
     if (old_locale != new_locale){
-      console.log('--> locales are different, so update tab/form');
+      //console.log('--> locales are different, so update tab/form');
 
       // first get name for this locale
       var name = $('form.tabbed-translation-form select.languages option[value="' + new_locale + '"]').html();
 
-      console.log('--> new locale name = ' + name);
+      //console.log('--> new locale name = ' + name);
 
       ////////////
       // update the tab
@@ -98,11 +98,11 @@ $(document).ready(function(){
       $(tab).find('a').html(name);
 
       // remove active class unless there is only one tab
-      console.log('--> remove active class');
+      //console.log('--> remove active class');
       if ($('form.tabbed-translation-form ul.nav.nav-tabs li').length > 1){
-        console.log(tab);
+        //console.log(tab);
         $(tab).removeClass('active');
-        console.log(tab);
+        //console.log(tab);
       }
 
       ////////////
@@ -147,7 +147,7 @@ $(document).ready(function(){
     $(tab).show();
     //$(form).show();
 
-    console.log('++++ update block with new locale END');
+    //console.log('++++ update block with new locale END');
   }
 
   // if no tabs are marked as active, activate the first one
@@ -161,7 +161,7 @@ $(document).ready(function(){
   function make_default_first(){
     var default_language = $('form.tabbed-translation-form select.default-language').val();
     if ( default_language != null && default_language != '' && $('form.tabbed-translation-form ul.nav.nav-tabs li:first').data('locale') != default_language ){
-      console.log('-- making sure default language is first tab');
+      //console.log('-- making sure default language is first tab');
       var ptab = $('form.tabbed-translation-form ul.nav.nav-tabs li[data-locale="' + default_language + '"]');
       var pform = $('form.tabbed-translation-form .tab-content .tab-pane[data-locale="' + default_language + '"]') 
 
@@ -185,37 +185,37 @@ $(document).ready(function(){
 
   // when a language changes, hide/show the appropriate language tabs
   function load_language_tabs(){
-    console.log('=== load lang tabs');
+    //console.log('=== load lang tabs');
     var values = $('form.tabbed-translation-form select.languages').val();
 
     if (values == null || values.length == 0){
-      console.log('- no selections so defualt to current app locale');
+      //console.log('- no selections so defualt to current app locale');
       // no items selected so default to all available locales
       values = I18n.available_locales; 
     }
-    console.log('--> current selected langs = ' + values);
+    //console.log('--> current selected langs = ' + values);
 
     // get the index for each locale in tabs
     var existing_indexes = [];
     var existing_locales = $('form.tabbed-translation-form ul.nav.nav-tabs li').map(function(){ return $(this).data('locale'); }).toArray();
-    console.log('--> existing locales = ');
-    console.log(existing_locales);
+    //console.log('--> existing locales = ');
+    //console.log(existing_locales);
     for(var i=0; i<values.length; i++){
-      console.log('--- testing if ' + values[i] + ' is already a tab');
+      //console.log('--- testing if ' + values[i] + ' is already a tab');
       existing_indexes.push(existing_locales.indexOf(values[i]));
     }
-    console.log('--> existing tab indexes = ');
-    console.log(existing_indexes);
+    //console.log('--> existing tab indexes = ');
+    //console.log(existing_indexes);
 
     // if currently there are more than one tab, 
     // see if any of the tabs are the currently selected locale(s)
     // if so - keep it
     // else, remove it
     if ($('form.tabbed-translation-form ul.nav.nav-tabs li').length > 1){
-      console.log('-- there was more than one tab');
+      //console.log('-- there was more than one tab');
 
       // work on tabs
-      console.log('--> removing un needed tabs');
+      //console.log('--> removing un needed tabs');
       var i = 0;
       for(var index=0; index<$('form.tabbed-translation-form ul.nav.nav-tabs li').length; index++){
         var item = $('form.tabbed-translation-form ul.nav.nav-tabs li')[index];
@@ -231,7 +231,7 @@ $(document).ready(function(){
       }
       
       // work on form 
-      console.log('--> removing un needed forms');
+      //console.log('--> removing un needed forms');
       i = 0;
       for(var index=0; index<$('form.tabbed-translation-form .tab-content .tab-pane').length; index++){
         var item = $('form.tabbed-translation-form .tab-content .tab-pane')[index];
@@ -250,16 +250,16 @@ $(document).ready(function(){
 
     // now go through each locale and if it does not exist as a tab yet, add it
     for(var index=0; index<values.length; index++){
-      console.log('==> index = ' + index + '; locale = ' + values[index] + '; existing index = ' + existing_indexes[index]);
+      //console.log('==> index = ' + index + '; locale = ' + values[index] + '; existing index = ' + existing_indexes[index]);
 
       // if no existing indexes exist, just update the first block with the locale if this is the first locale
       if ( allAreEqual(existing_indexes) == true && index == 0){
-        console.log('--> updating first block with new locale');
+        //console.log('--> updating first block with new locale');
         // now update first block to use the new locale
         update_block_with_new_locale(values[index], $('form.tabbed-translation-form ul.nav.nav-tabs li:first'), $('form.tabbed-translation-form .tab-content .tab-pane:first'))
       
       }else if ( existing_indexes[index] == -1 ){
-        console.log('--> add new block');
+        //console.log('--> add new block');
         // this is a new locale, need to add it
 
         // first have to turn off all tinymce so clone works nicely
@@ -299,7 +299,7 @@ $(document).ready(function(){
     // make sure the default language is first
     make_default_first();
 
-    console.log('=== load lang tabs end');
+    //console.log('=== load lang tabs end');
   }
 
 

@@ -43,7 +43,7 @@ gem 'whenever' # schedule cron jobs
 gem 'zipruby', '~> 0.3.6' # create zip files
 gem 'roadie', '~> 2.4.3' # apply easy styling to html emails
 gem 'mongoid_slug', '~> 4.0.0' # permalink urls with mongoid
-
+gem "autoprefixer-rails" # no need to prefix css, it will automatically do it
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do

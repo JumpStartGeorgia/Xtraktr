@@ -1,6 +1,7 @@
 <%-
   langs ||= nil
   current_locale ||= I18n.locale.to_s
+  share = false if share.nil?
 
   if langs.present?
 -%>
@@ -15,4 +16,7 @@
       <% end %>
     </select>
   </div>
+<% end %>
+<% if share %>
+  <div class="share share-box share-sub"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>
 <% end %>

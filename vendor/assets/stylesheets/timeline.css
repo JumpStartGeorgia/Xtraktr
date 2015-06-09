@@ -47,7 +47,6 @@
     padding: 20px;
     border: 1px solid #d4d4d4;
     border-radius: 2px;
-    -webkit-box-shadow: 0 1px 6px rgba(0,0,0,0.175);
     box-shadow: 0 1px 6px rgba(0,0,0,0.175);
 }
 
@@ -143,7 +142,7 @@
     margin-top: 5px;
 }
 
-@media(max-width:767px) {
+@media(max-width:992px) {
     ul.timeline:before {
         left: 40px;
     }
