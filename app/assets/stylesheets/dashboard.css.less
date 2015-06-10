@@ -116,10 +116,11 @@
       }
       .calendar
       {
-        background:transparent url(/assets/svg/calendar.svg) no-repeat;
+        background:transparent url(/assets/svg/calendar.svg) no-repeat center top;
         width:31px;
         height:22px;
         display:table-cell;
+        vertical-align:top;
       }
       .timestamps
       {
@@ -475,7 +476,7 @@
       top:2px;
     }
     .info {
-      margin-bottom:0px;
+      margin-bottom:1px;
       .time-series-year
       {
         font:14px 'nokiasans_s60', 'sans-serif';
@@ -485,7 +486,9 @@
         width:34px;
         height:26px;
         line-height: 30px;
-        margin:0 10px 1px 1px;        
+        margin:0 10px 1px 1px; 
+        display:table-cell;
+        vertical-align:top;       
         &.last
         {
           border-bottom-right-radius: 2px;
