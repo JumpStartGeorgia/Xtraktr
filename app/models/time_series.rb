@@ -53,7 +53,7 @@ class TimeSeries < CustomTranslation
   embeds_many :questions, class_name: 'TimeSeriesQuestion' do
     # get the question that has the provided code
     def with_code(code)
-      where(:code => code.downcase).first
+      where(:code => code.downcase).first if code.present?
     end
 
     # get the dataset question records for the provided code

@@ -16,6 +16,10 @@ class ApiV1
   #  - dataset_id - id of dataset to get info on (required)
   #  - language - locale of language to get data in (optional)
   def self.dataset(dataset_id, options={})
+    if dataset_id.nil?
+      return {errors: [{status: '404', detail: I18n.t('api.msgs.missing_required_params') }]}
+    end
+
     # get options
     language = options['language'].present? ? options['language'].downcase : nil
 
@@ -40,6 +44,10 @@ class ApiV1
   #  - language - locale of language to get data in (optional)
   def self.dataset_codebook(dataset_id, options={})
     questions = nil
+
+    if dataset_id.nil?
+      return {errors: [{status: '404', detail: I18n.t('api.msgs.missing_required_params') }]}
+    end
 
     # get options
     language = options['language'].present? ? options['language'].downcase : nil
@@ -87,6 +95,10 @@ class ApiV1
   # }  
   def self.dataset_analysis(dataset_id, question_code, options={})
     data = {}
+
+    if dataset_id.nil? || question_code.nil?
+      return {errors: [{status: '404', detail: I18n.t('api.msgs.missing_required_params') }]}
+    end
 
     # get options
     private_user_id = options['private_user_id'].present? ? options['private_user_id'] : nil
@@ -190,6 +202,10 @@ class ApiV1
   #  - time_series_id - id of time_series to get info on (required)
   #  - language - locale of language to get data in (optional)
   def self.time_series(time_series_id, options={})
+    if time_series_id.nil?
+      return {errors: [{status: '404', detail: I18n.t('api.msgs.missing_required_params') }]}
+    end
+
     # get options
     language = options['language'].present? ? options['language'].downcase : nil
 
@@ -212,6 +228,10 @@ class ApiV1
   #  - time_series_id - id of time_series to get codebook for (required)
   #  - language - locale of language to get data in
   def self.time_series_codebook(time_series_id, options={})
+    if time_series_id.nil?
+      return {errors: [{status: '404', detail: I18n.t('api.msgs.missing_required_params') }]}
+    end
+
     questions = nil
 
     # get options
@@ -255,6 +275,11 @@ class ApiV1
   # }  
   def self.time_series_analysis(time_series_id, question_code, options={})
     data = {}
+
+    if time_series_id.nil? || question_code.nil?
+      return {errors: [{status: '404', detail: I18n.t('api.msgs.missing_required_params') }]}
+    end
+
 
     ########################
     # get options

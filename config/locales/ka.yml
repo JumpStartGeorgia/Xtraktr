@@ -718,6 +718,7 @@ ka:
       no_time_series: "პერიოდული შედარება ვერ მოიძებნა"
       no_time_series_dataset: "პერიოდული შედარებას არ აქვს მასთან დაკავშირებული მონაცემთა ცხრილი."
       no_time_series_dataset_error: "პერიოდული შედარებაში მონაცემთა ცხრილის მიღების დროს წარმოიშვა პრობლემა."
+      missing_required_params: "Please provide all required parameters."
     index:
       title: API
       no_versions: API-სთვის დოკუმენტაცია ჯერ არ შექმნილა
