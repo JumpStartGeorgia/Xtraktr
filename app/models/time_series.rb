@@ -344,9 +344,10 @@ class TimeSeries < CustomTranslation
     puts "- found #{matches.length} matches"
 
     # create record for each match
-    answer_values = []
-    question_answers = {}
     matches.each do |code|
+      answer_values = []
+      question_answers = {}
+
       # see if question already exists
       q = self.questions.with_code(code)
       # only continue if this quesiton does not exist in the time series yet
@@ -354,7 +355,7 @@ class TimeSeries < CustomTranslation
         puts "- adding question with code #{code}"
         # create question
         q = self.questions.build
-
+      
         dataset_ids.each do |dataset_id|
           question = datasets[dataset_id].questions.with_code(code)
           if question.present?
