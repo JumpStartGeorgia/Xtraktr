@@ -39,12 +39,10 @@
                       </li>
                     <% end %>
                     <li role="menuitem">
-                      <%= link_to t('app.menu.all_datasets'), datasets_path %>
+                      <%= link_to t('app.menu.all_datasets'), datasets_path, class: 'btn btn-primary btn-xs' %>
                     </li>
                   </ul>
-                <% end %>
-
-                <% if @is_time_series_admin %>
+                <% elsif @is_time_series_admin %>
                   <ul class="nav navbar-nav navbar-right">
                     <% if @time_series.present? && @time_series.created_at.present? %>
                       <li class="dropdown" role="menuitem">
@@ -52,7 +50,7 @@
                       </li>
                     <% end %>
                     <li role="menuitem">
-                      <%= link_to t('app.menu.all_time_series'), time_series_index_path %>
+                      <%= link_to t('app.menu.all_time_series'), time_series_index_path, class: 'btn btn-primary btn-xs' %>
                     </li>
                   </ul>
                 <% end %>

@@ -2,8 +2,9 @@
   model_class = TimeSeries
   model_class_d = Dataset 
   is_admin_page = request.path == time_series_path(@time_series)
+  show_share = true if show_share.nil?
 
-  subnav_left render(partial: 'shared/language_switcher', locals: {langs: @time_series.language_objects, current_locale: @time_series.current_locale, share: true})
+  subnav_left render(partial: 'shared/language_switcher', locals: {langs: @time_series.language_objects, current_locale: @time_series.current_locale, share: show_share})
 -%>
 
 <div class="article timeseries">

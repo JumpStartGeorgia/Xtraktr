@@ -2,8 +2,9 @@
   model_class = Dataset 
   r_model_class = Report 
   is_admin_page = request.path == dataset_path(@dataset)
+  show_share = true if show_share.nil?
 
-  subnav_left render(partial: 'shared/language_switcher', locals: {langs: @dataset.language_objects, current_locale: @dataset.current_locale, share: true})
+  subnav_left render(partial: 'shared/language_switcher', locals: {langs: @dataset.language_objects, current_locale: @dataset.current_locale, share: show_share})
 
 -%>
 <div class="article dashboard">
