@@ -493,6 +493,7 @@ en:
       choose_category: "<span>Choose </span>Category"
       change_category: Change Category
       categories: Categories
+      category: Category
     common:
       xtraktr:
         app_name: Xtraktr
@@ -717,6 +718,7 @@ en:
       no_time_series: "The Time Series could not be found."
       no_time_series_dataset: "The Time Series does not have any datasets assigned to it."
       no_time_series_dataset_error: "There was an error getting the data for the datasets in the time series."
+      missing_required_params: "Please provide all required parameters."
     index:
       title: API
       no_versions: 'No documentation for the API has been created yet.'

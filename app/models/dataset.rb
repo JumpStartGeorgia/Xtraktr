@@ -72,7 +72,7 @@ class Dataset < CustomTranslation
 
     # get the question that has the provided code
     def with_code(code)
-      where(:code => code.downcase).first
+      where(:code => code.downcase).first if code.present?
     end
 
     def with_codes(codes)
@@ -212,12 +212,12 @@ class Dataset < CustomTranslation
 
     # get the data item with this code
     def with_code(code)
-      where(:code => code.downcase).first
+      where(:code => code.downcase).first if code.present?
     end
 
     # get the data array for the provided code
     def code_data(code)
-      x = where(:code => code.downcase).first
+      x = where(:code => code.downcase).first if code.present?
       if x.present?
         return x.data
       else

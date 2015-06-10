@@ -102,6 +102,7 @@
                 </tr>
               </thead>
               <tbody>
+                <% logger.debug "====== time series question #{@time_series_question.code} has #{@time_series_question.answers.length} answers" %>
                 <% @time_series_question.answers.sorted.each do |answer| %>
                   <tr>
                     <td>
@@ -118,7 +119,7 @@
                     </td>
                     <% @datasets.each do |dataset| %>
                       <% dataset_answer = answer.dataset_answers.by_dataset_id(dataset.dataset_id) %>
-                      <td><%= dataset_answer.text %></td>
+                      <td><%= dataset_answer.text if dataset_answer.present? %></td>
                     <% end %>
                   </tr>
                 <% end %>
