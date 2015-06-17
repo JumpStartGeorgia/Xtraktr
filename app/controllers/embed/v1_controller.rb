@@ -17,6 +17,8 @@ class Embed::V1Controller < ApplicationController
 
       gon.update_page_title = true
 
+      gon.get_highlight_desc_link = highlights_get_description_path
+
       # if the visual is a chart, include the highcharts file
       # if the visual is a map, include the highmaps file
       gon.visual_type = @highlight_data[:visual_type]

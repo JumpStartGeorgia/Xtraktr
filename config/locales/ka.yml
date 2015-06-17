@@ -420,6 +420,7 @@ ka:
       cancel: "გაუქმება"
       reset: "საწყის კონფიგურაციაზე დაბრუნება"
       view: "ნახვა"
+      save: "შენახვა"
       sign_in_facebook: Facebook-ით შესვლა
       forgot_password: "დაგავიწყდათ პაროლი?"
       change_password: "პაროლის შეცვლა"
@@ -461,10 +462,14 @@ ka:
       agreement: "შეთანხმება"
       add_highlight: "გამორჩეულში დამატება"
       delete_highlight: "გამორჩეულიდან წაშლა"
+      description_highlight: Edit the description of the highlight
+      highlight_description_chart: Chart Description
       embed_chart: ჩასმული გრაფიკი
       embed_chart_prompt: 'დააკოპირეთ და ჩასვით ეს კოდი თქვენ საიტზე:'
       embed_chart_wide: px ფართო
       embed_chart_high: px მაღალი
+      highlight_description: Chart Description
+      edit_description: Edit Description
     titles:
       edit: "შეცვლა %{model}"
       save: "შენახვა %{model}"
@@ -544,12 +549,15 @@ ka:
       mass_upload_answers_success: "%{count} პასუხები განახლდა!"
       highlight_show_home_page_success: "გამორჩეული ყოველთვის გამოჩნდება მთავარ გვერდზე"
       highlight_deleted: "გამორჩეული წაიშალა"
+      highlight_description_updated: "The highlight description has been updated."
       explore_error: "თქვენი მოთხოვნის შერსულების დროს წარმოიშვა პრობლემა"
       user_settings_updated: "თქვენი პარამეტრები წარამტებით განახლდა"
       api_key_created: "თქვენი API-ს დაშვების გასაღები წარმატებით შეიქმნა"
       api_key_deleted: "თქვენი API-ს დაშვების გასაღები წარმატებით წაიშალა"
       missing_user_info: "საიტზე გარკვეული ცვლილებების გამო გთხოვთ განაახლოთ თქვენი პარამეტრები. ბოდიშს გიხდით გაუგებრობისთვის."
       message_sent: "მადლობას გიხდით ჩვენთან დაკავშირებისთვის"
+      description_saved: Description was successfully saved
+      error_while_save: An error occurred while saving
     menu:
       explore_data: "მონაცემთა გაცნობა"
       explore_time_series: "პერიოდული შედარების გაცნობა"
@@ -791,8 +799,10 @@ ka:
       question_code: "კითხვა"
       broken_down_by_code: "ჩაშლილია"
       filtered_by_code: "გაფილტრულია"
-      show_home_page: "ყოველთვის ჩანს მთავარ გვერდზე"
-      btn_show_home_page: "მთავარ გვერდზე გამოჩენა"
+      show_home_page: Permanently Shown on Home Page
+      btn_show_home_page: Permanently Show on Home Page
+      questions: Questions
+      description: Description
   questions:
     index:
       title: "კითხვების და მათი პასუხების შესწორება"
@@ -843,8 +853,10 @@ ka:
       question_code: "კითხვა"
       broken_down_by_code: "ჩაშლილია"
       filtered_by_code: "გაფილტრულია"
-      show_home_page: "ყოველთვის ჩანს მთავარ გვერდზე"
-      btn_show_home_page: "მთავარ გვერდზე გამოჩენა"
+      show_home_page: Permanently Shown on Home Page
+      btn_show_home_page: Permanently Show on Home Page
+      questions: Questions
+      description: Description
   time_series_questions:
     index:
       title: "პერიოდული შედარების კითხვების და პასუხების შესწორება"

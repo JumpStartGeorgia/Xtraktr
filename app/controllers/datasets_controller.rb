@@ -50,7 +50,7 @@ class DatasetsController < ApplicationController
 
       @show_title = false
 
-      @css.push("dashboard.css", 'highlights.css', 'boxic.css', 'tabs.css', 'explore.css')
+      @css.push('list.css', "dashboard.css", 'highlights.css', 'boxic.css', 'tabs.css', 'explore.css')
       @js.push("live_search.js", 'highlights.js', 'explore.js')
 
       respond_to do |format|
@@ -76,6 +76,9 @@ class DatasetsController < ApplicationController
       gon.api_dataset_analysis_path = api_v1_dataset_analysis_path
       gon.embed_ids = @dataset.highlights.embed_ids
       gon.private_user = Base64.urlsafe_encode64(current_user.id.to_s)
+
+      # need css for tabbed translations for entering highlight description
+      @css.push('tabbed_translation_form.css')
 
       # this method is in application_controller
       # and gets all of the required information
@@ -614,7 +617,7 @@ class DatasetsController < ApplicationController
     success = false
 
     if dataset.present?
-      success = dataset.highlights.create(embed_id: params[:embed_id], visual_type: params[:visual_type])
+      success = dataset.highlights.create(embed_id: params[:embed_id], visual_type: params[:visual_type], description: params[:description])
     end
 
     respond_to do |format|
@@ -637,6 +640,24 @@ class DatasetsController < ApplicationController
       format.json { render json: success }
     end
   end
+
+  # remove highlight from dataset
+  def update_highlight_description
+    dataset = Dataset.by_id_for_user(params[:id], current_user.id)
+    success = false
+
+    if dataset.present?
+      h = dataset.highlights.with_embed_id(params[:embed_id])
+      h.description = params[:description].strip
+      success = h.save
+    end
+
+    respond_to do |format|
+      format.html { redirect_to highlights_dataset_path(dataset), flash: {success:  t('app.msgs.highlight_description_updated') } }
+      format.json { render json: success }
+    end
+  end
+
 
   # indicate highlight should show in home page
   def home_page_highlight
@@ -667,7 +688,8 @@ class DatasetsController < ApplicationController
 
       add_dataset_nav_options
 
-      @js.push('search.js')
+      @css.push('tabbed_translation_form.css')
+      @js.push('search.js', 'highlight_description.js')
 
       set_gon_datatables
 

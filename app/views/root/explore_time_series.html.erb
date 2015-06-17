@@ -2,6 +2,7 @@
 <% title t('.title') %>
 
 <div class="article explore">
+
   <div class="filters" data-path="<%= explore_time_path %>">
     <div class="search" data-filter='search'><div class="box"><input type="search" placeholder="<%= t('.search_time_series') %>"><div class="go"><%= t('app.common.go') %></div></div></div>
     <div class="sort"  data-filter='sort'>
@@ -24,7 +25,7 @@
               <div class="box"><div class="img <%= cat.permalink %>" alt="<%= cat.name %>"></div></div>
           <%- end -%>
         </div>      
-        <div class="text"><%= t('app.buttons.choose_category') %></div>
+        <div class="text"><%= t('app.buttons.choose_category').html_safe %></div>
       </div>
 
       <ul class="js-hide">
@@ -43,6 +44,7 @@
       </select>
     </div>
   </div>
+  
   <div class="list">
     <% if @time_series.present? %>
       <%= render partial: 'explore_data_time_series' %>

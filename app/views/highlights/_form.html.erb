@@ -1,0 +1,59 @@
+<%- 
+  label_key = "mongoid.attributes.highlight."
+  hint_key = "mongoid.hints.highlight."
+-%>
+
+<%= semantic_form_for(@highlight, url: highlights_edit_description_path, method: :post, html: {class: 'tabbed-translation-form'}) do |f| %>
+  <%= f.error_messages %>
+
+  <div role="tabpanel" class="tabbed-translation-fields">
+    <% 
+      locales = [I18n.locale] 
+      locales = @highlight.languages
+    %>
+
+    <ul class="nav nav-tabs" role="tablist">
+      <%
+        default_locale = I18n.default_locale.to_s
+        default_lang = '' 
+      %>
+      <% locales.each_with_index do |locale, index| %>
+        <%
+          lang = @languages.select{|x| x.locale == locale.to_s}.first
+          cls = ''
+          if index == 0
+            cls = 'class=active' 
+            default_locale = locale
+            default_lang = lang.present? ? lang.name : locale 
+          end
+        %>
+        <li role="presentation" <%= cls %> data-locale="<%= locale %>">
+          <a href="#<%= locale %>" aria-controls="home" role="tab" data-toggle="tab">
+            <% if index == 0 %>
+              <span class='glyphicon glyphicon-star' title='<%= t('helpers.default_language') %>'></span>
+            <% end %>
+            <%= lang.present? ? lang.name : locale %>
+          </a>
+        </li>
+      <% end %>
+    </ul>
+
+    <div class="tab-content">
+      <% locales.each_with_index do |locale, index| %>
+        <%
+          cls = ''
+          cls = 'in active' if index == 0
+        %>
+        <div role="tabpanel" class="tab-pane fade <%= cls %>" id="<%= locale %>" data-locale="<%= locale %>">
+          <%= f.fields_for :description_translations, OpenStruct.new(f.object.description_translations) do |translation| %>
+            <%= translation.input locale, as: :text, label: false, input_html: {rows: 4, cols: 80} %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="form-group" style="margin-top: 20px;">
+    <%= f.submit t('helpers.links.save'), :class => 'btn btn-primary' %>
+  </div>
+<% end %>

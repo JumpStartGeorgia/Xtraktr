@@ -44,12 +44,13 @@
     <div class="col">
       <div class="category">
         <% if @time_series.categories.present? %>
+            <div class="text"><%= t('app.buttons.categories') %>:</div>
             <ul>
               <% @time_series.categories.each {|x| %>
                 <li class="item">
-                  <%= link_to explore_data_path(category: x.permalink) do %>
+                  <%= link_to explore_time_path(category: x.permalink) do %>
                     <div class="text"><span><%= x.name %></span></div>
-                    <div class="img <%= x.permalink %>" alt="<%= x.name %>"></div>
+                    <div class="box"><div class="img <%= x.permalink %>" alt="<%= x.name %>"></div></div>
                   <% end %>
                 </li>
               <% } %>

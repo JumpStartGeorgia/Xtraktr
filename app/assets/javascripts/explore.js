@@ -72,8 +72,8 @@ function add_highlight_button(visual_element, embed_id, visual_type){
   if (gon.is_admin){
     var parent = $(visual_element).parent();
 
-    // create link
-    var link = '<a class="add-highlight btn btn-primary btn-sm" href="' + $(parent).data('add-highlight') + '" data-embed-id="' + embed_id + '" data-visual-type="' + visual_type + '" ';
+    // create add link
+    var link = '<a class="add-highlight btn btn-primary btn-xs" href="' + $(parent).data('add-highlight') + '" data-embed-id="' + embed_id + '" data-visual-type="' + visual_type + '" ';
     link += 'title="' + gon.add_highlight_text + '" data-placement="right"><span class="glyphicon glyphicon-star" aria-hidden="true"></span></a>';
 
     // add link to visual
@@ -88,9 +88,14 @@ function delete_highlight_button(visual_element, embed_id, visual_type){
   if (gon.is_admin){
     var parent = $(visual_element).parent();
 
-    // create link
-    var link = '<a class="delete-highlight btn btn-danger btn-sm" href="' + $(parent).data('delete-highlight') + '" data-embed-id="' + embed_id + '" data-visual-type="' + visual_type + '" ';
+    // create delete link
+    var link = '<a class="delete-highlight btn btn-danger btn-xs" href="' + $(parent).data('delete-highlight') + '" data-embed-id="' + embed_id + '" data-visual-type="' + visual_type + '" ';
     link += 'title="' + gon.delete_highlight_text + '" data-placement="right"><span class="glyphicon glyphicon-star" aria-hidden="true"></span></a>';
+
+    // create desc link
+    link += '<a class="description-highlight btn btn-primary btn-xs" data-href="' + $(parent).data('description') + '" data-embed-id="' + embed_id + '" ';
+    link += 'title="' + gon.description_highlight_text + '" data-placement="right"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>';
+
 
     // add link to visual
     $(visual_element).append(link);
@@ -115,6 +120,41 @@ function add_embed_button(visual_element, embed_id){
     $(visual_element).append(link);
   }
 }
+
+
+////////////////////////////////////////////////
+// add highlight description button to chart
+////////////////////////////////////////////////
+function add_highlight_description_button(visual_element, embed_id){
+  if (gon.get_highlight_desc_link && embed_id){
+    // get the description for this embed_id
+    $.ajax({
+      type: "POST",
+      url: gon.get_highlight_desc_link,
+      data: {embed_id: embed_id},
+      dataType: 'json'
+    }).done(function(data){
+      if (data && data.description != null && data.description != ''){
+        // add the link
+        var parent = $(visual_element).parent();
+
+        // create link
+        // - if the embed link does not exist, make sure it is in the correct place
+        var cls = '';
+        if (gon.embed_button_link){
+          cls = ' with-embed-chart';
+        }
+        var link = '<div class="highlight-description-chart ' + cls + '" data-text="' + data.description + '"';
+        link += 'title="' + gon.highlight_description_chart_text + '" data-placement="bottom"><img src="/assets/svg/desc_icon.svg" alt="' + data.description + '" /></div>';
+
+        // add link to visual
+        $(visual_element).append(link);
+      }
+    });
+
+  }
+}
+
 
 
 ////////////////////////////////////////////////
@@ -310,6 +350,9 @@ function build_highmap(shape_question_code, json_map_set){
   // add embed chart button
   add_embed_button($(selector_path + ' #' + map_id), json_map_set.embed_id);
 
+  // add highlight description button
+  add_highlight_description_button($(selector_path + ' #' + map_id), json_map_set.embed_id);
+
   // add disclaimer link
   add_disclaimer_link($(selector_path + ' #' + map_id));
 }
@@ -456,6 +499,9 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
   // add embed chart button
   add_embed_button($(selector_path + ' #' + chart_id), json_chart.embed_id);
 
+  // add highlight description button
+  add_highlight_description_button($(selector_path + ' #' + chart_id), json_chart.embed_id);
+
   // add disclaimer link
   add_disclaimer_link($(selector_path + ' #' + chart_id));
 }
@@ -600,6 +646,9 @@ function build_pie_chart(json_chart, chart_height){
   // add embed chart button
   add_embed_button($(selector_path + ' #' + chart_id), json_chart.embed_id);
 
+  // add highlight description button
+  add_highlight_description_button($(selector_path + ' #' + chart_id), json_chart.embed_id);
+
   // add disclaimer link
   add_disclaimer_link($(selector_path + ' #' + chart_id));
 }
@@ -721,6 +770,9 @@ function build_time_series_chart(json_chart, chart_height){
   // add embed chart button
   add_embed_button($(selector_path + ' #' + chart_id), json_chart.embed_id);
 
+  // add highlight description button
+  add_highlight_description_button($(selector_path + ' #' + chart_id), json_chart.embed_id);
+
   // add disclaimer link
   add_disclaimer_link($(selector_path + ' #' + chart_id));
 }
@@ -789,26 +841,30 @@ $(document).ready(function() {
   $('#tab-chart, #tab-map').on('click', 'a.delete-highlight', function(e){
     e.preventDefault();
     var link = this;
+    var text = gon.confirm_text != undefined ? gon.confirm_text : 'Are you sure?';
 
-    $.ajax({
-      type: "POST",
-      url: $(link).attr('href'),
-      data: {embed_id: $(link).data('embed-id'), visual_type: $(link).data('visual-type')},
-      dataType: 'json'
-    }).done(function(success){
-      if (success){
-        // delete embed id
-        gon.embed_ids.splice( $.inArray($(link).data('embed-id'), gon.embed_ids), 1 );
-        
-        // show delete button
-        $(link).fadeOut(function(){
-          add_highlight_button($(link).parent(), $(link).data('embed-id'), $(link).data('visual-type'));
-        });
-      }else{
+    var answer=confirm(text);
+    if(answer){
+      $.ajax({
+        type: "POST",
+        url: $(link).attr('href'),
+        data: {embed_id: $(link).data('embed-id'), visual_type: $(link).data('visual-type')},
+        dataType: 'json'
+      }).done(function(success){
+        if (success){
+          // delete embed id
+          gon.embed_ids.splice( $.inArray($(link).data('embed-id'), gon.embed_ids), 1 );
+          
+          // show delete button
+          $(link).parent().find('a.description-highlight').fadeOut().remove();
+          $(link).fadeOut(function(){
+            add_highlight_button($(link).parent(), $(link).data('embed-id'), $(link).data('visual-type'));
+          });
+        }else{
 
-      }
-    });
-
+        }
+      });
+    }
   });
 
   
@@ -828,9 +884,14 @@ $(document).ready(function() {
   $(document).on('click', '.tab-content .up', function () {    
     $('body').animate({ scrollTop: 0 }, 1500);
   });
+
+
+  // show embed chart modal
   $(document).on('click', '.embed-chart', function () {
     var url = $(this).attr('data-href');
-     modal(gon.embed_chart,
+    var popup = $('#embed-popup').html();
+    var embed_iframe = $('#embed-iframe').html();
+     modal(popup,
       {
         position:'center', 
         events: [
@@ -841,7 +902,7 @@ $(document).ready(function() {
             {  
               var t = $(this);
               var par = t.closest('.box');
-              par.find('textarea').val(gon.embed_chart_url.replace('{path}',url).replace('{wide}',t.val()).replace('{high}',par.find('.high input').val()));
+              par.find('textarea').val($(embed_iframe).attr('src', url).attr('width', t.val()).attr('height', par.find('.high input').val()).prop('outerHTML'));
             }
           },
           {  event:'change',
@@ -850,17 +911,99 @@ $(document).ready(function() {
              {
                 var t = $(this);
                 var par = t.closest('.box');
-                par.find('textarea').val(gon.embed_chart_url.replace('{path}',url).replace('{wide}',par.find('.wide input').val()).replace('{high}',t.val()));
+                par.find('textarea').val($(embed_iframe).attr('src', url).attr('width', t.val()).attr('height', par.find('.high input').val()).prop('outerHTML'));
              }
           }
         ],
         before: function(t)
         {
-          t.find('textarea').val(gon.embed_chart_url.replace('{path}',url).replace('{wide}',t.find('.wide input').val()).replace('{high}',t.find('.high input').val()));
+          t.find('textarea').val($(embed_iframe).attr('src', url).attr('width', t.find('.wide input').val()).attr('height', t.find('.high input').val()).prop('outerHTML'));
         }
       }
     );
   });
+
+
+  // show highlight description modal
+  $(document).on('click', '.highlight-description-chart', function () {
+    var text = $(this).attr('data-text').replace(/(?:\r\n|\r|\n)/g, '<br />');
+    var popup = $('#highlight-description-popup').html();
+     modal(popup,
+      {
+        position:'center', 
+        before: function(t)
+        {
+          t.find('.text').html(text);
+        }
+      }
+    );
+  });
+
+
+  // show highlight description form
+  $(document).on('click', '.description-highlight', function (e) {
+    var url = $(this).attr('data-href');
+    var embed_id = $(this).attr('data-embed-id');
+    var chart = $(this).closest('div');
+
+    // get the form for this embed id
+    $.ajax({
+      type: "GET",
+      url: url,
+      data: {embed_id: embed_id},
+      dataType: 'json'
+    }).done(function(data){
+      if (data && data.form != null){
+        // got form, create modal popup
+        modal($('#description-form-popup').html().replace('{form}', data.form),
+        {
+          position:'center', 
+          events: [
+            { 
+              event:'submit',
+              element: 'form.highlight', 
+              callback:function(e)
+              {  
+                e.preventDefault();
+                var params = $(this).serialize();
+                params += '&embed_id=' + embed_id;
+                var desc = $(this).find('textarea:first').val();
+
+                // submit the form and close window
+                $.ajax({
+                  type: "POST",
+                  url: $(this).attr('action'),
+                  data: params,
+                  dataType: 'json'
+                }).done(function(data){
+                  if (data && data.success == true){
+                    // turn off show desc button if exists 
+                    $(chart).find('div.highlight-description-chart').remove();
+
+                    if (desc != undefined && desc != ''){
+                      // show desc button 
+                      add_highlight_description_button(chart, embed_id);
+                    }
+
+                    // close popup
+                    js_modal_off();
+
+                    // show success message
+                    $('#page-wrapper .content').prepend(notification('success', data.message, 'message'));
+                    $('#page-wrapper .content > .message').delay(3000).fadeOut(3000);
+                  }else{
+                    $('#js_modal .popup .header').after(notification('error', data.message));
+                  }
+                });
+              }
+            },
+          ]
+        }
+        );
+      }
+    });
+  });
+
 
   
   resizeExploreData();

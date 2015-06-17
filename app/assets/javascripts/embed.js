@@ -1,5 +1,5 @@
 
-var keys = [];
+var keys = [], is_touch=null;
 
 ////////////////////////////////////////////////
 // build highmap

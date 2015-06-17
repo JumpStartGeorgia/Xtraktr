@@ -1,0 +1,37 @@
+<div id="embed-popup" style="display:none;">
+  <div class='embed-chart-modal'>
+    <div class='header'><%= t('helpers.links.embed_chart') %></div>
+    <div class='figure'></div>
+    <div class='text'><%= t('helpers.links.embed_chart_prompt') %></div>
+    <div class='box'>
+      <div class='dimensions'>
+        <div class='wide'><input type='number' value='500' step='10'><span><%= t('helpers.links.embed_chart_wide') %></span></div>
+        <div class='high'><input type='number' value='310' step='10'><span><%= t('helpers.links.embed_chart_high') %></span></div>
+      </div>
+      <textarea rows='7'></textarea>
+    </div>
+    <div class='closeup' onclick='js_modal_off();'></div>
+  </div>
+</div>
+
+<div id="embed-iframe" style="display:none;">
+  <iframe src='' width='' height='' frameborder='0'></iframe>
+</div>
+
+<div id="highlight-description-popup" style="display:none;">
+  <div class='highlight-description-modal'>
+    <div class='header'><%= t('helpers.links.highlight_description') %></div>
+    <div class='figure'></div>
+    <div class='text'></div>
+    <div class='closeup' onclick='js_modal_off();'></div>
+  </div>
+</div>
+
+<div id="description-form-popup" style="display:none;">
+  <div class='description-form-modal'>
+    <div class='header'><%= t('helpers.links.highlight_description') %></div>
+    <div class='form'>{form}</div>
+    <div class='closeup' onclick='js_modal_off();'></div>
+  </div>
+</div>
+

@@ -138,20 +138,20 @@ class RootController < ApplicationController
       @show_title = false
       @is_admin = false
       @dataset_url = explore_data_show_path(@dataset)
-      gon.embed_chart = "<div class='embed-chart-modal'>
-                          <div class='header'>#{t('helpers.links.embed_chart')}</div>
-                          <div class='figure'></div>
-                          <div class='text'>#{t('helpers.links.embed_chart_prompt')}</div>
-                          <div class='box'>
-                            <div class='dimensions'>
-                              <div class='wide'><input type='number' value='500'><span>#{t('helpers.links.embed_chart_wide')}</span></div>
-                              <div class='high'><input type='number' value='310'><span>#{t('helpers.links.embed_chart_high')}</span></div>
-                            </div>
-                            <textarea rows='7'></textarea>
-                          </div>
-                          <div class='closeup' onclick='js_modal_off();'></div>
-                        </div>"
-      gon.embed_chart_url = "<iframe src='{path}' width='{wide}' height='{high}' frameborder='0'></iframe>"
+      # gon.embed_chart = "<div class='embed-chart-modal'>
+      #                     <div class='header'>#{t('helpers.links.embed_chart')}</div>
+      #                     <div class='figure'></div>
+      #                     <div class='text'>#{t('helpers.links.embed_chart_prompt')}</div>
+      #                     <div class='box'>
+      #                       <div class='dimensions'>
+      #                         <div class='wide'><input type='number' value='500'><span>#{t('helpers.links.embed_chart_wide')}</span></div>
+      #                         <div class='high'><input type='number' value='310'><span>#{t('helpers.links.embed_chart_high')}</span></div>
+      #                       </div>
+      #                       <textarea rows='7'></textarea>
+      #                     </div>
+      #                     <div class='closeup' onclick='js_modal_off();'></div>
+      #                   </div>"
+      # gon.embed_chart_url = "<iframe src='{path}' width='{wide}' height='{high}' frameborder='0'></iframe>"
       # this method is in application_controller
       # and gets all of the required information
       # and responds appropriately to html or js
@@ -244,20 +244,20 @@ class RootController < ApplicationController
       @show_title = false
       @is_admin = false
       @time_series_url = explore_time_series_show_path(@time_series)
-      gon.embed_chart = "<div class='embed-chart-modal'>
-                          <div class='header'>#{t('helpers.links.embed_chart')}</div>
-                          <div class='figure'></div>
-                          <div class='text'>#{t('helpers.links.embed_chart_prompt')}</div>
-                          <div class='box'>
-                            <div class='dimensions'>
-                              <div class='wide'><input type='number' value='500'><span>#{t('helpers.links.embed_chart_wide')}</span></div>
-                              <div class='high'><input type='number' value='310'><span>#{t('helpers.links.embed_chart_high')}</span></div>
-                            </div>
-                            <textarea rows='7'></textarea>
-                          </div>
-                          <div class='closeup' onclick='js_modal_off();'></div>
-                        </div>"
-      gon.embed_chart_url = "<iframe src='{path}' width='{wide}' height='{high}' frameborder='0'></iframe>"
+      # gon.embed_chart = "<div class='embed-chart-modal'>
+      #                     <div class='header'>#{t('helpers.links.embed_chart')}</div>
+      #                     <div class='figure'></div>
+      #                     <div class='text'>#{t('helpers.links.embed_chart_prompt')}</div>
+      #                     <div class='box'>
+      #                       <div class='dimensions'>
+      #                         <div class='wide'><input type='number' value='500'><span>#{t('helpers.links.embed_chart_wide')}</span></div>
+      #                         <div class='high'><input type='number' value='310'><span>#{t('helpers.links.embed_chart_high')}</span></div>
+      #                       </div>
+      #                       <textarea rows='7'></textarea>
+      #                     </div>
+      #                     <div class='closeup' onclick='js_modal_off();'></div>
+      #                   </div>"
+      # gon.embed_chart_url = "<iframe src='{path}' width='{wide}' height='{high}' frameborder='0'></iframe>"
       # this method is in application_controller
       # and gets all of the required information
       # and responds appropriately to html or js

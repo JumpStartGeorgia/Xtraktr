@@ -377,6 +377,21 @@ Rails.logger.debug "================ind results has #{individual_results.length}
   ################################################################################
   ################################################################################
 private
+
+  # only keep the options that are desired
+  def self.clean_options(options)
+    if options.class == Hash
+      # list of keys to keep
+      to_keep = %w(dataset_id time_series_id question_code broken_down_by_code filtered_by_code can_exclude with_title with_chart_data with_map_data language filtered_by_value visual_type broken_down_value filtered_by_value)
+
+      # remove any keys that are not in the list
+      options = options.dup.delete_if{|k,v| !to_keep.include?(k.to_s)}    
+    end
+
+    return options
+  end
+
+
   # create question hash for a dataset
   def self.create_dataset_question_hash(question, can_exclude=false)
     hash = {}
@@ -502,9 +517,9 @@ private
 
           # create embed id
           # add filter value
-          options[:filtered_by_value] = filter[:filter_answer_value]
-          options[:visual_type] = 'chart'
-          chart_item[:filter_results][:embed_id] = Base64.urlsafe_encode64(options.to_query)
+          options['filtered_by_value'] = filter[:filter_answer_value]
+          options['visual_type'] = 'chart'
+          chart_item[:filter_results][:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
 
           # create data for chart
           chart_item[:filter_results][:data] = []
@@ -529,8 +544,8 @@ private
         end
 
         # create embed id
-        options[:visual_type] = 'chart'
-        chart[:embed_id] = Base64.urlsafe_encode64(options.to_query)
+        options['visual_type'] = 'chart'
+        chart[:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
 
         # create data for chart
         chart[:data] = []
@@ -581,9 +596,9 @@ private
 
           # create embed id
           # add filter value
-          options[:filtered_by_value] = filter[:filter_answer_value]
-          options[:visual_type] = 'map'
-          map_item[:filter_results][:map_sets][:embed_id] = Base64.urlsafe_encode64(options.to_query)
+          options['filtered_by_value'] = filter[:filter_answer_value]
+          options['visual_type'] = 'map'
+          map_item[:filter_results][:map_sets][:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
 
           map_item[:filter_results][:map_sets][:data] = []
           answers.each_with_index do |answer|
@@ -610,8 +625,8 @@ private
         end
 
         # create embed id
-        options[:visual_type] = 'map'
-        map[:map_sets][:embed_id] = Base64.urlsafe_encode64(options.to_query)
+        options['visual_type'] = 'map'
+        map[:map_sets][:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
 
         # load the data
         map[:map_sets][:data] = []
@@ -794,9 +809,9 @@ private
 
           # create embed id
           # add filter value
-          options[:filtered_by_value] = filter[:filter_answer_value]
-          options[:visual_type] = 'chart'
-          chart_item[:filter_results][:embed_id] = Base64.urlsafe_encode64(options.to_query)
+          options['filtered_by_value'] = filter[:filter_answer_value]
+          options['visual_type'] = 'chart'
+          chart_item[:filter_results][:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
 
           chart_item[:filter_results][:labels] = data[:question][:answers].map{|x| x[:text]}
   
@@ -822,8 +837,8 @@ private
         end
 
         # create embed id
-        options[:visual_type] = 'chart'
-        chart[:embed_id] = Base64.urlsafe_encode64(options.to_query)
+        options['visual_type'] = 'chart'
+        chart[:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
 
         chart[:labels] = data[:question][:answers].map{|x| x[:text]}
 
@@ -905,10 +920,10 @@ private
 
               # create embed id
               # add broken down by value & filter value
-              options[:broken_down_value] = bdb_answer.value
-              options[:filtered_by_value] = filter[:filter_answer_value]
-              options[:visual_type] = 'map'
-              item[:embed_id] = Base64.urlsafe_encode64(options.to_query)                
+              options['broken_down_value'] = bdb_answer.value
+              options['filtered_by_value'] = filter[:filter_answer_value]
+              options['visual_type'] = 'map'
+              item[:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)                
 
               # load the data
               item[:data] = []
@@ -946,10 +961,10 @@ private
 
                 # create embed id
                 # add broken down by value & filter value
-                options[:broken_down_value] = q_answer.value
-                options[:filtered_by_value] = filter[:filter_answer_value]
-                options[:visual_type] = 'map'
-                item[:embed_id] = Base64.urlsafe_encode64(options.to_query)                
+                options['broken_down_value'] = q_answer.value
+                options['filtered_by_value'] = filter[:filter_answer_value]
+                options['visual_type'] = 'map'
+                item[:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)                
 
                 # load the data
                 item[:data] = []
@@ -1006,9 +1021,9 @@ private
 
             # create embed id
             # add broken down by value
-            options[:broken_down_value] = bdb_answer.value
-            options[:visual_type] = 'map'
-            item[:embed_id] = Base64.urlsafe_encode64(options.to_query)
+            options['broken_down_value'] = bdb_answer.value
+            options['visual_type'] = 'map'
+            item[:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
 
             # load the data
             item[:data] = []
@@ -1042,9 +1057,9 @@ private
 
             # create embed id
             # add broken down by value
-            options[:broken_down_value] = q_answer.value
-            options[:visual_type] = 'map'
-            item[:embed_id] = Base64.urlsafe_encode64(options.to_query)
+            options['broken_down_value'] = q_answer.value
+            options['visual_type'] = 'map'
+            item[:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
             
             # load the data
             item[:data] = []
@@ -1252,9 +1267,9 @@ private
   
           # create embed id
           # add filter value
-          options[:filtered_by_value] = filter[:filter_answer_value]
-          options[:visual_type] = 'chart'
-          chart_item[:filter_results][:embed_id] = Base64.urlsafe_encode64(options.to_query)
+          options['filtered_by_value'] = filter[:filter_answer_value]
+          options['visual_type'] = 'chart'
+          chart_item[:filter_results][:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
 
 
           chart_item[:filter_results][:data] = []
@@ -1286,8 +1301,8 @@ private
         chart[:datasets] = datasets
 
         # create embed id
-        options[:visual_type] = 'chart'
-        chart[:embed_id] = Base64.urlsafe_encode64(options.to_query)
+        options['visual_type'] = 'chart'
+        chart[:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
 
         chart[:data] = []
         data[:question][:answers].each do |answer|

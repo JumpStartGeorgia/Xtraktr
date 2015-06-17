@@ -9,33 +9,58 @@
   <table id="highlights-datatable" class="table table-striped display">
     <thead>
       <tr>
-        <th><%= t('.question_code') %></th>
-        <th><%= t('.filtered_by_code') %></th>
+        <th></th>
+        <th><%= t('.questions') %></th>
         <th><%= t('.show_home_page') %></th>
+        <th><%= t('.description') %></th>
         <th><%=t '.actions', :default => t("helpers.actions") %></th>
       </tr>
     </thead>
     <tbody>
       <% @highlights.each do |highlight| %>
         <tr>
+          <td><%= link_to t('helpers.links.view'), embed_v1_path(highlight.embed_id), class: 'btn btn-default', target: :blank %>
           <td>
-            <% q = @time_series.questions.with_code(highlight.question_code) %>
-            <%= "#{q.original_code} - #{q.text}" if q.present?%>
-          </td>
-          <td>
-            <% fb = @time_series.questions.with_code(highlight.filtered_by_code) if highlight.filtered_by_code.present? %>
-            <%= "#{fb.original_code} - #{fb.text}" if fb.present?%>
+            <ul class="list-unstyled">
+              <% q = @time_series.questions.with_code(highlight.question_code) %>
+              <% if q.present? %>
+                <li>
+                  <strong><%= t('.question_code') %>:</strong><br />
+                  <%= "#{q.original_code} - #{q.text}" %>
+                </li>
+              <% end %>
+
+              <% fb = @time_series.questions.with_code(highlight.filtered_by_code) if highlight.filtered_by_code.present? %>
+              <% if fb.present? %>
+                <li>
+                  <strong><%= t('.filtered_by_code') %>:</strong><br />
+                  <%= "#{fb.original_code} - #{fb.text}" %>
+                </li>
+              <% end %>
+            </ul>
           </td>
           <td>
             <%= format_highlight_home_page_status(highlight.show_home_page) %>
           </td>
           <td>
+            <%= simple_format(highlight.description, {}, {sanitize: false}) %>
+          </td>
+          <td>
             <% if !highlight.show_home_page %>
-              <%= link_to t('.btn_show_home_page'),
-                          home_page_highlight_time_series_path(id: highlight.time_series_id, embed_id: highlight.embed_id), 
+              <%= link_to home_page_highlight_time_series_path(id: highlight.time_series_id, embed_id: highlight.embed_id), 
+                          :title => t('.btn_show_home_page'),
                           :method => :post,
-                          :class => 'btn btn-xs btn-default' %>
+                          :class => 'btn btn-xs btn-default' do %>
+                          
+                <span class="glyphicon glyphicon-pushpin" aria-hidden="true"></span>
+              <% end %>
             <% end %>
+            <%= link_to '',
+                        '#', 
+                        :title => t('helpers.links.edit_description'),
+                        :class => 'btn btn-xs btn-edit edit-highlight-description',
+                        :'data-href' => highlights_edit_description_path,
+                        :'data-embed-id' => highlight.embed_id %>
             <%= link_to '',
                         remove_highlight_time_series_path(id: highlight.time_series_id, embed_id: highlight.embed_id),
                         :title => t("helpers.links.destroy"),
@@ -54,3 +79,5 @@
   </p>
 
 <% end %>
+
+<%= render :partial => 'shared/explore_popups' %>

@@ -2,8 +2,9 @@
 //= require i18n/translations
 //= require jquery
 //= require bootstrap.tooltip.min
-//= require explore
 //= require embed
+//= require explore
+//= require modal
 
 $(document).ready(function(){
 

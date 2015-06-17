@@ -17,16 +17,16 @@ namespace :migration do
   # end
 
 
-  desc "load the api documentation written for xtraktr"
-  task :xtraktr_api_doc => :environment do
-    require "./db/migrate/xtraktr_api_doc.rb"
-  end
+  # desc "load the api documentation written for xtraktr"
+  # task :xtraktr_api_doc => :environment do
+  #   require "./db/migrate/xtraktr_api_doc.rb"
+  # end
 
 
-  desc "move time series datasets to own documents (not embed)"
-  task :move_time_series_datasets => :environment do
-    require "./db/migrate/move_time_series_datasets.rb"
-  end
+  # desc "move time series datasets to own documents (not embed)"
+  # task :move_time_series_datasets => :environment do
+  #   require "./db/migrate/move_time_series_datasets.rb"
+  # end
 
 
   desc "load dataset urls with shape_file path"
@@ -39,9 +39,14 @@ namespace :migration do
     require "./db/migrate/set_dataset_urls.rb"
   end
 
-  desc "remove permalink key from embed id in highlights"
-  task :remove_highlight_permalink => :environment do
-    require "./db/migrate/remove_highlight_permalink.rb"
+  # desc "remove permalink key from embed id in highlights"
+  # task :remove_highlight_permalink => :environment do
+  #   require "./db/migrate/remove_highlight_permalink.rb"
+  # end
+
+  desc "remove bad params from embed id in highlights"
+  task :remove_bad_embed_params => :environment do
+    require "./db/migrate/remove_bad_embed_params.rb"
   end
 
   desc "add extra questions/data to youth and violence"

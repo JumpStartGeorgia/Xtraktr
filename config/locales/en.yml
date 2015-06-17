@@ -420,6 +420,7 @@ en:
       cancel: Cancel
       reset: Reset
       view: View
+      save: Save
       sign_in_facebook: Sign in with Facebook
       forgot_password: Forgot Your Password?
       change_password: Change Your Password
@@ -459,12 +460,16 @@ en:
       back_dashboard: Back to Dashboard
       api_home: API Home
       agreement: Agreement
-      add_highlight: Add to Highlights
-      delete_highlight: Remove from Highlights
+      add_highlight: Add to highlights
+      delete_highlight: Remove from highlights
+      description_highlight: Edit the description of the highlight
+      highlight_description_chart: Chart Description
       embed_chart: Embed Chart
       embed_chart_prompt: "Copy and paste this embed code into your web page:"
       embed_chart_wide: px wide
       embed_chart_high: px high
+      highlight_description: Chart Description
+      edit_description: Edit Description
     titles:
       edit: "Edit %{model}"
       save: "Save %{model}"
@@ -544,12 +549,15 @@ en:
       mass_upload_answers_success: "%{count} answers were updated!"
       highlight_show_home_page_success: "The highlight will now always appear on the home page."
       highlight_deleted: "The highlight has been deleted."
+      highlight_description_updated: "The highlight description has been updated."
       explore_error: "An error occurred while processing your request."
       user_settings_updated: "Your settings were successfully updated."
       api_key_created: "Your API Access Token was successfully created."
       api_key_deleted: "Your API Access Token was successfully deleted."
       missing_user_info: "We have made some changes to the site that require you to update your user settings. Sorry for the inconvenience."
       message_sent: Thank you for contacting us!
+      description_saved: Description was successfully saved
+      error_while_save: An error occurred while saving
     menu:
       explore_data: Explore Data
       explore_time_series: Explore Time Series
@@ -791,8 +799,10 @@ en:
       question_code: Question
       broken_down_by_code: Broken Down By
       filtered_by_code: Filtered By
-      show_home_page: Always Shows on Home Page
-      btn_show_home_page: Show on Home Page
+      show_home_page: Permanently Shown on Home Page
+      btn_show_home_page: Permanently Show on Home Page
+      questions: Questions
+      description: Description
   questions:
     index:
       title: "Edit Questions and their Answers"
@@ -843,8 +853,10 @@ en:
       question_code: Question
       broken_down_by_code: Broken Down By
       filtered_by_code: Filtered By
-      show_home_page: Always Shows on Home Page
-      btn_show_home_page: Show on Home Page
+      show_home_page: Permanently Shown on Home Page
+      btn_show_home_page: Permanently Show on Home Page
+      questions: Questions
+      description: Description
   time_series_questions:
     index:
       title: "Edit Time Series Questions and their Answers"

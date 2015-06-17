@@ -1,4 +1,4 @@
-class Highlight
+class Highlight < CustomTranslation
   include Mongoid::Document
   include Mongoid::Timestamps
 
@@ -13,11 +13,12 @@ class Highlight
   field :embed_id, type: String
   field :show_home_page, type: Boolean, default: false
   field :visual_type, type: Integer
+  field :description, type: String, localize: true
 
   VISUAL_TYPES = {pie_chart: 1, crosstab_chart: 2, line_chart: 3, map: 4}
 
   #############################
-  attr_accessible :dataset_id, :time_series_id, :embed_id, :show_home_page, :visual_type
+  attr_accessible :dataset_id, :time_series_id, :embed_id, :show_home_page, :visual_type, :description, :description_translations
 
   #############################
   # indexes
@@ -109,6 +110,16 @@ class Highlight
     end
   end
 
+  # get the dataset/time series languages
+  def languages
+    if self.dataset_id.present?
+      self.dataset.languages_sorted
+    elsif self.time_series_id.present?
+      self.time_series.languages_sorted
+    end
+  end
+
+
   def question_code
     decode['question_code']
   end
@@ -120,6 +131,13 @@ class Highlight
   def filtered_by_code
     decode['filtered_by_code']
   end
+
+  #############################
+  ## override get methods for fields that are localized
+  def description
+    get_translation(self.description_translations)
+  end
+
 
 
 private 

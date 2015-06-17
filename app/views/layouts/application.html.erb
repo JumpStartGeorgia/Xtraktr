@@ -39,7 +39,7 @@
                       </li>
                     <% end %>
                     <li role="menuitem">
-                      <%= link_to t('app.menu.all_datasets'), datasets_path, class: 'btn btn-primary btn-xs' %>
+                      <%= link_to t('app.menu.all_datasets'), datasets_path %>
                     </li>
                   </ul>
                 <% elsif @is_time_series_admin %>
@@ -50,7 +50,7 @@
                       </li>
                     <% end %>
                     <li role="menuitem">
-                      <%= link_to t('app.menu.all_time_series'), time_series_index_path, class: 'btn btn-primary btn-xs' %>
+                      <%= link_to t('app.menu.all_time_series'), time_series_index_path %>
                     </li>
                   </ul>
                 <% end %>
@@ -74,9 +74,7 @@
 
 
     <%= render :partial => 'layouts/js' %>
-    <div id="js_modal">
-      <div class="popup"></div>
-      <div class="bg"></div>
-    </div>
+
+    <%= render :partial => 'layouts/modal' %>
   </body>
 </html>

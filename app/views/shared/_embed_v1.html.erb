@@ -36,10 +36,12 @@
       </div>
       <% end %>
 
-      <div class="explore-data <%= embed_class %>">
+      <div class="article explore-data <%= embed_class %>">
         <div id="container-chart"></div>
         <div id="container-map" class="<%= embed_class %>"></div>
       </div>
     </div>
   <% end %>
 </div>
+
+<%= render :partial => 'shared/explore_popups' %>

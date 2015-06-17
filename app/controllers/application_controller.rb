@@ -107,6 +107,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 
     gon.visual_types = Highlight::VISUAL_TYPES
     
+    gon.get_highlight_desc_link = highlights_get_description_path
 	end
 
   # in order for the downloads to work properly, the user must have entered all required fields (name, age, etc)
@@ -269,7 +270,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
         @css.push('bootstrap-select.min.css', "tabs.css", "explore.css", "datasets.css")
         @js.push('bootstrap-select.min.js', "explore.js", "explore_data.js", 'highcharts.js', 'highcharts-map.js', 'highcharts-exporting.js')
 
-        gon.embed_button_link = embed_v1_url('replace')
+        gon.embed_button_link = embed_v1_url('replace') if dataset.public?
 
         # record javascript variables
         gon.hover_region = I18n.t('explore_data.hover_region')
@@ -326,7 +327,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
         @css.push('bootstrap-select.min.css', "tabs.css", "explore.css", "time_series.css")
         @js.push('bootstrap-select.min.js', "explore.js", "explore_time_series.js", 'highcharts.js', 'highcharts-exporting.js')
 
-        gon.embed_button_link = embed_v1_url('replace')
+        gon.embed_button_link = embed_v1_url('replace') if time_series.public?
 
         # record javascript variables
         gon.na = I18n.t('explore_time_series.na')
@@ -482,8 +483,11 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     gon.highcharts_svg = I18n.t('highcharts.svg')
 
     gon.add_highlight_text = I18n.t('helpers.links.add_highlight')
+    gon.highlight_description_chart_text = I18n.t('helpers.links.highlight_description_chart') 
     gon.embed_chart_text = I18n.t('helpers.links.embed_chart') 
     gon.delete_highlight_text = I18n.t('helpers.links.delete_highlight')
+    gon.description_highlight_text = I18n.t('helpers.links.description_highlight')
+    gon.confirm_text = I18n.t('helpers.links.confirm')
 
     gon.disclaimer_text = I18n.t('app.menu.disclaimer')
     gon.disclaimer_link = disclaimer_url

@@ -94,6 +94,11 @@ BootstrapStarter::Application.routes.draw do
       match '/v1/:id', to: 'v1#index', as: :v1, via: :get
     end    
 
+    # highlights
+#    match '/highlights', to: 'highlights#index', as: :highlights, via: :get
+    match '/highlights/get_description', to: 'highlights#get_description', as: :highlights_get_description, via: :post, :defaults => { :format => 'json' }
+    match '/highlights/edit_description', to: 'highlights#edit_description', as: :highlights_edit_description, via: [:get, :post], :defaults => { :format => 'json' }
+
     # root pages
     match '/contact', :to => 'root#contact', :as => :contact, :via => [:get, :post]
     match '/download/:id', :to => 'root#download', :as => :download, :via => :get

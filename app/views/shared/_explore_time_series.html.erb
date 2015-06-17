@@ -75,7 +75,7 @@
           <%
             data_attr = ''
             if @is_time_series_admin
-              data_attr = "data-add-highlight=#{add_highlight_time_series_path(id: @time_series.id)} data-delete-highlight=#{remove_highlight_time_series_path(id: @time_series.id)}"
+              data_attr = "data-add-highlight=#{add_highlight_time_series_path(id: @time_series.id)} data-delete-highlight=#{remove_highlight_time_series_path(id: @time_series.id)} data-description=#{highlights_edit_description_path}"
             end
           %>
           <div id="container-chart" <%= data_attr %> ></div>
@@ -144,3 +144,5 @@
     <p><%= t('.no_data', title: @time_series.title) %></p>
   <% end %>
 </div>
+
+<%= render :partial => 'shared/explore_popups' %>
