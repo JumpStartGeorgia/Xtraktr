@@ -1,9 +1,10 @@
 
-var keys = [], is_touch=null;
+var keys = [], is_touch=null; var xxx;
 
 ////////////////////////////////////////////////
 // build highmap
 function build_highmaps(json){
+  xxx = json;
   if (json.map){
     // adjust the height/width of the map to fit its container if this is embed
     if ($('body#embed').length > 0){
@@ -55,7 +56,7 @@ function build_highmaps(json){
 
         for(var i=0; i<json.map.map_sets.length; i++){
           // create map for broken down by that matches gon.broken_down_by_value
-          if (json.map[i].broken_down_answer_value == gon.broken_down_by_value){          
+          if (json.map.map_sets[i].broken_down_answer_value == gon.broken_down_by_value){          
             build_highmap(json.map.shape_question_code, json.map.map_sets[i]);
             break;
           }

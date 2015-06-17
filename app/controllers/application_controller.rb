@@ -423,13 +423,14 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
         output[:js] = {}
 
         output[:js][:json_data] = data
-        output[:js][:visual_type] = options['visual_type']
+        output[:js][:visual_type] = output[:visual_type]
         # save values of filters so can choose correct chart/map to show
         output[:js][:broken_down_by_value] = options['broken_down_by_value'] if options['broken_down_by_value'].present? # only present if doing maps
         output[:js][:filtered_by_value] = options['filtered_by_value'] if options['filtered_by_value'].present?
       end
 
     end
+logger.debug "======= output js = #{output[:js]}"
 
     return output
   end
