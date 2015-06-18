@@ -14,22 +14,29 @@
 
 <div class="tabbed-translation-show">
   <ul class="row list-unstyled">
-    <li class="col-sm-3">
+    <li class="col-sm-4">
       <strong><%= model_class.human_attribute_name(:code) %>:</strong>
       <br />
       <%= @question.original_code %>  
     </li>
-    <li class="col-sm-3">
+    <li class="col-sm-4">
       <strong><%= model_class.human_attribute_name(:has_code_answers) %>:</strong>
       <br />
       <%= format_boolean_flag(@question.has_code_answers) %>  
     </li>
-    <li class="col-sm-3">
+  </ul>
+  <ul class="row list-unstyled" style="margin-top: 20px;">
+    <li class="col-sm-4">
       <strong><%= model_class.human_attribute_name(:exclude) %>:</strong>
       <br />
       <%= format_boolean_flag(@question.exclude) %>  
     </li>
-    <li class="col-sm-3">
+    <li class="col-sm-4">
+      <strong><%= model_class.human_attribute_name(:can_download) %>:</strong>
+      <br />
+      <%= format_boolean_flag(@question.can_download) %>  
+    </li>
+    <li class="col-sm-4">
       <strong><%= model_class.human_attribute_name(:is_mappable) %>:</strong>
       <br />
       <%= format_boolean_flag(@question.is_mappable) %>  

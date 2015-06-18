@@ -28,10 +28,11 @@ $(document).ready(function(){
   var datatable = $('#dataset-exclude-answers').dataTable({
     "dom": '<"top"fli>t<"bottom"p><"clear">',
     "columns": [
+      null,
+      null,
+      null,
       { "orderDataType": "dom-checkbox" },
-      null,
-      null,
-      null
+      { "orderDataType": "dom-checkbox" }
     ],
     "order": [[1, 'asc']],
     "language": {
@@ -47,13 +48,14 @@ $(document).ready(function(){
   // else, desfelect all questions that match the current filter
   // - if not filter -> then all questions are deselected
   $('a.btn-select-all').click(function(){
+    type = $(this).attr('data-type');
     if ($(this).attr('data-state') == 'all'){
-      $(datatable.$('tr', {"filter": "applied"})).find(':checkbox').each(function () {
+      $(datatable.$('tr', {"filter": "applied"})).find('td.' + type + '-input :checkbox').each(function () {
         $(this).prop('checked', true);
       });
       $(this).attr('data-state', 'none');
     }else{
-      $(datatable.$('tr', {"filter": "applied"})).find(':checkbox').each(function () {
+      $(datatable.$('tr', {"filter": "applied"})).find('td.' + type + '-input :checkbox').each(function () {
         $(this).prop('checked', false);
       });
       $(this).attr('data-state', 'all');

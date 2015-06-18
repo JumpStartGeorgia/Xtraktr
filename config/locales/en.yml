@@ -229,6 +229,7 @@ en:
         notes: Any special notes about the question
         exclude: "If selected, this question will not be available during analysis."
         is_mappable: "If the question is mappable in nature, you can match the question to a shapeset and be able to analyize the question on a map."
+        can_download: 'If selected, this question will be included in the data download available to the public.'
       answer:
         value: The value of the answer
         text: The text of the answer
@@ -586,12 +587,11 @@ en:
         highlights: Highlights
         warnings: Warnings
         mappable: Make Mappable
-        can_exlucde_answers: Answers Can Be Excluded
-        exlucde_answers: Exclude Answers
-        exclude_questions: Exclude Questions
         delete: Delete
         private_share: Share Private Dataset
-        mass_changes: Mass Changes
+        mass_changes: Mass Changes Via Spreadsheet
+        mass_changes_questions: Question Mass Changes
+        mass_changes_answers: Answer Mass Changes
       admin_time_series:
         explore_data: Explore Data
         heading: Time Series Options
@@ -755,17 +755,13 @@ en:
       no_no_answers: Congratulations! All of the data file questions have answers.
       no_no_text: Congratulations! All of the data file questions have text.
       no_warnings: Congratulations! Your data file contains no issues that may effect the way the data is analyzed.
-    exclude_questions:
-      title: "Questions to Exclude from Analysis"
-      explanation: "Use this page to indicate which questions should not be included during analysis."
+    mass_changes_questions:
+      title: "Question Mass Changes"
+      explanation: "Use this page to indicate which questions should not be included during analysis and which should be included when the public download's the data."
       no_questions: There are no questions on file for this dataset.
-    exclude_answers:
-      title: "Answers to Exclude from Analysis"
-      explanation: "Use this page to indicate which answers should not be included during analysis."
-      no_questions: There are no questions on file for this dataset.
-    can_exclude_answers:
-      title: "Answers That Can Be Excluded During Analysis"
-      explanation: "Use this page to indicate which answers can be included during analysis, but have the ability to be excluded (e.g., answers like: Don't Know, Refuse to Answer, etc)."
+    mass_changes_answers:
+      title: "Answer Mass Changes"
+      explanation: "Use this page to indicate which answers should not be included during analysis and which answers can be included during analysis, but have the ability to be excluded (e.g., answers like: Don't Know, Refuse to Answer, etc)."
       no_questions: There are no questions on file for this dataset.
     mappable:
       title: "Make Questions Mappable"

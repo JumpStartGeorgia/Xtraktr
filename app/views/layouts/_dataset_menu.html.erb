@@ -58,21 +58,15 @@
                     <% end %>
                   </li>
                   <li role="menuitem">
-                    <%= link_to exclude_questions_dataset_path(dataset) do %>
-                      <span class="glyphicon glyphicon-ban-circle"></span>
-                      <%= t('app.menu.admin_dataset.exclude_questions') %>
+                    <%= link_to mass_changes_questions_dataset_path(dataset) do %>
+                      <span class="glyphicon glyphicon-check"></span>
+                      <%= t('app.menu.admin_dataset.mass_changes_questions') %>
                     <% end %>
                   </li>
                   <li role="menuitem">
-                    <%= link_to exclude_answers_dataset_path(dataset) do %>
-                      <span class="glyphicon glyphicon-ban-circle"></span>
-                      <%= t('app.menu.admin_dataset.exlucde_answers') %>
-                    <% end %>
-                  </li>
-                  <li role="menuitem">
-                    <%= link_to can_exclude_answers_dataset_path(dataset) do %>
-                      <span class="glyphicon glyphicon-ok"></span>
-                      <%= t('app.menu.admin_dataset.can_exlucde_answers') %>
+                    <%= link_to mass_changes_answers_dataset_path(dataset) do %>
+                      <span class="glyphicon glyphicon-check"></span>
+                      <%= t('app.menu.admin_dataset.mass_changes_answers') %>
                     <% end %>
                   </li>
                   <li role="menuitem">

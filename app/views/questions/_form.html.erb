@@ -33,6 +33,25 @@
     </div>
   </div>
 
+  <div class="radio_buttons input optional form-group" id="question_can_download_input">
+    <label class="control-label" for="question_can_download"><%= t(label_key + 'can_download') %><div class="help-inline" title="<%= t(hint_key + 'can_download') %>"><div>?</div></div>
+    </label>
+    <div class="radio">
+      <label class="choice" for="question_can_download_true">
+        <% checked = @question.can_download? ? 'checked=checked' : '' %>
+        <input <%= checked %> id="question_can_download_true" name="question[can_download]" type="radio" value="true" />
+        <%= t('formtastic.yes') %>
+      </label>
+    </div>
+    <div class="radio">
+      <label class="choice" for="question_can_download_false">
+        <% checked = @question.can_download? ? '' : 'checked=checked' %>
+        <input <%= checked %> id="question_can_download_false" name="question[can_download]" type="radio" value="false" />
+        <%= t('formtastic.no') %>
+      </label>
+    </div>
+  </div>
+
 
   <div class="input">
     <label class="control-label">

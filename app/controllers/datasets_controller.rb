@@ -295,16 +295,16 @@ class DatasetsController < ApplicationController
   end
 
 
-  # mark which questions to not include in the analysis
-  def exclude_questions
+  # mark which questions to not include in the analysis and which to include in download
+  def mass_changes_questions
     @dataset = Dataset.by_id_for_user(params[:id], current_user.id)
 
     if @dataset.present?
 
       respond_to do |format|
         format.html {
-          @js.push("exclude_questions.js")
-          @css.push("exclude_questions.css")
+          @js.push("mass_changes_questions.js")
+          @css.push("mass_changes_questions.css")
 
           add_dataset_nav_options()
 
@@ -315,11 +315,15 @@ class DatasetsController < ApplicationController
             # no value exists in params and so no changes take place
             # -> get ids that are true and set them to true
             # -> set rest to false
-            true_ids = params[:dataset][:questions_attributes].select{|k,v| v[:exclude] == 'true'}.map{|k,v| v[:id]}
-            false_ids = params[:dataset][:questions_attributes].select{|k,v| v[:exclude] != 'true'}.map{|k,v| v[:id]}
+            exclude_true_ids = params[:dataset][:questions_attributes].select{|k,v| v[:exclude] == 'true'}.map{|k,v| v[:id]}
+            exclude_false_ids = params[:dataset][:questions_attributes].select{|k,v| v[:exclude] != 'true'}.map{|k,v| v[:id]}
+            @dataset.questions.add_exclude(exclude_true_ids)
+            @dataset.questions.remove_exclude(exclude_false_ids)
 
-            @dataset.questions.add_exclude(true_ids)
-            @dataset.questions.remove_exclude(false_ids)
+            download_true_ids = params[:dataset][:questions_attributes].select{|k,v| v[:can_download] == 'true'}.map{|k,v| v[:id]}
+            download_false_ids = params[:dataset][:questions_attributes].select{|k,v| v[:can_download] != 'true'}.map{|k,v| v[:id]}
+            @dataset.questions.add_can_download(download_true_ids)
+            @dataset.questions.remove_can_download(download_false_ids)
 
             @msg = t('app.msgs.question_exclude_saved')
             @success = true
@@ -347,16 +351,16 @@ class DatasetsController < ApplicationController
   end
 
 
-  # mark which answers to not include in the analysis
-  def exclude_answers
+  # mark which answers to not include in the analysis and which can be excluded during anayalsis
+  def mass_changes_answers
     @dataset = Dataset.by_id_for_user(params[:id], current_user.id)
 
     if @dataset.present?
 
       respond_to do |format|
         format.html {
-          @js.push("exclude_answers.js")
-          @css.push("exclude_answers.css")
+          @js.push("mass_changes_answers.js")
+          @css.push("mass_changes_answers.css")
 
           add_dataset_nav_options()
 
@@ -370,11 +374,16 @@ class DatasetsController < ApplicationController
             # -> get ids that are true and set them to true
             # -> set rest to false
             answers = params[:dataset][:questions_attributes].map{|kq,vq| vq[:answers_attributes]}
-            true_ids = answers.map{|x| x.values}.flatten.select{|x| x[:exclude] == 'true'}.map{|x| x[:id]}
-            false_ids = answers.map{|x| x.values}.flatten.select{|x| x[:exclude] != 'true'}.map{|x| x[:id]}
 
-            @dataset.questions.add_answer_exclude(true_ids)
-            @dataset.questions.remove_answer_exclude(false_ids)
+            exclude_true_ids = answers.map{|x| x.values}.flatten.select{|x| x[:exclude] == 'true'}.map{|x| x[:id]}
+            exclude_false_ids = answers.map{|x| x.values}.flatten.select{|x| x[:exclude] != 'true'}.map{|x| x[:id]}
+            @dataset.questions.add_answer_exclude(exclude_true_ids)
+            @dataset.questions.remove_answer_exclude(exclude_false_ids)
+
+            can_exclude_true_ids = answers.map{|x| x.values}.flatten.select{|x| x[:can_exclude] == 'true'}.map{|x| x[:id]}
+            can_exclude_false_ids = answers.map{|x| x.values}.flatten.select{|x| x[:can_exclude] != 'true'}.map{|x| x[:id]}
+            @dataset.questions.add_answer_can_exclude(can_exclude_true_ids)
+            @dataset.questions.remove_answer_can_exclude(can_exclude_false_ids)
 
             if !@dataset.save
               @msg = @dataset.errors.full_messages
@@ -399,58 +408,58 @@ class DatasetsController < ApplicationController
     end
   end
 
-  # mark which answers users can select to not include in the analysis
-  # during analysis
-  def can_exclude_answers
-    @dataset = Dataset.by_id_for_user(params[:id], current_user.id)
+  # # mark which answers users can select to not include in the analysis
+  # # during analysis
+  # def can_exclude_answers
+  #   @dataset = Dataset.by_id_for_user(params[:id], current_user.id)
 
-    if @dataset.present?
+  #   if @dataset.present?
 
-      respond_to do |format|
-        format.html {
-          @js.push("exclude_answers.js")
-          @css.push("exclude_answers.css")
+  #     respond_to do |format|
+  #       format.html {
+  #         @js.push("exclude_answers.js")
+  #         @css.push("exclude_answers.css")
 
-          add_dataset_nav_options()
+  #         add_dataset_nav_options()
 
-        }
-        format.js { 
-          @msg = t('app.msgs.answer_can_exclude_saved')
-          @success = true
-          begin
-            # cannot use simple update_attributes for if value was checked but is not now, 
-            # no value exists in params and so no changes take place
-            # -> get ids that are true and set them to true
-            # -> set rest to false
-            answers = params[:dataset][:questions_attributes].map{|kq,vq| vq[:answers_attributes]}
-            true_ids = answers.map{|x| x.values}.flatten.select{|x| x[:can_exclude] == 'true'}.map{|x| x[:id]}
-            false_ids = answers.map{|x| x.values}.flatten.select{|x| x[:can_exclude] != 'true'}.map{|x| x[:id]}
+  #       }
+  #       format.js { 
+  #         @msg = t('app.msgs.answer_can_exclude_saved')
+  #         @success = true
+  #         begin
+  #           # cannot use simple update_attributes for if value was checked but is not now, 
+  #           # no value exists in params and so no changes take place
+  #           # -> get ids that are true and set them to true
+  #           # -> set rest to false
+  #           answers = params[:dataset][:questions_attributes].map{|kq,vq| vq[:answers_attributes]}
+  #           true_ids = answers.map{|x| x.values}.flatten.select{|x| x[:can_exclude] == 'true'}.map{|x| x[:id]}
+  #           false_ids = answers.map{|x| x.values}.flatten.select{|x| x[:can_exclude] != 'true'}.map{|x| x[:id]}
 
-            @dataset.questions.add_answer_can_exclude(true_ids)
-            @dataset.questions.remove_answer_can_exclude(false_ids)
+  #           @dataset.questions.add_answer_can_exclude(true_ids)
+  #           @dataset.questions.remove_answer_can_exclude(false_ids)
 
-            if !@dataset.save
-              @msg = @dataset.errors.full_messages
-              @success = false
-            end
-          rescue Exception => e 
-            @msg = t('app.msgs.question_can_exclude_not_saved')
-            @success = false
+  #           if !@dataset.save
+  #             @msg = @dataset.errors.full_messages
+  #             @success = false
+  #           end
+  #         rescue Exception => e 
+  #           @msg = t('app.msgs.question_can_exclude_not_saved')
+  #           @success = false
 
-            # send the error notification
-            ExceptionNotifier::Notifier
-              .exception_notification(request.env, e)
-              .deliver
-          end
+  #           # send the error notification
+  #           ExceptionNotifier::Notifier
+  #             .exception_notification(request.env, e)
+  #             .deliver
+  #         end
 
-        }
-      end
-    else
-      flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to datasets_path(:locale => I18n.locale)
-      return
-    end
-  end  
+  #       }
+  #     end
+  #   else
+  #     flash[:info] =  t('app.msgs.does_not_exist')
+  #     redirect_to datasets_path(:locale => I18n.locale)
+  #     return
+  #   end
+  # end  
 
   # show which questions are assign to shape sets
   def mappable

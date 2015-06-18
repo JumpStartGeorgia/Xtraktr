@@ -166,6 +166,22 @@ class Dataset < CustomTranslation
       return nil
     end
 
+    # mark the question can download flag as true for the ids provided
+    def add_can_download(ids)
+      where(:_id.in => ids).each do |q|
+        q.can_download = true
+      end
+      return nil
+    end
+
+    # mark the question can download flag as false for the ids provided
+    def remove_can_download(ids)
+      where(:_id.in => ids).each do |q|
+        q.can_download = false
+      end
+      return nil
+    end
+
     # mark the answer exclude flag as true for the ids provided
     def add_answer_exclude(ids)
       map{|x| x.answers}.flatten.select{|x| ids.index(x.id.to_s).present?}.each do |a|

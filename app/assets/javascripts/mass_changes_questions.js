@@ -29,11 +29,12 @@ $(document).ready(function(){
   datatable = $('#dataset-exclude-questions').dataTable({
     "dom": '<"top"fli>t<"bottom"p><"clear">',
     "columns": [
-      { "orderDataType": "dom-checkbox" },
       null,
-      null
+      null,
+      { "orderDataType": "dom-checkbox" },
+      { "orderDataType": "dom-checkbox" }
     ],
-    "order": [[1, 'asc']],
+    "order": [[0, 'asc']],
     "language": {
       "url": gon.datatable_i18n_url,
       "searchPlaceholder": gon.datatable_search
@@ -47,13 +48,14 @@ $(document).ready(function(){
   // else, desfelect all questions that match the current filter
   // - if not filter -> then all questions are deselected
   $('a.btn-select-all').click(function(){
+    type = $(this).attr('data-type');
     if ($(this).attr('data-state') == 'all'){
-      $(datatable.$('tr', {"filter": "applied"})).find(':checkbox').each(function () {
+      $(datatable.$('tr', {"filter": "applied"})).find('td.' + type + '-input :checkbox').each(function () {
         $(this).prop('checked', true);
       });
       $(this).attr('data-state', 'none');
     }else{
-      $(datatable.$('tr', {"filter": "applied"})).find(':checkbox').each(function () {
+      $(datatable.$('tr', {"filter": "applied"})).find('td.' + type + '-input :checkbox').each(function () {
         $(this).prop('checked', false);
       });
       $(this).attr('data-state', 'all');
