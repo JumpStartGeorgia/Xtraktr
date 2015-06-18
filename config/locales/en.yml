@@ -94,6 +94,7 @@ en:
         has_code_answers: Has defined list of answers
         possible_answers: Possible Answer Values
         data_answers: Answer Values in Data
+        can_download: Include Question in Download for Public
       answer:
         value: Value
         text: Answer

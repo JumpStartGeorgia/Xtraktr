@@ -157,7 +157,7 @@ private
     start = Time.now
 
     output = ''
-    questions = dataset.questions.for_analysis
+    questions = dataset.questions.for_download
 
     filename = clean_filename(dataset.title)
     zip_name = "codebook.zip"
@@ -223,7 +223,7 @@ private
     start = Time.now
 
     output = ''
-    questions = dataset.questions.for_analysis
+    questions = dataset.questions.for_download
 
     filename = clean_filename(dataset.title)
     csv_file = "csv.csv"
@@ -275,7 +275,7 @@ private
     start = Time.now
 
     output = ''
-    questions = dataset.questions.for_analysis
+    questions = dataset.questions.for_download
 
     filename = clean_filename(dataset.title)
     csv_file = "spss.csv"
@@ -396,7 +396,7 @@ private
     start = Time.now
 
     output = ''
-    questions = dataset.questions.for_analysis
+    questions = dataset.questions.for_download
 
     filename = clean_filename(dataset.title)
     csv_file = "stata.csv"
@@ -468,7 +468,7 @@ private
     start = Time.now
 
     output = ''
-    questions = dataset.questions.for_analysis
+    questions = dataset.questions.for_download
 
     filename = clean_filename(dataset.title)
     csv_file = "r.csv"

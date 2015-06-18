@@ -94,6 +94,7 @@ ka:
         has_code_answers: "განსაზღვრა პასუხების სია"
         possible_answers: "შესაძლო პასუხების მნიშვნელობები"
         data_answers: "პასუხების მნიშვნელობები მონაცემებში"
+        can_download: Include Question in Download for Public
       answer:
         value: "მნიშვნელობა"
         text: "პასუხი"

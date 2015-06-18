@@ -203,6 +203,8 @@ module ProcessDataFile
                                                 }]
                   # update question to indciate it has answers
                   question.has_code_answers = true
+                  # include question in public download
+                  question.can_download = true
                 else
                   puts "******************************"
                   puts "Line #{line_number} of #{file_answers_complete} has a question code #{key} that could not be found in the list of questions."
@@ -242,6 +244,8 @@ module ProcessDataFile
                                                   }]
                     # update question to indciate it has answers
                     question.has_code_answers = true
+                    # include question in public download
+                    question.can_download = true
                   else
                     puts "******************************"
                     puts "Line #{line_number} of #{file_answers_complete} has a question code #{key} that could not be found in the list of questions."

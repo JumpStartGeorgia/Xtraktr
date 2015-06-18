@@ -19,6 +19,8 @@ class Question < CustomTranslation
   field :exclude, type: Boolean, default: false
   # whether or not the question is tied to a shapeset
   field :is_mappable, type: Boolean, default: false
+  # whether or not the question should be included in public download
+  field :can_download, type: Boolean, default: false
 
   embedded_in :dataset
   embeds_many :answers do

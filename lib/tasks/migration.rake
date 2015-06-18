@@ -60,5 +60,11 @@ namespace :migration do
   end
 
 
+  desc "populate the new can_download dataset question flag for all datasets"
+  task :populate_download_flag => :environment do
+    require "./db/migrate/populate_download_flag.rb"
+  end
+
+
 
 end

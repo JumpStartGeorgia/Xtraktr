@@ -91,6 +91,11 @@ class Dataset < CustomTranslation
       where(:original_code => original_code).first
     end
 
+    # get questions that can be included in download for public
+    def for_download
+      where(:can_download => true)
+    end
+
     # get questions that are not excluded and have code answers
     def for_analysis
       where(:exclude => false, :has_code_answers => true).to_a
@@ -289,6 +294,7 @@ class Dataset < CustomTranslation
   index ({ :'questions.original_code' => 1})
   index ({ :'questions.text' => 1})
   index ({ :'questions.is_mappable' => 1})
+  index ({ :'questions.can_download' => 1})
   index ({ :'questions.has_code_answers' => 1})
   index ({ :'questions.exclude' => 1})
   index ({ :'questions.shapeset_id' => 1})
