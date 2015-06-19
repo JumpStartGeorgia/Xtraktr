@@ -296,6 +296,7 @@ class Dataset < CustomTranslation
   FOLDER_PATH = '/system/datasets'
   JS_FILE = 'shapes.js'
   DOWNLOAD_FOLDER = 'data_download'
+  ADMIN_DOWNLOAD_FOLDER = 'complete'
 
   #############################
   # indexes
@@ -732,6 +733,14 @@ class Dataset < CustomTranslation
 
   def data_download_staging_path
     "#{FOLDER_PATH}/#{self.id}/#{DOWNLOAD_FOLDER}/staging"
+  end
+
+  def admin_data_download_path
+    "#{FOLDER_PATH}/#{self.id}/#{DOWNLOAD_FOLDER}/#{ADMIN_DOWNLOAD_FOLDER}"
+  end
+
+  def admin_data_download_staging_path
+    "#{FOLDER_PATH}/#{self.id}/#{DOWNLOAD_FOLDER}/#{ADMIN_DOWNLOAD_FOLDER}/staging"
   end
 
   #############################
