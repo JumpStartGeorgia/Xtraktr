@@ -660,7 +660,8 @@ ka:
   devise:
     mailer:
       reset_password_instructions:
-        title: "მოგესალმებით, %{nickname}!"
+        subject: 'UNICEF Georgia Data Portal - Reset password instructions'
+        title: "მოგესალმებით, %{nickname} - "
         p1: "მივიღეთ მოთხოვნა '%{app_name}' თქვენი პაროლის შეცვლის შესახებ. პაროლის შესაცვლელად, მიჰყევით შემდეგ ბმულს."
         link_title: "პაროლის შეცვლა"
         p2: "თუ თქვენ არ მოგითხოვიათ პაროლის შეცვლა, გთხოვთ, არ მიაქციოთ ყურადღება ამ შეტყობინებას."

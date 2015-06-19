@@ -660,8 +660,9 @@ en:
   devise:
     mailer:
       reset_password_instructions:
-        title: 'Hello %{nickname}!'
-        p1: Someone has requested a link to change your password on %{app_name}, and you can do this through the link below.
+        subject: 'UNICEF Georgia Data Portal - Reset password instructions'
+        title: 'Hello %{nickname} - '
+        p1: "Someone has requested a link to change your password on %{app_name}, and you can do this through the link below."
         link_title: Change my password
         p2: "If you didn't request this, please ignore this email."
         p3: "Your password won't change until you access the link above and create a new one."                
