@@ -16,12 +16,13 @@ class Agreement
   field :description, type: String
   field :dataset_type, type: String
   field :dataset_locale, type: String
+  field :download_type, type: String
 
   #############################
 
   attr_accessor :terms
   attr_accessible :first_name, :last_name, :age_group, :residence,
-                  :email, :affiliation, :status, :status_other, :description, :dataset_id, :dataset_type, :dataset_locale, :terms
+                  :email, :affiliation, :status, :status_other, :description, :dataset_id, :dataset_type, :dataset_locale, :terms, :download_type
 
     STATUS = { 1 => 'researcher',
                2 => 'student',
@@ -48,6 +49,8 @@ class Agreement
   validates :dataset_type, presence: true
   validates :dataset_locale, presence: true
   validates :terms, :inclusion => {:in => [true]  }
+  validates :download_type, :inclusion => {:in => ['public', 'admin']  }
+
 
 
   ####################
@@ -82,7 +85,8 @@ class Agreement
       model.human_attribute_name("created_at"), model.human_attribute_name("first_name"), model.human_attribute_name("last_name"), 
       model.human_attribute_name("age_group"), model.human_attribute_name("residence"), model.human_attribute_name("email"), 
       model.human_attribute_name("affiliation"), model.human_attribute_name("status"), model.human_attribute_name("description"), 
-      model.human_attribute_name("dataset_id"), model.human_attribute_name("dataset_type"), model.human_attribute_name("dataset_locale")
+      model.human_attribute_name("dataset_id"), model.human_attribute_name("dataset_type"), model.human_attribute_name("dataset_locale"), 
+      model.human_attribute_name("download_type")
     ]
   end
 
@@ -100,7 +104,7 @@ class Agreement
     return [  
       self.created_at, self.first_name, self.last_name, age_group, self.residence, 
       self.email, self.affiliation, status, self.description, 
-      title, self.dataset_type, self.dataset_locale
+      title, self.dataset_type, self.dataset_locale, self.download_type
     ]
   end
 

@@ -55,6 +55,7 @@ BootstrapStarter::Application.routes.draw do
         get 'highlights'
         post 'highlights'
         post 'home_page_highlight'
+        get 'download_data'
       end
     end
 

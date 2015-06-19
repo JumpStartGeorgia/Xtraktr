@@ -160,7 +160,8 @@ $(document).ready(function () {
       type = t.attr('data-type'),
       id = t.closest('.download').attr('data-id'),
       lang = t.closest('.download').attr('data-lang');
-    download_request("/" + document.documentElement.lang + "/download_request", { id: id, type: type, lang: lang });
+      download_type = t.closest('.download').attr('data-download-type');
+    download_request("/" + document.documentElement.lang + "/download_request", { id: id, type: type, lang: lang, download_type: download_type });
 
     t.closest('.download').removeClass('open');
     $(document).off('click.download');

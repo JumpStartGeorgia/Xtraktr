@@ -13,6 +13,7 @@ class FileMapper
    field :dataset_id, type: String
    field :dataset_type, type: String
    field :dataset_locale, type: String
+   field :download_type, type: String
 
   #############################
   ## Indexes
@@ -21,7 +22,7 @@ class FileMapper
   index({ :dataset_id => 1}, { background: true})
   index({ :dataset_locale => 1}, { background: true})
 
-  attr_accessible :key, :dataset_id, :dataset_type, :dataset_locale
+  attr_accessible :key, :dataset_id, :dataset_type, :dataset_locale, :download_type
 
 end
 

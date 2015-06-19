@@ -1,0 +1,16 @@
+<% title t('.title') %>
+
+<%= simple_format(t('.instructions')) %>
+
+<hr />
+
+<% if @dataset.urls.present? && @dataset.urls.codebook.present? %>     
+  <div class="download data-download" data-id="<%= @dataset.id.to_s %>" data-lang="<%= @dataset.current_locale %>" data-download-type="admin">
+      <ul class="list-inline">
+        <li class="btn btn-default"><div class="type" data-type='csv' title="<%= t('download_data_options.title.csv') %>" data-placement="top"><%= t('download_data_options.text.csv') %></div></li>
+        <li class="btn btn-default"><div class="type" data-type='r' title="<%= t('download_data_options.title.r') %>" data-placement="top"><%= t('download_data_options.text.r') %></div></li>
+        <li class="btn btn-default"><div class="type" data-type='spss' title="<%= t('download_data_options.title.spss') %>" data-placement="top"><%= t('download_data_options.text.spss') %></div></li>
+        <li class="btn btn-default"><div class="type" data-type='stata' title="<%= t('download_data_options.title.stata') %>" data-placement="top"><%= t('download_data_options.text.stata') %></div></li>
+      </ul>                 
+    </div>
+<% end %>

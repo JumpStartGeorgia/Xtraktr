@@ -65,6 +65,11 @@ namespace :migration do
     require "./db/migrate/populate_download_flag.rb"
   end
 
+  desc "populate the new download_type field for all agreements"
+  task :populate_download_type => :environment do
+    require "./db/migrate/populate_download_type.rb"
+  end
+
 
 
 end

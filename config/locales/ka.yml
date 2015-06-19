@@ -53,8 +53,9 @@ ka:
         status_other: "როდესაც სხვა (გთხოვთ მიუთითოთ)"
         description: "საკვლევი ობიექტის მოკლე აღწერა (<i>არჩევითი</i>)"
         dataset_id: მონაცემები
-        dataset_type: "ჩამოტვირთვის ტიპი"
-        dataset_locale: "ჩამოტვირთვის ენა"
+        dataset_type: File Type
+        dataset_locale: "ენა"
+        download_type: Download Type
         created_at: "თარიღი"
       page_content:
         name: "უნიკალური სახელი"
@@ -592,6 +593,7 @@ ka:
         mass_changes: Mass Changes Via Spreadsheet
         mass_changes_questions: Question Mass Changes
         mass_changes_answers: Answer Mass Changes
+        download_data: Download Data
       admin_time_series:
         explore_data: "მონაცემების გაცნობა"
         heading: "პერიოდული შედარების დეტალები"
@@ -800,6 +802,12 @@ ka:
       btn_show_home_page: Permanently Show on Home Page
       questions: Questions
       description: Description
+    download_data:
+      title: Download Complete Dataset
+      instructions: |
+        You can use this page to download the entire dataset in any format you desire. 
+
+        This download is different than what is on the dashboard page in that this download includes the entire dataset, whereas the download from the dashboard page only includes the data that you have indicated can be downloaded by the public.
   questions:
     index:
       title: "კითხვების და მათი პასუხების შესწორება"

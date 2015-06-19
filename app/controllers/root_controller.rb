@@ -292,11 +292,12 @@ class RootController < ApplicationController
     @dataset_id = params[:id]
     @dataset_type = params[:type]
     @dataset_locale = params[:lang]
-    if sign_in && current_user.agreement(@dataset_id, @dataset_type, @dataset_locale)
-      mapper = FileMapper.create({ dataset_id: @dataset_id, dataset_type: @dataset_type, dataset_locale: @dataset_locale })
+    @download_type = params[:download_type]
+    if sign_in && current_user.agreement(@dataset_id, @dataset_type, @dataset_locale, @download_type)
+      mapper = FileMapper.create({ dataset_id: @dataset_id, dataset_type: @dataset_type, dataset_locale: @dataset_locale, download_type: @download_type })
       data[:url] = "/#{I18n.locale}/download/#{mapper.key}"
     else
-      @mod = Agreement.new({ dataset_id: @dataset_id, dataset_type: @dataset_type, dataset_locale: @dataset_locale  })      
+      @mod = Agreement.new({ dataset_id: @dataset_id, dataset_type: @dataset_type, dataset_locale: @dataset_locale, download_type: @download_type  })      
       data[:form] = render_to_string "devise/registrations/new", :layout => false, :locals => { reg: false }       
     end    
     respond_to do |format|

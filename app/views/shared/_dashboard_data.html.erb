@@ -67,7 +67,7 @@
         <% end %>                    
         <% if @dataset.urls.present? && @dataset.urls.codebook.present? %>     
             <div class="download-wrapper" >
-              <div class="download" data-id="<%= @dataset.id.to_s %>" data-lang="<%= @dataset.current_locale %>">
+              <div class="download" data-id="<%= @dataset.id.to_s %>" data-lang="<%= @dataset.current_locale %>" data-download-type="public">
               <%= image_tag 'svg/download_big.svg', alt: t('helpers.links.download_data') %>
               <%= t('helpers.links.download_data') %>
               <ul>

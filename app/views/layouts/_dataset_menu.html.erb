@@ -17,6 +17,12 @@
                       <%= t('app.menu.admin_dataset.explore_data') %>
                     <% end %>
                   </li>
+                  <li role="menuitem">
+                    <%= link_to download_data_dataset_path(dataset) do %>
+                      <span class="glyphicon glyphicon-download-alt"></span>
+                      <%= t('app.menu.admin_dataset.download_data') %>
+                    <% end %>
+                  </li>
                   <li class="divider"></li>
                   <li role="menuitem">
                     <%= link_to edit_dataset_path(dataset) do %>
