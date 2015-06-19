@@ -809,6 +809,7 @@ en:
         You can use this page to download the entire dataset in any format you desire. 
 
         This download is different than what is on the dashboard page in that this download includes the entire dataset, whereas the download from the dashboard page only includes the data that you have indicated can be downloaded by the public.
+      no_files: The download files have not been generated yet. Please check back soon.
   questions:
     index:
       title: "Edit Questions and their Answers"

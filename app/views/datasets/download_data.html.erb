@@ -4,7 +4,7 @@
 
 <hr />
 
-<% if @dataset.urls.present? && @dataset.urls.codebook.present? %>     
+<% if @dataset.urls.present? && @dataset.urls.admin_codebook.present? %>     
   <div class="download data-download" data-id="<%= @dataset.id.to_s %>" data-lang="<%= @dataset.current_locale %>" data-download-type="admin">
       <ul class="list-inline">
         <li class="btn btn-default"><div class="type" data-type='csv' title="<%= t('download_data_options.title.csv') %>" data-placement="top"><%= t('download_data_options.text.csv') %></div></li>
@@ -13,4 +13,8 @@
         <li class="btn btn-default"><div class="type" data-type='stata' title="<%= t('download_data_options.title.stata') %>" data-placement="top"><%= t('download_data_options.text.stata') %></div></li>
       </ul>                 
     </div>
+<% else %>
+  <p>
+    <%= t('.no_files') %>
+  </p>
 <% end %>
