@@ -7,12 +7,20 @@
       <h2><%= @time_series.title %></h2>
       <%= form_tag(explore_time_path, :id => 'form-explore-time-series') do %>
         <div class="form-explore-question-code">
+          <%
+            has_can_exclude = false
+          %>
           <%= label_tag 'question_code', t('.form.question_code') %>
           <select data-live-search="true" data-hide-disabled='true' data-width="100%" class="selectpicker" id="question_code" name="question_code">
             <% @questions.each_with_index do |question, index| %>
-              <% selected = (@question_code.present? && @question_code == question.code) ? 'selected=selected ' : ''
+              <% 
+                q_text = "#{question.original_code} - #{question.text}"
+                selected = @question_code.present? && @question_code == question.code ? 'selected=selected ' : ''
+                can_exclude = question.has_can_exclude_answers? ? 'data-can-exclude=true ' : ''
+                has_can_exclude = true if can_exclude.present? && selected.present?
               %>
-              <option value="<%= question.code %>" <%= selected %> ><%= "#{question.original_code} - #{question.text}" %></option>
+              <option value="<%= question.code %>" title="<%= q_text %>" <%= selected %><%= can_exclude %>><%= q_text %></option>
+              %>
             <% end %>
           </select>
         </div>
@@ -23,15 +31,22 @@
             <option value=""><%= t('.form.no_filter') %></option>
             <% @questions.each do |question| %>
               <% 
+                q_text = "#{question.original_code} - #{question.text}"
                 selected = @filtered_by_code == question.code ? 'selected=selected ' : ''
                 disabled = @question_code == question.code ? 'disabled=disabled ' : ''
+                can_exclude = question.has_can_exclude_answers? ? 'data-can-exclude=true ' : ''
+                has_can_exclude = true if can_exclude.present? && selected.present?
               %>
-              <option value="<%= question.code %>" <%= selected %><%= disabled %>><%= "#{question.original_code} - #{question.text}" %></option>
+              <option value="<%= question.code %>" title="<%= q_text %>" <%= selected %><%= disabled %><%= can_exclude %>><%= q_text %></option>
+
             <% end %>
           </select>
         </div>
 
-        <div class="checkbox-box" tabindex="0">
+        <%
+          can_exclude_visibility = has_can_exclude == true ? '' : 'style=\'visibility: hidden;\''
+        %>
+        <div id="can-exclude-container" class="checkbox-box" tabindex="0" <%= can_exclude_visibility.html_safe %>>
           <%= check_box_tag 'can_exclude', true, params[:can_exclude].present? ? params[:can_exclude].to_bool : false %>
           <%= label_tag 'can_exclude', t('.form.can_exclude'), :title => t('.form.can_exclude_hint') %>
         </div>

@@ -10,17 +10,20 @@
         <div class="form-explore-question-code">
             <%
               mappable_icon_class = "option-mappable"
+              has_can_exclude = false
             %>
             <%= label_tag 'question_code', t('.form.question_code') %>
             <select data-live-search="true" data-hide-disabled='true' data-width="100%" class="selectpicker" id="question_code" name="question_code">
               <% @questions.each_with_index do |question, index| %>
                 <% 
                   q_text = "#{question.original_code} - #{question.text}"
-                  selected = (@question_code.present? && @question_code == question.code) || (@broken_down_by_code.blank? && index == 0) ? 'selected=selected ' : ''
+                  selected = @question_code.present? && @question_code == question.code ? 'selected=selected ' : ''
                   disabled = @broken_down_by_code == question.code ? 'disabled=disabled ' : ''
                   mappable = question.is_mappable? ? "class=#{mappable_icon_class} " : ''
+                  can_exclude = question.has_can_exclude_answers? ? 'data-can-exclude=true ' : ''
+                  has_can_exclude = true if can_exclude.present? && selected.present?
                 %>
-                <option value="<%= question.code %>" title="<%= q_text %>" <%= selected %><%= disabled %><%= mappable %>><%= q_text %></option>
+                <option value="<%= question.code %>" title="<%= q_text %>" <%= selected %><%= disabled %><%= mappable %><%= can_exclude %>><%= q_text %></option>
               <% end %>
             </select>
         </div>
@@ -44,8 +47,10 @@
                   selected = @broken_down_by_code.present? && @broken_down_by_code == question.code ? 'selected=selected ' : ''
                   disabled = @question_code == question.code ? 'disabled=disabled ' : ''
                   mappable = question.is_mappable? ? "class=#{mappable_icon_class} " : ''
+                  can_exclude = question.has_can_exclude_answers? ? 'data-can-exclude=true ' : ''
+                  has_can_exclude = true if can_exclude.present? && selected.present?
                 %>
-                <option value="<%= question.code %>" title="<%= q_text %>" <%= selected %><%= disabled %><%= mappable %>><%= q_text %></option>
+                <option value="<%= question.code %>" title="<%= q_text %>" <%= selected %><%= disabled %><%= mappable %><%= can_exclude %>><%= q_text %></option>
               <% end %>
             </select>
           </div>
@@ -59,13 +64,17 @@
                   selected = @filtered_by_code == question.code ? 'selected=selected ' : ''
                   disabled = @broken_down_by_code == question.code || @question_code == question.code ? 'disabled=disabled ' : ''
                   mappable = question.is_mappable? ? "class=#{mappable_icon_class} " : ''
+                  can_exclude = question.has_can_exclude_answers? ? 'data-can-exclude=true ' : ''
+                  has_can_exclude = true if can_exclude.present? && selected.present?
                 %>
-                <option value="<%= question.code %>" title="<%= q_text %>" <%= selected %><%= disabled %><%= mappable %>><%= q_text %></option>
+                <option value="<%= question.code %>" title="<%= q_text %>" <%= selected %><%= disabled %><%= mappable %><%= can_exclude %>><%= q_text %></option>
               <% end %>
             </select>
           </div>
-
-          <div class="checkbox-box" tabindex="0">
+          <%
+            can_exclude_visibility = has_can_exclude == true ? '' : 'style=\'visibility: hidden;\''
+          %>
+          <div id="can-exclude-container" class="checkbox-box" tabindex="0" <%= can_exclude_visibility.html_safe %>>
              <%= check_box_tag 'can_exclude', true, params[:can_exclude].present? ? params[:can_exclude].to_bool : false %>
              <%= label_tag 'can_exclude', t('.form.can_exclude'), :title => t('.form.can_exclude_hint') %>
           </div>

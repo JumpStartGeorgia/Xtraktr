@@ -75,6 +75,11 @@ namespace :migration do
     require "./db/migrate/populate_download_type.rb"
   end
 
+  desc "populate the new has_can_exclude_answers for all questions"
+  task :populate_has_can_exclude_answers => :environment do
+    require "./db/migrate/populate_has_can_exclude_answers.rb"
+  end
+
 
 
 end

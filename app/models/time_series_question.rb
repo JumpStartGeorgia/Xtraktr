@@ -11,6 +11,8 @@ class TimeSeriesQuestion < CustomTranslation
   field :original_code, type: String
   field :text, type: String, localize: true
   field :notes, type: String, localize: true
+  # whether or not the answers has a can exclude
+  field :has_can_exclude_answers, type: Boolean, default: false
 
   embeds_many :dataset_questions, class_name: 'TimeSeriesDatasetQuestion' do
     # get the record for a dataset
@@ -20,6 +22,11 @@ class TimeSeriesQuestion < CustomTranslation
   end
 
   embeds_many :answers, class_name: 'TimeSeriesAnswer' do
+    # see if answers have can exclude
+    def has_can_exclude?
+      where(can_exclude: true).count > 0 ? true : false
+    end
+
     # get the answer that has the provide value
     def with_value(value)
       where(:value => value).first
@@ -41,7 +48,7 @@ class TimeSeriesQuestion < CustomTranslation
   accepts_nested_attributes_for :dataset_questions
   accepts_nested_attributes_for :answers
 
-  attr_accessible :code, :text, :original_code, :notes, :notes_translations,
+  attr_accessible :code, :text, :original_code, :notes, :notes_translations, :has_can_exclude_answers,
                   :answers_attributes, :text_translations, :dataset_questions_attributes
 
   #############################
@@ -59,5 +66,14 @@ class TimeSeriesQuestion < CustomTranslation
     get_translation(self.notes_translations, self.time_series.current_locale, self.time_series.default_language)
   end
 
+  #############################
+  # callbacks
 
+  before_save :update_flags
+
+  def update_flags
+    self.has_can_exclude_answers = self.answers.has_can_exclude?
+
+    return true
+  end
 end

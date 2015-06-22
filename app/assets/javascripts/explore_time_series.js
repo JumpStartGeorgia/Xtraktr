@@ -3,6 +3,18 @@ var datatables, i, j, json_data;
 
 
 
+// show or hide the can exclude checkbox
+function set_can_exclude_visibility(){
+  if ($('select#question_code option:selected').data('can-exclude') == true ||
+      $('select#filtered_by_code option:selected').data('can-exclude') == true){
+
+    $('div#can-exclude-container').css('visibility', 'visible');
+  }else{
+    $('div#can-exclude-container').css('visibility', 'hidden');
+  }
+}
+
+
 // build time series line chart for each chart item in json
 function build_time_series_charts(json){
   if (json.chart){
@@ -476,11 +488,17 @@ $(document).ready(function() {
 
       // update tooltip for selects
       $('form button.selectpicker').tooltip('fixTitle')
+
+      // if selected options have can_exclude, show the checkbox, else hide it
+      set_can_exclude_visibility();
     });  
 
     // update tooltip when filter tooltip changes
     $('select.selectpicker-filter').change(function(){
       $('form button.selectpicker').tooltip('fixTitle')
+
+      // if selected options have can_exclude, show the checkbox, else hide it
+      set_can_exclude_visibility();
     });
 
 

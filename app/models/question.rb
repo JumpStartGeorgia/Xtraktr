@@ -21,10 +21,17 @@ class Question < CustomTranslation
   field :is_mappable, type: Boolean, default: false
   # whether or not the question should be included in public download
   field :can_download, type: Boolean, default: false
+  # whether or not the answers has a can exclude
+  field :has_can_exclude_answers, type: Boolean, default: false
 
   embedded_in :dataset
   embeds_many :answers do
     # these are functions that will query the answers documents
+
+    # see if answers have can exclude
+    def has_can_exclude?
+      where(can_exclude: true).count > 0 ? true : false
+    end
 
     # get the unique answer values
     def unique_values
@@ -65,7 +72,7 @@ class Question < CustomTranslation
   # index ({ :is_mappable => 1})
 
   #############################
-  attr_accessible :code, :text, :original_code, :has_code_answers, :is_mappable, 
+  attr_accessible :code, :text, :original_code, :has_code_answers, :is_mappable, :has_can_exclude_answers,
       :answers_attributes, :exclude, :text_translations, :notes, :notes_translations
 
   #############################
@@ -113,6 +120,7 @@ class Question < CustomTranslation
   def update_flags
 #    logger.debug "updating question flags for #{self.code}"
     self.has_code_answers = self.answers.present?
+    self.has_can_exclude_answers = self.answers.has_can_exclude?
 
     return true
   end
@@ -136,10 +144,17 @@ class Question < CustomTranslation
   end
 
   # if the question changed, make sure the dataset.reset_download_files flag is set to true
+  # if the only change is to the flags, the donwload does not need to be updated
   def check_if_dirty
-    logger.debug "======= question changed? #{self.changed?}; changed: #{self.changed}"    
-    if self.changed?
-      logger.debug "========== question changed!, setting reset_download_files = true"
+    puts "======= question changed? #{self.changed?}; changed: #{self.changed}"    
+    ignore = [:has_can_exclude_answers, :has_code_answers]
+    changed = self.changed
+    if changed.present?
+      # delete the keys we do not care about
+      ignore.each{|x| changed.delete(x)}
+    end
+    if self.changed? && changed.present?
+      puts "========== question changed!, setting reset_download_files = true"
       self.dataset.reset_download_files = true
       self.dataset.save
     end
