@@ -63,28 +63,25 @@
     .form-explore-filter-by
     {}
     /* add icon if question is mappable */
-    .bootstrap-select a.option-mappable:after{
-      content:"";
-      display:inline-block;
-      position: absolute;
-      top: 50%;
-      right: 27px;
-      width:17px;
-      height:18px;
-      margin:-9px 0 0;
-      vertical-align:middle;
-      background:url(/assets/svg/map.svg) no-repeat left top ;
-    }
-    .bootstrap-select span.option-mappable{
-      display:inline-block;
-      position: absolute;
-      top: 50%;
-      right: 27px;
-      width:17px;
-      height:18px;
-      margin:-9px 0 0;
-      img{
-        vertical-align: inherit;
+    .bootstrap-select ul.dropdown-menu li{
+      a.option-mappable:after{
+        content:"";
+        display:inline-block;
+        position: absolute;
+        top: 50%;
+        right: 27px;
+        width:17px;
+        height:18px;
+        margin:-9px 0 0;
+        vertical-align:middle;
+        font-family: "Glyphicons Halflings";
+        content: "\e062";
+        color: #333333;
+      }
+      &.active{
+        a.option-mappable:hover:after{
+          color: #fff;
+        }
       }
     }
     .checkbox-box
@@ -541,6 +538,33 @@
     position: absolute;
     top: 10px;
     left: 36px;
+  }
+
+  /* style the add button */
+  #container-chart .chart a.add-highlight, #container-map .map  a.add-highlight{
+    background-color: #ffffff;
+    border-color: #F3D952;
+    span.glyphicon{
+      color: #F3D952;
+    }
+  }
+
+  /* style the add button */
+  #container-chart .chart a.delete-highlight, #container-map .map  a.delete-highlight{
+    background-color: #ffffff;
+    border-color: #d9534f;
+    span.glyphicon{
+      color: #d9534f;
+    }
+  }
+
+  /* style the edit description button */
+  #container-chart .chart a.description-highlight, #container-map .map  a.description-highlight{
+    background-color: #ffffff;
+    border-color: @00adee;
+    span.glyphicon{
+      color: @00adee;
+    }
   }
 
 

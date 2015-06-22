@@ -38,7 +38,7 @@
                   </li>
                   <li role="menuitem">
                     <%= link_to warnings_dataset_path(dataset) do %>
-                      <span class="glyphicon glyphicon-exclamation-sign"></span>
+                      <span class="glyphicon glyphicon-exclamation-sign-admin"></span>
                       <%= t('app.menu.admin_dataset.warnings') %>
                     <% end %>
                   </li>
@@ -53,25 +53,25 @@
                   <li class="divider"></li>
                   <li role="menuitem">
                     <%= link_to dataset_questions_path(dataset) do %>
-                      <span class="glyphicon glyphicon-question-sign"></span>
+                      <span class="glyphicon glyphicon-question-admin"></span>
                       <%= t('app.menu.admin_dataset.qa') %>
                     <% end %>
                   </li>
                   <li role="menuitem">
                     <%= link_to mass_changes_dataset_questions_path(dataset) do %>
-                      <span class="glyphicon glyphicon-th-list"></span>
+                      <span class="glyphicon glyphicon-list-admin"></span>
                       <%= t('app.menu.admin_dataset.mass_changes') %>
                     <% end %>
                   </li>
                   <li role="menuitem">
                     <%= link_to mass_changes_questions_dataset_path(dataset) do %>
-                      <span class="glyphicon glyphicon-check"></span>
+                      <span class="glyphicon glyphicon-ok"></span>
                       <%= t('app.menu.admin_dataset.mass_changes_questions') %>
                     <% end %>
                   </li>
                   <li role="menuitem">
                     <%= link_to mass_changes_answers_dataset_path(dataset) do %>
-                      <span class="glyphicon glyphicon-check"></span>
+                      <span class="glyphicon glyphicon-ok"></span>
                       <%= t('app.menu.admin_dataset.mass_changes_answers') %>
                     <% end %>
                   </li>

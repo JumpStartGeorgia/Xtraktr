@@ -74,7 +74,7 @@ function add_highlight_button(visual_element, embed_id, visual_type){
     var parent = $(visual_element).parent();
 
     // create add link
-    var link = '<a class="add-highlight btn btn-primary btn-xs" href="' + $(parent).data('add-highlight') + '" data-embed-id="' + embed_id + '" data-visual-type="' + visual_type + '" ';
+    var link = '<a class="add-highlight btn btn-default btn-xs" href="' + $(parent).data('add-highlight') + '" data-embed-id="' + embed_id + '" data-visual-type="' + visual_type + '" ';
     link += 'title="' + gon.add_highlight_text + '" data-placement="right"><span class="glyphicon glyphicon-star" aria-hidden="true"></span></a>';
 
     // add link to visual
@@ -90,11 +90,11 @@ function delete_highlight_button(visual_element, embed_id, visual_type){
     var parent = $(visual_element).parent();
 
     // create delete link
-    var link = '<a class="delete-highlight btn btn-danger btn-xs" href="' + $(parent).data('delete-highlight') + '" data-embed-id="' + embed_id + '" data-visual-type="' + visual_type + '" ';
+    var link = '<a class="delete-highlight btn btn-default btn-xs" href="' + $(parent).data('delete-highlight') + '" data-embed-id="' + embed_id + '" data-visual-type="' + visual_type + '" ';
     link += 'title="' + gon.delete_highlight_text + '" data-placement="right"><span class="glyphicon glyphicon-star" aria-hidden="true"></span></a>';
 
     // create desc link
-    link += '<a class="description-highlight btn btn-primary btn-xs" data-href="' + $(parent).data('description') + '" data-embed-id="' + embed_id + '" ';
+    link += '<a class="description-highlight btn btn-default btn-xs" data-href="' + $(parent).data('description') + '" data-embed-id="' + embed_id + '" ';
     link += 'title="' + gon.description_highlight_text + '" data-placement="right"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>';
 
 

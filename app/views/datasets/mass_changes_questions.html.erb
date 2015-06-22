@@ -22,13 +22,13 @@
           <th>
             <%= model_class.human_attribute_name(:exclude) %>
             <%= link_to '#', class: 'btn btn-default btn-xs btn-select-all', :'data-state' => 'all', :'data-type' => 'exclude' do %>
-              <span class="glyphicon glyphicon-check" title="<%= t('helpers.links.select_all') %>"></span>
+              <span class="glyphicon glyphicon-ok" title="<%= t('helpers.links.select_all') %>"></span>
             <% end %>
           </th>
           <th>
             <%= model_class.human_attribute_name(:can_download) %>
             <%= link_to '#', class: 'btn btn-default btn-xs btn-select-all', :'data-state' => 'all', :'data-type' => 'download' do %>
-              <span class="glyphicon glyphicon-check" title="<%= t('helpers.links.select_all') %>"></span>
+              <span class="glyphicon glyphicon-ok" title="<%= t('helpers.links.select_all') %>"></span>
             <% end %>
           </th>
         </tr>
