@@ -54,6 +54,11 @@ namespace :migration do
     require "./db/migrate/add_new_questions.rb"
   end
 
+  desc "fix answers to extra questions/data to youth and violence"
+  task :add_new_questions_fix => :environment do
+    require "./db/migrate/add_new_questions_fix.rb"
+  end
+
   desc "update api requests with dataset, time series and user name"
   task :add_missing_names_api_requests => :environment do
     require "./db/migrate/add_missing_names_api_requests.rb"

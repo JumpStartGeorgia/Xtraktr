@@ -37,6 +37,9 @@ module ExportData
       # the process of creating the text version csv is time consuming
       # this var saves it the first time it is created and then all proceeding calls use it again
       # need to reset the variable when the locale changes so can get data in correct language
+      @header_code = {}
+      @header_text = {}
+      @csv_raw_data = {}
       @csv_text_data = {}
 
       # make sure path exists
@@ -108,6 +111,9 @@ module ExportData
       # the process of creating the text version csv is time consuming
       # this var saves it the first time it is created and then all proceeding calls use it again
       # need to reset the variable when the locale changes so can get data in correct language
+      @header_code = {}
+      @header_text = {}
+      @csv_raw_data = {}
       @csv_text_data = {}
 
       # make sure path exists
@@ -148,11 +154,16 @@ module ExportData
     puts "*** use_processed_csv = #{use_processed_csv}"
     
     Dataset.needs_download_files.each do |dataset|
+      puts "=========================================="
+      puts "=========================================="
+      puts "=========================================="
       puts ">>>>>>>>>> dataset: #{dataset.title}"
       # create the data files for this dataset
       create_all_files(dataset, use_processed_csv)
     end
 
+    puts "=========================================="
+    puts "=========================================="
     puts ">>>>>>>> it took #{(Time.now-start).round(3)} seconds to create all files for all datasets"
   end
 
@@ -173,7 +184,7 @@ private
   # answers:
   #   value - text
   def self.codebook(dataset)
-    puts '>> creating codebok'
+    puts '>>>>>>>>>>>>>>> creating codebok'
     start = Time.now
 
     # create the public files
@@ -272,7 +283,7 @@ private
   #########################################
   # create csv file
   def self.csv(dataset, use_processed_csv=false)
-    puts '>> creating csv'
+    puts '>>>>>>>>>>>>>>> creating csv'
     start = Time.now
 
     csv_file = "csv.csv"
@@ -354,7 +365,7 @@ private
   # notes 
   # - strings cannot be more than 60 chars
   def self.spss(dataset, use_processed_csv=false)
-    puts '>> creating spss'
+    puts '>>>>>>>>>>>>>>> creating spss'
     start = Time.now
 
     csv_file = "spss.csv"
@@ -515,7 +526,7 @@ private
       # label define sexfmt 0 "Male" 1 "Female"
       # infile str16 name sex:sexfmt age using persons        
   def self.stata(dataset, use_processed_csv=false)
-    puts '>> creating stata'
+    puts '>>>>>>>>>>>>>>> creating stata'
     start = Time.now
 
     csv_file = "stata.csv"
@@ -627,7 +638,7 @@ private
   #########################################
   # create r file that reads in csv file
   def self.r(dataset, use_processed_csv=false)
-    puts '>> creating r'
+    puts '>>>>>>>>>>>>>>> creating r'
     start = Time.now
 
     csv_file = "r.csv"
@@ -773,93 +784,160 @@ private
     with_header_code_only = options[:with_header_code_only].nil? ? false : options[:with_header_code_only]
 
     data = {admin: [], public: []}
-    header = []
+    header = {admin: [], public: []}
     csv = {admin: [], public: []}
+    csv_data = {admin: [], public: []}
 
     if dataset.present? && dataset.questions.present?
-      dataset.questions.each do |question|
-        if with_header_code_only
-          header << question.original_code
-        else
-          header << "#{question.original_code} - #{question.text}"
-        end
+      # get the index to the questions that can be downloaded (public)
+      public_indexes = dataset.questions.each_index.select{|i| dataset.questions[i].can_download?}
 
-        if with_raw_data
-          # use the data values
-          data[:public] << dataset.data_items.code_data(question.code)
-          data[:admin] << dataset.data_items.code_data(question.code)
-        else
-          # replace the data values with the answer text
-          # if the data has already been created on a previous call, use it
-          if @csv_text_data.present? && @csv_text_data[question.code].present?
-            data[:public] << @csv_text_data[question.code][:public]
-            data[:admin] << @csv_text_data[question.code][:admin]
+      #######
+      # if header/data has already been built once, just use it again
+      have_header = false
+      have_data = false
+      if @header_code.present? && with_header_code_only
+        puts "*** using existing header with code"
+        header[:public] = @header_code[:public]
+        header[:admin] = @header_code[:admin]
+        have_header = true
+      elsif @header_text.present? && !with_header_code_only
+        puts "*** using existing header with text"
+        header[:public] = @header_text[:public]
+        header[:admin] = @header_text[:admin]
+        have_header = true
+      end
+
+      if @csv_raw_data.present? && with_raw_data
+        puts "*** using existing data with code"
+        csv_data[:admin] = @csv_raw_data[:admin]
+        csv_data[:public] = @csv_raw_data[:public]
+        have_data = true
+      elsif @csv_text_data.present? && !with_raw_data
+        puts "*** using existing data with text"
+        csv_data[:admin] = @csv_text_data[:admin]
+        csv_data[:public] = @csv_text_data[:public]
+        have_data = true
+      end
+
+      #######
+      # if not have header yet, create it
+      if !have_header && (with_header || with_header_code_only)
+        puts "---- building header"
+        @header_code = {admin: [], public: []}
+        @header_text = {admin: [], public: []}
+
+        dataset.questions.each_with_index do |question, index|
+          if with_header_code_only
+            header[:admin] << question.original_code
+            @header_code[:admin] << header[:admin].last
+            if public_indexes.include?(index)
+              header[:public] << header[:admin].last
+              @header_code[:public] << header[:admin].last
+            end
           else
+            header[:admin] << "#{question.original_code} - #{question.text}"
+            @header_text[:admin] << header[:admin].last
+            if public_indexes.include?(index)
+              header[:admin] << header[:admin].last
+              @header_text[:public] << header[:admin].last
+            end
+          end
+        end
+      end
+
+      #######
+      # if not have data yet, create it
+      if !have_data
+        puts "---- building data"
+        dataset.questions.each_with_index do |question, index|
+          if with_raw_data
+            puts "--->> getting csv raw data for #{question.code}"
+            # use the data values
+            data[:admin] << dataset.data_items.code_data(question.code)
+            if public_indexes.include?(index)
+              data[:public] << data[:admin].last
+            end
+          else
+            # replace the data values with the answer text
+            puts "--->> getting csv text data for #{question.code}"
             # get original data
             question_data_admin = dataset.data_items.code_data(question.code)
-            question_data_public = question_data_admin.dup
+            question_data_public = question_data_admin.present? ? question_data_admin.dup : nil
 
             # now replace data values with answer text
             question.answers.sorted.each do |answer|
               # only need to update the public if this answer is not excluded
-              if !answer.exclude
+              if public_indexes.include?(index) && !answer.exclude
                 question_data_public.select{ |x| x == answer.value }.each{ |x| x.replace( answer.text ) }
               end
               question_data_admin.select{ |x| x == answer.value }.each{ |x| x.replace( answer.text ) }
             end
 
-            # save for use by other calls to this method
-            @csv_text_data[question.code] = {}
-            @csv_text_data[question.code][:public] = question_data_public
-            @csv_text_data[question.code][:admin] = question_data_admin
-
-            data[:public] << question_data_public
             data[:admin] << question_data_admin
+            if public_indexes.include?(index)
+              data[:public] << question_data_public
+            end
           end
         end
-      end
 
-      # now use transpose to get in proper format
-      # - for admin, get all data
-      csv[:admin] = CSV.generate do |csv_row|
-        if with_header || with_header_code_only
-          csv_row << header
-        end
+puts "data admin length = #{data[:admin].length}; dataset questions length = #{dataset.questions.length}"
+puts "data public length = #{data[:public].length}; public index length = #{public_indexes.length}"
 
+        # now use transpose to get in proper format
         data[:admin].transpose.each do |row|
-          csv_row << row.map{|x| 
+          csv_data[:admin] << row.map{|x| 
             y = x.nil? || x.empty? ? nil : clean_text(x)
             y.present? ? y : nil
           }
+        end
+
+        data[:public].transpose.each do |row|
+          csv_data[:public] << row.map{|x| 
+            y = x.nil? || x.empty? ? nil : clean_text(x)
+            y.present? ? y : nil
+          }
+        end
+
+        # save the data for quick use by other methods
+        if with_raw_data
+          @csv_raw_data[:public] = csv_data[:public]
+          @csv_raw_data[:admin] = csv_data[:admin]
+        else
+          @csv_text_data[:public] = csv_data[:public]
+          @csv_text_data[:admin] = csv_data[:admin]
         end
       end
 
-      # for public, only get data that is downloadable
-      public_indexes = dataset.questions.each_index.select{|i| dataset.questions[i].can_download?}
+
+      #######
+      # admin csv
+      csv[:admin] = CSV.generate do |csv_row|
+        # add header
+        if with_header_code_only || with_header
+          csv_row << header[:admin]
+        end
+
+        # add data
+        csv_data[:admin].each do |row|
+          csv_row << row
+        end
+      end
+
+      #######
+      # public csv
       csv[:public] = CSV.generate do |csv_row|
-        public_header = []
-        public_data = []
-
-        # if the index is in public_indexes, keep it
-        (0..data[:public].length-1).each do |index|
-          if public_indexes.include?(index)
-            public_header << header[index]
-            public_data << data[:public][index]
-          end
+        # add header
+        if with_header_code_only || with_header
+          csv_row << header[:public]
         end
 
-        if with_header || with_header_code_only
-          csv_row << public_header
-        end
-
-        public_data.transpose.each do |row|
-          csv_row << row.map{|x| 
-            y = x.nil? || x.empty? ? nil : clean_text(x)
-            y.present? ? y : nil
-          }
+        csv_data[:public].each do |row|
+          csv_row << row
         end
       end
     end
+
 
     return csv
   end
