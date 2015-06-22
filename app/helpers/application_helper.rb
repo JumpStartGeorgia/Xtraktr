@@ -79,9 +79,10 @@ module ApplicationHelper
     end
   end
 
-  def format_highlight_home_page_status(show_home_page, small=false)
+
+  def format_boolean_flag(flag, small=false)
     css_small = small == true ? 'small-status' : ''
-    if show_home_page == true
+    if flag == true
       return "<div class='publish-status public #{css_small}'>#{t('formtastic.yes')}</div>".html_safe
     end
   end

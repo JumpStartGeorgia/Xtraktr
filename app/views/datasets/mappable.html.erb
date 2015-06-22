@@ -1,4 +1,8 @@
 <% title t('.title') %>
+<%- 
+  label_key_model = "mongoid.models."
+  label_key = "mongoid.attributes.question."
+-%>
 
 <% if @shapeset_count > 0 %>
 
@@ -11,8 +15,9 @@
     <table class="table table-striped display">
       <thead>
         <tr>
-          <th><%= Question.model_name.human %></th>
-          <th><%= Shapeset.model_name.human %></th>
+          <th><%= t(label_key_model + 'question') %></th>
+          <th><%= t(label_key_model + 'shapeset') %></th>
+          <th><%= t(label_key + 'has_map_adjustable_max_range') %></th>
           <th><%=t '.actions', :default => t("helpers.actions") %></th>
         </tr>
       </thead>
@@ -21,6 +26,7 @@
           <tr>
             <td><%= question.text %></td>
             <td><%= question.shapeset.title_with_source %></td>
+            <td><%= format_boolean_flag(question.has_map_adjustable_max_range?) %></td>
             <td>
               <%= link_to '',
                           mappable_form_edit_dataset_path(:id => @dataset, :question_id => question.id), 

@@ -493,7 +493,7 @@ class DatasetsController < ApplicationController
         mappings = params['map']['answer'].zip(params['map']['shapeset'])
 
         # assign the shape to the question
-        if @dataset.map_question_to_shape(params['question'], params['shapeset'], mappings)
+        if @dataset.map_question_to_shape(params['question'], params['shapeset'], mappings, params['has_map_adjustable_max_range'])
           flash[:success] =  t('app.msgs.mapping_saved')
           redirect_to mappable_dataset_path(@dataset)
           return
@@ -541,7 +541,7 @@ class DatasetsController < ApplicationController
         mappings = params['map']['answer'].zip(params['map']['shapeset'])
 
         # assign the shape to the question
-        if @dataset.map_question_to_shape(params['question_id'], params['shapeset_id'], mappings)
+        if @dataset.map_question_to_shape(params['question_id'], params['shapeset_id'], mappings, params['has_map_adjustable_max_range'])
           flash[:success] =  t('app.msgs.mapping_saved')
           redirect_to mappable_dataset_path(@dataset)
           return

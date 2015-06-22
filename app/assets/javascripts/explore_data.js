@@ -60,7 +60,7 @@ function build_highmaps(json){
           jumpto_text = '<option></option>';
 
           for(var i=0; i<json.map[h].filter_results.map_sets.length; i++){
-            build_highmap(json.map[h].filter_results.shape_question_code, json.map[h].filter_results.map_sets[i]);
+            build_highmap(json.map[h].filter_results.shape_question_code, json.map[h].filter_results.adjustable_max_range, json.map[h].filter_results.map_sets[i]);
 
             // add jumpto link
             jumpto_text += '<option data-href="#map-' + (map_index+1) + '">' + non_map_text + ' = ' + json.map[h].filter_results.map_sets[i].broken_down_answer_text + '</option>';
@@ -73,7 +73,7 @@ function build_highmaps(json){
           jump_ary.push(jump_item);
 
         }else{
-          build_highmap(json.map[h].filter_results.shape_question_code, json.map[h].filter_results.map_sets);
+          build_highmap(json.map[h].filter_results.shape_question_code, json.map[h].filter_results.adjustable_max_range, json.map[h].filter_results.map_sets);
 
           // add jumpto link
           jumpto_text += '<option data-href="#map-' + (map_index+1) + '">' + json.filtered_by.text + ' = ' + json.map[h].filter_answer_text + '</option>';
@@ -114,7 +114,7 @@ function build_highmaps(json){
       // no filters
       if (json.broken_down_by && json.map.map_sets.constructor === Array){
         for(var i=0; i<json.map.map_sets.length; i++){
-          build_highmap(json.map.shape_question_code, json.map.map_sets[i]);
+          build_highmap(json.map.shape_question_code, json.map.adjustable_max_range, json.map.map_sets[i]);
 
           // add jumpto link
           jumpto_text += '<option data-href="#map-' + (i+1) + '">' + non_map_text + ' = ' + json.map.map_sets[i].broken_down_answer_text + '</option>';
@@ -129,7 +129,7 @@ function build_highmaps(json){
         $('#jumpto').show();
 
       }else{
-        build_highmap(json.map.shape_question_code, json.map.map_sets);
+        build_highmap(json.map.shape_question_code, json.map.adjustable_max_range, json.map.map_sets);
   
         // hide jumpto
         $('#jumpto #jumpto-map').hide();

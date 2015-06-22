@@ -175,7 +175,7 @@ function build_visual_title(highlight_path, text){
 ////////////////////////////////////////////////
 // build highmap
 ////////////////////////////////////////////////
-function build_highmap(shape_question_code, json_map_set){
+function build_highmap(shape_question_code, adjustable_max, json_map_set){
   // create a div tag for this map
   // if gon.highlight_id exist, add it to the jquery selector path
   var selector_path = '#container-map';
@@ -185,6 +185,13 @@ function build_highmap(shape_question_code, json_map_set){
   }
   var map_id = 'map-' + ($('#container-map .map').length+1);
   $(selector_path).append('<div id="' + map_id + '" class="map"></div>');
+
+  var max = 100;
+  if (adjustable_max == true){
+    //  for use in the color axis
+    // get the max percent value and round temp_max to the nearest 10s
+    max = Math.ceil(Math.max.apply(Math, $.map(json_data.map.map_sets.data, function(obj, i){return obj.value})) / 10)*10;    
+  }
 
   $(selector_path + ' #' + map_id).highcharts('Map', {
       credits: { enabled: false },
@@ -243,7 +250,7 @@ function build_highmap(shape_question_code, json_map_set){
       },
       colorAxis: {
         min: 0,
-        max: 100, 
+        max: max, 
         minColor: '#d2f1f9',
         maxColor: '#0086a5',
         labels: {

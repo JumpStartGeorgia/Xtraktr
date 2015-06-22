@@ -396,7 +396,7 @@ private
   def self.create_dataset_question_hash(question, can_exclude=false)
     hash = {}
     if question.present?
-      hash = {code: question.code, original_code: question.original_code, text: question.text, notes: question.notes, is_mappable: question.is_mappable}
+      hash = {code: question.code, original_code: question.original_code, text: question.text, notes: question.notes, is_mappable: question.is_mappable, has_map_adjustable_max_range: question.has_map_adjustable_max_range}
       hash[:answers] = (can_exclude == true ? question.answers.must_include_for_analysis : question.answers.all_for_analysis).map{|x| {value: x.value, text: x.text, can_exclude: x.can_exclude, sort_order: x.sort_order}}
     end
 
@@ -585,7 +585,7 @@ private
         map = []
         data[:results][:filter_analysis].each do |filter|
           map_item = {filter_answer_value: filter[:filter_answer_value], filter_answer_text: filter[:filter_answer_text], 
-                    filter_results: {shape_question_code: data[:question][:code], map_sets: {}}}
+                    filter_results: {shape_question_code: data[:question][:code], adjustable_max_range: data[:question][:has_map_adjustable_max_range], map_sets: {}}}
 
           # set the titles
           # - assume titles are already set in data[:results]
@@ -615,7 +615,7 @@ private
 
       else
         # need question code so know which shape data to use
-        map = {shape_question_code: data[:question][:code], map_sets: {}}
+        map = {shape_question_code: data[:question][:code], adjustable_max_range: data[:question][:has_map_adjustable_max_range], map_sets: {}}
 
         # set the titles
         # - assume titles are already set in data[:results]
@@ -886,6 +886,7 @@ private
           if question_mappable
             # need question code so know which shape data to use
             map_item[:filter_results][:shape_question_code] = data[:question][:code]
+            map_item[:filter_results][:adjustable_max_range] = data[:question][:has_map_adjustable_max_range]
 
             # have to transpose the counts for highcharts (and re-calculate percents)
             counts = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:count]}}.transpose
@@ -939,6 +940,7 @@ private
           else
             # need question code so know which shape data to use
             map_item[:filter_results][:shape_question_code] = data[:broken_down_by][:code]
+            map_item[:filter_results][:adjustable_max_range] = data[:question][:has_map_adjustable_max_range]
 
             counts = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:count]}}
             percents = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:percent]}}
@@ -988,6 +990,7 @@ private
         if question_mappable
           # need question code so know which shape data to use
           map[:shape_question_code] = data[:question][:code]
+          map[:adjustable_max_range] = data[:question][:has_map_adjustable_max_range]
 
           # have to transpose the counts for highcharts (and re-calculate percents)
           counts = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:count]}}.transpose
@@ -1037,6 +1040,7 @@ private
         else
           # need question code so know which shape data to use
           map[:shape_question_code] = data[:broken_down_by][:code]
+          map[:adjustable_max_range] = data[:question][:has_map_adjustable_max_range]
 
           counts = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:count]}}
           percents = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:percent]}}

@@ -1,4 +1,7 @@
 <% title t('.title') %>
+<%- 
+  label_key = "mongoid.attributes.question."
+-%>
 
 <%= form_tag mappable_form_edit_dataset_path(@dataset), id: 'frm-mappable-question' do %>
   <input type="hidden" name="question_id" value="<%= @question.id %>"/>
@@ -39,6 +42,29 @@
         <% end %>
       </ul>
 
+    </div>
+
+    <h2><%= t('.adjustable_range_header') %></h2>
+
+    <p><%= t('.adjustable_range_p1') %></p>
+    <p><%= t('.adjustable_range_p2') %></p>
+
+    <div class="radio_buttons input optional form-group" id="has_map_adjustable_max_range">
+      <label class="  control-label" for="has_map_adjustable_max_range">
+        <%= t(label_key + 'has_map_adjustable_max_range') %>
+      </label>
+      <div class="radio">
+        <label class="choice" for="has_map_adjustable_max_range_true">
+          <input <%= @question.has_map_adjustable_max_range? ? "checked=checked" : '' %> id="has_map_adjustable_max_range_true" name="has_map_adjustable_max_range" type="radio" value="true">
+          <%= t('formtastic.yes') %>
+        </label>
+      </div>
+      <div class="radio">
+        <label class="choice" for="has_map_adjustable_max_range_false">
+          <input <%= !@question.has_map_adjustable_max_range? ? "checked=checked" : '' %> id="has_map_adjustable_max_range_false" name="has_map_adjustable_max_range" type="radio" value="false">
+          <%= t('formtastic.no') %>
+        </label>
+      </div>
     </div>
 
     <div class="form-group">

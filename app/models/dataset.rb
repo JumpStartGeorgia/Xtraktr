@@ -783,8 +783,9 @@ class Dataset < CustomTranslation
   # - question_id - id of question to update
   # - shapeset_id - id of shapeset to assign
   # - mappings - array of arrays containing answer id and shape name
+  # - has_map_adjustable_max_range - flag indicating if question map has adjustable range
   #   - [ [id, name], [id, name], ... ]
-  def map_question_to_shape(question_id, shapeset_id, mappings)
+  def map_question_to_shape(question_id, shapeset_id, mappings, has_map_adjustable_max_range=false)
     logger.debug "====== map_question_to_shape start"
     success = false
     # get the question
@@ -794,6 +795,8 @@ class Dataset < CustomTranslation
       logger.debug "====== found question"
       # set the shapeset
       q.shapeset_id = shapeset_id
+      # set the max range flag
+      q.has_map_adjustable_max_range = has_map_adjustable_max_range
 
       # set the shape name for each answer
       logger.debug "====== #{mappings.length} mappings"

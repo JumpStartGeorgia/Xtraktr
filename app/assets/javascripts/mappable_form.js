@@ -14,8 +14,8 @@ function update_mappable_matching_list(){
   var shapeset_text = $('select#shapeset option:selected').html();
 
   // update the header/text
-  $('#mappable-matching > h2').html($('#mappable-matching > h2').data('orig').replace('[question]', question_text).replace('[shapeset]', shapeset_text));
-  $('#mappable-matching > p').html($('#mappable-matching >p ').data('orig').replace('[question]', question_text).replace('[shapeset]', shapeset_text));
+  $('#mappable-matching h2#mappable-matching-header').html($('#mappable-matching h2#mappable-matching-header').data('orig').replace('[question]', question_text).replace('[shapeset]', shapeset_text));
+  $('#mappable-matching p#mappable-matching-explanation').html($('#mappable-matching p#mappable-matching-explanation ').data('orig').replace('[question]', question_text).replace('[shapeset]', shapeset_text));
 
   // create the html for mapping
   // ul li answer - select of shape sets

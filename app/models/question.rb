@@ -19,6 +19,8 @@ class Question < CustomTranslation
   field :exclude, type: Boolean, default: false
   # whether or not the question is tied to a shapeset
   field :is_mappable, type: Boolean, default: false
+  # whether or not the range for the map is fixed at 100 or adjusts to max percent
+  field :has_map_adjustable_max_range, type: Boolean, default: false
   # whether or not the question should be included in public download
   field :can_download, type: Boolean, default: false
   # whether or not the answers has a can exclude
@@ -72,7 +74,7 @@ class Question < CustomTranslation
   # index ({ :is_mappable => 1})
 
   #############################
-  attr_accessible :code, :text, :original_code, :has_code_answers, :is_mappable, :has_can_exclude_answers,
+  attr_accessible :code, :text, :original_code, :has_code_answers, :is_mappable, :has_can_exclude_answers, :has_map_adjustable_max_range,
       :answers_attributes, :exclude, :text_translations, :notes, :notes_translations
 
   #############################
@@ -129,6 +131,9 @@ class Question < CustomTranslation
   def check_mappable
     if self.shapeset_id_changed?
       self.is_mappable = self.shapeset_id.present?
+      if !self.is_mappable?
+        self.has_map_adjustable_max_range = false
+      end
       self.dataset.update_mappable_flag
     end
     return true

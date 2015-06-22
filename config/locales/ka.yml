@@ -96,6 +96,7 @@ ka:
         possible_answers: "შესაძლო პასუხების მნიშვნელობები"
         data_answers: "პასუხების მნიშვნელობები მონაცემებში"
         can_download: Include Question in Download for Public
+        has_map_adjustable_max_range: Max Range of Choropleth Map is Adjustable
       answer:
         value: "მნიშვნელობა"
         text: "პასუხი"
@@ -780,6 +781,9 @@ ka:
       shapeset_label: "გამოყენებადი რუკა"
       matching_header: "[question]' დატანა '[shapeset]' რუკაზე "
       matching_explanation: "[question]'-ის თითოეული პასუხისთვის, აირჩიეთ შესატყვისი რუკის ფორმა '[shapeset]'-დან."
+      adjustable_range_header: Do you want an adjustable scale when mapped?
+      adjustable_range_p1: "Do you want the choropleth map colors to always show results between 0 and 100% or would you prefer that the max range value be adjusted based on the max value of the analysis? Going with an adjustable max value could result in the choropleth map showing more varied colors."
+      adjustable_range_p2: "Let's assume that the following are the resulting percentage values from the analysis: 4, 8, 16, 32, 40. If the question did not use an adjustable max value, the choropleth map colors will vary between 0 and 100%  resulting in 4 and 8 and 16 having very similar, and possibly not discernable, colors. However, if the question did use an adjustable max value, the choropleth map colors will vary between 0 and 40% resulting in 4 and 8 having similar colors, but 16 having a color that is discernable as different."
     mappable_form_edit:
       title: "რუკაზე დასატანი კითხვების ფორმა"
       matching_header: "[question]' დატანა '[shapeset]' რუკაზე "

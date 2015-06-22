@@ -1,7 +1,27 @@
 #mappable-matching{
+  #mappable-matching-items, #adjustable-range{
+    margin-bottom: 15px;
+  }
+  p{
+    margin: 0 0 10px !important;
+  }
+  #has_map_adjustable_max_range{
+    & > label{
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 10px;
+    }
+    .radio{
+      margin-right: 10px;
+      &:last-of-type{
+        margin-right: inherit;
+      }
+    }
+  }
   #mappable-matching-items > ul > li{
     padding: 10px 5px;
     border-top: solid 1px #cdcdcd;
+    margin-bottom: 15px;
 
     .match-shapeset.no-match{
       background-color: #d95d6a;
