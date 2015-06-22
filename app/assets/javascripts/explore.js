@@ -25,6 +25,7 @@ function crosstab_chart_height(json){
   return chart_height;
 }
 
+
 function time_series_chart_height(json){
   var chart_height = 501; // need the 1 for the border bottom line
   if (json.question.answers.length >= 5){
@@ -199,7 +200,7 @@ function build_highmap(shape_question_code, json_map_set){
                         enabled: true,
                         color: 'white',
                         formatter: function () {
-                          return this.point.properties.display_name + '<br/>' + Highcharts.numberFormat(this.point.count, 0) + '   (' + this.point.value + '%)';
+                          return this.point.display_name + '<br/>' + Highcharts.numberFormat(this.point.count, 0) + '   (' + this.point.value + '%)';
                         }
                       }
                     }, false);
@@ -225,7 +226,19 @@ function build_highmap(shape_question_code, json_map_set){
           enabled: true,
           enableMouseWheelZoom: false,
           buttonOptions: {
-              verticalAlign: 'top'
+              verticalAlign: 'top',
+              theme: {
+                  states: {
+                      hover: {
+                          stroke: '#999999',
+                          fill: '#eeeeee'
+                      },
+                      select: {
+                          stroke: '#999999',
+                          fill: '#eeeeee'
+                      }
+                  }              
+              },
           }
       },
       colorAxis: {
@@ -301,7 +314,7 @@ function build_highmap(shape_question_code, json_map_set){
       exporting: {
         sourceWidth: 1280,
         sourceHeight: 720,
-        filename: json_map_set.title.text,
+        filename: json_map_set.title.text.replace(/[\|&;\$%@"\'<>\(\)\+,]/g, ""),
         chartOptions:{
           title: {
             text: json_map_set.title.text
@@ -313,6 +326,21 @@ function build_highmap(shape_question_code, json_map_set){
         buttons: {
           contextButton: {
             symbol: 'url(/assets/svg/download.svg)',
+            theme: {
+                'stroke-width': 1,
+                stroke: 'white',
+                r: 0,
+                states: {
+                    hover: {
+                        stroke: 'white',
+                        fill: 'white'
+                    },
+                    select: {
+                        stroke: 'white',
+                        fill: 'white'
+                    }
+                }              
+            },
             menuItems: [
               {
                 text: gon.highcharts_png,
@@ -449,8 +477,8 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
     series: json_chart.data.reverse(),
     exporting: {
       sourceWidth: 1280,
-      sourceHeight: 720,
-      filename: json_chart.title.text,
+      sourceHeight: chart_height,
+      filename: json_chart.title.text.replace(/[\|&;\$%@"\'<>\(\)\+,]/g, ""),
       chartOptions:{
         title: {
           text: json_chart.title.text
@@ -462,6 +490,21 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
       buttons: {
         contextButton: {
           symbol: 'url(/assets/svg/download.svg)',
+          theme: {
+              'stroke-width': 1,
+              stroke: 'white',
+              r: 0,
+              states: {
+                  hover: {
+                      stroke: 'white',
+                      fill: 'white'
+                  },
+                  select: {
+                      stroke: 'white',
+                      fill: 'white'
+                  }
+              }              
+          },
           menuItems: [
             {
               text: gon.highcharts_png,
@@ -531,10 +574,30 @@ function build_pie_chart(json_chart, chart_height){
   // create chart
   $(selector_path + ' #' + chart_id).highcharts({
     credits: { enabled: false },
-    chart: {
-        plotBackgroundColor: null,
-        plotBorderWidth: null,
-        plotShadow: false
+    chart:{
+      plotBackgroundColor: null,
+      plotBorderWidth: null,
+      plotShadow: false,
+      events: {
+        load: function () {
+          if (this.options.chart.forExport) {
+              Highcharts.each(this.series, function (series) {
+                // only show data labels for shapes that have data
+                if (series.name != 'baseLayer'){
+                  series.update({
+                    dataLabels: {
+                      enabled: true,
+                      formatter: function () {
+                        return this.key + '<br/>' + Highcharts.numberFormat(this.point.options.count, 0) + '   (' + this.y + '%)';
+                      }
+                    }
+                  }, false);
+                }
+            });
+            this.redraw();
+          }
+        }
+      }          
     },
     title: {
         text: build_visual_title(highlight_path, json_chart.title.html),
@@ -576,18 +639,36 @@ function build_pie_chart(json_chart, chart_height){
     exporting: {
       sourceWidth: 1280,
       sourceHeight: 720,
-      filename: json_chart.title.text,
+      filename: json_chart.title.text.replace(/[\|&;\$%@"\'<>\(\)\+,]/g, ""),
       chartOptions:{
         title: {
           text: json_chart.title.text
         },
         subtitle: {
           text: json_chart.subtitle.text
+        },
+        legend: {
+          enabled: false
         }
       },
       buttons: {
         contextButton: {
           symbol: 'url(/assets/svg/download.svg)',
+          theme: {
+              'stroke-width': 1,
+              stroke: 'white',
+              r: 0,
+              states: {
+                  hover: {
+                      stroke: 'white',
+                      fill: 'white'
+                  },
+                  select: {
+                      stroke: 'white',
+                      fill: 'white'
+                  }
+              }              
+          },
           menuItems: [
             {
               text: gon.highcharts_png,
@@ -720,8 +801,8 @@ function build_time_series_chart(json_chart, chart_height){
     series: json_chart.data,
     exporting: {
       sourceWidth: 1280,
-      sourceHeight: 720,
-      filename: json_chart.title.text,
+      sourceHeight: chart_height,
+      filename: json_chart.title.text.replace(/[\|&;\$%@"'<>\(\)\+,]/g, ""),
       chartOptions:{
         title: {
           text: json_chart.title.text
@@ -733,6 +814,21 @@ function build_time_series_chart(json_chart, chart_height){
       buttons: {
         contextButton: {
           symbol: 'url(/assets/svg/download.svg)',
+          theme: {
+              'stroke-width': 1,
+              stroke: 'white',
+              r: 0,
+              states: {
+                  hover: {
+                      stroke: 'white',
+                      fill: 'white'
+                  },
+                  select: {
+                      stroke: 'white',
+                      fill: 'white'
+                  }
+              }              
+          },
           menuItems: [
             {
               text: gon.highcharts_png,
