@@ -1511,7 +1511,7 @@ private
     return title.html_safe
   end 
 
-  def self.time_series_analysis_subtitle_text_filtered(fitlered_by_code, filtered_by_text, results)
+  def self.time_series_analysis_subtitle_text_filtered(filtered_by_code, filtered_by_text, results)
     filter_responses = []
     results.each do |result|
       text = " #{result[:filter_answer_text]}: "
