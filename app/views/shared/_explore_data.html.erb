@@ -8,13 +8,19 @@
       <h2><%= @dataset.title %></h2>
       <%= form_tag(explore_data_path, :id => 'form-explore-data') do %>
         <div class="form-explore-question-code">
+            <%
+              mappable_icon_class = "option-mappable"
+            %>
             <%= label_tag 'question_code', t('.form.question_code') %>
             <select data-live-search="true" data-hide-disabled='true' data-width="100%" class="selectpicker" id="question_code" name="question_code">
               <% @questions.each_with_index do |question, index| %>
-                <% selected = (@question_code.present? && @question_code == question.code) || (@broken_down_by_code.blank? && index == 0) ? 'selected=selected ' : ''
+                <% 
+                  q_text = "#{question.original_code} - #{question.text}"
+                  selected = (@question_code.present? && @question_code == question.code) || (@broken_down_by_code.blank? && index == 0) ? 'selected=selected ' : ''
                   disabled = @broken_down_by_code == question.code ? 'disabled=disabled ' : ''
+                  mappable = question.is_mappable? ? "class=#{mappable_icon_class} " : ''
                 %>
-                <option value="<%= question.code %>" <%= selected %><%= disabled %>><%= "#{question.original_code} - #{question.text}" %></option>
+                <option value="<%= question.code %>" title="<%= q_text %>" <%= selected %><%= disabled %><%= mappable %>><%= q_text %></option>
               <% end %>
             </select>
         </div>
@@ -34,10 +40,12 @@
               <option value="" <%= selected %>><%= t('.form.no_comparison') %></option>
               <% @questions.each_with_index do |question, index| %>
                 <% 
+                  q_text = "#{question.original_code} - #{question.text}"
                   selected = @broken_down_by_code.present? && @broken_down_by_code == question.code ? 'selected=selected ' : ''
                   disabled = @question_code == question.code ? 'disabled=disabled ' : ''
+                  mappable = question.is_mappable? ? "class=#{mappable_icon_class} " : ''
                 %>
-                <option value="<%= question.code %>" <%= selected %><%= disabled %>><%= "#{question.original_code} - #{question.text}" %></option>
+                <option value="<%= question.code %>" title="<%= q_text %>" <%= selected %><%= disabled %><%= mappable %>><%= q_text %></option>
               <% end %>
             </select>
           </div>
@@ -47,10 +55,12 @@
               <option value=""><%= t('.form.no_filter') %></option>
               <% @questions.each do |question| %>
                 <% 
+                  q_text = "#{question.original_code} - #{question.text}"
                   selected = @filtered_by_code == question.code ? 'selected=selected ' : ''
                   disabled = @broken_down_by_code == question.code || @question_code == question.code ? 'disabled=disabled ' : ''
+                  mappable = question.is_mappable? ? "class=#{mappable_icon_class} " : ''
                 %>
-                <option value="<%= question.code %>" <%= selected %><%= disabled %>><%= "#{question.original_code} - #{question.text}" %></option>
+                <option value="<%= question.code %>" title="<%= q_text %>" <%= selected %><%= disabled %><%= mappable %>><%= q_text %></option>
               <% end %>
             </select>
           </div>

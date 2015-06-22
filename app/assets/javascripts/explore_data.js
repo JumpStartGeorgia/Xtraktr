@@ -822,7 +822,15 @@ $(document).ready(function() {
       }
       $('select#filtered_by_code').selectpicker('refresh');
       $('select#filtered_by_code').selectpicker('render');
+
+      // update tooltip for selects
+      $('form button.selectpicker').tooltip('fixTitle')
     });  
+
+    // update tooltip when filter tooltip changes
+    $('select.selectpicker-filter').change(function(){
+      $('form button.selectpicker').tooltip('fixTitle')
+    });
 
     // swap vars button
     // - when clicked, swap the values and then submit the form

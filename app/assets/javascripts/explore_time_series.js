@@ -473,7 +473,16 @@ $(document).ready(function() {
       // refresh the filter list
       $('select#filtered_by_code').selectpicker('refresh');
       $('select#filtered_by_code').selectpicker('render');
+
+      // update tooltip for selects
+      $('form button.selectpicker').tooltip('fixTitle')
     });  
+
+    // update tooltip when filter tooltip changes
+    $('select.selectpicker-filter').change(function(){
+      $('form button.selectpicker').tooltip('fixTitle')
+    });
+
 
     // get the initial data
     $('#explore-data-loader').fadeIn('slow', function(){
