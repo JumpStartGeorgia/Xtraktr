@@ -2,8 +2,8 @@
 ##### SET ALL VARIABLES UNDER config/deploy/env.rb             #####
 ####################################################################
 
-set :stages, %w(production staging unicef_staging)
-set :default_stage, "unicef_staging" # if just run 'cap deploy' the staging environment will be used
+set :stages, %w(production staging)
+set :default_stage, "staging" # if just run 'cap deploy' the staging environment will be used
 set :whenever_command, "bundle exec whenever" # must use bundle exec
 set :whenever_environment, defer { stage } # get it to work with stages
 
