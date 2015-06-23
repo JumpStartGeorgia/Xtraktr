@@ -219,7 +219,7 @@ $(document).ready(function () {
   });
 
   $(document).on('click', function (e) {
-    var t = $(event.target);
+    var t = $(e.target);
     if (!t.is('.navbar-toggle, .navbar-collapse, .tab-collapse') && !t.closest('.navbar-toggle, .navbar-collapse, .tab-collapse').length) {
       $('.navbar-toggle:not(.collapsed)').trigger('click');
     }
