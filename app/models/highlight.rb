@@ -64,16 +64,16 @@ class Highlight < CustomTranslation
   end
 
   # get the required home page highlight and random highlights until the limit is reached
-  def self.for_home_page(limit=2)
+  def self.for_home_page(limit=4)
     items = []
     count = self.count
 
     if count > 0
       # get the required highlight
-      required = where(show_home_page: true).first
-      if required.present?
-        items << required
-      end
+      # required = where(show_home_page: true).first
+      # if required.present?
+      #   items << required
+      # end
 
       # now get random highlights until reach the size of limit
       # only look for more highlights if there are more highlights to look through

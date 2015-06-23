@@ -397,18 +397,18 @@ ka:
     svg: SVG ვექტორული სურათი
   mailer:
     closing: "პატივისცემით,"
-    signature: UNICEF საქართველო
+    signature: The Xtraktr Team
     unsubscribe: "დააჭირეთ და შეცვალეთ შეტყობინებების პარამეტრები"
     notification:
       new_user:
-        subject: "კეთილი იყოს თქვენი მობრძანება UNICEF საქართველოს მონაცემთა პორტალზე!"
-        message: "მადლობას გიხდით UNICEF საქართველოს ღია მონაცემების პოტალზე ანგარიშის გახსნის და თქვენი მონაცემების გაზიარებისთვის. ვიმედოვნებთ, რომ მონაცემები და შინაარსი დაეხმარება თქვენს საქმიანობას საქართველოში ბავშვთა უფლებების დაცვის სფეროში. ნებისმიერი შეკითხვის შემთხვევაში, თქვენ შეგიძლიათ დაგვიკავშირდეთ ჩვენი ვებ-ფორმის საშუალებით ან მოგვწეროთ ელ-ფოსტაზე."
+        subject: "Welcome to Xtraktr!"
+        message: Thank you for creating an account on Xtraktr's open data portal and sharing some information about yourself. It is our hope that the content and data you find adds value to your work and understanding of trends related to the rights of children in Georgia. If you have any questions, you can contact us via our webform or send us an email.
       new_data:
-        subject: UNICEF საქართველოს მონაცემების პორტალს დაემატა მონაცემთა ახალი ცხრილი
-        message: UNICEF საქართველომ დაამატა მონაცემთა ახალი ცხრილი რათა თქვენ შეძლოთ მისი გაცნობა, გაზიარება და ვიზუალიზაცია.
+        subject: "A new dataset has been added to Xtraktr!"
+        message: "Xtraktr has just uploaded new data for you to explore, visualize, and share."
     contact:
       contact_form:
-        subject: UNICEF საქართველოს მონაცემების პორტალის საკონტაქტი ფორმა
+        subject: "Xtraktr Contact Form"
   helpers:
     actions: "აირჩიეთ"
     default_language: "ეს არის მთავარი ენა, რომელიც გამოჩნდება"
@@ -505,9 +505,9 @@ ka:
       category: Category
     common:
       xtraktr:
-        app_name: X-Traktr
-        app_slogan: Insert xtraktr slogn here!
-        app_description: Insert xtraktr description here.
+        app_name: Xtraktr
+        app_slogan: "Find, Share, Explore & Visualize Your Data"
+        app_description: "Looking for data about an issue? Find it. Have data on an issue? Share it. Xtraktr enables you to put your data on the map so others can find and use it. Analyze, visualize, embed, and share your findings. With Xtraktr, translating your dataset into other languages is easy. Open your data to the world and make it truly accessible. "
       unicef:
         app_name: გაეროს ბავშვთა ფონდის მონაცემთა პორტალი
         app_slogan: ვეხმარებით კვლევით
@@ -661,7 +661,7 @@ ka:
   devise:
     mailer:
       reset_password_instructions:
-        subject: 'UNICEF Georgia Data Portal - Reset password instructions'
+        subject: 'Xtraktr - Reset password instructions'
         title: "მოგესალმებით, %{nickname} - "
         p1: "მივიღეთ მოთხოვნა '%{app_name}' თქვენი პაროლის შეცვლის შესახებ. პაროლის შესაცვლელად, მიჰყევით შემდეგ ბმულს."
         link_title: "პაროლის შეცვლა"

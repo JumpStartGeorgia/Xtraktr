@@ -66,7 +66,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 
 	def preload_global_variables
     # flag to indicate if the app is currently running in unicef or xtraktr mode
-    @is_xtraktr = false
+    @is_xtraktr = true
 
     # locale key name to get text specific to xtraktr or other
     @app_key_name = @is_xtraktr ? 'xtraktr' : 'unicef'

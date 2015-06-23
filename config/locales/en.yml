@@ -397,18 +397,18 @@ en:
     svg: SVG Vector Image
   mailer:
     closing: "Sincerely,"
-    signature: UNICEF Georgia
+    signature: The Xtraktr Team
     unsubscribe: Click here to change your notification settings
     notification:
       new_user:
-        subject: "Welcome to UNICEF Georgia Data Portal!"
-        message: Thank you for creating an account on UNICEF Georgia's open data portal and sharing some information about yourself. It is our hope that the content and data you find adds value to your work and understanding of trends related to the rights of children in Georgia. If you have any questions, you can contact us via our webform or send us an email.
+        subject: "Welcome to Xtraktr!"
+        message: Thank you for creating an account on Xtraktr's open data portal and sharing some information about yourself. It is our hope that the content and data you find adds value to your work and understanding of trends related to the rights of children in Georgia. If you have any questions, you can contact us via our webform or send us an email.
       new_data:
-        subject: "A new dataset has been added to UNICEF Georgia Data Portal!"
-        message: "UNICEF Georgia has just uploaded new data for you to explore, visualize, and share."
+        subject: "A new dataset has been added to Xtraktr!"
+        message: "Xtraktr has just uploaded new data for you to explore, visualize, and share."
     contact:
       contact_form:
-        subject: "UNICEF Georgia Data Portal Contact Form"
+        subject: "Xtraktr Contact Form"
   helpers:
     actions: Actions
     default_language: This is the default language that will show
@@ -506,8 +506,8 @@ en:
     common:
       xtraktr:
         app_name: Xtraktr
-        app_slogan: Insert xtraktr slogn here!
-        app_description: Insert xtraktr description here.      
+        app_slogan: "Find, Share, Explore & Visualize Your Data"
+        app_description: "Looking for data about an issue? Find it. Have data on an issue? Share it. Xtraktr enables you to put your data on the map so others can find and use it. Analyze, visualize, embed, and share your findings. With Xtraktr, translating your dataset into other languages is easy. Open your data to the world and make it truly accessible. "
       unicef:
         app_name: UNICEF Georgia Data Portal
         app_slogan: 'Helping to solve by measuring'
@@ -661,7 +661,7 @@ en:
   devise:
     mailer:
       reset_password_instructions:
-        subject: 'UNICEF Georgia Data Portal - Reset password instructions'
+        subject: 'Xtraktr - Reset password instructions'
         title: 'Hello %{nickname} - '
         p1: "Someone has requested a link to change your password on %{app_name}, and you can do this through the link below."
         link_title: Change my password
