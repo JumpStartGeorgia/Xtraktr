@@ -10,70 +10,75 @@ module ExportData
   def self.create_file(dataset, type, use_processed_csv=false)
     start = Time.now
 
-    # @app_key_name = 'xtraktr'
-    @app_key_name = 'unicef'
+    # only contine if the dataset is valid
+    if dataset.valid?
+
+      # @app_key_name = 'xtraktr'
+      @app_key_name = 'unicef'
 
 
-    # set readme file name to appear in zip file
-    @readme_file = 'README.txt'
+      # set readme file name to appear in zip file
+      @readme_file = 'README.txt'
 
-    @dataset_download_path = "#{Rails.public_path}#{dataset.data_download_path}"
-    @dataset_download_staging_path = "#{Rails.public_path}#{dataset.data_download_staging_path}"
-    @admin_dataset_download_path = "#{Rails.public_path}#{dataset.admin_data_download_path}"
-    @admin_dataset_download_staging_path = "#{Rails.public_path}#{dataset.admin_data_download_staging_path}"
+      @dataset_download_path = "#{Rails.public_path}#{dataset.data_download_path}"
+      @dataset_download_staging_path = "#{Rails.public_path}#{dataset.data_download_staging_path}"
+      @admin_dataset_download_path = "#{Rails.public_path}#{dataset.admin_data_download_path}"
+      @admin_dataset_download_staging_path = "#{Rails.public_path}#{dataset.admin_data_download_staging_path}"
 
-    # make sure dataset has url object
-    dataset.create_urls_object
-    get_url_params(dataset)
+      # make sure dataset has url object
+      dataset.create_urls_object
+      get_url_params(dataset)
 
-    current_locale = dataset.current_locale.dup
+      current_locale = dataset.current_locale.dup
 
-    # create files for each locale in the dataset
-    dataset.languages.each do |locale|
-      puts "@@@@@@@@@@@@@@@@ creating files for locale #{locale}"
+      # create files for each locale in the dataset
+      dataset.languages.each do |locale|
+        puts "@@@@@@@@@@@@@@@@ creating files for locale #{locale}"
 
-      dataset.current_locale = locale
+        dataset.current_locale = locale
 
-      # the process of creating the text version csv is time consuming
-      # this var saves it the first time it is created and then all proceeding calls use it again
-      # need to reset the variable when the locale changes so can get data in correct language
-      @header_code = {}
-      @header_text = {}
-      @csv_raw_data = {}
-      @csv_text_data = {}
+        # the process of creating the text version csv is time consuming
+        # this var saves it the first time it is created and then all proceeding calls use it again
+        # need to reset the variable when the locale changes so can get data in correct language
+        @header_code = {}
+        @header_text = {}
+        @csv_raw_data = {}
+        @csv_text_data = {}
 
-      # make sure path exists
-      FileUtils.mkpath("#{@dataset_download_path}/#{dataset.current_locale}")    
-      FileUtils.mkpath("#{@dataset_download_staging_path}/#{dataset.current_locale}")    
-      FileUtils.mkpath("#{@admin_dataset_download_path}/#{dataset.current_locale}")    
-      FileUtils.mkpath("#{@admin_dataset_download_staging_path}/#{dataset.current_locale}")    
+        # make sure path exists
+        FileUtils.mkpath("#{@dataset_download_path}/#{dataset.current_locale}")    
+        FileUtils.mkpath("#{@dataset_download_staging_path}/#{dataset.current_locale}")    
+        FileUtils.mkpath("#{@admin_dataset_download_path}/#{dataset.current_locale}")    
+        FileUtils.mkpath("#{@admin_dataset_download_staging_path}/#{dataset.current_locale}")    
 
-      # set path to codebook here since used in all methods
-      @codebook_file = 'codebook.txt'
-      @codebook_file_path = "#{@dataset_download_staging_path}/#{dataset.current_locale}/#{@codebook_file}"
-      @admin_codebook_file_path = "#{@admin_dataset_download_staging_path}/#{dataset.current_locale}/#{@codebook_file}"
+        # set path to codebook here since used in all methods
+        @codebook_file = 'codebook.txt'
+        @codebook_file_path = "#{@dataset_download_staging_path}/#{dataset.current_locale}/#{@codebook_file}"
+        @admin_codebook_file_path = "#{@admin_dataset_download_staging_path}/#{dataset.current_locale}/#{@codebook_file}"
 
-      # all options require codebook, so create it
-      codebook(dataset)
+        # all options require codebook, so create it
+        codebook(dataset)
 
-      # generate the requested files
-      case type
-        when 'csv'
-          csv(dataset, use_processed_csv)
-        when 'spss'
-          spss(dataset, use_processed_csv)
-        when 'stata'
-          stata(dataset, use_processed_csv)
-        when 'r'
-          r(dataset, use_processed_csv)
+        # generate the requested files
+        case type
+          when 'csv'
+            csv(dataset, use_processed_csv)
+          when 'spss'
+            spss(dataset, use_processed_csv)
+          when 'stata'
+            stata(dataset, use_processed_csv)
+          when 'r'
+            r(dataset, use_processed_csv)
+        end
+
       end
 
+      dataset.current_locale = current_locale
+      set_url_params(dataset)
+
+      dataset.save
+
     end
-
-    dataset.current_locale = current_locale
-    set_url_params(dataset)
-
-    dataset.save
 
     puts "@@@@@@@@@@@@@@@@ it took #{(Time.now-start).round(3)} seconds to create #{type} files for dataset"
 
@@ -85,65 +90,69 @@ module ExportData
   def self.create_all_files(dataset, use_processed_csv=false)
     start = Time.now
 
-    # @app_key_name = 'xtraktr'
-    @app_key_name = 'unicef'
+    # only contine if the dataset is valid
+    if dataset.valid?
 
-    # set readme file name to appear in zip file
-    @readme_file = 'README.txt'
+      # @app_key_name = 'xtraktr'
+      @app_key_name = 'unicef'
 
-    @dataset_download_path = "#{Rails.public_path}#{dataset.data_download_path}"
-    @dataset_download_staging_path = "#{Rails.public_path}#{dataset.data_download_staging_path}"
-    @admin_dataset_download_path = "#{Rails.public_path}#{dataset.admin_data_download_path}"
-    @admin_dataset_download_staging_path = "#{Rails.public_path}#{dataset.admin_data_download_staging_path}"
+      # set readme file name to appear in zip file
+      @readme_file = 'README.txt'
 
-    # make sure dataset has url object
-    dataset.create_urls_object
-    get_url_params(dataset)
+      @dataset_download_path = "#{Rails.public_path}#{dataset.data_download_path}"
+      @dataset_download_staging_path = "#{Rails.public_path}#{dataset.data_download_staging_path}"
+      @admin_dataset_download_path = "#{Rails.public_path}#{dataset.admin_data_download_path}"
+      @admin_dataset_download_staging_path = "#{Rails.public_path}#{dataset.admin_data_download_staging_path}"
 
-    current_locale = dataset.current_locale.dup    
+      # make sure dataset has url object
+      dataset.create_urls_object
+      get_url_params(dataset)
 
-    # create files for each locale in the dataset
-    dataset.languages.each do |locale|
-      puts "@@@@@@@@@@@@@@@@ creating files for locale #{locale}"
+      current_locale = dataset.current_locale.dup    
 
-      dataset.current_locale = locale
+      # create files for each locale in the dataset
+      dataset.languages.each do |locale|
+        puts "@@@@@@@@@@@@@@@@ creating files for locale #{locale}"
 
-      # the process of creating the text version csv is time consuming
-      # this var saves it the first time it is created and then all proceeding calls use it again
-      # need to reset the variable when the locale changes so can get data in correct language
-      @header_code = {}
-      @header_text = {}
-      @csv_raw_data = {}
-      @csv_text_data = {}
+        dataset.current_locale = locale
 
-      # make sure path exists
-      FileUtils.mkpath("#{@dataset_download_path}/#{dataset.current_locale}")    
-      FileUtils.mkpath("#{@dataset_download_staging_path}/#{dataset.current_locale}")    
-      FileUtils.mkpath("#{@admin_dataset_download_path}/#{dataset.current_locale}")    
-      FileUtils.mkpath("#{@admin_dataset_download_staging_path}/#{dataset.current_locale}")    
+        # the process of creating the text version csv is time consuming
+        # this var saves it the first time it is created and then all proceeding calls use it again
+        # need to reset the variable when the locale changes so can get data in correct language
+        @header_code = {}
+        @header_text = {}
+        @csv_raw_data = {}
+        @csv_text_data = {}
 
-      # set path to codebook here since used in all methods
-      @codebook_file = 'codebook.txt'
-      @codebook_file_path = "#{@dataset_download_staging_path}/#{dataset.current_locale}/#{@codebook_file}"
-      @admin_codebook_file_path = "#{@admin_dataset_download_staging_path}/#{dataset.current_locale}/#{@codebook_file}"
+        # make sure path exists
+        FileUtils.mkpath("#{@dataset_download_path}/#{dataset.current_locale}")    
+        FileUtils.mkpath("#{@dataset_download_staging_path}/#{dataset.current_locale}")    
+        FileUtils.mkpath("#{@admin_dataset_download_path}/#{dataset.current_locale}")    
+        FileUtils.mkpath("#{@admin_dataset_download_staging_path}/#{dataset.current_locale}")    
 
-      codebook(dataset)
-      csv(dataset, use_processed_csv)
-      spss(dataset, use_processed_csv)
-      stata(dataset, use_processed_csv)
-      r(dataset, use_processed_csv)
+        # set path to codebook here since used in all methods
+        @codebook_file = 'codebook.txt'
+        @codebook_file_path = "#{@dataset_download_staging_path}/#{dataset.current_locale}/#{@codebook_file}"
+        @admin_codebook_file_path = "#{@admin_dataset_download_staging_path}/#{dataset.current_locale}/#{@codebook_file}"
 
+        codebook(dataset)
+        csv(dataset, use_processed_csv)
+        spss(dataset, use_processed_csv)
+        stata(dataset, use_processed_csv)
+        r(dataset, use_processed_csv)
+
+      end
+
+      dataset.current_locale = current_locale
+      set_url_params(dataset)
+
+      # indicate that the files are up to date
+      # unless using procesed csv because the real files still need to be created
+      dataset.reset_download_files = use_processed_csv
+      
+      dataset.save
     end
-
-    dataset.current_locale = current_locale
-    set_url_params(dataset)
-
-    # indicate that the files are up to date
-    # unless using procesed csv because the real files still need to be created
-    dataset.reset_download_files = use_processed_csv
     
-    dataset.save
-
     puts "@@@@@@@@@@@@@@@@ it took #{(Time.now-start).round(3)} seconds to create all files for dataset"
   end
 
@@ -158,6 +167,7 @@ module ExportData
       puts "=========================================="
       puts "=========================================="
       puts ">>>>>>>>>> dataset: #{dataset.title}"
+      puts ">>>>>>>>>> use_processed_csv: #{use_processed_csv}"
       # create the data files for this dataset
       create_all_files(dataset, use_processed_csv)
     end
@@ -261,11 +271,13 @@ private
     create_readme(readme_file_path, 'codebook', dataset)
 
     # create the zip file
-    create_zip(dataset, zip_file_path, [
-        {file_name: @readme_file, file_path: readme_file_path},
-        {file_name: @codebook_file, file_path: codebook_file_path}
-      ]
-    )
+    if File.exists?(readme_file_path) && File.exists?(codebook_file_path)
+      create_zip(dataset, zip_file_path, [
+          {file_name: @readme_file, file_path: readme_file_path},
+          {file_name: @codebook_file, file_path: codebook_file_path}
+        ]
+      )
+    end
 
     # record the path to the file in the dataset
     if is_admin
@@ -290,7 +302,7 @@ private
     csv_file_path = "#{@dataset_download_staging_path}/#{dataset.current_locale}/#{csv_file}"
     
     csv_data = nil
-    if !File.exists?(csv_file_path) || dataset.reset_download_files?
+    if !use_processed_csv && (!File.exists?(csv_file_path) || dataset.reset_download_files?)
       puts "-- building csv data"
       start_csv = Time.now
       csv_data = build_csv(dataset, with_raw_data: false, with_header: true)
@@ -339,12 +351,14 @@ private
     create_readme(readme_file_path, 'csv', dataset)
 
     # create the zip file
-    create_zip(dataset, zip_file_path, [
-        {file_name: @readme_file, file_path: readme_file_path},
-        {file_name: @codebook_file, file_path: codebook_file_path},
-        {file_name: csv_file, file_path: csv_file_path}
-      ]
-    )
+    if File.exists?(readme_file_path) && File.exists?(codebook_file_path) && File.exists?(csv_file_path)
+      create_zip(dataset, zip_file_path, [
+          {file_name: @readme_file, file_path: readme_file_path},
+          {file_name: @codebook_file, file_path: codebook_file_path},
+          {file_name: csv_file, file_path: csv_file_path}
+        ]
+      )
+    end
 
     # record the path to the file in the dataset
     if is_admin
@@ -373,7 +387,7 @@ private
     
 
     csv_data = nil
-    if (!File.exists?(csv_file_path) || dataset.reset_download_files?) && !use_processed_csv
+    if !use_processed_csv && (!File.exists?(csv_file_path) || dataset.reset_download_files?)
       puts "- building csv data"
       start_csv = Time.now
       csv_data = build_csv(dataset)
@@ -496,13 +510,15 @@ private
     create_readme(readme_file_path, 'spss', dataset)
 
     # create the zip file
-    create_zip(dataset, zip_file_path, [
-        {file_name: @readme_file, file_path: readme_file_path},
-        {file_name: @codebook_file, file_path: codebook_file_path},
-        {file_name: csv_file, file_path: csv_file_path},
-        {file_name: spss_file, file_path: spss_file_path}
-      ]
-    )
+    if File.exists?(readme_file_path) && File.exists?(codebook_file_path) && File.exists?(csv_file_path) && File.exists?(spss_file_path)
+      create_zip(dataset, zip_file_path, [
+          {file_name: @readme_file, file_path: readme_file_path},
+          {file_name: @codebook_file, file_path: codebook_file_path},
+          {file_name: csv_file, file_path: csv_file_path},
+          {file_name: spss_file, file_path: spss_file_path}
+        ]
+      )
+    end
 
     # record the path to the file in the dataset
     if is_admin
@@ -533,7 +549,7 @@ private
     csv_file_path = "#{@dataset_download_staging_path}/#{dataset.current_locale}/#{csv_file}"
 
     csv_data = nil
-    if (!File.exists?(csv_file_path) || dataset.reset_download_files?) && !use_processed_csv
+    if !use_processed_csv && (!File.exists?(csv_file_path) || dataset.reset_download_files?)
       puts "- building csv data"
       start_csv = Time.now
       csv_data = build_csv(dataset, with_raw_data: false)
@@ -614,13 +630,15 @@ private
     create_readme(readme_file_path, 'stata', dataset)
 
     # create the zip file
-    create_zip(dataset, zip_file_path, [
-        {file_name: @readme_file, file_path: readme_file_path},
-        {file_name: @codebook_file, file_path: codebook_file_path},
-        {file_name: csv_file, file_path: csv_file_path},
-        {file_name: stata_file, file_path: stata_file_path}
-      ]
-    )
+    if File.exists?(readme_file_path) && File.exists?(codebook_file_path) && File.exists?(csv_file_path) && File.exists?(stata_file_path)
+      create_zip(dataset, zip_file_path, [
+          {file_name: @readme_file, file_path: readme_file_path},
+          {file_name: @codebook_file, file_path: codebook_file_path},
+          {file_name: csv_file, file_path: csv_file_path},
+          {file_name: stata_file, file_path: stata_file_path}
+        ]
+      )
+    end
 
     # record the path to the file in the dataset
     if is_admin
@@ -645,7 +663,7 @@ private
     csv_file_path = "#{@dataset_download_staging_path}/#{dataset.current_locale}/#{csv_file}"
 
     csv_data = nil
-    if (!File.exists?(csv_file_path) || dataset.reset_download_files?) && !use_processed_csv
+    if !use_processed_csv && (!File.exists?(csv_file_path) || dataset.reset_download_files?)
       puts "- building csv data"
       start_csv = Time.now
       csv_data = build_csv(dataset, with_raw_data: false, with_header_code_only: true)
@@ -731,13 +749,15 @@ private
     create_readme(readme_file_path, 'r', dataset)
 
     # create the zip file
-    create_zip(dataset, zip_file_path, [
-        {file_name: @readme_file, file_path: readme_file_path},
-        {file_name: @codebook_file, file_path: codebook_file_path},
-        {file_name: csv_file, file_path: csv_file_path},
-        {file_name: r_file, file_path: r_file_path}
-      ]
-    )
+    if File.exists?(readme_file_path) && File.exists?(codebook_file_path) && File.exists?(csv_file_path) && File.exists?(r_file_path)
+      create_zip(dataset, zip_file_path, [
+          {file_name: @readme_file, file_path: readme_file_path},
+          {file_name: @codebook_file, file_path: codebook_file_path},
+          {file_name: csv_file, file_path: csv_file_path},
+          {file_name: r_file, file_path: r_file_path}
+        ]
+      )
+    end
 
     # record the path to the file in the dataset
     if is_admin
@@ -881,8 +901,8 @@ private
           end
         end
 
-puts "data admin length = #{data[:admin].length}; dataset questions length = #{dataset.questions.length}"
-puts "data public length = #{data[:public].length}; public index length = #{public_indexes.length}"
+        puts "data admin length = #{data[:admin].length}; dataset questions length = #{dataset.questions.length}"
+        puts "data public length = #{data[:public].length}; public index length = #{public_indexes.length}"
 
         # now use transpose to get in proper format
         data[:admin].transpose.each do |row|
@@ -961,8 +981,10 @@ puts "data public length = #{data[:public].length}; public index length = #{publ
       # heading
       output << I18n.t('export_data.dataset', title: dataset.title)
       output << "\n"
-      output << I18n.t('export_data.download_from', app_name: I18n.t("app.common.#{@app_key_name}.app_name"), url: url)
-      output << "\n"
+      if dataset.slug.present?
+        output << I18n.t('export_data.download_from', app_name: I18n.t("app.common.#{@app_key_name}.app_name"), url: url)
+        output << "\n"
+      end
       output << I18n.t('export_data.last_update', date: I18n.l(date, format: :long))
       output << "\n\n\n"
 
