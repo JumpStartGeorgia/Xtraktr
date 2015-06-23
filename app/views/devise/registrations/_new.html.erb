@@ -7,6 +7,7 @@
   <div class="r">
     <%= f.input :email, :as => :email, :input_html => { :size => 35 , :class => "login-username" }, :placeholder => model_class.human_attribute_name(:email).upcase+" *" , :label => false  %>
   </div>
+    <input id="user_account" name="user[is_registration]" type="hidden" value="1">
     <% if reg %>      
         <input id="user_account" name="user[account]" type="hidden" value="1">
     <% else %>

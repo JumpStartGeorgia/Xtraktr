@@ -43,10 +43,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def sign_up_params
     devise_parameter_sanitizer.sanitize(:sign_up)
   end
-   def create_user?
-      params[:user][:account].present? && params[:user][:account].to_i == 1
-   end
-   def terms?
-      params[:user][:terms].present? && params[:user][:terms].to_i == 1
-   end
+  def create_user?
+    params[:user][:account].present? && params[:user][:account].to_i == 1
+  end
+  def terms?
+    params[:user][:terms].present? && params[:user][:terms].to_i == 1
+  end
 end

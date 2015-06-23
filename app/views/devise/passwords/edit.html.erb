@@ -1,16 +1,18 @@
-<h2>Change your password</h2>
+<%- model_class = User -%>
+<% title t('helpers.links.change_password') %> 
+<% @show_title = false %>
 
-<%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put }) do |f| %>
-  <%= devise_error_messages! %>
-  <%= f.hidden_field :reset_password_token %>
+<div id="change-password-form">
+   <div class="red-box long"><%= t('helpers.links.change_password2') %></div>
+  <%= semantic_form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :id => 'change_password', :method => :put, :"data-form-id"=>"change-password-form" }) do |f| %>
+      <%= f.error_messages %>
+      <%= f.hidden_field :reset_password_token %>
 
-  <div><%= f.label :password, "New password" %><br />
-  <%= f.password_field :password %></div>
+      <%= f.input :password, :input_html => { :size => 35 , :class => "login-password", :autofocus => true }, :placeholder => model_class.human_attribute_name(:password).upcase+" *" , :label => false  %>
+      <%= f.input :password_confirmation, :input_html => { :size => 35 , :class => "login-password-confirmation" }, :placeholder => model_class.human_attribute_name(:password_confirmation).upcase+" *" , :label => false  %>
 
-  <div><%= f.label :password_confirmation, "Confirm new password" %><br />
-  <%= f.password_field :password_confirmation %></div>
-
-  <div><%= f.submit "Change my password" %></div>
-<% end %>
-
-<%= render "links" %>
+      <div class="control-group submit-row">
+         <%= f.submit t('helpers.links.change_password'), :class => 'btn btn-default pass-reset' %>
+      </div>
+   <% end %>
+</div>

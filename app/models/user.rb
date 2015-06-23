@@ -134,12 +134,12 @@ class User
   index({ :reset_password_token => 1}, { background: true, unique: true, sparse: true })
 
   #############################
-  attr_accessor :account
+  attr_accessor :account, :is_registration
   attr_accessible :email, :password, :password_confirmation, :remember_me, 
                   :role, :provider, :uid, :nickname, :avatar,
                   :first_name, :last_name, :age_group, :residence,
                   :affiliation, :status, :status_other, :description, :terms, :account, 
-                  :notifications, :notification_locale, :api_keys_attributes
+                  :notifications, :notification_locale, :api_keys_attributes, :is_registration
 
   #############################
   ## Validations
@@ -152,12 +152,17 @@ class User
   validates :affiliation, presence: true
   validates :status, inclusion: { in: STATUS.keys }
   validates_presence_of :status_other, :if => lambda { |o| o.status == 8 }
-  validates :account, :numericality => { :equal_to => 1 }
+  validates :account, :numericality => { :equal_to => 1 }, :if => lambda { |o| o.is_registration.present? }
   validates :terms, :inclusion => {:in => [true]  }
   ####################
+  ## Callbacks
 
   before_create :create_nickname
-
+  before_validation :test
+  def test
+    logger.debug "@@@@@@@@@@@ reset_password_period_valid = #{self.reset_password_period_valid?}"
+    return true
+  end
   def create_nickname
     self.nickname = self.email.split('@')[0] if self.nickname.blank? && self.email.present?
 
