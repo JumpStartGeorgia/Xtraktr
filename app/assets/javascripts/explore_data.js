@@ -589,10 +589,10 @@ function build_explore_data_page(json){
   // if no visible tab is marked as active, mark the first one active
   if ($('#explore-tabs li.active:visible').length == 0){
     // turn on tab and its content
-    $('#explore-tabs li:visible:first a').trigger('click'); 
+    $('#explore-tabs li:visible:first').trigger('click'); 
   }else{
     // make sure correct jumptos are showing
-    $('#explore-tabs li.active a').trigger('click');
+    $('#explore-tabs li.active').trigger('click');
   }
 
 }
@@ -911,12 +911,14 @@ $(document).ready(function() {
     });
 
     // when chart tab/map clicked on, make sure the jumpto block is showing, else, hide it
-    $('#explore-tabs li a').click(function(){
-      if ($(this).attr('href') == '#tab-chart' && $('#jumpto #jumpto-chart select option').length > 0){
+    $('#explore-tabs li').click(function(){
+      var ths_link = $(this).find('a');
+
+      if ($(ths_link).attr('href') == '#tab-chart' && $('#jumpto #jumpto-chart select option').length > 0){
         $('#jumpto').show();
         $('#jumpto #jumpto-chart').show();
         $('#jumpto #jumpto-map').hide();
-      }else if ($(this).attr('href') == '#tab-map' && $('#jumpto #jumpto-map select option').length > 0){
+      }else if ($(ths_link).attr('href') == '#tab-map' && $('#jumpto #jumpto-map select option').length > 0){
         $('#jumpto').show();
         $('#jumpto #jumpto-map').show();
         $('#jumpto #jumpto-chart').hide();
@@ -926,7 +928,6 @@ $(document).ready(function() {
         $('#jumpto #jumpto-map').hide();
       }
     });
-
 
     // the below code is to override back button to get the ajax content without page reload
     $(window).bind('popstate', function() {

@@ -190,7 +190,7 @@ function build_highmap(shape_question_code, adjustable_max, json_map_set){
   if (adjustable_max == true){
     //  for use in the color axis
     // get the max percent value and round temp_max to the nearest 10s
-    max = Math.ceil(Math.max.apply(Math, $.map(json_data.map.map_sets.data, function(obj, i){return obj.value})) / 10)*10;    
+    max = Math.ceil(Math.max.apply(Math, $.map(json_map_set.data, function(obj, i){return obj.value})) / 10)*10;    
   }
 
   $(selector_path + ' #' + map_id).highcharts('Map', {
