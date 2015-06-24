@@ -91,5 +91,9 @@ $(function() {
   // initalize the fancy select box for categories
   $('form select.selectpicker').select2({width:'element', allowClear:true});
 
+  // when settings form is submitted, show loading screen
+  $('form.dataset').submit(function(e){
+    $('#saving-form-loader').fadeIn('fast');
+  });
 
 });

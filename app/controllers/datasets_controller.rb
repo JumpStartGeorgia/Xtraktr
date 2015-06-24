@@ -96,7 +96,7 @@ class DatasetsController < ApplicationController
     @dataset = Dataset.new
 
     # add the required assets
-    @css.push("jquery.ui.datepicker.css")
+    @css.push("jquery.ui.datepicker.css", 'datasets.css')
     @js.push('jquery.ui.datepicker.js', "datasets.js", 'cocoon.js')
 
     add_dataset_nav_options(set_url: false)
@@ -162,7 +162,7 @@ class DatasetsController < ApplicationController
         gon.released_at = @dataset.released_at.strftime('%m/%d/%Y') if @dataset.released_at.present?
 
         # add the required assets
-        @css.push("jquery.ui.datepicker.css")
+        @css.push("jquery.ui.datepicker.css", "datasets.css")
         @js.push('jquery.ui.datepicker.js', "datasets.js", 'cocoon.js')
 
         add_dataset_nav_options({show_title: false, set_url: false})
@@ -233,7 +233,7 @@ class DatasetsController < ApplicationController
           gon.released_at = @dataset.released_at.strftime('%m/%d/%Y') if @dataset.released_at.present?
 
           # add the required assets
-          @css.push("jquery.ui.datepicker.css")
+          @css.push("jquery.ui.datepicker.css", "datasets.css")
           @js.push('jquery.ui.datepicker.js', "datasets.js", 'cocoon.js')
 
           add_dataset_nav_options()
