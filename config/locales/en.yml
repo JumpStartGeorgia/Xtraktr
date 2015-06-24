@@ -36,7 +36,7 @@ en:
         status_other: When other (Please specify)
         description: Short description of research objective (<i>optional</i>)           
         notifications: I want to receive notifications when new datasets are added
-        notification_locale: Notification Language
+        notific07ation_locale: Notification Language
       message:
         name: Name
         email: Email Address
@@ -794,6 +794,12 @@ en:
     form:
       reports: Reports
       header_add_report: Add a report for this dataset
+      saving_text: |
+        Your file is being loaded, the data is being processed and validated, and the download files are being generated - this may take a couple minutes.
+
+        This would be a good time to get some water, go to the bathroom, check your social media updates, or watch that cat video.
+
+        This page will reload when the processing is complete.
     highlights:
       title: Dataset Highlights
       instructions: |
