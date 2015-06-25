@@ -64,7 +64,7 @@ private
     users = user_query.order_by([[sort_column, sort_direction]])
     users = users.page(page).per(per_page)
     if params[:search].present? && params[:search][:value].present?
-      users = users.where(email: /.*#{params[:search][:value]}.*/i)
+      users = users.or({email: /#{params[:search][:value]}/i}, {last_name: /#{params[:search][:value]}/i}, {first_name: /#{params[:search][:value]}/i})
     end
     users
   end
