@@ -1,7 +1,7 @@
 /*
  * This is a manifest file that'll automatically include all the stylesheets available in this directory
  * and any sub-directories. You're free to add application-wide styles to this file and they'll appear at
- * the top of the compiled file, but it's generally better to create a new file per style scope. 
+ * the top of the compiled file, but it's generally better to create a new file per style scope.
  *= require formtastic
  *= require formtastic-bootstrap
  *= require jquery.ui.core
@@ -17,52 +17,52 @@
 */
 @import "variables.css.less";
 @font-face {
-    font-family: "prime_en";    
-    src: url( '/assets/fonts/en/prime.otf') format("opentype");         
+    font-family: "prime_en";
+    src: url( '/assets/fonts/en/prime.otf') format("opentype");
     font-style: normal;
     font-weight: 200;
 }
 @font-face {
-    font-family: "sourcesans_pro_l_en";    
-    src: url( '/assets/fonts/en/sourcesans_pro_l.otf') format("opentype");         
+    font-family: "sourcesans_pro_l_en";
+    src: url( '/assets/fonts/en/sourcesans_pro_l.otf') format("opentype");
     font-style: normal;
     font-weight: 200;
 }
 @font-face {
-    font-family: "sourcesans_pro_li_en";    
-    src: url( '/assets/fonts/en/sourcesans_pro_li.otf') format("opentype");         
+    font-family: "sourcesans_pro_li_en";
+    src: url( '/assets/fonts/en/sourcesans_pro_li.otf') format("opentype");
     font-style: normal;
     font-weight: 200;
 }
 @font-face {
-    font-family: "sourcesans_pro_sbi_en";    
-    src: url( '/assets/fonts/en/sourcesans_pro_sbi.otf') format("opentype");         
-    font-style: normal;
-    font-weight: 200;
-}
-
-@font-face {
-    font-family: "prime_ka";    
-    src: url( '/assets/fonts/ka/dejavusansm_book_c.ttf') format("truetype");         
+    font-family: "sourcesans_pro_sbi_en";
+    src: url( '/assets/fonts/en/sourcesans_pro_sbi.otf') format("opentype");
     font-style: normal;
     font-weight: 200;
 }
 
 @font-face {
-    font-family: "sourcesans_pro_l_ka";    
-    src: url( '/assets/fonts/ka/dejavusans_el.ttf') format("truetype");   
+    font-family: "prime_ka";
+    src: url( '/assets/fonts/ka/dejavusansm_book_c.ttf') format("truetype");
+    font-style: normal;
+    font-weight: 200;
+}
+
+@font-face {
+    font-family: "sourcesans_pro_l_ka";
+    src: url( '/assets/fonts/ka/dejavusans_el.ttf') format("truetype");
     font-style: normal;
     font-weight: 200;
 }
 @font-face {
-    font-family: "sourcesans_pro_li_ka";    
-    src: url( '/assets/fonts/ka/dejavusans_i.ttf') format("truetype");         
+    font-family: "sourcesans_pro_li_ka";
+    src: url( '/assets/fonts/ka/dejavusans_i.ttf') format("truetype");
     font-style: normal;
     font-weight: 200;
 }
 @font-face {
-    font-family: "sourcesans_pro_sbi_ka";    
-    src: url( '/assets/fonts/ka/dejavusans_c_bi.ttf') format("truetype");         
+    font-family: "sourcesans_pro_sbi_ka";
+    src: url( '/assets/fonts/ka/dejavusans_c_bi.ttf') format("truetype");
     font-style: normal;
     font-weight: 200;
 }
@@ -117,7 +117,7 @@ div#form-ka {
 	margin: 0.5em 0;
   padding: 1em;
   background-color: #ddd;
-  
+
   .nested_form_item {
     background-color: #eee;
     padding: 0.5em 1em;
@@ -132,7 +132,7 @@ div#form-ka {
   box-sizing:content-box;
 
   &[type="number"]{
-    width: 100px;  
+    width: 100px;
   }
 }
 .formtastic input[type='submit'], .formtastic input[type='reset']
@@ -175,9 +175,9 @@ div#form-ka {
   width:21px;
   height:20px;
   font-size:16px;
-  font-style:normal;  
+  font-style:normal;
   vertical-align:middle;
-  display:inline-block; 
+  display:inline-block;
   cursor:default;
   padding:0px;
   border: 1px solid #9E9E9E;
@@ -194,9 +194,9 @@ div#form-ka {
   width:21px;
   height:20px;
   font-size:16px;
-  font-style:normal;  
+  font-style:normal;
   vertical-align:middle;
-  display:inline-block; 
+  display:inline-block;
   cursor:default;
   padding:0px;
   border: 1px solid #b94a48;
@@ -205,7 +205,7 @@ div#form-ka {
 .error-inline div,.error-block div {
   margin:1px 0px 0px 7px;
 }
-.formtastic 
+.formtastic
 {
   .input
   {
@@ -228,13 +228,13 @@ div#form-ka {
       font:12px 'sourcesans_pro', 'sans-serif';
       color: #d95d6a;
       width:10px;
-      display:inline-block; 
+      display:inline-block;
       border: 0;
       margin:0;
       padding:0;
     }
-  }  
-  .select select 
+  }
+  .select select
   {
     max-width: 72%;
   }
@@ -256,7 +256,7 @@ ul.dropdown-menu.inner.selectpicker li a{
   display: inline-block;
   padding: 4px 8px;
   color: #3d3d3d;
-  border-radius: 5px; 
+  border-radius: 5px;
   &.public{
     background-color: #F3D952;
   }
@@ -270,7 +270,7 @@ ul.dropdown-menu.inner.selectpicker li a{
   }
 }
 
-div.message {  
+div.message {
   position: absolute;
   min-width: 250px;
   max-width: 350px;
@@ -283,9 +283,9 @@ div.message {
 .content { /* sub-navigation bar */
 
   #subnav-navbar{
-    
+
     background-color:@f6f7f7;
-    padding:0px 10px;    
+    padding:0px 10px;
     overflow: visible;
     display:table;
     width:100%;
@@ -305,7 +305,7 @@ div.message {
         }
 
         .available-language-switcher
-        {  
+        {
           display:inline-block;
           label
           {
@@ -313,7 +313,7 @@ div.message {
             font-weight:normal;
             margin:0 12px 0 0;
             padding:0;
-            color: #4d5563;    
+            color: #4d5563;
             line-height: 30px;
           }
           select
@@ -324,7 +324,7 @@ div.message {
             padding:5px 28px 6px 10px;
             border:0px solid #ddd;
             min-width:140px;
-            height:30px;    
+            height:30px;
             vertical-align:top;
             outline:none;
             appearance:none;
@@ -348,7 +348,7 @@ div.message {
     .back {
       display:inline-block;
       vertical-align: top;
-      a 
+      a
       {
         font:12px 'nokiasans_s60_sb', 'sans-serif';
         color:#747984;
@@ -382,11 +382,11 @@ div.message {
     content:"";
     display:block;
     border-bottom:1px solid @e8e8e8;
-  }  
+  }
   h1
   {
-    font:16px 'nokiasans_s60', 'sans-serif';    
-    color:#747984;  
+    font:16px 'nokiasans_s60', 'sans-serif';
+    color:#747984;
     text-transform:uppercase;
     margin:0px 10px;
     padding:26px 0px 16px;
@@ -424,7 +424,7 @@ div.message {
   &.youth{ background:transparent url(/assets/svg/categories.svg) no-repeat -294px center; }
   &.none{ background:transparent url(/assets/svg/categories.svg) no-repeat -336px center; }
 }
-    
+
 .pagination {
   width: 100%;
   text-align: left;
@@ -469,7 +469,7 @@ div.message {
       font:14px 'sourcesans_pro', 'sans-serif';
       line-height:18px;
       color:@fff;
-      text-align:center;      
+      text-align:center;
       text-decoration:none;
       background-color:@00adee;
       display: inline-block;
@@ -492,9 +492,9 @@ div.message {
   padding: 10px 10px 10px 10px;
   .box
   {
-    display:table;    
+    display:table;
     input[type=search]
-    {          
+    {
       font:13px 'sourcesans_pro_l', 'sans-serif';
       color: @3c4352;
       height:34px;
@@ -534,13 +534,13 @@ div.message {
       width:auto;
       input[type=search]
       {
-        min-width:290px; 
+        min-width:290px;
       }
     }
   }
 }
 
-.mce-fullscreen { z-index: 1100 !important; } /* tinymce fullscren */    
+.mce-fullscreen { z-index: 1100 !important; } /* tinymce fullscren */
 .col { display:block; vertical-align:top; }
 @media (min-width: 992px) {
   .col { display:table-cell; }
@@ -571,7 +571,7 @@ div.message {
       input {
         font:13px 'opensans_li';
         color:@3c4352;
-        border-radius: 0px;  
+        border-radius: 0px;
         outline:none;
         border:0px;
         box-shadow: none;
@@ -606,7 +606,7 @@ div.message {
         width: auto !important;
         appearance:         none;
         cursor:pointer;
-        border-radius: 2px;  
+        border-radius: 2px;
         outline:none;
         box-shadow: none;
       }
@@ -623,7 +623,7 @@ div.message {
   min-width:290px;
   max-width:500px;
   margin:20px auto;
-  border-radius: 3px;  
+  border-radius: 3px;
   position:relative;
   display:table;
   overflow:hidden;
@@ -631,14 +631,14 @@ div.message {
     width:42px;
     height:39px;
     display:table-cell;
-  } 
+  }
   .text {
     font:14px 'sourcesans_pro', 'sans-serif';
     padding:11px 34px 11px 14px;
     color:@92b758;
     display:table-cell;
     // width:100%;
-  } 
+  }
   .closeup {
     background:transparent url(/assets/svg/close.svg) no-repeat -15px;
     width:15px;
@@ -647,28 +647,28 @@ div.message {
     top:12px;
     right:12px;
     cursor:pointer;
-  }  
+  }
   &.info
   {
     background-color:#94d9f3;
-    .figure { background:@00adee url(/assets/svg/info_w.svg) no-repeat center/25px 21px; } 
-    .text { color:#009ac9; } 
+    .figure { background:@00adee url(/assets/svg/info_w.svg) no-repeat center/25px 21px; }
+    .text { color:#009ac9; }
     .closeup { background:transparent url(/assets/svg/close.svg) no-repeat -30px; }
-  } 
+  }
   &.success
   {
     background-color:#ceddb7;
-    .figure { background:@92b758 url(/assets/svg/success_w.svg) no-repeat center/25px 21px; } 
-    .text { color:#799143; } 
+    .figure { background:@92b758 url(/assets/svg/success_w.svg) no-repeat center/25px 21px; }
+    .text { color:#799143; }
     .closeup { background:transparent url(/assets/svg/close.svg) no-repeat -15px; }
   }
   &.error
   {
     background-color:#eab9bf;
-    .figure { background:@d95d6a url(/assets/svg/error_w.svg) no-repeat center/25px 21px; } 
-    .text { color:@d95d6a; } 
+    .figure { background:@d95d6a url(/assets/svg/error_w.svg) no-repeat center/25px 21px; }
+    .text { color:@d95d6a; }
     .closeup { background:transparent url(/assets/svg/close.svg) no-repeat 0px; }
-  }      
+  }
 }
 .loading {
   position:fixed;
@@ -680,16 +680,16 @@ div.message {
   transform: translateX(-50%) translateY(-50%);
 }
 
-::-webkit-input-placeholder { font:12px 'sourcesans_pro','sans-serif'; color: @3c4352 !important; }
-:-moz-placeholder { /* Firefox 18- */ font:12px 'sourcesans_pro','sans-serif'; color: @3c4352 !important; }
-::-moz-placeholder {  /* Firefox 19+ */ font:12px 'sourcesans_pro','sans-serif'; color: @3c4352 !important; }
-:-ms-input-placeholder { font:12px 'sourcesans_pro','sans-serif'; color: @3c4352 !important; }
+::-webkit-input-placeholder { font-size:12px; font-family:'sourcesans_pro','sans-serif'; color: @3c4352 !important; }
+:-moz-placeholder { /* Firefox 18- */ font-size:12px; font-family:'sourcesans_pro','sans-serif'; color: @3c4352 !important; }
+::-moz-placeholder {  /* Firefox 19+ */ font-size:12px; font-family:'sourcesans_pro','sans-serif'; color: @3c4352 !important; }
+:-ms-input-placeholder { font-size:12px; font-family:'sourcesans_pro','sans-serif'; color: @3c4352 !important; }
 input[type=search]
-{          
-  &::-webkit-input-placeholder { font:13px 'sourcesans_pro_li', 'sans-serif'; color:#9da1a8; }
-  &:-moz-placeholder { font:13px 'sourcesans_pro_li', 'sans-serif'; color:#9da1a8; }
-  &::-moz-placeholder { font:13px 'sourcesans_pro_li', 'sans-serif'; color:#9da1a8; }
-  &:-ms-input-placeholder { font:13px 'sourcesans_pro_li', 'sans-serif'; color:#9da1a8; }
+{
+  &::-webkit-input-placeholder { font-size:13px; font-family:'sourcesans_pro_li', 'sans-serif'; color:#9da1a8; }
+  &:-moz-placeholder { font-size:13px; font-family:'sourcesans_pro_li', 'sans-serif'; color:#9da1a8; }
+  &::-moz-placeholder { font-size:13px; font-family:'sourcesans_pro_li', 'sans-serif'; color:#9da1a8; }
+  &:-ms-input-placeholder { font-size:13px; font-family:'sourcesans_pro_li', 'sans-serif'; color:#9da1a8; }
 }
 
 *::-webkit-scrollbar-track {
@@ -777,7 +777,7 @@ input[type=search]
   height: 36px;
   &.btn-xs{
     width: 30px;
-    height: 26px;    
+    height: 26px;
   }
   &:before{
     content:"";
@@ -802,7 +802,7 @@ input[type=search]
   height: 36px;
   &.btn-xs{
     width: 30px;
-    height: 26px;    
+    height: 26px;
   }
   &:before{
     content:"";
