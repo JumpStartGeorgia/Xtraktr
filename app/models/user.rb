@@ -185,7 +185,7 @@ class User
 
 
   def self.no_admins
-    where(role: ROLES[:admin])
+    ne(role: ROLES[:admin])
   end
 
   # if no role is supplied, default to the basic user role
