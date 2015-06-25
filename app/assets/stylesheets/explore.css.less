@@ -47,7 +47,7 @@
       padding-left:10px;
     }
     .form-explore-question-code,
-    .form-explore-broken-by    
+    .form-explore-broken-by
     {
       margin-bottom:12px;
     }
@@ -91,15 +91,15 @@
         {
           font:12px 'sourcesans_pro', 'sans-serif';
           font-weight:normal;
-          color:@3c4352; 
-          display:inline-block; 
+          color:@3c4352;
+          display:inline-block;
           margin:0px;
-          padding:0px; 
-          cursor:pointer;     
+          padding:0px;
+          cursor:pointer;
         }
         input[type="checkbox"] {
           display:none;
-        }    
+        }
         input[type="checkbox"] + label:before {
           content:"";
             display:inline-block;
@@ -168,7 +168,7 @@
         padding: 0 !important;
       }
     }
-    @media (max-width: @screen-sm-min) { 
+    @media (max-width: @screen-sm-min) {
       /* shrink width due to small screens */
       .dropdown-menu > li {
           & > a{
@@ -182,8 +182,8 @@
     #jumpto {
       display: none;
       position: relative;
-      padding-top: 10px;  
-//      overflow-y: auto;    
+      padding-top: 10px;
+//      overflow-y: auto;
       h3{
         font:14px 'sourcesans_pro', 'sans-serif';
         color: #62CBF2;
@@ -192,14 +192,14 @@
       h4{
         font:14px 'sourcesans_pro', 'sans-serif';
         color: @3c4352;
-        display: none; 
-        margin:0px 0px 5px;       
+        display: none;
+        margin:0px 0px 5px;
         span{
           color: @00adee;
         }
       }
       .jumpto-map-item{
-        margin:0px 0px 14px; 
+        margin:0px 0px 14px;
       }
       #jumpto-chart, #jumpto-map{
         display:none;
@@ -215,6 +215,7 @@
       }
       .bootstrap-select > .dropdown-menu {
         position:relative;
+        bottom:inherit !important;
       }
     }
 
@@ -233,7 +234,7 @@
       outline:none;
       appearance:         none;
       cursor:pointer;
-      border-radius: 0px;  
+      border-radius: 0px;
       outline:none;
     }
     .bootstrap-select{
@@ -250,7 +251,7 @@
         outline:none;
         appearance:         none;
         cursor:pointer;
-        border-radius: 0px;  
+        border-radius: 0px;
         outline:none;
         .caret
         {
@@ -281,7 +282,7 @@
       input {
         font:13px 'sourcesans_pro_li', 'sans-serif';
         color:@3c4352;
-        border-radius: 0px;  
+        border-radius: 0px;
         outline:none;
         border:0px;
         box-shadow: none;
@@ -315,14 +316,14 @@
         width:100%;
         appearance:         none;
         cursor:pointer;
-        border-radius: 2px;  
+        border-radius: 2px;
         outline:none;
         box-shadow: none;
       }
     }
     .table-data{
       border-collapse: separate;
-      border-spacing: 1px 1px; 
+      border-spacing: 1px 1px;
       thead
       {
         .sorting, .sorting_asc, .sorting_desc {
@@ -347,7 +348,7 @@
         }
         th.var1-col-red
         {
-          font:12px 'sourcesans_pro', 'sans-serif';          
+          font:12px 'sourcesans_pro', 'sans-serif';
           background-color:@dfe2e5;
           color:@d95d6a;
           text-transform:uppercase;
@@ -375,13 +376,13 @@
           th.color13 { border-bottom:4px solid #4eccae; }
           th:first-child { border-bottom:0; }
 
-          th:not(:first-child) { 
+          th:not(:first-child) {
             background:@e9ecef url(/assets/svg/vborder.svg) repeat-y center right;
             &:last-child {  background-image:none; background-color: @e9ecef; }
           }
         }
         tr:nth-child(3){
-          th { 
+          th {
             font:11px 'sourcesans_pro', 'sans-serif';
             color:@d95d6a;
             line-height:18px;
@@ -390,7 +391,7 @@
             &:last-child { background-image: none; background-color:@e9ecef; }
           }
         }
-        
+
       }
       tbody
       {
@@ -401,7 +402,7 @@
           text-align:left;
           background-color:@fff;
           border:0 !important;
-          background:transparent url(/assets/svg/vborder.svg) repeat-y center right;          
+          background:transparent url(/assets/svg/vborder.svg) repeat-y center right;
           &:last-child { background: none; }
         }
         .var1-col{
@@ -410,7 +411,7 @@
           background:none;
         }
         .odd{
-          
+
           .var1-col{
             background-color:#f4f6f7;
           }
@@ -442,7 +443,7 @@
       }
       th.code-highlight{
         color: @00adee;
-      }      
+      }
       td.var1-col{
         text-align: left;
         &.filter-col{
@@ -463,7 +464,7 @@
   #container-chart{
     width:100%;
     .chart{
-      width:100%; 
+      width:100%;
       height:501px;
       margin-bottom: 20px;
       border-bottom: dotted 1px #ccc;
@@ -527,7 +528,7 @@
   }
 
   /* poisition the add highlight button in the visuals */
-  #container-chart .chart a.add-highlight, #container-map .map  a.add-highlight, 
+  #container-chart .chart a.add-highlight, #container-map .map  a.add-highlight,
   #container-chart .chart a.delete-highlight, #container-map .map  a.delete-highlight{
     position: absolute;
     top: 10px;
@@ -636,7 +637,7 @@
 
   #tab-details {
 
-    .details-item{    
+    .details-item{
       position:relative;
       width:100%;
       font:16px 'sourcesans_pro_l', 'sans-serif';
@@ -645,8 +646,8 @@
 
       h3{
         font:16px 'sourcesans_pro_sb', 'sans-serif';
-      }  
-      > div 
+      }
+      > div
       {
         margin:0px 0px 20px 10px;
         > div { display:table-cell; vertical-align:top; }
@@ -661,7 +662,7 @@
         list-style:none;
         padding:0px;
         margin:0px;
-        display:table-cell; 
+        display:table-cell;
         vertical-align:top;
         li
         {
@@ -679,7 +680,7 @@
       }
     }
   }
- 
+
 
   #explore-data-content {
     position: relative;
@@ -690,7 +691,7 @@
         position:absolute;
         left: 6px;
         top: 2px;
-        margin:0px;    
+        margin:0px;
 
         .prompt
         {
@@ -711,25 +712,25 @@
        .addthis_sharing_toolbox
        {
           opacity:0;
-          position:static;  
-          margin:1px 0px 0px;   
+          position:static;
+          margin:1px 0px 0px;
           z-index:44;
            a.at-svc-compact
           {
             background-color:transparent !important;
             .aticon-compact
-            {      
-              background:transparent url('/assets/svg/plus.svg') no-repeat center/24px 24px !important;    
+            {
+              background:transparent url('/assets/svg/plus.svg') no-repeat center/24px 24px !important;
               width: 24px !important;
-              height: 24px !important;  
+              height: 24px !important;
               line-height:24px !important;
               opacity:1 !important;
               font:18px 'sourcesans_pro', 'sans-serif' !important;
-              color:@fff !important;    
+              color:@fff !important;
               border:0px solid @fff !important;
-              padding: 0px !important;  
-              display: inline-block !important; 
-            }  
+              padding: 0px !important;
+              display: inline-block !important;
+            }
           }
           .at-svc-facebook, .at-svc-twitter
           {
@@ -738,16 +739,16 @@
           }
           .at-share-btn
           {
-          
+
             width: 24px !important;
-            height: 24px !important;   
+            height: 24px !important;
             max-width: 24px !important;
             max-height: 24px !important;
             vertical-align:top !important;
             .at4-icon
             {
               width: 23px !important;
-              height: 23px !important;              
+              height: 23px !important;
               vertical-align:top !important;
               background-position:center !important;
             }
@@ -759,8 +760,8 @@
           right: 6px;
           .addthis_sharing_toolbox
           {
-            margin:1px 0px 0px 15px;    
-          } 
+            margin:1px 0px 0px 15px;
+          }
       }
     }
   }
@@ -792,7 +793,7 @@
   .tabs .tab-content .tab-pane{
     margin:0px !important;
   }
-  
+
 }
 
 @media (min-width: 992px) {
@@ -811,7 +812,7 @@
         padding:0px 30px;
         &:after { content:none; }
         .submit-box
-        {        
+        {
           .submit-btn-box
           {
             background:url(/assets/svg/generate_arrow.svg) no-repeat right/11px 29px;
@@ -838,7 +839,7 @@
         }
       }
     }
-    
+
 }
 
 
@@ -973,5 +974,4 @@ span.total_responses{
   color: #575F6D;
   font:14px 'sourcesans_pro', 'sans-serif';
   text-decoration: underline;
-} 
-
+}

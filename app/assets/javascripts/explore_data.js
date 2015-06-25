@@ -56,7 +56,7 @@ function build_highmaps(json){
         if (json.broken_down_by && json.map[h].filter_results.map_sets.constructor === Array){
           // add jumpto link
           jump_item = $(template).clone();
-          $(jump_item).find('h4').html(json.filtered_by.text + ' = <span>' + json.map[h].filter_answer_text + '</span>');          
+          $(jump_item).find('h4').html(json.filtered_by.text + ' = <span>' + json.map[h].filter_answer_text + '</span>');
           jumpto_text = '<option></option>';
 
           for(var i=0; i<json.map[h].filter_results.map_sets.length; i++){
@@ -66,7 +66,7 @@ function build_highmaps(json){
             jumpto_text += '<option data-href="#map-' + (map_index+1) + '">' + non_map_text + ' = ' + json.map[h].filter_results.map_sets[i].broken_down_answer_text + '</option>';
 
             // increase the map index
-            map_index += 1;        
+            map_index += 1;
           }
 
           $(jump_item).find('select').append(jumpto_text);
@@ -79,7 +79,7 @@ function build_highmaps(json){
           jumpto_text += '<option data-href="#map-' + (map_index+1) + '">' + json.filtered_by.text + ' = ' + json.map[h].filter_answer_text + '</option>';
 
           // increase the map index
-          map_index += 1;        
+          map_index += 1;
         }
       }
 
@@ -87,9 +87,9 @@ function build_highmaps(json){
       // - if jump_ary exists (filter and broken down), add a drop down for each filter value
       if (jump_ary != undefined && jump_ary.length > 0){
         // remove the existing template
-        $('#jumpto #jumpto-map .jumpto-map-item').remove();  
+        $('#jumpto #jumpto-map .jumpto-map-item').remove();
         for (var i=0; i<jump_ary.length; i++){
-          $('#jumpto #jumpto-map').append(jump_ary[i]);  
+          $('#jumpto #jumpto-map').append(jump_ary[i]);
 
           var select = $('#jumpto #jumpto-map select:last');
           if (i == 0) {
@@ -130,7 +130,7 @@ function build_highmaps(json){
 
       }else{
         build_highmap(json.map.shape_question_code, json.map.adjustable_max_range, json.map.map_sets);
-  
+
         // hide jumpto
         $('#jumpto #jumpto-map').hide();
         $('#jumpto').hide();
@@ -192,7 +192,7 @@ function build_crosstab_charts(json){
       $('#jumpto').hide();
     }
   }
-} 
+}
 
 
 
@@ -232,13 +232,13 @@ function build_pie_charts(json){
     }else{
       // no filters
       build_pie_chart(json.chart, chart_height);
-  
+
       // hide jumpto
       $('#jumpto #jumpto-chart').hide();
       $('#jumpto').hide();
     }
   }
-} 
+}
 
 
 
@@ -278,7 +278,7 @@ function build_datatable(json){
       table += json.broken_down_by.original_code;
       table += "</th>";
       table += "</tr>";
-      
+
       table += "<tr class='th-center'>";
       table += "<th class='var1-col code-highlight' rowspan='2'>";
       table += json.question.original_code;
@@ -344,7 +344,7 @@ function build_datatable(json){
         table += "</th>"
       }
       table += "</tr>";
-      
+
       table += "<tr>";
       for(i=0; i<json.broken_down_by.answers.length;i++){
         table += "<th>";
@@ -397,7 +397,7 @@ function build_datatable(json){
       }
 
     }else{
-      
+
       // cells per row: question code answer, count, percent
       for(i=0; i<json.results.analysis.length; i++){
         table += "<tr>";
@@ -504,9 +504,9 @@ function build_datatable(json){
             "sButtonText": gon.datatable_xls_title,
             "sToolTip": gon.datatable_xls_tooltip
           }
-        ]        
+        ]
       }
-    }))    
+    }))
   });
 }
 
@@ -516,14 +516,14 @@ function build_details(json){
   // clear out existing content and hide
   var details_item = $('#tab-details .details-item').hide(), tmp;
   details_item.find('.name-variable, .notes, .list-answers').empty();
-  
+
   // add questions
   if (json.question && json.question.text && json.question.answers){
     tmp = $('#tab-details #details-question-code');
-    tmp.find('.name-variable').html(json.question.text);    
-    tmp.find('.name-code').html(json.question.original_code);    
+    tmp.find('.name-variable').html(json.question.text);
+    tmp.find('.name-code').html(json.question.original_code);
     if (json.question.notes){
-      tmp.find('.notes').html(json.question.notes);    
+      tmp.find('.notes').html(json.question.notes);
       tmp.find('.details-notes').show();
     }else{
       tmp.find('.details-notes').hide();
@@ -537,10 +537,10 @@ function build_details(json){
   // add broken down by
   if (json.broken_down_by && json.broken_down_by.text && json.broken_down_by.answers){
     tmp = $('#tab-details #details-broken-down-by-code');
-    tmp.find('.name-variable').html(json.broken_down_by.text);    
-    tmp.find('.name-code').html(json.broken_down_by.original_code);    
+    tmp.find('.name-variable').html(json.broken_down_by.text);
+    tmp.find('.name-code').html(json.broken_down_by.original_code);
     if (json.broken_down_by.notes){
-      tmp.find('.notes').html(json.broken_down_by.notes);    
+      tmp.find('.notes').html(json.broken_down_by.notes);
       tmp.find('.details-notes').show();
     }else{
       tmp.find('.details-notes').hide();
@@ -554,10 +554,10 @@ function build_details(json){
   // add filters
   if (json.filtered_by && json.filtered_by.text && json.filtered_by.answers){
     tmp = $('#tab-details #details-broken-down-by-code');
-    tmp.find('.name-variable').html(json.filtered_by.text);    
-    tmp.find('.name-code').html(json.filtered_by.original_code);    
+    tmp.find('.name-variable').html(json.filtered_by.text);
+    tmp.find('.name-code').html(json.filtered_by.original_code);
     if (json.filtered_by.notes){
-      tmp.find('.notes').html(json.filtered_by.notes);    
+      tmp.find('.notes').html(json.filtered_by.notes);
       tmp.find('.details-notes').show();
     }else{
       tmp.find('.details-notes').hide();
@@ -589,7 +589,7 @@ function build_explore_data_page(json){
   // if no visible tab is marked as active, mark the first one active
   if ($('#explore-tabs li.active:visible').length == 0){
     // turn on tab and its content
-    $('#explore-tabs li:visible:first').trigger('click'); 
+    $('#explore-tabs li:visible:first').trigger('click');
   }else{
     // make sure correct jumptos are showing
     $('#explore-tabs li.active').trigger('click');
@@ -667,7 +667,7 @@ function get_explore_data(is_back_button){
     type: "GET",
     url: gon.api_dataset_analysis_path,
     data: ajax_data,
-    dataType: 'json'   
+    dataType: 'json'
   })
   .error(function( jqXHR, textStatus, errorThrown ) {
     //console.log( "Request failed: " + textStatus  + ". Error thrown: " + errorThrown);
@@ -676,7 +676,7 @@ function get_explore_data(is_back_button){
     json_data = json;
 
     if (json.errors){
-      $('#jumpto-loader').fadeOut('slow');      
+      $('#jumpto-loader').fadeOut('slow');
       $('#explore-data-loader').fadeOut('slow', function(){
         $('#explore-error').fadeIn('slow').delay(3000).fadeOut('slow');
       });
@@ -732,21 +732,21 @@ $(document).ready(function() {
 
   if (gon.explore_data){
     // due to using tabs, the map, chart and table cannot be properly drawn
-    // because they may be hidden. 
-    // this event catches when a tab is being shown to make sure 
+    // because they may be hidden.
+    // this event catches when a tab is being shown to make sure
     // the item is properly drawn
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
       switch($(this).attr('href')){
         case '#tab-map':
           $('#container-map .map').each(function(){
-            $(this).highcharts().reflow();        
+            $(this).highcharts().reflow();
             // this is a hack until can figure out why charts are sometimes cut-off
             $(this).find('.highcharts-container').width($('#container-map').width()-1);
           });
           break;
         case '#tab-chart':
           $('#container-chart .chart').each(function(){
-            $(this).highcharts().reflow();        
+            $(this).highcharts().reflow();
             // this is a hack until can figure out why charts are sometimes cut-off
             $(this).find('.highcharts-container').width($('#container-chart').width()-1);
           });
@@ -754,7 +754,7 @@ $(document).ready(function() {
         case '#tab-table':
           var ttInstances = TableTools.fnGetMasters();
           for (i in ttInstances) {
-          if (ttInstances[i].fnResizeRequired()) 
+          if (ttInstances[i].fnResizeRequired())
             ttInstances[i].fnResizeButtons();
           }
           break;
@@ -784,8 +784,8 @@ $(document).ready(function() {
 
 
     // initalize the fancy select boxes
-    $('select.selectpicker').selectpicker();    
-    $('select.selectpicker-filter').selectpicker();    
+    $('select.selectpicker').selectpicker();
+    $('select.selectpicker-filter').selectpicker();
 
     // if option changes, make sure the select option is not available in the other lists
     $('select.selectpicker').change(function(){
@@ -795,7 +795,7 @@ $(document).ready(function() {
       if ($(this).attr('id') == 'question_code'){
         // update broken down by list
         // remove all disabled
-        $('select#broken_down_by_code option[disabled="disabled"]').removeAttr('disabled');  
+        $('select#broken_down_by_code option[disabled="disabled"]').removeAttr('disabled');
         // disable the new selection
         $('select#broken_down_by_code option[value="' + val + '"]').attr('disabled', 'disabled');
         // update the select list
@@ -803,7 +803,7 @@ $(document).ready(function() {
       }else if ($(this).attr('id') == 'broken_down_by_code'){
         // update question list
         // remove all disabled
-        $('select#question_code option[disabled="disabled"]').removeAttr('disabled');  
+        $('select#question_code option[disabled="disabled"]').removeAttr('disabled');
         // disable the new selection
         $('select#question_code option[value="' + val + '"]').attr('disabled', 'disabled');
         // update the select list
@@ -824,9 +824,9 @@ $(document).ready(function() {
       if (($('select#filtered_by_code').val() == q && q != '') || ($('select#filtered_by_code').val() == bdb && bdb != '')){
         // reset value and hide filter answers
         $('select#filtered_by_code').selectpicker('val', '');
-      }   
+      }
       // mark selected items as disabled
-      $('select#filtered_by_code option[disabled="disabled"]').removeAttr('disabled');  
+      $('select#filtered_by_code option[disabled="disabled"]').removeAttr('disabled');
       if (q != ''){
         $('select#filtered_by_code option[value="' + q + '"]').attr('disabled','disabled');
       }
@@ -841,7 +841,7 @@ $(document).ready(function() {
 
       // if selected options have can_exclude, show the checkbox, else hide it
       set_can_exclude_visibility();
-    });  
+    });
 
     // update tooltip when filter tooltip changes
     $('select.selectpicker-filter').change(function(){
@@ -982,6 +982,6 @@ $(document).ready(function() {
       $('#explore-data-loader').fadeIn('slow', function(){
         get_explore_data(true);
       });
-    });  
+    });
   }
 });
