@@ -13,23 +13,14 @@ module ExportData
     # only contine if the dataset is valid
     if dataset.valid?
 
-      # @app_key_name = 'xtraktr'
-      @app_key_name = 'unicef'
+      # set global vars
+      set_global_vars
 
-
-      # set readme file name to appear in zip file
-      @readme_file = 'README.txt'
-
-      @dataset_download_path = "#{Rails.public_path}#{dataset.data_download_path}"
-      @dataset_download_staging_path = "#{Rails.public_path}#{dataset.data_download_staging_path}"
-      @admin_dataset_download_path = "#{Rails.public_path}#{dataset.admin_data_download_path}"
-      @admin_dataset_download_staging_path = "#{Rails.public_path}#{dataset.admin_data_download_staging_path}"
+      current_locale = dataset.current_locale.dup
 
       # make sure dataset has url object
       dataset.create_urls_object
       get_url_params(dataset)
-
-      current_locale = dataset.current_locale.dup
 
       # create files for each locale in the dataset
       dataset.languages.each do |locale|
@@ -37,27 +28,17 @@ module ExportData
 
         dataset.current_locale = locale
 
-        # the process of creating the text version csv is time consuming
-        # this var saves it the first time it is created and then all proceeding calls use it again
-        # need to reset the variable when the locale changes so can get data in correct language
-        @header_code = {}
-        @header_text = {}
-        @csv_raw_data = {}
-        @csv_text_data = {}
-
-        # make sure path exists
-        FileUtils.mkpath("#{@dataset_download_path}/#{dataset.current_locale}")    
-        FileUtils.mkpath("#{@dataset_download_staging_path}/#{dataset.current_locale}")    
-        FileUtils.mkpath("#{@admin_dataset_download_path}/#{dataset.current_locale}")    
-        FileUtils.mkpath("#{@admin_dataset_download_staging_path}/#{dataset.current_locale}")    
-
-        # set path to codebook here since used in all methods
-        @codebook_file = 'codebook.txt'
-        @codebook_file_path = "#{@dataset_download_staging_path}/#{dataset.current_locale}/#{@codebook_file}"
-        @admin_codebook_file_path = "#{@admin_dataset_download_staging_path}/#{dataset.current_locale}/#{@codebook_file}"
+        # set the file paths for this dataset
+        set_dataset_file_paths(dataset)
 
         # all options require codebook, so create it
         codebook(dataset)
+
+        # make the csv files if needed
+        if !use_processed_csv && ['csv', 'spss', 'stata', 'r'].include?(type)
+          build_csv_headers(dataset)
+          build_csv_files(dataset)
+        end
 
         # generate the requested files
         case type
@@ -93,22 +74,14 @@ module ExportData
     # only contine if the dataset is valid
     if dataset.valid?
 
-      # @app_key_name = 'xtraktr'
-      @app_key_name = 'unicef'
+      # set global vars
+      set_global_vars
 
-      # set readme file name to appear in zip file
-      @readme_file = 'README.txt'
-
-      @dataset_download_path = "#{Rails.public_path}#{dataset.data_download_path}"
-      @dataset_download_staging_path = "#{Rails.public_path}#{dataset.data_download_staging_path}"
-      @admin_dataset_download_path = "#{Rails.public_path}#{dataset.admin_data_download_path}"
-      @admin_dataset_download_staging_path = "#{Rails.public_path}#{dataset.admin_data_download_staging_path}"
+      current_locale = dataset.current_locale.dup    
 
       # make sure dataset has url object
       dataset.create_urls_object
       get_url_params(dataset)
-
-      current_locale = dataset.current_locale.dup    
 
       # create files for each locale in the dataset
       dataset.languages.each do |locale|
@@ -116,25 +89,16 @@ module ExportData
 
         dataset.current_locale = locale
 
-        # the process of creating the text version csv is time consuming
-        # this var saves it the first time it is created and then all proceeding calls use it again
-        # need to reset the variable when the locale changes so can get data in correct language
-        @header_code = {}
-        @header_text = {}
-        @csv_raw_data = {}
-        @csv_text_data = {}
+        # set the file paths for this dataset
+        set_dataset_file_paths(dataset)
 
-        # make sure path exists
-        FileUtils.mkpath("#{@dataset_download_path}/#{dataset.current_locale}")    
-        FileUtils.mkpath("#{@dataset_download_staging_path}/#{dataset.current_locale}")    
-        FileUtils.mkpath("#{@admin_dataset_download_path}/#{dataset.current_locale}")    
-        FileUtils.mkpath("#{@admin_dataset_download_staging_path}/#{dataset.current_locale}")    
+        # make the csv files
+        if !use_processed_csv
+          build_csv_headers(dataset)
+          build_csv_files(dataset)
+        end
 
-        # set path to codebook here since used in all methods
-        @codebook_file = 'codebook.txt'
-        @codebook_file_path = "#{@dataset_download_staging_path}/#{dataset.current_locale}/#{@codebook_file}"
-        @admin_codebook_file_path = "#{@admin_dataset_download_staging_path}/#{dataset.current_locale}/#{@codebook_file}"
-
+        # generate all of the files
         codebook(dataset)
         csv(dataset, use_processed_csv)
         spss(dataset, use_processed_csv)
@@ -162,10 +126,15 @@ module ExportData
     start = Time.now
     puts "*** use_processed_csv = #{use_processed_csv}"
     
-    Dataset.needs_download_files.each do |dataset|
+    count = Dataset.needs_download_files.count
+    Dataset.needs_download_files.each_with_index do |dataset, index|
       puts "=========================================="
       puts "=========================================="
+      puts "============ dataset #{index+1} out of #{count}"
+      puts "============ the script has been running for #{(Time.now-start).round(3)} seconds so far"
       puts "=========================================="
+      puts "=========================================="
+      puts ""
       puts ">>>>>>>>>> dataset: #{dataset.title}"
       puts ">>>>>>>>>> use_processed_csv: #{use_processed_csv}"
       # create the data files for this dataset
@@ -301,26 +270,18 @@ private
     csv_file = "csv.csv"
     csv_file_path = "#{@dataset_download_staging_path}/#{dataset.current_locale}/#{csv_file}"
     
-    csv_data = nil
-    if !use_processed_csv && (!File.exists?(csv_file_path) || dataset.reset_download_files?)
-      puts "-- building csv data"
-      start_csv = Time.now
-      csv_data = build_csv(dataset, with_raw_data: false, with_header: true)
-      puts "-- it took #{(Time.now-start_csv).round(3)} seconds to build the csv data"
-    end
-
     # create the public files
-    generate_csv(dataset, csv_data, use_processed_csv)
+    generate_csv(dataset, use_processed_csv)
 
     # create the admin files
-    generate_csv(dataset, csv_data, use_processed_csv, true)
+    generate_csv(dataset, use_processed_csv, true)
     
     puts "-- it took #{(Time.now-start).round(3)} seconds to create the csv files"
     return nil  
   end
 
   # create csv file
-  def self.generate_csv(dataset, csv_data, use_processed_csv=false, is_admin=false)
+  def self.generate_csv(dataset, use_processed_csv=false, is_admin=false)
     puts ">>> generating csv, is admin = #{is_admin} "
     start = Time.now
 
@@ -340,10 +301,10 @@ private
     if !File.exists?(csv_file_path) || dataset.reset_download_files?
       if use_processed_csv
         puts "- copying processed csv file"
-        copy_processed_csv(dataset, csv_file_path)
+        copy_processed_csv(csv_file_path)
       else
-        puts "- creating csv file"
-        File.open(csv_file_path, 'w') {|f| f.write(is_admin ? csv_data[:admin] : csv_data[:public]) }
+        puts "- creating csv file with text and header"
+        copy_csv_file(csv_file_path, is_admin, with_raw_data: false, with_header: true)
       end
     end
 
@@ -386,19 +347,11 @@ private
     csv_file_path = "#{@dataset_download_staging_path}/#{dataset.current_locale}/#{csv_file}"
     
 
-    csv_data = nil
-    if !use_processed_csv && (!File.exists?(csv_file_path) || dataset.reset_download_files?)
-      puts "- building csv data"
-      start_csv = Time.now
-      csv_data = build_csv(dataset)
-      puts "-- it took #{(Time.now-start_csv).round(3)} seconds to build the csv data"
-    end
-
     # create the public files
-    generate_spss(dataset, csv_data, use_processed_csv)
+    generate_spss(dataset, use_processed_csv)
 
     # create the admin files
-    generate_spss(dataset, csv_data, use_processed_csv, true)
+    generate_spss(dataset, use_processed_csv, true)
 
     puts "-- it took #{(Time.now-start).round(3)} seconds to create the spss and csv files"
     return nil
@@ -408,7 +361,7 @@ private
   # create spss file
   # notes 
   # - strings cannot be more than 60 chars
-  def self.generate_spss(dataset, csv_data, use_processed_csv=false, is_admin=false)
+  def self.generate_spss(dataset, use_processed_csv=false, is_admin=false)
     puts ">>> generating spss, is admin = #{is_admin}"
     start = Time.now
 
@@ -499,10 +452,10 @@ private
     if !File.exists?(csv_file_path) || dataset.reset_download_files?
       if use_processed_csv
         puts "- copying processed csv file to #{csv_file_path}"
-        copy_processed_csv(dataset, csv_file_path)
+        copy_processed_csv(csv_file_path)
       else
-        puts "- creating csv file at #{csv_file_path}"
-        File.open(csv_file_path, 'w') {|f| f.write(is_admin ? csv_data[:admin] : csv_data[:public]) }
+        puts "- creating csv file with raw data and no header"
+        copy_csv_file(csv_file_path, is_admin)
       end
     end
 
@@ -548,19 +501,11 @@ private
     csv_file = "stata.csv"
     csv_file_path = "#{@dataset_download_staging_path}/#{dataset.current_locale}/#{csv_file}"
 
-    csv_data = nil
-    if !use_processed_csv && (!File.exists?(csv_file_path) || dataset.reset_download_files?)
-      puts "- building csv data"
-      start_csv = Time.now
-      csv_data = build_csv(dataset, with_raw_data: false)
-      puts "-- it took #{(Time.now-start_csv).round(3)} seconds to build the csv data"
-    end
-
     # create the public files
-    generate_stata(dataset, csv_data, use_processed_csv)
+    generate_stata(dataset, use_processed_csv)
 
     # create the admin files
-    generate_stata(dataset, csv_data, use_processed_csv, true)
+    generate_stata(dataset, use_processed_csv, true)
 
     puts "-- it took #{(Time.now-start).round(3)} seconds to create the stata and csv files"
     return nil
@@ -573,7 +518,7 @@ private
   # create labels:
       # label define sexfmt 0 "Male" 1 "Female"
       # infile str16 name sex:sexfmt age using persons        
-  def self.generate_stata(dataset, csv_data, use_processed_csv=false, is_admin=false)
+  def self.generate_stata(dataset, use_processed_csv=false, is_admin=false)
     puts ">>> creating stata, is_admin = #{is_admin}"
     start = Time.now
 
@@ -619,10 +564,10 @@ private
     if !File.exists?(csv_file_path) || dataset.reset_download_files?
       if use_processed_csv
         puts "- copying processed csv file"
-        copy_processed_csv(dataset, csv_file_path)
+        copy_processed_csv(csv_file_path)
       else
-        puts "- creating csv file"
-        File.open(csv_file_path, 'w') {|f| f.write(is_admin ? csv_data[:admin] : csv_data[:public]) }
+        puts "- creating csv file with text and no header"
+        copy_csv_file(csv_file_path, is_admin, with_raw_data: false)
       end
     end
 
@@ -662,19 +607,11 @@ private
     csv_file = "r.csv"
     csv_file_path = "#{@dataset_download_staging_path}/#{dataset.current_locale}/#{csv_file}"
 
-    csv_data = nil
-    if !use_processed_csv && (!File.exists?(csv_file_path) || dataset.reset_download_files?)
-      puts "- building csv data"
-      start_csv = Time.now
-      csv_data = build_csv(dataset, with_raw_data: false, with_header_code_only: true)
-      puts "-- it took #{(Time.now-start_csv).round(3)} seconds to build the csv data"
-    end
-
     # create the public files
-    generate_r(dataset, csv_data, use_processed_csv)
+    generate_r(dataset, use_processed_csv)
 
     # create the admin files
-    generate_r(dataset, csv_data, use_processed_csv, true)
+    generate_r(dataset, use_processed_csv, true)
 
 
     puts "-- it took #{(Time.now-start).round(3)} seconds to create the r and csv files"
@@ -685,7 +622,7 @@ private
   #########################################
   #########################################
   # create r file that reads in csv file
-  def self.generate_r(dataset, csv_data, use_processed_csv=false, is_admin=false)
+  def self.generate_r(dataset, use_processed_csv=false, is_admin=false)
     puts ">>> generating r, is admin = #{is_admin} "
     start = Time.now
 
@@ -738,10 +675,10 @@ private
     if !File.exists?(csv_file_path) || dataset.reset_download_files?
       if use_processed_csv
         puts "- copying processed csv file"
-        copy_processed_csv(dataset, csv_file_path)
+        copy_processed_csv(csv_file_path)
       else
-        puts "- creating csv file"
-        File.open(csv_file_path, 'w') {|f| f.write(is_admin ? csv_data[:admin] : csv_data[:public]) }
+        puts "- creating csv file with text and header code"
+        copy_csv_file(csv_file_path, is_admin, with_raw_data: false, with_header_code_only: true)
       end
     end
 
@@ -791,6 +728,102 @@ private
       return text[0..50]
     end
     return text
+  end
+
+  #########################################
+  #########################################
+
+  # build csv headers for both public and admin downloads
+  # for both code and code-text 
+  # values are stored in @headers hash
+  def self.build_csv_headers(dataset)
+    puts ">>>> building csv header"
+    start = Time.now
+
+    # to store the csv headers
+    @headers = {code: {admin: [], public: []}, text: {admin: [], public: []}}
+
+    # get the index to the questions that can be downloaded (public)
+    public_indexes = dataset.questions.each_index.select{|i| dataset.questions[i].can_download?}
+
+    dataset.questions.each_with_index do |question, index|
+      @headers[:code][:admin] << question.original_code
+      @headers[:text][:admin] << "#{question.original_code} - #{question.text}"
+      if public_indexes.include?(index)
+        @headers[:code][:public] << @headers[:code][:admin].last
+        @headers[:text][:public] << @headers[:text][:admin].last
+      end
+    end
+
+    puts "--- it took #{(Time.now-start).round(3)} seconds to build the csv headers"
+    return nil
+  end
+
+  # build raw csv files for both public and admin downloads
+  # for both raw data and text data
+  # these files will then be copied and used when generating the csv files for csv, spss, stata, r
+  def self.build_csv_files(dataset)
+    puts ">>>> build_csv_files"
+    start = Time.now
+
+    csv_data = {raw: {admin: [], public: []}, text: {admin: [], public: []}}
+
+    # get the index to the questions that can be downloaded (public)
+    public_indexes = dataset.questions.each_index.select{|i| dataset.questions[i].can_download?}
+
+    dataset.questions.each_with_index do |question, index|
+      # raw data
+      csv_data[:raw][:admin] << dataset.data_items.code_data(question.code)
+      if public_indexes.include?(index)
+        csv_data[:raw][:public] << csv_data[:raw][:admin].last
+      end
+
+      # text data
+      csv_data[:text][:admin] << dataset.data_items.code_data(question.code)
+      # now replace data values with answer text
+      question.answers.sorted.each do |answer|
+        csv_data[:text][:admin].last.select{ |x| x == answer.value }.each{ |x| x.replace( answer.text ) }
+      end
+      # clean the text
+      csv_data[:text][:admin].last.each do |x|
+        x.replace(clean_text(x)) if x.present?
+      end
+
+      # now add to public if needed
+      if public_indexes.include?(index)
+        csv_data[:text][:public] << csv_data[:text][:admin].last
+      end
+
+    end
+
+    #######
+    # now create csv files
+    CSV.open(@csv_raw_data_file_path, 'w') do |csv|
+      csv_data[:raw][:public].transpose.each do |row|
+        csv << row
+      end
+    end
+    CSV.open(@admin_csv_raw_data_file_path, 'w') do |csv|
+      csv_data[:raw][:admin].transpose.each do |row|
+        csv << row
+      end
+    end
+    CSV.open(@csv_text_data_file_path, 'w') do |csv|
+      csv_data[:text][:public].transpose.each do |row|
+        csv << row
+      end
+    end
+    CSV.open(@admin_csv_text_data_file_path, 'w') do |csv|
+      csv_data[:text][:admin].transpose.each do |row|
+        csv << row
+      end
+    end
+
+
+    csv_data = nil
+
+    puts "--- it took #{(Time.now-start).round(3)} seconds to build the csv files"
+    return nil
   end
 
   #########################################
@@ -1039,12 +1072,57 @@ private
   end
 
 
-  def self.copy_processed_csv(dataset, csv_file_path)
-    # path to the processed csv file
-    processed_file_path = "#{Rails.public_path}/system/datasets/#{dataset.id}/processed/data.csv"
-    
-    FileUtils.cp processed_file_path, csv_file_path if File.exists?(processed_file_path)
+  # copy the original processed csv file to the one passed in
+  def self.copy_processed_csv(csv_file_path)
+    FileUtils.cp @processed_file_path, csv_file_path if File.exists?(@processed_file_path)
   end
+
+
+  # copy the appropriate csv file and add header if needed
+  def self.copy_csv_file(csv_file_path, is_admin, options={})
+    puts ">>>> copy csv file"
+
+    start = Time.now
+
+    with_raw_data = options[:with_raw_data].nil? ? true : options[:with_raw_data]
+    with_header = options[:with_header].nil? ? false : options[:with_header]
+    with_header_code_only = options[:with_header_code_only].nil? ? false : options[:with_header_code_only]
+
+    # determine which file to copy from
+    orig_csv_file = if is_admin
+      with_raw_data == true ? @admin_csv_raw_data_file_path : @admin_csv_text_data_file_path
+    else
+      with_raw_data == true ? @csv_raw_data_file_path : @csv_text_data_file_path
+    end
+    headers = nil
+    if with_header || with_header_code_only
+      if is_admin
+        headers = with_header_code_only == true ? @headers[:code][:admin] : @headers[:text][:admin]
+      else
+        headers = with_header_code_only == true ? @headers[:code][:public] : @headers[:text][:public]
+      end
+    end
+
+    # if file exists, continue
+    if orig_csv_file.present? && File.exists?(orig_csv_file)
+      # if header is needed, add it
+      if headers.present?
+        puts "---> adding headers to csv file"
+        CSV.open(csv_file_path, "w") do |csv|
+          csv << headers
+          CSV.foreach(orig_csv_file, 'r') do |row|
+            csv << row
+          end
+        end
+      else
+        FileUtils.cp orig_csv_file, csv_file_path
+      end
+    end
+
+    puts "--- it took #{(Time.now-start).round(3)} seconds to copy the csv file"
+    return nil
+  end
+
 
   #########################################
   #########################################
@@ -1084,6 +1162,44 @@ private
   end
 
 
+
+  def self.set_global_vars
+    # @app_key_name = 'xtraktr'
+    @app_key_name = 'unicef'
+
+    # set file name to appear in zip file
+    @readme_file = 'README.txt'
+    @codebook_file = 'codebook.txt'
+    @csv_raw_data_file = 'csv_raw_data.csv'
+    @csv_text_data_file = 'csv_text_data.csv'
+
+  end
+
+
+  def self.set_dataset_file_paths(dataset)
+    # folder paths for public and admin files
+    @dataset_download_path = "#{Rails.public_path}#{dataset.data_download_path}"
+    @dataset_download_staging_path = "#{Rails.public_path}#{dataset.data_download_staging_path}"
+    @admin_dataset_download_path = "#{Rails.public_path}#{dataset.admin_data_download_path}"
+    @admin_dataset_download_staging_path = "#{Rails.public_path}#{dataset.admin_data_download_staging_path}"
+
+    # path to the processed csv file
+    @processed_file_path = "#{Rails.public_path}/system/datasets/#{dataset.id}/processed/data.csv"
+
+    # make sure path exists
+    FileUtils.mkpath("#{@dataset_download_path}/#{dataset.current_locale}")    
+    FileUtils.mkpath("#{@dataset_download_staging_path}/#{dataset.current_locale}")    
+    FileUtils.mkpath("#{@admin_dataset_download_path}/#{dataset.current_locale}")    
+    FileUtils.mkpath("#{@admin_dataset_download_staging_path}/#{dataset.current_locale}")    
+
+    # set path to codebook here since used in all methods
+    @codebook_file_path = "#{@dataset_download_staging_path}/#{dataset.current_locale}/#{@codebook_file}"
+    @admin_codebook_file_path = "#{@admin_dataset_download_staging_path}/#{dataset.current_locale}/#{@codebook_file}"
+    @csv_raw_data_file_path = "#{@dataset_download_staging_path}/#{dataset.current_locale}/#{@csv_raw_data_file}"
+    @csv_text_data_file_path = "#{@dataset_download_staging_path}/#{dataset.current_locale}/#{@csv_text_data_file}"
+    @admin_csv_raw_data_file_path = "#{@admin_dataset_download_staging_path}/#{dataset.current_locale}/#{@csv_raw_data_file}"
+    @admin_csv_text_data_file_path = "#{@admin_dataset_download_staging_path}/#{dataset.current_locale}/#{@csv_text_data_file}"
+  end
 
 
 end
