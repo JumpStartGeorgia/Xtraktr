@@ -100,7 +100,7 @@ function delete_highlight_button(visual_element, embed_id, visual_type){
 
     // add link to visual
     $(visual_element).append(link);
-    
+
   }
 }
 
@@ -190,7 +190,7 @@ function build_highmap(shape_question_code, adjustable_max, json_map_set){
   if (adjustable_max == true){
     //  for use in the color axis
     // get the max percent value and round temp_max to the nearest 10s
-    max = Math.ceil(Math.max.apply(Math, $.map(json_map_set.data, function(obj, i){return obj.value})) / 10)*10;    
+    max = Math.ceil(Math.max.apply(Math, $.map(json_map_set.data, function(obj, i){return obj.value})) / 10)*10;
   }
 
   $(selector_path + ' #' + map_id).highcharts('Map', {
@@ -216,7 +216,7 @@ function build_highmap(shape_question_code, adjustable_max, json_map_set){
               this.redraw();
             }
           }
-        }          
+        }
       },
       title: {
           text: build_visual_title(highlight_path, json_map_set.title.html),
@@ -244,13 +244,13 @@ function build_highmap(shape_question_code, adjustable_max, json_map_set){
                           stroke: '#999999',
                           fill: '#eeeeee'
                       }
-                  }              
+                  }
               },
           }
       },
       colorAxis: {
         min: 0,
-        max: max, 
+        max: max,
         minColor: '#d2f1f9',
         maxColor: '#0086a5',
         labels: {
@@ -299,7 +299,7 @@ function build_highmap(shape_question_code, adjustable_max, json_map_set){
           allAreas: false, // if shape does not have value, do not show it so base layer above will show
           tooltip: {
               headerFormat: '',
-              pointFormat: '<b>{point.display_name}:</b> {point.count:,.0f} ({point.value}%)'    
+              pointFormat: '<b>{point.display_name}:</b> {point.count:,.0f} ({point.value}%)'
           },
           borderColor: '#f6f6f6',
           borderWidth: 2,
@@ -346,7 +346,7 @@ function build_highmap(shape_question_code, adjustable_max, json_map_set){
                         stroke: 'white',
                         fill: 'white'
                     }
-                }              
+                }
             },
             menuItems: [
               {
@@ -354,19 +354,19 @@ function build_highmap(shape_question_code, adjustable_max, json_map_set){
                 onclick: function () {
                     this.exportChart({type: 'image/png'});
                 }
-              }, 
+              },
               {
                 text: gon.highcharts_jpg,
                 onclick: function () {
                     this.exportChart({type: 'image/jpeg'});
                 }
-              }, 
+              },
               {
                 text: gon.highcharts_pdf,
                 onclick: function () {
                     this.exportChart({type: 'application/pdf'});
                 }
-              }, 
+              },
               {
                 text: gon.highcharts_svg,
                 onclick: function () {
@@ -376,11 +376,11 @@ function build_highmap(shape_question_code, adjustable_max, json_map_set){
             ]
           }
         }
-      }          
+      }
   });
 
   // now add button to add as highlight
-  determine_highlight_button($(selector_path + ' #' + map_id), json_map_set.embed_id, gon.visual_types.map);  
+  determine_highlight_button($(selector_path + ' #' + map_id), json_map_set.embed_id, gon.visual_types.map);
 
   // add embed chart button
   add_embed_button($(selector_path + ' #' + map_id), json_map_set.embed_id);
@@ -454,7 +454,7 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
         {
           style: { "color": "#777c86", "fontSize": "14px", "fontFamily":"'sourcesans_pro', 'sans-serif'", "fontWeight": "normal" },
           useHTML: true
-        }       
+        }
     },
     legend: {
         title: {
@@ -510,7 +510,7 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
                       stroke: 'white',
                       fill: 'white'
                   }
-              }              
+              }
           },
           menuItems: [
             {
@@ -518,19 +518,19 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
               onclick: function () {
                   this.exportChart({type: 'image/png'});
               }
-            }, 
+            },
             {
               text: gon.highcharts_jpg,
               onclick: function () {
                   this.exportChart({type: 'image/jpeg'});
               }
-            }, 
+            },
             {
               text: gon.highcharts_pdf,
               onclick: function () {
                   this.exportChart({type: 'application/pdf'});
               }
-            }, 
+            },
             {
               text: gon.highcharts_svg,
               onclick: function () {
@@ -541,10 +541,10 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
         }
       }
     }
-  });    
+  });
 
   // now add button to add as highlight
-  determine_highlight_button($(selector_path + ' #' + chart_id), json_chart.embed_id, gon.visual_types.crosstab_chart);  
+  determine_highlight_button($(selector_path + ' #' + chart_id), json_chart.embed_id, gon.visual_types.crosstab_chart);
 
   // add embed chart button
   add_embed_button($(selector_path + ' #' + chart_id), json_chart.embed_id);
@@ -604,7 +604,7 @@ function build_pie_chart(json_chart, chart_height){
             this.redraw();
           }
         }
-      }          
+      }
     },
     title: {
         text: build_visual_title(highlight_path, json_chart.title.html),
@@ -627,7 +627,7 @@ function build_pie_chart(json_chart, chart_height){
             dataLabels: {
                 enabled: false
             },
-            showInLegend: true,          
+            showInLegend: true,
         }
     },
     legend: {
@@ -674,7 +674,7 @@ function build_pie_chart(json_chart, chart_height){
                       stroke: 'white',
                       fill: 'white'
                   }
-              }              
+              }
           },
           menuItems: [
             {
@@ -682,19 +682,19 @@ function build_pie_chart(json_chart, chart_height){
               onclick: function () {
                   this.exportChart({type: 'image/png'});
               }
-            }, 
+            },
             {
               text: gon.highcharts_jpg,
               onclick: function () {
                   this.exportChart({type: 'image/jpeg'});
               }
-            }, 
+            },
             {
               text: gon.highcharts_pdf,
               onclick: function () {
                   this.exportChart({type: 'application/pdf'});
               }
-            }, 
+            },
             {
               text: gon.highcharts_svg,
               onclick: function () {
@@ -714,9 +714,9 @@ function build_pie_chart(json_chart, chart_height){
                       hover: {
                           fill: '#fff',
                           stroke: '#eaeaea',
-                          'stroke-width': 1                            
+                          'stroke-width': 1
                       },
-                      select: {                          
+                      select: {
                           fill: '#fff',
                           stroke: '#eaeaea',
                           'stroke-width': 1
@@ -729,7 +729,7 @@ function build_pie_chart(json_chart, chart_height){
   });
 
   // now add button to add as highlight
-  determine_highlight_button($(selector_path + ' #' + chart_id), json_chart.embed_id, gon.visual_types.pie_chart);  
+  determine_highlight_button($(selector_path + ' #' + chart_id), json_chart.embed_id, gon.visual_types.pie_chart);
 
   // add embed chart button
   add_embed_button($(selector_path + ' #' + chart_id), json_chart.embed_id);
@@ -834,7 +834,7 @@ function build_time_series_chart(json_chart, chart_height){
                       stroke: 'white',
                       fill: 'white'
                   }
-              }              
+              }
           },
           menuItems: [
             {
@@ -842,19 +842,19 @@ function build_time_series_chart(json_chart, chart_height){
               onclick: function () {
                   this.exportChart({type: 'image/png'});
               }
-            }, 
+            },
             {
               text: gon.highcharts_jpg,
               onclick: function () {
                   this.exportChart({type: 'image/jpeg'});
               }
-            }, 
+            },
             {
               text: gon.highcharts_pdf,
               onclick: function () {
                   this.exportChart({type: 'application/pdf'});
               }
-            }, 
+            },
             {
               text: gon.highcharts_svg,
               onclick: function () {
@@ -868,7 +868,7 @@ function build_time_series_chart(json_chart, chart_height){
   });
 
   // now add button to add as highlight
-  determine_highlight_button($(selector_path + ' #' + chart_id), json_chart.embed_id, gon.visual_types.line_chart);  
+  determine_highlight_button($(selector_path + ' #' + chart_id), json_chart.embed_id, gon.visual_types.line_chart);
 
   // add embed chart button
   add_embed_button($(selector_path + ' #' + chart_id), json_chart.embed_id);
@@ -894,7 +894,7 @@ function build_page_title(json){
   }else{
     $('head title').html(title_parts[0] + ' | ' + title_parts[title_parts.length-1])
   }
-   
+
 }
 
 function resizeExploreData(){
@@ -957,7 +957,7 @@ $(document).ready(function() {
         if (success){
           // delete embed id
           gon.embed_ids.splice( $.inArray($(link).data('embed-id'), gon.embed_ids), 1 );
-          
+
           // show delete button
           $(link).parent().find('a.description-highlight').fadeOut().remove();
           $(link).fadeOut(function(){
@@ -970,21 +970,21 @@ $(document).ready(function() {
     }
   });
 
-  
+
 // share button with slide effect used on dashboard, timeseries and explore page
   if(is_touch) {
-    $('.share-box').on('click', function(){ share_toggle(($(this).attr('data-state') == 'in' ? 'out' : 'in'),$(this)); }); 
+    $('.share-box').on('click', function(){ share_toggle(($(this).attr('data-state') == 'in' ? 'out' : 'in'),$(this)); });
   }
   else {
-    $('.share-box').hover(function(){ 
+    $('.share-box').hover(function(){
       share_toggle('in',$(this));
-    }, function() { share_toggle('out',$(this)); }); 
+    }, function() { share_toggle('out',$(this)); });
   }
 // tabs - on li click fire inner a tag
-  $(document).on('click', '.tabs li', function() {    
+  $(document).on('click', '.tabs li', function() {
     $(this).find('a').tab('show');
   });
-  $(document).on('click', '.tab-content .up', function () {    
+  $(document).on('click', '.tab-content .up', function () {
     $('body').animate({ scrollTop: 0 }, 1500);
   });
 
@@ -996,13 +996,13 @@ $(document).ready(function() {
     var embed_iframe = $('#embed-iframe').html();
      modal(popup,
       {
-        position:'center', 
+        position:'center',
         events: [
-          { 
+          {
             event:'change',
-            element: '.wide input', 
+            element: '.wide input',
             callback:function()
-            {  
+            {
               var t = $(this);
               var par = t.closest('.box');
               par.find('textarea').val($(embed_iframe).attr('src', url).attr('width', t.val()).attr('height', par.find('.high input').val()).prop('outerHTML'));
@@ -1033,7 +1033,7 @@ $(document).ready(function() {
     var popup = $('#highlight-description-popup').html();
      modal(popup,
       {
-        position:'center', 
+        position:'center',
         before: function(t)
         {
           t.find('.text').html(text);
@@ -1060,13 +1060,13 @@ $(document).ready(function() {
         // got form, create modal popup
         modal($('#description-form-popup').html().replace('{form}', data.form),
         {
-          position:'center', 
+          position:'center',
           events: [
-            { 
+            {
               event:'submit',
-              element: 'form.highlight', 
+              element: 'form.highlight',
               callback:function(e)
-              {  
+              {
                 e.preventDefault();
                 var params = $(this).serialize();
                 params += '&embed_id=' + embed_id;
@@ -1080,11 +1080,11 @@ $(document).ready(function() {
                   dataType: 'json'
                 }).done(function(data){
                   if (data && data.success == true){
-                    // turn off show desc button if exists 
+                    // turn off show desc button if exists
                     $(chart).find('div.highlight-description-chart').remove();
 
                     if (desc != undefined && desc != ''){
-                      // show desc button 
+                      // show desc button
                       add_highlight_description_button(chart, embed_id);
                     }
 
@@ -1108,7 +1108,7 @@ $(document).ready(function() {
   });
 
 
-  
+
   resizeExploreData();
   $( window ).resize(function() { resizeExploreData(); });
 });
@@ -1117,8 +1117,8 @@ function share_toggle(state,t)
   var at = t.find('.addthis_sharing_toolbox'),
       dir = { },
       dir2 = { };
-  
-  if(state == 'in') {   
+
+  if(state == 'in') {
     var atwidth = at.width();
 
     var tmp = 'right';
