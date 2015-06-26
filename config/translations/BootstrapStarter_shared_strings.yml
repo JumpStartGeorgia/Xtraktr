@@ -3,6 +3,7 @@
   - en.mongoid.attributes.agreement.dataset_id
   - en.mongoid.attributes.time_series_dataset.dataset_id
   - en.mongoid.attributes.time_series_dataset_question.dataset
+  - en.mongoid.attributes.api_request.dataset_title
   - en.shared.explore_data.dataset_title
 - - en.mongoid.models.question
   - en.mongoid.models.time_series_question
@@ -13,6 +14,7 @@
   - en.datasets.highlights.question_code
   - en.time_series.highlights.question_code
 - - en.mongoid.models.time_series
+  - en.mongoid.attributes.api_request.time_series_title
   - en.app.menu.time_series
   - en.shared.explore_time_series.time_series_title
 - - en.mongoid.models.time_series_answer
@@ -20,9 +22,13 @@
   - en.mongoid.attributes.time_series_answer.text
 - - en.mongoid.models.api_version
   - en.mongoid.attributes.api_request.api_version
+- - en.mongoid.models.categories
+  - en.app.buttons.category
 - - en.mongoid.models.category_mappers
   - en.mongoid.attributes.dataset.category_ids
   - en.mongoid.attributes.time_series.category_ids
+  - en.app.buttons.categories
+  - en.admin.index.categories
 - - en.mongoid.attributes.user.email
   - en.mongoid.attributes.message.email
   - en.mongoid.attributes.agreement.email
@@ -34,6 +40,8 @@
   - en.mongoid.attributes.agreement.last_name
 - - en.mongoid.attributes.user.name
   - en.mongoid.attributes.message.name
+  - en.mongoid.attributes.api_request.user_name
+  - en.mongoid.attributes.category.name
 - - en.mongoid.attributes.user.age_group
   - en.mongoid.attributes.agreement.age_group
 - - en.mongoid.attributes.user.residence
@@ -42,10 +50,10 @@
   - en.mongoid.attributes.agreement.affiliation
 - - en.mongoid.attributes.user.status
   - en.mongoid.attributes.agreement.status
-- - en.mongoid.attributes.user.status_other
-  - en.mongoid.attributes.agreement.status_other
 - - en.mongoid.attributes.user.description
   - en.mongoid.attributes.agreement.description
+- - en.mongoid.attributes.agreement.dataset_locale
+  - en.mongoid.attributes.report.language_id
 - - en.mongoid.attributes.agreement.created_at
   - en.mongoid.attributes.api_request.created_at
 - - en.mongoid.attributes.page_content.title
@@ -62,6 +70,8 @@
 - - en.mongoid.attributes.dataset.description
   - en.mongoid.attributes.time_series.description
   - en.mongoid.attributes.shapeset.description
+  - en.datasets.highlights.description
+  - en.time_series.highlights.description
 - - en.mongoid.attributes.dataset.methodology
   - en.shared.dashboard_data.tabs.methodology
   - en.shared.dashboard_time_series.tabs.methodology
@@ -69,7 +79,6 @@
   - en.mongoid.attributes.time_series.source
 - - en.mongoid.attributes.dataset.source_url
   - en.mongoid.attributes.time_series.source_url
-  - en.mongoid.attributes.shapeset.source_url
 - - en.mongoid.attributes.dataset.codebook
   - en.shared.dashboard_data.tabs.codebook
   - en.shared.dashboard_time_series.tabs.codebook
@@ -102,9 +111,8 @@
   - en.root.notes.title
 - - en.mongoid.attributes.question.no_questions
   - en.mongoid.attributes.answer.no_questions
-  - en.datasets.exclude_questions.no_questions
-  - en.datasets.exclude_answers.no_questions
-  - en.datasets.can_exclude_answers.no_questions
+  - en.datasets.mass_changes_questions.no_questions
+  - en.datasets.mass_changes_answers.no_questions
   - en.questions.index.no_questions
 - - en.mongoid.attributes.answer.value
   - en.mongoid.attributes.time_series_answer.value
@@ -114,6 +122,7 @@
   - en.mongoid.attributes.time_series_dataset.sort_order
   - en.mongoid.attributes.time_series_answer.sort_order
   - en.mongoid.attributes.api_method.sort_order
+  - en.mongoid.attributes.category.sort_order
 - - en.mongoid.attributes.time_series.datasets
   - en.app.menu.datasets
   - en.admin.index.datasets
@@ -203,10 +212,18 @@
   - en.app.buttons.reset
   - en.shared.explore_data.form.reset
   - en.shared.explore_time_series.form.reset
+- - en.helpers.links.save
+  - en.app.buttons.save
 - - en.helpers.links.make_mappable
   - en.app.menu.admin_dataset.mappable
+- - en.helpers.links.download_data
+  - en.app.menu.admin_dataset.download_data
+- - en.helpers.links.highlight_description_chart
+  - en.helpers.links.highlight_description
 - - en.app.common.questions
+  - en.datasets.highlights.questions
   - en.questions.mass_changes.questions.header
+  - en.time_series.highlights.questions
 - - en.app.common.answers
   - en.questions.show.header_answers
   - en.questions.form.header_answers
@@ -239,6 +256,10 @@
 - - en.app.menu.admin_dataset.warnings
   - en.app.menu.admin_time_series.warnings
   - en.datasets.warnings.title
+- - en.app.menu.admin_dataset.mass_changes_questions
+  - en.datasets.mass_changes_questions.title
+- - en.app.menu.admin_dataset.mass_changes_answers
+  - en.datasets.mass_changes_answers.title
 - - en.admin.index.users
   - en.admin.users.index.title
 - - en.root.index.no_datasets
@@ -259,6 +280,12 @@
   - en.datasets.mappable_form.no_shapes
 - - en.datasets.mappable_form.title
   - en.datasets.mappable_form_edit.title
+- - en.datasets.mappable_form.adjustable_range_header
+  - en.datasets.mappable_form_edit.adjustable_range_header
+- - en.datasets.mappable_form.adjustable_range_p1
+  - en.datasets.mappable_form_edit.adjustable_range_p1
+- - en.datasets.mappable_form.adjustable_range_p2
+  - en.datasets.mappable_form_edit.adjustable_range_p2
 - - en.datasets.highlights.no_highlights
   - en.shared.dashboard_data.no_highlights
 - - en.datasets.highlights.broken_down_by_code

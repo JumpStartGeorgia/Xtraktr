@@ -172,9 +172,9 @@ ka:
         user_id: "მომხმარებლის ID"
         user_name: "სახელი"
         dataset_id: მონაცემების ID
-        dataset: მონაცემები
+        dataset_title: მონაცემები
         time_series_id: "პერიოდული შედარების ID"
-        time_series: "პერიოდული შედარება"
+        time_series_title: "პერიოდული შედარება"
         ip_address: IP მისამართი
         locale: API ადგილი
         api_version: API ვერსია

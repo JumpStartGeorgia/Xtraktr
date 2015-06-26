@@ -1,7 +1,7 @@
 Line #,Key,en Version,ka Translation
 1,ka.mongoid.models.user,User,მომხმარებელი
 2,ka.mongoid.models.page_content,Text for Pages,ტექსტი გვერდებისთვის
-3,ka.mongoid.models.dataset,Dataset,მონაცემთა ცხრილი
+3,ka.mongoid.models.dataset,Dataset,მონაცემები
 4,ka.mongoid.models.shapeset,Shapeset,ფორმების ცხრილი
 5,ka.mongoid.models.question,Question,კითხვა
 6,ka.mongoid.models.time_series,Time Series,პერიოდული შედარება
@@ -16,7 +16,7 @@ Line #,Key,en Version,ka Translation
 15,ka.mongoid.attributes.user.password,Password,პაროლი
 16,ka.mongoid.attributes.user.password_confirmation,Password Confirmation,გაიმეორეთ პაროლი
 17,ka.mongoid.attributes.user.role,Role,როლი
-18,ka.mongoid.attributes.user.remember_me,Remeber Me,დამიმახსოვრე
+18,ka.mongoid.attributes.user.remember_me,Remember Me,დამიმახსოვრე
 19,ka.mongoid.attributes.user.nickname,Nickname,მომხმარებლის სახელი
 20,ka.mongoid.attributes.user.sign_in_count,Number of Times Logged In,შემოსვლის რაოდენობა
 21,ka.mongoid.attributes.user.created_at,Date Created,შექმნის თარიღი
@@ -28,7 +28,7 @@ Line #,Key,en Version,ka Translation
 27,ka.mongoid.attributes.user.residence,Country of Residence,საცხოვრებელი ქვეყანა
 28,ka.mongoid.attributes.user.affiliation,Affiliation,დაწესებულება
 29,ka.mongoid.attributes.user.status,Status,სტატუსი
-30,ka.mongoid.attributes.user.status_other,When other(Please specify),როდესაც სხვა (გთხოვთ მიუთითოთ)
+30,ka.mongoid.attributes.user.status_other,When other (Please specify),როდესაც სხვა (გთხოვთ მიუთითოთ)
 31,ka.mongoid.attributes.user.description,Short description of research objective (<i>optional</i>),საკვლევი ობიექტის მოკლე აღწერა (<i>არჩევითი</i>)
 32,ka.mongoid.attributes.user.notifications,I want to receive notifications when new datasets are added,ახალი მონაცემების დამატების დროს მინდა შეტყობინების მიღება
 33,ka.mongoid.attributes.user.notification_locale,Notification Language,შეტყობინების ენა
@@ -45,590 +45,631 @@ Line #,Key,en Version,ka Translation
 44,ka.mongoid.attributes.agreement.status,Status,სტატუსი
 45,ka.mongoid.attributes.agreement.status_other,When other(Please specify),როდესაც სხვა (გთხოვთ მიუთითოთ)
 46,ka.mongoid.attributes.agreement.description,Short description of research objective (<i>optional</i>),საკვლევი ობიექტის მოკლე აღწერა (<i>არჩევითი</i>)
-47,ka.mongoid.attributes.agreement.dataset_id,Dataset,მონაცემთა ცხრილი
-48,ka.mongoid.attributes.agreement.dataset_type,Download Type,ჩამოტვირთვის ტიპი
-49,ka.mongoid.attributes.agreement.dataset_locale,Download Language,ჩამოტვირთვის ენა
-50,ka.mongoid.attributes.agreement.created_at,Date,თარიღი
-51,ka.mongoid.attributes.page_content.name,Unique Name,უნიკალური სახელი
-52,ka.mongoid.attributes.page_content.title,Title,სათაური
-53,ka.mongoid.attributes.page_content.content,Content,კონტენტი
-54,ka.mongoid.attributes.dataset.title,Title,სათაური
-55,ka.mongoid.attributes.dataset.description,Description,აღწერა
-56,ka.mongoid.attributes.dataset.methodology,Methodology,მეთოდოლოგია
-57,ka.mongoid.attributes.dataset.source,Source of Data,მონაცემთა წყარო
-58,ka.mongoid.attributes.dataset.source_url,URL to Souce,წყაროს URL
-59,ka.mongoid.attributes.dataset.datafile,Data File,მონაცემების ფაილი
-60,ka.mongoid.attributes.dataset.has_warnings,Issues with Data,მონაცემების საკითხები
-61,ka.mongoid.attributes.dataset.stats,Dataset Stats,მონაცემთა ცხრილის სტატისტიკა
-62,ka.mongoid.attributes.dataset.codebook,Codebook,კოდირება
-63,ka.mongoid.attributes.dataset.released_at,Date Released,გამოქვეყნების თარიღი
-64,ka.mongoid.attributes.dataset.start_gathered_at,Date Started Gathering Data,მონაცემთა შეგროვების დაწყების თარიღი
-65,ka.mongoid.attributes.dataset.end_gathered_at,Date Finished Gathering Data,მონაცემთა შეგროვების დასრულების თარიღი
-66,ka.mongoid.attributes.dataset.gathered_at,Dates Collected,მონაცემები შეგროვებულია
-67,ka.mongoid.attributes.dataset.public,Make Available to the Public,გავხადოთ საჯაროდ ხელსმისაწვდომი
-68,ka.mongoid.attributes.dataset.languages,Languages of Dataset,მონაცემთა ცხრილის ენა
-69,ka.mongoid.attributes.dataset.default_language,Default Language,მთავარი ენა
-70,ka.mongoid.attributes.dataset.is_mappable,Has questions that are geographic in nature,აქვს კითხვები რომლებიც არიან ბუნებრივად გეოგრაფიული ტიპის
-71,ka.mongoid.attributes.dataset.created_at,Added On,დამატებულია
-72,ka.mongoid.attributes.dataset.reports,Reports,რეფორთები
-73,ka.mongoid.attributes.dataset.category_ids,Categories,კატეგორიები
-74,ka.mongoid.attributes.dataset.permalink,URL to Dataset,მონაცემთა URL-ი
-75,ka.mongoid.attributes.question.code,Question Code,კითხვის კოდი
-76,ka.mongoid.attributes.question.original_code,Question Code,კითხვის კოდი
-77,ka.mongoid.attributes.question.text,Question,კითხვა
-78,ka.mongoid.attributes.question.notes,Notes,შენიშვნა
-79,ka.mongoid.attributes.question.exclude,Exclude Question from Analysis,ანალიზიდან კითხვის გამორიცხვა
-80,ka.mongoid.attributes.question.exclude_download_header,Exclude Question from Analysis (leave blank to show question),ანალიზიდან კითხვის გამორიცხვა (დატოვე ადგილი კითხვი გამოსაჩენად)
-81,ka.mongoid.attributes.question.no_questions,There are no questions on file for this dataset.,მონაცემთა ამ ცხრილისთვის კითხვა ან ფაილი ვერ მოიძებნა
-82,ka.mongoid.attributes.question.is_mappable,Question has been setup to show answers on a map,კითხვის პასუხები რუკაზე გამოჩნდება
-83,ka.mongoid.attributes.question.has_code_answers,Has defined list of answers,განსაზღვრა პასუხების სია
-84,ka.mongoid.attributes.question.possible_answers,Possible Answer Values,შესაძლო პასუხების მნიშვნელობები
-85,ka.mongoid.attributes.question.data_answers,Answer Values in Data,პასუხების მნიშვნელობები მონაცემებში
-86,ka.mongoid.attributes.answer.value,Value,მნიშვნელობა
-87,ka.mongoid.attributes.answer.text,Answer,პასუხი
-88,ka.mongoid.attributes.answer.exclude,Exclude Answer from Analysis,ანალიზიდან კითხვის გამორიცხვა
-89,ka.mongoid.attributes.answer.exclude_download_header,Exclude Answer from Analysis (leave blank to show answer),ანალიზიდან კითხვის გამორიცხვა (დატოვე ადგილი პასუხის გამოსაჩენად)
-90,ka.mongoid.attributes.answer.can_exclude,Can Exclude During Analysis,ანალიზის დროს შეუძლია გამორიცხვა
-91,ka.mongoid.attributes.answer.can_exclude_download_header,Can Exclude During Analysis (leave blank to always show answer),ანალიზის დროს შეუძლია გამორიცხვა (დატოვე ადგილი პასუხის მუდმივად გამოსაჩენად)
-92,ka.mongoid.attributes.answer.no_questions,There are no questions on file for this dataset.,მონაცემთა ამ ცხრილისთვის კითხვა ან ფაილი ვერ მოიძებნა
-93,ka.mongoid.attributes.answer.sort_order,Sort Order,დახარისხების წყობა
-94,ka.mongoid.attributes.answer.shape_name,Name of Shape,ფორმის სახელი
-95,ka.mongoid.attributes.report.title,Title,დასახელება
-96,ka.mongoid.attributes.report.file,File,ფაილი
-97,ka.mongoid.attributes.report.released_at,Date Released,გამოქვეყნების თარიღი
-98,ka.mongoid.attributes.report.language_id,Language,ენა
-99,ka.mongoid.attributes.report.summary,Summary,მოკლე შეჯამება
-100,ka.mongoid.attributes.time_series.title,Title,დასახელება
-101,ka.mongoid.attributes.time_series.description,Description,აღწერა
-102,ka.mongoid.attributes.time_series.source,Source of Data,მონაცემთა წყარო
-103,ka.mongoid.attributes.time_series.source_url,URL to Souce,წყაროს URL
-104,ka.mongoid.attributes.time_series.public,Make Available to the Public,გავხადოთ საჯაროდ ხელსმისაწვდომი
-105,ka.mongoid.attributes.time_series.created_at,Added On,დამატებულია
-106,ka.mongoid.attributes.time_series.datasets,Datasets,მონაცემთა ცხრილი
-107,ka.mongoid.attributes.time_series.dates,Dates Included,მოიცავს თარიღებს
-108,ka.mongoid.attributes.time_series.category_ids,Categories,კატეგორიები
-109,ka.mongoid.attributes.time_series.permalink,URL to Time Series,პერიოდული შედარების URL-ი
-110,ka.mongoid.attributes.time_series_dataset.dataset_id,Dataset,მონაცემთა ცხრილი
-111,ka.mongoid.attributes.time_series_dataset.title,Label,ეტიკეტი
-112,ka.mongoid.attributes.time_series_dataset.sort_order,Sort Order,დახარისხების წყობა
-113,ka.mongoid.attributes.time_series_question.code,Question Code,კითხვის კოდი
-114,ka.mongoid.attributes.time_series_question.original_code,Question Code,კითხვის კოდი
-115,ka.mongoid.attributes.time_series_question.text,Question,კითხვა
-116,ka.mongoid.attributes.time_series_question.notes,Notes,შენიშვნა
-117,ka.mongoid.attributes.time_series_dataset_question.code,Question Code,კითხვის კოდი
-118,ka.mongoid.attributes.time_series_dataset_question.text,Question,კითხვა
-119,ka.mongoid.attributes.time_series_dataset_question.notes,Notes,შენიშვნა
-120,ka.mongoid.attributes.time_series_dataset_question.dataset,Dataset,მონაცემთა ცხრილი
-121,ka.mongoid.attributes.time_series_answer.value,Value,მნიშვნელობა
-122,ka.mongoid.attributes.time_series_answer.text,Answer,პასუხი
-123,ka.mongoid.attributes.time_series_answer.can_exclude,Can Exclude During Analysis,შეუძლია ანალიზის დროს გამორიცხვა
-124,ka.mongoid.attributes.time_series_answer.sort_order,Sort Order,დახარისხების წყობა
-125,ka.mongoid.attributes.shapeset.title,Title,დასახელება
-126,ka.mongoid.attributes.shapeset.description,Description,აღწერა
-127,ka.mongoid.attributes.shapeset.source,Source of Shapeset,ფორმების ცხრილის წყარო
-128,ka.mongoid.attributes.shapeset.source_url,URL to Souce,წყაროს URL
-129,ka.mongoid.attributes.shapeset.shapefile,GeoJSON File,GeoJSON ფაილი
-130,ka.mongoid.attributes.shapeset.languages,Languages of Shapeset,ფორმების ცხრილის ენა
-131,ka.mongoid.attributes.shapeset.default_language,Default Language,მთავარი ენა
-132,ka.mongoid.attributes.shapeset.created_at,Added On,დამატებულია
-133,ka.mongoid.attributes.api_version.permalink,Permalink,პერმალინკი
-134,ka.mongoid.attributes.api_version.title,Title,დასახელება
-135,ka.mongoid.attributes.api_version.public,Make Available to the Public,გავხადოთ საჯაროდ ხელსმისაწვდომი
-136,ka.mongoid.attributes.api_version.public_at,Released At,გამოქვეყნებულია
-137,ka.mongoid.attributes.api_version.updated_at,Last Updated At,ბოლო განახლება
-138,ka.mongoid.attributes.api_version.methods,Methods,მეთოდი
-139,ka.mongoid.attributes.api_method.permalink,Permalink,პერმალინკი
-140,ka.mongoid.attributes.api_method.title,Title,დასახელება
-141,ka.mongoid.attributes.api_method.content,Content,კონტენტი
-142,ka.mongoid.attributes.api_method.public,Make Available to the Public,გავხადოთ საჯაროდ ხელსმისაწვდომი
-143,ka.mongoid.attributes.api_method.public_at,Released At,გამოქვეყნებულია
-144,ka.mongoid.attributes.api_method.updated_at,Last Updated At,ბოლო განახლება
-145,ka.mongoid.attributes.api_method.sort_order,Sort Order,დახარისხების წყობა
-146,ka.mongoid.attributes.api_request.api_key_id,API Key ID,API-ს გასაღების ID
-147,ka.mongoid.attributes.api_request.user_id,User ID,მომხმარებლის ID
-148,ka.mongoid.attributes.api_request.dataset_id,Dataset ID,მონაცემთა ცხრილის ID
-149,ka.mongoid.attributes.api_request.time_series_id,Time Series ID,პერიოდული შედარების ID
-150,ka.mongoid.attributes.api_request.ip_address,IP Address,IP მისამართი
-151,ka.mongoid.attributes.api_request.locale,API Locale,API ადგილი
-152,ka.mongoid.attributes.api_request.api_version,API Version,API ვერსია
-153,ka.mongoid.attributes.api_request.action,API Action,API ქმედება
-154,ka.mongoid.attributes.api_request.question_code,Question Code,კითხვის კოდი
-155,ka.mongoid.attributes.api_request.broken_down_by_code,Broken Down By Code,ჩაშლილია კოდით
-156,ka.mongoid.attributes.api_request.filtered_by_code,Filtered By Code,გაფილტრულია კოდით
-157,ka.mongoid.attributes.api_request.can_exclude,Can Exclude,შეუძლია გამორიცხვა
-158,ka.mongoid.attributes.api_request.with_title,With Title,სახელით
-159,ka.mongoid.attributes.api_request.with_chart_data,With Chart Data,მონაცემების დიაგრამით
-160,ka.mongoid.attributes.api_request.with_map_data,With Map Data,მონაცემების რუკით
-161,ka.mongoid.attributes.api_request.browser,Browser,ბრაუზერი
-162,ka.mongoid.attributes.api_request.version,Browser Version,ბრაუზერის ვერსია
-163,ka.mongoid.attributes.api_request.os,OS,OS
-164,ka.mongoid.attributes.api_request.platform,OS Platform,OS პლატფორმა
-165,ka.mongoid.attributes.api_request.app,App,App
-166,ka.mongoid.attributes.api_request.is_mobile,Is Mobile Device?,მობილური მოწყობილობაა?
-167,ka.mongoid.attributes.api_request.created_at,Date,თარიღი
-168,ka.mongoid.attributes.api_key.key,Access Token,დაშვების გასაღები
-169,ka.mongoid.attributes.api_key.created_at,Date Created,შექმნის თარიღი
-170,ka.mongoid.hints.dataset.title,The title of your dataset,მონაცემთა თქვენი ცხრილის დასახელება
-171,ka.mongoid.hints.dataset.description,Explain what your dataset is about,გთხოვთ ახსნათ რას ეხება თქვენი მონაცემთა ცხრილი
-172,ka.mongoid.hints.dataset.methodology,Explain how the data in the dataset was collected,გთხოვთ ახსნათ როგორ მოაგროვეთ თქვენი მონაცემთა ცხრილი
-173,ka.mongoid.hints.dataset.source,Who collected this data,ვინ მოაგროვა მონაცემები
-174,ka.mongoid.hints.dataset.source_url,"URL to the Source's website. Please include the http as part of the url (e.g., http://source.com)",წყაროს ვებ გვერდზე URL. გთხოვთ გამოიყენით http როგორც url-ის ნაწილი (მაგ. http://source.com)
-175,ka.mongoid.hints.dataset.datafile,"Only sav, dta, csv, xls, xlsx formats are allowed","დასაშვებია მხოლოდ sav, dta, csv, xls, xlsx ფორმატები"
-176,ka.mongoid.hints.dataset.datafile_read_only,"At this time, you cannot load a new datafile to add or replace existing information","At this time, you cannot load a new datafile to add or replace existing information"
-177,ka.mongoid.hints.dataset.codebook,"Only txt, pdf, doc, docx formats are allowed","დასაშვებია მხოლოდ txt, pdf, doc, docx ფორმატები"
-178,ka.mongoid.hints.dataset.released_at,Date the dataset was released to the public,მონაცემების საჯაროდ გამოქვეყნების თარიღი
-179,ka.mongoid.hints.dataset.start_gathered_at,Date the data gathering process began,მონაცემების შეგროვების დაწყების თარიღი
-180,ka.mongoid.hints.dataset.end_gathered_at,Date the data gathering process finished,მონაცემების შეგროვების დასრულების თარიღი
-181,ka.mongoid.hints.dataset.public,Select 'Yes' to make your dataset available to the world,მონიშნეთ 'დიახ' რათა თქვენი მონაცემები ხელმისაწვდომი გახდეს მსოფლიოსთვის
-182,ka.mongoid.hints.dataset.languages,"Even though your dataset may be in one language, you can use these forms to translate all of the questions and answers into any language you desire.","იმ შემთხვევაშიც კი, თუ თქვენი მონაცემები მხოლოდ ერთ ენაზეა, თქვენ შეგიძლიათ ამ ფორმების გამოყენება რათა თარგმნოთ ყველა კითხვა და პასუხი თქვენთვის სასურველ ნებისმიერ ენაზე"
-183,ka.mongoid.hints.dataset.default_language,The dataset language that is shown by default if no specific language is requested by user,"მონაცემთა ცხრილის ენა რომელიც ნაჩვენებია როგორც მთავარი ენა, თუ რომელიმე კონკრეტული ენა არ არის მოთხოვნილი მომხმარებლის მიერ"
-184,ka.mongoid.hints.dataset.category_ids,Assign the dataset to one or more categories,აირჩიეთ მონაცემთა ცხრილი ერთი ან მეტი კატეგორიებისთვის
-185,ka.mongoid.hints.dataset.permalink,"An abbreviated name of the dataset that you want to appear in the URL (e.g., 'wms' for 'Welfare Monitoring Survey'). All special characters will be automatically removed.","მონაცემთა ცხრილის შემოკლებული სახელი, რომელიც გსურთ, რომ გამოჩნდეს URL-ში (მაგალითად, 'wms', რომელიც გულისხმობს 'Welfare Monitoring Survey'). ყველა სპეციალური სიმბოლოების ავტომატურად წაიშლება."
-186,ka.mongoid.hints.shapeset.title,The title of your shapeset,თქვენი ფორმების ცხრილის დასახელება
-187,ka.mongoid.hints.shapeset.description,Short summary of what is in the shapeset,ფორმების ცხრილის შინაარსის მოკლე აღწერა
-188,ka.mongoid.hints.shapeset.source,Who put the shapeset together,ვინ დააყენა ფორმების ცხრილი ერთად
-189,ka.mongoid.hints.shapeset.source_url,"URL to the Source's website. Please include the http as part of the url (e.g., http://source.com)",წყაროს ვებ გვერდზე URL. გთხოვთ გამოიყენით http როგორც url-ის ნაწილი (მაგ. http://source.com)
-190,ka.mongoid.hints.shapeset.shapefile,Only json and geojson formats are allowed,დასაშვებია მხოლოდ json და geojson ფორმატები
-191,ka.mongoid.hints.shapeset.languages,"Even though your shapeset may be in one language, you can use this form to translate all of the shapeset into any language you desire.","იმ შემთხვევაშიც კი, თუ თქვენი მონაცემები მხოლოდ ერთ ენაზეა, თქვენ შეგიძლიათ ამ ფორმების გამოყენება რათა თარგმნოთ ყველა კითხვა და პასუხი თქვენთვის სასურველ ნებისმიერ ენაზე"
-192,ka.mongoid.hints.shapeset.default_language,The shapeset language that is used by default if no specific language is requested,"მონაცემთა ცხრილის ენა რომელიც გამოყენებულია როგორც მთავარი ენა, თუ რომელიმე კონკრეტული ენა არ არის მოთხოვნილი"
-193,ka.mongoid.hints.question.text,The text of the question,კითხვის ტექსტი
-194,ka.mongoid.hints.question.notes,Any special notes about the question,რაიმე სპეციალური შენიშვნა კითხვასთან დაკავშრებით
-195,ka.mongoid.hints.question.exclude,"If selected, this question will not be available during analysis.",მონიშვნის შემთხვევაში ეს კითხვა არ იქნება ხელმისაწვდომი ანალიზის დროს
-196,ka.mongoid.hints.question.is_mappable,"If the question is mappable in nature, you can match the question to a shapeset and be able to analyize the question on a map.","თუ კითხვები ბუნებრივად შეიძლება დატანილი იყვნენ რუკაზე, შეგიძლიათ დაამთხვიოთ კითხვა ფორმები ცხრილს და რუკაზე გაანალიზოთ შეკითხვა"
-197,ka.mongoid.hints.answer.value,The value of the answer,პასუხის მნიშვნელობა
-198,ka.mongoid.hints.answer.text,The text of the answer,პასუხის ტექსტი
-199,ka.mongoid.hints.answer.exclude,"If selected, this answer will not be available during analysis.",მონიშვნის შემთხვევაში ეს კითხვა არ იქნება ხელმისაწვდომი ანალიზის დროს
-200,ka.mongoid.hints.answer.can_exclude,"If selected, this answer will be available during analysis, but can be turned off if desired by the user.","მონიშვნის შემთხვევაში ეს კითხვა იქნება ხელმისაწვდომი ანალიზის დროს, მაგრამ მომხმარებლის სურვილის შემთხვევაში ის შეიძლება გამოირთოს"
-201,ka.mongoid.hints.answer.sort_order,The order the answers should appear,გამოსაჩენი პასუხების წყობა
-202,ka.mongoid.hints.answer.default_text,This is the answer text from the default language which is provided to make it easier to complete the translation,"ეს არის პასუხის ტექსტი მთავარი ენიდან, რომელიც მოწოდებულია რათა თარგმანის გასაადვილებლად"
-203,ka.mongoid.hints.report.title,The title of the report,რეფორთის დასახელება
-204,ka.mongoid.hints.report.file,"The report file in pdf, doc, odt or txt format","რეფორთის ფაილი pdf, doc, odt ან txt დოკუმენტებში"
-205,ka.mongoid.hints.report.released_at,Date the report was released to the public,რეფორთის საჯაროდ გამოქვეყნების თარიღი
-206,ka.mongoid.hints.report.language_id,The language the report is written in,ენა რომელშიც რეფორთი არის დაწერილი
-207,ka.mongoid.hints.report.summary,A brief summary of the report,რეფორთის მოკლე აღწერა
-208,ka.mongoid.hints.mappable.question,Select the question that you want to have the answers appear on a map during analysis.,აირჩიეთ კითხვა რომელის პასუხიც გსურთ გამოჩნდეს რუკაზე ანალიზის დროს
-209,ka.mongoid.hints.mappable.shapeset,Select the shapeset to use for this question.,არიჩიეთ ამ კითხვის გამოსაყენებელი ფორმების ცხრილი
-210,ka.mongoid.hints.time_series.title,The title of your time series,პერიოდული შედარების დასახელება
-211,ka.mongoid.hints.time_series.description,Explain what your time series is about,ახსენით რას ეხება თქვენი პერიოდული შედარება
-212,ka.mongoid.hints.time_series.public,Select 'Yes' to make your time series available to the world,აირჩიეთ 'დიახ' რათა თქვენი პერიოდული შედარება გახდეს მსოფლიოსთვის ხელმისაწვდომი
-213,ka.mongoid.hints.time_series.languages,The languages of your time series are automatically determined by the languages of the datasets,თქვენი პერიოდული შედარების ენები ავტომატურად განისაზღვრება მონაცემთა ცხრილის ენების მიერ
-214,ka.mongoid.hints.time_series.default_language,The time series language that is shown by default if no specific language is requested by user,"პერიოდული შედარების ენა რომელიც ნაჩვენებია მთავარ ენად, თუ სხვა ენა არ არის მოთხოვნილი მომხმარებლის მიერ"
-215,ka.mongoid.hints.time_series.category_ids,Assign the time series to one or more categories,აირჩიეთ პერიოდული შედარების ერთი ან მეტი კატეგორია
-216,ka.mongoid.hints.time_series.permalink,"An abbreviated name of the time series that you want to appear in the URL (e.g., 'wms' for 'Welfare Monitoring Survey'). All special characters will be automatically removed.","პერიოდული შედარების შემოკლებული სახელი, რომელიც გსურთ, რომ გამოჩნდეს URL-ში (მაგალითად, 'wms', რომელიც გულისხმობს 'Welfare Monitoring Survey'). ყველა სპეციალური სიმბოლოების ავტომატურად წაიშლება."
-217,ka.mongoid.hints.time_series_dataset.dataset_id,Select the dataset to add to this time series,აირჩიეთ მონაცემთა ცხრილი რათა დაამატოთ პერიოდულ შედარებაში
-218,ka.mongoid.hints.time_series_dataset.title,"The text that will represent this data set in the time series, most likely a time indicator. For example, if your dataset is from 2015, you could enter 2015; or if it is from January 2015, you can enter January 2015.","პერიოდულ შედარებაში ეს ტექსტი წარმოადგენ მონაცემთა ცხრილს, სავარაუდოდ დროის ინდიკატორს. მაგალითად, თუ თქვენი მონაცემთა ცხრილი არის 2015 წლიდან, თქვენ ჩაწერთ 2015 წელს, ან თუ ის იქნება 2015 წლის იანვრიდან, თქვენ ჩაწერთ 2015 წლის იანვარს."
-219,ka.mongoid.hints.time_series_dataset.sort_order,The order the datasets should appear in the time series,პერიოდული შედარებაში უნდა გამოჩნდეს მონაცემთა ცხრილის თანმიმდევრობა
-220,ka.mongoid.hints.time_series_question.code,The code of the question as you want it to appear in the time series,კითხვის კოდი რომლის გამოჩენაც გსურთ პერიოდული შედარებაში
-221,ka.mongoid.hints.time_series_question.text,The text of the question as you want it to appear in the time series,"კითხვის ტექსტი, რომლის გამოჩენაც გსურთ პერიოდული შედარებაში"
-222,ka.mongoid.hints.time_series_question.notes,Any special notes about the question,რაიმე სპეციალური შენიშვნა კითხვასთან დაკავშრებით
-223,ka.mongoid.hints.time_series_dataset_question.text,"Only questions from the dataset that are not already assigned to this time series will be shown. When you select a new question, the list of answers for this dataset below will automatically change.","მონაცემთა ცხრილიდან მხოლოდ ის კითხვები იქნება ნაჩვენები, რომლებიც არ არიან ჩანიშნულნი პერიოდულ შედარებაში."
-224,ka.mongoid.hints.time_series_dataset_question.notes,Any special notes about the question,რაიმე სპეციალური შენიშვნა კითხვასთან დაკავშრებით
-225,ka.mongoid.hints.time_series_answer.value,The value of the answer,პასუხის მნიშვნელობა
-226,ka.mongoid.hints.time_series_answer.text,The text of the answer,ტექსტის მნიშვნელობა
-227,ka.mongoid.hints.time_series_answer.can_exclude,"If selected, this answer will be available during analysis, but can be turned off if desired by the user.","მონიშვნის შემთხვევაში, ეს პასუხი ხელმისაწვდომი იქნება ანალიზის დროს, მაგრამ შესაძლებელი იქნება მისი გამორთვა მომხმარებლის სურვილის შემთხვევაში."
-228,ka.mongoid.hints.time_series_answer.sort_order,The order the answers should appear,პასუხების გამოჩენის თანმიმდევრობა
-229,ka.mongoid.hints.time_series_answer.default_text,This is the answer text from the default language which is provided to make it easier to complete the translation,"ეს არის პასუხის ტექსტი მთავარი ენიდან, რომელიც მოწოდებულია რათა თარგმანის გასაადვილებლად"
-230,ka.mongoid.hints.time_series_answer.dataset,The possible answers for the question selected from this dataset,მონაცემთა ცხრილიდან არჩეული შეკითხვის სავარაუდო პასუხები
-231,ka.mongoid.hints.page_content.name,Unique name for content (do not change!),კონტენტის უნიკალური სახელი (არ შეცვალოთ!)
-232,ka.mongoid.hints.page_content.title,Title to show above content,"სათაური, რომელიც გამოჩნდება კონტენტის ზემოთ"
-233,ka.mongoid.hints.page_content.content,Content to be shown on page,გვერდზე გამოსაჩენი კონტენტი
-234,ka.mongoid.hints.api_version.permalink,"Abbreviated Name Used in URL (e.g., v1)","URL-ში გამოყენებული აბრევიატურა (მაგ., v1)"
-235,ka.mongoid.hints.api_version.title,Title of the API Version,API ვერსიის დასახელება
-236,ka.mongoid.hints.api_version.public,Select 'Yes' to make the API Version documentation available to the world,მონიშნეთ 'დიახ' API ვერსიის საქვეყნოდ ხელმისაწვდომობისთვის
-237,ka.mongoid.hints.api_method.permalink,"Abbreviated Name Used in URL (e.g., v1)","URL-ში გამოყენებული აბრევიატურა (მაგ., v1)"
-238,ka.mongoid.hints.api_method.title,Title of API Method,API ვერსიის დასახელება
-239,ka.mongoid.hints.api_method.content,Explanation of how to use the API Method,API მეთოდის გამოყენები ახსნა
-240,ka.mongoid.hints.api_method.public,Select 'Yes' to make the API Method documentation available to the world,მონიშნეთ 'დიახ' API მეთოდის დოკუმენტაციის საქვეყნოდ ხელმისაწვდომობისთვის
-241,ka.mongoid.hints.api_method.sort_order,The order the API methods should appear,API მეთოდის გამოჩენის თანმიმდევრობა
-242,ka.errors.messages.required_field,is a required field.,სავალდებულო ველი
-243,ka.errors.messages.already_exists,already exists in the database.,უკვე არსებობს მონაცემთა ბაზაში
-244,ka.errors.messages.translation_default_lang,%{field_name} for Default Language '%{language}' %{msg},%{field_name} მთავარი ენისთვის '%{language}' %{msg}
-245,ka.errors.messages.translation_any_lang,%{field_name} for Language '%{language}' %{msg},%{field_name} ენისთვის '%{language}' %{msg}
-246,ka.errors.messages.invalid_language,'%{lang_locale}' is not a valid language locale,%{lang_locale}' შეუსაბამო ადგილობრივი ენაა
-247,ka.errors.messages.dataset_length,At least two datasets are needed for a time series to be saved.,პერიოდული შედარების შენახვისთვის სულ მცირე მონაცემთა ორი ცხრილია საჭირო
-248,ka.mass_uploads_msgs.bad_headers,The headers in the file do not match the headers from the template so it is not possible to determine what each column of data is. Please download the question template file and use the headers from that file.,"ფაილის საწყისი არ ემთხვევა ნიმუშის საწყის, შეუძლებელია მონაცემების თითოეული სვეტის განსაზღვრა. გთხოვთ ჩამოტვირთოთ კითხვის ნიმუშის ფაილი და გამოიყენოთ საწყისი ამ ფაილიდან."
-249,ka.mass_uploads_msgs.missing_code,Row %{n}: Could not find question with code '%{code}',რიგი %{n}: ამ კოდით კითხვა არ მოიძებნა '%{code}'
-250,ka.mass_uploads_msgs.questions.not_save,Row %{n}: Could not save question: %{msg},რიგი %{n}: კითხვის შენახვა შეუძლებელია: %{msg}
-251,ka.mass_uploads_msgs.answers.missing_answer,Row %{n}: Could not find answer with value '%{value}' for question with code '%{code}',რიგი %{n}: პასუხის მნიშვნელობის მოძებნა შეუძლებელია '%{value}' კითხვისთვის ამ კოდით '%{code}'
-252,ka.mass_uploads_msgs.answers.not_save,Row %{n}: Could not save answer: %{msg},რიგი %{n}: პასუხის შენახვა შეუძლებელია: %{msg}
-253,ka.publish_status.public,Public,საჯარო
-254,ka.publish_status.private,Private,კერძო
-255,ka.tabbed_translation_form.default_text,Default Text,მთავარი ტექსტი
-256,ka.tabbed_translation_form.default_url,Default URL,მთავარი URL
-257,ka.explore_time_series.na,N/A,არ არის ხელმისაწვდომი
-258,ka.explore_time_series.percent,Percent (%),პროცენტი (%)
-259,ka.explore_time_series.single.html.title,'<span class='code-highlight'>%{code}</span> - %{question}','<span class='code-highlight'>%{code}</span> - %{question}'
-260,ka.explore_time_series.single.html.title_filter,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}',<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'
-261,ka.explore_time_series.single.html.title_filter_value,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>',<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = %{value}'
-262,ka.explore_time_series.single.text.title,'%{code} - %{question}','%{code} - %{question}'
-263,ka.explore_time_series.single.text.title_filter, filtered by: '%{code} - %{variable}',გაფილტრულია: '%{code} - %{variable}'
-264,ka.explore_time_series.single.text.title_filter_value, filtered by: '%{code} - %{variable} = %{value}',გაფილტრულია: '%{code} - %{variable} = %{value}'
-265,ka.explore_time_series.subtitle.html.title,Total Responses: <span class='number'>%{num}</span>,მთლიანი გამოხმაურება: %{num}
-266,ka.explore_time_series.subtitle.html.title_filter,Total Responses Filtered by Answers to '<span class='number'>%{code}</span> - %{variable}': %{nums},პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{code} - %{variable}: %{nums}
-267,ka.explore_time_series.subtitle.text.title,Total Responses: %{num},მთლიანი პასუხები: %{num}
-268,ka.explore_time_series.subtitle.text.title_filter,Total Responses Filtered by Answers to '%{code} - %{variable}': %{nums},პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{code} - %{variable}: %{nums}
-269,ka.explore_data.hover_region,Hover over a Region,Hover over a Region
-270,ka.explore_data.na,N/A,არ არის ხელმისაწვდომი
-271,ka.explore_data.percent,Percent,პროცენტი
-272,ka.explore_data.comparative.html.title,<span class='title-highlight'>Answers to:</span> <br /> '<span class='code-highlight'>%{question_code}</span> - %{question}' <br /> <span class='title-highlight'>broken down by:</span> <br /> '<span class='code-highlight'>%{broken_down_by_code}</span> - %{broken_down_by}',<span class='title-highlight'>პასუხობს:</span> <br /> '<span class='code-highlight'>%{question_code}</span> - %{question}' <br /> <span class='title-highlight'>ჩაშლილია:</span> <br /> '<span class='code-highlight'>%{broken_down_by_code}</span> - %{broken_down_by}'
-273,ka.explore_data.comparative.html.title_filter,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}',<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'
-274,ka.explore_data.comparative.html.title_filter_value,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>',<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'
-275,ka.explore_data.comparative.html.map.title,'<span class='code-highlight'>%{code}</span> - %{question}' ,'<span class='code-highlight'>%{code}</span> - %{question}' 
-276,ka.explore_data.comparative.html.map.title_col,<br /> <span class='title-highlight'>broken down by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{broken_down_by} = <span class='code-highlight'>%{broken_down_by_answer}</span>' ,<br /> <span class='title-highlight'>ჩაშლილია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{broken_down_by} = <span class=”code-highlight”>%{broken_down_by_answer}</span>' 
-277,ka.explore_data.comparative.html.map.title_filter,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}',<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'
-278,ka.explore_data.comparative.html.map.title_filter_value,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>',<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'
-279,ka.explore_data.comparative.text.title,"Answers to: '%{question_code} - %{question}', broken down by: '%{broken_down_by_code} - %{broken_down_by}'","პასუხობს: '%{question_code} - %{question}', ჩაშლილია: '%{broken_down_by_code} - %{broken_down_by}'"
-280,ka.explore_data.comparative.text.title_filter,", filtered by: '%{code} - %{variable}'",", გაფილტრულია: '%{code} - %{variable}'"
-281,ka.explore_data.comparative.text.title_filter_value,", filtered by: '%{code} - %{variable} = %{value}'",", გაფილტრულია: '%{code} - %{variable} = %{value}'"
-282,ka.explore_data.comparative.text.map.title,'%{code} - %{question}' ,%{code} - %{question}'
-283,ka.explore_data.comparative.text.map.title_col,broken down by: '%{code} - %{broken_down_by} = %{broken_down_by_answer}',ჩაშლილია: '%{code} - %{broken_down_by} = %{broken_down_by_answer}'
-284,ka.explore_data.comparative.text.map.title_filter,", filtered by: '%{code} - %{variable}'",", გაფილტრულია: '%{code} - %{variable}'"
-285,ka.explore_data.comparative.text.map.title_filter_value,", filtered by: '%{code} - %{variable} = %{value}'",", გაფილტრულია: '%{code} - %{variable} = %{value}'"
-286,ka.explore_data.single.html.title,<span class='title-highlight'>Answers to:</span><br /> '<span class='code-highlight'>%{code}</span> - %{question}',<span class='title-highlight'>პასუხობს:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{question}'
-287,ka.explore_data.single.html.title_filter,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}',<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'
-288,ka.explore_data.single.html.title_filter_value,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>',<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'
-289,ka.explore_data.single.text.title,Answers to: '%{code} - %{question}' ,პასუხობს: '%{code} - %{question}'
-290,ka.explore_data.single.text.title_filter,", filtered by: '%{code} - %{variable}'",", გაფილტრულია: '%{code} - %{variable}'"
-291,ka.explore_data.single.text.title_filter_value,", filtered by: '%{code} - %{variable} = %{value}'",", გაფილტრულია: '%{code} - %{variable} = %{value}'"
-292,ka.explore_data.subtitle.html.title,Total Responses: <span class='number'>%{num}</span>,მთლიანი გამოხმაურება: <span class='number'>%{num}</span>
-293,ka.explore_data.subtitle.html.title_filter,Total Responses Filtered by Answers to '<span class='number'>%{code}</span> - %{variable}': %{nums},პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{code} - %{variable}: %{nums}
-294,ka.explore_data.subtitle.text.title,Total Responses: %{num},მთლიანი პასუხები: %{num}
-295,ka.explore_data.subtitle.text.title_filter,Total Responses Filtered by Answers to '%{code} - %{variable}': %{nums},პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{code} - %{variable}: %{nums}
-296,ka.datatable.search,Search,ძიება
-297,ka.datatable.copy.title,Copy,კოპირება
-298,ka.datatable.copy.tooltip,Copy to clipboard,კოპირება ბუფერში
-299,ka.datatable.csv.title,CSV,CSV
-300,ka.datatable.csv.tooltip,Save as CSV,CSV-ში შენახვა
-301,ka.datatable.xls.title,XLS,XLS
-302,ka.datatable.xls.tooltip,Save as XLS,XLS-ში შენახვა
-303,ka.datatable.pdf.title,PDF,PDF
-304,ka.datatable.pdf.tooltip,Save as PDF,PDF-ში შენახვა
-305,ka.datatable.print.title,Print,ბეჭდვა
-306,ka.datatable.print.tooltip,Print the table,ცხრილის ბეჭდვა
-307,ka.highcharts.context_title,Save this chart,გრაფიკის შენახვა
-308,ka.highcharts.png,PNG Image,PNG სურათი
-309,ka.highcharts.jpg,JPG Image,JPG სურათი
-310,ka.highcharts.pdf,PDF Document,PDF დოკუმენტი
-311,ka.highcharts.svg,SVG Vector Image,SVG ვექტორული სურათი
-312,ka.mailer.closing,"Sincerely,","პატივისცემით,"
-313,ka.mailer.signature,UNICEF Georgia,UNICEF საქართველო
-314,ka.mailer.unsubscribe,Click here to change your notification settings,დააჭირეთ და შეცვალეთ შეტყობინებების პარამეტრები
-315,ka.mailer.notification.new_user.subject,Welcome to UNICEF Georgia Data Portal!,კეთილი იყოს თქვენი მობრძანება UNICEF საქართველოს მონაცემთა პორტალზე!
-316,ka.mailer.notification.new_user.message,"Thank you for creating an account on UNICEF Georgia's open data portal and sharing some information about yourself. It is our hope that the content and data you find adds value to your work and understanding of trends related to the rights of children in Georgia. If you have any questions, you can contact us via our webform or send us an email.","მადლობას გიხდით UNICEF საქართველოს ღია მონაცემების პოტალზე ანგარიშის გახსნის და თქვენი მონაცემების გაზიარებისთვის. ვიმედოვნებთ, რომ მონაცემები და შინაარსი დაეხმარება თქვენს საქმიანობას საქართველოში ბავშვთა უფლებების დაცვის სფეროში. ნებისმიერი შეკითხვის შემთხვევაში, თქვენ შეგიძლიათ დაგვიკავშირდეთ ჩვენი ვებ-ფორმის საშუალებით ან მოგვწეროთ ელ-ფოსტაზე."
-317,ka.mailer.notification.new_data.subject,A new dataset has been added to UNICEF Georgia Data Portal!,UNICEF საქართველოს მონაცემების პორტალს დაემატა მონაცემთა ახალი ცხრილი
-318,ka.mailer.notification.new_data.message,"UNICEF Georgia has just uploaded new data for you to explore, visualize, and share.","UNICEF საქართველომ დაამატა მონაცემთა ახალი ცხრილი რათა თქვენ შეძლოთ მისი გაცნობა, გაზიარება და ვიზუალიზაცია."
-319,ka.mailer.contact.contact_form.subject,UNICEF Georgia Data Portal Contact Form,UNICEF საქართველოს მონაცემების პორტალის საკონტაქტი ფორმა
-320,ka.helpers.actions,Actions,აირჩიეთ
-321,ka.helpers.default_language,This is the default language that will show,"ეს არის მთავარი ენა, რომელიც გამოჩნდება"
-322,ka.helpers.search,Search,ძებნა
-323,ka.helpers.links.admin,Admin Section,ადმინისტრატორის განყოფილება
-324,ka.helpers.links.edit,Edit,შეცვლა
-325,ka.helpers.links.confirm,Are you sure?,დარწმუნებული ხართ?
-326,ka.helpers.links.destroy,Delete,წაშლა
-327,ka.helpers.links.new,New,ახალი
-328,ka.helpers.links.list,View All,ყველას ნახვა
-329,ka.helpers.links.back,View All,ყველას ნახვა
-330,ka.helpers.links.cancel,Cancel,გაუქმება
-331,ka.helpers.links.reset,Reset,საწყის კონფიგურაციაზე დაბრუნება
-332,ka.helpers.links.view,View,ნახვა
-333,ka.helpers.links.sign_in_facebook,Sign in with Facebook,Facebook-ით შესვლა
-334,ka.helpers.links.forgot_password,Forgot Your Password?,დაგავიწყდათ პაროლი?
-335,ka.helpers.links.change_password,Change Your Password,პაროლის შეცვლა
-336,ka.helpers.links.change_password2,Change Password,პაროლის შეცვლა
-337,ka.helpers.links.password_reset,Reset Password,პაროლის აღდგენა
-338,ka.helpers.links.sign_in2,Sign In,შესვლა
-339,ka.helpers.links.sign_in,Already have an account?,უკვე გაქვთ ანგარიში?
-340,ka.helpers.links.sign_up2,Sign Up,რეგისტრაცია
-341,ka.helpers.links.sign_up_question,Not registered?,არ გაქვთ ანგარიში?
-342,ka.helpers.links.sign_up,Create Account,დარეგისტრირდით
-343,ka.helpers.links.sign_up_title,Join %{app_name},შემოგვიერთდი “%{app_name}”
-344,ka.helpers.links.sign_out,Sign Out,გასვლა
-345,ka.helpers.links.sign_in_provider,Sign in with %{provider},შესვლა %{provider}-ით
-346,ka.helpers.links.sign_up_provider,Sign up with %{provider},დარეგისტრირდით  %{provider}-ით
-347,ka.helpers.links.sign_in_local_or_provider,or log in with your email and password,ან შეიყვანეთ თქვენი ელ. ფოსტა და პაროლი
-348,ka.helpers.links.reset_or_sign_in,sign in with facebook or reset your password,შედით facebook-ით ან შეცვალეთ პაროლი
-349,ka.helpers.links.explanation,We are excited you are interested in our data. We would like to know a bit about who you are. Please complete our form to continue downloading this dataset.,"მოხარულნი ვართ, რომ დაინტერესდით ჩვენი მონაცემებით. ჩვენ გვსურს გავიგოთ მცირე ინფორმაცია თქვენს შესახებ. მონაცემთა ცხრილის ჩამოსატვირთად, გთხოვთ შეავსოთ ჩვენი ფორმა."
-350,ka.helpers.links.download_and_sign_up,Download & Create Account,ჩამოტვირთვა და ანგარიშის გახსნა
-351,ka.helpers.links.like,Like,მოწონება
-352,ka.helpers.links.likes,Likes,მოწონება
-353,ka.helpers.links.menu,Menu,მენიუ
-354,ka.helpers.links.close,Close,დახურვა
-355,ka.helpers.links.select_all,Select All,ყველას მონიშვნა
-356,ka.helpers.links.select_none,Select None,არცერთის მონიშვნა
-357,ka.helpers.links.make_mappable,Make Mappable,დაიტანოს რუკაზე
-358,ka.helpers.links.add_question_text,Add Question Text,კითხვის ტექსტის დამატება
-359,ka.helpers.links.add_answer,Add Answer,პასუხის დამატება
-360,ka.helpers.links.add_answers,Add Answers,პასუხების დამატება
-361,ka.helpers.links.edit_answers,Edit Answers,პასუხების შესწორება
-362,ka.helpers.links.download,Download,ჩამოტვირთვა
-363,ka.helpers.links.view_data,View Data,მონაცემების ჩვენება
-364,ka.helpers.links.add_dataset,Add Dataset,მონაცემთა ცხრილის დამატება
-365,ka.helpers.links.remove_dataset,Remove Dataset,მონაცემთა ცხრილის წაშლა
-366,ka.helpers.links.add_report,Add Report,რეფორთის დამატება
-367,ka.helpers.links.remove_report,Remove Report,რეფორთის წაშლა
-368,ka.helpers.links.download_data,Download Data,მონაცემების ჩამოტვირთვა
-369,ka.helpers.links.back_dashboard,Back to Dashboard,Dashboard-ზე დაბრუნება
-370,ka.helpers.links.api_home,API Home,API საწყისი გვერდი
-371,ka.helpers.links.agreement,Agreement,შეთანხმება
-372,ka.helpers.links.add_highlight,Add to Highlights,გამორჩეულში დამატება
-373,ka.helpers.links.delete_highlight,Remove from Highlights,გამორჩეულიდან წაშლა
-374,ka.helpers.links.embed_chart,Embed Chart,ჩასმული გრაფიკი
-375,ka.helpers.links.embed_chart_prompt,Copy and paste this embed code into your web page:,დააკოპირეთ და ჩასვით ეს კოდი თქვენ საიტზე:
-376,ka.helpers.links.embed_chart_wide,px wide,px ფართო
-377,ka.helpers.links.embed_chart_high,px high,px მაღალი
-378,ka.helpers.titles.edit,Edit %{model},შეცვლა %{model}
-379,ka.helpers.titles.save,Save %{model},შენახვა %{model}
-380,ka.helpers.titles.new,New %{model},ახალი %{model}
-381,ka.helpers.titles.delete,Delete %{model},წაშლა %{model}
-382,ka.app.language.en,English,English
-383,ka.app.language.ka,ქართული,ქართული
-384,ka.app.buttons.back,View All,იხილეთ ყველა
-385,ka.app.buttons.list,View All,იხილეთ ყველა
-386,ka.app.buttons.admin,Admin Section,ადმინისტრატორის განყოფილება
-387,ka.app.buttons.delete,Delete,წაშლა
-388,ka.app.buttons.edit,Edit,შეცვლა
-389,ka.app.buttons.show,Show,ჩვენება
-390,ka.app.buttons.cancel,Cancel,გაუქმება
-391,ka.app.buttons.update,Update,განახლება
-392,ka.app.buttons.save,Save,შენახვა
-393,ka.app.buttons.create,Create,შექმნა
-394,ka.app.buttons.reset,Reset,საწყის კონფიგურაციაზე დაბრუნება
-395,ka.app.buttons.remove,Remove,ამოშლა
-396,ka.app.buttons.confirm,Are you sure?,დარწმუნებული ხართ?
-397,ka.app.buttons.new,New,ახალი
-398,ka.app.buttons.save_settings,Save Settings,პარამეტრების შენახვა
-399,ka.app.buttons.choose_category,Choose Category,კატეგორიის არჩევა
-400,ka.app.buttons.change_category,Change Category,კატეგორიის შეცვლა
-401,ka.app.common.xtraktr.app_name,X-Traktr,X-Traktr
-402,ka.app.common.xtraktr.app_slogan,Insert xtraktr slogn here!,Insert xtraktr slogn here!
-403,ka.app.common.xtraktr.app_description,Insert xtraktr description here.,Insert xtraktr description here.
-404,ka.app.common.unicef.app_name,UNICEF Georgia Data Portal,UNICEF საქართველოს ღია მონაცემები
-405,ka.app.common.unicef.app_slogan,Helping to solve by measuring,პრობლემების გადაჭრა საზომით
-406,ka.app.common.unicef.app_description,"In collaboration with a wide range of partners, UNICEF Georgia gathers evidence on the situation of children in Georgia. It uses this knowledge to inform national and global decision-making with the objective of improving children’s well-being.","UNICEF საქართველო, სხვა მრავალ პარტნიორთან ერთად აგროვებს მონაცემებს საქართველოში ბავშვთა კეთილდღეობის შესახებ არსებულ სიტუაციაზე. ამ ცოდნას ის გადასცემს ნაციონალურ და გლობალურ გადაწყვეტილების მიმღებ ორგანოებს რათა გაუმჯობესდეს ბავშვა კეთილდღეობა საქართველოში."
-407,ka.app.common.added_on,Added on: %{date},დამატებულია: %{date}
-408,ka.app.common.jumpstart,JumpStart Georgia,“ჯამპსტარტ ჯორჯია”
-409,ka.app.common.js_link_title,JumpStart Georgia - We communicate data better!,“ჯამპსტარტ ჯორჯია” - ჩვენ გაწვდით მონაცემებს უკეთ!
-410,ka.app.common.question,Question,კითხვა
-411,ka.app.common.questions,Questions,კითხვები
-412,ka.app.common.question_code,Code,კოდი
-413,ka.app.common.answers,Answers,პასუხები
-414,ka.app.common.notes,Notes,შენიშვნები
-415,ka.app.common.count,Count,დათვლა
-416,ka.app.common.percent,Percent,პროცენტი
-417,ka.app.common.dataset_dashboard,Dataset Dashboard,მონაცემთა Dashboard
-418,ka.app.common.time_series_dashboard,Time Series Dashboard,პერიოდული შედარების Dashboard
-419,ka.app.common.terms,I agree to the <a href='http://www.unicef.org/about/legal_terms.html' target='_blank'>Terms of Use</a>,თანახმა ვარ <a href='http://www.unicef.org/about/legal_terms.html' target='_blank'>გამოყენების წესებზე</a>
-420,ka.app.common.or,Or,ან
-421,ka.app.common.go,Go,ძებნა
-422,ka.app.common.share,Share,გაზიარება
-423,ka.app.common.codebook_title,Download the Codebook,კოდირების ჩამოტვირთვა
-424,ka.app.msgs.does_not_exist,You tried to access a page that does not exist.,"თქვენ ცდილობთ ისეთი გვერდის ნახვას, რომელიც არ არსებობს."
-425,ka.app.msgs.not_authorized,You are not authorized to view that page.,თქვენ არ გაქვთ ამ გვერდის ნახვის უფლება.
-426,ka.app.msgs.success_created,%{obj} was successfully created.,%{obj} შექმნილია.
-427,ka.app.msgs.success_updated,%{obj} was successfully updated.,%{obj} განახლებულია.
-428,ka.app.msgs.success_deleted,%{obj} was successfully deleted.,%{obj} was successfully deleted.
-429,ka.app.msgs.question_exclude_saved,Exclude question selections were saved.,გამორიცხული კითხვის არჩევა შენახულია
-430,ka.app.msgs.question_exclude_not_saved,An error occurred while saving the exclude question selections.,გამორიცხული კითხვის შენახვის დროს წარმოიშვა პრობლემა
-431,ka.app.msgs.answer_exclude_saved,Exclude answer selections were saved.,გამორიცხული პასუხის არჩევა შენახულია
-432,ka.app.msgs.answer_exclude_not_saved,An error occurred while saving the exclude answer selections.,გამორიცხული პასუხის შენახვის დროს წარმოიშვა პრობლემა
-433,ka.app.msgs.answer_can_exclude_saved,Can exclude answer selections were saved.,შესაძლებელი გამორიცხული პასუხის არჩევა შენახულია
-434,ka.app.msgs.answer_can_exclude_not_saved,An error occurred while saving the can exclude answer selections.,შესაძლებელი გამორიცხული პასუხის შენახვის დროს წარმოიშვა პრობლემა
-435,ka.app.msgs.mapping_saved,The question was successfully made mappable.,კითხვა წარმატებით იქნა რუკაზე დასატანი
-436,ka.app.msgs.mapping_not_save,An error occurred while making the question mappable.,რუკაზე კითხვის დატანის დროს წარმოიშვა პრობლემა
-437,ka.app.msgs.mapping_deleted,The question is no longer mappable.,კითხვა აღარ არის რუკაზე დასატანი
-438,ka.app.msgs.mapping_not_deleted,The question mapping could not be deleted.,კითხვის რუკაზე დატანის წაშლა შეუძლებელია
-439,ka.app.msgs.time_series_automatic_match,%{count} questions were added to your time series.,%{count} თქვენს პერიოდული შედარებაში კითხვები დაემატა
-440,ka.app.msgs.mass_upload_questions_error,The following error occurred while processing the questions: %{msg},კითხვების პროცესირების დროს შემდეგი სახის პრობლემები წარმოიშვა: %{msg}
-441,ka.app.msgs.mass_upload_questions_success,%{count} questions were updated!,%{count} კითხვები განახლდა!
-442,ka.app.msgs.mass_upload_answers_error,The following error occurred while processing the answers: %{msg},პასუხების პროცესირების დროს შემდეგი სახის პრობლემები წარმოიშვა: %{msg}
-443,ka.app.msgs.mass_upload_answers_success,%{count} answers were updated!,%{count} პასუხები განახლდა!
-444,ka.app.msgs.highlight_show_home_page_success,The highlight will now always appear on the home page.,გამორჩეული ყოველთვის გამოჩნდება მთავარ გვერდზე
-445,ka.app.msgs.highlight_deleted,The highlight has been deleted.,გამორჩეული წაიშალა
-446,ka.app.msgs.explore_error,An error occurred while processing your request.,თქვენი მოთხოვნის შერსულების დროს წარმოიშვა პრობლემა
-447,ka.app.msgs.user_settings_updated,Your settings were successfully updated.,თქვენი პარამეტრები წარამტებით განახლდა
-448,ka.app.msgs.api_key_created,Your API Access Token was successfully created.,თქვენი API-ს დაშვების გასაღები წარმატებით შეიქმნა
-449,ka.app.msgs.api_key_deleted,Your API Access Token was successfully deleted.,თქვენი API-ს დაშვების გასაღები წარმატებით წაიშალა
-450,ka.app.msgs.missing_user_info,We have made some changes to the site that require you to update your user settings. Sorry for the inconvenience.,საიტზე გარკვეული ცვლილებების გამო გთხოვთ განაახლოთ თქვენი პარამეტრები. ბოდიშს გიხდით გაუგებრობისთვის.
-451,ka.app.msgs.message_sent,Thank you for contacting us!,მადლობას გიხდით ჩვენთან დაკავშირებისთვის
-452,ka.app.menu.explore_data,Explore Data,მონაცემთა გაცნობა
-453,ka.app.menu.explore_time_series,Explore Time Series,პერიოდული შედარების გაცნობა
-454,ka.app.menu.datasets,Datasets,მონაცემთა ცხრილი
-455,ka.app.menu.time_series,Time Series,პერიოდული შედარება
-456,ka.app.menu.user_settings,User Settings,მომხმარებლის პარამეტრები
-457,ka.app.menu.about_dataset,About,შესახებ
-458,ka.app.menu.about_time_series,About,შესახებ
-459,ka.app.menu.all_datasets,All Datasets,მონაცემების ყველა ცხრილი
-460,ka.app.menu.all_time_series,All Time Series,პერიოდული შედარების ყველა ცხრილი
-461,ka.app.menu.contact,Contact,კონტაქტი
-462,ka.app.menu.api,API,API
-463,ka.app.menu.instructions,Instructions,ინსტრუქცია
-464,ka.app.menu.home,Home,მთავარი გვერდი
-465,ka.app.menu.disclaimer,Disclaimer,განაცხადი
-466,ka.app.menu.titles.explore_dataset,"Explore the dataset data through charts, maps and tables","მონაცემთა ცხრილში არსებული მონაცემების გაცნობა გრაფიკების, რუკების და ცხრილების საშუალებით"
-467,ka.app.menu.titles.explore_time_series,Explore the time series data through charts and tables,"პერიოდული შედარებაში არსებული მონაცემების გაცნობა გრაფიკების, რუკების და ცხრილების საშუალებით"
-468,ka.app.menu.titles.dataset_to_time_series,Explore this dataset as part of a time series,მონაცემთა ცხრილის გაცნობა როგორც პერიოდული შედარების ნაწილი
-469,ka.app.menu.admin_dataset.explore_data,Explore Data,მონაცემთა გაცნობა
-470,ka.app.menu.admin_dataset.heading,Dataset Options,მონაცემთა ცხრილის დეტალები
-471,ka.app.menu.admin_dataset.settings,Settings,პარამეტრები
-472,ka.app.menu.admin_dataset.qa,Edit Questions/Answers,კითხვების/პასუხების შესწორება
-473,ka.app.menu.admin_dataset.highlights,Highlights,გამორჩეული
-474,ka.app.menu.admin_dataset.warnings,Warnings,გაფრთხილება
-475,ka.app.menu.admin_dataset.mappable,Make Mappable,რუკაზე დასატანი
-476,ka.app.menu.admin_dataset.can_exlucde_answers,Answers Can Be Excluded,პასუხი შეიძლება გამოირიცხოს
-477,ka.app.menu.admin_dataset.exlucde_answers,Exclude Answers,პასუხის გამორიცხვა
-478,ka.app.menu.admin_dataset.exclude_questions,Exclude Questions,კითხვის გამორიცხვა
-479,ka.app.menu.admin_dataset.delete,Delete,წაშლა
-480,ka.app.menu.admin_dataset.private_share,Share Private Dataset,პირადი მონაცემთა ცხრილის გაზიარება
-481,ka.app.menu.admin_dataset.mass_changes,Mass Changes,ფართო ცვლილებები
-482,ka.app.menu.admin_time_series.explore_data,Explore Data,მონაცემების გაცნობა
-483,ka.app.menu.admin_time_series.heading,Time Series Options,პერიოდული შედარების დეტალები
-484,ka.app.menu.admin_time_series.settings,Settings,პარამეტრები
-485,ka.app.menu.admin_time_series.qa,Edit Questions/Answers,კითხვების/პასუხების შესწორება
-486,ka.app.menu.admin_time_series.highlights,Highlights,გამორჩეული
-487,ka.app.menu.admin_time_series.warnings,Warnings,გაფრთხილება
-488,ka.app.menu.admin_time_series.delete,Delete,წაშლა
-489,ka.app.menu.admin_time_series.private_share,Share Private Time Series,პირადი პერიოდული შედარების გაზიარება
-490,ka.user.age_group.g1,17-24,17-24
-491,ka.user.age_group.g2,25-34,25-34
-492,ka.user.age_group.g3,35-44,35-44
-493,ka.user.age_group.g4,45-54,45-54
-494,ka.user.age_group.g5,55-64,55-64
-495,ka.user.age_group.g6,above (>65),(>65)-ზე მეტი 
-496,ka.user.status.researcher,Researcher,მკვლევარი
-497,ka.user.status.student,Student,სტუდენტი
-498,ka.user.status.journalist,Journalist,ჟურნალისტი
-499,ka.user.status.ngo,NGO,არასამთავრობო ორგანიზაცია
-500,ka.user.status.government_official,Government Official,სამთავრობო სტრუქტურა
-501,ka.user.status.international_organization,International Organization,საერთაშორისო ორგანიზაცია
-502,ka.user.status.private_sector,Private Sector,კერძო სექტორი
-503,ka.user.status.other,Other,სხვა
-504,ka.user.wanna_account,"Tired of filling out this form? To avoid this form in the future, create an account.","დაიღალეთ ამ ფორმის შევსებით? მომავალში მისი თავიდან აცილების მიზნის, შექმენით ანგარიში."
-505,ka.layouts.nav.toggle,Toggle navigation,ნავიგაციის ჩართვა/გამორთვა
-506,ka.layouts.nav.back,Back to UNICEF.ge,UNICEF.ge-ზე დაბრუნება
-507,ka.layouts.explore_data.private_share_header,Privately Share '%{title}',პირადად გაზიარებული '%{title}'
-508,ka.layouts.explore_data.private_share_explanation,"You can copy and share the following URL with whomever you want to view '%{title}' even though your dataset is not shared with the public. These people will have the ability to explore your data, but not edit it.","თქვენ შეგიძლიათ დააკოპიროთ და გაუზიაროთ შემდეგი URL იმას , ვინც გსურთ რომ იხილოს '%{title}' იმ შემთხვევაშიც კი, თუ თქვენი მონაცემთა ცხრილი არ არის საჯაროდ გაზიარებული. ამ ადამიანებს ექნებათ საშუალება გაეცნონ თქვენს მონაცემებს, მაგრამ ვერ შეძლებენ მის შეცვლას და შესწორებას."
-509,ka.layouts.unsupported_browser.title,Unsupported Browser,არასათანადო ბრაუზერი
-510,ka.layouts.unsupported_browser.p1,We are sorry to report that your browser is out of date and will not properly render the content from this website.,სამწუხაროდ თქვენი ინტერნეტ ბრაუზერის მოხმარების ვადა გასულია და ვერ მოხდება ვებ-გვერდთან სრულად დაკავშირება.
-511,ka.layouts.unsupported_browser.p2,"On the bright side, there are several free browsers that you can download that are compatible with this site.",არსებობს რამდენიმე უფასო ბრაუზერი რომელის გადმოწერის შემდეგ შეძლებთ ვებ-გვერდით სარგებლობას.
-512,ka.layouts.unsupported_browser.chrome,Chrome,Chrome
-513,ka.layouts.unsupported_browser.firefox,Firefox,Firefox
-514,ka.layouts.unsupported_browser.ie,Internet Explorer (Windows only),Internet Explorer (მხოლოდ Windows-ზე)
-515,ka.layouts.unsupported_browser.opera,Opera,Opera
-516,ka.layouts.unsupported_browser.Safari,Safari,Safari
-517,ka.admin.index.title,Administration Section,ადმინისტრატორის განყოფილება
-518,ka.admin.index.users,Users,მომხმარებლები
-519,ka.admin.index.page_contents,Edit Text on Site,საიტზე ტექსტის რედაქტირება
-520,ka.admin.index.datasets,Datasets,მონაცემთა ცხრილი
-521,ka.admin.index.shapesets,Shapesets,ფორმების ცხრილი
-522,ka.admin.index.api_documentation,API Version Documentation,API ვერსიის დოკუმენტაცია
-523,ka.admin.index.download_api_requests,Download API Request History,API-ს მოთხოვნილი ისტორიის ჩამოტვირთვა
-524,ka.admin.index.download_download_requests,Download Download Request History,მოთხოვნილი ისტორიის ჩამოტვირთვა
-525,ka.admin.users.edit.title,Editing User,ცვლილებების შეტანა მომხმარებლის გვერდზე
-526,ka.admin.users.index.title,Users,მომხმარებლები
-527,ka.admin.users.new.title,New User,ახალი მომხმარებელი
-528,ka.admin.users.show.title,User Details,მომხმარებლის დეტალები
-529,ka.devise.mailer.reset_password_instructions.title,Hello %{nickname}!,"მოგესალმებით, %{nickname}!"
-530,ka.devise.mailer.reset_password_instructions.p1,"Someone has requested a link to change your password on %{app_name}, and you can do this through the link below.","მივიღეთ მოთხოვნა '%{app_name}' თქვენი პაროლის შეცვლის შესახებ. პაროლის შესაცვლელად, მიჰყევით შემდეგ ბმულს."
-531,ka.devise.mailer.reset_password_instructions.link_title,Change my password,პაროლის შეცვლა
-532,ka.devise.mailer.reset_password_instructions.p2,"If you didn't request this, please ignore this email.","თუ თქვენ არ მოგითხოვიათ პაროლის შეცვლა, გთხოვთ, არ მიაქციოთ ყურადღება ამ შეტყობინებას."
-533,ka.devise.mailer.reset_password_instructions.p3,Your password won't change until you access the link above and create a new one.,"თქვენი პაროლი იგივე დარჩება, სანამ არ გადახვალთ ზემოთ მითითებულ ბმულზე და შექმნით ახალ პაროლს."
-534,ka.settings.index.title,User Settings,მომხმარებლის პარამეტრები
-535,ka.settings.index.tabs.settings,Settings,პარამეტრები
-536,ka.settings.index.tabs.api,API Access Tokens,API-ს დაშვების გასაღები
-537,ka.settings.index.api_explanation1,"The API allows you to programmatically get information and run analyses on the datasets and time series available on this site. All API calls require an access token - a key that let's us know who is making the request. To get one, simply press the button below.","API საშუალებას გაძლევთ პროგრამულად მიიღოთ ინფორმაცია და ჩაატაროთ ანალიზი საიტზე არსებულ მონაცემთა ცხრილსა და პერიოდულ შედარებაში. API-ს ყველა გამოძაღება ითხოვს დაშვების გასაღებს, რომელიც გვამცნობს იმას, თუ ვინ აკეთებს მოთხოვნას. გამოძაღებისთვის უბრალოდ დააჭირეთ ქვემოთ მოცემულ ღილაკს."
-538,ka.settings.index.api_link_text,API Documentation section,API-ს დოკუმენტაციის სექცია
-539,ka.settings.index.api_explanation2,You can learn more about the API and how to use the Access Token by going to the [link].,[link]-ზე გადასვლით თქვენ შეგიძლია გაიგოთ მეტი API-ს და დაშვების გასაღების შესახებ. 
-540,ka.settings.index.no_api_keys,You do not have any API Access Tokens on file.,თქვენ არ გაქვთ API-ს დაშვების გასაღები ან ფაილი
-541,ka.settings.index.get_api,Get API Access Token,API-ს დაშვების გასაღების მიღება
-542,ka.settings.index.delete_api,Delete API Access Token,API-ს დაშვების გასაღების წაშლა
-543,ka.root.index.header_latest_datasets,Latest Datasets,უახლესი მონაცემთა ცხრილი
-544,ka.root.index.no_datasets,"At this time, no datasets have been loaded into the site.",ამ მომენტისთვის ვებ-გვერდზე არ ჩატვირთულა მონაცემთა ცხრილი
-545,ka.root.index.header_latest_time_series,Latest Time Series,უახლესი პერიოდული შედარება
-546,ka.root.index.no_time_series,"At this time, no time series have been created in the site.",ამ მომენტისთვის ვებ-გვერდზე არ შექმნილა პერიოდული შედარება.
-547,ka.root.index.wms_title,Welfare <br />Monitoring Survey,კეთილდღეობის <br />მონიტორინგის კვლევა
-548,ka.root.index.wms_slogan,"Comparing the <br />well-being of children <br />from 2009, 20011 and 2013","ბავშვთა კეთილდღეობის <br />შედარება <br />2009, 2011 და <br/>2013 წლებში"
-549,ka.root.index.header_highlights,Highlights,გამორჩეული
-550,ka.root.index.header_categories,Browse Categories,კატეგორიების დათვალიერება
-551,ka.root.index.search_datasets,Search Datasets,მონაცემთა ცხრილის ძებნა
-552,ka.root.contact.title,Contact,კონტაქტი
-553,ka.root.contact.send,Send,გაგზავნა
-554,ka.root.contact.error_title,An error has occurred,პრობლემა წარმოიშვა
-555,ka.root.instructions.title,Instructions,ინსტრუქცია
-556,ka.root.notes.title,Notes,შენიშვნები
-557,ka.root.explore_data.title,Explore the Data,მონაცემთა გაცნობა
-558,ka.root.explore_data.search_datasets,Search Datasets,მონაცემთა ცხრილის ძებნა
-559,ka.root.explore_data.sort_by.this,Sort By,დახარისხება
-560,ka.root.explore_data.sort_by.title,Title,დასახელება
-561,ka.root.explore_data.sort_by.release,Date Released,გამოქვეყნების თარიღი
-562,ka.root.explore_data.sort_by.publish,Date Published Here,აქ გამოქვეყნების თარიღი
-563,ka.root.explore_data.no_data,"At this time, no datasets have been loaded into the site.",ამ მომენტისთვის ვებ-გვერდზე არ ჩატვირთულა მონაცემთა ცხრილი
-564,ka.root.explore_data.no_match,"Sorry, no datasets match your search request.","უკაცრავად, თქვენი არცერთი მოთხოვნა არ ემთხვევა პერიოდული შედარებას"
-565,ka.root.explore_data_show.title,Explore the Data,პერიოდული შედარების მონაცემების გაცნობა
-566,ka.root.explore_time_series.title,Explore Time Series Data,პერიოდული შედარების მონაცემების გაცნობა
-567,ka.root.explore_time_series.search_time_series,Search Time Series,პერიოდული შედარების ძებნა
-568,ka.root.explore_time_series.sort_by.this,Sort By,დახარისხება
-569,ka.root.explore_time_series.sort_by.title,Title,დასახელება
-570,ka.root.explore_time_series.sort_by.publish,Date Published Here,აქ გამოქვეყნების თარიღი
-571,ka.root.explore_time_series.no_data,"At this time, no time series have been created in the site.",ამ მომენტისთვის ვებ-გვერდზე არ შექმნილა პერიოდული შედარება.
-572,ka.root.explore_time_series.no_match,"Sorry, no time series match your search request.","უკაცრავად, თქვენს მოთხოვნას არცერთი პერიოდული შედარება არ შეესაბამება"
-573,ka.root.explore_time_series_show.title,Explore Time Series Data,გაეცანით პერიოდული შედარების მონაცემებს
-574,ka.api.msgs.no_key,You must provide an API Access Token in order to use the API. You can quickly get a API Access Token by going to %{url}.,API-ს გამოსაყენებლად თქვენ უნდა წარმაოდგინოთ API-ს დაშვების გასაღები. თქენ მარტივად შეგიძლიათ API-ის დაშვების გასაღების მიღება შემდეგ მისამართზე გადასვლით %{url}.
-575,ka.api.msgs.no_dataset,The Dataset could not be found.,მონაცემთა ცხრილი ვერ მოიძებნა
-576,ka.api.msgs.no_question,The Question cound not be found.,კითხვა ვერ მოიძებნა
-577,ka.api.msgs.no_broken_down_by,The Broken Down By Question could not be found.,კითხვებით ჩაშლა ვერ მოიძებნა
-578,ka.api.msgs.no_filtered_by,The Filter By Question could not be found.,კითხვებით გაფილტრვა ვერ მოიძებნა
-579,ka.api.msgs.no_time_series,The Time Series could not be found.,პერიოდული შედარება ვერ მოიძებნა
-580,ka.api.msgs.no_time_series_dataset,The Time Series does not have any datasets assigned to it.,პერიოდული შედარებას არ აქვს მასთან დაკავშირებული მონაცემთა ცხრილი.
-581,ka.api.msgs.no_time_series_dataset_error,There was an error getting the data for the datasets in the time series.,პერიოდული შედარებაში მონაცემთა ცხრილის მიღების დროს წარმოიშვა პრობლემა.
-582,ka.api.index.title,API,API
-583,ka.api.index.no_versions,No documentation for the API has been created yet.,API-სთვის დოკუმენტაცია ჯერ არ შექმნილა
-584,ka.api.index.no_methods,No documentation for this version has been created yet.,ამ ვერსიისთვის დოკუმენტაცია ჯერ არ შექმნილა
-585,ka.api.documentation.no_content,No documentation for this method has been created yet.,ამ მეთოდისთვის დოკუმენტაცია ჯერ არ შექმნილა
-586,ka.datasets.index.stats.data_records,Data Records,მონაცემთა ჩაწერა
-587,ka.datasets.index.stats.good_questions,Analyzable Questions,გაანალიზებადი კითხვები
-588,ka.datasets.index.stats.no_text,No Question Text,კითხვის ტექსტი არ არის
-589,ka.datasets.index.stats.bad_answers,Bad Answers,არასწორი პასუხი
-590,ka.datasets.index.stats.no_answers,No Answers,პასუხის გარეშე
-591,ka.datasets.index.view_warnings,View Details,დეტალების ნახვა
-592,ka.datasets.warnings.title,Warnings,გაფრთხილება
-593,ka.datasets.warnings.tab_bad_answers,Questions with Bad Answers,კითხვა არასწორი პასუხით
-594,ka.datasets.warnings.tab_no_answers,Questions with No Answers,კითხვა პასუხის გარეშე
-595,ka.datasets.warnings.tab_no_text,Questions with No Text,კითხვა ტექსტის გარეშე
-596,ka.datasets.warnings.bad_answers,"The following %{number} questions contain values that were not listed as one of the possible answers. For example, the list of possible answers was 1, 2, 3 or 4 and one record had a value of 5. The records with the extra values will not be used during analysis.","წინამდებარე კითხვას %{number} გააჩნია ისეთი მნიშვნელობა, რომელიც არ იყო ჩამოთვლილი ერთ-ერთ სავარაუდო პასუხად. ეს მონაცემები, დამატებითი მნიშნელობებით, არ იქნება გამოყენებული ანალიზი დროს."
-597,ka.datasets.warnings.no_answers,"The following %{number} questions do not have a list of possible answers. For example, a question 'What is your age?' could come with answers like <20, 20-40, 40-60, >60 and each of these answers would represent a certain value like 1, 2, 3, 4 that is stored in the data. These questions will not be available for analysis unless a list of possible answers are provided.","წინამდებარე კითხვას %{number} გააჩნია ისეთი მნიშვნელობა, რომელიც არ იყო ჩამოთვლილი ერთ-ერთ სავარაუდო პასუხად. ეს მონაცემები, დამატებითი მნიშნელობებით, არ იქნება გამოყენებული ანალიზი დროს ვიდრე სავარაუდო პასუხების სია არ იქნება მოწოდებული."
-598,ka.datasets.warnings.no_text,"The following %{number} questions do not have text. For example a code of 'A1' was given, but no text describing what 'A1' represents was provided. These questions will not be available for analysis unless text is provided.","წინამდებარე კითხვას %{number} გააჩნია ისეთი მნიშვნელობა, რომელიც არ იყო ჩამოთვლილი ერთ-ერთ სავარაუდო პასუხად. ეს მონაცემები, დამატებითი მნიშნელობებით, არ იქნება გამოყენებული ანალიზი დროს ვიდრე ტექსტი არ იქნება მოწოდებული."
-599,ka.datasets.warnings.no_bad_answers,Congratulations! All of the data file data contains valid answers.,გილოცავთ! მონაცემების ფაილის ყველა მონაცემი შეიცავს სწორ პასუხს.
-600,ka.datasets.warnings.no_no_answers,Congratulations! All of the data file questions have answers.,გილოცავთ! მონაცემების ყველა ფაილს აქვს პასუხი.
-601,ka.datasets.warnings.no_no_text,Congratulations! All of the data file questions have text.,გილოცავთ! მონაცემების ყველა ფაილს აქვს ტექსტი.
-602,ka.datasets.warnings.no_warnings,Congratulations! Your data file contains no issues that may effect the way the data is analyzed.,გილოცავთ! თქენი მონაცემები არ შეიცავენ ისეთ საკითხებს რომლებსაც შეუძლიათ ზეგავლენა მოახდინონ მონაცემთა ანალიზზე.
-603,ka.datasets.exclude_questions.title,Questions to Exclude from Analysis,ანალიზიდან გამოსარიცხი კითხვები
-604,ka.datasets.exclude_questions.explanation,Use this page to indicate which questions should not be included during analysis.,გამოიყენეთ ეს გვერდი რათა მიუთითოთ რომელ შეკითხვას არ უნდა მოიცავდეს ანალიზი
-605,ka.datasets.exclude_questions.no_questions,There are no questions on file for this dataset.,ამ ცხრილისთვის არ არის კითხვები ან ფაილები
-606,ka.datasets.exclude_answers.title,Answers to Exclude from Analysis,ანალიზიდან გამოსარიცხი პასუხები
-607,ka.datasets.exclude_answers.explanation,Use this page to indicate which answers should not be included during analysis.,გამოიყენეთ ეს გვერდი რათა მიუთითოთ რომელ პასუხს არ უნდა მოიცავდეს ანალიზი
-608,ka.datasets.exclude_answers.no_questions,There are no questions on file for this dataset.,ამ ცხრილისთვის არ არის კითხვები ან ფაილები
-609,ka.datasets.can_exclude_answers.title,Answers That Can Be Excluded During Analysis,პასუხები რომლებიც ანალიზიდან შეიძლება გამოირიცხონ
-610,ka.datasets.can_exclude_answers.explanation,"Use this page to indicate which answers can be included during analysis, but have the ability to be excluded (e.g., answers like: Don't Know, Refuse to Answer, etc).","გამოიყენეთ ეს გვერდი რათა მიუთითოთ რომელი პასუხი შეიძლება იყოს ანალიზის დროს გამოყენებული, მაგრამ ჰქონდეს გამორიცხვის საშუალება (მაგ. ისეთი პასუხები, როგორიცაა არ ვიცი, უარი პასუხზე, ა.შ.)."
-611,ka.datasets.can_exclude_answers.no_questions,There are no questions on file for this dataset.,ამ ცხრილისთვის არ არის კითხვები ან ფაილები
-612,ka.datasets.mappable.title,Make Questions Mappable,გახადოს კითხვა რუკაზე დასატანი
-613,ka.datasets.mappable.explanation,Use this page to indicate which questions are geographic in nature so that the analysis screen can include a map.,"გამოყენეთ ეს გვერდი რათა მიუთითოთ როელი კითხვები არიან ბუნებრივად გეოგრაფიული ტიპის, რათა ანალიზის ეკრანს შეეძლოს რუკის გამოყენება."
-614,ka.datasets.mappable.no_shapes,"Sorry, at this time there are no pre-defined maps on file that you can use.","უკაცრავად, ამ დროისთვის ფაილში არ არის წინასწარ განსაზღვრული რუკები რომლის გამოყენებასაც თქვენ შეძლებდით."
-615,ka.datasets.mappable.add_shapes,Add Map Shapes,რუკის ფორმის დამატება
-616,ka.datasets.mappable.add_map_question,Add Mappable Question,რუკაზე დასატანი კითხვების დამატება
-617,ka.datasets.mappable_form.title,Mappable Question Form,რუკაზე დასატანი კითხვების ფორმა
-618,ka.datasets.mappable_form.no_questions,There are no questions available in '%{title}' to be made mappable.,"%{title}'-ში არ არის ისეთი ხელმისაწვდომი კითხვები, რომელიც შეიძლება იყოს რუკაზე დასატანი"
-619,ka.datasets.mappable_form.no_shapes,"Sorry, at this time there are no pre-defined maps on file that you can use.","უკაცრავად, ამ დროისთვის ფაილში არ არის წინასწარ განსაზღვრული რუკები რომლის გამოყენებასაც თქვენ შეძლებდით."
-620,ka.datasets.mappable_form.question_label,Question to make mappable,გახადოს კითხვა რუკაზე დასატანი
-621,ka.datasets.mappable_form.shapeset_label,Map to use,გამოყენებადი რუკა
-622,ka.datasets.mappable_form.matching_header,Mapping '[question]' to '[shapeset]',[question]' დატანა '[shapeset]' რუკაზე 
-623,ka.datasets.mappable_form.matching_explanation,"For each answer to '[question]', select the matching map shape from '[shapeset]'.","[question]'-ის თითოეული პასუხისთვის, აირჩიეთ შესატყვისი რუკის ფორმა '[shapeset]'-დან."
-624,ka.datasets.mappable_form_edit.title,Mappable Question Form,რუკაზე დასატანი კითხვების ფორმა
-625,ka.datasets.mappable_form_edit.matching_header,Mapping '%{question}' to '%{shapeset}',[question]' დატანა '[shapeset]' რუკაზე 
-626,ka.datasets.mappable_form_edit.matching_explanation,"For each answer to '%{question}', select the matching map shape from '%{shapeset}'.","[question]'-ის თითოეული პასუხისთვის, აირჩიეთ შესატყვისი რუკის ფორმა '[shapeset]'-დან."
-627,ka.datasets.form.reports,Reports,რეფორთები
-628,ka.datasets.form.header_add_report,Add a report for this dataset,მონაცემთა ცხრილში რეფორთის დამატება
-629,ka.datasets.highlights.title,Dataset Highlights,მონაცემთა ცხრილის გამორჩეულები
-630,ka.datasets.highlights.instructions,"Highlights are visuals (charts and maps) that highlight interesting aspects of your dataset and are shown on the dashboard page and the home page. 
+47,ka.mongoid.attributes.agreement.dataset_id,Dataset,მონაცემები
+48,ka.mongoid.attributes.agreement.dataset_type,File Type,File Type
+49,ka.mongoid.attributes.agreement.dataset_locale,Language,ენა
+50,ka.mongoid.attributes.agreement.download_type,Download Type,Download Type
+51,ka.mongoid.attributes.agreement.created_at,Date,თარიღი
+52,ka.mongoid.attributes.page_content.name,Unique Name,უნიკალური სახელი
+53,ka.mongoid.attributes.page_content.title,Title,სათაური
+54,ka.mongoid.attributes.page_content.content,Content,კონტენტი
+55,ka.mongoid.attributes.dataset.title,Title,სათაური
+56,ka.mongoid.attributes.dataset.description,Description,აღწერა
+57,ka.mongoid.attributes.dataset.methodology,Methodology,მეთოდოლოგია
+58,ka.mongoid.attributes.dataset.source,Source of Data,მონაცემთა წყარო
+59,ka.mongoid.attributes.dataset.source_url,URL to Source,წყაროს URL
+60,ka.mongoid.attributes.dataset.datafile,Data File,მონაცემების ფაილი
+61,ka.mongoid.attributes.dataset.has_warnings,Issues with Data,მონაცემების საკითხები
+62,ka.mongoid.attributes.dataset.stats,Dataset Stats,მონაცემთა ცხრილის სტატისტიკა
+63,ka.mongoid.attributes.dataset.codebook,Codebook,კოდირება
+64,ka.mongoid.attributes.dataset.released_at,Date Released,გამოქვეყნების თარიღი
+65,ka.mongoid.attributes.dataset.start_gathered_at,Date Started Gathering Data,მონაცემთა შეგროვების დაწყების თარიღი
+66,ka.mongoid.attributes.dataset.end_gathered_at,Date Finished Gathering Data,მონაცემთა შეგროვების დასრულების თარიღი
+67,ka.mongoid.attributes.dataset.gathered_at,Dates Collected,მონაცემები შეგროვებულია
+68,ka.mongoid.attributes.dataset.public,Make Available to the Public,გავხადოთ საჯაროდ ხელსმისაწვდომი
+69,ka.mongoid.attributes.dataset.languages,Languages of Dataset,მონაცემთა ცხრილის ენა
+70,ka.mongoid.attributes.dataset.default_language,Default Language,მთავარი ენა
+71,ka.mongoid.attributes.dataset.is_mappable,Has questions that are geographic in nature,აქვს კითხვები რომლებიც არიან ბუნებრივად გეოგრაფიული ტიპის
+72,ka.mongoid.attributes.dataset.created_at,Added On,დამატებულია
+73,ka.mongoid.attributes.dataset.reports,Reports,რეფორთები
+74,ka.mongoid.attributes.dataset.category_ids,Categories,კატეგორიები
+75,ka.mongoid.attributes.dataset.permalink,URL to Dataset,მონაცემთა URL-ი
+76,ka.mongoid.attributes.question.code,Question Code,კითხვის კოდი
+77,ka.mongoid.attributes.question.original_code,Question Code,კითხვის კოდი
+78,ka.mongoid.attributes.question.text,Question,კითხვა
+79,ka.mongoid.attributes.question.notes,Notes,შენიშვნა
+80,ka.mongoid.attributes.question.exclude,Exclude Question from Analysis,ანალიზიდან კითხვის გამორიცხვა
+81,ka.mongoid.attributes.question.exclude_download_header,Exclude Question from Analysis (leave blank to show question),ანალიზიდან კითხვის გამორიცხვა (დატოვე ადგილი კითხვი გამოსაჩენად)
+82,ka.mongoid.attributes.question.no_questions,There are no questions on file for this dataset.,მონაცემთა ამ ცხრილისთვის კითხვა ან ფაილი ვერ მოიძებნა
+83,ka.mongoid.attributes.question.is_mappable,Question has been setup to show answers on a map,კითხვის პასუხები რუკაზე გამოჩნდება
+84,ka.mongoid.attributes.question.has_code_answers,Has defined list of answers,განსაზღვრა პასუხების სია
+85,ka.mongoid.attributes.question.possible_answers,Possible Answer Values,შესაძლო პასუხების მნიშვნელობები
+86,ka.mongoid.attributes.question.data_answers,Answer Values in Data,პასუხების მნიშვნელობები მონაცემებში
+87,ka.mongoid.attributes.question.can_download,Include Question in Download for Public,Include Question in Download for Public
+88,ka.mongoid.attributes.question.has_map_adjustable_max_range,Max Range of Choropleth Map is Adjustable,Max Range of Choropleth Map is Adjustable
+89,ka.mongoid.attributes.answer.value,Value,მნიშვნელობა
+90,ka.mongoid.attributes.answer.text,Answer,პასუხი
+91,ka.mongoid.attributes.answer.exclude,Exclude Answer from Analysis,ანალიზიდან კითხვის გამორიცხვა
+92,ka.mongoid.attributes.answer.exclude_download_header,Exclude Answer from Analysis (leave blank to show answer),ანალიზიდან კითხვის გამორიცხვა (დატოვე ადგილი პასუხის გამოსაჩენად)
+93,ka.mongoid.attributes.answer.can_exclude,Can Exclude During Analysis,ანალიზის დროს შეუძლია გამორიცხვა
+94,ka.mongoid.attributes.answer.can_exclude_download_header,Can Exclude During Analysis (leave blank to always show answer),ანალიზის დროს შეუძლია გამორიცხვა (დატოვე ადგილი პასუხის მუდმივად გამოსაჩენად)
+95,ka.mongoid.attributes.answer.no_questions,There are no questions on file for this dataset.,ამ მონაცემთა ფაილზე არ არის კითხვები
+96,ka.mongoid.attributes.answer.sort_order,Sort Order,დახარისხების წყობა
+97,ka.mongoid.attributes.answer.shape_name,Name of Shape,ფორმის სახელი
+98,ka.mongoid.attributes.report.title,Title,დასახელება
+99,ka.mongoid.attributes.report.file,File,ფაილი
+100,ka.mongoid.attributes.report.released_at,Date Released,გამოქვეყნების თარიღი
+101,ka.mongoid.attributes.report.language_id,Language,ენა
+102,ka.mongoid.attributes.report.summary,Summary,მოკლე შეჯამება
+103,ka.mongoid.attributes.time_series.title,Title,დასახელება
+104,ka.mongoid.attributes.time_series.description,Description,აღწერა
+105,ka.mongoid.attributes.time_series.source,Source of Data,მონაცემთა წყარო
+106,ka.mongoid.attributes.time_series.source_url,URL to Source,წყაროს URL
+107,ka.mongoid.attributes.time_series.public,Make Available to the Public,გავხადოთ საჯაროდ ხელსმისაწვდომი
+108,ka.mongoid.attributes.time_series.created_at,Added On,დამატებულია
+109,ka.mongoid.attributes.time_series.datasets,Datasets,მონაცემები
+110,ka.mongoid.attributes.time_series.dates,Dates Included,მოიცავს თარიღებს
+111,ka.mongoid.attributes.time_series.category_ids,Categories,კატეგორიები
+112,ka.mongoid.attributes.time_series.permalink,URL to Time Series,პერიოდული შედარების URL-ი
+113,ka.mongoid.attributes.time_series_dataset.dataset_id,Dataset,მონაცემები
+114,ka.mongoid.attributes.time_series_dataset.title,Label,ეტიკეტი
+115,ka.mongoid.attributes.time_series_dataset.sort_order,Sort Order,დახარისხების წყობა
+116,ka.mongoid.attributes.time_series_question.code,Question Code,კითხვის კოდი
+117,ka.mongoid.attributes.time_series_question.original_code,Question Code,კითხვის კოდი
+118,ka.mongoid.attributes.time_series_question.text,Question,კითხვა
+119,ka.mongoid.attributes.time_series_question.notes,Notes,შენიშვნა
+120,ka.mongoid.attributes.time_series_dataset_question.code,Question Code,კითხვის კოდი
+121,ka.mongoid.attributes.time_series_dataset_question.text,Question,კითხვა
+122,ka.mongoid.attributes.time_series_dataset_question.notes,Notes,შენიშვნა
+123,ka.mongoid.attributes.time_series_dataset_question.dataset,Dataset,მონაცემები
+124,ka.mongoid.attributes.time_series_answer.value,Value,მნიშვნელობა
+125,ka.mongoid.attributes.time_series_answer.text,Answer,პასუხი
+126,ka.mongoid.attributes.time_series_answer.can_exclude,Can Exclude During Analysis,შეუძლია ანალიზის დროს გამორიცხვა
+127,ka.mongoid.attributes.time_series_answer.sort_order,Sort Order,დახარისხების წყობა
+128,ka.mongoid.attributes.shapeset.title,Title,დასახელება
+129,ka.mongoid.attributes.shapeset.description,Description,აღწერა
+130,ka.mongoid.attributes.shapeset.source,Source of Shapeset,ფორმების ცხრილის წყარო
+131,ka.mongoid.attributes.shapeset.source_url,URL to Souce,წყაროს URL
+132,ka.mongoid.attributes.shapeset.shapefile,GeoJSON File,GeoJSON ფაილი
+133,ka.mongoid.attributes.shapeset.languages,Languages of Shapeset,ფორმების ცხრილის ენა
+134,ka.mongoid.attributes.shapeset.default_language,Default Language,მთავარი ენა
+135,ka.mongoid.attributes.shapeset.created_at,Added On,დამატებულია
+136,ka.mongoid.attributes.api_version.permalink,Permalink,პერმალინკი
+137,ka.mongoid.attributes.api_version.title,Title,დასახელება
+138,ka.mongoid.attributes.api_version.public,Make Available to the Public,გავხადოთ საჯაროდ ხელსმისაწვდომი
+139,ka.mongoid.attributes.api_version.public_at,Released At,გამოქვეყნებულია
+140,ka.mongoid.attributes.api_version.updated_at,Last Updated At,ბოლო განახლება
+141,ka.mongoid.attributes.api_version.methods,Methods,მეთოდი
+142,ka.mongoid.attributes.api_method.permalink,Permalink,პერმალინკი
+143,ka.mongoid.attributes.api_method.title,Title,დასახელება
+144,ka.mongoid.attributes.api_method.content,Content,კონტენტი
+145,ka.mongoid.attributes.api_method.public,Make Available to the Public,გავხადოთ საჯაროდ ხელსმისაწვდომი
+146,ka.mongoid.attributes.api_method.public_at,Released At,გამოქვეყნებულია
+147,ka.mongoid.attributes.api_method.updated_at,Last Updated At,ბოლო განახლება
+148,ka.mongoid.attributes.api_method.sort_order,Sort Order,დახარისხების წყობა
+149,ka.mongoid.attributes.api_request.api_key_id,API Key ID,API-ს გასაღების ID
+150,ka.mongoid.attributes.api_request.user_id,User ID,მომხმარებლის ID
+151,ka.mongoid.attributes.api_request.user_name,Name,სახელი
+152,ka.mongoid.attributes.api_request.dataset_id,Dataset ID,მონაცემების ID
+153,ka.mongoid.attributes.api_request.dataset_title,Dataset,მონაცემები
+154,ka.mongoid.attributes.api_request.time_series_id,Time Series ID,პერიოდული შედარების ID
+155,ka.mongoid.attributes.api_request.time_series_title,Time Series,პერიოდული შედარება
+156,ka.mongoid.attributes.api_request.ip_address,IP Address,IP მისამართი
+157,ka.mongoid.attributes.api_request.locale,API Locale,API ადგილი
+158,ka.mongoid.attributes.api_request.api_version,API Version,API ვერსია
+159,ka.mongoid.attributes.api_request.action,API Action,API ქმედება
+160,ka.mongoid.attributes.api_request.question_code,Question Code,კითხვის კოდი
+161,ka.mongoid.attributes.api_request.broken_down_by_code,Broken Down By Code,ჩაშლილია კოდით
+162,ka.mongoid.attributes.api_request.filtered_by_code,Filtered By Code,გაფილტრულია კოდით
+163,ka.mongoid.attributes.api_request.can_exclude,Can Exclude,შეუძლია გამორიცხვა
+164,ka.mongoid.attributes.api_request.with_title,With Title,სახელით
+165,ka.mongoid.attributes.api_request.with_chart_data,With Chart Data,მონაცემების დიაგრამით
+166,ka.mongoid.attributes.api_request.with_map_data,With Map Data,მონაცემების რუკით
+167,ka.mongoid.attributes.api_request.browser,Browser,ბრაუზერი
+168,ka.mongoid.attributes.api_request.version,Browser Version,ბრაუზერის ვერსია
+169,ka.mongoid.attributes.api_request.os,OS,OS
+170,ka.mongoid.attributes.api_request.platform,OS Platform,OS პლატფორმა
+171,ka.mongoid.attributes.api_request.app,App,App
+172,ka.mongoid.attributes.api_request.is_mobile,Is Mobile Device?,მობილური მოწყობილობაა?
+173,ka.mongoid.attributes.api_request.created_at,Date,თარიღი
+174,ka.mongoid.attributes.api_key.key,Access Token,დაშვების გასაღები
+175,ka.mongoid.attributes.api_key.created_at,Date Created,შექმნის თარიღი
+176,ka.mongoid.attributes.category.name,Name,სახელი
+177,ka.mongoid.attributes.category.permalink,URL to Category,ბმული
+178,ka.mongoid.attributes.category.sort_order,Sort Order,დახარისხება
+179,ka.mongoid.hints.dataset.title,The title of your dataset,თქვენი მონაცემების სახელწოდება
+180,ka.mongoid.hints.dataset.description,Explain what your dataset is about,"აღწერეთ, რაზეა თქვენი მონაცემები"
+181,ka.mongoid.hints.dataset.methodology,Explain how the data in the dataset was collected,"აღწერეთ, როგორ იქნა შეგროვებული მონაცემები"
+182,ka.mongoid.hints.dataset.source,Who collected this data,ვინ შეაგროვა მონაცემები
+183,ka.mongoid.hints.dataset.source_url,"URL to the Source's website. Please include the http as part of the url (e.g., http://source.com)","წყაროს ვებგვერდის URL. გთხოვთ, გამოიყენით http როგორც url-ის ნაწილი (მაგ. http://source.com)"
+184,ka.mongoid.hints.dataset.datafile,"Only sav, dta, csv, xls, xlsx formats are allowed","დასაშვებია მხოლოდ sav, dta, csv, xls, xlsx ფორმატები"
+185,ka.mongoid.hints.dataset.datafile_read_only,"At this time, you cannot load a new datafile to add or replace existing information","ამ დროისთვის, არ შეგიძლიათ მონაცემთა ახალი ფაილის ატვირთვა ახლის დასამატებლად ან ძველის ჩანასაცვლებლად"
+186,ka.mongoid.hints.dataset.codebook,"Only txt, pdf, doc, docx formats are allowed","დასაშვებია მხოლოდ txt, pdf, doc, docx ფორმატები"
+187,ka.mongoid.hints.dataset.released_at,Date the dataset was released to the public,მონაცემების საჯაროდ გამოქვეყნების თარიღი
+188,ka.mongoid.hints.dataset.start_gathered_at,Date the data gathering process began,მონაცემების შეგროვების დაწყების თარიღი
+189,ka.mongoid.hints.dataset.end_gathered_at,Date the data gathering process finished,მონაცემების შეგროვების დასრულების თარიღი
+190,ka.mongoid.hints.dataset.public,Select 'Yes' to make your dataset available to the world,"მონიშნეთ 'დიახ', რათა თქვენი მონაცემები საჯაროდ ხელმისაწვდომი გახდეს "
+191,ka.mongoid.hints.dataset.languages,"Even though your dataset may be in one language, you can use these forms to translate all of the questions and answers into any language you desire.","იმ შემთხვევაშიც კი, თუ თქვენი მონაცემები მხოლოდ ერთ ენაზეა, თქვენ შეგიძლიათ ამ ფორმების გამოყენება, რათა თარგმნოთ ყველა კითხვა და პასუხი თქვენთვის სასურველ ნებისმიერ ენაზე"
+192,ka.mongoid.hints.dataset.default_language,The dataset language that is shown by default if no specific language is requested by user,"მონაცემთა ენა, რომელიც ნაჩვენებია მთავარ ენად, თუ რომელიმე კონკრეტული ენა არ არის მოთხოვნილი მომხმარებლის მიერ"
+193,ka.mongoid.hints.dataset.category_ids,Assign the dataset to one or more categories,მიაკუთვნეთ მონაცემები ერთ ან მეტ კატეგორიას
+194,ka.mongoid.hints.dataset.permalink,"An abbreviated name of the dataset that you want to appear in the URL (e.g., 'wms' for 'Welfare Monitoring Survey'). All special characters will be automatically removed.","მონაცემების შემოკლებული სახელი, რომელიც გსურთ, რომ გამოჩნდეს URL-ში (მაგალითად, 'wms', რომელიც გულისხმობს 'Welfare Monitoring Survey'). ყველა სპეციალური სიმბოლოების ავტომატურად წაიშლება."
+195,ka.mongoid.hints.shapeset.title,The title of your shapeset,სახელწოდება ფორმების კრებულისთვის
+196,ka.mongoid.hints.shapeset.description,Short summary of what is in the shapeset,ფორმების ცხრილის შინაარსის მოკლე აღწერა
+197,ka.mongoid.hints.shapeset.source,Who put the shapeset together,ვინ დააყენა ფორმების ცხრილი ერთად
+198,ka.mongoid.hints.shapeset.source_url,"URL to the Source's website. Please include the http as part of the url (e.g., http://source.com)",წყაროს ვებ გვერდზე URL. გთხოვთ გამოიყენით http როგორც url-ის ნაწილი (მაგ. http://source.com)
+199,ka.mongoid.hints.shapeset.shapefile,Only json and geojson formats are allowed,დასაშვებია მხოლოდ json და geojson ფორმატები
+200,ka.mongoid.hints.shapeset.languages,"Even though your shapeset may be in one language, you can use this form to translate all of the shapeset into any language you desire.","იმ შემთხვევაშიც კი, თუ თქვენი მონაცემები მხოლოდ ერთ ენაზეა, თქვენ შეგიძლიათ ამ ფორმების გამოყენება რათა თარგმნოთ ყველა კითხვა და პასუხი თქვენთვის სასურველ ნებისმიერ ენაზე"
+201,ka.mongoid.hints.shapeset.default_language,The shapeset language that is used by default if no specific language is requested,"მონაცემთა ცხრილის ენა რომელიც გამოყენებულია როგორც მთავარი ენა, თუ რომელიმე კონკრეტული ენა არ არის მოთხოვნილი"
+202,ka.mongoid.hints.question.text,The text of the question,კითხვის ტექსტი
+203,ka.mongoid.hints.question.notes,Any special notes about the question,რაიმე სპეციალური შენიშვნა კითხვასთან დაკავშრებით
+204,ka.mongoid.hints.question.exclude,"If selected, this question will not be available during analysis.",მონიშვნის შემთხვევაში ეს კითხვა არ იქნება ხელმისაწვდომი ანალიზის დროს
+205,ka.mongoid.hints.question.is_mappable,"If the question is mappable in nature, you can match the question to a shapeset and be able to analyize the question on a map.","თუ კითხვები ბუნებრივად შეიძლება დატანილი იყვნენ რუკაზე, შეგიძლიათ დაამთხვიოთ კითხვა ფორმები ცხრილს და რუკაზე გაანალიზოთ შეკითხვა"
+206,ka.mongoid.hints.question.can_download,"If selected, this question will be included in the data download available to the public.","If selected, this question will be included in the data download available to the public."
+207,ka.mongoid.hints.answer.value,The value of the answer,პასუხის მნიშვნელობა
+208,ka.mongoid.hints.answer.text,The text of the answer,პასუხის ტექსტი
+209,ka.mongoid.hints.answer.exclude,"If selected, this answer will not be available during analysis.",მონიშვნის შემთხვევაში ეს კითხვა არ იქნება ხელმისაწვდომი ანალიზის დროს
+210,ka.mongoid.hints.answer.can_exclude,"If selected, this answer will be available during analysis, but can be turned off if desired by the user.","მონიშვნის შემთხვევაში ეს კითხვა იქნება ხელმისაწვდომი ანალიზის დროს, მაგრამ მომხმარებლის სურვილის შემთხვევაში ის შეიძლება გამოირთოს"
+211,ka.mongoid.hints.answer.sort_order,The order the answers should appear,გამოსაჩენი პასუხების წყობა
+212,ka.mongoid.hints.answer.default_text,This is the answer text from the default language which is provided to make it easier to complete the translation,"ეს არის პასუხის ტექსტი მთავარი ენიდან, რომელიც მოწოდებულია რათა თარგმანის გასაადვილებლად"
+213,ka.mongoid.hints.report.title,The title of the report,რეფორთის დასახელება
+214,ka.mongoid.hints.report.file,"The report file in pdf, doc, odt or txt format","რეფორთის ფაილი pdf, doc, odt ან txt დოკუმენტებში"
+215,ka.mongoid.hints.report.released_at,Date the report was released to the public,რეფორთის საჯაროდ გამოქვეყნების თარიღი
+216,ka.mongoid.hints.report.language_id,The language the report is written in,ენა რომელშიც რეფორთი არის დაწერილი
+217,ka.mongoid.hints.report.summary,A brief summary of the report,რეფორთის მოკლე აღწერა
+218,ka.mongoid.hints.mappable.question,Select the question that you want to have the answers appear on a map during analysis.,აირჩიეთ კითხვა რომელის პასუხიც გსურთ გამოჩნდეს რუკაზე ანალიზის დროს
+219,ka.mongoid.hints.mappable.shapeset,Select the shapeset to use for this question.,არიჩიეთ ამ კითხვის გამოსაყენებელი ფორმების ცხრილი
+220,ka.mongoid.hints.time_series.title,The title of your time series,პერიოდული შედარების დასახელება
+221,ka.mongoid.hints.time_series.description,Explain what your time series is about,ახსენით რას ეხება თქვენი პერიოდული შედარება
+222,ka.mongoid.hints.time_series.public,Select 'Yes' to make your time series available to the world,აირჩიეთ 'დიახ' რათა თქვენი პერიოდული შედარება გახდეს მსოფლიოსთვის ხელმისაწვდომი
+223,ka.mongoid.hints.time_series.languages,The languages of your time series are automatically determined by the languages of the datasets,თქვენი პერიოდული შედარების ენები ავტომატურად განისაზღვრება მონაცემთა ცხრილის ენების მიერ
+224,ka.mongoid.hints.time_series.default_language,The time series language that is shown by default if no specific language is requested by user,"პერიოდული შედარების ენა რომელიც ნაჩვენებია მთავარ ენად, თუ სხვა ენა არ არის მოთხოვნილი მომხმარებლის მიერ"
+225,ka.mongoid.hints.time_series.category_ids,Assign the time series to one or more categories,აირჩიეთ პერიოდული შედარების ერთი ან მეტი კატეგორია
+226,ka.mongoid.hints.time_series.permalink,"An abbreviated name of the time series that you want to appear in the URL (e.g., 'wms' for 'Welfare Monitoring Survey'). All special characters will be automatically removed.","პერიოდული შედარების შემოკლებული სახელი, რომელიც გსურთ, რომ გამოჩნდეს URL-ში (მაგალითად, 'wms', რომელიც გულისხმობს 'Welfare Monitoring Survey'). ყველა სპეციალური სიმბოლოების ავტომატურად წაიშლება."
+227,ka.mongoid.hints.time_series_dataset.dataset_id,Select the dataset to add to this time series,აირჩიეთ მონაცემთა ცხრილი რათა დაამატოთ პერიოდულ შედარებაში
+228,ka.mongoid.hints.time_series_dataset.title,"The text that will represent this data set in the time series, most likely a time indicator. For example, if your dataset is from 2015, you could enter 2015; or if it is from January 2015, you can enter January 2015.","პერიოდულ შედარებაში ეს ტექსტი წარმოადგენ მონაცემთა ცხრილს, სავარაუდოდ დროის ინდიკატორს. მაგალითად, თუ თქვენი მონაცემთა ცხრილი არის 2015 წლიდან, თქვენ ჩაწერთ 2015 წელს, ან თუ ის იქნება 2015 წლის იანვრიდან, თქვენ ჩაწერთ 2015 წლის იანვარს."
+229,ka.mongoid.hints.time_series_dataset.sort_order,The order the datasets should appear in the time series,პერიოდული შედარებაში უნდა გამოჩნდეს მონაცემთა ცხრილის თანმიმდევრობა
+230,ka.mongoid.hints.time_series_question.code,The code of the question as you want it to appear in the time series,კითხვის კოდი რომლის გამოჩენაც გსურთ პერიოდული შედარებაში
+231,ka.mongoid.hints.time_series_question.text,The text of the question as you want it to appear in the time series,"კითხვის ტექსტი, რომლის გამოჩენაც გსურთ პერიოდული შედარებაში"
+232,ka.mongoid.hints.time_series_question.notes,Any special notes about the question,რაიმე სპეციალური შენიშვნა კითხვასთან დაკავშრებით
+233,ka.mongoid.hints.time_series_dataset_question.text,"Only questions from the dataset that are not already assigned to this time series will be shown. When you select a new question, the list of answers for this dataset below will automatically change.","მონაცემთა ცხრილიდან მხოლოდ ის კითხვები იქნება ნაჩვენები, რომლებიც არ არიან ჩანიშნულნი პერიოდულ შედარებაში."
+234,ka.mongoid.hints.time_series_dataset_question.notes,Any special notes about the question,რაიმე სპეციალური შენიშვნა კითხვასთან დაკავშრებით
+235,ka.mongoid.hints.time_series_answer.value,The value of the answer,პასუხის მნიშვნელობა
+236,ka.mongoid.hints.time_series_answer.text,The text of the answer,ტექსტის მნიშვნელობა
+237,ka.mongoid.hints.time_series_answer.can_exclude,"If selected, this answer will be available during analysis, but can be turned off if desired by the user.","მონიშვნის შემთხვევაში, ეს პასუხი ხელმისაწვდომი იქნება ანალიზის დროს, მაგრამ შესაძლებელი იქნება მისი გამორთვა მომხმარებლის სურვილის შემთხვევაში."
+238,ka.mongoid.hints.time_series_answer.sort_order,The order the answers should appear,პასუხების გამოჩენის თანმიმდევრობა
+239,ka.mongoid.hints.time_series_answer.default_text,This is the answer text from the default language which is provided to make it easier to complete the translation,"ეს არის პასუხის ტექსტი მთავარი ენიდან, რომელიც მოწოდებულია რათა თარგმანის გასაადვილებლად"
+240,ka.mongoid.hints.time_series_answer.dataset,The possible answers for the question selected from this dataset,მონაცემთა ცხრილიდან არჩეული შეკითხვის სავარაუდო პასუხები
+241,ka.mongoid.hints.page_content.name,Unique name for content (do not change!),კონტენტის უნიკალური სახელი (არ შეცვალოთ!)
+242,ka.mongoid.hints.page_content.title,Title to show above content,"სათაური, რომელიც გამოჩნდება კონტენტის ზემოთ"
+243,ka.mongoid.hints.page_content.content,Content to be shown on page,გვერდზე გამოსაჩენი კონტენტი
+244,ka.mongoid.hints.api_version.permalink,"Abbreviated Name Used in URL (e.g., v1)","URL-ში გამოყენებული აბრევიატურა (მაგ., v1)"
+245,ka.mongoid.hints.api_version.title,Title of the API Version,API ვერსიის დასახელება
+246,ka.mongoid.hints.api_version.public,Select 'Yes' to make the API Version documentation available to the world,მონიშნეთ 'დიახ' API ვერსიის საქვეყნოდ ხელმისაწვდომობისთვის
+247,ka.mongoid.hints.api_method.permalink,"Abbreviated Name Used in URL (e.g., v1)","URL-ში გამოყენებული აბრევიატურა (მაგ., v1)"
+248,ka.mongoid.hints.api_method.title,Title of API Method,API ვერსიის დასახელება
+249,ka.mongoid.hints.api_method.content,Explanation of how to use the API Method,API მეთოდის გამოყენები ახსნა
+250,ka.mongoid.hints.api_method.public,Select 'Yes' to make the API Method documentation available to the world,მონიშნეთ 'დიახ' API მეთოდის დოკუმენტაციის საქვეყნოდ ხელმისაწვდომობისთვის
+251,ka.mongoid.hints.api_method.sort_order,The order the API methods should appear,API მეთოდის გამოჩენის თანმიმდევრობა
+252,ka.mongoid.hints.category.name,Name of category,კატეგორიის სახელი
+253,ka.mongoid.hints.category.permalink,This text needs to match the name of the icon image file,This text needs to match the name of the icon image file
+254,ka.mongoid.hints.category.sort_order,The order the categories should appear,The order the categories should appear
+255,ka.errors.messages.required_field,is a required field.,სავალდებულო ველი
+256,ka.errors.messages.already_exists,already exists in the database.,უკვე არსებობს მონაცემთა ბაზაში
+257,ka.errors.messages.translation_default_lang,%{field_name} for Default Language '%{language}' %{msg},%{field_name} მთავარი ენისთვის '%{language}' %{msg}
+258,ka.errors.messages.translation_any_lang,%{field_name} for Language '%{language}' %{msg},%{field_name} ენისთვის '%{language}' %{msg}
+259,ka.errors.messages.invalid_language,'%{lang_locale}' is not a valid language locale,%{lang_locale}' შეუსაბამო ადგილობრივი ენაა
+260,ka.errors.messages.dataset_length,At least two datasets are needed for a time series to be saved.,პერიოდული შედარების შენახვისთვის სულ მცირე მონაცემთა ორი ცხრილია საჭირო
+261,ka.mass_uploads_msgs.bad_headers,The headers in the file do not match the headers from the template so it is not possible to determine what each column of data is. Please download the question template file and use the headers from that file.,"ფაილის საწყისი არ ემთხვევა ნიმუშის საწყის, შეუძლებელია მონაცემების თითოეული სვეტის განსაზღვრა. გთხოვთ ჩამოტვირთოთ კითხვის ნიმუშის ფაილი და გამოიყენოთ საწყისი ამ ფაილიდან."
+262,ka.mass_uploads_msgs.missing_code,Row %{n}: Could not find question with code '%{code}',რიგი %{n}: ამ კოდით კითხვა არ მოიძებნა '%{code}'
+263,ka.mass_uploads_msgs.questions.not_save,Row %{n}: Could not save question: %{msg},რიგი %{n}: კითხვის შენახვა შეუძლებელია: %{msg}
+264,ka.mass_uploads_msgs.answers.missing_answer,Row %{n}: Could not find answer with value '%{value}' for question with code '%{code}',რიგი %{n}: პასუხის მნიშვნელობის მოძებნა შეუძლებელია '%{value}' კითხვისთვის ამ კოდით '%{code}'
+265,ka.mass_uploads_msgs.answers.not_save,Row %{n}: Could not save answer: %{msg},რიგი %{n}: პასუხის შენახვა შეუძლებელია: %{msg}
+266,ka.publish_status.public,Public,საჯარო
+267,ka.publish_status.private,Private,კერძო
+268,ka.tabbed_translation_form.default_text,Default Text,მთავარი ტექსტი
+269,ka.tabbed_translation_form.default_url,Default URL,მთავარი URL
+270,ka.explore_time_series.na,N/A,არ არის ხელმისაწვდომი
+271,ka.explore_time_series.percent,Percent (%),პროცენტი (%)
+272,ka.explore_time_series.single.html.title,'<span class='code-highlight'>%{code}</span> - %{question}','<span class='code-highlight'>%{code}</span> - %{question}'
+273,ka.explore_time_series.single.html.title_filter,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}',<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'
+274,ka.explore_time_series.single.html.title_filter_value,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>',<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = %{value}'
+275,ka.explore_time_series.single.text.title,'%{code} - %{question}','%{code} - %{question}'
+276,ka.explore_time_series.single.text.title_filter, filtered by: '%{code} - %{variable}',გაფილტრულია: '%{code} - %{variable}'
+277,ka.explore_time_series.single.text.title_filter_value, filtered by: '%{code} - %{variable} = %{value}',გაფილტრულია: '%{code} - %{variable} = %{value}'
+278,ka.explore_time_series.subtitle.html.title,Total Responses: <span class='number'>%{num}</span>,მთლიანი გამოხმაურება: %{num}
+279,ka.explore_time_series.subtitle.html.title_filter,Total Responses Filtered by Answers to '<span class='number'>%{code}</span> - %{variable}': %{nums},პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{code} - %{variable}: %{nums}
+280,ka.explore_time_series.subtitle.text.title,Total Responses: %{num},მთლიანი პასუხები: %{num}
+281,ka.explore_time_series.subtitle.text.title_filter,Total Responses Filtered by Answers to '%{code} - %{variable}': %{nums},პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{code} - %{variable}: %{nums}
+282,ka.explore_data.hover_region,Hover over a Region,Hover over a Region
+283,ka.explore_data.na,N/A,არ არის ხელმისაწვდომი
+284,ka.explore_data.percent,Percent,პროცენტი
+285,ka.explore_data.comparative.html.title,<span class='title-highlight'>Answers to:</span> <br /> '<span class='code-highlight'>%{question_code}</span> - %{question}' <br /> <span class='title-highlight'>broken down by:</span> <br /> '<span class='code-highlight'>%{broken_down_by_code}</span> - %{broken_down_by}',<span class='title-highlight'>პასუხობს:</span> <br /> '<span class='code-highlight'>%{question_code}</span> - %{question}' <br /> <span class='title-highlight'>ჩაშლილია:</span> <br /> '<span class='code-highlight'>%{broken_down_by_code}</span> - %{broken_down_by}'
+286,ka.explore_data.comparative.html.title_filter,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}',<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'
+287,ka.explore_data.comparative.html.title_filter_value,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>',<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'
+288,ka.explore_data.comparative.html.map.title,'<span class='code-highlight'>%{code}</span> - %{question}' ,'<span class='code-highlight'>%{code}</span> - %{question}' 
+289,ka.explore_data.comparative.html.map.title_col,<br /> <span class='title-highlight'>broken down by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{broken_down_by} = <span class='code-highlight'>%{broken_down_by_answer}</span>' ,<br /> <span class='title-highlight'>ჩაშლილია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{broken_down_by} = <span class=”code-highlight”>%{broken_down_by_answer}</span>' 
+290,ka.explore_data.comparative.html.map.title_filter,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}',<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'
+291,ka.explore_data.comparative.html.map.title_filter_value,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>',<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'
+292,ka.explore_data.comparative.text.title,"Answers to: '%{question_code} - %{question}', broken down by: '%{broken_down_by_code} - %{broken_down_by}'","პასუხობს: '%{question_code} - %{question}', ჩაშლილია: '%{broken_down_by_code} - %{broken_down_by}'"
+293,ka.explore_data.comparative.text.title_filter,", filtered by: '%{code} - %{variable}'",", გაფილტრულია: '%{code} - %{variable}'"
+294,ka.explore_data.comparative.text.title_filter_value,", filtered by: '%{code} - %{variable} = %{value}'",", გაფილტრულია: '%{code} - %{variable} = %{value}'"
+295,ka.explore_data.comparative.text.map.title,'%{code} - %{question}' ,%{code} - %{question}'
+296,ka.explore_data.comparative.text.map.title_col,broken down by: '%{code} - %{broken_down_by} = %{broken_down_by_answer}',ჩაშლილია: '%{code} - %{broken_down_by} = %{broken_down_by_answer}'
+297,ka.explore_data.comparative.text.map.title_filter,", filtered by: '%{code} - %{variable}'",", გაფილტრულია: '%{code} - %{variable}'"
+298,ka.explore_data.comparative.text.map.title_filter_value,", filtered by: '%{code} - %{variable} = %{value}'",", გაფილტრულია: '%{code} - %{variable} = %{value}'"
+299,ka.explore_data.single.html.title,<span class='title-highlight'>Answers to:</span><br /> '<span class='code-highlight'>%{code}</span> - %{question}',<span class='title-highlight'>პასუხობს:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{question}'
+300,ka.explore_data.single.html.title_filter,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}',<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'
+301,ka.explore_data.single.html.title_filter_value,<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>',<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'
+302,ka.explore_data.single.text.title,Answers to: '%{code} - %{question}' ,პასუხობს: '%{code} - %{question}'
+303,ka.explore_data.single.text.title_filter,", filtered by: '%{code} - %{variable}'",", გაფილტრულია: '%{code} - %{variable}'"
+304,ka.explore_data.single.text.title_filter_value,", filtered by: '%{code} - %{variable} = %{value}'",", გაფილტრულია: '%{code} - %{variable} = %{value}'"
+305,ka.explore_data.subtitle.html.title,Total Responses: <span class='number'>%{num}</span>,მთლიანი გამოხმაურება: <span class='number'>%{num}</span>
+306,ka.explore_data.subtitle.html.title_filter,Total Responses Filtered by Answers to '<span class='number'>%{code}</span> - %{variable}': %{nums},პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{code} - %{variable}: %{nums}
+307,ka.explore_data.subtitle.text.title,Total Responses: %{num},მთლიანი პასუხები: %{num}
+308,ka.explore_data.subtitle.text.title_filter,Total Responses Filtered by Answers to '%{code} - %{variable}': %{nums},პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{code} - %{variable}: %{nums}
+309,ka.datatable.search,Search,ძიება
+310,ka.datatable.copy.title,Copy,კოპირება
+311,ka.datatable.copy.tooltip,Copy to clipboard,კოპირება ბუფერში
+312,ka.datatable.csv.title,CSV,CSV
+313,ka.datatable.csv.tooltip,Save as CSV,CSV-ში შენახვა
+314,ka.datatable.xls.title,XLS,XLS
+315,ka.datatable.xls.tooltip,Save as XLS,XLS-ში შენახვა
+316,ka.datatable.pdf.title,PDF,PDF
+317,ka.datatable.pdf.tooltip,Save as PDF,PDF-ში შენახვა
+318,ka.datatable.print.title,Print,ბეჭდვა
+319,ka.datatable.print.tooltip,Print the table,ცხრილის ბეჭდვა
+320,ka.highcharts.context_title,Save this chart,გრაფიკის შენახვა
+321,ka.highcharts.png,PNG Image,PNG სურათი
+322,ka.highcharts.jpg,JPG Image,JPG სურათი
+323,ka.highcharts.pdf,PDF Document,PDF დოკუმენტი
+324,ka.highcharts.svg,SVG Vector Image,SVG ვექტორული სურათი
+325,ka.mailer.closing,"Sincerely,","პატივისცემით,"
+326,ka.mailer.signature,UNICEF Georgia,UNICEF საქართველო
+327,ka.mailer.unsubscribe,Click here to change your notification settings,დააჭირეთ და შეცვალეთ შეტყობინებების პარამეტრები
+328,ka.mailer.notification.new_user.subject,Welcome to UNICEF Georgia Data Portal!,კეთილი იყოს თქვენი მობრძანება UNICEF საქართველოს მონაცემთა პორტალზე!
+329,ka.mailer.notification.new_user.message,"Thank you for creating an account on UNICEF Georgia's open data portal and sharing some information about yourself. It is our hope that the content and data you find adds value to your work and understanding of trends related to the rights of children in Georgia. If you have any questions, you can contact us via our webform or send us an email.","მადლობას გიხდით UNICEF საქართველოს ღია მონაცემების პოტალზე ანგარიშის გახსნის და თქვენი მონაცემების გაზიარებისთვის. ვიმედოვნებთ, რომ მონაცემები და შინაარსი დაეხმარება თქვენს საქმიანობას საქართველოში ბავშვთა უფლებების დაცვის სფეროში. ნებისმიერი შეკითხვის შემთხვევაში, თქვენ შეგიძლიათ დაგვიკავშირდეთ ჩვენი ვებ-ფორმის საშუალებით ან მოგვწეროთ ელ-ფოსტაზე."
+330,ka.mailer.notification.new_data.subject,A new dataset has been added to UNICEF Georgia Data Portal!,UNICEF საქართველოს მონაცემების პორტალს დაემატა მონაცემთა ახალი ცხრილი
+331,ka.mailer.notification.new_data.message,"UNICEF Georgia has just uploaded new data for you to explore, visualize, and share.","UNICEF საქართველომ დაამატა მონაცემთა ახალი ცხრილი რათა თქვენ შეძლოთ მისი გაცნობა, გაზიარება და ვიზუალიზაცია."
+332,ka.mailer.contact.contact_form.subject,UNICEF Georgia Data Portal Contact Form,UNICEF საქართველოს მონაცემების პორტალის საკონტაქტი ფორმა
+333,ka.helpers.actions,Actions,აირჩიეთ
+334,ka.helpers.default_language,This is the default language that will show,"ეს არის მთავარი ენა, რომელიც გამოჩნდება"
+335,ka.helpers.search,Search,ძებნა
+336,ka.helpers.links.admin,Admin Section,ადმინისტრატორის განყოფილება
+337,ka.helpers.links.edit,Edit,შეცვლა
+338,ka.helpers.links.confirm,Are you sure?,დარწმუნებული ხართ?
+339,ka.helpers.links.destroy,Delete,წაშლა
+340,ka.helpers.links.new,New,ახალი
+341,ka.helpers.links.list,View All,ყველას ნახვა
+342,ka.helpers.links.back,View All,ყველას ნახვა
+343,ka.helpers.links.cancel,Cancel,გაუქმება
+344,ka.helpers.links.reset,Reset,საწყის კონფიგურაციაზე დაბრუნება
+345,ka.helpers.links.view,View,ნახვა
+346,ka.helpers.links.save,Save,შენახვა
+347,ka.helpers.links.sign_in_facebook,Sign in with Facebook,Facebook-ით შესვლა
+348,ka.helpers.links.forgot_password,Forgot Your Password?,დაგავიწყდათ პაროლი?
+349,ka.helpers.links.change_password,Change Your Password,პაროლის შეცვლა
+350,ka.helpers.links.change_password2,Change Password,პაროლის შეცვლა
+351,ka.helpers.links.password_reset,Reset Password,პაროლის აღდგენა
+352,ka.helpers.links.sign_in2,Sign In,შესვლა
+353,ka.helpers.links.sign_in,Already have an account?,უკვე გაქვთ ანგარიში?
+354,ka.helpers.links.sign_up2,Sign Up,რეგისტრაცია
+355,ka.helpers.links.sign_up_question,Not registered?,არ გაქვთ ანგარიში?
+356,ka.helpers.links.sign_up,Create Account,დარეგისტრირდით
+357,ka.helpers.links.sign_up_title,Join %{app_name},შემოგვიერთდი “%{app_name}”
+358,ka.helpers.links.sign_out,Sign Out,გასვლა
+359,ka.helpers.links.sign_in_provider,Sign in with %{provider},შესვლა %{provider}-ით
+360,ka.helpers.links.sign_up_provider,Sign up with %{provider},დარეგისტრირდით  %{provider}-ით
+361,ka.helpers.links.sign_in_local_or_provider,or log in with your email and password,ან შეიყვანეთ თქვენი ელ. ფოსტა და პაროლი
+362,ka.helpers.links.reset_or_sign_in,sign in with facebook or reset your password,შედით facebook-ით ან შეცვალეთ პაროლი
+363,ka.helpers.links.explanation,We are excited you are interested in our data. We would like to know a bit about who you are. Please complete our form to continue downloading this dataset.,"მოხარულნი ვართ, რომ დაინტერესდით ჩვენი მონაცემებით. ჩვენ გვსურს გავიგოთ მცირე ინფორმაცია თქვენს შესახებ. მონაცემთა ცხრილის ჩამოსატვირთად, გთხოვთ შეავსოთ ჩვენი ფორმა."
+364,ka.helpers.links.download_and_sign_up,Download & Create Account,ჩამოტვირთვა და ანგარიშის გახსნა
+365,ka.helpers.links.like,Like,მოწონება
+366,ka.helpers.links.likes,Likes,მოწონება
+367,ka.helpers.links.menu,Menu,მენიუ
+368,ka.helpers.links.close,Close,დახურვა
+369,ka.helpers.links.select_all,Select All,ყველას მონიშვნა
+370,ka.helpers.links.select_none,Select None,არცერთის მონიშვნა
+371,ka.helpers.links.make_mappable,Make Mappable,დაიტანოს რუკაზე
+372,ka.helpers.links.add_question_text,Add Question Text,კითხვის ტექსტის დამატება
+373,ka.helpers.links.add_answer,Add Answer,პასუხის დამატება
+374,ka.helpers.links.add_answers,Add Answers,პასუხების დამატება
+375,ka.helpers.links.edit_answers,Edit Answers,პასუხების შესწორება
+376,ka.helpers.links.download,Download,ჩამოტვირთვა
+377,ka.helpers.links.view_data,View Data,მონაცემების ჩვენება
+378,ka.helpers.links.add_dataset,Add Dataset,მონაცემთა ცხრილის დამატება
+379,ka.helpers.links.remove_dataset,Remove Dataset,მონაცემთა ცხრილის წაშლა
+380,ka.helpers.links.add_report,Add Report,რეფორთის დამატება
+381,ka.helpers.links.remove_report,Remove Report,რეფორთის წაშლა
+382,ka.helpers.links.download_data,Download Data,მონაცემების ჩამოტვირთვა
+383,ka.helpers.links.back_dashboard,Back to Dashboard,Dashboard-ზე დაბრუნება
+384,ka.helpers.links.api_home,API Home,API საწყისი გვერდი
+385,ka.helpers.links.agreement,Agreement,შეთანხმება
+386,ka.helpers.links.add_highlight,Add to highlights,გამორჩეულში დამატება
+387,ka.helpers.links.delete_highlight,Remove from highlights,გამორჩეულიდან წაშლა
+388,ka.helpers.links.description_highlight,Edit the description of the highlight,Edit the description of the highlight
+389,ka.helpers.links.highlight_description_chart,Chart Description,Chart Description
+390,ka.helpers.links.embed_chart,Embed Chart,ჩასმული გრაფიკი
+391,ka.helpers.links.embed_chart_prompt,Copy and paste this embed code into your web page:,დააკოპირეთ და ჩასვით ეს კოდი თქვენ საიტზე:
+392,ka.helpers.links.embed_chart_wide,px wide,px ფართო
+393,ka.helpers.links.embed_chart_high,px high,px მაღალი
+394,ka.helpers.links.highlight_description,Chart Description,Chart Description
+395,ka.helpers.links.edit_description,Edit Description,Edit Description
+396,ka.helpers.titles.edit,Edit %{model},შეცვლა %{model}
+397,ka.helpers.titles.save,Save %{model},შენახვა %{model}
+398,ka.helpers.titles.new,New %{model},ახალი %{model}
+399,ka.helpers.titles.delete,Delete %{model},წაშლა %{model}
+400,ka.app.language.en,English,English
+401,ka.app.language.ka,ქართული,ქართული
+402,ka.app.buttons.back,View All,იხილეთ ყველა
+403,ka.app.buttons.list,View All,იხილეთ ყველა
+404,ka.app.buttons.admin,Admin Section,ადმინისტრატორის განყოფილება
+405,ka.app.buttons.delete,Delete,წაშლა
+406,ka.app.buttons.edit,Edit,შეცვლა
+407,ka.app.buttons.show,Show,ჩვენება
+408,ka.app.buttons.cancel,Cancel,გაუქმება
+409,ka.app.buttons.update,Update,განახლება
+410,ka.app.buttons.save,Save,შენახვა
+411,ka.app.buttons.create,Create,შექმნა
+412,ka.app.buttons.reset,Reset,საწყის კონფიგურაციაზე დაბრუნება
+413,ka.app.buttons.remove,Remove,ამოშლა
+414,ka.app.buttons.confirm,Are you sure?,დარწმუნებული ხართ?
+415,ka.app.buttons.new,New,ახალი
+416,ka.app.buttons.save_settings,Save Settings,პარამეტრების შენახვა
+417,ka.app.buttons.choose_category,<span>Choose </span>Category,კატეგორიის არჩევა
+418,ka.app.buttons.change_category,Change Category,კატეგორიის შეცვლა
+419,ka.app.buttons.categories,Categories,Categories
+420,ka.app.buttons.category,Category,Category
+421,ka.app.common.xtraktr.app_name,Xtraktr,X-Traktr
+422,ka.app.common.xtraktr.app_slogan,Insert xtraktr slogn here!,Insert xtraktr slogn here!
+423,ka.app.common.xtraktr.app_description,Insert xtraktr description here.,Insert xtraktr description here.
+424,ka.app.common.unicef.app_name,UNICEF Georgia Data Portal,გაეროს ბავშვთა ფონდის მონაცემთა პორტალი
+425,ka.app.common.unicef.app_slogan,Helping to solve by measuring,ვეხმარებით კვლევით
+426,ka.app.common.unicef.app_description,"In collaboration with a wide range of partners, UNICEF Georgia gathers evidence on the situation of children in Georgia. It uses this knowledge to inform national and global decision-making with the objective of improving children’s well-being.","გაეროს ბავშვთა ფონდის საქართველოს წარმომადგენლობა პარტნიორებთან ერთად აგროვებს მონაცემებს საქართველოში ბავშვთა მდგომარეობის შესახებ. ამ ცოდნას ის იყენებს ეროვნული და გლობალური გადაწყვეტილებების მიმღებთა ინფორმირებისათვის, რათა, საბოლოო ჯამში, გაუმჯობესდეს ბავშვთა კეთილდღეობა საქართველოში."
+427,ka.app.common.added_on,Added on: %{date},დამატებულია: %{date}
+428,ka.app.common.jumpstart,JumpStart Georgia,“ჯამპსტარტ ჯორჯია”
+429,ka.app.common.js_link_title,JumpStart Georgia - We communicate data better!,“ჯამპსტარტ ჯორჯია” - ჩვენ გაწვდით მონაცემებს უკეთ!
+430,ka.app.common.question,Question,კითხვა
+431,ka.app.common.questions,Questions,კითხვები
+432,ka.app.common.question_code,Code,კოდი
+433,ka.app.common.answers,Answers,პასუხები
+434,ka.app.common.notes,Notes,შენიშვნები
+435,ka.app.common.count,Count,დათვლა
+436,ka.app.common.percent,Percent,პროცენტი
+437,ka.app.common.dataset_dashboard,Dataset Dashboard,მონაცემთა Dashboard
+438,ka.app.common.time_series_dashboard,Time Series Dashboard,პერიოდული შედარების Dashboard
+439,ka.app.common.terms,I agree to the <a href='http://www.unicef.org/about/legal_terms.html' target='_blank'>Terms of Use</a>,თანახმა ვარ <a href='http://www.unicef.org/about/legal_terms.html' target='_blank'>გამოყენების წესებზე</a>
+440,ka.app.common.or,Or,ან
+441,ka.app.common.go,Go,ძებნა
+442,ka.app.common.share,Share,გაზიარება
+443,ka.app.common.codebook_title,Download the Codebook,კოდირების ჩამოტვირთვა
+444,ka.app.common.all_categories,All Categories,All Categories
+445,ka.app.msgs.does_not_exist,You tried to access a page that does not exist.,"თქვენ ცდილობთ ისეთი გვერდის ნახვას, რომელიც არ არსებობს."
+446,ka.app.msgs.not_authorized,You are not authorized to view that page.,თქვენ არ გაქვთ ამ გვერდის ნახვის უფლება.
+447,ka.app.msgs.success_created,%{obj} was successfully created.,%{obj} შექმნილია.
+448,ka.app.msgs.success_updated,%{obj} was successfully updated.,%{obj} განახლებულია.
+449,ka.app.msgs.success_deleted,%{obj} was successfully deleted.,%{obj} was successfully deleted.
+450,ka.app.msgs.question_exclude_saved,Exclude question selections were saved.,გამორიცხული კითხვის არჩევა შენახულია
+451,ka.app.msgs.question_exclude_not_saved,An error occurred while saving the exclude question selections.,გამორიცხული კითხვის შენახვის დროს წარმოიშვა პრობლემა
+452,ka.app.msgs.answer_exclude_saved,Exclude answer selections were saved.,გამორიცხული პასუხის არჩევა შენახულია
+453,ka.app.msgs.answer_exclude_not_saved,An error occurred while saving the exclude answer selections.,გამორიცხული პასუხის შენახვის დროს წარმოიშვა პრობლემა
+454,ka.app.msgs.answer_can_exclude_saved,Can exclude answer selections were saved.,შესაძლებელი გამორიცხული პასუხის არჩევა შენახულია
+455,ka.app.msgs.answer_can_exclude_not_saved,An error occurred while saving the can exclude answer selections.,შესაძლებელი გამორიცხული პასუხის შენახვის დროს წარმოიშვა პრობლემა
+456,ka.app.msgs.mapping_saved,The question was successfully made mappable.,კითხვა წარმატებით იქნა რუკაზე დასატანი
+457,ka.app.msgs.mapping_not_save,An error occurred while making the question mappable.,რუკაზე კითხვის დატანის დროს წარმოიშვა პრობლემა
+458,ka.app.msgs.mapping_deleted,The question is no longer mappable.,კითხვა აღარ არის რუკაზე დასატანი
+459,ka.app.msgs.mapping_not_deleted,The question mapping could not be deleted.,კითხვის რუკაზე დატანის წაშლა შეუძლებელია
+460,ka.app.msgs.time_series_automatic_match,%{count} questions were added to your time series.,%{count} თქვენს პერიოდული შედარებაში კითხვები დაემატა
+461,ka.app.msgs.mass_upload_questions_error,The following error occurred while processing the questions: %{msg},კითხვების პროცესირების დროს შემდეგი სახის პრობლემები წარმოიშვა: %{msg}
+462,ka.app.msgs.mass_upload_questions_success,%{count} questions were updated!,%{count} კითხვები განახლდა!
+463,ka.app.msgs.mass_upload_answers_error,The following error occurred while processing the answers: %{msg},პასუხების პროცესირების დროს შემდეგი სახის პრობლემები წარმოიშვა: %{msg}
+464,ka.app.msgs.mass_upload_answers_success,%{count} answers were updated!,%{count} პასუხები განახლდა!
+465,ka.app.msgs.highlight_show_home_page_success,The highlight will now always appear on the home page.,გამორჩეული ყოველთვის გამოჩნდება მთავარ გვერდზე
+466,ka.app.msgs.highlight_deleted,The highlight has been deleted.,გამორჩეული წაიშალა
+467,ka.app.msgs.highlight_description_updated,The highlight description has been updated.,The highlight description has been updated.
+468,ka.app.msgs.explore_error,An error occurred while processing your request.,თქვენი მოთხოვნის შერსულების დროს წარმოიშვა პრობლემა
+469,ka.app.msgs.user_settings_updated,Your settings were successfully updated.,თქვენი პარამეტრები წარამტებით განახლდა
+470,ka.app.msgs.api_key_created,Your API Access Token was successfully created.,თქვენი API-ს დაშვების გასაღები წარმატებით შეიქმნა
+471,ka.app.msgs.api_key_deleted,Your API Access Token was successfully deleted.,თქვენი API-ს დაშვების გასაღები წარმატებით წაიშალა
+472,ka.app.msgs.missing_user_info,We have made some changes to the site that require you to update your user settings. Sorry for the inconvenience.,საიტზე გარკვეული ცვლილებების გამო გთხოვთ განაახლოთ თქვენი პარამეტრები. ბოდიშს გიხდით გაუგებრობისთვის.
+473,ka.app.msgs.message_sent,Thank you for contacting us!,მადლობას გიხდით ჩვენთან დაკავშირებისთვის
+474,ka.app.msgs.description_saved,Description was successfully saved,Description was successfully saved
+475,ka.app.msgs.error_while_save,An error occurred while saving,An error occurred while saving
+476,ka.app.menu.explore_data,Explore Data,მონაცემთა გაცნობა
+477,ka.app.menu.explore_time_series,Explore Time Series,პერიოდული შედარების გაცნობა
+478,ka.app.menu.datasets,Datasets,მონაცემები
+479,ka.app.menu.time_series,Time Series,პერიოდული შედარება
+480,ka.app.menu.user_settings,User Settings,მომხმარებლის პარამეტრები
+481,ka.app.menu.about_dataset,About,შესახებ
+482,ka.app.menu.about_time_series,About,შესახებ
+483,ka.app.menu.all_datasets,All Datasets,მონაცემების ყველა ცხრილი
+484,ka.app.menu.all_time_series,All Time Series,პერიოდული შედარების ყველა ცხრილი
+485,ka.app.menu.contact,Contact,კონტაქტი
+486,ka.app.menu.api,API,API
+487,ka.app.menu.instructions,Instructions,ინსტრუქცია
+488,ka.app.menu.home,Home,მთავარი გვერდი
+489,ka.app.menu.disclaimer,Disclaimer,შენიშვნა
+490,ka.app.menu.titles.explore_dataset,"Explore the dataset data through charts, maps and tables","მონაცემთა ცხრილში არსებული მონაცემების გაცნობა გრაფიკების, რუკების და ცხრილების საშუალებით"
+491,ka.app.menu.titles.explore_time_series,Explore the time series data through charts and tables,"პერიოდული შედარებაში არსებული მონაცემების გაცნობა გრაფიკების, რუკების და ცხრილების საშუალებით"
+492,ka.app.menu.titles.dataset_to_time_series,Explore this dataset as part of a time series,მონაცემთა ცხრილის გაცნობა როგორც პერიოდული შედარების ნაწილი
+493,ka.app.menu.admin_dataset.explore_data,Explore Data,მონაცემთა გაცნობა
+494,ka.app.menu.admin_dataset.heading,Dataset Options,მონაცემთა ცხრილის დეტალები
+495,ka.app.menu.admin_dataset.settings,Settings,პარამეტრები
+496,ka.app.menu.admin_dataset.qa,Edit Questions/Answers,კითხვების/პასუხების შესწორება
+497,ka.app.menu.admin_dataset.highlights,Highlights,მნიშვნელოვანი
+498,ka.app.menu.admin_dataset.warnings,Warnings,გაფრთხილება
+499,ka.app.menu.admin_dataset.mappable,Make Mappable,რუკაზე დასატანი
+500,ka.app.menu.admin_dataset.delete,Delete,წაშლა
+501,ka.app.menu.admin_dataset.private_share,Share Private Dataset,პირადი მონაცემთა ცხრილის გაზიარება
+502,ka.app.menu.admin_dataset.mass_changes,Mass Changes Via Spreadsheet,Mass Changes Via Spreadsheet
+503,ka.app.menu.admin_dataset.mass_changes_questions,Question Mass Changes,Question Mass Changes
+504,ka.app.menu.admin_dataset.mass_changes_answers,Answer Mass Changes,Answer Mass Changes
+505,ka.app.menu.admin_dataset.download_data,Download Data,Download Data
+506,ka.app.menu.admin_time_series.explore_data,Explore Data,მონაცემების გაცნობა
+507,ka.app.menu.admin_time_series.heading,Time Series Options,პერიოდული შედარების დეტალები
+508,ka.app.menu.admin_time_series.settings,Settings,პარამეტრები
+509,ka.app.menu.admin_time_series.qa,Edit Questions/Answers,კითხვების/პასუხების შესწორება
+510,ka.app.menu.admin_time_series.highlights,Highlights,მნიშვნელოვანი
+511,ka.app.menu.admin_time_series.warnings,Warnings,გაფრთხილება
+512,ka.app.menu.admin_time_series.delete,Delete,წაშლა
+513,ka.app.menu.admin_time_series.private_share,Share Private Time Series,პირადი პერიოდული შედარების გაზიარება
+514,ka.user.age_group.g1,17-24,17-24
+515,ka.user.age_group.g2,25-34,25-34
+516,ka.user.age_group.g3,35-44,35-44
+517,ka.user.age_group.g4,45-54,45-54
+518,ka.user.age_group.g5,55-64,55-64
+519,ka.user.age_group.g6,above (>65),(>65)-ზე მეტი 
+520,ka.user.status.researcher,Researcher,მკვლევარი
+521,ka.user.status.student,Student,სტუდენტი
+522,ka.user.status.journalist,Journalist,ჟურნალისტი
+523,ka.user.status.ngo,NGO,არასამთავრობო ორგანიზაცია
+524,ka.user.status.government_official,Government Official,სამთავრობო სტრუქტურა
+525,ka.user.status.international_organization,International Organization,საერთაშორისო ორგანიზაცია
+526,ka.user.status.private_sector,Private Sector,კერძო სექტორი
+527,ka.user.status.other,Other,სხვა
+528,ka.user.wanna_account,"Tired of filling out this form? To avoid this form in the future, create an account.","დაიღალეთ ამ ფორმის შევსებით? მომავალში მისი თავიდან აცილების მიზნის, შექმენით ანგარიში."
+529,ka.layouts.nav.toggle,Toggle navigation,ნავიგაციის ჩართვა/გამორთვა
+530,ka.layouts.nav.back,Back to UNICEF.ge,UNICEF.ge-ზე დაბრუნება
+531,ka.layouts.explore_data.private_share_header,Privately Share '%{title}',პირადად გაზიარებული '%{title}'
+532,ka.layouts.explore_data.private_share_explanation,"You can copy and share the following URL with whomever you want to view '%{title}' even though your dataset is not shared with the public. These people will have the ability to explore your data, but not edit it.","თქვენ შეგიძლიათ დააკოპიროთ და გაუზიაროთ შემდეგი URL იმას , ვინც გსურთ რომ იხილოს '%{title}' იმ შემთხვევაშიც კი, თუ თქვენი მონაცემთა ცხრილი არ არის საჯაროდ გაზიარებული. ამ ადამიანებს ექნებათ საშუალება გაეცნონ თქვენს მონაცემებს, მაგრამ ვერ შეძლებენ მის შეცვლას და შესწორებას."
+533,ka.layouts.unsupported_browser.title,Unsupported Browser,არასათანადო ბრაუზერი
+534,ka.layouts.unsupported_browser.p1,We are sorry to report that your browser is out of date and will not properly render the content from this website.,სამწუხაროდ თქვენი ინტერნეტ ბრაუზერის მოხმარების ვადა გასულია და ვერ მოხდება ვებ-გვერდთან სრულად დაკავშირება.
+535,ka.layouts.unsupported_browser.p2,"On the bright side, there are several free browsers that you can download that are compatible with this site.",არსებობს რამდენიმე უფასო ბრაუზერი რომელის გადმოწერის შემდეგ შეძლებთ ვებ-გვერდით სარგებლობას.
+536,ka.layouts.unsupported_browser.chrome,Chrome,Chrome
+537,ka.layouts.unsupported_browser.firefox,Firefox,Firefox
+538,ka.layouts.unsupported_browser.ie,Internet Explorer (Windows only),Internet Explorer (მხოლოდ Windows-ზე)
+539,ka.layouts.unsupported_browser.opera,Opera,Opera
+540,ka.layouts.unsupported_browser.Safari,Safari,Safari
+541,ka.admin.index.title,Administration Section,ადმინისტრატორის განყოფილება
+542,ka.admin.index.users,Users,მომხმარებლები
+543,ka.admin.index.page_contents,Edit Text on Site,საიტზე ტექსტის რედაქტირება
+544,ka.admin.index.datasets,Datasets,მონაცემები
+545,ka.admin.index.shapesets,Shapesets,ფორმების ცხრილი
+546,ka.admin.index.api_documentation,API Version Documentation,API ვერსიის დოკუმენტაცია
+547,ka.admin.index.download_api_requests,Download API Request History,API-ს მოთხოვნილი ისტორიის ჩამოტვირთვა
+548,ka.admin.index.download_download_requests,Download Download Request History,მოთხოვნილი ისტორიის ჩამოტვირთვა
+549,ka.admin.index.categories,Categories,კატეგორიები
+550,ka.admin.users.edit.title,Editing User,ცვლილებების შეტანა მომხმარებლის გვერდზე
+551,ka.admin.users.index.title,Users,მომხმარებლები
+552,ka.admin.users.new.title,New User,ახალი მომხმარებელი
+553,ka.admin.users.show.title,User Details,მომხმარებლის დეტალები
+554,ka.devise.mailer.reset_password_instructions.subject,UNICEF Georgia Data Portal - Reset password instructions,UNICEF Georgia Data Portal - Reset password instructions
+555,ka.devise.mailer.reset_password_instructions.title,Hello %{nickname} - ,"მოგესალმებით, %{nickname} - "
+556,ka.devise.mailer.reset_password_instructions.p1,"Someone has requested a link to change your password on %{app_name}, and you can do this through the link below.","მივიღეთ მოთხოვნა '%{app_name}' თქვენი პაროლის შეცვლის შესახებ. პაროლის შესაცვლელად, მიჰყევით შემდეგ ბმულს."
+557,ka.devise.mailer.reset_password_instructions.link_title,Change my password,პაროლის შეცვლა
+558,ka.devise.mailer.reset_password_instructions.p2,"If you didn't request this, please ignore this email.","თუ თქვენ არ მოგითხოვიათ პაროლის შეცვლა, გთხოვთ, არ მიაქციოთ ყურადღება ამ შეტყობინებას."
+559,ka.devise.mailer.reset_password_instructions.p3,Your password won't change until you access the link above and create a new one.,"თქვენი პაროლი იგივე დარჩება, სანამ არ გადახვალთ ზემოთ მითითებულ ბმულზე და შექმნით ახალ პაროლს."
+560,ka.settings.index.title,User Settings,მომხმარებლის პარამეტრები
+561,ka.settings.index.tabs.settings,Settings,პარამეტრები
+562,ka.settings.index.tabs.api,API Access Tokens,API-ს დაშვების გასაღები
+563,ka.settings.index.api_explanation1,"The API allows you to programmatically get information and run analyses on the datasets and time series available on this site. All API calls require an access token - a key that let's us know who is making the request. To get one, simply press the button below.","API საშუალებას გაძლევთ პროგრამულად მიიღოთ ინფორმაცია და ჩაატაროთ ანალიზი საიტზე არსებულ მონაცემთა ცხრილსა და პერიოდულ შედარებაში. API-ს ყველა გამოძაღება ითხოვს დაშვების გასაღებს, რომელიც გვამცნობს იმას, თუ ვინ აკეთებს მოთხოვნას. გამოძაღებისთვის უბრალოდ დააჭირეთ ქვემოთ მოცემულ ღილაკს."
+564,ka.settings.index.api_link_text,API Documentation section,API-ს დოკუმენტაციის სექცია
+565,ka.settings.index.api_explanation2,You can learn more about the API and how to use the Access Token by going to the [link].,[link]-ზე გადასვლით თქვენ შეგიძლია გაიგოთ მეტი API-ს და დაშვების გასაღების შესახებ. 
+566,ka.settings.index.no_api_keys,You do not have any API Access Tokens on file.,თქვენ არ გაქვთ API-ს დაშვების გასაღები ან ფაილი
+567,ka.settings.index.get_api,Get API Access Token,API-ს დაშვების გასაღების მიღება
+568,ka.settings.index.delete_api,Delete API Access Token,API-ს დაშვების გასაღების წაშლა
+569,ka.root.index.header_latest_datasets,Latest Datasets,უახლესი მონაცემები
+570,ka.root.index.no_datasets,"At this time, no datasets have been loaded into the site.",ამ მომენტისთვის ვებ-გვერდზე არ ჩატვირთულა მონაცემთა ცხრილი
+571,ka.root.index.header_latest_time_series,Latest Time Series,უახლესი პერიოდული შედარება
+572,ka.root.index.no_time_series,"At this time, no time series have been created in the site.",ამ მომენტისთვის ვებ-გვერდზე არ შექმნილა პერიოდული შედარება.
+573,ka.root.index.wms_title,Welfare <br />Monitoring Survey,კეთილდღეობის <br />მონიტორინგის კვლევა
+574,ka.root.index.wms_slogan,"Comparing the <br />well-being of children <br />from 2009, 20011 and 2013","ბავშვთა შინამეურნეობების კეთილდღეობის <br />შედარება <br />2009, 2011 და <br/>2013 წლებში"
+575,ka.root.index.header_highlights,Highlights,მნიშვნელოვანი
+576,ka.root.index.header_categories,Browse Categories,კატეგორიების დათვალიერება
+577,ka.root.index.search_datasets,Search Datasets,მონაცემთა ძიება
+578,ka.root.contact.title,Contact,კონტაქტი
+579,ka.root.contact.send,Send,გაგზავნა
+580,ka.root.contact.error_title,An error has occurred,პრობლემა წარმოიშვა
+581,ka.root.instructions.title,Instructions,ინსტრუქცია
+582,ka.root.notes.title,Notes,შენიშვნები
+583,ka.root.explore_data.title,Explore the Data,მონაცემთა გაცნობა
+584,ka.root.explore_data.search_datasets,Search Datasets,მონაცემთა ცხრილის ძებნა
+585,ka.root.explore_data.sort_by.this,Sort By,დახარისხება
+586,ka.root.explore_data.sort_by.title,Title,დასახელება
+587,ka.root.explore_data.sort_by.release,Date Released,გამოქვეყნების თარიღი
+588,ka.root.explore_data.sort_by.publish,Date Published Here,აქ გამოქვეყნების თარიღი
+589,ka.root.explore_data.no_data,"At this time, no datasets have been loaded into the site.",ამ მომენტისთვის ვებ-გვერდზე არ ჩატვირთულა მონაცემთა ცხრილი
+590,ka.root.explore_data.no_match,"Sorry, no datasets match your search request.","უკაცრავად, თქვენი არცერთი მოთხოვნა არ ემთხვევა პერიოდული შედარებას"
+591,ka.root.explore_data_show.title,Explore the Data,პერიოდული შედარების მონაცემების გაცნობა
+592,ka.root.explore_time_series.title,Explore Time Series Data,პერიოდული შედარების მონაცემების გაცნობა
+593,ka.root.explore_time_series.search_time_series,Search Time Series,პერიოდული შედარების ძებნა
+594,ka.root.explore_time_series.sort_by.this,Sort By,დახარისხება
+595,ka.root.explore_time_series.sort_by.title,Title,დასახელება
+596,ka.root.explore_time_series.sort_by.publish,Date Published Here,აქ გამოქვეყნების თარიღი
+597,ka.root.explore_time_series.no_data,"At this time, no time series have been created in the site.",ამ მომენტისთვის ვებ-გვერდზე არ შექმნილა პერიოდული შედარება.
+598,ka.root.explore_time_series.no_match,"Sorry, no time series match your search request.","უკაცრავად, თქვენს მოთხოვნას არცერთი პერიოდული შედარება არ შეესაბამება"
+599,ka.root.explore_time_series_show.title,Explore Time Series Data,გაეცანით პერიოდული შედარების მონაცემებს
+600,ka.api.msgs.no_key,You must provide an API Access Token in order to use the API. You can quickly get a API Access Token by going to %{url}.,API-ს გამოსაყენებლად თქვენ უნდა წარმაოდგინოთ API-ს დაშვების გასაღები. თქენ მარტივად შეგიძლიათ API-ის დაშვების გასაღების მიღება შემდეგ მისამართზე გადასვლით %{url}.
+601,ka.api.msgs.no_dataset,The Dataset could not be found.,მონაცემთა ცხრილი ვერ მოიძებნა
+602,ka.api.msgs.no_question,The Question could not be found.,კითხვა ვერ მოიძებნა
+603,ka.api.msgs.no_broken_down_by,The Broken Down By Question could not be found.,კითხვებით ჩაშლა ვერ მოიძებნა
+604,ka.api.msgs.no_filtered_by,The Filter By Question could not be found.,კითხვებით გაფილტრვა ვერ მოიძებნა
+605,ka.api.msgs.no_time_series,The Time Series could not be found.,პერიოდული შედარება ვერ მოიძებნა
+606,ka.api.msgs.no_time_series_dataset,The Time Series does not have any datasets assigned to it.,პერიოდული შედარებას არ აქვს მასთან დაკავშირებული მონაცემთა ცხრილი.
+607,ka.api.msgs.no_time_series_dataset_error,There was an error getting the data for the datasets in the time series.,პერიოდული შედარებაში მონაცემთა ცხრილის მიღების დროს წარმოიშვა პრობლემა.
+608,ka.api.msgs.missing_required_params,Please provide all required parameters.,Please provide all required parameters.
+609,ka.api.index.title,API,API
+610,ka.api.index.no_versions,No documentation for the API has been created yet.,API-სთვის დოკუმენტაცია ჯერ არ შექმნილა
+611,ka.api.index.no_methods,No documentation for this version has been created yet.,ამ ვერსიისთვის დოკუმენტაცია ჯერ არ შექმნილა
+612,ka.api.documentation.no_content,No documentation for this method has been created yet.,ამ მეთოდისთვის დოკუმენტაცია ჯერ არ შექმნილა
+613,ka.datasets.index.stats.data_records,Data Records,მონაცემთა ჩაწერა
+614,ka.datasets.index.stats.good_questions,Analyzable Questions,გაანალიზებადი კითხვები
+615,ka.datasets.index.stats.no_text,No Question Text,კითხვის ტექსტი არ არის
+616,ka.datasets.index.stats.bad_answers,Bad Answers,არასწორი პასუხი
+617,ka.datasets.index.stats.no_answers,No Predefined Answers,არ აქვს წინასწარ განსაზღვრული პასუხები
+618,ka.datasets.index.view_warnings,View Details,დეტალების ნახვა
+619,ka.datasets.warnings.title,Warnings,გაფრთხილება
+620,ka.datasets.warnings.tab_bad_answers,Questions with Bad Answers,კითხვები ცუდი პასუხებით
+621,ka.datasets.warnings.tab_no_answers,Questions with No Answers,კითხვები პასუხების გარეშე
+622,ka.datasets.warnings.tab_no_text,Questions with No Text,კითხვები ტექსტის გარეშე
+623,ka.datasets.warnings.bad_answers,"The following %{number} questions contain values that were not listed as one of the possible answers. For example, the list of possible answers was 1, 2, 3 or 4 and one record had a value of 5. The records with the extra values will not be used during analysis.","წინამდებარე კითხვას %{number} გააჩნია ისეთი მნიშვნელობა, რომელიც არ იყო ჩამოთვლილი ერთ-ერთ სავარაუდო პასუხად. ეს მონაცემები, დამატებითი მნიშნელობებით, არ იქნება გამოყენებული ანალიზი დროს."
+624,ka.datasets.warnings.no_answers,"The following %{number} questions do not have a list of possible answers. For example, a question 'What is your age?' could come with answers like <20, 20-40, 40-60, >60 and each of these answers would represent a certain value like 1, 2, 3, 4 that is stored in the data. These questions will not be available for analysis unless a list of possible answers are provided.","წინამდებარე კითხვას %{number} გააჩნია ისეთი მნიშვნელობა, რომელიც არ იყო ჩამოთვლილი ერთ-ერთ სავარაუდო პასუხად. ეს მონაცემები, დამატებითი მნიშნელობებით, არ იქნება გამოყენებული ანალიზი დროს ვიდრე სავარაუდო პასუხების სია არ იქნება მოწოდებული."
+625,ka.datasets.warnings.no_text,"The following %{number} questions do not have text. For example a code of 'A1' was given, but no text describing what 'A1' represents was provided. These questions will not be available for analysis unless text is provided.","წინამდებარე კითხვას %{number} გააჩნია ისეთი მნიშვნელობა, რომელიც არ იყო ჩამოთვლილი ერთ-ერთ სავარაუდო პასუხად. ეს მონაცემები, დამატებითი მნიშნელობებით, არ იქნება გამოყენებული ანალიზი დროს ვიდრე ტექსტი არ იქნება მოწოდებული."
+626,ka.datasets.warnings.no_bad_answers,Congratulations! All of the data file data contains valid answers.,გილოცავთ! მონაცემების ფაილის ყველა მონაცემი შეიცავს სწორ პასუხს.
+627,ka.datasets.warnings.no_no_answers,Congratulations! All of the data file questions have answers.,გილოცავთ! მონაცემების ყველა ფაილს აქვს პასუხი.
+628,ka.datasets.warnings.no_no_text,Congratulations! All of the data file questions have text.,გილოცავთ! მონაცემების ყველა ფაილს აქვს ტექსტი.
+629,ka.datasets.warnings.no_warnings,Congratulations! Your data file contains no issues that may effect the way the data is analyzed.,გილოცავთ! თქენი მონაცემები არ შეიცავენ ისეთ საკითხებს რომლებსაც შეუძლიათ ზეგავლენა მოახდინონ მონაცემთა ანალიზზე.
+630,ka.datasets.mass_changes_questions.title,Question Mass Changes,Question Mass Changes
+631,ka.datasets.mass_changes_questions.explanation,Use this page to indicate which questions should not be included during analysis and which should be included when the public download's the data.,Use this page to indicate which questions should not be included during analysis and which should be included when the public download's the data.
+632,ka.datasets.mass_changes_questions.no_questions,There are no questions on file for this dataset.,ამ ცხრილისთვის არ არის კითხვები ან ფაილები
+633,ka.datasets.mass_changes_answers.title,Answer Mass Changes,Answer Mass Changes
+634,ka.datasets.mass_changes_answers.explanation,"Use this page to indicate which answers should not be included during analysis and which answers can be included during analysis, but have the ability to be excluded (e.g., answers like: Don't Know, Refuse to Answer, etc).","Use this page to indicate which answers should not be included during analysis and which answers can be included during analysis, but have the ability to be excluded (e.g., answers like: Don't Know, Refuse to Answer, etc)."
+635,ka.datasets.mass_changes_answers.no_questions,There are no questions on file for this dataset.,ამ ცხრილისთვის არ არის კითხვები ან ფაილები
+636,ka.datasets.mappable.title,Make Questions Mappable,გახადოს კითხვა რუკაზე დასატანი
+637,ka.datasets.mappable.explanation,Use this page to indicate which questions are geographic in nature so that the analysis screen can include a map.,"გამოყენეთ ეს გვერდი რათა მიუთითოთ როელი კითხვები არიან ბუნებრივად გეოგრაფიული ტიპის, რათა ანალიზის ეკრანს შეეძლოს რუკის გამოყენება."
+638,ka.datasets.mappable.no_shapes,"Sorry, at this time there are no pre-defined maps on file that you can use.","უკაცრავად, ამ დროისთვის ფაილში არ არის წინასწარ განსაზღვრული რუკები რომლის გამოყენებასაც თქვენ შეძლებდით."
+639,ka.datasets.mappable.add_shapes,Add Map Shapes,რუკის ფორმის დამატება
+640,ka.datasets.mappable.add_map_question,Add Mappable Question,რუკაზე დასატანი კითხვების დამატება
+641,ka.datasets.mappable_form.title,Mappable Question Form,რუკაზე დასატანი კითხვების ფორმა
+642,ka.datasets.mappable_form.no_questions,There are no questions available in '%{title}' to be made mappable.,"%{title}'-ში არ არის ისეთი ხელმისაწვდომი კითხვები, რომელიც შეიძლება იყოს რუკაზე დასატანი"
+643,ka.datasets.mappable_form.no_shapes,"Sorry, at this time there are no pre-defined maps on file that you can use.","უკაცრავად, ამ დროისთვის ფაილში არ არის წინასწარ განსაზღვრული რუკები რომლის გამოყენებასაც თქვენ შეძლებდით."
+644,ka.datasets.mappable_form.question_label,Question to make mappable,გახადოს კითხვა რუკაზე დასატანი
+645,ka.datasets.mappable_form.shapeset_label,Map to use,გამოყენებადი რუკა
+646,ka.datasets.mappable_form.matching_header,Mapping '[question]' to '[shapeset]',[question]' დატანა '[shapeset]' რუკაზე 
+647,ka.datasets.mappable_form.matching_explanation,"For each answer to '[question]', select the matching map shape from '[shapeset]'.","[question]'-ის თითოეული პასუხისთვის, აირჩიეთ შესატყვისი რუკის ფორმა '[shapeset]'-დან."
+648,ka.datasets.mappable_form.adjustable_range_header,Do you want an adjustable scale when mapped?,Do you want an adjustable scale when mapped?
+649,ka.datasets.mappable_form.adjustable_range_p1,Do you want the choropleth map colors to always show results between 0 and 100% or would you prefer that the max range value be adjusted based on the max value of the analysis? Going with an adjustable max value could result in the choropleth map showing more varied colors.,Do you want the choropleth map colors to always show results between 0 and 100% or would you prefer that the max range value be adjusted based on the max value of the analysis? Going with an adjustable max value could result in the choropleth map showing more varied colors.
+650,ka.datasets.mappable_form.adjustable_range_p2,"Let's assume that the following are the resulting percentage values from the analysis: 4, 8, 16, 32, 40. If the question did not use an adjustable max value, the choropleth map colors will vary between 0 and 100%  resulting in 4 and 8 and 16 having very similar, and possibly not discernable, colors. However, if the question did use an adjustable max value, the choropleth map colors will vary between 0 and 40% resulting in 4 and 8 having similar colors, but 16 having a color that is discernable as different.","Let's assume that the following are the resulting percentage values from the analysis: 4, 8, 16, 32, 40. If the question did not use an adjustable max value, the choropleth map colors will vary between 0 and 100%  resulting in 4 and 8 and 16 having very similar, and possibly not discernable, colors. However, if the question did use an adjustable max value, the choropleth map colors will vary between 0 and 40% resulting in 4 and 8 having similar colors, but 16 having a color that is discernable as different."
+651,ka.datasets.mappable_form_edit.title,Mappable Question Form,რუკაზე დასატანი კითხვების ფორმა
+652,ka.datasets.mappable_form_edit.matching_header,Mapping '%{question}' to '%{shapeset}',[question]' დატანა '[shapeset]' რუკაზე 
+653,ka.datasets.mappable_form_edit.matching_explanation,"For each answer to '%{question}', select the matching map shape from '%{shapeset}'.","[question]'-ის თითოეული პასუხისთვის, აირჩიეთ შესატყვისი რუკის ფორმა '[shapeset]'-დან."
+654,ka.datasets.mappable_form_edit.adjustable_range_header,Do you want an adjustable scale when mapped?,Do you want an adjustable scale when mapped?
+655,ka.datasets.mappable_form_edit.adjustable_range_p1,Do you want the choropleth map colors to always show results between 0 and 100% or would you prefer that the max range value be adjusted based on the max value of the analysis? Going with an adjustable max value could result in the choropleth map showing more varied colors.,Do you want the choropleth map colors to always show results between 0 and 100% or would you prefer that the max range value be adjusted based on the max value of the analysis? Going with an adjustable max value could result in the choropleth map showing more varied colors.
+656,ka.datasets.mappable_form_edit.adjustable_range_p2,"Let's assume that the following are the resulting percentage values from the analysis: 4, 8, 16, 32, 40. If the question did not use an adjustable max value, the choropleth map colors will vary between 0 and 100%  resulting in 4 and 8 and 16 having very similar, and possibly not discernable, colors. However, if the question did use an adjustable max value, the choropleth map colors will vary between 0 and 40% resulting in 4 and 8 having similar colors, but 16 having a color that is discernable as different.","Let's assume that the following are the resulting percentage values from the analysis: 4, 8, 16, 32, 40. If the question did not use an adjustable max value, the choropleth map colors will vary between 0 and 100%  resulting in 4 and 8 and 16 having very similar, and possibly not discernable, colors. However, if the question did use an adjustable max value, the choropleth map colors will vary between 0 and 40% resulting in 4 and 8 having similar colors, but 16 having a color that is discernable as different."
+657,ka.datasets.form.reports,Reports,რეფორთები
+658,ka.datasets.form.header_add_report,Add a report for this dataset,მონაცემთა ცხრილში რეფორთის დამატება
+659,ka.datasets.form.saving_text,"Your file is being loaded, the data is being processed and validated, and the download files are being generated - this may take a couple minutes.
+
+This would be a good time to get some water, go to the bathroom, check your social media updates, or watch that cat video.
+
+This page will reload when the processing is complete.
+","Your file is being loaded, the data is being processed and validated, and the download files are being generated - this may take a couple minutes.
+
+This would be a good time to get some water, go to the bathroom, check your social media updates, or watch that cat video.
+
+This page will reload when the processing is complete.
+"
+660,ka.datasets.highlights.title,Dataset Highlights,მონაცემთა ცხრილის გამორჩეულები
+661,ka.datasets.highlights.instructions,"Highlights are visuals (charts and maps) that highlight interesting aspects of your dataset and are shown on the dashboard page and the home page. 
 
 To add a highlight, go to the explore page, select the indicators you want, and then in the charts that appear click the star button in the top left corner.
 
@@ -639,43 +680,54 @@ You can use this page to quickly remove highlights or to indicate which highligh
 
 თქვენ შეგიძლიათ გამოიყენოთ ეს გვერდი გამორჩეულის მარტივად წასაშლელად ან იმის მისათითებლად თუ რომელი გამორჩეული იყოს მთავარ გვერდზე მუდმივად ნაჩვენები - ყველა ცხრილიდან მხოლოდ ერთი გამორჩეული შეიძლება იყოს არჩეული.
 "
-631,ka.datasets.highlights.no_highlights,There are no highlights on file for this dataset.,ფაილში ამ ცხრილისთვის არ არის გამორჩეული
-632,ka.datasets.highlights.question_code,Question,კითხვა
-633,ka.datasets.highlights.broken_down_by_code,Broken Down By,ჩაშლილია
-634,ka.datasets.highlights.filtered_by_code,Filtered By,გაფილტრულია
-635,ka.datasets.highlights.show_home_page,Always Shows on Home Page,ყოველთვის ჩანს მთავარ გვერდზე
-636,ka.datasets.highlights.btn_show_home_page,Show on Home Page,მთავარ გვერდზე გამოჩენა
-637,ka.questions.index.title,Edit Questions and their Answers,კითხვების და მათი პასუხების შესწორება
-638,ka.questions.index.explanation,Use this page to select a question to edit it and/or it's answers.,გამოიყენეთ ეს გვერდი კითხვის ან/და მისი პასუხის ჩასასწორებლად
-639,ka.questions.index.mass_changes,You can also use the %{link} to change multiple items at once via a spreadsheet upload.,"თქვენ ასევე შეგიძლია გამოიყენოთ %{link} რამდენიმე საკითხის ერთხელ შესაცვლელად, ონლაინ ცხრილის ატვირთვით."
-640,ka.questions.index.mass_changes_link,Mass Changes page,ფართო ცვლილებების გვერდი
-641,ka.questions.index.no_questions,There are no questions on file for this dataset.,ამ ცხრილისთვის არ არის კითხვები ან ფაილები
-642,ka.questions.show.title,Question: %{question},კითხვა: %{question}
-643,ka.questions.show.header_answers,Answers,პასუხი
-644,ka.questions.show.no_answers,There are no pre-defined list of answers for this question.,ამ კითხვისთვის არ არის წონასწარ განსაზღვრული პასუხების სია
-645,ka.questions.form.header_answers,Answers,პასუხები
-646,ka.questions.form.explanation_answers,"The answer settings fields (value, sort order, etc) are only shown in the '%{lang}' tab.","პასუხის პარამეტრები (მნიშვნელობა, დახარისხების წყობა, ა.შ.) ნაჩვენებია მხოლოდ '%{lang}' ჩანართში."
-647,ka.questions.form.default_text,Default Text,ძირითადი ტექსტი
-648,ka.questions.form.header_add_answer,Add a new answer for this question,ამ კითხვისთვის ახალი პასუხის დამატება
-649,ka.questions.form.header_add_missing_answer,The following values are in the data but are not provided as one of the answers. <br/>Select a value to add it as an answer and have it included in the analysis.,"აღნიშნული მნიშვნელობები მონაცემებში არიან, მაგრამ არ არიან მოწოდებულნი როგორც პასუხის ერთ ერთი ვარიანტი. <br/>აირჩიეთ მნიშვნელობა რათა დაამატოთ იგირ როგორც პასუხი და ანალიზმა მოიცვას იგი."
-650,ka.questions.mass_changes.title,Mass Changes for Questions/Answers,კითხვების/პასუხების ფართო ცვლილებები
-651,ka.questions.mass_changes.explanation,Use this page to upload a spreadsheet of Questions or Answers to quickly change the text or settings for many records at once.,გამოიყენეთ ეს გვერდი კითხვების ან პასუხების ასატვირთად ან მარავალი ჩანაწერის ტექსტისა და პარამეტრების შესაცვლლეად.
-652,ka.questions.mass_changes.template,Template,ნიმუში
-653,ka.questions.mass_changes.upload,Upload Your Spreadsheet of Changes,ატვირთეთ თქვენი შესწორებების ონლაინ ცხრილი
-654,ka.questions.mass_changes.questions.header,Questions,კითხვები
-655,ka.questions.mass_changes.questions.template,Clicking the button below will download a template of all questions in this dataset. Make the desired changes in the spreadsheet and then use the form below to update your changes.,ქვემოთ მოცემულ ღილაკზე დაჭერით ჩამოიტვირთება მონაცემთა ცხრილში არსებული ყველა პასუხის ნიმუში. გააკეთეთ თქვენთვის სასურველი ცვლილებები ონლაინ ცხრილში და შემდეგ გამოიყენეთ ქვემოთ მოცემული ფორმა თქვენი ცვლილებების განახლებისთვის.
-656,ka.questions.mass_changes.questions.template2,The only columns that cannot be changed are: %{code},"სვეტები, რომლის შეცვლაც შეუძლებელია: %{code}"
-657,ka.questions.mass_changes.questions.template_link,Download Questions Template,კითხვების ნიმუშების ჩამოტვირთვა
-658,ka.questions.mass_changes.questions.submit,Update Questions,კითხვების განახლება
-659,ka.questions.mass_changes.answers.header,Answers,პასუხები
-660,ka.questions.mass_changes.answers.template,Clicking the button below will download a template of all answers in this dataset. Make the desired changes in the spreadsheet and then use the form below to update your changes.,ქვემოთ მოცემულ ღილაკზე დაჭერით ჩამოიტვირთება მონაცემთა ცხრილში არსებული ყველა პასუხის ნიმუში. გააკეთეთ თქვენთვის სასურველი ცვლილებები ონლაინ ცხრილში და შემდეგ გამოიყენეთ ქვემოთ მოცემული ფორმა თქვენი ცვლილებების განახლებისთვის.
-661,ka.questions.mass_changes.answers.template2,"The only columns that cannot be changed are: %{code}, %{value}","სვეტები, რომლის შეცვლაც შეუძლებელია: %{code}, %{value}"
-662,ka.questions.mass_changes.answers.template_link,Download Answers Template,პასუხების ნიმუშების ჩამოტვირთვა
-663,ka.questions.mass_changes.answers.submit,Update Answers,პასუხების განახლება
-664,ka.time_series.form.header_datasets,Datasets,მონაცემთა ცხრილები
-665,ka.time_series.form.header_add_dataset,Add a new dataset to this time series,პერიოდული შედარებაში ახალი მონაცემთა ცხრილების დამატება
-666,ka.time_series.highlights.title,Time Series Highlights,პერიოდული შედარება გამორჩეული
-667,ka.time_series.highlights.instructions,"Highlights are visuals (charts and maps) that highlight interesting aspects of your time series and are shown on the dashboard page and the home page. 
+662,ka.datasets.highlights.no_highlights,There are no highlights on file for this dataset.,ფაილში ამ ცხრილისთვის არ არის გამორჩეული
+663,ka.datasets.highlights.question_code,Question,კითხვა
+664,ka.datasets.highlights.broken_down_by_code,Broken Down By,ჩაშლილია
+665,ka.datasets.highlights.filtered_by_code,Filtered By,გაფილტრულია
+666,ka.datasets.highlights.show_home_page,Permanently Shown on Home Page,Permanently Shown on Home Page
+667,ka.datasets.highlights.btn_show_home_page,Permanently Show on Home Page,Permanently Show on Home Page
+668,ka.datasets.highlights.questions,Questions,Questions
+669,ka.datasets.highlights.description,Description,Description
+670,ka.datasets.download_data.title,Download Complete Dataset,Download Complete Dataset
+671,ka.datasets.download_data.instructions,"You can use this page to download the entire dataset in any format you desire. 
+
+This download is different than what is on the dashboard page in that this download includes the entire dataset, whereas the download from the dashboard page only includes the data that you have indicated can be downloaded by the public.
+","You can use this page to download the entire dataset in any format you desire. 
+
+This download is different than what is on the dashboard page in that this download includes the entire dataset, whereas the download from the dashboard page only includes the data that you have indicated can be downloaded by the public.
+"
+672,ka.datasets.download_data.no_files,The download files have not been generated yet. Please check back soon.,The download files have not been generated yet. Please check back soon.
+673,ka.questions.index.title,Edit Questions and their Answers,კითხვების და მათი პასუხების შესწორება
+674,ka.questions.index.explanation,Use this page to select a question to edit it and/or it's answers.,გამოიყენეთ ეს გვერდი კითხვის ან/და მისი პასუხის ჩასასწორებლად
+675,ka.questions.index.mass_changes,You can also use the %{link} to change multiple items at once via a spreadsheet upload.,"თქვენ ასევე შეგიძლია გამოიყენოთ %{link} რამდენიმე საკითხის ერთხელ შესაცვლელად, ონლაინ ცხრილის ატვირთვით."
+676,ka.questions.index.mass_changes_link,Mass Changes page,ფართო ცვლილებების გვერდი
+677,ka.questions.index.no_questions,There are no questions on file for this dataset.,ამ ცხრილისთვის არ არის კითხვები ან ფაილები
+678,ka.questions.show.title,Question: %{question},კითხვა: %{question}
+679,ka.questions.show.header_answers,Answers,პასუხი
+680,ka.questions.show.no_answers,There are no pre-defined list of answers for this question.,ამ კითხვისთვის არ არის წონასწარ განსაზღვრული პასუხების სია
+681,ka.questions.form.header_answers,Answers,პასუხები
+682,ka.questions.form.explanation_answers,"The answer settings fields (value, sort order, etc) are only shown in the '%{lang}' tab.","პასუხის პარამეტრები (მნიშვნელობა, დახარისხების წყობა, ა.შ.) ნაჩვენებია მხოლოდ '%{lang}' ჩანართში."
+683,ka.questions.form.default_text,Default Text,ძირითადი ტექსტი
+684,ka.questions.form.header_add_answer,Add a new answer for this question,ამ კითხვისთვის ახალი პასუხის დამატება
+685,ka.questions.form.header_add_missing_answer,The following values are in the data but are not provided as one of the answers. <br/>Select a value to add it as an answer and have it included in the analysis.,"აღნიშნული მნიშვნელობები მონაცემებში არიან, მაგრამ არ არიან მოწოდებულნი როგორც პასუხის ერთ ერთი ვარიანტი. <br/>აირჩიეთ მნიშვნელობა რათა დაამატოთ იგირ როგორც პასუხი და ანალიზმა მოიცვას იგი."
+686,ka.questions.mass_changes.title,Mass Changes for Questions/Answers,კითხვების/პასუხების ფართო ცვლილებები
+687,ka.questions.mass_changes.explanation,Use this page to upload a spreadsheet of Questions or Answers to quickly change the text or settings for many records at once.,გამოიყენეთ ეს გვერდი კითხვების ან პასუხების ასატვირთად ან მარავალი ჩანაწერის ტექსტისა და პარამეტრების შესაცვლლეად.
+688,ka.questions.mass_changes.template,Template,ნიმუში
+689,ka.questions.mass_changes.upload,Upload Your Spreadsheet of Changes,ატვირთეთ თქვენი შესწორებების ონლაინ ცხრილი
+690,ka.questions.mass_changes.questions.header,Questions,კითხვები
+691,ka.questions.mass_changes.questions.template,Clicking the button below will download a template of all questions in this dataset. Make the desired changes in the spreadsheet and then use the form below to update your changes.,ქვემოთ მოცემულ ღილაკზე დაჭერით ჩამოიტვირთება მონაცემთა ცხრილში არსებული ყველა პასუხის ნიმუში. გააკეთეთ თქვენთვის სასურველი ცვლილებები ონლაინ ცხრილში და შემდეგ გამოიყენეთ ქვემოთ მოცემული ფორმა თქვენი ცვლილებების განახლებისთვის.
+692,ka.questions.mass_changes.questions.template2,The only columns that cannot be changed are: %{code},"სვეტები, რომლის შეცვლაც შეუძლებელია: %{code}"
+693,ka.questions.mass_changes.questions.template_link,Download Questions Template,კითხვების ნიმუშების ჩამოტვირთვა
+694,ka.questions.mass_changes.questions.submit,Update Questions,კითხვების განახლება
+695,ka.questions.mass_changes.answers.header,Answers,პასუხები
+696,ka.questions.mass_changes.answers.template,Clicking the button below will download a template of all answers in this dataset. Make the desired changes in the spreadsheet and then use the form below to update your changes.,ქვემოთ მოცემულ ღილაკზე დაჭერით ჩამოიტვირთება მონაცემთა ცხრილში არსებული ყველა პასუხის ნიმუში. გააკეთეთ თქვენთვის სასურველი ცვლილებები ონლაინ ცხრილში და შემდეგ გამოიყენეთ ქვემოთ მოცემული ფორმა თქვენი ცვლილებების განახლებისთვის.
+697,ka.questions.mass_changes.answers.template2,"The only columns that cannot be changed are: %{code}, %{value}","სვეტები, რომლის შეცვლაც შეუძლებელია: %{code}, %{value}"
+698,ka.questions.mass_changes.answers.template_link,Download Answers Template,პასუხების ნიმუშების ჩამოტვირთვა
+699,ka.questions.mass_changes.answers.submit,Update Answers,პასუხების განახლება
+700,ka.time_series.form.header_datasets,Datasets,მონაცემთა ცხრილები
+701,ka.time_series.form.header_add_dataset,Add a new dataset to this time series,პერიოდული შედარებაში ახალი მონაცემთა ცხრილების დამატება
+702,ka.time_series.highlights.title,Time Series Highlights,პერიოდული შედარება გამორჩეული
+703,ka.time_series.highlights.instructions,"Highlights are visuals (charts and maps) that highlight interesting aspects of your time series and are shown on the dashboard page and the home page. 
 
 To add a highlight, go to the explore page, select the indicators you want, and then in the charts that appear click the star button in the top left corner.
 
@@ -686,97 +738,103 @@ You can use this page to quickly remove highlights or to indicate which highligh
 
 თქვენ შეგიძლიათ გამოიყენოთ ეს გვერდი გამორჩეულის მარტივად წასაშლელად ან იმის მისათითებლად თუ რომელი გამორჩეული იყოს მთავარ გვერდზე მუდმივად ნაჩვენები - ყველა ცხრილიდან მხოლოდ ერთი გამორჩეული შეიძლება იყოს არჩეული.
 "
-668,ka.time_series.highlights.no_highlights,There are no highlights on file for this time series.,ფაილში ამ პერიოდული შედარებისთვის არ არის გამორჩეული
-669,ka.time_series.highlights.question_code,Question,კითხვა
-670,ka.time_series.highlights.broken_down_by_code,Broken Down By,ჩაშლილია
-671,ka.time_series.highlights.filtered_by_code,Filtered By,გაფილტრულია
-672,ka.time_series.highlights.show_home_page,Always Shows on Home Page,ყოველთვის ჩანს მთავარ გვერდზე
-673,ka.time_series.highlights.btn_show_home_page,Show on Home Page,მთავარ გვერდზე გამოჩენა
-674,ka.time_series_questions.index.title,Edit Time Series Questions and their Answers,პერიოდული შედარების კითხვების და პასუხების შესწორება
-675,ka.time_series_questions.index.explanation,Use this page to add questions to the time series or edit questions already in the time series.,გამოიყენეთ ეს გვერდი პერიოდულ შედარებაში ახალი კითხვების დასამატებლად ან არსებული კითხვების შესასწორებლად
-676,ka.time_series_questions.index.no_questions,There are no questions on file for this time series yet.,პერიოდული შედარებისთვის კითხვა ან ფაილი ვერ მოიძებნა
-677,ka.time_series_questions.index.btn_add_question,Add a Question,კითხვის დამატება
-678,ka.time_series_questions.index.btn_add_question_hint,Match a question from each dataset and add the question to the time series.,მოანცემთა თითოეული ცხრილიდან დაამთხვიოს კითხვა და დაამატოს პერიოდულ შედარებაში.
-679,ka.time_series_questions.index.btn_automatic,Automatically Assign Matching Questions,ავტომატურად დააკავშიროს ერთნაირი კითხვები
-680,ka.time_series_questions.index.btn_automatic_hint,Questions with the same Question Code in each dataset will automatically be added to the time series. This will take a few seconds to complete.,მონაცემთა თითოეული ცხრილიდან ერთი და იმავე კოდის მქონე კითხვები ავტომატურად დაემატება პერიოდულ შედარებაში. ამის დასრულებას დასჭირდება რამდენიმე წამი.
-681,ka.time_series_questions.index.header_dataset_question,%{title} Question,%{title} კითხვა
-682,ka.time_series_questions.form.header_answers,Answers,პასუხი
-683,ka.time_series_questions.form.explanation_answers,"The answer settings fields (value, sort order, etc) are only shown in the '%{lang}' tab.","პასუხის პარამეტრები (მნიშვნელობა, დახარისხების წყობა, ა.შ.) ნაჩვენებია მხოლოდ '%{lang}' ჩანართში."
-684,ka.time_series_questions.form.default_text,Default Text,მთავარი ტექსტი
-685,ka.time_series_questions.form.header_add_answer,Add a new answer for this question,ამ კითხვისთვის ახალი პასუხის დამატება
-686,ka.time_series_questions.show.title,Question: %{question},კითხვა: %{question}
-687,ka.time_series_questions.show.header_answers,Answers,პასუხი
-688,ka.time_series_questions.show.no_answers,There are no answers for this question yet.,ამ კითხვისთვის პასუხი ჯერ ვერ მოიძებნა
-689,ka.shared.explore_data.no_matches,Your selections returned no data. Please try again with a different selection.,თქვენი მონიშნული დაბრუნდა მონაცემებში. გთხოვთ სცადოთ თავიდან სხვა მონიშვნით.
-690,ka.shared.explore_data.no_data,'%{title}' does not have any data that is analyzable at this time.,"%{title}' არ შეიცავს მონაცემებს, რომლებიც გაანალიზებადია ამ დროისთვის."
-691,ka.shared.explore_data.hover_region,Hover over a Region,Hover over a Region
-692,ka.shared.explore_data.na,N/A,არ არის ხელმისაწვდომი
-693,ka.shared.explore_data.percent,Percent,პროცენტი
-694,ka.shared.explore_data.dataset_title,Dataset,მონაცემთა ცხრილი
-695,ka.shared.explore_data.form.question_code,Explore Answers To,გაეცანით პასუხებს
-696,ka.shared.explore_data.form.broken_down_by_code,Broken Down By,ჩაშლილია
-697,ka.shared.explore_data.form.optional,optional,არჩევითი
-698,ka.shared.explore_data.form.no_comparison,No Comparison,არ არის შედარება
-699,ka.shared.explore_data.form.swap,Swap the Questions,კითხვის შეცვლა
-700,ka.shared.explore_data.form.submit,Generate,დაანგარიშება
-701,ka.shared.explore_data.form.reset,Reset,გადატვირთვა
-702,ka.shared.explore_data.form.filtered_by_code,Filtered By,გაფილტრულია
-703,ka.shared.explore_data.form.no_filter,No Filter,ფილტრი არ არის
-704,ka.shared.explore_data.form.can_exclude,"Exclude ""Don't know"" & ""Refuse""","გამორიცხე ""არ ვიცი"" & ""უარი პასუხზე"""
-705,ka.shared.explore_data.form.can_exclude_hint,"Remove answers like ""Don't know"" & ""Refuse"" from the analysis","ანალიზიდან წაშალე პასუხები ""არ ვიცი"" & ""უარი პასუხზე"""
-706,ka.shared.explore_data.jumpto.chart,Jump to Chart,გრაფაზე გადასვლა
-707,ka.shared.explore_data.jumpto.map,Jumpt to Map,რუკაზე გადასვლა
-708,ka.shared.explore_data.tabs.map,Map,რუკა
-709,ka.shared.explore_data.tabs.chart,Chart,გრაფა
-710,ka.shared.explore_data.tabs.table,Table,ცხრილი
-711,ka.shared.explore_data.tabs.details,Details,დეტალები
-712,ka.shared.explore_data.map.filter,Filter map by selecting an answer to '%{text}':,რუკის გაფილტვრა ამ პასუხის არჩევით '%{text}':
-713,ka.shared.explore_time_series.no_matches,Your selections returned no data. Please try again with a different selection.,თქვენი მონიშნული დაბრუნდა მონაცემებში. გთხოვთ სცადოთ თავიდან სხვა მონიშვნით.
-714,ka.shared.explore_time_series.no_data,'%{title}' does not have any data that is analyzable at this time.,"%{title}' არ შეიცავს მონაცემებს, რომლებიც გაანალიზებადია ამ დროისთვის."
-715,ka.shared.explore_time_series.na,N/A,არ არის ხელმისაწვდომი
-716,ka.shared.explore_time_series.percent,Percent,პროცენტი
-717,ka.shared.explore_time_series.time_series_title,Time Series,პერიოდული შედარება
-718,ka.shared.explore_time_series.form.question_code,Explore Answers To,გაეცანით პასუხებს
-719,ka.shared.explore_time_series.form.submit,Generate,დაანგარიშება
-720,ka.shared.explore_time_series.form.reset,Reset,გადატვირთვა
-721,ka.shared.explore_time_series.form.filtered_by_code,Filtered By,გაფილტრულია
-722,ka.shared.explore_time_series.form.no_filter,No Filter,ფილტრი არ არის
-723,ka.shared.explore_time_series.form.can_exclude,"Exclude ""Don't know"" & ""Refuse""","გამორიცხე ""არ ვიცი"" & ""უარი პასუხზე"""
-724,ka.shared.explore_time_series.form.can_exclude_hint,"Remove answers like ""Don't know"" & ""Refuse"" from the analysis","ანალიზიდან წაშალე პასუხები ""არ ვიცი"" & ""უარი პასუხზე"""
-725,ka.shared.explore_time_series.jumpto.chart,Jump to Chart,გრაფაზე გადასვლა
-726,ka.shared.explore_time_series.tabs.chart,Chart,გრაფა
-727,ka.shared.explore_time_series.tabs.table,Table,ცხრილი
-728,ka.shared.explore_time_series.tabs.details,Details,დეტალები
-729,ka.shared.dashboard_data.tabs.highlights,Highlights,გამორჩეული
-730,ka.shared.dashboard_data.tabs.methodology,Methodology,მეთოდოლოგია
-731,ka.shared.dashboard_data.tabs.codebook,Codebook,კოდირება
-732,ka.shared.dashboard_data.tabs.reports,Reports,რეფორთები
-733,ka.shared.dashboard_data.tabs.licensing,Legal,ლეგალური
-734,ka.shared.dashboard_data.no_methodology,There is no methodology on file for this dataset.,ამ ცხრილისთვის მეთოდოლოგია არ მოიძებნა
-735,ka.shared.dashboard_data.no_reports,There are no reports on file for this dataset.,ამ ცხრილისთვის რეფორთები არ მოიძებნა
-736,ka.shared.dashboard_data.no_highlights,There are no highlights on file for this dataset.,ამ ცხრილისთვის გამორჩეული არ მოიძებნა
-737,ka.shared.dashboard_data.filter.all,All Text,ყველა ტექსტი
-738,ka.shared.dashboard_data.filter.questions,Question Text,კითხვის ტექსტი
-739,ka.shared.dashboard_data.filter.answers,Answer Text,პასუხის ტექსტი
-740,ka.shared.dashboard_time_series.tabs.highlights,Highlights,გამორჩეული
-741,ka.shared.dashboard_time_series.tabs.methodology,Methodology,მეთოდოლოგია
-742,ka.shared.dashboard_time_series.tabs.codebook,Codebook,კოდირება
-743,ka.shared.dashboard_time_series.tabs.reports,Reports,რეფორთები
-744,ka.shared.dashboard_time_series.tabs.licensing,Legal,ლეგალური
-745,ka.shared.dashboard_time_series.tabs.datasets,Datasets,მონაცემთა ცხრილი
-746,ka.shared.dashboard_time_series.no_highlights,There are no highlights on file for this time series.,ამ პერიოდული შედარებისთვის გამორჩეული არ მოიძებნა
-747,ka.shared.dashboard_time_series.filter.all,All Text,ყველა ტექსტი
-748,ka.shared.dashboard_time_series.filter.questions,Question Text,კითხვის ტექსტი
-749,ka.shared.dashboard_time_series.filter.answers,Answer Text,პასუხის ტექსტი
-750,ka.shared.language_switcher.label,Available Languages,ხელმისაწვდომი ენები
-751,ka.shared.embed_v1.title_site,Go to %{app_name},გადასვლა %{app_name} -ზე
-752,ka.shared.embed_v1.title_datalist,View All Datasets,მონაცემთა ყველა ცხილის ნახვა
-753,ka.export_data.dataset,Dataset: %{title},მონაცემთა ცხრილი: %{title}
-754,ka.export_data.download_from,Downloaded From: %{app_name} at %{url}.,ჩამოტვირთულია აქედან: %{app_name} at %{url}.
-755,ka.export_data.last_update,Data Last Updated: %{date},მონაცემები ბოლოს განახლებულია: %{date}
-756,ka.export_data.instructions.codebook,The codebook is a list of all questions and answers available in this dataset. It is provided as a reference to help you quickly find items of interest.,"კოდირება არის მონაცემთა ცხრილში არსებული ყველა შესაძლო კითვა და პასუხი. ის წარმოადგენს დამხმარე ცნობარს, რომელიც გეხმარებათ თქვენთვის საინტერესო ინფორმაციის მოძიებაში."
-757,ka.export_data.instructions.csv_main,"The CSV file is a spreadsheet of all of the data in the dataset. You can open this file in OpenOffice, Excel, Google Spreadsheets or any other spreadsheet software. ","CSV ფაილი არის მონაცემთა ცხრილში არსებული ყველა მონაცემის ონლაინ ცხრილი. თქვენი მისი გახსნა შეგიძლიათ შემდეგი პროგრამების საშუალებით: OpenOffice, Excel, Google Spreadsheets ან სხვა ნებისმიერი ონლაინ ცხრილის პროგრამით."
-758,ka.export_data.instructions.csv,"The CSV download contains 2 files:
+704,ka.time_series.highlights.no_highlights,There are no highlights on file for this time series.,ფაილში ამ პერიოდული შედარებისთვის არ არის გამორჩეული
+705,ka.time_series.highlights.question_code,Question,კითხვა
+706,ka.time_series.highlights.broken_down_by_code,Broken Down By,ჩაშლილია
+707,ka.time_series.highlights.filtered_by_code,Filtered By,გაფილტრულია
+708,ka.time_series.highlights.show_home_page,Permanently Shown on Home Page,Permanently Shown on Home Page
+709,ka.time_series.highlights.btn_show_home_page,Permanently Show on Home Page,Permanently Show on Home Page
+710,ka.time_series.highlights.questions,Questions,Questions
+711,ka.time_series.highlights.description,Description,Description
+712,ka.time_series_questions.index.title,Edit Time Series Questions and their Answers,პერიოდული შედარების კითხვების და პასუხების შესწორება
+713,ka.time_series_questions.index.explanation,Use this page to add questions to the time series or edit questions already in the time series.,გამოიყენეთ ეს გვერდი პერიოდულ შედარებაში ახალი კითხვების დასამატებლად ან არსებული კითხვების შესასწორებლად
+714,ka.time_series_questions.index.no_questions,There are no questions on file for this time series yet.,პერიოდული შედარებისთვის კითხვა ან ფაილი ვერ მოიძებნა
+715,ka.time_series_questions.index.btn_add_question,Add a Question,კითხვის დამატება
+716,ka.time_series_questions.index.btn_add_question_hint,Match a question from each dataset and add the question to the time series.,მოანცემთა თითოეული ცხრილიდან დაამთხვიოს კითხვა და დაამატოს პერიოდულ შედარებაში.
+717,ka.time_series_questions.index.btn_automatic,Automatically Assign Matching Questions,ავტომატურად დააკავშიროს ერთნაირი კითხვები
+718,ka.time_series_questions.index.btn_automatic_hint,Questions with the same Question Code in each dataset will automatically be added to the time series. This will take a few seconds to complete.,მონაცემთა თითოეული ცხრილიდან ერთი და იმავე კოდის მქონე კითხვები ავტომატურად დაემატება პერიოდულ შედარებაში. ამის დასრულებას დასჭირდება რამდენიმე წამი.
+719,ka.time_series_questions.index.header_dataset_question,%{title} Question,%{title} კითხვა
+720,ka.time_series_questions.form.header_answers,Answers,პასუხი
+721,ka.time_series_questions.form.explanation_answers,"The answer settings fields (value, sort order, etc) are only shown in the '%{lang}' tab.","პასუხის პარამეტრები (მნიშვნელობა, დახარისხების წყობა, ა.შ.) ნაჩვენებია მხოლოდ '%{lang}' ჩანართში."
+722,ka.time_series_questions.form.default_text,Default Text,მთავარი ტექსტი
+723,ka.time_series_questions.form.header_add_answer,Add a new answer for this question,ამ კითხვისთვის ახალი პასუხის დამატება
+724,ka.time_series_questions.form.auto_create_answers_link,Auto-Create Answers,Auto-Create Answers
+725,ka.time_series_questions.form.auto_create_answers_title,"For each answer in the questions selected above, add it to the list below","For each answer in the questions selected above, add it to the list below"
+726,ka.time_series_questions.form.delete_all_answers_link,Delete All Answers,Delete All Answers
+727,ka.time_series_questions.form.delete_all_answers_title,Delete all answers below,Delete all answers below
+728,ka.time_series_questions.show.title,Question: %{question},კითხვა: %{question}
+729,ka.time_series_questions.show.header_answers,Answers,პასუხი
+730,ka.time_series_questions.show.no_answers,There are no answers for this question yet.,ამ კითხვისთვის პასუხი ჯერ ვერ მოიძებნა
+731,ka.shared.explore_data.no_matches,Your selections returned no data. Please try again with a different selection.,თქვენი მონიშნული დაბრუნდა მონაცემებში. გთხოვთ სცადოთ თავიდან სხვა მონიშვნით.
+732,ka.shared.explore_data.no_data,'%{title}' does not have any data that is analyzable at this time.,"%{title}' არ შეიცავს მონაცემებს, რომლებიც გაანალიზებადია ამ დროისთვის."
+733,ka.shared.explore_data.hover_region,Hover over a Region,Hover over a Region
+734,ka.shared.explore_data.na,N/A,არ არის ხელმისაწვდომი
+735,ka.shared.explore_data.percent,Percent,პროცენტი
+736,ka.shared.explore_data.dataset_title,Dataset,მონაცემები
+737,ka.shared.explore_data.form.question_code,Explore Answers To,გაეცანით პასუხებს
+738,ka.shared.explore_data.form.broken_down_by_code,Broken Down By,ჩაშლილია
+739,ka.shared.explore_data.form.optional,optional,არჩევითი
+740,ka.shared.explore_data.form.no_comparison,No Comparison,არ არის შედარება
+741,ka.shared.explore_data.form.swap,Swap the Questions,კითხვის შეცვლა
+742,ka.shared.explore_data.form.submit,Generate,დაანგარიშება
+743,ka.shared.explore_data.form.reset,Reset,გადატვირთვა
+744,ka.shared.explore_data.form.filtered_by_code,Filtered By,გაფილტრულია
+745,ka.shared.explore_data.form.no_filter,No Filter,ფილტრი არ არის
+746,ka.shared.explore_data.form.can_exclude,"Exclude ""Don't know"" & ""Refuse""","გამორიცხე ""არ ვიცი"" & ""უარი პასუხზე"""
+747,ka.shared.explore_data.form.can_exclude_hint,"Remove answers like ""Don't know"" & ""Refuse"" from the analysis","ანალიზიდან წაშალე პასუხები ""არ ვიცი"" & ""უარი პასუხზე"""
+748,ka.shared.explore_data.jumpto.chart,Jump to Chart,გრაფაზე გადასვლა
+749,ka.shared.explore_data.jumpto.map,Jump to Map,რუკაზე გადასვლა
+750,ka.shared.explore_data.tabs.map,Map,რუკა
+751,ka.shared.explore_data.tabs.chart,Chart,გრაფა
+752,ka.shared.explore_data.tabs.table,Table,ცხრილი
+753,ka.shared.explore_data.tabs.details,Details,დეტალები
+754,ka.shared.explore_data.map.filter,Filter map by selecting an answer to '%{text}':,რუკის გაფილტვრა ამ პასუხის არჩევით '%{text}':
+755,ka.shared.explore_time_series.no_matches,Your selections returned no data. Please try again with a different selection.,თქვენი მონიშნული დაბრუნდა მონაცემებში. გთხოვთ სცადოთ თავიდან სხვა მონიშვნით.
+756,ka.shared.explore_time_series.no_data,'%{title}' does not have any data that is analyzable at this time.,"%{title}' არ შეიცავს მონაცემებს, რომლებიც გაანალიზებადია ამ დროისთვის."
+757,ka.shared.explore_time_series.na,N/A,არ არის ხელმისაწვდომი
+758,ka.shared.explore_time_series.percent,Percent,პროცენტი
+759,ka.shared.explore_time_series.time_series_title,Time Series,პერიოდული შედარება
+760,ka.shared.explore_time_series.form.question_code,Explore Answers To,გაეცანით პასუხებს
+761,ka.shared.explore_time_series.form.submit,Generate,დაანგარიშება
+762,ka.shared.explore_time_series.form.reset,Reset,გადატვირთვა
+763,ka.shared.explore_time_series.form.filtered_by_code,Filtered By,გაფილტრულია
+764,ka.shared.explore_time_series.form.no_filter,No Filter,ფილტრი არ არის
+765,ka.shared.explore_time_series.form.can_exclude,"Exclude ""Don't know"" & ""Refuse""","გამორიცხე ""არ ვიცი"" & ""უარი პასუხზე"""
+766,ka.shared.explore_time_series.form.can_exclude_hint,"Remove answers like ""Don't know"" & ""Refuse"" from the analysis","ანალიზიდან წაშალე პასუხები ""არ ვიცი"" & ""უარი პასუხზე"""
+767,ka.shared.explore_time_series.jumpto.chart,Jump to Chart,გრაფაზე გადასვლა
+768,ka.shared.explore_time_series.tabs.chart,Chart,გრაფა
+769,ka.shared.explore_time_series.tabs.table,Table,ცხრილი
+770,ka.shared.explore_time_series.tabs.details,Details,დეტალები
+771,ka.shared.dashboard_data.tabs.highlights,Highlights,მნიშვნელოვანი
+772,ka.shared.dashboard_data.tabs.methodology,Methodology,მეთოდოლოგია
+773,ka.shared.dashboard_data.tabs.codebook,Codebook,კოდირება
+774,ka.shared.dashboard_data.tabs.reports,Reports,რეფორთები
+775,ka.shared.dashboard_data.tabs.licensing,Legal,ლეგალური
+776,ka.shared.dashboard_data.no_methodology,There is no methodology on file for this dataset.,ამ ცხრილისთვის მეთოდოლოგია არ მოიძებნა
+777,ka.shared.dashboard_data.no_reports,There are no reports on file for this dataset.,ამ ცხრილისთვის რეფორთები არ მოიძებნა
+778,ka.shared.dashboard_data.no_highlights,There are no highlights on file for this dataset.,ამ ცხრილისთვის გამორჩეული არ მოიძებნა
+779,ka.shared.dashboard_data.filter.all,All Text,ყველა ტექსტი
+780,ka.shared.dashboard_data.filter.questions,Question Text,კითხვის ტექსტი
+781,ka.shared.dashboard_data.filter.answers,Answer Text,პასუხის ტექსტი
+782,ka.shared.dashboard_time_series.tabs.highlights,Highlights,მნიშვნელოვანი
+783,ka.shared.dashboard_time_series.tabs.methodology,Methodology,მეთოდოლოგია
+784,ka.shared.dashboard_time_series.tabs.codebook,Codebook,კოდირება
+785,ka.shared.dashboard_time_series.tabs.reports,Reports,რეფორთები
+786,ka.shared.dashboard_time_series.tabs.licensing,Legal,ლეგალური
+787,ka.shared.dashboard_time_series.tabs.datasets,Datasets,მონაცემები
+788,ka.shared.dashboard_time_series.no_highlights,There are no highlights on file for this time series.,ამ პერიოდული შედარებისთვის გამორჩეული არ მოიძებნა
+789,ka.shared.dashboard_time_series.filter.all,All Text,ყველა ტექსტი
+790,ka.shared.dashboard_time_series.filter.questions,Question Text,კითხვის ტექსტი
+791,ka.shared.dashboard_time_series.filter.answers,Answer Text,პასუხის ტექსტი
+792,ka.shared.language_switcher.label,Available Languages,ხელმისაწვდომი ენები
+793,ka.shared.embed_v1.title_site,Go to %{app_name},გადასვლა %{app_name} -ზე
+794,ka.shared.embed_v1.title_datalist,View All Datasets,მონაცემთა ყველა ცხილის ნახვა
+795,ka.export_data.dataset,Dataset: %{title},მონაცემთა ცხრილი: %{title}
+796,ka.export_data.download_from,Downloaded From: %{app_name} at %{url}.,ჩამოტვირთულია აქედან: %{app_name} at %{url}.
+797,ka.export_data.last_update,Data Last Updated: %{date},მონაცემები ბოლოს განახლებულია: %{date}
+798,ka.export_data.instructions.codebook,The codebook is a list of all questions and answers available in this dataset. It is provided as a reference to help you quickly find items of interest.,"კოდირება არის მონაცემთა ცხრილში არსებული ყველა შესაძლო კითვა და პასუხი. ის წარმოადგენს დამხმარე ცნობარს, რომელიც გეხმარებათ თქვენთვის საინტერესო ინფორმაციის მოძიებაში."
+799,ka.export_data.instructions.csv_main,"The CSV file is a spreadsheet of all of the data in the dataset. You can open this file in OpenOffice, Excel, Google Spreadsheets or any other spreadsheet software. ","CSV ფაილი არის მონაცემთა ცხრილში არსებული ყველა მონაცემის ონლაინ ცხრილი. თქვენი მისი გახსნა შეგიძლიათ შემდეგი პროგრამების საშუალებით: OpenOffice, Excel, Google Spreadsheets ან სხვა ნებისმიერი ონლაინ ცხრილის პროგრამით."
+800,ka.export_data.instructions.csv,"The CSV download contains 2 files:
 - Codebook: %{codebook}
 
 - CSV: %{csv} The CSV is formatted with headers (format: code - name) and the answers are the answer text, not the answer value.
@@ -785,7 +843,7 @@ You can use this page to quickly remove highlights or to indicate which highligh
 
 - CSV: %{csv} CSV ფორმატირებულია სათაურებით (ცვლადი კოდი და სახელი) და პასუხები იყენებენ პასუხის ტექსტს და არა პასუხის მნიშვნელობას.
 "
-759,ka.export_data.instructions.spss,"The SPSS download contains 3 files:
+801,ka.export_data.instructions.spss,"The SPSS download contains 3 files:
 - Codebook: %{codebook}
 
 - CSV: %{csv} The CSV is formatted to be loaded into SPSS, so it does not contain headers and the answers are the answer values, not the answer text.
@@ -798,7 +856,7 @@ You can use this page to quickly remove highlights or to indicate which highligh
 - CSV: %{csv} CSV დაფორმატირებულია SPSS-ის ჩატვირთვის ფორმატში, ამიტომ ის არ შეიცავს სათაურს და პასუხები იყენებენ პასუხის მნიშვნელობას და არა პასუხის ტექსტს.
 
 - SPS: SPS ფაილი არის კოდირებული ფაილი, რომელიც გაიშვება SPSS-ში და ჩატვირთავს მონაცემებს CSV-დან, აგრეთვე ქმნის თითოეულ ცვლად და მის შესაძლო მნიშვნელობას. მნიშვნელოვანია - SPSS-ში კოდირებული ტექსტის გაშვებამდე, თქვენ უნდა განაახლოთ 'DATA LIST FILE' რათა გქონდეთ სრული ხელმისაწვდომობა CSV ფაილამდე."
-760,ka.export_data.instructions.stata,"The STATA download contains 3 files:
+802,ka.export_data.instructions.stata,"The STATA download contains 3 files:
 - Codebook: %{codebook}
 
 - CSV: %{csv} The CSV is formatted to be loaded into STATA, so it does not contain headers and the answers are the answer text, not the answer values.
@@ -814,7 +872,7 @@ You can use this page to quickly remove highlights or to indicate which highligh
 
 IMPORTANT - STATA-ში კოდირებული ტექსტის გაშვებამდე, თქვენ უნდა განაახლოთ 'using' ფაილის ბოლოს რათა გქონდეთ სრული ხელმისაწვდომობა CSV ფაილამდე.
 "
-761,ka.export_data.instructions.r,"The R download contains 3 files:
+803,ka.export_data.instructions.r,"The R download contains 3 files:
 - Codebook: %{codebook}
 
 - CSV: %{csv} The CSV is formatted to be loaded into R, so the headers are the variables and the answers are the answer values, not the answer text.
@@ -829,11 +887,11 @@ IMPORTANT - STATA-ში კოდირებული ტექსტის �
 - R: R არის კოდირებული ფაილი, რომელიც გაიშვება R-ში რომელიც ტვირთავს მონაცემებს CSV-დან და ქმნის თოთიეულ ცვლადს. 
      მნიშვნელოვანია - R-ში კოდირებული ტექსტის გაშვებამდე, თქვენ უნდა განაახლოთ 'setwd' რათა გქონდეთ სრული ხელმისაწვდომობა CSV ფაილამდე.
 "
-762,ka.download_data_options.text.csv,CSV,CSV
-763,ka.download_data_options.text.spss,SPSS,SPSS
-764,ka.download_data_options.text.stata,STATA,STATA
-765,ka.download_data_options.text.r,R,R
-766,ka.download_data_options.title.csv,Data formatted for spreadsheets,ონლაინ ცხრილისთვის დაფორმატებული მონაცემები
-767,ka.download_data_options.title.spss,Data formatted for SPSS,SPSS-სთვის დაფორმატებული მონაცემები
-768,ka.download_data_options.title.stata,Data formatted for STATA,STATA-სთვის დაფორმატებული მონაცემები
-769,ka.download_data_options.title.r,Data formatted for R,R-სთვის დაფორმატებული მონაცემები
+804,ka.download_data_options.text.csv,CSV,CSV
+805,ka.download_data_options.text.spss,SPSS,SPSS
+806,ka.download_data_options.text.stata,STATA,STATA
+807,ka.download_data_options.text.r,R,R
+808,ka.download_data_options.title.csv,Data formatted for spreadsheets,ონლაინ ცხრილისთვის დაფორმატებული მონაცემები
+809,ka.download_data_options.title.spss,Data formatted for SPSS,SPSS-სთვის დაფორმატებული მონაცემები
+810,ka.download_data_options.title.stata,Data formatted for STATA,STATA-სთვის დაფორმატებული მონაცემები
+811,ka.download_data_options.title.r,Data formatted for R,R-სთვის დაფორმატებული მონაცემები
