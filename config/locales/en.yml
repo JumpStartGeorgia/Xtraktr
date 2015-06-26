@@ -36,7 +36,7 @@ en:
         status_other: When other (Please specify)
         description: Short description of research objective (<i>optional</i>)           
         notifications: I want to receive notifications when new datasets are added
-        notific07ation_locale: Notification Language
+        notification_locale: Notification Language
       message:
         name: Name
         email: Email Address
