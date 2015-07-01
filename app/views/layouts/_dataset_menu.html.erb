@@ -31,6 +31,12 @@
                     <% end %>
                   </li>
                   <li role="menuitem">
+                    <%= link_to dataset_weights_path(dataset) do %>
+                      <span class="glyphicon glyphicon-scale"></span>
+                      <%= t('app.menu.admin_dataset.weights') %>
+                    <% end %>
+                  </li>                  
+                  <li role="menuitem">
                     <%= link_to highlights_dataset_path(dataset) do %>
                       <span class="glyphicon glyphicon-star"></span>
                       <%= t('app.menu.admin_dataset.highlights') %>

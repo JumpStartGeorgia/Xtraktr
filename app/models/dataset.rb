@@ -67,6 +67,7 @@ class Dataset < CustomTranslation
     end
   end
 
+
   embeds_many :groups, cascade_callbacks: true do
     # get groups that are at the top level (are not sub-groups)
     # if exclude_id provided, remove it from the list
@@ -86,12 +87,50 @@ class Dataset < CustomTranslation
   end
   accepts_nested_attributes_for :groups
 
+  embeds_many :weights, cascade_callbacks: true do
+    # get the default weight
+    def default
+      where(is_default: true).first
+    end
+
+    # get the weights for a question
+    def for_question(code, ignore_id=nil)
+      if ignore_id.present?
+        return self.nin(id: ignore_id).or({is_default: true}, {applies_to_all: true}, {:codes.in => [code] })
+      else
+        return self.or({is_default: true}, {applies_to_all: true}, {:codes.in => [code] })
+      end
+    end
+
+    # get codes of questions that are being used as weights
+    # - if current code is passed in, do not include this code in the list
+    def weight_codes(current_code=nil)
+      x = only(:code).map{|x| x.code}
+      if current_code.present?
+        x.delete(current_code)
+      end
+      return x
+    end
+
+  end
+  accepts_nested_attributes_for :weights
+
+
   embeds_many :questions, cascade_callbacks: true do
     # these are functions that will query the questions documents
 
     # get the question that has the provided code
     def with_code(code)
       where(:code => code.downcase).first if code.present?
+    end
+
+    def text_with_code(code)
+      x = only(:title).where(:code => code.downcase).first
+      if x.present?
+        return x.text
+      else
+        return nil
+      end
     end
 
     def with_codes(codes)
@@ -295,6 +334,10 @@ class Dataset < CustomTranslation
       return nil
     end
 
+    # get questions that are not being used as weights and have no answers
+    def available_to_be_weights(current_code=nil)
+      nin(:code => base.weights.weight_codes(current_code)).where(has_code_answers: false)
+    end
 
   end
   accepts_nested_attributes_for :questions
@@ -355,6 +398,7 @@ class Dataset < CustomTranslation
 
   attr_accessible :title, :description, :methodology, :user_id, :has_warnings,
       :data_items_attributes, :questions_attributes, :reports_attributes, :questions_with_bad_answers,
+      :weights_attributes,
       :datafile, :public, :private_share_key, #:codebook,
       :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at,
       :languages, :default_language, :stats_attributes, :urls_attributes,
@@ -397,6 +441,9 @@ class Dataset < CustomTranslation
   index ({ :'reports.released_at' => 1})
   index ({ :'groups.parent_id' => 1})
   index ({ :'groups.sort_order' => 1})
+  index ({ :'weights.is_defualt' => 1})
+  index ({ :'weights.applies_to_all' => 1})
+  index ({ :'weights.codes' => 1})
 
 
   #############################
@@ -583,6 +630,7 @@ class Dataset < CustomTranslation
                         self.no_question_text_count > 0
 
     logger.debug "==== - has_warnings = #{self.has_warnings}"
+
     return true
   end
 
@@ -934,6 +982,9 @@ class Dataset < CustomTranslation
     Category.in(id: self.category_mappers.map {|x| x.category_id } ).to_a
   end
 
+  def has_weights?
+    self.weights.present?
+  end
 
   # get list of quesitons with no text
   def questions_with_no_text

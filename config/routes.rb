@@ -33,6 +33,7 @@ BootstrapStarter::Application.routes.draw do
           post 'group_questions', :defaults => { :format => 'json' }
         end
       end
+      resources :weights, :except => [:show]
       resources :questions, :only => [:index, :show, :edit, :update] do
         collection do
           get 'mass_changes'
