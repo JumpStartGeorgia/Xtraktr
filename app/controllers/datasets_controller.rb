@@ -306,6 +306,17 @@ class DatasetsController < ApplicationController
           @js.push("mass_changes_questions.js")
           @css.push("mass_changes_questions.css")
 
+          # create data for datatables (faster to load this way)
+          gon.datatable_json = []
+          @dataset.questions.with_code_answers.each_with_index do |question, question_index|
+            gon.datatable_json << {
+              code: question.original_code,
+              text: question.text,
+              exclude: "<input id='dataset_questions_attributes_#{question_index}_id' name='dataset[questions_attributes][#{question_index}][id]' type='hidden' value='#{question.id}'><input class='exclude-input' name='dataset[questions_attributes][#{question_index}][exclude]' type='checkbox' value='true' #{question.exclude == true ? 'checked=\'checked\'' : ''}>",
+              download: "<input class='download-input' name='dataset[questions_attributes][#{question_index}][can_download]' type='checkbox' value='true' #{question.can_download == true ? 'checked=\'checked\'' : ''}>"
+            }
+          end
+
           add_dataset_nav_options()
 
         }
@@ -361,6 +372,22 @@ class DatasetsController < ApplicationController
         format.html {
           @js.push("mass_changes_answers.js")
           @css.push("mass_changes_answers.css")
+
+          # create data for datatables (faster to load this way)
+          gon.datatable_json = []
+          @dataset.questions.with_code_answers.each_with_index do |question, question_index|
+            question.answers.each_with_index do |answer, answer_index|
+              gon.datatable_json << {
+                code: question.original_code,
+                question: question.text,
+                answer: answer.text,
+                exclude: "<input id='dataset_questions_attributes_#{question_index}_answers_attributes_#{answer_index}_id' name='dataset[questions_attributes][#{question_index}][answers_attributes][#{answer_index}][id]' type='hidden' value='#{answer.id}'><input class='exclude-input' name='dataset[questions_attributes][#{question_index}][answers_attributes][#{answer_index}][exclude]' type='checkbox' value='true' #{answer.exclude == true ? 'checked=\'checked\'' : ''}>",
+                can_exclude: "<input class='can-exclude-input' name='dataset[questions_attributes][#{question_index}][answers_attributes][#{answer_index}][can_exclude]' type='checkbox' value='true' #{answer.can_exclude== true ? 'checked=\'checked\'' : ''}>"
+              }
+            end
+          end
+
+
 
           add_dataset_nav_options()
 
