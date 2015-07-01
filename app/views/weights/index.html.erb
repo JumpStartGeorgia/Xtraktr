@@ -1,0 +1,75 @@
+<% title t('.title') %>
+<%- 
+  label_key = "mongoid.attributes.weight."
+-%>
+
+<div class="form-group form-group-admin-buttons">
+  <%= link_to t('.new', :default => t("helpers.links.new")),
+              new_dataset_weight_path,
+              :class => 'btn btn-primary' %>
+</div>
+
+  <table id="weight-datatable" class="table table-striped display">
+    <thead>
+      <tr>
+        <th><%= t(label_key + 'text') %></th>
+        <th><%= t(label_key + 'code') %></th>
+        <th><%= t(label_key + 'is_default') %></th>
+        <th><%= t(label_key + 'applies_to') %></th>
+        <th><%=t '.actions', :default => t("helpers.actions") %></th>
+      </tr>
+    </thead>
+    <tbody>
+    <% @dataset.weights.each do |weight| %>
+      <tr>  
+        <td>
+          <%= weight.text %>
+        </td>
+        <td>
+          <%= weight.source_question.code_with_text %>
+        </td>
+        <td>
+          <%= format_boolean_flag(weight.is_default) %>
+        </td>
+        <td>
+          <% if weight.applies_to_all? %>
+            <%= t(label_key + 'all_questions') %>
+          <% elsif weight.codes.present? %> 
+            <%= link_to t('.question_count', num: weight.codes.length), '#', class: 'applies-to btn btn-default' %>
+
+            <div class="applies-to-questions">
+              <ul>
+                <% weight.applies_to_questions.each do |question| %>
+                  <li>
+                    <%= question.code_with_text %>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+        </td>
+        <td>
+        <%= link_to '',
+                    edit_dataset_weight_path(@dataset, weight), 
+                    :title => t('helpers.links.edit'),
+                    :class => 'btn btn-xs btn-edit' %>
+        <%= link_to '',
+                    dataset_weight_path(@dataset, weight),
+                    :title => t("helpers.links.destroy"),
+                    :method => :delete,
+                    :data => { :confirm => I18n.t("helpers.links.confirm") },
+                    :class => 'btn btn-xs btn-delete' %>
+      </td>
+    </tr>
+    <% end %>
+    </tbody>
+  </table>
+
+<div id="questions-popup" style="display:none;">
+  <div class='question-modal'>
+    <div class='header' data-title="<%= t('.modal.header') %>"></div>
+    <div class='text'></div>
+    <div class='closeup' onclick='js_modal_off();'></div>
+  </div>
+</div>
+

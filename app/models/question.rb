@@ -197,4 +197,14 @@ class Question < CustomTranslation
     }
   end
 
+  # get the weights for this question
+  def weights(ignore_id=nil)
+    self.dataset.weights.for_question(self.code, ignore_id)
+  end
+
+  # get the weight titles for this question
+  def weight_titles(ignore_id=nil)
+    return weights(ignore_id).map{|x| x.text}
+  end
+
 end

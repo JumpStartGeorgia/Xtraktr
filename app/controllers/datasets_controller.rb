@@ -746,7 +746,6 @@ class DatasetsController < ApplicationController
       redirect_to datasets_path(:locale => I18n.locale)
       return
     end
-
   end
 
 

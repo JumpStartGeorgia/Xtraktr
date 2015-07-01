@@ -16,6 +16,7 @@ en:
       categories: Category
       category_mappers: Categories
       group: Group
+      weight: Weight
     attributes:
       user:
         email: Email Address
@@ -115,6 +116,14 @@ en:
         codes: Questions in this Group
         parent_id: This Group is a Subgroup of
         sub_group: Subgroup
+      weight:
+        code: Question with Weight
+        text: Weight Name
+        is_default: Is Default Weight?
+        applies_to_all: Applies to All Questions
+        applies_to: Applies To
+        all_questions: All Questions
+        codes: Apply the Weight to the Following Questions
       report:
         title: Title
         file: File
@@ -253,6 +262,12 @@ en:
         include_in_charts: "If selected, the group description will appear in the title of the charts. The Description will then be required."
         codes: Select the questions that belong in this group
         parent_id: Use this to indicate that this group belongs to another group
+      weight:
+        code: The question that contains the weight values
+        text: 'A label for the weight - this will be visible to the public during analysis (e.g., Individual, Household, etc)'
+        is_default: 'If selected, this will be the weight that is applied to all questions during analysis by default if no weight is indicated'
+        applies_to_all: 'If selected, all questions will be assigned to this weight'
+        codes: Select the questions that you want to have this weight applied to
       report:
         title: The title of the report
         file: "The report file in pdf, doc, odt or txt format"
@@ -594,6 +609,7 @@ en:
       jumpto_group: Jump to this group
       is_group: This is a group of questions
       is_subgroup: This is a subgroup of questions
+      weights_deleted: All weights have been deleted.
     menu:
       explore_data: Explore Data
       explore_time_series: Explore Time Series
@@ -631,6 +647,7 @@ en:
         download_data: Download Data
         groups: Group Questions
         sort: Sort Groups/Questions
+        weights: Apply Weights
       admin_time_series:
         explore_data: Explore Data
         heading: Time Series Options
@@ -944,6 +961,28 @@ en:
       ex_question: Is the sky blue?
       questions_explanation_default: "All questions that are not assigned to any other group are avaiable to be assigned to this group."
       questions_explanation_subgroup: "Only the questions assinged to '%{group}' are available to be assigned to this subgroup."
+  weights:
+    index:
+      title: Dataset Weighting
+      question: Is your dataset weighted?
+      add: Add Weights
+      edit: Edit Weights
+      confirm_delete: Are you sure you want to delete all weights on file?
+      question_count: '%{num} questions'
+      table:
+        headers:
+          name: Weight Name
+          question: Question with Weight
+          default: Is Default Weight?
+          apply_to: Apply Weight To
+      modal:
+        header: "Questions for Weight '[weight]'"
+    new:
+      title: Dataset Weighting Form
+    edit:
+      title: Dataset Weighting Form
+    form:
+      other_weights: Other Weights this Question Belongs To
   time_series:
     form:
       header_datasets: Datasets
