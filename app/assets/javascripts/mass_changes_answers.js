@@ -24,22 +24,24 @@ $(document).ready(function(){
     return false;
   });
 
-  // datatable for exclude answers page
-  var datatable = $('#dataset-exclude-answers').dataTable({
+  // datatable
+  datatable = $('#dataset-exclude-answers').dataTable({
     "dom": '<"top"fli>t<"bottom"p><"clear">',
+    "data": gon.datatable_json,
     "columns": [
-      null,
-      null,
-      null,
-      { "orderDataType": "dom-checkbox" },
-      { "orderDataType": "dom-checkbox" }
+      {"data":"code"},
+      {"data":"question", "width":"33%"},
+      {"data":"answer", "width":"33%"},
+      {"data":"exclude", "orderDataType": "dom-checkbox"},
+      {"data":"can_exclude", "orderDataType": "dom-checkbox"}
     ],
-    "order": [[1, 'asc']],
+    "order": [[0, 'asc']],
     "language": {
       "url": gon.datatable_i18n_url,
       "searchPlaceholder": gon.datatable_search
     },
-    "pagingType": "full_numbers"
+    "pagingType": "full_numbers",
+    "orderClasses": false
   });
 
 
@@ -50,12 +52,12 @@ $(document).ready(function(){
   $('a.btn-select-all').click(function(){
     type = $(this).attr('data-type');
     if ($(this).attr('data-state') == 'all'){
-      $(datatable.$('tr', {"filter": "applied"})).find('td.' + type + '-input :checkbox').each(function () {
+      $(datatable.$('tr', {"filter": "applied"})).find('td :checkbox.' + type + '-input').each(function () {
         $(this).prop('checked', true);
       });
       $(this).attr('data-state', 'none');
     }else{
-      $(datatable.$('tr', {"filter": "applied"})).find('td.' + type + '-input :checkbox').each(function () {
+      $(datatable.$('tr', {"filter": "applied"})).find('td :checkbox.' + type + '-input').each(function () {
         $(this).prop('checked', false);
       });
       $(this).attr('data-state', 'all');

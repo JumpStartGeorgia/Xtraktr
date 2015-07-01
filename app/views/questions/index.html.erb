@@ -23,37 +23,6 @@
       </tr>
     </thead>
     <tbody>
-      <% @questions.each do |question| %>
-        <tr>
-          <td>
-            <%= link_to t('helpers.links.view'), dataset_question_path(@dataset, question), class: 'btn btn-default' %>
-          </td>
-          <td>
-            <%= question.original_code %>
-          </td>
-          <td>
-            <%= question.text %>
-          </td>
-          <td>
-            <%= format_boolean_flag(question.has_code_answers) %>
-          </td>
-          <td>
-            <%= format_boolean_flag(question.exclude) %>
-          </td>
-          <td>
-            <%= format_boolean_flag(question.can_download) %>
-          </td>
-          <td>
-            <%= format_boolean_flag(question.is_mappable) %>
-          </td>
-          <td>
-            <%= link_to '',
-                      edit_dataset_question_path(@dataset, question), 
-                      :title => t('helpers.links.edit'),
-                      :class => 'btn btn-edit btn-xs' %>
-          </td>
-        </tr>
-      <% end %>
     </tbody>
   </table>
 

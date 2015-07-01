@@ -1,9 +1,20 @@
 var datatable;
 $(document).ready(function(){
 
-  // datatable for exclude questions page
+  // datatable
   datatable = $('#dataset-questions').dataTable({
     "dom": '<"top"fli>t<"bottom"p><"clear">',
+    "data": gon.datatable_json,
+    "columns": [
+      {"data":"view"},
+      {"data":"code"},
+      {"data":"text", "width":"25%"},
+      {"data":"has_answers"},
+      {"data":"exclude"},
+      {"data":"download"},
+      {"data":"mappable"},
+      {"data":"action"}
+    ],
     "columnDefs": [
       { orderable: false, targets: [0,-1] }
     ],
@@ -12,9 +23,9 @@ $(document).ready(function(){
       "url": gon.datatable_i18n_url,
       "searchPlaceholder": gon.datatable_search
     },
-    "pagingType": "full_numbers"
+    "pagingType": "full_numbers",
+    "orderClasses": false
   });
-
 
   // when text of answer changes in default language, update the other languages default text table cell
   $('form.question .tab-content .tab-pane:first table#dataset-answers tbody').on('change', 'tr td:first-of-type input', function(){

@@ -1,8 +1,7 @@
 <%- model_class = Question -%>
 <% title t('.title') %>
 
-<% questions = @dataset.questions.with_code_answers %>
-<% if questions.present? %>
+<% if @dataset.questions.with_code_answers.present? %>
 
   <%= form_tag mass_changes_questions_dataset_path(@dataset), id: 'frm-dataset-exclude-questions' do %>
 
@@ -34,29 +33,6 @@
         </tr>
       </thead>
       <tbody>
-        <% questions.each_with_index do |question, question_index| %>
-          <tr>
-            <td>
-              <%= question.original_code %>
-            </td>
-            <td>
-              <%= question.text %>
-            </td>
-            <td class="exclude-input">
-              <input id="<%= "dataset_questions_attributes_#{question_index}_id" %>" 
-                    name="<%= "dataset[questions_attributes][#{question_index}][id]" %>" 
-                    type="hidden" value="<%= question.id %>">
-              <input  
-                    name="<%= "dataset[questions_attributes][#{question_index}][exclude]" %>" 
-                    type="checkbox" value="true" <%= question.exclude == true ? 'checked=checked' : ''%>>
-            </td>
-            <td class="download-input">
-              <input  
-                    name="<%= "dataset[questions_attributes][#{question_index}][can_download]" %>" 
-                    type="checkbox" value="true" <%= question.can_download == true ? 'checked=checked' : ''%>>
-            </td>
-          </tr>
-        <% end %>
       </tbody>
     </table>
 

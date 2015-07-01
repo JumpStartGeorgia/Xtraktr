@@ -2,8 +2,7 @@
 <%- model_class_a = Answer -%>
 <% title t('.title') %>
 
-<% questions = @dataset.questions.with_code_answers %>
-<% if questions.present? %>
+<% if @dataset.questions.with_code_answers.present? %>
 
   <%= form_tag mass_changes_answers_dataset_path(@dataset), id: 'frm-dataset-exclude-answers' do %>
 
@@ -36,34 +35,6 @@
         </tr>
       </thead>
       <tbody>
-        <% questions.each_with_index do |question, question_index| %>
-          <% question.answers.each_with_index do |answer, answer_index| %>
-            <tr>
-              <td>
-                <%= question.original_code %>
-              </td>
-              <td>
-                <%= question.text %>
-              </td>
-              <td>
-                <%= answer.text %>
-              </td>
-              <td class="exclude-input">
-                <input id="<%= "dataset_questions_attributes_#{question_index}_answers_attributes_#{answer_index}_id" %>" 
-                      name="<%= "dataset[questions_attributes][#{question_index}][answers_attributes][#{answer_index}][id]" %>" 
-                      type="hidden" value="<%= answer.id %>">
-                <input  
-                      name="<%= "dataset[questions_attributes][#{question_index}][answers_attributes][#{answer_index}][exclude]" %>" 
-                      type="checkbox" value="true" <%= answer.exclude == true ? 'checked=checked' : ''%>>
-              </td>
-              <td class="can-exclude-input">
-                <input  
-                      name="<%= "dataset[questions_attributes][#{question_index}][answers_attributes][#{answer_index}][can_exclude]" %>" 
-                      type="checkbox" value="true" <%= answer.can_exclude == true ? 'checked=checked' : ''%>>
-              </td>
-            </tr>
-          <% end %>
-        <% end %>
       </tbody>
     </table>
 
