@@ -76,4 +76,11 @@ class TimeSeriesQuestion < CustomTranslation
 
     return true
   end
+
+
+  #############################
+  def code_with_text
+    "#{self.original_code} - #{self.text}"
+  end
+
 end
