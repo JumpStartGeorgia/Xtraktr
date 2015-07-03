@@ -530,6 +530,8 @@ en:
       share: Share
       codebook_title: Download the Codebook
       all_categories: All Categories
+      private_question: This quesiton is not available to the public
+      mappable_question: This question displays a map
     msgs:
       does_not_exist: You tried to access a page that does not exist.
       not_authorized: You are not authorized to view that page.
