@@ -135,11 +135,11 @@ module ApplicationHelper
         content << 'data-content=\'<span>' + q_text + '</span><span class="pull-right">'
 
         if question.is_mappable?
-          content << '<img src="/assets/svg/map.svg" title="' + I18n.t('app.common.mappable_question') + '" />'
+          content << mappable_question_icon
         end
 
         if question.exclude?
-          content << '<img src="/assets/svg/lock.svg" title="' + I18n.t('app.common.private_question') + '" />'
+          content << exclude_question_icon
         end
 
         content << '</span>\''
@@ -151,5 +151,16 @@ module ApplicationHelper
     return html_options.html_safe
   end
 
+  def exclude_question_icon
+    '<img src="/assets/svg/lock.svg" title="' + I18n.t('app.common.private_question') + '" />'
+  end
+
+  def exclude_answer_icon
+    '<img src="/assets/svg/lock.svg" title="' + I18n.t('app.common.private_answer') + '" />'
+  end
+
+  def mappable_question_icon
+    '<img src="/assets/svg/map.svg" title="' + I18n.t('app.common.mappable_question') + '" />'
+  end
 
 end

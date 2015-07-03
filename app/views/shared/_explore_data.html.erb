@@ -1,3 +1,7 @@
+<%- 
+  show_private_questions = false if show_private_questions.nil?
+-%>
+
 <%-
   subnav_left render(partial: 'shared/language_switcher', locals: {langs: @dataset.language_objects, current_locale: @dataset.current_locale})
 -%>
@@ -159,7 +163,7 @@
           <div class="details-item" id="details-filtered-by-code">
             <h3><%= t('.form.filtered_by_code') %></h3>
             <div>
-              <div class="header-variable"><%= t('app.common.question') %>:</div>
+              <div class="k"><%= t('app.common.question') %>:</div>
               <div class="name-variable"></div>
             </div>
             <div>
@@ -174,8 +178,15 @@
               <div class="k"><%= t('app.common.answers') %>:</div>
               <ul class="list-answers"></ul>
             </div>
-
           </div>
+
+          <% if show_private_questions %>
+            <div class="details-icons" style="display:none;">
+              <span id="detail-icon-exclude-question" class="icon-item"><%= exclude_question_icon.html_safe %></span>
+              <span id="detail-icon-exclude-answer" class="icon-item"><%= exclude_answer_icon.html_safe %></span>
+              <span id="detail-icon-mappable-question" class="icon-item"><%= mappable_question_icon.html_safe %></span>
+            </div>
+          <% end %>
         </div>
 
       </div>

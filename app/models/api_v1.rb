@@ -163,9 +163,9 @@ class ApiV1
     ########################
     # start populating the output
     data[:dataset] = {id: dataset.id, title: dataset.title}
-    data[:question] = create_dataset_question_hash(question, can_exclude)    
-    data[:broken_down_by] = create_dataset_question_hash(broken_down_by, can_exclude) if broken_down_by.present?
-    data[:filtered_by] = create_dataset_question_hash(filtered_by, can_exclude) if filtered_by.present?
+    data[:question] = create_dataset_question_hash(question, can_exclude, private_user_id)    
+    data[:broken_down_by] = create_dataset_question_hash(broken_down_by, can_exclude, private_user_id) if broken_down_by.present?
+    data[:filtered_by] = create_dataset_question_hash(filtered_by, can_exclude, private_user_id) if filtered_by.present?
     data[:analysis_type] = nil
     data[:results] = nil
 
@@ -393,11 +393,17 @@ private
 
 
   # create question hash for a dataset
-  def self.create_dataset_question_hash(question, can_exclude=false)
+  def self.create_dataset_question_hash(question, can_exclude=false, private_user_id=nil)
     hash = {}
     if question.present?
       hash = {code: question.code, original_code: question.original_code, text: question.text, notes: question.notes, is_mappable: question.is_mappable, has_map_adjustable_max_range: question.has_map_adjustable_max_range}
-      hash[:answers] = (can_exclude == true ? question.answers.must_include_for_analysis : question.answers.all_for_analysis).map{|x| {value: x.value, text: x.text, can_exclude: x.can_exclude, sort_order: x.sort_order}}
+      # if this is for admin, include whether the question is excluded
+      if private_user_id.present?
+        hash[:exclude] = question.exclude
+        hash[:answers] = question.answers.sorted.map{|x| {value: x.value, text: x.text, exclude: x.exclude, can_exclude: x.can_exclude, sort_order: x.sort_order}}
+      else
+        hash[:answers] = (can_exclude == true ? question.answers.must_include_for_analysis : question.answers.all_for_analysis).map{|x| {value: x.value, text: x.text, can_exclude: x.can_exclude, sort_order: x.sort_order}}
+      end
     end
 
     return hash

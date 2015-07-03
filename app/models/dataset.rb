@@ -101,6 +101,11 @@ class Dataset < CustomTranslation
       where(:exclude => false, :has_code_answers => true).to_a
     end
 
+    # get questions that are not excluded and have code answers
+    def for_analysis_with_exclude_questions
+      where(:has_code_answers => true).to_a
+    end
+
     # get count questions that are not excluded and have code answers
     def for_analysis_count
       where(:exclude => false, :has_code_answers => true).count
