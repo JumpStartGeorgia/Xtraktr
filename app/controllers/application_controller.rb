@@ -225,14 +225,14 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
   #######################
   ## get data for explore view
   #######################
-  def explore_data_generator(dataset)
+  def explore_data_generator(dataset, show_private_questions=false)
     # if the language parameter exists and it is valid, use it instead of the default current_locale
     if params[:language].present? && dataset.languages.include?(params[:language])
       dataset.current_locale = params[:language]
     end
 
     # the questions for cross tab can only be those that have code answers and are not excluded
-    @questions = dataset.questions.for_analysis
+    @questions = show_private_questions ? dataset.questions.for_analysis_with_exclude_questions : dataset.questions.for_analysis
 
     if @questions.present?
 
@@ -347,7 +347,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 
   # generate the data needed for the embed_id 
   # output: {type, title, dashboard_link, explore_link, error, visual_type, js}
-  def get_highlight_data(embed_id, highlight_id=nil)
+  def get_highlight_data(embed_id, highlight_id=nil, use_admin_link=nil)
     highlight_id ||= SecureRandom.urlsafe_base64
     output = {highlight_id:highlight_id, id:nil, type:nil, title:nil, dashboard_link:nil, explore_link:nil, error:false, visual_type:nil, js:{}, has_data:false}
     options = nil
@@ -377,14 +377,14 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
           permalink = Dataset.get_slug(options['dataset_id'])
           permalink = options['dataset_id'] if permalink.blank?
 
-          # create link to dashboard
-          output[:dashboard_link] = explore_data_dashboard_url(permalink)
+          # create link to dashboard          
+          output[:dashboard_link] = use_admin_link.to_s == 'true' ? dataset_url(permalink) : explore_data_dashboard_url(permalink)
 
           # create link to this item
           options['id'] = permalink
           output[:id] = options['id']
           options['from_embed'] = true
-          output[:explore_link] = explore_data_show_url(options)
+          output[:explore_link] = use_admin_link.to_s == 'true' ? explore_dataset_url(options) : explore_data_show_url(options)
         end
       elsif options['time_series_id'].present?
         output[:type] = 'time_series'
@@ -400,13 +400,13 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
           permalink = options['time_series_id'] if permalink.blank?
 
           # create link to dashboard
-          output[:dashboard_link] = explore_time_series_dashboard_url(permalink)
+          output[:dashboard_link] = use_admin_link.to_s == 'true' ? time_series_url(path) : explore_time_series_dashboard_url(permalink)
 
           # create link to this item
           options['id'] = permalink
           output[:id] = options['id']
           options['from_embed'] = true
-          output[:explore_link] = explore_time_series_show_url(options)
+          output[:explore_link] = use_admin_link.to_s == 'true' ? explore_time_series_url(options) : explore_time_series_show_url(options)
         end        
       end
 

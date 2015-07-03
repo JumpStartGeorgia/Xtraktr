@@ -46,6 +46,7 @@ class TimeSeriesController < ApplicationController
       gon.highlight_ids = @highlights.map{|x| x.id}.shuffle if @highlights.present?
       gon.highlight_show_title = false
       gon.highlight_show_links = false
+      gon.highlight_admin_link = true
       load_highlight_assets(@highlights.map{|x| x.embed_id}) if @highlights.present?
 
       @show_title = false

@@ -46,6 +46,7 @@ class DatasetsController < ApplicationController
       gon.highlight_ids = @highlights.map{|x| x.id}.shuffle if @highlights.present?
       gon.highlight_show_title = false
       gon.highlight_show_links = false
+      gon.highlight_admin_link = true
       load_highlight_assets(@highlights.map{|x| x.embed_id}) if @highlights.present?
 
       @show_title = false
@@ -83,7 +84,7 @@ class DatasetsController < ApplicationController
       # this method is in application_controller
       # and gets all of the required information
       # and responds appropriately to html or js
-      explore_data_generator(@dataset)
+      explore_data_generator(@dataset, true)
     end
 
   end

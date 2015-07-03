@@ -331,7 +331,7 @@ class RootController < ApplicationController
       logger.debug "------- #{highlights.length} highlights"
       @highlight_data = []
       highlights.each do |highlight|
-        @highlight_data << {visual_type_name: highlight.visual_type_name, data: get_highlight_data(highlight.embed_id, highlight.id)}
+        @highlight_data << {visual_type_name: highlight.visual_type_name, data: get_highlight_data(highlight.embed_id, highlight.id, params[:use_admin_link])}
       end
 
       if @highlight_data.map{|x| x[:data]}.flatten.map{|x| x[:error]}.index{|x| x == true}.nil?

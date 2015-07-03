@@ -531,6 +531,7 @@ ka:
       codebook_title: კოდირების ჩამოტვირთვა
       all_categories: All Categories
       private_question: This quesiton is not available to the public
+      private_answer: This answer is not available to the public
       mappable_question: This question displays a map
     msgs:
       does_not_exist: "თქვენ ცდილობთ ისეთი გვერდის ნახვას, რომელიც არ არსებობს."

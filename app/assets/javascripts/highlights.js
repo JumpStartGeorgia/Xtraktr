@@ -17,6 +17,9 @@ $(document).ready(function(){
     if (gon.highlight_show_links){
       data.show_links = true;
     }
+    if (gon.highlight_admin_link){
+      data.use_admin_link = true;
+    }
     $.ajax({
       type: "POST",
       url: gon.generate_highlights_url,

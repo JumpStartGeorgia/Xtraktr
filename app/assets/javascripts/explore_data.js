@@ -511,6 +511,39 @@ function build_datatable(json){
 }
 
 ////////////////////////////////////////////////
+// populat a details item block
+function build_details_item(selector, json_question){
+  if (json_question && json_question.text && json_question.answers){
+    tmp = $(selector);
+    if (tmp.length > 0){
+      var icon = '';
+      if (json_question.exclude){
+        icon += $('.details-icons #detail-icon-exclude-question')[0].outerHTML;
+      }
+      if (json_question.is_mappable){
+        icon += $('.details-icons #detail-icon-mappable-question')[0].outerHTML;
+      }
+      tmp.find('.name-variable').html(icon + json_question.text);
+      
+      tmp.find('.name-code').html(json_question.original_code);
+      if (json_question.notes){
+        tmp.find('.notes').html(json_question.notes);
+        tmp.find('.details-notes').show();
+      }else{
+        tmp.find('.details-notes').hide();
+      }
+      for(var i=0;i<json_question.answers.length;i++){
+        icon = '';
+        if (json_question.answers[i].exclude){
+          icon += $('.details-icons #detail-icon-exclude-answer')[0].outerHTML; 
+        }
+        tmp.find('.list-answers').append('<li>' + icon + json_question.answers[i].text + '</li>');
+      }
+      tmp.show();
+    }
+  }  
+}
+
 // build details (question and possible answers)
 function build_details(json){
   // clear out existing content and hide
@@ -518,56 +551,13 @@ function build_details(json){
   details_item.find('.name-variable, .notes, .list-answers').empty();
 
   // add questions
-  if (json.question && json.question.text && json.question.answers){
-    tmp = $('#tab-details #details-question-code');
-    tmp.find('.name-variable').html(json.question.text);
-    tmp.find('.name-code').html(json.question.original_code);
-    if (json.question.notes){
-      tmp.find('.notes').html(json.question.notes);
-      tmp.find('.details-notes').show();
-    }else{
-      tmp.find('.details-notes').hide();
-    }
-    for(var i=0;i<json.question.answers.length;i++){
-      tmp.find('.list-answers').append('<li>' + json.question.answers[i].text + '</li>');
-    }
-    tmp.show();
-  }
+  build_details_item('#tab-details #details-question-code', json.question);
 
   // add broken down by
-  if (json.broken_down_by && json.broken_down_by.text && json.broken_down_by.answers){
-    tmp = $('#tab-details #details-broken-down-by-code');
-    tmp.find('.name-variable').html(json.broken_down_by.text);
-    tmp.find('.name-code').html(json.broken_down_by.original_code);
-    if (json.broken_down_by.notes){
-      tmp.find('.notes').html(json.broken_down_by.notes);
-      tmp.find('.details-notes').show();
-    }else{
-      tmp.find('.details-notes').hide();
-    }
-    for(var i=0;i<json.broken_down_by.answers.length;i++){
-      tmp.find('.list-answers').append('<li>' + json.broken_down_by.answers[i].text + '</li>');
-    }
-    tmp.show();
-  }
+  build_details_item('#tab-details #details-broken-down-by-code', json.broken_down_by);
 
   // add filters
-  if (json.filtered_by && json.filtered_by.text && json.filtered_by.answers){
-    tmp = $('#tab-details #details-broken-down-by-code');
-    tmp.find('.name-variable').html(json.filtered_by.text);
-    tmp.find('.name-code').html(json.filtered_by.original_code);
-    if (json.filtered_by.notes){
-      tmp.find('.notes').html(json.filtered_by.notes);
-      tmp.find('.details-notes').show();
-    }else{
-      tmp.find('.details-notes').hide();
-    }
-    for(var i=0;i<json.filtered_by.answers.length;i++){
-      tmp.find('.list-answers').append('<li>' + json.filtered_by.answers[i].text + '</li>');
-    }
-    tmp.show();
-  }
-
+  build_details_item('#tab-details #details-filtered-by-code', json.filtered_by);
 }
 
 

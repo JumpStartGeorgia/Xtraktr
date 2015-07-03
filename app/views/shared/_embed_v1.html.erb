@@ -14,26 +14,26 @@
   <% else %>
     <div class="boxic">
       <% if @show_title %>
-      <div class="embed-title">
-        <h3><%= link_to highlight[:title], highlight[:dashboard_link], target: '_parent' %></h3>
-        <% if @show_links %>
-          <div class="embed-links">
-            <ul>
-              <li>
-                <%= link_to root_url, target: '_parent', :'data-placement' => "bottom",
-                    title: t('.title_site', app_name: t("app.common.#{@app_key_name}.app_name"))  do %>
-                  <%= image_tag 'svg/widget_link.svg', alt: t('.title_site', app_name: t("app.common.#{@app_key_name}.app_name")) %>
-                <% end %>
-              </li>
-              <li>
-                <%= link_to explore_data_url, target: '_parent', :'data-placement' => "bottom", title: t('.title_datalist') do %>
-                  <%= image_tag 'svg/widget_datalist.svg', alt: t('.title_datalist') %>
-                <% end %>
-              </li>
-            </ul>              
-          </div>
-        <% end %>
-      </div>
+        <div class="embed-title">
+          <h3><%= link_to highlight[:title], highlight[:dashboard_link], target: '_parent' %></h3>
+          <% if @show_links %>
+            <div class="embed-links">
+              <ul>
+                <li>
+                  <%= link_to root_url, target: '_parent', :'data-placement' => "bottom",
+                      title: t('.title_site', app_name: t("app.common.#{@app_key_name}.app_name"))  do %>
+                    <%= image_tag 'svg/widget_link.svg', alt: t('.title_site', app_name: t("app.common.#{@app_key_name}.app_name")) %>
+                  <% end %>
+                </li>
+                <li>
+                  <%= link_to explore_data_url, target: '_parent', :'data-placement' => "bottom", title: t('.title_datalist') do %>
+                    <%= image_tag 'svg/widget_datalist.svg', alt: t('.title_datalist') %>
+                  <% end %>
+                </li>
+              </ul>              
+            </div>
+          <% end %>
+        </div>
       <% end %>
 
       <div class="article explore-data <%= embed_class %>">

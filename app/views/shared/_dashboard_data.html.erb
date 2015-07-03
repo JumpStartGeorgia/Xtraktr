@@ -3,6 +3,7 @@
   r_model_class = Report 
   is_admin_page = request.path == dataset_path(@dataset)
   show_share = true if show_share.nil?
+  show_private_questions = false if show_private_questions.nil?
 
   subnav_left render(partial: 'shared/language_switcher', locals: {langs: @dataset.language_objects, current_locale: @dataset.current_locale, share: show_share})
 
@@ -171,10 +172,12 @@
       </div>
       <div class="up"></div>
       <ul class="list-unstyled">
-        <% @dataset.questions.for_analysis.each do |question| %>
+        <% questions = show_private_questions == true ? @dataset.questions.for_analysis_with_exclude_questions : @dataset.questions.for_analysis %>
+        <% questions.each do |question| %>
           <li>
             <div class="col question">
-                <%= link_to url_dataset_explore(@dataset, question_code: question.code, language: params[:language]) do %>
+                <% cls = question.exclude? ? 'exclude-question' : '' %>
+                <%= link_to url_dataset_explore(@dataset, question_code: question.code, language: params[:language]), class: cls do %>
                   <div><span><%= question.original_code %>:</span><br/>
                   <%= question.text %></div>
                 <% end %>
@@ -182,7 +185,19 @@
             <div class="col details">
               <div>
                 <div class="col k"><%= t('app.common.question') %>: </div>
-                <div class="col"><%= question.text %></div>
+                <div class="col">
+                  <% if question.exclude? %>
+                    <span class="item-icons">
+                      <%= exclude_question_icon.html_safe %>
+                    </span>
+                  <% end %>
+                  <% if question.is_mappable? %>
+                    <span class="item-icons">
+                      <%= mappable_question_icon.html_safe %>
+                    </span>
+                  <% end %>
+                  <%= question.text %>
+                </div>
               </div>
               <% if question.notes.present? %>
                 <div>
@@ -193,12 +208,19 @@
               <div>
                 <div class="col k"><%= t('app.common.answers') %>: </div>
                 <div class="col answers">
-                  <%- answers = question.answers.all_for_analysis
+                  <%- answers = show_private_questions == true ? question.answers.sorted : question.answers.all_for_analysis
                     if answers.present? 
                   -%>
                     <ul>
                       <%- answers.each do |answer| -%>
-                        <li><%= answer.text %></li> 
+                        <li>
+                          <% if answer.exclude? %>
+                            <span class="item-icons">
+                              <%= exclude_answer_icon.html_safe %>
+                            </span>
+                          <% end %>
+                          <%= answer.text %>
+                        </li> 
                       <%- end -%>
                     </ul>
                   <% end %>
@@ -214,8 +236,8 @@
       <ul>
         <% if @dataset.reports.present? %>
           <% @dataset.reports.sorted.each do |report| %>
-        <% lng = report.language.present? ? "lang=#{report.language.locale}" : '' %>
-        <li>
+            <% lng = report.language.present? ? "lang=#{report.language.locale}" : '' %>
+            <li>
               <div class="caption">
                 <div class="title" <%= lng %>><%= report.title %></div>
                 <%= link_to report.file.url, class: 'download-direct', target: :blank, title: "#{report.file_type} - #{number_to_human_size(report.file_file_size).to_s}" do %>
