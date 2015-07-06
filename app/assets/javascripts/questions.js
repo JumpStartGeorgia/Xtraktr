@@ -18,7 +18,8 @@ $(document).ready(function(){
     "columnDefs": [
       { orderable: false, targets: [0,-1] }
     ],
-    "order": [[1, 'asc']],
+    "sorting": [],
+    // "order": [[1, 'asc']],
     "language": {
       "url": gon.datatable_i18n_url,
       "searchPlaceholder": gon.datatable_search
