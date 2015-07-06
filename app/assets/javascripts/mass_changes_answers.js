@@ -35,7 +35,8 @@ $(document).ready(function(){
       {"data":"exclude", "orderDataType": "dom-checkbox"},
       {"data":"can_exclude", "orderDataType": "dom-checkbox"}
     ],
-    "order": [[0, 'asc']],
+    "sorting": [],
+    // "order": [[0, 'asc']],
     "language": {
       "url": gon.datatable_i18n_url,
       "searchPlaceholder": gon.datatable_search
