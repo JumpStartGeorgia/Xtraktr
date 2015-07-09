@@ -28,6 +28,11 @@ BootstrapStarter::Application.routes.draw do
     end
 
     resources :datasets, path: :manage_datasets do
+      resources :groups, :except => [:show] do
+        member do
+          post 'group_questions', :defaults => { :format => 'json' }
+        end
+      end
       resources :questions, :only => [:index, :show, :edit, :update] do
         collection do
           get 'mass_changes'

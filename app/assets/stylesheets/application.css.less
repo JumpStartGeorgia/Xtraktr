@@ -182,10 +182,20 @@ div#form-ka {
   padding:0px;
   border: 1px solid #9E9E9E;
   margin-left:10px;
+  div{
+    margin:0px 0px 0px 6px;
+  }
 }
-.help-inline div,.help-block div {
-  margin:0px 0px 0px 4px;
+table tfoot td{
+  label.control-label{
+    font-weight: normal;
+    margin-right: 16px;
+    .help-inline{
+      margin-left: 8px;
+    }
+  }
 }
+
 .error-inline, .error-block
 {
   border-radius: 50px;
@@ -561,61 +571,68 @@ div.message {
 
 
 .dataTables_wrapper { /* datatable styles */
-    .dataTables_filter
-    {
+  .dataTables_filter
+  {
+    float: left;
+    text-align: left;
+    label{
       float: left;
-      text-align: left;
-      label{
-        float: left;
-      }
-      input {
-        font:13px 'opensans_li';
-        color:@3c4352;
-        border-radius: 0px;
-        outline:none;
-        border:0px;
-        box-shadow: none;
-        height:31px;
-        width:260px;
-        background: @fff url(/assets/svg/search.svg) no-repeat 14px center / 16px 16px;
-        padding-left: 42px;
-        &:focus,&:active {
-          outline: none;
-          box-shadow: none;
-        }
-      }
     }
-    .dataTables_length
-    {
-      float: right;
-      font:14px 'sourcesans_pro_l', 'sans-serif';
+    input {
+      font:13px 'opensans_li';
       color:@3c4352;
-      /****************************************************/
-      /* select box */
-      /****************************************************/
-      select{
-        border:0px;
-        font: 14px 'sourcesans_pro', 'sans-serif';
-        color: @3c4352;
-        background: @fff url(/assets/svg/select_arrow.svg) no-repeat center right / 21px 7px;
-        padding: 3px 28px 3px 10px;
-        margin:0px 10px;
-        border:1px solid @ddd;
-        height:31px;
-        min-width: 70px;
-        width: auto !important;
-        appearance:         none;
-        cursor:pointer;
-        border-radius: 2px;
-        outline:none;
+      border-radius: 0px;
+      outline:none;
+      border:0px;
+      box-shadow: none;
+      height:31px;
+      width:260px;
+      background: @fff url(/assets/svg/search.svg) no-repeat 14px center / 16px 16px;
+      padding-left: 42px !important;
+      &:focus,&:active {
+        outline: none;
         box-shadow: none;
       }
     }
-    .dataTables_info{
-      text-align: center;
-      font:14px 'sourcesans_pro_l', 'sans-serif';
+  }
+  .dataTables_length
+  {
+    float: right;
+    font:14px 'sourcesans_pro_l', 'sans-serif';
+    color:@3c4352;
+    /****************************************************/
+    /* select box */
+    /****************************************************/
+    select{
+      border:0px;
+      font: 14px 'sourcesans_pro', 'sans-serif';
       color: @3c4352;
+      background: @fff url(/assets/svg/select_arrow.svg) no-repeat center right / 21px 7px;
+      padding: 3px 28px 3px 10px;
+      margin:0px 10px;
+      border:1px solid @ddd;
+      height:31px;
+      min-width: 70px;
+      width: auto !important;
+      appearance:         none;
+      cursor:pointer;
+      border-radius: 2px;
+      outline:none;
+      box-shadow: none;
     }
+  }
+  .dataTables_info{
+    text-align: center;
+    font:14px 'sourcesans_pro_l', 'sans-serif';
+    color: @3c4352;
+  }
+  table tfoot td{
+    padding: 8px 0;
+    input[type="text"]{
+      padding: 0 14px !important;
+    }
+
+  }
 }
 
 .notification {
@@ -840,5 +857,34 @@ g.highcharts-button{
     width: 100%;
     height: 100%;
     display: none;
+  }
+}
+
+/* fix select2 styles in forms */
+form .select2-container {
+  padding: 0 !important;
+  .select2-choice{
+    height: inherit;
+    padding: 8px;
+    background-image: none;
+    & > .select2-chosen{
+      font-size: 16px;
+    }
+    .select2-arrow b {
+      margin-top: 6px;
+    }
+  }
+  .select2-choices {
+    .select2-search-choice{
+      padding: 8px 8px 8px 18px;
+      .select2-search-choice-close{
+        top: 8px;
+      }
+    }
+    .select2-search-field .select2-input {
+      padding-top: 8px !important;
+      padding-bottom: 8px !important;
+    }
+
   }
 }

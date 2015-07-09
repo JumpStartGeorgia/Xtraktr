@@ -75,6 +75,13 @@
                       <%= t('app.menu.admin_dataset.mass_changes_answers') %>
                     <% end %>
                   </li>
+                  <li class="divider"></li>
+                  <li role="menuitem">
+                    <%= link_to dataset_groups_path(dataset) do %>
+                      <span class="glyphicon glyphicon-th-large"></span>
+                      <%= t('app.menu.admin_dataset.groups') %>
+                    <% end %>
+                  </li>
                   <li role="menuitem">
                     <%= link_to mappable_dataset_path(dataset) do %>
                       <span class="glyphicon glyphicon-map-marker"></span>

@@ -15,6 +15,7 @@ en:
       api_key: API Access Token
       categories: Category
       category_mappers: Categories
+      group: Group
     attributes:
       user:
         email: Email Address
@@ -107,6 +108,13 @@ en:
         no_questions: There are no questions on file for this dataset.
         sort_order: Sort Order
         shape_name: Name of Shape
+      group:
+        title: Name
+        description: Description
+        include_in_charts: Include the Description in the Chart Titles?
+        codes: Questions in this Group
+        parent_id: This Group is a Sub-Group of
+        sub_group: Sub-Group
       report:
         title: Title
         file: File
@@ -239,6 +247,12 @@ en:
         can_exclude: "If selected, this answer will be available during analysis, but can be turned off if desired by the user."
         sort_order: "The order the answers should appear"
         default_text: "This is the answer text from the default language which is provided to make it easier to complete the translation"
+      group:
+        title: The group name will appear in the codebook and on the explore page in the question drop-down lists
+        description: "The group description will appear in the codebook, on the explore page in the question drop-down lists and the chart titles, if desired."
+        include_in_charts: "If selected, the group description will appear in the title of the charts. The Description will then be required."
+        codes: Select the questions that belong in this group
+        parent_id: Use this to indicate that this group belongs to another group
       report:
         title: The title of the report
         file: "The report file in pdf, doc, odt or txt format"
@@ -374,7 +388,12 @@ en:
         title_filter: "Total Responses Filtered by Answers to '%{code} - %{variable}': %{nums}"
   datatable:
     search: Search
+<<<<<<< HEAD
     copy:
+=======
+    search_footer: 'Search %{name}'
+    copy: 
+>>>>>>> bfd260a... add groups model and form
       title: Copy
       tooltip: Copy to clipboard
     csv:
@@ -520,6 +539,7 @@ en:
       question: Question
       questions: Questions
       question_code: Code
+      question_codes: Codes
       answers: Answers
       notes: Notes
       count: Count
@@ -565,6 +585,8 @@ en:
       message_sent: Thank you for contacting us!
       description_saved: Description was successfully saved
       error_while_save: An error occurred while saving
+      insert_description_text: "[Please enter description text so you can see it here]"
+      datatable_regex_search: "Search for text that is only in this column. You can use regular expressions like ^ for beginning of string and $ for end of string."
     menu:
       explore_data: Explore Data
       explore_time_series: Explore Time Series
@@ -600,6 +622,7 @@ en:
         mass_changes_questions: Question Mass Changes
         mass_changes_answers: Answer Mass Changes
         download_data: Download Data
+        groups: Group Questions
       admin_time_series:
         explore_data: Explore Data
         heading: Time Series Options
@@ -862,6 +885,20 @@ en:
         template2: "The only columns that cannot be changed are: %{code}, %{value}"
         template_link: Download Answers Template
         submit: Update Answers
+  groups:
+    index:
+      title: Group Questions
+      no_groups: There are no groups on file for this dataset.
+      modal:
+        header: "Questions for Group '[group]'"
+    table_row:
+      question_count: '%{num} questions'    
+    form:
+      option_top_level: This group is not a sub-group
+      chart_description_explanation: "Below is an example of how your description text will look in the charts. The format is: Question Code - Group Description. Question Text."
+      ex_question: Is the sky blue?
+      questions_explanation_default: "All questions that are not assigned to any other group are avaiable to be assigned to this group."
+      questions_explanation_subgroup: "Only the questions assinged to '%{group}' are available to be assigned to this sub-group."
   time_series:
     form:
       header_datasets: Datasets
