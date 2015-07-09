@@ -25,6 +25,10 @@ class Question < CustomTranslation
   field :can_download, type: Boolean, default: false
   # whether or not the answers has a can exclude
   field :has_can_exclude_answers, type: Boolean, default: false
+  # which group this question belongs
+  field :group_id, type: Moped::BSON::ObjectId
+  # number indicating the sort order
+  field :sort_order, type: Integer
 
   embedded_in :dataset
   embeds_many :answers do
@@ -75,7 +79,7 @@ class Question < CustomTranslation
 
   #############################
   attr_accessible :code, :text, :original_code, :has_code_answers, :is_mappable, :has_can_exclude_answers, :has_map_adjustable_max_range,
-      :answers_attributes, :exclude, :text_translations, :notes, :notes_translations
+      :answers_attributes, :exclude, :text_translations, :notes, :notes_translations, :group_id, :sort_order
 
   #############################
   # Validations
@@ -176,6 +180,17 @@ class Question < CustomTranslation
 
   def code_with_text
     "#{self.original_code} - #{self.text}"
+  end
+
+  # create json for groups 
+  def json_for_groups(selected=false)
+    {
+      id: self.id,
+      code: self.code,
+      original_code: self.original_code,
+      text: self.text,
+      selected: selected
+    }
   end
 
 end

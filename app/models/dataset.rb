@@ -67,6 +67,38 @@ class Dataset < CustomTranslation
     end
   end
 
+  embeds_many :groups, cascade_callbacks: true do
+    # get groups that are at the top level (are not sub-groups)
+    # if exclude_id provided, remove it from the list
+    def main_groups(exclude_id=nil)
+      if exclude_id.present?
+        where(parent_id: nil)
+      else
+        where(parent_id: nil).nin(id: exclude_id)
+      end
+    end
+
+    # get sub-groups of a group
+    def sub_groups(parent_id)
+      where(parent_id: parent_id)
+    end
+
+    # get groups arranged with main groups and their sub-groups as nested arrays
+    # if a group has sub-groups, then the attribute sub_groups will be an array of those sub-groups
+    def arranged
+      groups = main_groups
+
+      # if main group has sub-groups, add them
+      groups.each do |group|
+        group.sub_groups = sub_groups(group.id)
+      end
+
+      return groups
+    end
+
+  end
+  accepts_nested_attributes_for :groups
+
   embeds_many :questions, cascade_callbacks: true do
     # these are functions that will query the questions documents
 
@@ -76,7 +108,7 @@ class Dataset < CustomTranslation
     end
 
     def with_codes(codes)
-      where(:code => codes)
+      any_in(code: codes)
     end
 
     def not_in_codes(codes)
@@ -229,6 +261,42 @@ class Dataset < CustomTranslation
       where(:is_mappable => false, :has_code_answers => true)
     end
 
+    # get questions that are not assigned to groups
+    def not_assigned_group
+      where(group_id: nil)
+    end
+
+    # get questions that are assigned to a group
+    def assigned_to_group(group_id)
+      where(group_id: group_id)
+    end
+
+    # get count of questions that are assigned to a group
+    def count_assigned_to_group(group_id)
+      where(group_id: group_id).count
+    end
+
+    # get questions that are not assigned to groups
+    # - only get the id, code and title
+    def not_assigned_group_meta_only
+      where(group_id: nil).only(:id, :code, :original_code, :title)
+    end
+
+    # get questions that are assigned to a group
+    # - only get the id, code and title
+    def assigned_to_group_meta_only(group_id)
+      where(group_id: group_id).only(:id, :code, :original_code, :title)
+    end
+
+    # mark the answer can_exclude flag as true for the ids provided
+    def assign_group(ids, group_id)
+      where(:_id.in => ids).each do |q|
+        q.group_id = group_id
+      end
+      return nil
+    end
+
+
   end
   accepts_nested_attributes_for :questions
 
@@ -292,7 +360,7 @@ class Dataset < CustomTranslation
       :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at,
       :languages, :default_language, :stats_attributes, :urls_attributes,
       :title_translations, :description_translations, :methodology_translations, :source_translations, :source_url_translations,
-      :reset_download_files, :category_mappers_attributes, :category_ids, :permalink
+      :reset_download_files, :category_mappers_attributes, :category_ids, :permalink, :groups_attributes
 
   attr_accessor :category_ids
 
@@ -323,9 +391,13 @@ class Dataset < CustomTranslation
   index ({ :'questions.answers.can_exclude' => 1})
   index ({ :'questions.answers.sort_order' => 1})
   index ({ :'questions.answers.exclude' => 1})
+  index ({ :'questions.sort_order' => 1})
+  index ({ :'questions.group_id' => 1})
   index ({ :private_share_key => 1})
   index ({ :'reports.title' => 1})
   index ({ :'reports.released_at' => 1})
+  index ({ :'groups.parent_id' => 1})
+  index ({ :'groups.sort_order' => 1})
 
 
   #############################

@@ -15,6 +15,7 @@ ka:
       api_key: API დაშვების გასაღები
       categories: "კატეგორია"
       category_mappers: "კატეგორიები"
+      group: Group
     attributes:
       user:
         email: "ელ.ფოსტა"
@@ -107,6 +108,13 @@ ka:
         no_questions: ამ მონაცემთა ფაილზე არ არის კითხვები
         sort_order: "დახარისხების წყობა"
         shape_name: "ფორმის სახელი"
+      group:
+        title: Name
+        description: Description
+        include_in_charts: Include the Description in the Chart Titles?
+        codes: Questions in this Group
+        parent_id: This Group is a Sub-Group of
+        sub_group: Sub-Group
       report:
         title: "დასახელება"
         file: "ფაილი"
@@ -239,6 +247,12 @@ ka:
         can_exclude: "მონიშვნის შემთხვევაში ეს კითხვა იქნება ხელმისაწვდომი ანალიზის დროს, მაგრამ მომხმარებლის სურვილის შემთხვევაში ის შეიძლება გამოირთოს"
         sort_order: "გამოსაჩენი პასუხების წყობა"
         default_text: "ეს არის პასუხის ტექსტი მთავარი ენიდან, რომელიც მოწოდებულია რათა თარგმანის გასაადვილებლად"
+      group:
+        title: The group name will appear in the codebook and on the explore page in the question drop-down lists
+        description: "The group description will appear in the codebook, on the explore page in the question drop-down lists and the chart titles, if desired."
+        include_in_charts: "If selected, the group description will appear in the title of the charts. The Description will then be required."
+        codes: Select the questions that belong in this group
+        parent_id: Use this to indicate that this group belongs to another group
       report:
         title: "რეფორთის დასახელება"
         file: "რეფორთის ფაილი pdf, doc, odt ან txt დოკუმენტებში"
@@ -374,6 +388,7 @@ ka:
         title_filter: "პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{code} - %{variable}: %{nums}"
   datatable:
     search: ძიება
+    search_footer: 'Search %{name}'
     copy:
       title: "კოპირება"
       tooltip: "კოპირება ბუფერში"
@@ -518,6 +533,7 @@ ka:
       question: "კითხვა"
       questions: "კითხვები"
       question_code: "კოდი"
+      question_codes: Codes
       answers: "პასუხები"
       notes: "შენიშვნები"
       count: "დათვლა"
@@ -565,6 +581,8 @@ ka:
       message_sent: "მადლობას გიხდით ჩვენთან დაკავშირებისთვის"
       description_saved: Description was successfully saved
       error_while_save: An error occurred while saving
+      insert_description_text: "[Please enter description text so you can see it here]"
+      datatable_regex_search: "Search for text that is only in this column. You can use regular expressions like ^ for beginning of string and $ for end of string."
     menu:
       explore_data: "მონაცემთა გაცნობა"
       explore_time_series: "პერიოდული შედარების გაცნობა"
@@ -598,6 +616,7 @@ ka:
         mass_changes_questions: Question Mass Changes
         mass_changes_answers: Answer Mass Changes
         download_data: Download Data
+        groups: Group Questions
       admin_time_series:
         explore_data: "მონაცემების გაცნობა"
         heading: "პერიოდული შედარების დეტალები"
@@ -860,6 +879,20 @@ ka:
         template2: "სვეტები, რომლის შეცვლაც შეუძლებელია: %{code}, %{value}"
         template_link: "პასუხების ნიმუშების ჩამოტვირთვა"
         submit: "პასუხების განახლება"
+  groups:
+    index:
+      title: Group Questions
+      no_groups: There are no groups on file for this dataset.
+      modal:
+        header: "Questions for Group '[group]'"
+    table_row:
+      question_count: '%{num} questions'    
+    form:
+      option_top_level: This group is not a sub-group
+      chart_description_explanation: "Below is an example of how your description text will look in the charts. The format is: Question Code - Group Description. Question Text."
+      ex_question: Is the sky blue?
+      questions_explanation_default: "All questions that are not assigned to any other group are avaiable to be assigned to this group."
+      questions_explanation_subgroup: "Only the questions assinged to '%{group}' are available to be assigned to this sub-group."
   time_series:
     form:
       header_datasets: "მონაცემთა ცხრილები"
