@@ -54,9 +54,11 @@ function run_search(){
   if (filter != undefined && filter != ''){
     $("#codebook > ul > li").each(function(){
       // determine what text to search in
-      var filter_selector = $(this);
+      var filter_selector = $(this).find('.details .default-search');
       if (filter_by == 'q'){
         filter_selector = $(this).find('.question');
+      }else if (filter_by == 'code'){
+        filter_selector = $(this).find('.question-code');
       }else if (filter_by == 'ans'){
         filter_selector = $(this).find('.answers ul');
       }
