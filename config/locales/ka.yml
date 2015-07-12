@@ -966,6 +966,7 @@ ka:
       filter:
         all: "ყველა ტექსტი"
         questions: "კითხვის ტექსტი"
+        codes: Question Code
         answers: "პასუხის ტექსტი"
     dashboard_time_series:
       tabs:
@@ -979,6 +980,7 @@ ka:
       filter:
         all: "ყველა ტექსტი"
         questions: "კითხვის ტექსტი"
+        codes: Question Code
         answers: "პასუხის ტექსტი"
     language_switcher:
       label: "ხელმისაწვდომი ენები"

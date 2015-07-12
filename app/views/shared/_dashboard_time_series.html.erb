@@ -122,6 +122,10 @@
               <label class="filter" for="filter_q"><%= t('.filter.questions') %></label>
             </div>
             <div class="radio-box" tabindex="0">
+              <input id="filter_code" name="filter" type="radio" value="code" />
+              <label class="filter" for="filter_code"><%= t('.filter.codes') %></label>
+            </div>
+            <div class="radio-box" tabindex="0">
               <input id="filter_ans" name="filter" type="radio" value="ans" />
               <label class="filter" for="filter_ans"><%= t('.filter.answers') %></label>
             </div>  
@@ -131,7 +135,7 @@
         <ul class="list-unstyled">
           <% @time_series.questions.sorted.each do |question| %>
             <li>
-              <div class="col question">
+              <div class="col question-link">
                 <%= link_to url_time_series_explore(@time_series, question_code: question.code, language: params[:language]) do %>
                   <div><span><%= question.original_code %>:</span><br/>
                   <%= question.text %></div>
@@ -140,17 +144,23 @@
               <div class="col details">
                 <div>
                   <div class="col k"><%= t('app.common.question') %>: </div>
-                  <div class="col"><%= question.text %></div>
+                  <div class="col default-search question"><%= question.text %></div>
+                </div>
+                <div>
+                  <div class="col k"><%= t('app.common.question_code') %>: </div>
+                  <div class="col default-search question-code">
+                    <%= question.original_code %>
+                  </div>
                 </div>
                 <% if question.notes.present? %>
                   <div>
                     <div class="col k"><%= t('app.common.notes') %>: </div>
-                    <div class="col"><%= question.notes %></div>
+                    <div class="col default-search "><%= question.notes %></div>
                   </div>
                 <% end %>
                 <div>
                   <div class="col k"><%= t('app.common.answers') %>: </div>
-                  <div class="col answers">
+                  <div class="col answers default-search ">
                     <%- answers = question.answers.sorted
                       if answers.present? 
                     -%>

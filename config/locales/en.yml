@@ -966,6 +966,7 @@ en:
       filter:
         all: All Text
         questions: Question Text
+        codes: Question Code
         answers: Answer Text
     dashboard_time_series:
       tabs:
@@ -979,6 +980,7 @@ en:
       filter:
         all: All Text
         questions: Question Text
+        codes: Question Code
         answers: Answer Text
     language_switcher:
       label: Available Languages
