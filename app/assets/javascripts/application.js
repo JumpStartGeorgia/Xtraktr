@@ -225,6 +225,11 @@ $(document).ready(function () {
     }
   });
 
+  // when form with data loader is submitted, show the loading img
+  $('form.form-data-loader').submit(function(){
+    $('.data-loader').fadeIn('fast');
+  });
+
 });
 var downloading = false;
 function download_request(url, data) {
