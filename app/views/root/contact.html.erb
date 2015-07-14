@@ -19,11 +19,19 @@
   <div class="col">
     <div class="email">
       <div class="figure"></div>
-      <div class="text"><%= mail_to "info@jumpstart.ge", nil, :encode => "hex", :subject => t('mailer.contact.contact_form.subject') %></div> 
+      <div class="text"><%= mail_to "info@jumpstart.ge", nil, :encode => "hex", :subject => t('mailer.contact.contact_form.subject') %></div>
     </div>
     <div class="phone">
       <div class="figure"></div>
       <div class="text">+995 032 214 29 26</div>
+    </div>
+    <div class="website">
+      <div class="figure"></div>
+      <div class="text"><%= link_to "http://www.jumpstart.ge", "http://www.jumpstart.ge",  :target => "_blank"%></div>
+    </div>
+    <div class="address">
+      <div class="figure"></div>
+      <div class="text"><%= t("app.common.jumpstart_address") %></div>
     </div>
   </div>
 </div>
