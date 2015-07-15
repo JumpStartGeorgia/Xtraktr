@@ -106,28 +106,37 @@
           <% end %>
         <% end %>
           <li class="sidebaritem sidebar">
-            <div class="box">
-              <ul class="nav in" id="side-menu">
-                <li><%= link_to_sidebar root_path, 'home' %></li>
-                <li><%= link_to_sidebar explore_data_path, 'datasets' %></li>
-                <li><%= link_to_sidebar explore_time_path, 'time_series' %></li>
-                <li><%= link_to_sidebar "#", 'highlights' %></li>
-                <li><%= link_to_sidebar "#", 'about' %></li>
-                <li><%= link_to_sidebar instructions_path, 'instructions' %></li>
-                <li><%= link_to_sidebar api_path, 'api' %></li>
-                <li><%= link_to_sidebar contact_path, 'contact' %></li>
-              </ul>
-              <div class="sidebar-bottom">
-                <div class="share">
-                  <%= link_to '', "https://www.facebook.com/sharer/sharer.php?u=" +  root_url, class: 'facebook', onclick:"javascript:window.open(this.href,
-                              '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;" %>
-                  <% title = content_for?(:title) ? "#{yield(:title)} | #{t("app.common.#{@app_key_name}.app_name")}" : "#{t("app.common.#{@app_key_name}.app_name")} | #{t("app.common.#{@app_key_name}.app_slogan")}".html_safe %>
-                  <%= link_to '',"https://twitter.com/share?text=#{title}" , class: 'twitter', onclick:"javascript:window.open(this.href,
-                              '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;" %>
+            <div class="tbl">
+              <div class="left">
+                <div class="tbl">
+                  <div class="top">
+                    <ul class="nav in" id="side-menu">
+                      <li><%= link_to_sidebar root_path, 'home' %></li>
+                      <li><%= link_to_sidebar explore_data_path, 'datasets' %></li>
+                      <li><%= link_to_sidebar explore_time_path, 'time_series' %></li>
+                      <li><%= link_to_sidebar "#", 'highlights' %></li>
+                      <li><%= link_to_sidebar "#", 'about' %></li>
+                      <li><%= link_to_sidebar instructions_path, 'instructions' %></li>
+                      <li><%= link_to_sidebar api_path, 'api' %></li>
+                      <li><%= link_to_sidebar contact_path, 'contact' %></li>
+                    </ul>
+                  </div>
+                  <div class="bottom">
+                    <div class="sidebar-bottom">
+                      <div class="share">
+                        <%= link_to '', "https://www.facebook.com/sharer/sharer.php?u=" +  root_url, class: 'facebook', onclick:"javascript:window.open(this.href,
+                                    '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;" %>
+                        <% title = content_for?(:title) ? "#{yield(:title)} | #{t("app.common.#{@app_key_name}.app_name")}" : "#{t("app.common.#{@app_key_name}.app_name")} | #{t("app.common.#{@app_key_name}.app_slogan")}".html_safe %>
+                        <%= link_to '',"https://twitter.com/share?text=#{title}" , class: 'twitter', onclick:"javascript:window.open(this.href,
+                                    '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;" %>
+                      </div>
+                      <%= link_to t('app.common.powered_by_jumpstart').html_safe, "http://www.jumpstart.ge",  :target => "_blank", :title => t('app.common.js_link_title'), class: 'powered-by' %>
+                    </div>
+                  </div>
                 </div>
-                <%= link_to t('app.common.powered_by_jumpstart').html_safe, "http://www.jumpstart.ge",  :target => "_blank", :title => t('app.common.js_link_title'), class: 'powered-by' %>
               </div>
-            </div>
+              <div class="right"></div>
+          </div>
         </li>
       </ul>
 
