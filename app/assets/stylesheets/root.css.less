@@ -413,7 +413,7 @@
     {
       font:12px 'sourcesans_pro_sb', 'sans-serif';
       color:@fff;
-      background-color:@00adee;
+      background-color:@d67456;
       border:1px solid @fff;
       border-radius: 3px;
       text-transform:uppercase;
@@ -427,24 +427,29 @@
     padding:0px 0px 0px 6px;
     display:block;
     min-height:42px;
-    min-width: 200px;
+    width:300px;
     > div
     {
       display:inline-block;
       vertical-align: middle;
     }
     .figure {
-      width:42px;
       height:42px;
+      width:42px;
+      min-width:42px;
+      display:table-cell;
     }
-    .text, .text a
+    .text
     {
       font:16px 'sourcesans_pro','sans-serif';
       color:#d67456;
       padding:0px 12px 0px 10px;
-      position:relative;
-      top: 50%;
-      transform: translateY(-50%);
+      display:table-cell;
+      width:100%;
+    }
+    .text a {
+      font:16px 'sourcesans_pro','sans-serif';
+      color:#d67456;
     }
   }
   .email {
@@ -462,9 +467,14 @@
   .address {
     .figure { background:#f4e38b url(/assets/svg/address.svg) no-repeat center/25px 22px; }
   }
-  .formtastic input
+  .formtastic
   {
-    box-sizing:border-box;
+    input {
+      box-sizing:border-box;
+    }
+    .input {
+      margin:0;
+    }
   }
 
   .has-error
@@ -489,7 +499,7 @@
     a
     {
       font: 16px 'sourcesans_pro_sb', 'sans-serif';
-      color:@00adee;
+      color:@d67456;
     }
   }
   .box

@@ -1,6 +1,6 @@
-<%- 
-  model_class = Dataset 
-  r_model_class = Report 
+<%-
+  model_class = Dataset
+  r_model_class = Report
   is_admin_page = request.path == dataset_path(@dataset)
   show_share = true if show_share.nil?
   show_private_questions = false if show_private_questions.nil?
@@ -13,7 +13,6 @@
     <div class="col">
       <h2><%=@dataset.title%></h2>
       <div class="info">
-        <div class="calendar"></div>
         <div class="timestamps">
           <div class="timestamp">
             <span><%= model_class.human_attribute_name(:gathered_at) %>:</span>
@@ -23,15 +22,12 @@
             <span><%= model_class.human_attribute_name(:released_at) %>:</span>
             <%= I18n.l(@dataset.released_at, format: :day_first) if @dataset.released_at.present? %>
           </div>
-        </div>   
+        </div>
+        <div class="source"><span><%= "#{model_class.human_attribute_name(:source)}: " %></span><%= "#{@dataset.source}" %></div>
         <% if !@is_dataset_admin %>
           <div class="share share-box"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>
         <% end %>
       </div>
-      
-      <% if @is_xtraktr %>
-        <div class="source"><%= "#{model_class.human_attribute_name(:source)}: #{@dataset.source}" %></div>
-      <% end %>
       <% if @dataset.description.present? %>
         <div class="description">
           <%= simple_format_no_tags(@dataset.description, {}, {sanitize: false}) %>
@@ -51,7 +47,7 @@
                   <% end %>
                 </li>
               <% } %>
-            </ul>         
+            </ul>
         <% end %>
       </div>
       <div class="links">
@@ -65,8 +61,8 @@
             <%= image_tag 'svg/timeseries.svg' %>
             <%= t('app.menu.time_series') %>
           <% end %>
-        <% end %>                    
-        <% if @dataset.urls.present? && @dataset.urls.codebook.present? %>     
+        <% end %>
+        <% if @dataset.urls.present? && @dataset.urls.codebook.present? %>
             <div class="download-wrapper" >
               <div class="download" data-id="<%= @dataset.id.to_s %>" data-lang="<%= @dataset.current_locale %>" data-download-type="public">
               <%= image_tag 'svg/download_big.svg', alt: t('helpers.links.download_data') %>
@@ -76,17 +72,17 @@
                 <li><div class="type" data-type='r' title="<%= t('download_data_options.title.r') %>" data-placement="left"><%= t('download_data_options.text.r') %></div></li>
                 <li><div class="type" data-type='spss' title="<%= t('download_data_options.title.spss') %>" data-placement="left"><%= t('download_data_options.text.spss') %></div></li>
                 <li><div class="type" data-type='stata' title="<%= t('download_data_options.title.stata') %>" data-placement="left"><%= t('download_data_options.text.stata') %></div></li>
-              </ul>                 
-            </div>        
+              </ul>
+            </div>
           </div>
         <% end %>
-     
+
       </div>
     </div>
   </div>
 
 <div id="dashboard-tabs" class="tabs style1" role="tabpanel">
-    <% 
+    <%
       highlight_active = {tab: '', panel: ''}
       method_active = {tab: 'active', panel: 'in active'}
       codebook_active = {tab: '', panel: ''}
@@ -94,12 +90,12 @@
       if @highlights.present?
         highlight_active = {tab: 'active', panel: 'in active'}
         method_active = {tab: '', panel: ''}
-        active_tab_label = t('.tabs.highlights') 
-      elsif !@dataset.methodology.present? 
+        active_tab_label = t('.tabs.highlights')
+      elsif !@dataset.methodology.present?
         method_active = {tab: '', panel: ''}
         codebook_active = {tab: 'active', panel: 'in active'}
-        active_tab_label = t('.tabs.codebook') 
-      end 
+        active_tab_label = t('.tabs.codebook')
+      end
     %>
   <div class="tab-header">
     <div class="tab-caption"><%= active_tab_label %></div>
@@ -136,7 +132,7 @@
         </p>
       <% end %>
     </div>
-    
+
     <div role="tabpanel" class="tab-pane fade <%= method_active[:panel] %>" id="methodology">
       <% if @dataset.methodology.present? %>
         <div class="tinymce_format">
@@ -149,12 +145,12 @@
         </p>
       <% end %>
     </div>
-    
+
     <div role="tabpanel" class="tab-pane fade <%= codebook_active[:panel] %>" id="codebook">
       <div id="codebook-search">
         <input type="search" class="codebook-search" id="filter" value="" placeholder="<%= t('helpers.search') %>" />
         <%= link_to @dataset.urls.codebook, class: 'download-direct',  title: t("app.common.codebook_title") do %>
-                  <% end %>  
+                  <% end %>
         <div class="radio-box-group">
           <div class="radio-box" tabindex="0">
             <input checked id="filter_all" name="filter" type="radio" value="all" />
@@ -171,8 +167,8 @@
           <div class="radio-box" tabindex="0">
             <input id="filter_ans" name="filter" type="radio" value="ans" />
             <label class="filter" for="filter_ans"><%= t('.filter.answers') %></label>
-          </div>  
-        </div>         
+          </div>
+        </div>
       </div>
       <div class="up"></div>
       <ul class="list-unstyled">
@@ -219,7 +215,7 @@
                 <div class="col k"><%= t('app.common.answers') %>: </div>
                 <div class="col answers default-search">
                   <%- answers = show_private_questions == true ? question.answers.sorted : question.answers.all_for_analysis
-                    if answers.present? 
+                    if answers.present?
                   -%>
                     <ul>
                       <%- answers.each do |answer| -%>
@@ -230,7 +226,7 @@
                             </span>
                           <% end %>
                           <%= answer.text %>
-                        </li> 
+                        </li>
                       <%- end -%>
                     </ul>
                   <% end %>
@@ -241,7 +237,7 @@
         <% end %>
       </ul>
     </div>
-    
+
     <div role="tabpanel" class="tab-pane fade list" id="reports">
       <ul>
         <% if @dataset.reports.present? %>
@@ -252,7 +248,7 @@
                 <div class="title" <%= lng %>><%= report.title %></div>
                 <%= link_to report.file.url, class: 'download-direct', target: :blank, title: "#{report.file_type} - #{number_to_human_size(report.file_file_size).to_s}" do %>
                 <% end %>
-              </div>                  
+              </div>
               <div class="info">
                 <div class="calendar"></div>
                 <div class="timestamps">

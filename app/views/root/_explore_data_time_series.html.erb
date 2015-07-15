@@ -3,7 +3,9 @@
   <% if @time_series.present? %>
     <% @time_series.each do |time_series| %>
       <li>
-        <h2><%= link_to time_series.title, explore_time_series_dashboard_path(time_series) %></h2>
+        <div class="caption">
+          <div class="title"><%= link_to time_series.title, explore_time_series_dashboard_path(time_series) %></div>
+        </div>
         <div class="info">
           <div class="calendar"></div>
           <div class="timestamps">
@@ -16,11 +18,11 @@
 
         <% if time_series.description.present? %>
           <div class="description">
-            <%= strip_tags_nbsp(time_series.description) %> 
+            <%= strip_tags_nbsp(time_series.description) %>
           </div>
         <% end %>
       </li>
-    <% end %>  
+    <% end %>
   <% else %>
     <li><div class="no-data-found"><%= t('.no_match') %></div></li>
   <% end %>
