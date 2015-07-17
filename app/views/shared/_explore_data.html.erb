@@ -180,13 +180,11 @@
             </div>
           </div>
 
-          <% if show_private_questions %>
-            <div class="details-icons" style="display:none;">
-              <span id="detail-icon-exclude-question" class="icon-item"><%= exclude_question_icon.html_safe %></span>
-              <span id="detail-icon-exclude-answer" class="icon-item"><%= exclude_answer_icon.html_safe %></span>
-              <span id="detail-icon-mappable-question" class="icon-item"><%= mappable_question_icon.html_safe %></span>
-            </div>
-          <% end %>
+          <div class="details-icons" style="display:none;">
+            <span id="detail-icon-exclude-question" class="icon-item"><%= exclude_question_icon.html_safe %></span>
+            <span id="detail-icon-exclude-answer" class="icon-item"><%= exclude_answer_icon.html_safe %></span>
+            <span id="detail-icon-mappable-question" class="icon-item"><%= mappable_question_icon.html_safe %></span>
+          </div>
         </div>
 
       </div>
