@@ -1,3 +1,19 @@
+var group_ids = [];
+
+jQuery.fn.unique_items = function()
+{
+  var n = {},r=[];
+  for(var i = 0; i < this.length; i++) 
+  {
+    if (!n[this[i]]) 
+    {
+      n[this[i]] = true; 
+      r.push(this[i]); 
+    }
+  }
+  return r;
+}
+
 /*
 highlight v5
 Highlights arbitrary terms.
@@ -65,24 +81,59 @@ function run_search(){
 
       // If the list item does not contain the text phrase fade it out
       if ($(filter_selector).text().search(new RegExp(filter, "i")) < 0) {
-        $(this).fadeOut();
+        $(this).hide();
 
       // Show the list item if the phrase matches
       } else {
         $(filter_selector).highlight(filter);
-        $(this).fadeIn();
+        $(this).show();
       }
     });
+
+    // show group header if questions in group are showing
+    // - get list of groups that need to be shown from visible questions
+    var search_group_ids = [];
+    $('#codebook ul li.question-item:visible .question').each(function(){
+      if ($(this).data('group') != ''){
+        search_group_ids.push($(this).data('group'));
+      }
+      if ($(this).data('subgroup') != ''){
+        search_group_ids.push($(this).data('subgroup'));
+      }
+    });
+    // - get unique list of group ids to show
+    search_group_ids = $(search_group_ids).unique_items();
+    // - show correct groups
+    $('#codebook ul li.group-item').each(function(){
+      if (search_group_ids.indexOf($(this).data('id')) == -1){
+        $(this).hide();
+      }else{
+        $(this).show();
+      }
+    });
+    // - show correct jumpto options
+    $('#codebook select.selectpicker option').each(function(){
+      if (search_group_ids.indexOf($(this).attr('value')) == -1){
+        $(this).prop('disabled', true);
+      }else{
+        $(this).prop('disabled', false);
+      }
+    });
+    $('#codebook select.selectpicker').selectpicker('refresh');
+
   }else{
-    $("#codebook > ul > li").fadeIn();
+    $("#codebook > ul > li").show();
+    $('#codebook select.selectpicker option').prop('disabled', false);
+    $('#codebook select.selectpicker').selectpicker('refresh');
   }  
+
+
 }
 
 $(document).ready(function(){
-  // taken from: http://www.designchemical.com/blog/index.php/jquery/live-text-search-function-using-jquery/
   $("#codebook input#filter").keyup(debounce(function() {
     run_search();
-  }, 250));
+  }, 500));
 
   // re-run search when filter option changes
   $('#codebook input[type="radio"]').change(function(){
@@ -90,6 +141,27 @@ $(document).ready(function(){
     if ($('#codebook input#filter').val().length > 0){
       run_search();
     }
+  });
+
+  // group jumpto 
+  $('#codebook select.selectpicker').selectpicker();
+  // get unique list of group ids
+  // - used during search so knows which groups to turn on and off
+  $('#codebook select.selectpicker option').map(function(){
+    if ($(this).attr('value') != ''){
+      return group_ids.push($(this).attr('value'));
+    }
+  })
+
+  // when select group, go to it
+  $('#codebook select.selectpicker').change(function(){
+    $('body').animate({ scrollTop: $('#codebook .group-item[data-id="' + $(this).val() + '"]').offset().top - $('nav.navbar').height() }, 1500);
+    // reset select to default value
+    $(this).selectpicker('val', '');
+  });
+
+  $('#codebook .question-link-groups .question-link-group').click(function(){
+    $('body').animate({ scrollTop: $('#codebook .group-item[data-id="' + $(this).data('id') + '"]').offset().top - $('nav.navbar').height() }, 1500);
   });
 });
 

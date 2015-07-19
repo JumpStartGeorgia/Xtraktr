@@ -549,6 +549,7 @@ en:
       private_question: This quesiton is not available to the public
       private_answer: This answer is not available to the public
       mappable_question: This question displays a map
+      jumpto_group: Jump to this group
     msgs:
       does_not_exist: You tried to access a page that does not exist.
       not_authorized: You are not authorized to view that page.
@@ -1001,6 +1002,7 @@ en:
         questions: Question Text
         codes: Question Code
         answers: Answer Text
+      jumpto_group: Jump To Group
     dashboard_time_series:
       tabs:
         highlights: Highlights

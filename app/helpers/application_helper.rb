@@ -163,4 +163,12 @@ module ApplicationHelper
     '<img src="/assets/svg/map.svg" title="' + I18n.t('app.common.mappable_question') + '" />'
   end
 
+  def group_icon(description=nil)
+    '<img src="/assets/svg/group.svg" title="' + description + '" />'
+  end
+
+  def subgroup_icon(description=nil)
+    '<img src="/assets/svg/subgroup.svg" title="' + description + '" />'
+  end
+
 end

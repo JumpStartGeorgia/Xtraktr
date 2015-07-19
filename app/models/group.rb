@@ -96,6 +96,16 @@ class Group < CustomTranslation
     self.dataset.questions.assigned_to_group(self.id)
   end
 
+  # get questions that are in this group for analysis
+  def questions_for_anlysis
+    self.dataset.questions.assigned_to_group_for_analysis(self.id)
+  end
+
+  # get questions that are in this group for analysis
+  def questions_for_anlysis_with_exclude_questions
+    self.dataset.questions.assigned_to_group_for_analysis_with_exclude_questions(self.id)
+  end
+
   # get count of questions that are in this group
   def question_count
     self.dataset.questions.count_assigned_to_group(self.id)

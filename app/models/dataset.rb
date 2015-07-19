@@ -138,6 +138,56 @@ class Dataset < CustomTranslation
       where(:has_code_answers => true).to_a
     end
 
+    # organize all of the groups/questions that are not exlucde and have code answers
+    def sorted_for_analysis
+      items = [] 
+      groups = base.groups.arranged
+
+      # if groups exist and they have desired questions, get them
+      if groups.present?
+        groups.each do |group|
+          items << group
+          if group.sub_groups.present?
+            group.sub_groups.each do |subgroup|
+              items << subgroup
+              items << subgroup.questions_for_anlysis
+            end
+          end
+          items << group.questions_for_anlysis
+        end
+      end
+
+      # get all questions that are not assigned to groups
+      items << where(:exclude => false, :has_code_answers => true, :group_id => nil).to_a
+      
+      return items.flatten
+    end
+
+    # organize all of the groups/questions that have code answers
+    def sorted_for_analysis_with_exclude_questions
+      items = [] 
+      groups = base.groups.arranged
+
+      # if groups exist and they have desired questions, get them
+      if groups.present?
+        groups.each do |group|
+          items << group
+          if group.sub_groups.present?
+            group.sub_groups.each do |subgroup|
+              items << subgroup
+              items << subgroup.questions_for_anlysis_with_exclude_questions
+            end
+          end
+          items << group.questions_for_anlysis_with_exclude_questions
+        end
+      end
+
+      # get all questions that are not assigned to groups
+      items << where(:has_code_answers => true, :group_id => nil).to_a
+      
+      return items.flatten
+    end
+
     # get count questions that are not excluded and have code answers
     def for_analysis_count
       where(:exclude => false, :has_code_answers => true).count
@@ -269,6 +319,16 @@ class Dataset < CustomTranslation
     # get questions that are assigned to a group
     def assigned_to_group(group_id)
       where(group_id: group_id)
+    end
+
+    # get questions that are assigned to a group for anlyais
+    def assigned_to_group_for_analysis(group_id)
+      where(group_id: group_id, exclude: false, has_code_answers: true).to_a
+    end
+
+    # get questions that are assigned to a group for anlyais
+    def assigned_to_group_for_analysis_with_exclude_questions(group_id)
+      where(group_id: group_id, has_code_answers: true).to_a
     end
 
     # get count of questions that are assigned to a group
