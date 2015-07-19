@@ -97,6 +97,11 @@ class Group < CustomTranslation
   end
 
   # get questions that are in this group for analysis
+  def for_download
+    self.dataset.questions.assigned_to_group_for_download(self.id)
+  end
+
+  # get questions that are in this group for analysis
   def questions_for_anlysis
     self.dataset.questions.assigned_to_group_for_analysis(self.id)
   end

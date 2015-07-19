@@ -72,9 +72,9 @@ class Dataset < CustomTranslation
     # if exclude_id provided, remove it from the list
     def main_groups(exclude_id=nil)
       if exclude_id.present?
-        where(parent_id: nil)
-      else
         where(parent_id: nil).nin(id: exclude_id)
+      else
+        where(parent_id: nil)
       end
     end
 
@@ -102,6 +102,31 @@ class Dataset < CustomTranslation
   embeds_many :questions, cascade_callbacks: true do
     # these are functions that will query the questions documents
 
+    # organize all of the groups/questions
+    def sorted
+      items = [] 
+      groups = base.groups.arranged
+
+      # if groups exist and they have desired questions, get them
+      if groups.present?
+        groups.each do |group|
+          items << group
+          if group.sub_groups.present?
+            group.sub_groups.each do |subgroup|
+              items << subgroup
+              items << subgroup.questions
+            end
+          end
+          items << group.questions
+        end
+      end
+
+      # get all questions that are not assigned to groups
+      items << where(:group_id => nil).to_a
+      
+      return items.flatten
+    end
+
     # get the question that has the provided code
     def with_code(code)
       where(:code => code.downcase).first if code.present?
@@ -126,6 +151,31 @@ class Dataset < CustomTranslation
     # get questions that can be included in download for public
     def for_download
       where(:can_download => true)
+    end
+
+    # organize all of the groups/questions that are not exlucde and have code answers
+    def sorted_for_download
+      items = [] 
+      groups = base.groups.arranged
+
+      # if groups exist and they have desired questions, get them
+      if groups.present?
+        groups.each do |group|
+          items << group
+          if group.sub_groups.present?
+            group.sub_groups.each do |subgroup|
+              items << subgroup
+              items << subgroup.for_download
+            end
+          end
+          items << group.for_download
+        end
+      end
+
+      # get all questions that are not assigned to groups
+      items << where(:can_download => true, :group_id => nil).to_a
+      
+      return items.flatten
     end
 
     # get questions that are not excluded and have code answers
@@ -319,6 +369,11 @@ class Dataset < CustomTranslation
     # get questions that are assigned to a group
     def assigned_to_group(group_id)
       where(group_id: group_id)
+    end
+
+    # get questions that are assigned to a group for download
+    def assigned_to_group_for_download(group_id)
+      where(group_id: group_id, can_download: true).to_a
     end
 
     # get questions that are assigned to a group for anlyais

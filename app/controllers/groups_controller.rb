@@ -112,9 +112,16 @@ class GroupsController < ApplicationController
 
     if @dataset.present?
       @group = @dataset.groups.find(params[:id])
+      @group.assign_attributes(params[:group])
+
+      # assign the group ids to the questions
+      selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] == 'true'}.map{|k,v| v[:id]}
+      not_selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] != 'true'}.map{|k,v| v[:id]}
+      @dataset.questions.assign_group(selected_ids, @group.id)
+      @dataset.questions.assign_group(not_selected_ids, @group.parent_id.present? ? @group.parent_id : nil)
 
       respond_to do |format|
-        if @group.update_attributes(params[:group])
+        if @dataset.save
           format.html { redirect_to dataset_groups_path, flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.group'))} }
           format.json { head :no_content }
         else
@@ -192,7 +199,7 @@ private
       @languages = Language.sorted
 
       # get list of current main groups
-      @main_groups = @dataset.groups.main_groups
+      @main_groups = @dataset.groups.main_groups(@group.id)
 
       gon.insert_description_text = t('app.msgs.insert_description_text')
       gon.group_questions_path = group_questions_dataset_group_path(@dataset.id, @group.id)
