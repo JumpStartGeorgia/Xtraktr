@@ -209,24 +209,58 @@ private
 
       # add each question/answer
       # - use only questions/answers that can be downloaded and analyzed
-      questions = is_admin ? dataset.questions : dataset.questions.for_download
-      questions.each do |question|
-        output << "--------------"
-        output << "\n"
-        output << "#{question.original_code} - #{clean_text(question.text)}"
-        output << "\n"
-        if question.notes.present?
-          output << "#{I18n.t('app.common.notes')}: #{question.notes}"        
+      items = is_admin ? dataset.questions.sorted : dataset.questions.sorted_for_download
+      indent = ''
+      items.each do |item|
+        if item.class == Group
+          group = item
+          group_indent = ''
+          if group.parent_id.present?
+            # subgroup
+            indent = '        '
+            group_indent = '    '
+          else
+            # group
+            indent = '    '
+            group_indent = ''
+          end
+
+          output << "#{group_indent}=============="
+          output << "\n"
+          output << "#{group_indent}#{group.title}"
+          if group.description.present?
+            output << " - #{clean_text(group.description)}"
+          end
+          output << "\n"
+          output << "#{group_indent}=============="
+          output << "\n"
+          output << "\n"
+
+        else  
+          question = item
+
+          # reset the indent if this question is not part of a group
+          indent = '' if question.group_id.nil?
+
+          output << "#{indent}--------------"
+          output << "\n"
+          output << "#{indent}#{question.original_code} - #{clean_text(question.text)}"
+          output << "\n"
+          if question.notes.present?
+            output << "#{indent}#{I18n.t('app.common.notes')}: #{question.notes}"        
+            output << "\n"
+          end
+          answers = is_admin ? question.answers : question.answers.all_for_analysis
+          if answers.present?
+            output << "#{indent}#{I18n.t('app.common.answers')}:"
+            output << "\n"
+            answers.each do |answer|
+              output << "#{indent}  #{answer.value} - #{clean_text(answer.text)}"
+              output << "\n"
+            end
+          end
           output << "\n"
         end
-        output << "#{I18n.t('app.common.answers')}:"
-        output << "\n"
-        answers = is_admin ? question.answers : question.answers.all_for_analysis
-        answers.each do |answer|
-          output << "  #{answer.value} - #{clean_text(answer.text)}"
-          output << "\n"
-        end
-        output << "\n"
       end
 
       #######################
