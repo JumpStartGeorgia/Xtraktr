@@ -156,7 +156,8 @@
         <tbody>
         </tbody>
       </table>
-      <div id="data-loader"></div>
+      <div id="hidden-table-inputs" style="display:none;"></div>
+      <div class="data-loader"></div>
     </div>
     
 
@@ -168,4 +169,7 @@
     <%= f.submit t('helpers.links.reset'), :class => 'btn btn-warning', :type => :reset, :name => :reset %>
     <%= link_to t('helpers.links.cancel'), dataset_groups_path, :class => 'btn btn-warning' %>
   </div>
+
+  <div class="data-loader"></div>
+
 <% end %>

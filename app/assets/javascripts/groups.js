@@ -69,7 +69,7 @@ $(document).ready(function(){
       var start = Date.now();
 
       // turn on the loader
-      $('form #group-questions #data-loader').fadeIn('fast');
+      $('form #group-questions .data-loader').fadeIn('fast');
 
       $.ajax({
         type: 'POST',
@@ -123,7 +123,7 @@ $(document).ready(function(){
 
       }).always(function () {
         // hide the loader
-        $('form #group-questions #data-loader').fadeOut('fast');
+        $('form #group-questions .data-loader').fadeOut('fast');
       });
     }
 
@@ -138,8 +138,24 @@ $(document).ready(function(){
         $('#group-questions #group-question-explanation').html($('#group-questions #group-question-explanation').data('subgroup').replace('[group]', $('form select#group_parent_id option:selected').text()));
       }
     });
+
     // when page loads get the group questions
     get_group_questions();
+
+    // when form submits, get all checkboxes from datatable and then submit
+    // - have to do this because loading data via js and so dom does not know about all inputs
+    $('form').submit(function(){
+      // show data loader
+      $(this).find('> .data-loader').fadeIn('fast');
+
+      // get all inputs from table and add to form
+      datatable.$('input').each(function(){
+        $(this).clone().appendTo('form #hidden-table-inputs');
+      });
+
+    });
+
+
   }
 
 
