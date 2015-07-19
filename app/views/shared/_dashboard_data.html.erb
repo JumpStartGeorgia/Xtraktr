@@ -147,6 +147,11 @@
     </div>
 
     <div role="tabpanel" class="tab-pane fade <%= codebook_active[:panel] %>" id="codebook">
+      <% 
+        items = show_private_questions == true ? @dataset.questions.sorted_for_analysis_with_exclude_questions : @dataset.questions.sorted_for_analysis 
+        current_group = nil
+        current_subgroup = nil
+      %>
       <div id="codebook-search">
         <input type="search" class="codebook-search" id="filter" value="" placeholder="<%= t('helpers.search') %>" />
         <%= link_to @dataset.urls.codebook, class: 'download-direct',  title: t("app.common.codebook_title") do %>
@@ -167,22 +172,92 @@
           <div class="radio-box" tabindex="0">
             <input id="filter_ans" name="filter" type="radio" value="ans" />
             <label class="filter" for="filter_ans"><%= t('.filter.answers') %></label>
-          </div>
+          </div>  
         </div>
+        <% groups = items.select{|x| x.class == Group} %>
+        <% if groups.length > 0 %>
+          <div class="codebook-jumpto">
+            <select data-live-search="true" data-hide-disabled='true' data-width="auto" class="selectpicker" id="codebook-jumpto">
+              <option value='' disabled selected style='display:none;'><%= t('.jumpto_group') %></option>
+              <% groups.each do |group| %>
+                <% 
+                  cls = group.parent_id.present? ? 'subgroup' : 'group' 
+                  content = 'data-content=\'<span>' + group.title + '</span><span class="pull-right">'
+                  desc = group.description.present? ? group.description : I18n.t('app.common.jumpto_group')
+                  if group.parent_id.present?
+                    content << subgroup_icon(desc)
+                  else
+                    content << group_icon(desc)
+                  end
+                  content << '</span>\''
+                %>
+                <option value='<%= group.id %>' class='<%= cls %>' <%= content.html_safe %>><%= group.title %></option>
+              <% end %>
+            </select>
+          </div>       
+        <% end %>
       </div>
       <div class="up"></div>
       <ul class="list-unstyled">
-        <% questions = show_private_questions == true ? @dataset.questions.for_analysis_with_exclude_questions : @dataset.questions.for_analysis %>
-        <% questions.each do |question| %>
-          <li>
-            <div class="col question-link">
+        <% items.each do |item| %>
+          <% 
+            cls = item.class == Group ? 'group-item' : 'question-item' 
+            id = item.class == Group ? item.id : ''
+          %>
+          <li class="<%= cls %>" data-id="<%= id %>">
+            <% if item.class == Group # group/subgroup %>
+              <% 
+                group = item 
+                cls = ''
+                if group.parent_id.present?
+                  cls = 'subgroup'
+                  current_subgroup = group
+                else
+                  current_group = group
+                end
+              %>
+              <div class="question-group <%= cls %>">
+                <span class="group-title"><%= group.title %></span>
+                <% if group.description.present? %>
+                  <span class="group-description"><%= group.description %></span>
+                <% end %>
+              </div>
+
+            <% else #question %>
+              <% 
+                question = item 
+                data_group = ''
+                data_subgroup = ''
+                if question.group_id.present? 
+                  data_group = current_group.id
+                  if question.group_id == current_subgroup.id
+                    data_subgroup = current_subgroup.id
+                  end
+                end
+              %>
+
+              <div class="col question-link" data-group="<%= data_group %>" data-subgroup="<%= data_subgroup %>">
                 <% cls = question.exclude? ? 'exclude-question' : '' %>
                 <%= link_to url_dataset_explore(@dataset, question_code: question.code, language: params[:language]), class: cls do %>
                   <div><span><%= question.original_code %>:</span><br/>
                   <%= question.text %></div>
                 <% end %>
-            </div>
-            <div class="col details">
+
+                <% if question.group_id.present? %>
+                  <ul class="question-link-groups list-unstyled">
+                    <li>
+                      <span class="question-link-group" data-id="<%= current_group.id %>" title="<%= t('app.common.jumpto_group') %>"><%= current_group.title %></span>
+                    </li>
+                    <% if question.group_id == current_subgroup.id %>
+                      <li>
+                        <span class="question-link-group subgroup" data-id="<%= current_subgroup.id %>" title="<%= t('app.common.jumpto_group') %>"><%= current_subgroup.title %></span>
+                      </li>
+                    <% end %>
+                  </ul>
+                <% end %>
+              </div>
+
+              <div class="col details">
               <div>
                 <div class="col k"><%= t('app.common.question') %>: </div>
                 <div class="col question default-search">
@@ -232,7 +307,7 @@
                   <% end %>
                 </div>
               </div>
-            </div>
+            <% end %>
           </li>
         <% end %>
       </ul>

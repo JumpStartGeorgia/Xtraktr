@@ -51,8 +51,8 @@ class DatasetsController < ApplicationController
 
       @show_title = false
 
-      @css.push('list.css', "dashboard.css", 'highlights.css', 'boxic.css', 'tabs.css', 'explore.css')
-      @js.push("live_search.js", 'highlights.js', 'explore.js')
+      @css.push('bootstrap-select.min.css', 'list.css', "dashboard.css", 'highlights.css', 'boxic.css', 'tabs.css', 'explore.css')
+      @js.push('bootstrap-select.min.js', "live_search.js", 'highlights.js', 'explore.js')
 
       respond_to do |format|
         format.html # index.html.erb
