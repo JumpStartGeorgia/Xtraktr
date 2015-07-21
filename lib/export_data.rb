@@ -209,57 +209,36 @@ private
 
       # add each question/answer
       # - use only questions/answers that can be downloaded and analyzed
-      items = is_admin ? dataset.questions.sorted : dataset.questions.sorted_for_download
+      items = is_admin ? dataset.questions.arranged : dataset.questions.arranged('download')
       indent = ''
       items.each do |item|
         if item.class == Group
           group = item
+          indent = '    '
           group_indent = ''
-          if group.parent_id.present?
-            # subgroup
-            indent = '        '
-            group_indent = '    '
-          else
-            # group
-            indent = '    '
-            group_indent = ''
-          end
+          subgroup_indent = '    '
+          subgroup_q_indent =  '        '
 
-          output << "#{group_indent}=============="
-          output << "\n"
-          output << "#{group_indent}#{group.title}"
-          if group.description.present?
-            output << " - #{clean_text(group.description)}"
-          end
-          output << "\n"
-          output << "#{group_indent}=============="
-          output << "\n"
-          output << "\n"
+          # add group
+          output << generate_codebook_group(group, group_indent)
 
-        else  
-          question = item
+          # if have subgroups, add them
+          group.sub_groups.each do |subgroup|
+            output << generate_codebook_group(subgroup, subgroup_indent)
 
-          # reset the indent if this question is not part of a group
-          indent = '' if question.group_id.nil?
-
-          output << "#{indent}--------------"
-          output << "\n"
-          output << "#{indent}#{question.original_code} - #{clean_text(question.text)}"
-          output << "\n"
-          if question.notes.present?
-            output << "#{indent}#{I18n.t('app.common.notes')}: #{question.notes}"        
-            output << "\n"
-          end
-          answers = is_admin ? question.answers : question.answers.all_for_analysis
-          if answers.present?
-            output << "#{indent}#{I18n.t('app.common.answers')}:"
-            output << "\n"
-            answers.each do |answer|
-              output << "#{indent}  #{answer.value} - #{clean_text(answer.text)}"
-              output << "\n"
+            # if have questions, add them
+            subgroup.questions.each do |question|
+              output << generate_codebook_question(question, is_admin, subgroup_q_indent)
             end
           end
-          output << "\n"
+
+          # if have questions, add them
+          group.questions.each do |question|
+            output << generate_codebook_question(question, is_admin, indent)
+          end
+
+        else  
+          output << generate_codebook_question(item, is_admin)
         end
       end
 
@@ -293,6 +272,47 @@ private
     return nil  
   end
 
+  def self.generate_codebook_group(group, indent='')
+    output = ''
+
+    output << "#{indent}=============="
+    output << "\n"
+    output << "#{indent}#{group.title}"
+    if group.description.present?
+      output << " - #{clean_text(group.description)}"
+    end
+    output << "\n"
+    output << "#{indent}=============="
+    output << "\n"
+    output << "\n"
+
+    return output
+  end
+
+  def self.generate_codebook_question(question, is_admin, indent='')
+    output = ''
+
+    output << "#{indent}--------------"
+    output << "\n"
+    output << "#{indent}#{question.original_code} - #{clean_text(question.text)}"
+    output << "\n"
+    if question.notes.present?
+      output << "#{indent}#{I18n.t('app.common.notes')}: #{question.notes}"        
+      output << "\n"
+    end
+    answers = is_admin ? question.answers : question.answers.all_for_analysis
+    if answers.present?
+      output << "#{indent}#{I18n.t('app.common.answers')}:"
+      output << "\n"
+      answers.each do |answer|
+        output << "#{indent}  #{answer.value} - #{clean_text(answer.text)}"
+        output << "\n"
+      end
+    end
+    output << "\n"
+
+    return output
+  end
 
   #########################################
   #########################################

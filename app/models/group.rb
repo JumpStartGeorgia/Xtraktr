@@ -16,7 +16,7 @@ class Group < CustomTranslation
 
   #############################
   attr_accessible :title, :description, :title_translations, :description_translations, :include_in_charts, :parent_id, :sort_order
-  attr_accessor :sub_groups
+  attr_accessor :questions, :sub_groups
 
   #############################
   # Validations
@@ -91,25 +91,31 @@ class Group < CustomTranslation
 
   #############################
 
-  # get questions that are in this group
-  def questions
-    self.dataset.questions.assigned_to_group(self.id)
+  # get questions for a specific type and save to questions
+  def get_questions_by_type(type='all')
+    self.questions = self.dataset.questions.assigned_to_group(self.id, type)
   end
 
-  # get questions that are in this group for analysis
-  def for_download
-    self.dataset.questions.assigned_to_group_for_download(self.id)
-  end
 
-  # get questions that are in this group for analysis
-  def questions_for_anlysis
-    self.dataset.questions.assigned_to_group_for_analysis(self.id)
-  end
+  # # get questions that are in this group
+  # def questions
+  #   self.dataset.questions.assigned_to_group(self.id)
+  # end
 
-  # get questions that are in this group for analysis
-  def questions_for_anlysis_with_exclude_questions
-    self.dataset.questions.assigned_to_group_for_analysis_with_exclude_questions(self.id)
-  end
+  # # get questions that are in this group for analysis
+  # def for_download
+  #   self.dataset.questions.assigned_to_group_for_download(self.id)
+  # end
+
+  # # get questions that are in this group for analysis
+  # def questions_for_anlysis
+  #   self.dataset.questions.assigned_to_group_for_analysis(self.id)
+  # end
+
+  # # get questions that are in this group for analysis
+  # def questions_for_anlysis_with_exclude_questions
+  #   self.dataset.questions.assigned_to_group_for_analysis_with_exclude_questions(self.id)
+  # end
 
   # get count of questions that are in this group
   def question_count
@@ -121,8 +127,8 @@ class Group < CustomTranslation
     self.dataset.groups.find(self.parent_id) if self.parent_id.present?
   end
 
-  # get the sub-groups
-  def sub_groups
-    self.dataset.groups.sub_groups(self.id)
+  # get the sub-groups and save to sub_groups
+  def get_sub_groups
+    self.sub_groups = self.dataset.groups.sub_groups(self.id)
   end
 end

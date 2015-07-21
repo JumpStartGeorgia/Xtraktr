@@ -86,14 +86,15 @@ class Dataset < CustomTranslation
     # get groups arranged with main groups and their sub-groups as nested arrays
     # if a group has sub-groups, then the attribute sub_groups will be an array of those sub-groups
     def arranged
-      groups = main_groups
+      return main_groups
+      # groups = main_groups
 
-      # if main group has sub-groups, add them
-      groups.each do |group|
-        group.sub_groups = sub_groups(group.id)
-      end
+      # # if main group has sub-groups, add them
+      # groups.each do |group|
+      #   group.sub_groups = sub_groups(group.id)
+      # end
 
-      return groups
+      # return groups
     end
 
   end
@@ -103,29 +104,64 @@ class Dataset < CustomTranslation
     # these are functions that will query the questions documents
 
     # organize all of the groups/questions
-    def sorted
+    def arranged(type='all')
       items = [] 
-      groups = base.groups.arranged
 
-      # if groups exist and they have desired questions, get them
-      if groups.present?
-        groups.each do |group|
-          items << group
-          if group.sub_groups.present?
-            group.sub_groups.each do |subgroup|
-              items << subgroup
-              items << subgroup.questions
-            end
+      # get groups
+      items << base.groups.arranged
+      items.flatten!
+
+      # if groups exist get their subgroups and questions
+      if items.present?
+        items.each do |group|
+          group.get_questions_by_type(type)
+          group.get_sub_groups
+          group.sub_groups.each do |subgroup|
+            subgroup.get_questions_by_type(type)
           end
-          items << group.questions
         end
       end
 
-      # get all questions that are not assigned to groups
-      items << where(:group_id => nil).to_a
+      # get questions that are not assigned to groups
+      case type
+        when 'download'
+          items << where(:can_download => true, :group_id => nil).to_a
+        when 'analysis'
+          items << where(:exclude => false, :has_code_answers => true, :group_id => nil).to_a
+        when 'anlysis_with_exclude_questions'
+          items << where(:has_code_answers => true, :group_id => nil).to_a
+        else
+          items << where(:group_id => nil).to_a
+      end
       
       return items.flatten
     end
+
+
+    # organize all of the groups/questions
+    # def sorted
+    #   items = [] 
+    #   groups = base.groups.arranged
+
+    #   # if groups exist and they have desired questions, get them
+    #   if groups.present?
+    #     groups.each do |group|
+    #       items << group
+    #       if group.sub_groups.present?
+    #         group.sub_groups.each do |subgroup|
+    #           items << subgroup
+    #           items << subgroup.questions
+    #         end
+    #       end
+    #       items << group.questions
+    #     end
+    #   end
+
+    #   # get all questions that are not assigned to groups
+    #   items << where(:group_id => nil).to_a
+      
+    #   return items.flatten
+    # end
 
     # get the question that has the provided code
     def with_code(code)
@@ -153,30 +189,30 @@ class Dataset < CustomTranslation
       where(:can_download => true)
     end
 
-    # organize all of the groups/questions that are not exlucde and have code answers
-    def sorted_for_download
-      items = [] 
-      groups = base.groups.arranged
+    # # organize all of the groups/questions that are not exlucde and have code answers
+    # def sorted_for_download
+    #   items = [] 
+    #   groups = base.groups.arranged
 
-      # if groups exist and they have desired questions, get them
-      if groups.present?
-        groups.each do |group|
-          items << group
-          if group.sub_groups.present?
-            group.sub_groups.each do |subgroup|
-              items << subgroup
-              items << subgroup.for_download
-            end
-          end
-          items << group.for_download
-        end
-      end
+    #   # if groups exist and they have desired questions, get them
+    #   if groups.present?
+    #     groups.each do |group|
+    #       items << group
+    #       if group.sub_groups.present?
+    #         group.sub_groups.each do |subgroup|
+    #           items << subgroup
+    #           items << subgroup.for_download
+    #         end
+    #       end
+    #       items << group.for_download
+    #     end
+    #   end
 
-      # get all questions that are not assigned to groups
-      items << where(:can_download => true, :group_id => nil).to_a
+    #   # get all questions that are not assigned to groups
+    #   items << where(:can_download => true, :group_id => nil).to_a
       
-      return items.flatten
-    end
+    #   return items.flatten
+    # end
 
     # get questions that are not excluded and have code answers
     def for_analysis
@@ -189,54 +225,54 @@ class Dataset < CustomTranslation
     end
 
     # organize all of the groups/questions that are not exlucde and have code answers
-    def sorted_for_analysis
-      items = [] 
-      groups = base.groups.arranged
+    # def sorted_for_analysis
+    #   items = [] 
+    #   groups = base.groups.arranged
 
-      # if groups exist and they have desired questions, get them
-      if groups.present?
-        groups.each do |group|
-          items << group
-          if group.sub_groups.present?
-            group.sub_groups.each do |subgroup|
-              items << subgroup
-              items << subgroup.questions_for_anlysis
-            end
-          end
-          items << group.questions_for_anlysis
-        end
-      end
+    #   # if groups exist and they have desired questions, get them
+    #   if groups.present?
+    #     groups.each do |group|
+    #       items << group
+    #       if group.sub_groups.present?
+    #         group.sub_groups.each do |subgroup|
+    #           items << subgroup
+    #           items << subgroup.questions_for_anlysis
+    #         end
+    #       end
+    #       items << group.questions_for_anlysis
+    #     end
+    #   end
 
-      # get all questions that are not assigned to groups
-      items << where(:exclude => false, :has_code_answers => true, :group_id => nil).to_a
+    #   # get all questions that are not assigned to groups
+    #   items << where(:exclude => false, :has_code_answers => true, :group_id => nil).to_a
       
-      return items.flatten
-    end
+    #   return items.flatten
+    # end
 
-    # organize all of the groups/questions that have code answers
-    def sorted_for_analysis_with_exclude_questions
-      items = [] 
-      groups = base.groups.arranged
+    # # organize all of the groups/questions that have code answers
+    # def sorted_for_analysis_with_exclude_questions
+    #   items = [] 
+    #   groups = base.groups.arranged
 
-      # if groups exist and they have desired questions, get them
-      if groups.present?
-        groups.each do |group|
-          items << group
-          if group.sub_groups.present?
-            group.sub_groups.each do |subgroup|
-              items << subgroup
-              items << subgroup.questions_for_anlysis_with_exclude_questions
-            end
-          end
-          items << group.questions_for_anlysis_with_exclude_questions
-        end
-      end
+    #   # if groups exist and they have desired questions, get them
+    #   if groups.present?
+    #     groups.each do |group|
+    #       items << group
+    #       if group.sub_groups.present?
+    #         group.sub_groups.each do |subgroup|
+    #           items << subgroup
+    #           items << subgroup.questions_for_anlysis_with_exclude_questions
+    #         end
+    #       end
+    #       items << group.questions_for_anlysis_with_exclude_questions
+    #     end
+    #   end
 
-      # get all questions that are not assigned to groups
-      items << where(:has_code_answers => true, :group_id => nil).to_a
+    #   # get all questions that are not assigned to groups
+    #   items << where(:has_code_answers => true, :group_id => nil).to_a
       
-      return items.flatten
-    end
+    #   return items.flatten
+    # end
 
     # get count questions that are not excluded and have code answers
     def for_analysis_count
@@ -367,24 +403,33 @@ class Dataset < CustomTranslation
     end
 
     # get questions that are assigned to a group
-    def assigned_to_group(group_id)
-      where(group_id: group_id)
+    def assigned_to_group(group_id, type='all')
+      case type
+        when 'download'
+          where(group_id: group_id, can_download: true).to_a
+        when 'analysis'
+          where(group_id: group_id, exclude: false, has_code_answers: true).to_a
+        when 'anlysis_with_exclude_questions'
+          where(group_id: group_id, has_code_answers: true).to_a
+        else
+          where(group_id: group_id)
+      end
     end
 
-    # get questions that are assigned to a group for download
-    def assigned_to_group_for_download(group_id)
-      where(group_id: group_id, can_download: true).to_a
-    end
+    # # get questions that are assigned to a group for download
+    # def assigned_to_group_for_download(group_id)
+    #   where(group_id: group_id, can_download: true).to_a
+    # end
 
-    # get questions that are assigned to a group for anlyais
-    def assigned_to_group_for_analysis(group_id)
-      where(group_id: group_id, exclude: false, has_code_answers: true).to_a
-    end
+    # # get questions that are assigned to a group for anlyais
+    # def assigned_to_group_for_analysis(group_id)
+    #   where(group_id: group_id, exclude: false, has_code_answers: true).to_a
+    # end
 
-    # get questions that are assigned to a group for anlyais
-    def assigned_to_group_for_analysis_with_exclude_questions(group_id)
-      where(group_id: group_id, has_code_answers: true).to_a
-    end
+    # # get questions that are assigned to a group for anlyais
+    # def assigned_to_group_for_analysis_with_exclude_questions(group_id)
+    #   where(group_id: group_id, has_code_answers: true).to_a
+    # end
 
     # get count of questions that are assigned to a group
     def count_assigned_to_group(group_id)

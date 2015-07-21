@@ -1024,7 +1024,7 @@ $(document).ready(function() {
     }, function() { share_toggle('out',$(this)); });
   }
 // tabs - on li click fire inner a tag
-  $(document).on('click', '.tabs li', function() {
+  $(document).on('click', '#explore-data-content.tabs li', function() {
     $(this).find('a').tab('show');
   });
   $(document).on('click', '.tab-content .up', function () {

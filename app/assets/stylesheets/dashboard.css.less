@@ -604,7 +604,9 @@
   }
 
   > ul {
-    > li
+    margin-left: -50px;
+    margin-right: -50px;        
+    li.question-item, li.group-item
     {
       padding:20px 0px;
       position: relative;
@@ -618,32 +620,41 @@
         position: relative;
         top: 20px;
       }
-      &.group-item{
-        background-color: @f7f8f8;
-        margin-left: -50px;
-        margin-right: -50px;        
-        padding-left: 40px;
-        & + .group-item{
-          padding-top: 0;
-        }
-        & + .question-item{
-          padding-top: 35px;
-          &:before{
-            content: "";
-            position: absolute;
-            width: 0; 
-            height: 0; 
-            border-left: 40px solid transparent;
-            border-right: 40px solid transparent;
-            border-top: 16px solid @f7f8f8;
-            top: 0;
-            left: 34px;
-          }
-        }
-        &:after{
-          background: none;
+    }
+    li.question-item{
+      padding:20px 0px 20px 40px;
+      position: relative;
+    }
+    li.group-item{
+      & > .question-group + ul > .group-item{
+        padding-top: 0;
+      }
+      & > .question-group + ul > li:first-of-type.question-item{
+        padding-top: 36px;
+        &:before{
+          content: "";
+          position: absolute;
+          width: 0; 
+          height: 0; 
+          border-left: 40px solid transparent;
+          border-right: 40px solid transparent;
+          border-top: 16px solid @f7f8f8;
+          top: 0px;
+          left: 60px;
         }
       }
+      &:after{
+        background: none;
+      }
+    }
+    /* if this item is part of group, indent it and show vertical line */
+    ul.grouped-items{
+      margin-left:40px;
+      border-left: solid 2px @db8042;
+    }
+    ul.subgrouped-items{
+      margin-left:40px;
+      border-left: solid 2px @af5213;
     }
     .highlight
     {
@@ -653,6 +664,9 @@
     }
   }
   .question-group{
+    background-color: @f7f8f8;
+    padding: 20px 20px 20px 40px;
+    position: relative;
     .group-title{
       color: @db8042;
       font-weight: bold;
@@ -677,8 +691,8 @@
       }
     }
     &.subgroup{
-      margin-left: 35px;
-      .group-title{
+/*      margin-left: 35px;
+*/      .group-title{
         color: @af5213;
         &:before
         {
@@ -832,7 +846,7 @@
 @media (min-width: 992px) {
   #codebook {
     #codebook-search {
-      margin-bottom:50px;
+      margin-bottom:20px;
     }
     .question-link {
       display:table-cell;

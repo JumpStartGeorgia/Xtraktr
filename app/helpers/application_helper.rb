@@ -150,19 +150,6 @@ module ApplicationHelper
     return html_options.html_safe
   end
 
-  # determine if any of the selected questions have can_exclude answers
-  def selected_question_has_can_exclude?(questions, select_values=[])
-    has_can_exclude = false
-
-    if select_values.present?
-      x = questions.select{|x| select_values.include?(x.code)}.map{|x| x.has_can_exclude_answers}
-      has_can_exclude = x.present? && x.include?(true)
-    end
-
-    return has_can_exclude
-  end
-
-
   def exclude_question_icon
     '<img src="/assets/svg/lock.svg" title="' + I18n.t('app.common.private_question') + '" />'
   end
@@ -176,11 +163,14 @@ module ApplicationHelper
   end
 
   def group_icon(description=nil)
-    '<img src="/assets/svg/group.svg" title="' + description + '" />'
+    title = description.present? ? "title=\'#{description}\'" : ''
+    '<img src="/assets/svg/group.svg" ' + title + ' />'
   end
 
   def subgroup_icon(description=nil)
-    '<img src="/assets/svg/subgroup.svg" title="' + description + '" />'
+    title = description.present? ? "title=\'#{description}\'" : ''
+    '<img src="/assets/svg/subgroup.svg" ' + title + ' />'
   end
+
 
 end
