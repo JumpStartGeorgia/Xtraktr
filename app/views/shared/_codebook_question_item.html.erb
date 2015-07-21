@@ -1,0 +1,83 @@
+<%
+  question ||= nil
+  show_private_questions = false if show_private_questions.nil?
+  current_group ||= nil
+  current_subgroup ||= nil
+
+  if question.present?
+%>
+            <li class="question-item">
+              <div class="col question-link" data-group="<%= current_group.present? ? current_group.id : '' %>" data-subgroup="<%= current_subgroup.present? ? current_subgroup.id : '' %>">
+                <% cls = question.exclude? ? 'exclude-question' : '' %>
+                <%= link_to url_dataset_explore(question.dataset, question_code: question.code, language: params[:language]), class: cls do %>
+                  <div><span><%= question.original_code %>:</span><br/>
+                  <%= question.text %></div>
+                <% end %>
+
+                <% if question.group_id.present? %>
+                  <ul class="question-link-groups list-unstyled">
+                    <li>
+                      <span class="question-link-group" data-id="<%= current_group.id %>" title="<%= t('app.common.jumpto_group') %>"><%= current_group.title %></span>
+                    </li>
+                    <% if current_subgroup.present? && question.group_id == current_subgroup.id %>
+                      <li>
+                        <span class="question-link-group subgroup" data-id="<%= current_subgroup.id %>" title="<%= t('app.common.jumpto_group') %>"><%= current_subgroup.title %></span>
+                      </li>
+                    <% end %>
+                  </ul>
+                <% end %>
+              </div>
+
+              <div class="col details">
+              <div>
+                <div class="col k"><%= t('app.common.question') %>: </div>
+                <div class="col question default-search">
+                  <% if question.exclude? %>
+                    <span class="item-icons">
+                      <%= exclude_question_icon.html_safe %>
+                    </span>
+                  <% end %>
+                  <% if question.is_mappable? %>
+                    <span class="item-icons">
+                      <%= mappable_question_icon.html_safe %>
+                    </span>
+                  <% end %>
+                  <%= question.text %>
+                </div>
+              </div>
+              <div>
+                <div class="col k"><%= t('app.common.question_code') %>: </div>
+                <div class="col question-code default-search">
+                  <%= question.original_code %>
+                </div>
+              </div>
+              <% if question.notes.present? %>
+                <div>
+                  <div class="col k"><%= t('app.common.notes') %>: </div>
+                  <div class="col default-search"><%= question.notes %></div>
+                </div>
+              <% end %>
+              <div>
+                <div class="col k"><%= t('app.common.answers') %>: </div>
+                <div class="col answers default-search">
+                  <%- answers = show_private_questions == true ? question.answers.sorted : question.answers.all_for_analysis
+                    if answers.present? 
+                  -%>
+                    <ul>
+                      <%- answers.each do |answer| -%>
+                        <li>
+                          <% if answer.exclude? %>
+                            <span class="item-icons">
+                              <%= exclude_answer_icon.html_safe %>
+                            </span>
+                          <% end %>
+                          <%= answer.text %>
+                        </li> 
+                      <%- end -%>
+                    </ul>
+                  <% end %>
+                </div>
+              </div>
+            </li>
+
+<% end %>

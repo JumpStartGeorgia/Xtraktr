@@ -68,7 +68,7 @@ function run_search(){
 
   // Loop through the comment list
   if (filter != undefined && filter != ''){
-    $("#codebook > ul > li").each(function(){
+    $("#codebook li.question-item").each(function(){
       // determine what text to search in
       var filter_selector = $(this).find('.details .default-search');
       if (filter_by == 'q'){
@@ -79,7 +79,7 @@ function run_search(){
         filter_selector = $(this).find('.answers ul');
       }
 
-      // If the list item does not contain the text phrase fade it out
+      // If the list item does not contain the text phrase, hide it
       if ($(filter_selector).text().search(new RegExp(filter, "i")) < 0) {
         $(this).hide();
 
@@ -93,7 +93,9 @@ function run_search(){
     // show group header if questions in group are showing
     // - get list of groups that need to be shown from visible questions
     var search_group_ids = [];
-    $('#codebook ul li.question-item:visible .question').each(function(){
+    // cannot use :visible selector for li might be nested in another li that is no visible
+    // so have to look by using list-item
+    $('#codebook li.question-item[style*="list-item"] .question-link').each(function(){
       if ($(this).data('group') != ''){
         search_group_ids.push($(this).data('group'));
       }
@@ -103,8 +105,9 @@ function run_search(){
     });
     // - get unique list of group ids to show
     search_group_ids = $(search_group_ids).unique_items();
+
     // - show correct groups
-    $('#codebook ul li.group-item').each(function(){
+    $('#codebook li.group-item').each(function(){
       if (search_group_ids.indexOf($(this).data('id')) == -1){
         $(this).hide();
       }else{
@@ -112,19 +115,19 @@ function run_search(){
       }
     });
     // - show correct jumpto options
-    $('#codebook select.selectpicker option').each(function(){
+    $('#codebook select.selectpicker-group option').each(function(){
       if (search_group_ids.indexOf($(this).attr('value')) == -1){
         $(this).prop('disabled', true);
       }else{
         $(this).prop('disabled', false);
       }
     });
-    $('#codebook select.selectpicker').selectpicker('refresh');
+    $('#codebook select.selectpicker-group').selectpicker('refresh');
 
   }else{
-    $("#codebook > ul > li").show();
-    $('#codebook select.selectpicker option').prop('disabled', false);
-    $('#codebook select.selectpicker').selectpicker('refresh');
+    $("#codebook li.question-item, #codebook li.group-item").show();
+    $('#codebook select.selectpicker-group option').prop('disabled', false);
+    $('#codebook select.selectpicker-group').selectpicker('refresh');
   }  
 
 
@@ -144,22 +147,23 @@ $(document).ready(function(){
   });
 
   // group jumpto 
-  $('#codebook select.selectpicker').selectpicker();
+  $('#codebook select.selectpicker-group').selectpicker();
+
   // get unique list of group ids
   // - used during search so knows which groups to turn on and off
-  $('#codebook select.selectpicker option').map(function(){
+  $('#codebook select.selectpicker-group option').map(function(){
     if ($(this).attr('value') != ''){
       return group_ids.push($(this).attr('value'));
     }
   })
 
   // when select group, go to it
-  $('#codebook select.selectpicker').change(function(){
+  $('#codebook select.selectpicker-group').change(function(){
     $('body').animate({ scrollTop: $('#codebook .group-item[data-id="' + $(this).val() + '"]').offset().top - $('nav.navbar').height() }, 1500);
     // reset select to default value
     $(this).selectpicker('val', '');
   });
-
+  // when click on group under question link, go to it
   $('#codebook .question-link-groups .question-link-group').click(function(){
     $('body').animate({ scrollTop: $('#codebook .group-item[data-id="' + $(this).data('id') + '"]').offset().top - $('nav.navbar').height() }, 1500);
   });

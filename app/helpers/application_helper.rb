@@ -151,6 +151,7 @@ module ApplicationHelper
     return html_options.html_safe
   end
 
+
   def exclude_question_icon
     '<img src="/assets/svg/lock.svg" title="' + I18n.t('app.common.private_question') + '" />'
   end
@@ -164,11 +165,14 @@ module ApplicationHelper
   end
 
   def group_icon(description=nil)
-    '<img src="/assets/svg/group.svg" title="' + description + '" />'
+    title = description.present? ? "title=\'#{description}\'" : ''
+    '<img src="/assets/svg/group.svg" ' + title + ' />'
   end
 
   def subgroup_icon(description=nil)
-    '<img src="/assets/svg/subgroup.svg" title="' + description + '" />'
+    title = description.present? ? "title=\'#{description}\'" : ''
+    '<img src="/assets/svg/subgroup.svg" ' + title + ' />'
   end
+
 
 end
