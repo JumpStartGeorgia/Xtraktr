@@ -1115,7 +1115,7 @@ private
     if !File.exists?(zip_file_path)
       puts "- creating zip"
       # zip the files and move to the main folder
-      Zip::Archive.open(zip_file_path, Zip::CREATE) do |zipfile|
+      ZipRuby::Archive.open(zip_file_path, ZipRuby::CREATE) do |zipfile|
         zipfile.add_dir(dataset.title)
         files.each do |file|
           # args: file name (with directory), source
