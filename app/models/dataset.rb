@@ -115,8 +115,7 @@ class Dataset < CustomTranslation
       if items.present?
         items.each do |group|
           group.get_questions_by_type(type)
-          group.get_sub_groups
-          group.sub_groups.each do |subgroup|
+          group.get_sub_groups.each do |subgroup|
             subgroup.get_questions_by_type(type)
           end
         end

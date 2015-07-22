@@ -42,7 +42,7 @@ class GroupsController < ApplicationController
    @dataset = Dataset.by_id_for_user(params[:dataset_id], current_user.id)
 
     if @dataset.present?
-      @group = Group.new
+      @group = @dataset.groups.new
 
       add_common_options
 

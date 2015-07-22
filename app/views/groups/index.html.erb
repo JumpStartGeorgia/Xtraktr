@@ -9,6 +9,8 @@
               :class => 'btn btn-primary' %>
 </div>
 
+<%= simple_format t('.explanation') %>
+
 <% if @groups.present? %>
 
   <table id="group-datatable" class="table table-striped display">
@@ -25,7 +27,7 @@
     <tbody>
       <% @groups.each do |group| %>
         <%= render :partial => 'groups/table_row', locals: {group: group} %>
-        <% group.sub_groups.each do |sub_group| %>
+        <% group.get_sub_groups.each do |sub_group| %>
           <%= render :partial => 'groups/table_row', locals: {group: sub_group, is_sub_group: true} %>
         <% end %>
       <% end %>

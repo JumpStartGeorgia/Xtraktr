@@ -113,8 +113,8 @@ en:
         description: Description
         include_in_charts: Include the Description in the Chart Titles?
         codes: Questions in this Group
-        parent_id: This Group is a Sub-Group of
-        sub_group: Sub-Group
+        parent_id: This Group is a Subgroup of
+        sub_group: Subgroup
       report:
         title: Title
         file: File
@@ -886,14 +886,22 @@ en:
       no_groups: There are no groups on file for this dataset.
       modal:
         header: "Questions for Group '[group]'"
+      explanation: |
+        This section allows you to put similar questions together in a group. You can also create a subgroup of questions.
+
+        Groups have a name and description. You can use the description to give context to the set of questions in the group. 
+
+        Groups will be visible in the codebook and on the explore page. It is up to you on whether or not the group description is included in the chart titles.
+
+        By default, groups are put at the top of the codebook and all ungrouped questions will appear after the groups. You can use the Sorting page to further control the order of the groups and questions.
     table_row:
       question_count: '%{num} questions'    
     form:
-      option_top_level: This group is not a sub-group
+      option_top_level: This group is not a subgroup
       chart_description_explanation: "Below is an example of how your description text will look in the charts. The format is: Question Code - Group Description. Question Text."
       ex_question: Is the sky blue?
       questions_explanation_default: "All questions that are not assigned to any other group are avaiable to be assigned to this group."
-      questions_explanation_subgroup: "Only the questions assinged to '%{group}' are available to be assigned to this sub-group."
+      questions_explanation_subgroup: "Only the questions assinged to '%{group}' are available to be assigned to this subgroup."
   time_series:
     form: 
       header_datasets: Datasets

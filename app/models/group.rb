@@ -80,6 +80,7 @@ class Group < CustomTranslation
 
   end
 
+
   #############################
   ## override get methods for fields that are localized
   def title
@@ -93,9 +94,12 @@ class Group < CustomTranslation
 
   # get questions for a specific type and save to questions
   def get_questions_by_type(type='all')
-    self.questions = self.dataset.questions.assigned_to_group(self.id, type)
-  end
+    if !self.questions.present?
+      self.questions = self.dataset.questions.assigned_to_group(self.id, type)
+    end
 
+    return self.questions
+  end
 
   # # get questions that are in this group
   # def questions
@@ -119,7 +123,8 @@ class Group < CustomTranslation
 
   # get count of questions that are in this group
   def question_count
-    self.dataset.questions.count_assigned_to_group(self.id)
+    #self.dataset.questions.count_assigned_to_group(self.id)
+    get_questions_by_type.count
   end
 
   # get the parent group of this group
@@ -129,6 +134,10 @@ class Group < CustomTranslation
 
   # get the sub-groups and save to sub_groups
   def get_sub_groups
-    self.sub_groups = self.dataset.groups.sub_groups(self.id)
+    if !self.sub_groups.present?
+      self.sub_groups = self.dataset.groups.sub_groups(self.id)
+    end
+
+    return self.sub_groups
   end
 end

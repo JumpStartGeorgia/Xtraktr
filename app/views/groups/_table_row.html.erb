@@ -19,7 +19,7 @@
 
           <div class="group-questions">
             <ul>
-              <% group.questions.each do |question| %>
+              <% group.get_questions_by_type.each do |question| %>
                 <li>
                   <%= question.code_with_text %>
                 </li>
