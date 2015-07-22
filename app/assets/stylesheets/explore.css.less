@@ -645,6 +645,36 @@
          color:@d67456;
          min-width:100px;
       }
+      .name-group .group-title{
+        color: @db8042;
+        font-weight: bold;
+        &:before
+        {
+          content: "";
+          background: transparent url(/assets/svg/group.svg) no-repeat;
+          width: 11px;
+          height: 11px;
+          display: inline-block;
+          position: relative;
+          top: 1px;
+          margin-right: 7px;    
+        }
+      }
+      .name-subgroup .group-title{
+        color: @af5213;
+        font-weight: bold;
+        &:before
+        {
+          content: "";
+          background: transparent url(/assets/svg/subgroup.svg) no-repeat;
+          width: 11px;
+          height: 11px;
+          display: inline-block;
+          position: relative;
+          top: 1px;
+          margin-right: 7px;    
+        }
+      }
       ul
       {
         list-style:none;

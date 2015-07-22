@@ -397,6 +397,17 @@ private
     hash = {}
     if question.present?
       hash = {code: question.code, original_code: question.original_code, text: question.text, notes: question.notes, is_mappable: question.is_mappable, has_map_adjustable_max_range: question.has_map_adjustable_max_range}
+      # if this question belongs to a group, add it
+      if question.group_id.present?
+        group = question.group
+        # see if this is a subgroup
+        if group.parent_id.present?
+          hash[:group] = {title: group.parent.title, description: group.parent.description}
+          hash[:subgroup] = {title: group.title, description: group.description}
+        else
+          hash[:group] = {title: group.title, description: group.description}
+        end
+      end
       # if this is for admin, include whether the question is excluded
       if private_user_id.present?
         hash[:exclude] = question.exclude
