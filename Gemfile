@@ -40,7 +40,9 @@ gem "unidecoder", "~> 1.1.2" #convert utf8 to ascii for permalinks
 gem 'active_model_serializers', '~> 0.9.3' # easily create json serialized model data
 gem 'mongoid_search', :git => 'https://github.com/mauriciozaffari/mongoid_search.git', :branch => "master" # search mongo collections
 gem 'whenever' # schedule cron jobs
-gem 'zipruby', '~> 0.3.6' # create zip files
+# gem 'zipruby', '~> 0.3.6' # create zip files
+# have to use this because zipruby and rubyzip use the same class names
+gem "zipruby-compat", :require => 'zipruby', :git => "git@github.com:jawspeak/zipruby-compatibility-with-rubyzip-fork.git", :tag => "v0.3.7"
 gem 'roadie', '~> 2.4.3' # apply easy styling to html emails
 gem 'mongoid_slug', '~> 4.0.0' # permalink urls with mongoid
 gem "autoprefixer-rails" # no need to prefix css, it will automatically do it
