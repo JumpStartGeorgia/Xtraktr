@@ -127,7 +127,6 @@ module ApplicationHelper
       selected = selected_code.present? && selected_code == question.code ? 'selected=selected ' : ''
       disabled = (disabled_code.present? && disabled_code == question.code) || (disabled_code2.present? && disabled_code2 == question.code) ? 'disabled=disabled ' : ''
       can_exclude = question.has_can_exclude_answers? ? 'data-can-exclude=true ' : ''
-      has_can_exclude = can_exclude.present? && selected.present?
 
       # if the question is mappable or is excluded, show the icons for this
       content = ''
@@ -149,6 +148,18 @@ module ApplicationHelper
     end
 
     return html_options.html_safe
+  end
+
+  # determine if any of the selected questions have can_exclude answers
+  def selected_question_has_can_exclude?(questions, select_values=[])
+    has_can_exclude = false
+
+    if select_values.present?
+      x = questions.select{|x| select_values.include?(x.code)}.map{|x| x.has_can_exclude_answers}
+      has_can_exclude = x.present? && x.include?(true)
+    end
+
+    return has_can_exclude
   end
 
 
