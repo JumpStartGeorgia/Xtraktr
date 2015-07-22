@@ -179,8 +179,7 @@
         <% groups = items.select{|x| x.class == Group} %>
         <% if groups.length > 0 %>
           <div class="codebook-jumpto">
-            <select data-live-search="true" data-width="auto" class="selectpicker-group" id="codebook-jumpto">
-              <option value='' disabled selected style='display:none;'><%= t('.jumpto_group') %></option>
+            <select data-live-search="true" data-hide-disabled='true' data-width="auto" class="selectpicker-group" id="codebook-jumpto" title="<%= t('.jumpto_group') %>">
               <%= generate_codebook_groups(groups) %>
             </select>
           </div>       
