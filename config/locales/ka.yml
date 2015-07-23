@@ -536,6 +536,8 @@ ka:
       question_codes: Codes
       answers: "პასუხები"
       notes: "შენიშვნები"
+      group: Group
+      subgroup: Subgroup
       count: "დათვლა"
       percent: "პროცენტი"
       dataset_dashboard: "მონაცემთა Dashboard"

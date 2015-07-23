@@ -182,6 +182,10 @@ class Question < CustomTranslation
     "#{self.original_code} - #{self.text}"
   end
 
+  def group
+    self.dataset.groups.find(self.group_id) if self.group_id.present?
+  end
+
   # create json for groups 
   def json_for_groups(selected=false)
     {

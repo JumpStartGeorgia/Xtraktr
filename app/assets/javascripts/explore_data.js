@@ -514,7 +514,7 @@ function build_datatable(json){
 // populat a details item block
 function build_details_item(selector, json_question){
   if (json_question && json_question.text && json_question.answers){
-    tmp = $(selector);
+    var tmp = $(selector);
     if (tmp.length > 0){
       var icon = '';
       if (json_question.exclude){
@@ -532,6 +532,24 @@ function build_details_item(selector, json_question){
       }else{
         tmp.find('.details-notes').hide();
       }
+      if (json_question.group){
+        tmp.find('.name-group .group-title').html(json_question.group.title);
+        if (json_question.group.description != ''){
+          tmp.find('.name-group .group-description').html(' - ' + json_question.group.description);
+        }
+        tmp.find('.details-group').show();
+      }else{
+        tmp.find('.details-group').hide();
+      }
+      if (json_question.subgroup){
+        tmp.find('.name-subgroup .group-title').html(json_question.subgroup.title);
+        if (json_question.subgroup.description != ''){
+          tmp.find('.name-subgroup .group-description').html(' - ' + json_question.subgroup.description);
+        }
+        tmp.find('.details-subgroup').show();
+      }else{
+        tmp.find('.details-subgroup').hide();
+      }
       for(var i=0;i<json_question.answers.length;i++){
         icon = '';
         if (json_question.answers[i].exclude){
@@ -547,8 +565,8 @@ function build_details_item(selector, json_question){
 // build details (question and possible answers)
 function build_details(json){
   // clear out existing content and hide
-  var details_item = $('#tab-details .details-item').hide(), tmp;
-  details_item.find('.name-variable, .notes, .list-answers').empty();
+  var details_item = $('#tab-details .details-item').hide();
+  details_item.find('.name-group .group-title, .name-group .group-description, .name-subgroup .group-title, .name-subgroup .group-description, .name-variable, .name-code, .notes, .list-answers').empty();
 
   // add questions
   build_details_item('#tab-details #details-question-code', json.question);

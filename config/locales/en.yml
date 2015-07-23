@@ -536,6 +536,8 @@ en:
       question_codes: Codes
       answers: Answers
       notes: Notes
+      group: Group
+      subgroup: Subgroup
       count: Count
       percent: Percent
       dataset_dashboard: Dataset Dashboard
