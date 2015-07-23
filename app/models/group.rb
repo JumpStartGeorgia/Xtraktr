@@ -61,7 +61,7 @@ class Group < CustomTranslation
 
     # if this is not a sub-group, get questions from subgroups too that need to be updated
     if self.parent_id.nil?
-      self.sub_groups.each do |sub_group|
+      self.get_sub_groups.each do |sub_group|
         questions_to_update += self.dataset.questions.assigned_to_group_meta_only(sub_group.id).map{|x| x.id}
       end
     end
@@ -75,7 +75,7 @@ class Group < CustomTranslation
     # if this is not a sub-group, delete all of its sub-groups too
     if self.parent_id.nil?
       Rails.logger.debug ">>>>> - deleting all subgroups"
-      self.sub_groups.delete_all
+      self.get_sub_groups.delete_all
     end
 
   end
