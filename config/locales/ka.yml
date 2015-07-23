@@ -965,8 +965,8 @@ ka:
         reset: "გადატვირთვა"
         filtered_by_code: "გაფილტრულია"
         no_filter: "ფილტრი არ არის"
-        can_exclude: გამორიცხე "არ ვიცი" & "უარი პასუხზე"
-        can_exclude_hint: ანალიზიდან წაშალე პასუხები "არ ვიცი" & "უარი პასუხზე"
+        can_exclude: Exclude Answers
+        can_exclude_hint: At least one selected question has answers that can be excluded during analysis. Select this checkbox to remove these answers from the analysis.
       jumpto:
         chart: "გრაფაზე გადასვლა"
         map: "რუკაზე გადასვლა"

@@ -9,11 +9,35 @@
 ////////////////////////////////////////////////
 // determine heights of chart based on number of answers
 ////////////////////////////////////////////////
+function map_chart_height(json){
+  var chart_height = 501; // need the 1 for the border bottom line
+  // if showing group, add space for it
+  if (json.question.group && json.question.group.include_in_charts){
+    chart_height += 24;
+  }
+  if (json.broken_down_by && json.broken_down_by.group && json.broken_down_by.group.include_in_charts){
+    chart_height += 24;
+  }
+  if (json.filtered_by && json.filtered_by.group  && json.filtered_by.group.include_in_charts){
+    chart_height += 24;
+  }
+
+  return chart_height;
+}
+
 function pie_chart_height(json){
   var chart_height = 501; // need the 1 for the border bottom line
   if (json.question.answers.length >= 5){
     chart_height = 425 + json.question.answers.length*21 + 1;
   }
+  // if showing group, add space for it
+  if (json.question.group && json.question.group.include_in_charts){
+    chart_height += 24;
+  }
+  if (json.filtered_by && json.filtered_by.group && json.filtered_by.group.include_in_charts){
+    chart_height += 24;
+  }
+
   return chart_height;
 }
 
@@ -22,6 +46,17 @@ function crosstab_chart_height(json){
   if (json.question.answers.length + json.broken_down_by.answers.length >= 10){
     chart_height = 330 + json.question.answers.length*26.125 + json.broken_down_by.answers.length*21 + 1;
   }
+  // if showing group, add space for it
+  if (json.question.group && json.question.group.include_in_charts){
+    chart_height += 24;
+  }
+  if (json.broken_down_by.group && json.broken_down_by.group.include_in_charts){
+    chart_height += 24;
+  }
+  if (json.filtered_by && json.filtered_by.group  && json.filtered_by.group.include_in_charts){
+    chart_height += 24;
+  }
+
   return chart_height;
 }
 
@@ -31,6 +66,14 @@ function time_series_chart_height(json){
   if (json.question.answers.length >= 5){
     chart_height = 425 + json.question.answers.length*21 + 1;
   }
+  // if showing group, add space for it
+  if (json.question.group && json.question.group.include_in_charts){
+    chart_height += 24;
+  }
+  if (json.filtered_by && json.filtered_by.group  && json.filtered_by.group.include_in_charts){
+    chart_height += 24;
+  }
+
   return chart_height;
 }
 
