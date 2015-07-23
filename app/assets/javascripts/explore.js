@@ -21,15 +21,6 @@ function map_chart_height(json){
   if (json.filtered_by && json.filtered_by.group  && json.filtered_by.group.include_in_charts){
     chart_height += 24;
   }
-  if (json.question.group != undefined && json.question.group.include_in_charts){
-    chart_height += 24;
-  }
-  if (json.broken_down_by.group != undefined && json.broken_down_by.group.include_in_charts){
-    chart_height += 24;
-  }
-  if (json.filtered_by.group != undefined && json.filtered_by.group.include_in_charts){
-    chart_height += 24;
-  }
 
   return chart_height;
 }
@@ -44,12 +35,6 @@ function pie_chart_height(json){
     chart_height += 24;
   }
   if (json.filtered_by && json.filtered_by.group && json.filtered_by.group.include_in_charts){
-    chart_height += 24;
-  }
-  if (json.question.group != undefined && json.question.group.include_in_charts){
-    chart_height += 24;
-  }
-  if (json.filtered_by.group != undefined && json.filtered_by.group.include_in_charts){
     chart_height += 24;
   }
 
@@ -71,15 +56,6 @@ function crosstab_chart_height(json){
   if (json.filtered_by && json.filtered_by.group  && json.filtered_by.group.include_in_charts){
     chart_height += 24;
   }
-  if (json.question.group != undefined && json.question.group.include_in_charts){
-    chart_height += 24;
-  }
-  if (json.broken_down_by.group != undefined && json.broken_down_by.group.include_in_charts){
-    chart_height += 24;
-  }
-  if (json.filtered_by.group != undefined && json.filtered_by.group.include_in_charts){
-    chart_height += 24;
-  }
 
   return chart_height;
 }
@@ -95,12 +71,6 @@ function time_series_chart_height(json){
     chart_height += 24;
   }
   if (json.filtered_by && json.filtered_by.group  && json.filtered_by.group.include_in_charts){
-    chart_height += 24;
-  }
-  if (json.question.group != undefined && json.question.group.include_in_charts){
-    chart_height += 24;
-  }
-  if (json.filtered_by.group != undefined && json.filtered_by.group.include_in_charts){
     chart_height += 24;
   }
 
