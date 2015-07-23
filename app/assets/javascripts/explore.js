@@ -7,7 +7,7 @@
 
 
 ////////////////////////////////////////////////
-// determine heights of chart based on number of answers
+// determine heights of chart based on number of answers and group text
 ////////////////////////////////////////////////
 function map_chart_height(json){
   var chart_height = 501; // need the 1 for the border bottom line
@@ -19,6 +19,15 @@ function map_chart_height(json){
     chart_height += 24;
   }
   if (json.filtered_by && json.filtered_by.group  && json.filtered_by.group.include_in_charts){
+    chart_height += 24;
+  }
+  if (json.question.group != undefined && json.question.group.include_in_charts){
+    chart_height += 24;
+  }
+  if (json.broken_down_by.group != undefined && json.broken_down_by.group.include_in_charts){
+    chart_height += 24;
+  }
+  if (json.filtered_by.group != undefined && json.filtered_by.group.include_in_charts){
     chart_height += 24;
   }
 
@@ -35,6 +44,12 @@ function pie_chart_height(json){
     chart_height += 24;
   }
   if (json.filtered_by && json.filtered_by.group && json.filtered_by.group.include_in_charts){
+    chart_height += 24;
+  }
+  if (json.question.group != undefined && json.question.group.include_in_charts){
+    chart_height += 24;
+  }
+  if (json.filtered_by.group != undefined && json.filtered_by.group.include_in_charts){
     chart_height += 24;
   }
 
@@ -56,6 +71,15 @@ function crosstab_chart_height(json){
   if (json.filtered_by && json.filtered_by.group  && json.filtered_by.group.include_in_charts){
     chart_height += 24;
   }
+  if (json.question.group != undefined && json.question.group.include_in_charts){
+    chart_height += 24;
+  }
+  if (json.broken_down_by.group != undefined && json.broken_down_by.group.include_in_charts){
+    chart_height += 24;
+  }
+  if (json.filtered_by.group != undefined && json.filtered_by.group.include_in_charts){
+    chart_height += 24;
+  }
 
   return chart_height;
 }
@@ -71,6 +95,12 @@ function time_series_chart_height(json){
     chart_height += 24;
   }
   if (json.filtered_by && json.filtered_by.group  && json.filtered_by.group.include_in_charts){
+    chart_height += 24;
+  }
+  if (json.question.group != undefined && json.question.group.include_in_charts){
+    chart_height += 24;
+  }
+  if (json.filtered_by.group != undefined && json.filtered_by.group.include_in_charts){
     chart_height += 24;
   }
 
@@ -218,7 +248,11 @@ function build_visual_title(highlight_path, text){
 ////////////////////////////////////////////////
 // build highmap
 ////////////////////////////////////////////////
-function build_highmap(shape_question_code, adjustable_max, json_map_set){
+function build_highmap(shape_question_code, adjustable_max, json_map_set, chart_height){
+  if (chart_height == undefined){
+    chart_height = 501; // need the 1 for the border bottom line
+  }
+
   // create a div tag for this map
   // if gon.highlight_id exist, add it to the jquery selector path
   var selector_path = '#container-map';
@@ -227,7 +261,7 @@ function build_highmap(shape_question_code, adjustable_max, json_map_set){
     selector_path = highlight_path + selector_path;
   }
   var map_id = 'map-' + ($('#container-map .map').length+1);
-  $(selector_path).append('<div id="' + map_id + '" class="map"></div>');
+  $(selector_path).append('<div id="' + map_id + '" class="map" style="height: ' + chart_height + 'px;"></div>');
 
   var max = 100;
   if (adjustable_max == true){
