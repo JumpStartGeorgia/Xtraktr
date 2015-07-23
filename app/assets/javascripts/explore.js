@@ -251,8 +251,8 @@ function build_highmap(shape_question_code, adjustable_max, json_map_set){
       colorAxis: {
         min: 0,
         max: max,
-        minColor: '#d2f1f9',
-        maxColor: '#0086a5',
+        minColor: '#d1e5d5',
+        maxColor: '#477c52',
         labels: {
             formatter: function () {
               return this.value + '%';
@@ -454,7 +454,8 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
         {
           style: { "color": "#777c86", "fontSize": "14px", "fontFamily":"'sourcesans_pro', 'sans-serif'", "fontWeight": "normal" },
           useHTML: true
-        }
+        },
+        reversed: true
     },
     legend: {
         title: {
@@ -463,7 +464,7 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
         },
         useHTML: true,
         layout: 'vertical',
-        reversed: true,
+        //reversed: true,
         symbolWidth: 14,
         symbolHeight: 14,
         itemMarginBottom: 5,
@@ -481,7 +482,7 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
             stacking: 'percent'
         }
     },
-    series: json_chart.data.reverse(),
+    series: json_chart.data,//.reverse(),
     exporting: {
       sourceWidth: 1280,
       sourceHeight: chart_height,

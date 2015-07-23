@@ -1,6 +1,6 @@
-<%- 
+<%-
   model_class = TimeSeries
-  model_class_d = Dataset 
+  model_class_d = Dataset
   is_admin_page = request.path == time_series_path(@time_series)
   show_share = true if show_share.nil?
 
@@ -14,12 +14,11 @@
         <%= image_tag 'svg/timeseries.svg' %>
         <%=@time_series.title%>
       </h2>
-      <% @datasets.each_with_index do |dataset, dataset_index| %>     
+      <% @datasets.each_with_index do |dataset, dataset_index| %>
         <div class="info">
           <div class="time-series-year<%= dataset_index == @datasets.length-1 ? ' last' : '' %>">
             <%= @time_series.dates_included[dataset_index] %>
           </div>
-          <div class="calendar"></div>
           <div class="timestamps">
             <div class="timestamp">
               <span><%= model_class_d.human_attribute_name(:gathered_at) %>:</span>
@@ -28,13 +27,13 @@
             <div class="timestamp">
               <span><%= model_class_d.human_attribute_name(:released_at) %>:</span>
               <%= I18n.l(dataset.released_at, format: :day_first) if dataset.released_at.present? %>
-            </div>   
+            </div>
           </div>
           <% if dataset_index == 0 && !@is_time_series_admin %>
             <div class="share"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>
           <% end %>
         </div>
-      <% end %>      
+      <% end %>
       <% if @time_series.description.present? %>
         <div class="description">
           <%= simple_format_no_tags(@time_series.description, {}, {sanitize: false}) %>
@@ -54,7 +53,7 @@
                   <% end %>
                 </li>
               <% } %>
-            </ul>         
+            </ul>
         <% end %>
       </div>
       <div class="links">
@@ -66,7 +65,7 @@
     </div>
   </div>
   <div id="dashboard-tabs" class="tabs style1" role="tabpanel">
-      <% 
+      <%
         highlight_active = {tab: '', panel: ''}
         codebook_active = {tab: 'active', panel: 'in active'}
         active_tab_label = t('.tabs.codebook')
@@ -74,7 +73,7 @@
           highlight_active = {tab: 'active', panel: 'in active'}
           codebook_active = {tab: '', panel: ''}
           active_tab_label = t('.tabs.highlights')
-        end 
+        end
       %>
     <div class="tab-header">
       <div class="tab-caption"><%= active_tab_label %></div>
@@ -84,7 +83,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-    </div>      
+    </div>
     <ul class="nav nav-tabs collapse tab-collapse" role="tablist">
       <li role="presentation" class="<%= highlight_active[:tab] %>">
         <a href="#highlights" aria-controls="highlights" role="tab" data-toggle="tab"><%= t('.tabs.highlights') %></a>
@@ -108,7 +107,7 @@
           </p>
         <% end %>
       </div>
-      
+
       <div role="tabpanel" class="tab-pane fade <%= codebook_active[:panel] %>" id="codebook">
         <div id="codebook-search">
           <input type="search" class="codebook-search" id="filter" value="" placeholder="<%= t('helpers.search') %>" />
@@ -128,7 +127,7 @@
             <div class="radio-box" tabindex="0">
               <input id="filter_ans" name="filter" type="radio" value="ans" />
               <label class="filter" for="filter_ans"><%= t('.filter.answers') %></label>
-            </div>  
+            </div>
           </div>
         </div>
         <div class="up"></div>
@@ -162,11 +161,11 @@
                   <div class="col k"><%= t('app.common.answers') %>: </div>
                   <div class="col answers default-search ">
                     <%- answers = question.answers.sorted
-                      if answers.present? 
+                      if answers.present?
                     -%>
                       <ul>
                         <%- answers.each do |answer| -%>
-                          <li><%= answer.text %></li> 
+                          <li><%= answer.text %></li>
                         <%- end -%>
                       </ul>
                     <% end %>
@@ -177,11 +176,11 @@
           <% end %>
         </ul>
       </div>
-      
+
       <div role="tabpanel" class="tab-pane fade list" id="datasets">
             <%= render partial: 'root/explore_data_datasets', locals: {with_pagination: false, with_time_series_link: false} %>
       </div>
-      
+
       <div role="tabpanel" class="tab-pane fade" id="licensing">
         <% if @license.present? %>
           <div class="tinymce_format">

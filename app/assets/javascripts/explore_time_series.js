@@ -87,7 +87,7 @@ function build_datatable(json){
 
     var ln = json.datasets.length;
     for(i=0; i<ln;i++){
-      table += "<th colspan='2' class='code-highlight color"+(ln-i%13)+"'>";
+      table += "<th colspan='2' class='code-highlight color"+(i % 13 + 1)+"'>";
       table += json.datasets[i].label;
       table += "</th>"
     }
@@ -138,7 +138,7 @@ function build_datatable(json){
     table += "<th class='var1-col-red' colspan='2'>" + gon.table_questions_header + "</th>";
     var ln = json.datasets.length;
     for(i=0; i<ln;i++){
-      table += "<th colspan='2' class='code-highlight color"+(ln-i%13)+"'>";
+      table += "<th colspan='2' class='code-highlight color"+(i % 13 + 1)+"'>";
       table += json.datasets[i].label;
       table += "</th>"
     }

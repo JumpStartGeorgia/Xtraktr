@@ -85,8 +85,8 @@
       position:relative;
       &:first-of-type
       {
-        // min-width:1024px;
         max-width:1024px;
+        width:100%;
       }
       &:last-of-type
       {
@@ -141,6 +141,7 @@
       font:16px 'sourcesans_pro_l', 'sans-serif';
       color:@3c4352;
       margin:16px 0 25px;
+      max-width:1024px;
     }
   }
   .links {
@@ -463,11 +464,11 @@
 
 .article.timeseries{
   .meta{
-    h2{
-      margin:40px 0 0;
-      position:relative;
-      top:2px;
-    }
+    // h2{
+    //   // margin:40px 0 0;
+    //   position:relative;
+    //   top:2px;
+    // }
     .info {
       margin-bottom:1px;
       .time-series-year
@@ -487,6 +488,9 @@
           border-bottom-right-radius: 2px;
           border-bottom-left-radius: 2px;
         }
+      }
+      .timestamps {
+        padding-left:10px;
       }
     }
   }
@@ -630,7 +634,7 @@
     }
     .k
     {
-       color:@d67456;
+       color:@d8bc48;
        min-width:100px;
 
     }
@@ -662,7 +666,7 @@
         &:before {
           font:1em/1.4em Arial,'sans-serif';
           content: "\2022";
-          color:@d67456;
+          color:@d95d6a;
           padding-right: 0.5em;
           vertical-align:middle;
         }
