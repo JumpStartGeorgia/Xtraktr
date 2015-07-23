@@ -67,4 +67,13 @@ $(document).ready(function(){
     return false;
   });
 
+  // when form submits, get all checkboxes from datatable and then submit
+  // - have to do this because loading data via js and so dom does not know about all inputs
+  $('form').submit(function(){
+    // get all inputs from table and add to form
+    datatable.$('input').each(function(){
+      $(this).clone().appendTo('form #hidden-table-inputs');
+    });
+  });  
+
 });

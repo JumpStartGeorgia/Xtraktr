@@ -12,9 +12,6 @@
       <h2><%= @dataset.title %></h2>
       <%= form_tag(explore_data_path, :id => 'form-explore-data') do %>
         <div class="form-explore-question-code">
-            <%
-              has_can_exclude = false
-            %>
             <%= label_tag 'question_code', t('.form.question_code') %>
             <select data-live-search="true" data-hide-disabled='true' data-width="100%" class="selectpicker" id="question_code" name="question_code">
               <%= generate_explore_options(@questions, selected_code: @question_code, disabled_code: @broken_down_by_code) %>
@@ -44,8 +41,8 @@
               <%= generate_explore_options(@questions, selected_code: @filtered_by_code, disabled_code: @question_code, disabled_code2: @broken_down_by_code) %>
             </select>
           </div>
-          <%
-            can_exclude_visibility = has_can_exclude == true ? '' : 'style=\'visibility: hidden;\''
+          <%            
+            can_exclude_visibility = selected_question_has_can_exclude?(@questions, [@question_code, @broken_down_by_code, @filtered_by_code]) == true ? '' : 'style=\'visibility: hidden;\''
           %>
           <div id="can-exclude-container" class="checkbox-box" tabindex="0" <%= can_exclude_visibility.html_safe %>>
              <%= check_box_tag 'can_exclude', true, params[:can_exclude].present? ? params[:can_exclude].to_bool : false %>
@@ -180,13 +177,11 @@
             </div>
           </div>
 
-          <% if show_private_questions %>
-            <div class="details-icons" style="display:none;">
-              <span id="detail-icon-exclude-question" class="icon-item"><%= exclude_question_icon.html_safe %></span>
-              <span id="detail-icon-exclude-answer" class="icon-item"><%= exclude_answer_icon.html_safe %></span>
-              <span id="detail-icon-mappable-question" class="icon-item"><%= mappable_question_icon.html_safe %></span>
-            </div>
-          <% end %>
+          <div class="details-icons" style="display:none;">
+            <span id="detail-icon-exclude-question" class="icon-item"><%= exclude_question_icon.html_safe %></span>
+            <span id="detail-icon-exclude-answer" class="icon-item"><%= exclude_answer_icon.html_safe %></span>
+            <span id="detail-icon-mappable-question" class="icon-item"><%= mappable_question_icon.html_safe %></span>
+          </div>
         </div>
 
       </div>

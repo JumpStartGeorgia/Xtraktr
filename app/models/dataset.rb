@@ -1164,7 +1164,7 @@ class Dataset < CustomTranslation
   # reference: https://msdn.microsoft.com/en-us/library/cc195054.aspx
   def clean_string(str)
     if str.class == String && str.present?
-      str.gsub(/\\x../) {|s| [s[2..-1].hex].pack("C")}.force_encoding("UTF-8").strip.chomp
+      clean_text(str).gsub(/\\x../) {|s| [s[2..-1].hex].pack("C")}.force_encoding("UTF-8").strip.chomp
     else
       str
     end

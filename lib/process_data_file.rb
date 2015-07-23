@@ -693,6 +693,7 @@ private
   # - <92> = ’
   # - <93> = “
   # - <94> = ”
+  # - <96> = —
   # - <97> = —
   # - \xa0 = space
   # if string = '' or '\\N' return nil
@@ -715,6 +716,7 @@ private
             .gsub("<92>", single_quote).gsub("\\x92", single_quote)
             .gsub("<93>", double_quote).gsub("\\x93", double_quote)
             .gsub("<94>", double_quote).gsub("\\x94", double_quote)
+            .gsub("<96>", dash).gsub("\\x96", dash)
             .gsub("<97>", dash).gsub("\\x97", dash)
             .gsub("\\xa0", space).chomp.strip
 
