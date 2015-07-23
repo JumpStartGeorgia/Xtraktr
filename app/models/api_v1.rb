@@ -400,12 +400,14 @@ private
       # if this question belongs to a group, add it
       if question.group_id.present?
         group = question.group
-        # see if this is a subgroup
-        if group.parent_id.present?
-          hash[:group] = {title: group.parent.title, description: group.parent.description}
-          hash[:subgroup] = {title: group.title, description: group.description}
-        else
-          hash[:group] = {title: group.title, description: group.description}
+        if group.present? 
+          # see if this is a subgroup
+          if group.parent_id.present?
+            hash[:group] = {title: group.parent.title, description: group.parent.description, include_in_charts: group.parent.include_in_charts}
+            hash[:subgroup] = {title: group.title, description: group.description, include_in_charts: group.include_in_charts}
+          else
+            hash[:group] = {title: group.title, description: group.description, include_in_charts: group.include_in_charts}
+          end
         end
       end
       # if this is for admin, include whether the question is excluded
@@ -1372,76 +1374,188 @@ private
 
 
   def self.dataset_single_analysis_title_html(question, filtered_by=nil, filtered_by_answer=nil)
-    title = I18n.t('explore_data.single.html.title', :code => question[:original_code], :question => question[:text])
+    group = ''
+    if question[:group].present? && question[:group][:include_in_charts]
+      group << I18n.t('explore_data.title_group', text: question[:group][:description])
+      if question[:subgroup].present? && question[:subgroup][:include_in_charts]
+        group << I18n.t('explore_data.title_group', text: question[:subgroup][:description])
+      end
+    end
+    title = I18n.t('explore_data.single.html.title', :code => question[:original_code], :variable => question[:text], :group => group)
     if filtered_by.present?
+      group = ''
+      if filtered_by[:group].present? && filtered_by[:group][:include_in_charts]
+        group << I18n.t('explore_data.title_group', text: filtered_by[:group][:description])
+        if filtered_by[:subgroup].present? && filtered_by[:subgroup][:include_in_charts]
+          group << I18n.t('explore_data.title_group', text: filtered_by[:subgroup][:description])
+        end
+      end
       if filtered_by_answer.present?
-        title << I18n.t('explore_data.single.html.title_filter_value', :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer )
+        title << I18n.t('explore_data.single.html.title_filter_value', :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer, :group => group )
       else
-        title << I18n.t('explore_data.single.html.title_filter', :code => filtered_by[:original_code], :variable => filtered_by[:text])
+        title << I18n.t('explore_data.single.html.title_filter', :code => filtered_by[:original_code], :variable => filtered_by[:text], :group => group)
       end
     end
     return title.html_safe
   end 
 
   def self.dataset_single_analysis_title_text(question, filtered_by=nil, filtered_by_answer=nil)
-    title = I18n.t('explore_data.single.text.title', :code => question[:original_code], :question => question[:text])
+    group = ''
+    if question[:group].present? && question[:group][:include_in_charts]
+      group << I18n.t('explore_data.title_group', text: question[:group][:description])
+      if question[:subgroup].present? && question[:subgroup][:include_in_charts]
+        group << I18n.t('explore_data.title_group', text: question[:subgroup][:description])
+      end
+    end
+    title = I18n.t('explore_data.single.text.title', :code => question[:original_code], :variable => question[:text], :group => group)
     if filtered_by.present?
+      group = ''
+      if filtered_by[:group].present? && filtered_by[:group][:include_in_charts]
+        group << I18n.t('explore_data.title_group', text: filtered_by[:group][:description])
+        if filtered_by[:subgroup].present? && filtered_by[:subgroup][:include_in_charts]
+          group << I18n.t('explore_data.title_group', text: filtered_by[:subgroup][:description])
+        end
+      end
       if filtered_by_answer.present?
-        title << I18n.t('explore_data.single.text.title_filter_value', :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer )
+        title << I18n.t('explore_data.single.text.title_filter_value', :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer, :group => group )
       else
-        title << I18n.t('explore_data.single.text.title_filter', :code => filtered_by[:original_code], :variable => filtered_by[:text])
+        title << I18n.t('explore_data.single.text.title_filter', :code => filtered_by[:original_code], :variable => filtered_by[:text], :group => group)
       end
     end
     return title
   end 
 
   def self.dataset_comparative_analysis_title_html(question, broken_down_by, filtered_by=nil, filtered_by_answer=nil)
-    title = I18n.t('explore_data.comparative.html.title', :question_code => question[:original_code], :question => question[:text], 
-              :broken_down_by_code => broken_down_by[:original_code], :broken_down_by => broken_down_by[:text])
+    group = ''
+    if question[:group].present? && question[:group][:include_in_charts]
+      group << I18n.t('explore_data.title_group', text: question[:group][:description])
+      if question[:subgroup].present? && question[:subgroup][:include_in_charts]
+        group << I18n.t('explore_data.title_group', text: question[:subgroup][:description])
+      end
+    end
+    group2 = ''
+    if broken_down_by[:group].present? && broken_down_by[:group][:include_in_charts]
+      group2 << I18n.t('explore_data.title_group', text: broken_down_by[:group][:description])
+      if broken_down_by[:subgroup].present? && broken_down_by[:subgroup][:include_in_charts]
+        group2 << I18n.t('explore_data.title_group', text: broken_down_by[:subgroup][:description])
+      end
+    end
+    title = I18n.t('explore_data.comparative.html.title', :question_code => question[:original_code], :variable => question[:text], 
+              :broken_down_by_code => broken_down_by[:original_code], :broken_down_by => broken_down_by[:text], :group => group, :group2 => group2)
     if filtered_by.present?
+      group = ''
+      if filtered_by[:group].present? && filtered_by[:group][:include_in_charts]
+        group << I18n.t('explore_data.title_group', text: filtered_by[:group][:description])
+        if filtered_by[:subgroup].present? && filtered_by[:subgroup][:include_in_charts]
+          group << I18n.t('explore_data.title_group', text: filtered_by[:subgroup][:description])
+        end
+      end
       if filtered_by_answer.present?
-        title << I18n.t('explore_data.comparative.html.title_filter_value', :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer )
+        title << I18n.t('explore_data.comparative.html.title_filter_value', :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer, :group => group )
       else
-        title << I18n.t('explore_data.comparative.html.title_filter', :code => filtered_by[:original_code], :variable => filtered_by[:text] )
+        title << I18n.t('explore_data.comparative.html.title_filter', :code => filtered_by[:original_code], :variable => filtered_by[:text], :group => group )
       end
     end
     return title.html_safe
   end 
 
   def self.dataset_comparative_analysis_title_text(question, broken_down_by, filtered_by=nil, filtered_by_answer=nil)
-    title = I18n.t('explore_data.comparative.text.title', :question_code => question[:original_code], :question => question[:text], 
-              :broken_down_by_code => broken_down_by[:original_code], :broken_down_by => broken_down_by[:text])
+    group = ''
+    if question[:group].present? && question[:group][:include_in_charts]
+      group << I18n.t('explore_data.title_group', text: question[:group][:description])
+      if question[:subgroup].present? && question[:subgroup][:include_in_charts]
+        group << I18n.t('explore_data.title_group', text: question[:subgroup][:description])
+      end
+    end
+    group2 = ''
+    if broken_down_by[:group].present? && broken_down_by[:group][:include_in_charts]
+      group2 << I18n.t('explore_data.title_group', text: broken_down_by[:group][:description])
+      if broken_down_by[:subgroup].present? && broken_down_by[:subgroup][:include_in_charts]
+        group2 << I18n.t('explore_data.title_group', text: broken_down_by[:subgroup][:description])
+      end
+    end
+    title = I18n.t('explore_data.comparative.text.title', :question_code => question[:original_code], :variable => question[:text], 
+              :broken_down_by_code => broken_down_by[:original_code], :broken_down_by => broken_down_by[:text], :group => group, :group2 => group2)
     if filtered_by.present?
+      group = ''
+      if filtered_by[:group].present? && filtered_by[:group][:include_in_charts]
+        group << I18n.t('explore_data.title_group', text: filtered_by[:group][:description])
+        if filtered_by[:subgroup].present? && filtered_by[:subgroup][:include_in_charts]
+          group << I18n.t('explore_data.title_group', text: filtered_by[:subgroup][:description])
+        end
+      end
       if filtered_by_answer.present?
-        title << I18n.t('explore_data.comparative.text.title_filter_value', :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer )
+        title << I18n.t('explore_data.comparative.text.title_filter_value', :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer, :group => group )
       else
-        title << I18n.t('explore_data.comparative.text.title_filter', :code => filtered_by[:original_code], :variable => filtered_by[:text] )
+        title << I18n.t('explore_data.comparative.text.title_filter', :code => filtered_by[:original_code], :variable => filtered_by[:text], :group => group )
       end
     end
     return title
   end 
 
   def self.dataset_comparative_analysis_map_title_html(question, broken_down_by, broken_down_by_answer, filtered_by=nil, filtered_by_answer=nil)
-    title = I18n.t('explore_data.comparative.html.map.title', :code => question[:original_code], :question => question[:text])
-    title << I18n.t('explore_data.comparative.html.map.title_col', :code => broken_down_by[:original_code], :broken_down_by => broken_down_by[:text], :broken_down_by_answer => broken_down_by_answer)
+    group = ''
+    if question[:group].present? && question[:group][:include_in_charts]
+      group << I18n.t('explore_data.title_group', text: question[:group][:description])
+      if question[:subgroup].present? && question[:subgroup][:include_in_charts]
+        group << I18n.t('explore_data.title_group', text: question[:subgroup][:description])
+      end
+    end
+    group2 = ''
+    if broken_down_by[:group].present? && broken_down_by[:group][:include_in_charts]
+      group2 << I18n.t('explore_data.title_group', text: broken_down_by[:group][:description])
+      if broken_down_by[:subgroup].present? && broken_down_by[:subgroup][:include_in_charts]
+        group2 << I18n.t('explore_data.title_group', text: broken_down_by[:subgroup][:description])
+      end
+    end
+    title = I18n.t('explore_data.comparative.html.map.title', :code => question[:original_code], :variable => question[:text], :group => group)
+    title << I18n.t('explore_data.comparative.html.map.title_broken_down_by', :code => broken_down_by[:original_code], :broken_down_by => broken_down_by[:text], :broken_down_by_answer => broken_down_by_answer, :group => group2)
     if filtered_by.present?
+      group = ''
+      if filtered_by[:group].present? && filtered_by[:group][:include_in_charts]
+        group << I18n.t('explore_data.title_group', text: filtered_by[:group][:description])
+        if filtered_by[:subgroup].present? && filtered_by[:subgroup][:include_in_charts]
+          group << I18n.t('explore_data.title_group', text: filtered_by[:subgroup][:description])
+        end
+      end
       if filtered_by_answer.present?
-        title << I18n.t('explore_data.comparative.html.map.title_filter_value', :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer )
+        title << I18n.t('explore_data.comparative.html.map.title_filter_value', :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer, :group => group )
       else
-        title << I18n.t('explore_data.comparative.html.map.title_filter', :code => filtered_by[:original_code], :variable => filtered_by[:text] )
+        title << I18n.t('explore_data.comparative.html.map.title_filter', :code => filtered_by[:original_code], :variable => filtered_by[:text], :group => group )
       end
     end
     return title.html_safe
   end 
 
   def self.dataset_comparative_analysis_map_title_text(question, broken_down_by, broken_down_by_answer, filtered_by=nil, filtered_by_answer=nil)
-    title = I18n.t('explore_data.comparative.text.map.title', :code => question[:original_code], :question => question[:text])
-    title << I18n.t('explore_data.comparative.text.map.title_col', :code => broken_down_by[:original_code], :broken_down_by => broken_down_by[:text], :broken_down_by_answer => broken_down_by_answer)
+    group = ''
+    if question[:group].present? && question[:group][:include_in_charts]
+      group << I18n.t('explore_data.title_group', text: question[:group][:description])
+      if question[:subgroup].present? && question[:subgroup][:include_in_charts]  
+        group << I18n.t('explore_data.title_group', text: question[:subgroup][:description])
+      end
+    end
+    group2 = ''
+    if broken_down_by[:group].present? && broken_down_by[:group][:include_in_charts]
+      group2 << I18n.t('explore_data.title_group', text: broken_down_by[:group][:description])
+      if broken_down_by[:subgroup].present? && broken_down_by[:subgroup][:include_in_charts]
+        group2 << I18n.t('explore_data.title_group', text: broken_down_by[:subgroup][:description])
+      end
+    end
+    title = I18n.t('explore_data.comparative.text.map.title', :code => question[:original_code], :variable => question[:text], :group => group)
+    title << I18n.t('explore_data.comparative.text.map.title_broken_down_by', :code => broken_down_by[:original_code], :broken_down_by => broken_down_by[:text], :broken_down_by_answer => broken_down_by_answer, :group => group2)
     if filtered_by.present?
+      group = ''
+      if filtered_by[:group].present? && filtered_by[:group][:include_in_charts]
+        group << I18n.t('explore_data.title_group', text: filtered_by[:group][:description])
+        if filtered_by[:subgroup].present? && filtered_by[:subgroup][:include_in_charts]
+          group << I18n.t('explore_data.title_group', text: filtered_by[:subgroup][:description])
+        end
+      end
       if filtered_by_answer.present?
-        title << I18n.t('explore_data.comparative.text.map.title_filter_value', :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer )
+        title << I18n.t('explore_data.comparative.text.map.title_filter_value', :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer, :group => group )
       else
-        title << I18n.t('explore_data.comparative.text.map.title_filter', :code => filtered_by[:original_code], :variable => filtered_by[:text] )
+        title << I18n.t('explore_data.comparative.text.map.title_filter', :code => filtered_by[:original_code], :variable => filtered_by[:text], :group => group )
       end
     end
     return title
@@ -1484,7 +1598,7 @@ private
 
 
   def self.time_series_single_analysis_title_html(question, filtered_by=nil, filtered_by_answer=nil)
-    title = I18n.t('explore_time_series.single.html.title', :code => question[:original_code], :question => question[:text])
+    title = I18n.t('explore_time_series.single.html.title', :code => question[:original_code], :variable => question[:text])
     if filtered_by.present?
       if filtered_by_answer.present?
         title << I18n.t('explore_time_series.single.html.title_filter_value', :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer )
@@ -1496,7 +1610,7 @@ private
   end 
 
   def self.time_series_single_analysis_title_text(question, filtered_by=nil, filtered_by_answer=nil)
-    title = I18n.t('explore_time_series.single.text.title', :code => question[:original_code], :question => question[:text])
+    title = I18n.t('explore_time_series.single.text.title', :code => question[:original_code], :variable => question[:text])
     if filtered_by.present?
       if filtered_by_answer.present?
         title << I18n.t('explore_time_series.single.text.title_filter_value', :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer )

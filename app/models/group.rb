@@ -9,8 +9,8 @@ class Group < CustomTranslation
   # id of group that this group belongs to
   field :parent_id, type: Moped::BSON::ObjectId
   # number indicating the sort order
-  field :sort_order, type: Integer
-
+  field :sort_order, type: Integer, default: 0
+  
   #############################
   embedded_in :dataset
 

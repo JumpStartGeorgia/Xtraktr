@@ -333,11 +333,11 @@ en:
     percent: Percent (%)
     single:
       html:
-        title: "'<span class='code-highlight'>%{code}</span> - %{question}'"
+        title: "'<span class='code-highlight'>%{code}</span> - %{variable}'"
         title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
         title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'"
       text:
-        title: "'%{code} - %{question}'"
+        title: "'%{code} - %{variable}'"
         title_filter: " filtered by: '%{code} - %{variable}'"
         title_filter_value: " filtered by: '%{code} - %{variable} = %{value}'"
     subtitle:
@@ -351,34 +351,36 @@ en:
     hover_region: Hover over a Region
     na: N/A
     percent: Percent
+    title_group: "<span class='group-highlight'>%{text}</span> "
+    title_subgroup: "<span class='subgroup-highlight'>%{text}</span> "
     comparative:
       html:
-        title: "<span class='title-highlight'>Answers to:</span> <br /> '<span class='code-highlight'>%{question_code}</span> - %{question}' <br /> <span class='title-highlight'>broken down by:</span> <br /> '<span class='code-highlight'>%{broken_down_by_code}</span> - %{broken_down_by}'"
-        title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
-        title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'"
+        title: "'<span class='code-highlight'>%{question_code}</span> - %{group}%{variable}' <br /> <span class='title-highlight'>broken down by:</span> <br /> '<span class='code-highlight'>%{broken_down_by_code}</span> - %{group2}%{broken_down_by}'"
+        title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
+        title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable} = <span class='code-highlight'>%{value}</span>'"
         map:
-          title: "'<span class='code-highlight'>%{code}</span> - %{question}' "
-          title_col: "<br /> <span class='title-highlight'>broken down by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{broken_down_by} = <span class='code-highlight'>%{broken_down_by_answer}</span>' "
-          title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
-          title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'"
+          title: "'<span class='code-highlight'>%{code}</span> - %{group}%{variable}' "
+          title_broken_down_by: "<br /> <span class='title-highlight'>broken down by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{broken_down_by} = <span class='code-highlight'>%{broken_down_by_answer}</span>' "
+          title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
+          title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable} = <span class='code-highlight'>%{value}</span>'"
       text:
-        title: "Answers to: '%{question_code} - %{question}', broken down by: '%{broken_down_by_code} - %{broken_down_by}'"
-        title_filter: ", filtered by: '%{code} - %{variable}'"
-        title_filter_value: ", filtered by: '%{code} - %{variable} = %{value}'"
+        title: "'%{question_code} - %{group} %{variable}', broken down by: '%{broken_down_by_code} - %{group2} %{broken_down_by}'"
+        title_filter: ", filtered by: '%{code} - %{group} %{variable}'"
+        title_filter_value: ", filtered by: '%{code} - %{group} %{variable} = %{value}'"
         map:
-          title: "'%{code} - %{question}' "
-          title_col: "broken down by: '%{code} - %{broken_down_by} = %{broken_down_by_answer}'"
-          title_filter: ", filtered by: '%{code} - %{variable}'"
-          title_filter_value: ", filtered by: '%{code} - %{variable} = %{value}'"
+          title: "'%{code} - %{group} %{variable}' "
+          title_broken_down_by: "broken down by: '%{code} - %{group} %{broken_down_by} = %{broken_down_by_answer}'"
+          title_filter: ", filtered by: '%{code} - %{group} %{variable}'"
+          title_filter_value: ", filtered by: '%{code} - %{group} %{variable} = %{value}'"
     single:
       html:
-        title: "<span class='title-highlight'>Answers to:</span><br /> '<span class='code-highlight'>%{code}</span> - %{question}'"
-        title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
-        title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'"
+        title: "'<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
+        title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
+        title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable} = <span class='code-highlight'>%{value}</span>'"
       text:
-        title: "Answers to: '%{code} - %{question}' "
-        title_filter: ", filtered by: '%{code} - %{variable}'"
-        title_filter_value: ", filtered by: '%{code} - %{variable} = %{value}'"
+        title: "'%{code} - %{group} %{variable}' "
+        title_filter: ", filtered by: '%{code} - %{group} %{variable}'"
+        title_filter_value: ", filtered by: '%{code} - %{group} %{variable} = %{value}'"
     subtitle:
       html: 
         title: "Total Responses: <span class='number'>%{num}</span>"

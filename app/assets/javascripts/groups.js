@@ -3,8 +3,8 @@ var datatable;
 $(document).ready(function(){
 
   if ($('form.group').length > 0){
-    // if chart title is true, show the example description
-    $('form input[name="group[include_in_charts]"]').change(function(){
+    // show the description example if include in charts is true
+    function show_description_ex(){
       if ($('form input[name="group[include_in_charts]"]:checked').val() == 'true'){
         // add description text and show example
         var desc = $('form input.main-description').val();
@@ -17,7 +17,14 @@ $(document).ready(function(){
         // hide example
         $('#chart-description-container').fadeOut();
       }
+    }
+
+    // if chart title is true, show the example description
+    $('form input[name="group[include_in_charts]"]').change(function(){
+      show_description_ex();
     });
+    // show description ex when page loads if needed
+    show_description_ex();
 
     // as the description changes, update the chart description example
     // only need this if the include in charts is true

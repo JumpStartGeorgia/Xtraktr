@@ -333,11 +333,11 @@ ka:
     percent: "პროცენტი (%)"
     single:
       html:
-        title: "'<span class='code-highlight'>%{code}</span> - %{question}'"
+        title: "'<span class='code-highlight'>%{code}</span> - %{variable}'"
         title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
         title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = %{value}'"
       text:
-        title: "'%{code} - %{question}'"
+        title: "'%{code} - %{variable}'"
         title_filter: "გაფილტრულია: '%{code} - %{variable}'"
         title_filter_value: "გაფილტრულია: '%{code} - %{variable} = %{value}'"
     subtitle:
@@ -351,32 +351,34 @@ ka:
     hover_region: Hover over a Region
     na: "არ არის ხელმისაწვდომი"
     percent: "პროცენტი"
+    title_group: "<span class='group-highlight'>%{text}</span> "
+    title_subgroup: "<span class='subgroup-highlight'>%{text}</span> "
     comparative:
       html:
-        title: "<span class='title-highlight'>პასუხობს:</span> <br /> '<span class='code-highlight'>%{question_code}</span> - %{question}' <br /> <span class='title-highlight'>ჩაშლილია:</span> <br /> '<span class='code-highlight'>%{broken_down_by_code}</span> - %{broken_down_by}'"
+        title: "'<span class='code-highlight'>%{question_code}</span> - %{variable}' <br /> <span class='title-highlight'>ჩაშლილია:</span> <br /> '<span class='code-highlight'>%{broken_down_by_code}</span> - %{broken_down_by}'"
         title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
         title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'"
         map:
-          title: "'<span class='code-highlight'>%{code}</span> - %{question}' "
-          title_col: "<br /> <span class='title-highlight'>ჩაშლილია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{broken_down_by} = <span class=”code-highlight”>%{broken_down_by_answer}</span>' "
+          title: "'<span class='code-highlight'>%{code}</span> - %{variable}' "
+          title_broken_down_by: "<br /> <span class='title-highlight'>ჩაშლილია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{broken_down_by} = <span class=”code-highlight”>%{broken_down_by_answer}</span>' "
           title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
           title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'"
       text:
-        title: "პასუხობს: '%{question_code} - %{question}', ჩაშლილია: '%{broken_down_by_code} - %{broken_down_by}'"
+        title: "'%{question_code} - %{variable}', ჩაშლილია: '%{broken_down_by_code} - %{broken_down_by}'"
         title_filter: ", გაფილტრულია: '%{code} - %{variable}'"
         title_filter_value: ", გაფილტრულია: '%{code} - %{variable} = %{value}'"
         map:
-          title: "%{code} - %{question}'"
-          title_col: "ჩაშლილია: '%{code} - %{broken_down_by} = %{broken_down_by_answer}'"
+          title: "%{code} - %{variable}'"
+          title_broken_down_by: "ჩაშლილია: '%{code} - %{broken_down_by} = %{broken_down_by_answer}'"
           title_filter: ", გაფილტრულია: '%{code} - %{variable}'"
           title_filter_value: ", გაფილტრულია: '%{code} - %{variable} = %{value}'"
     single:
       html:
-        title: "<span class='title-highlight'>პასუხობს:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{question}'"
+        title: "'<span class='code-highlight'>%{code}</span> - %{variable}'"
         title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
         title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'"
       text:
-        title: "პასუხობს: '%{code} - %{question}'"
+        title: "'%{code} - %{variable}'"
         title_filter: ", გაფილტრულია: '%{code} - %{variable}'"
         title_filter_value: ", გაფილტრულია: '%{code} - %{variable} = %{value}'"
     subtitle:
