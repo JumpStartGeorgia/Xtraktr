@@ -578,7 +578,7 @@ private
 
       # get the questions
       puts "- getting questions"
-      headers.each_with_index{|x, i| questions << ["#{@@spreadsheet_question_code}#{i}", x]}
+      headers.each_with_index{|x, i| questions << ["#{@@spreadsheet_question_code}#{i+1}", x]}
 
       # get the answers
       puts "- getting answers"
@@ -645,7 +645,7 @@ private
   #     data.select{|row| row.select{|cell| cell.include?('\N')}.each{|x| x.replace('')}}
 
   #     # get the questions
-  #     headers.each_with_index{|x, i| questions << ["#{@@spreadsheet_question_code}#{i}", x]}
+  #     headers.each_with_index{|x, i| questions << ["#{@@spreadsheet_question_code}#{i+1}", x]}
   #     # get the answers
   #     (0..headers.length-1).each do |index|
   #       code = questions[index][0]
