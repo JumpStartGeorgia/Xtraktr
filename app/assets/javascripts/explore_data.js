@@ -789,27 +789,54 @@ $(document).ready(function() {
     $('select.selectpicker').selectpicker();
     $('select.selectpicker-filter').selectpicker();
 
+    // if an option has data-disabled when page loads, make sure it is hidden in the selectpicker
+    $('select#question_code option[data-disabled="disabled"]').each(function(){
+      $('.form-explore-question-code .bootstrap-select ul.dropdown-menu li:eq(' + $(this).index() + ')').hide();
+    });
+    $('select#broken_down_by_code option[data-disabled="disabled"]').each(function(){
+      $('.form-explore-broken-by .bootstrap-select ul.dropdown-menu li:eq(' + $(this).index() + ')').hide();
+    });
+    $('select#filtered_by_code option[data-disabled="disabled"]').each(function(){
+      $('.form-explore-filter-by .bootstrap-select ul.dropdown-menu li:eq(' + $(this).index() + ')').hide();
+    });
+
     // if option changes, make sure the select option is not available in the other lists
     $('select.selectpicker').change(function(){
       val = $(this).val();
+      index = $(this).find('option[value="' + val + '"]').index();
+
       // if this is question, update broken down by
       // else, vice-versa
       if ($(this).attr('id') == 'question_code'){
         // update broken down by list
-        // remove all disabled
-        $('select#broken_down_by_code option[disabled="disabled"]').removeAttr('disabled');
-        // disable the new selection
-        $('select#broken_down_by_code option[value="' + val + '"]').attr('disabled', 'disabled');
-        // update the select list
-        $('select#broken_down_by_code').selectpicker('refresh');
+        
+        // turn on all hidden items
+        $('.form-explore-broken-by .bootstrap-select ul.dropdown-menu li[style*="display: none"]').show();
+
+        // turn on off this item
+        $('.form-explore-broken-by .bootstrap-select ul.dropdown-menu li:eq(' + (index+1) + ')').hide();
+
+        // // remove all disabled
+        // $('select#broken_down_by_code option[disabled="disabled"]').removeAttr('disabled');
+        // // disable the new selection
+        // $('select#broken_down_by_code option[value="' + val + '"]').attr('disabled', 'disabled');
+        // // update the select list
+        // $('select#broken_down_by_code').selectpicker('refresh');
       }else if ($(this).attr('id') == 'broken_down_by_code'){
         // update question list
-        // remove all disabled
-        $('select#question_code option[disabled="disabled"]').removeAttr('disabled');
-        // disable the new selection
-        $('select#question_code option[value="' + val + '"]').attr('disabled', 'disabled');
-        // update the select list
-        $('select#question_code').selectpicker('refresh');
+
+        // turn on all hidden items
+        $('.form-explore-question-code .bootstrap-select ul.dropdown-menu li[style*="display: none"]').show();
+
+        // turn on off this item
+        $('.form-explore-question-code .bootstrap-select ul.dropdown-menu li:eq(' + (index-1) + ')').hide();
+
+        // // remove all disabled
+        // $('select#question_code option[disabled="disabled"]').removeAttr('disabled');
+        // // disable the new selection
+        // $('select#question_code option[value="' + val + '"]').attr('disabled', 'disabled');
+        // // update the select list
+        // $('select#question_code').selectpicker('refresh');
 
         // if val != '' then turn on swap button
         if (val == ''){
@@ -821,22 +848,37 @@ $(document).ready(function() {
 
       // update filter list
       var q = $('select#question_code').val();
+      var q_index = $('select#question_code option[value="' + q + '"]').index();
       var bdb = $('select#broken_down_by_code').val();
+      var bdb_index = $('select#broken_down_by_code option[value="' + bdb + '"]').index();
       // if filter is one of these values, reset filter to no filter
       if (($('select#filtered_by_code').val() == q && q != '') || ($('select#filtered_by_code').val() == bdb && bdb != '')){
         // reset value and hide filter answers
         $('select#filtered_by_code').selectpicker('val', '');
       }
-      // mark selected items as disabled
-      $('select#filtered_by_code option[disabled="disabled"]').removeAttr('disabled');
-      if (q != ''){
-        $('select#filtered_by_code option[value="' + q + '"]').attr('disabled','disabled');
+
+      // turn on all hidden items
+      $('.form-explore-filter-by .bootstrap-select ul.dropdown-menu li[style*="display: none"]').show();
+
+      // turn on off this item
+      if (q_index != -1){
+        $('.form-explore-filter-by .bootstrap-select ul.dropdown-menu li:eq(' + (q_index + 1) + ')').hide();
       }
-      if (bdb != ''){
-        $('select#filtered_by_code option[value="' + bdb + '"]').attr('disabled','disabled');
+      if (bdb_index != -1){
+        $('.form-explore-filter-by .bootstrap-select ul.dropdown-menu li:eq(' + bdb_index + ')').hide();
       }
-      $('select#filtered_by_code').selectpicker('refresh');
-      $('select#filtered_by_code').selectpicker('render');
+
+
+
+      // $('select#filtered_by_code option[disabled="disabled"]').removeAttr('disabled');
+      // if (q != ''){
+      //   $('select#filtered_by_code option[value="' + q + '"]').attr('disabled','disabled');
+      // }
+      // if (bdb != ''){
+      //   $('select#filtered_by_code option[value="' + bdb + '"]').attr('disabled','disabled');
+      // }
+      // $('select#filtered_by_code').selectpicker('refresh');
+      // $('select#filtered_by_code').selectpicker('render');
 
       // update tooltip for selects
       $('form button.selectpicker').tooltip('fixTitle')
