@@ -284,8 +284,8 @@ function build_highmap(shape_question_code, adjustable_max, json_map_set){
           borderWidth: 2,
           states: {
               hover: {
-                  color: '#0086a5',
-                  borderColor: '#3c4352',
+                  // color: '#0086a5',
+                  borderColor: '#d8bc48',
                   borderWidth: 2
               }
           }
@@ -305,8 +305,8 @@ function build_highmap(shape_question_code, adjustable_max, json_map_set){
           borderWidth: 2,
           states: {
             hover: {
-              color: '#0086a5',
-              borderColor: '#3c4352',
+              // color: '#0086a5',
+              borderColor: '#d8bc48',
               borderWidth: 2
             }
           },
