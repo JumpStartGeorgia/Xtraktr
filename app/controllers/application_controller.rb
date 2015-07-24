@@ -489,9 +489,6 @@ logger.debug "======= output js = #{output[:js]}"
     gon.delete_highlight_text = I18n.t('helpers.links.delete_highlight')
     gon.description_highlight_text = I18n.t('helpers.links.description_highlight')
     gon.confirm_text = I18n.t('helpers.links.confirm')
-
-    gon.disclaimer_text = I18n.t('app.menu.disclaimer')
-    gon.disclaimer_link = disclaimer_url
   end
 
   def set_gon_datatables

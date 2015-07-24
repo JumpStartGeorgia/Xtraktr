@@ -103,7 +103,8 @@ BootstrapStarter::Application.routes.draw do
     match '/download/:id', :to => 'root#download', :as => :download, :via => :get
     match '/download_request', :to => 'root#download_request', :as => :download_request, :via => :get
     match '/instructions', :to => 'root#instructions', :as => :instructions, :via => :get
-    match '/disclaimer', :to => 'root#disclaimer', :as => :disclaimer, :via => :get
+    match '/about', :to => 'root#about', :as => :about, :via => :get
+    match '/highlights', :to => 'root#highlights', :as => :highlights, :via => :get
 		match '/datasets', :to => 'root#explore_data', :as => :explore_data, :via => :get
 		match '/datasets/:id', :to => 'root#explore_data_dashboard', :as => :explore_data_dashboard, :via => :get
     match '/datasets/:id/explore', :to => 'root#explore_data_show', :as => :explore_data_show, :via => :get

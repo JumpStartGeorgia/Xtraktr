@@ -389,7 +389,7 @@ function build_highmap(shape_question_code, adjustable_max, json_map_set){
   add_highlight_description_button($(selector_path + ' #' + map_id), json_map_set.embed_id);
 
   // add disclaimer link
-  add_disclaimer_link($(selector_path + ' #' + map_id));
+  // add_disclaimer_link($(selector_path + ' #' + map_id));
 }
 
 
@@ -554,7 +554,7 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
   add_highlight_description_button($(selector_path + ' #' + chart_id), json_chart.embed_id);
 
   // add disclaimer link
-  add_disclaimer_link($(selector_path + ' #' + chart_id));
+  // add_disclaimer_link($(selector_path + ' #' + chart_id));
 }
 
 
@@ -739,7 +739,7 @@ function build_pie_chart(json_chart, chart_height){
   add_highlight_description_button($(selector_path + ' #' + chart_id), json_chart.embed_id);
 
   // add disclaimer link
-  add_disclaimer_link($(selector_path + ' #' + chart_id));
+  // add_disclaimer_link($(selector_path + ' #' + chart_id));
 }
 
 
@@ -878,7 +878,7 @@ function build_time_series_chart(json_chart, chart_height){
   add_highlight_description_button($(selector_path + ' #' + chart_id), json_chart.embed_id);
 
   // add disclaimer link
-  add_disclaimer_link($(selector_path + ' #' + chart_id));
+  // add_disclaimer_link($(selector_path + ' #' + chart_id));
 }
 
 

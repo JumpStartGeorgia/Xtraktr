@@ -50,9 +50,15 @@ class RootController < ApplicationController
     end
   end
 
-  def disclaimer
-    @page_content = PageContent.by_name('disclaimer')
+  def about
+    @page_content = PageContent.by_name('about')
     @css.push('root.css')
+    respond_to do |format|
+      format.html # index.html.erb
+    end
+  end
+
+  def highlights
     respond_to do |format|
       format.html # index.html.erb
     end

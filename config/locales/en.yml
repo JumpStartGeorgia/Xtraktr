@@ -963,7 +963,7 @@ en:
         methodology: Methodology
         codebook: Codebook
         reports: Reports
-        licensing: Legal
+        licensing: License
       no_methodology: There is no methodology on file for this dataset.
       no_reports: There are no reports on file for this dataset.
       no_highlights: There are no highlights on file for this dataset.
@@ -978,7 +978,7 @@ en:
         methodology: Methodology
         codebook: Codebook
         reports: Reports
-        licensing: Legal
+        licensing: License
         datasets: Datasets
       no_highlights: There are no highlights on file for this time series.
       filter:
