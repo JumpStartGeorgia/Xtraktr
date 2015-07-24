@@ -1378,7 +1378,7 @@ private
     if question[:group].present? && question[:group][:include_in_charts]
       group << I18n.t('explore_data.title_group', text: question[:group][:description])
       if question[:subgroup].present? && question[:subgroup][:include_in_charts]
-        group << I18n.t('explore_data.title_group', text: question[:subgroup][:description])
+        group << I18n.t('explore_data.title_subgroup', text: question[:subgroup][:description])
       end
     end
     title = I18n.t('explore_data.single.html.title', :code => question[:original_code], :variable => question[:text], :group => group)
@@ -1387,7 +1387,7 @@ private
       if filtered_by[:group].present? && filtered_by[:group][:include_in_charts]
         group << I18n.t('explore_data.title_group', text: filtered_by[:group][:description])
         if filtered_by[:subgroup].present? && filtered_by[:subgroup][:include_in_charts]
-          group << I18n.t('explore_data.title_group', text: filtered_by[:subgroup][:description])
+          group << I18n.t('explore_data.title_subgroup', text: filtered_by[:subgroup][:description])
         end
       end
       if filtered_by_answer.present?
@@ -1404,7 +1404,7 @@ private
     if question[:group].present? && question[:group][:include_in_charts]
       group << I18n.t('explore_data.title_group', text: question[:group][:description])
       if question[:subgroup].present? && question[:subgroup][:include_in_charts]
-        group << I18n.t('explore_data.title_group', text: question[:subgroup][:description])
+        group << I18n.t('explore_data.title_subgroup', text: question[:subgroup][:description])
       end
     end
     title = I18n.t('explore_data.single.text.title', :code => question[:original_code], :variable => question[:text], :group => group)
@@ -1413,7 +1413,7 @@ private
       if filtered_by[:group].present? && filtered_by[:group][:include_in_charts]
         group << I18n.t('explore_data.title_group', text: filtered_by[:group][:description])
         if filtered_by[:subgroup].present? && filtered_by[:subgroup][:include_in_charts]
-          group << I18n.t('explore_data.title_group', text: filtered_by[:subgroup][:description])
+          group << I18n.t('explore_data.title_subgroup', text: filtered_by[:subgroup][:description])
         end
       end
       if filtered_by_answer.present?
@@ -1430,14 +1430,14 @@ private
     if question[:group].present? && question[:group][:include_in_charts]
       group << I18n.t('explore_data.title_group', text: question[:group][:description])
       if question[:subgroup].present? && question[:subgroup][:include_in_charts]
-        group << I18n.t('explore_data.title_group', text: question[:subgroup][:description])
+        group << I18n.t('explore_data.title_subgroup', text: question[:subgroup][:description])
       end
     end
     group2 = ''
     if broken_down_by[:group].present? && broken_down_by[:group][:include_in_charts]
       group2 << I18n.t('explore_data.title_group', text: broken_down_by[:group][:description])
       if broken_down_by[:subgroup].present? && broken_down_by[:subgroup][:include_in_charts]
-        group2 << I18n.t('explore_data.title_group', text: broken_down_by[:subgroup][:description])
+        group2 << I18n.t('explore_data.title_subgroup', text: broken_down_by[:subgroup][:description])
       end
     end
     title = I18n.t('explore_data.comparative.html.title', :question_code => question[:original_code], :variable => question[:text], 
@@ -1447,7 +1447,7 @@ private
       if filtered_by[:group].present? && filtered_by[:group][:include_in_charts]
         group << I18n.t('explore_data.title_group', text: filtered_by[:group][:description])
         if filtered_by[:subgroup].present? && filtered_by[:subgroup][:include_in_charts]
-          group << I18n.t('explore_data.title_group', text: filtered_by[:subgroup][:description])
+          group << I18n.t('explore_data.title_subgroup', text: filtered_by[:subgroup][:description])
         end
       end
       if filtered_by_answer.present?
@@ -1464,14 +1464,14 @@ private
     if question[:group].present? && question[:group][:include_in_charts]
       group << I18n.t('explore_data.title_group', text: question[:group][:description])
       if question[:subgroup].present? && question[:subgroup][:include_in_charts]
-        group << I18n.t('explore_data.title_group', text: question[:subgroup][:description])
+        group << I18n.t('explore_data.title_subgroup', text: question[:subgroup][:description])
       end
     end
     group2 = ''
     if broken_down_by[:group].present? && broken_down_by[:group][:include_in_charts]
       group2 << I18n.t('explore_data.title_group', text: broken_down_by[:group][:description])
       if broken_down_by[:subgroup].present? && broken_down_by[:subgroup][:include_in_charts]
-        group2 << I18n.t('explore_data.title_group', text: broken_down_by[:subgroup][:description])
+        group2 << I18n.t('explore_data.title_subgroup', text: broken_down_by[:subgroup][:description])
       end
     end
     title = I18n.t('explore_data.comparative.text.title', :question_code => question[:original_code], :variable => question[:text], 
@@ -1481,7 +1481,7 @@ private
       if filtered_by[:group].present? && filtered_by[:group][:include_in_charts]
         group << I18n.t('explore_data.title_group', text: filtered_by[:group][:description])
         if filtered_by[:subgroup].present? && filtered_by[:subgroup][:include_in_charts]
-          group << I18n.t('explore_data.title_group', text: filtered_by[:subgroup][:description])
+          group << I18n.t('explore_data.title_subgroup', text: filtered_by[:subgroup][:description])
         end
       end
       if filtered_by_answer.present?
@@ -1498,14 +1498,14 @@ private
     if question[:group].present? && question[:group][:include_in_charts]
       group << I18n.t('explore_data.title_group', text: question[:group][:description])
       if question[:subgroup].present? && question[:subgroup][:include_in_charts]
-        group << I18n.t('explore_data.title_group', text: question[:subgroup][:description])
+        group << I18n.t('explore_data.title_subgroup', text: question[:subgroup][:description])
       end
     end
     group2 = ''
     if broken_down_by[:group].present? && broken_down_by[:group][:include_in_charts]
       group2 << I18n.t('explore_data.title_group', text: broken_down_by[:group][:description])
       if broken_down_by[:subgroup].present? && broken_down_by[:subgroup][:include_in_charts]
-        group2 << I18n.t('explore_data.title_group', text: broken_down_by[:subgroup][:description])
+        group2 << I18n.t('explore_data.title_subgroup', text: broken_down_by[:subgroup][:description])
       end
     end
     title = I18n.t('explore_data.comparative.html.map.title', :code => question[:original_code], :variable => question[:text], :group => group)
@@ -1515,7 +1515,7 @@ private
       if filtered_by[:group].present? && filtered_by[:group][:include_in_charts]
         group << I18n.t('explore_data.title_group', text: filtered_by[:group][:description])
         if filtered_by[:subgroup].present? && filtered_by[:subgroup][:include_in_charts]
-          group << I18n.t('explore_data.title_group', text: filtered_by[:subgroup][:description])
+          group << I18n.t('explore_data.title_subgroup', text: filtered_by[:subgroup][:description])
         end
       end
       if filtered_by_answer.present?
@@ -1532,14 +1532,14 @@ private
     if question[:group].present? && question[:group][:include_in_charts]
       group << I18n.t('explore_data.title_group', text: question[:group][:description])
       if question[:subgroup].present? && question[:subgroup][:include_in_charts]  
-        group << I18n.t('explore_data.title_group', text: question[:subgroup][:description])
+        group << I18n.t('explore_data.title_subgroup', text: question[:subgroup][:description])
       end
     end
     group2 = ''
     if broken_down_by[:group].present? && broken_down_by[:group][:include_in_charts]
       group2 << I18n.t('explore_data.title_group', text: broken_down_by[:group][:description])
       if broken_down_by[:subgroup].present? && broken_down_by[:subgroup][:include_in_charts]
-        group2 << I18n.t('explore_data.title_group', text: broken_down_by[:subgroup][:description])
+        group2 << I18n.t('explore_data.title_subgroup', text: broken_down_by[:subgroup][:description])
       end
     end
     title = I18n.t('explore_data.comparative.text.map.title', :code => question[:original_code], :variable => question[:text], :group => group)
@@ -1549,7 +1549,7 @@ private
       if filtered_by[:group].present? && filtered_by[:group][:include_in_charts]
         group << I18n.t('explore_data.title_group', text: filtered_by[:group][:description])
         if filtered_by[:subgroup].present? && filtered_by[:subgroup][:include_in_charts]
-          group << I18n.t('explore_data.title_group', text: filtered_by[:subgroup][:description])
+          group << I18n.t('explore_data.title_subgroup', text: filtered_by[:subgroup][:description])
         end
       end
       if filtered_by_answer.present?

@@ -125,7 +125,7 @@ module ApplicationHelper
     questions.each_with_index do |question, index|
       q_text = question.code_with_text
       selected = selected_code.present? && selected_code == question.code ? 'selected=selected ' : ''
-      disabled = (disabled_code.present? && disabled_code == question.code) || (disabled_code2.present? && disabled_code2 == question.code) ? 'disabled=disabled ' : ''
+      disabled = (disabled_code.present? && disabled_code == question.code) || (disabled_code2.present? && disabled_code2 == question.code) ? 'data-disabled=disabled ' : ''
       can_exclude = question.has_can_exclude_answers? ? 'data-can-exclude=true ' : ''
 
       # if the question is mappable or is excluded, show the icons for this
