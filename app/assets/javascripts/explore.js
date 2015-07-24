@@ -497,7 +497,8 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
         {
           style: { "color": "#777c86", "fontSize": "14px", "fontFamily":"'sourcesans_pro', 'sans-serif'", "fontWeight": "normal" },
           useHTML: true
-        }
+        },
+        reversedStacks: false
     },
     legend: {
         title: {
@@ -506,7 +507,6 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
         },
         useHTML: true,
         layout: 'vertical',
-        reversed: true,
         symbolWidth: 14,
         symbolHeight: 14,
         itemMarginBottom: 5,
@@ -524,7 +524,7 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
             stacking: 'percent'
         }
     },
-    series: json_chart.data.reverse(),
+    series: json_chart.data,
     exporting: {
       sourceWidth: 1280,
       sourceHeight: chart_height,
