@@ -1,16 +1,8 @@
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
           <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-          <%
-            link_class = ''
-            img_path = 'svg/logo.svg'
-            if @is_xtraktr
-              link_class = 'xtraktr'
-              img_path = 'svg/xtraktr_logo.svg'
-            end
-          %>
-          <%= link_to root_path(:locale => I18n.locale),:class=>"navbar-brand #{link_class}" do %>
-            <%= image_tag img_path, :id => 'logo', :alt => t("app.common.#{@app_key_name}.app_name") %>
+          <%= link_to root_path(:locale => I18n.locale),:class=>"navbar-brand" do %>
+            <%= image_tag "svg/logo.svg", :id => 'logo', :alt => t("app.common.#{@app_key_name}.app_name") %>
           <% end %>
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
             <span class="sr-only"><%= t('.toggle') %></span>
@@ -19,7 +11,7 @@
             <span class="icon-bar"></span>
           </button>
 
-      
+
           <div class="m-box">
             <div class="m-share">
               <%= link_to '', "https://www.facebook.com/sharer/sharer.php?u=" +  root_url, class: 'facebook', onclick:"javascript:window.open(this.href,
@@ -56,15 +48,15 @@
             <div class="questions"><%= t('app.common.questions').upcase %></div>
           </div>
         </div>
-        
+
         <form class="navbar-form navbar-left" role="search" action="<%= explore_data_path %>">
           <div class="form-group">
             <input type="search" class="form-control" placeholder="<%= t('helpers.search') %>" name="q">
           </div>
         </form>
       <ul class="nav navbar-right navbar-top-links collapse" id="navbar-collapse">
-        
-        <% if user_signed_in? %>       
+
+        <% if user_signed_in? %>
           <li class="user">
             <div class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -97,11 +89,11 @@
             </div>
             <div>
               <%= link_to destroy_user_session_path, :method => :delete, title: t('helpers.links.sign_out'), class:"signout" do %>
-                <div class="img" alt="<%= t('helpers.links.sign_out') %>"></div>             
+                <div class="img" alt="<%= t('helpers.links.sign_out') %>"></div>
               <% end %>
             </div>
           </li>
-          
+
         <% else %>
           <li role="menuitem" class="user in">
             <%= link_to(t('helpers.links.sign_in2'), new_user_session_path, class: 'reattach sign_in')  %>/
@@ -114,33 +106,39 @@
           <% end %>
         <% end %>
           <li class="sidebaritem sidebar">
-            <div class="box">
-              <ul class="nav in" id="side-menu">          
-                <% if !@is_xtraktr %>
-                <li><%= link_to t('.back'), 'http://www.unicef.ge', class: 'unicef', :target => :blank %></li>
-                <% end %>
-                <li><%= link_to_sidebar root_path, 'home' %></li>
-                <li><%= link_to_sidebar explore_data_path, 'datasets' %></li> 
-                <% if @is_xtraktr %>
-                  <li><%= link_to_sidebar explore_time_path, 'time_series' %></li>            
-                <% end %>            
-                <li><%= link_to_sidebar instructions_path, 'instructions' %></li>
-                <li><%= link_to_sidebar api_path, 'api' %></li>
-                <li><%= link_to_sidebar contact_path, 'contact' %></li>                                        
-              </ul>
-              <div class="sidebar-bottom">
-                <div class="share">
-                  <%= link_to '', "https://www.facebook.com/sharer/sharer.php?u=" +  root_url, class: 'facebook', onclick:"javascript:window.open(this.href,
-                              '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;" %>
-                  <% title = content_for?(:title) ? "#{yield(:title)} | #{t("app.common.#{@app_key_name}.app_name")}" : "#{t("app.common.#{@app_key_name}.app_name")} | #{t("app.common.#{@app_key_name}.app_slogan")}".html_safe %>
-                  <%= link_to '',"https://twitter.com/share?text=#{title}" , class: 'twitter', onclick:"javascript:window.open(this.href,
-                              '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;" %>
+            <div class="tbl">
+              <div class="left">
+                <div class="tbl">
+                  <div class="top">
+                    <ul class="nav in" id="side-menu">
+                      <li><%= link_to_sidebar root_path, 'home' %></li>
+                      <li><%= link_to_sidebar explore_data_path, 'datasets' %></li>
+                      <li><%= link_to_sidebar explore_time_path, 'time_series' %></li>
+                      <li><%= link_to_sidebar highlights_path, 'highlights' %></li>
+                      <li><%= link_to_sidebar about_path, 'about' %></li>
+                      <li><%= link_to_sidebar instructions_path, 'instructions' %></li>
+                      <li><%= link_to_sidebar api_path, 'api' %></li>
+                      <li><%= link_to_sidebar contact_path, 'contact' %></li>
+                    </ul>
+                  </div>
+                  <div class="bottom">
+                    <div class="sidebar-bottom">
+                      <div class="share">
+                        <%= link_to '', "https://www.facebook.com/sharer/sharer.php?u=" +  root_url, class: 'facebook', onclick:"javascript:window.open(this.href,
+                                    '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;" %>
+                        <% title = content_for?(:title) ? "#{yield(:title)} | #{t("app.common.#{@app_key_name}.app_name")}" : "#{t("app.common.#{@app_key_name}.app_name")} | #{t("app.common.#{@app_key_name}.app_slogan")}".html_safe %>
+                        <%= link_to '',"https://twitter.com/share?text=#{title}" , class: 'twitter', onclick:"javascript:window.open(this.href,
+                                    '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;" %>
+                      </div>
+                      <%= link_to t('app.common.powered_by_jumpstart').html_safe, "http://www.jumpstart.ge",  :target => "_blank", class: 'powered-by' %>
+                    </div>
+                  </div>
                 </div>
-                <%= link_to t('app.menu.disclaimer'), disclaimer_path, class: 'disclaimer' %>
-              </div> 
-            </div>
+              </div>
+              <div class="right"></div>
+          </div>
         </li>
       </ul>
 
-      
+
     </nav>

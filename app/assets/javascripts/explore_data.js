@@ -285,7 +285,7 @@ function build_datatable(json){
       table += "</th>";
       var ln = json.broken_down_by.answers.length;
       for(i=0; i<ln;i++){
-        table += "<th colspan='2' class='color"+(ln-i%13)+"'>";
+        table += "<th colspan='2' class='color"+(i % 13 + 1)+"'>";
         table += json.broken_down_by.answers[i].text.toString();
         table += "</th>"
       }
@@ -339,7 +339,7 @@ function build_datatable(json){
 
       var ln = json.broken_down_by.answers.length;
       for(i=0; i<ln;i++){
-        table += "<th colspan='2' class='color"+(ln-i%13)+"'>";
+        table += "<th colspan='2' class='color"+(i % 13 + 1)+"'>";
         table += json.broken_down_by.answers[i].text.toString();
         table += "</th>"
       }
@@ -524,7 +524,7 @@ function build_details_item(selector, json_question){
         icon += $('.details-icons #detail-icon-mappable-question')[0].outerHTML;
       }
       tmp.find('.name-variable').html(icon + json_question.text);
-      
+
       tmp.find('.name-code').html(json_question.original_code);
       if (json_question.notes){
         tmp.find('.notes').html(json_question.notes);
@@ -535,13 +535,13 @@ function build_details_item(selector, json_question){
       for(var i=0;i<json_question.answers.length;i++){
         icon = '';
         if (json_question.answers[i].exclude){
-          icon += $('.details-icons #detail-icon-exclude-answer')[0].outerHTML; 
+          icon += $('.details-icons #detail-icon-exclude-answer')[0].outerHTML;
         }
         tmp.find('.list-answers').append('<li>' + icon + json_question.answers[i].text + '</li>');
       }
       tmp.show();
     }
-  }  
+  }
 }
 
 // build details (question and possible answers)
@@ -716,7 +716,7 @@ $(document).ready(function() {
     lang: {
       contextButtonTitle: gon.highcharts_context_title
     },
-    colors: ['#00adee', '#e88d42', '#9674a9', '#f3d952', '#6fa187', '#b2a440', '#d95d6a', '#737d91', '#d694e0', '#80b5bc', '#a6c449', '#1b74cc', '#4eccae']
+    colors: ['#C6CA53', '#7DAA92', '#725752', '#E29A27', '#998746', '#A6D3A0', '#808782', '#B4656F', '#294739', '#1B998B', '#7DAA92', '#BE6E46', '#565264']
   });
 
 

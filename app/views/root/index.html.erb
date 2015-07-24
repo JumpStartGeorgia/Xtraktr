@@ -28,15 +28,15 @@
                           <div class='img <%= "#{@categories[i].permalink}" %>'></div>
                           <span><%= @categories[i].name %></span>
                         <% end %>
-                  </div>                  
+                  </div>
                   <div class="c">
                         <%= link_to explore_data_path(category: @categories[i+rows].permalink) do %>
                           <div class='img <%= "#{@categories[i+rows].permalink}" %>'></div>
                           <span><%= @categories[i+rows].name %></span>
                         <% end %>
-                  </div> 
+                  </div>
               </div>
-            <% end %> 
+            <% end %>
             <% if plusone %>
               <div class="r">
                 <div class="c">
@@ -44,10 +44,10 @@
                     <div class='img <%= "#{@categories[@categories.length-1].permalink}" %>'></div>
                     <span><%= @categories[@categories.length-1].name %></span>
                   <% end %>
-                </div> 
-              </div>            
+                </div>
+              </div>
             <% end %>
-          </div>  
+          </div>
       </div>
     </div>
     <% if !@is_xtraktr %>
@@ -63,7 +63,7 @@
       </div>
     <% end %>
     <div class="recents">
-      <div class="boxic">      
+      <div class="boxic">
         <div class="header">
           <h2><%= t('.header_latest_datasets') %></h2>
           <div class="cell"><div class="line"></div></div>
@@ -87,18 +87,17 @@
                   </div>
                 <% end %>
               </div>
-            <% end %>   
-          </div>                    
+            <% end %>
+          </div>
         <% else %>
           <p>
             <%= t('.no_datasets') %>
           </p>
         <% end %>
-        <div class="vborder"></div>
       </div>
     </div>
     <div class="recents">
-      <div class="boxic">      
+      <div class="boxic">
         <% if @is_xtraktr %>
             <div class="header">
               <h2><%= t('.header_latest_time_series') %></h2>
@@ -123,8 +122,8 @@
                       </div>
                     <% end %>
                   </div>
-                <% end %>   
-              </div>                    
+                <% end %>
+              </div>
             <% else %>
               <p>
                 <%= t('.no_time_series') %>
@@ -138,7 +137,7 @@
               </div>
             <% end %>
         <% end %>
-      </div>      
+      </div>
     </div>
   </div>
 
@@ -147,7 +146,7 @@
       <h2><%= t('.header_highlights') %></h2>
       <div class="cell"><div class="line"></div></div>
     </div>
-    <% if @highlights.present? %>    
+    <% if @highlights.present? %>
       <div id="highlights" class="highlights">
 
       </div>

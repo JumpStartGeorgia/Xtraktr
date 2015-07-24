@@ -294,8 +294,8 @@ function build_highmap(shape_question_code, adjustable_max, json_map_set){
       colorAxis: {
         min: 0,
         max: max,
-        minColor: '#d2f1f9',
-        maxColor: '#0086a5',
+        minColor: '#d1e5d5',
+        maxColor: '#477c52',
         labels: {
             formatter: function () {
               return this.value + '%';
@@ -327,8 +327,8 @@ function build_highmap(shape_question_code, adjustable_max, json_map_set){
           borderWidth: 2,
           states: {
               hover: {
-                  color: '#0086a5',
-                  borderColor: '#3c4352',
+                  // color: '#0086a5',
+                  borderColor: '#d8bc48',
                   borderWidth: 2
               }
           }
@@ -348,8 +348,8 @@ function build_highmap(shape_question_code, adjustable_max, json_map_set){
           borderWidth: 2,
           states: {
             hover: {
-              color: '#0086a5',
-              borderColor: '#3c4352',
+              // color: '#0086a5',
+              borderColor: '#d8bc48',
               borderWidth: 2
             }
           },
@@ -432,7 +432,7 @@ function build_highmap(shape_question_code, adjustable_max, json_map_set){
   add_highlight_description_button($(selector_path + ' #' + map_id), json_map_set.embed_id);
 
   // add disclaimer link
-  add_disclaimer_link($(selector_path + ' #' + map_id));
+  // add_disclaimer_link($(selector_path + ' #' + map_id));
 }
 
 
@@ -497,16 +497,17 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
         {
           style: { "color": "#777c86", "fontSize": "14px", "fontFamily":"'sourcesans_pro', 'sans-serif'", "fontWeight": "normal" },
           useHTML: true
-        }
+        },
+        reversed: true
     },
     legend: {
         title: {
           text: broken_down_by_code,
-          style: { "color": "#00adee", "fontSize": "18px", "fontFamily":"'sourcesans_pro_sb', 'sans-serif'", "fontWeight": "normal" }
+          style: { "color": "#d67456", "fontSize": "18px", "fontFamily":"'sourcesans_pro_sb', 'sans-serif'", "fontWeight": "normal" }
         },
         useHTML: true,
         layout: 'vertical',
-        reversed: true,
+        //reversed: true,
         symbolWidth: 14,
         symbolHeight: 14,
         itemMarginBottom: 5,
@@ -524,7 +525,7 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
             stacking: 'percent'
         }
     },
-    series: json_chart.data.reverse(),
+    series: json_chart.data,//.reverse(),
     exporting: {
       sourceWidth: 1280,
       sourceHeight: chart_height,
@@ -596,7 +597,7 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
   add_highlight_description_button($(selector_path + ' #' + chart_id), json_chart.embed_id);
 
   // add disclaimer link
-  add_disclaimer_link($(selector_path + ' #' + chart_id));
+  // add_disclaimer_link($(selector_path + ' #' + chart_id));
 }
 
 
@@ -781,7 +782,7 @@ function build_pie_chart(json_chart, chart_height){
   add_highlight_description_button($(selector_path + ' #' + chart_id), json_chart.embed_id);
 
   // add disclaimer link
-  add_disclaimer_link($(selector_path + ' #' + chart_id));
+  // add_disclaimer_link($(selector_path + ' #' + chart_id));
 }
 
 
@@ -920,7 +921,7 @@ function build_time_series_chart(json_chart, chart_height){
   add_highlight_description_button($(selector_path + ' #' + chart_id), json_chart.embed_id);
 
   // add disclaimer link
-  add_disclaimer_link($(selector_path + ' #' + chart_id));
+  // add_disclaimer_link($(selector_path + ' #' + chart_id));
 }
 
 

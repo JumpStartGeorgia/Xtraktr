@@ -23,14 +23,14 @@ function build_highmaps(json){
 
           for(var i=0; i<json.map[h].filter_results.map_sets.length; i++){
             // create map for filter that matches gon.broken_down_by_value and broken down by that matches gon.broken_down_by_value
-            if (json.map[h].filter_answer_value == gon.filtered_by_value && json.map[i].broken_down_answer_value == gon.broken_down_by_value){          
+            if (json.map[h].filter_answer_value == gon.filtered_by_value && json.map[i].broken_down_answer_value == gon.broken_down_by_value){
               build_highmap(json.map[h].filter_results.shape_question_code, json.map[h].filter_results.map_sets[i]);
               stop_loop = true;
               break;
             }
 
             // increase the map index
-            map_index += 1;        
+            map_index += 1;
           }
 
           if (stop_loop === true){
@@ -39,13 +39,13 @@ function build_highmaps(json){
         }else{
 
           // create map for filter that matches gon.filtered_by_value
-          if (json.map[i].filter_answer_value == gon.filtered_by_value){          
+          if (json.map[i].filter_answer_value == gon.filtered_by_value){
             build_highmap(json.map[h].filter_results.shape_question_code, json.map[h].filter_results.map_sets);
             break;
           }
 
           // increase the map index
-          map_index += 1;        
+          map_index += 1;
         }
       }
 
@@ -56,7 +56,7 @@ function build_highmaps(json){
 
         for(var i=0; i<json.map.map_sets.length; i++){
           // create map for broken down by that matches gon.broken_down_by_value
-          if (json.map.map_sets[i].broken_down_answer_value == gon.broken_down_by_value){          
+          if (json.map.map_sets[i].broken_down_answer_value == gon.broken_down_by_value){
             build_highmap(json.map.shape_question_code, json.map.map_sets[i]);
             break;
           }
@@ -82,7 +82,7 @@ function build_crosstab_charts(json){
       // filters
       for(var i=0; i<json.chart.length; i++){
         // create chart for filter that matches gon.filtered_by_value
-        if (json.chart[i].filter_answer_value == gon.filtered_by_value){          
+        if (json.chart[i].filter_answer_value == gon.filtered_by_value){
           build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart[i].filter_results, chart_height);
           break;
         }
@@ -93,7 +93,7 @@ function build_crosstab_charts(json){
       build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart, chart_height);
     }
   }
-} 
+}
 
 
 ////////////////////////////////////////////////
@@ -108,7 +108,7 @@ function build_pie_charts(json){
       // filters
       for(var i=0; i<json.chart.length; i++){
         // create chart for filter that matches gon.filtered_by_value
-        if (json.chart[i].filter_answer_value == gon.filtered_by_value){          
+        if (json.chart[i].filter_answer_value == gon.filtered_by_value){
           build_pie_chart(json.chart[i].filter_results, chart_height);
           break;
         }
@@ -119,7 +119,7 @@ function build_pie_charts(json){
       build_pie_chart(json.chart, chart_height);
     }
   }
-} 
+}
 
 
 ////////////////////////////////////////////////
@@ -134,7 +134,7 @@ function build_time_series_charts(json){
       // filters
       for(var i=0; i<json.chart.length; i++){
         // create chart for filter that matches gon.filtered_by_value
-        if (json.chart[i].filter_answer_value == gon.filtered_by_value){          
+        if (json.chart[i].filter_answer_value == gon.filtered_by_value){
           build_time_series_chart(json.chart[i].filter_results, chart_height);
           break;
         }
@@ -200,7 +200,7 @@ $(document).ready(function() {
     lang: {
       contextButtonTitle: gon.highcharts_context_title
     },
-  colors: ['#00adee', '#e88d42', '#9674a9', '#f3d952', '#6fa187', '#b2a440', '#d95d6a', '#737d91', '#d694e0', '#80b5bc', '#a6c449', '#1b74cc', '#4eccae']
+    colors: ['#C6CA53', '#7DAA92', '#725752', '#E29A27', '#998746', '#A6D3A0', '#808782', '#B4656F', '#294739', '#1B998B', '#7DAA92', '#BE6E46', '#565264']
   });
 
   if (gon.highlight_data){
@@ -208,4 +208,3 @@ $(document).ready(function() {
   }
 
 });
-
