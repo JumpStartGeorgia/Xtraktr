@@ -231,8 +231,13 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
       dataset.current_locale = params[:language]
     end
 
-    # the questions for cross tab can only be those that have code answers and are not excluded
-    @questions = show_private_questions ? dataset.questions.for_analysis_with_exclude_questions : dataset.questions.for_analysis
+    # get appropriate questions
+    @questions = show_private_questions == true ? dataset.questions.for_analysis_with_exclude_questions : dataset.questions.for_analysis
+
+    # get the appropriate questions/groups in the correct order
+    @question_type = show_private_questions == true ? 'analysis_with_exclude_questions' : 'analysis'
+    @items = dataset.questions.arranged(@question_type)
+
 
     if @questions.present?
 

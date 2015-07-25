@@ -553,7 +553,6 @@ ka:
       private_question: This quesiton is not available to the public
       private_answer: This answer is not available to the public
       mappable_question: This question displays a map
-      jumpto_group: Jump to this group
     msgs:
       does_not_exist: "თქვენ ცდილობთ ისეთი გვერდის ნახვას, რომელიც არ არსებობს."
       not_authorized: "თქვენ არ გაქვთ ამ გვერდის ნახვის უფლება."
@@ -588,6 +587,9 @@ ka:
       error_while_save: An error occurred while saving
       insert_description_text: "[Please enter description text so you can see it here]"
       datatable_regex_search: "Search for text that is only in this column. You can use regular expressions like ^ for beginning of string and $ for end of string."
+      jumpto_group: Jump to this group
+      is_group: This is a group of questions
+      is_subgroup: This is a subgroup of questions
     menu:
       explore_data: "მონაცემთა გაცნობა"
       explore_time_series: "პერიოდული შედარების გაცნობა"
