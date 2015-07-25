@@ -586,18 +586,29 @@
           font:13px 'sourcesans_pro', 'sans-serif';
         }
       }
-      .dropdown-menu li a{
-        font:13px 'sourcesans_pro', 'sans-serif';
-        padding: 3px 20px;
-        font-weight: bold;
-        &.group{
-          color: @db8042;
-        }
-        &.subgroup{
-          padding: 3px 20px 3px 10px;
-          margin-left: 20px;
-          color: @af5213;
-          border-left: solid 1px @db8042;
+      .dropdown-menu li {
+        max-width: 500px;
+        min-width: 3000px;
+        a{
+          font:13px 'sourcesans_pro', 'sans-serif';
+          padding: 3px 20px;
+          font-weight: bold;
+          white-space: normal;
+          &.group{
+            color: @db8042;
+          }
+          &.subgroup{
+            padding: 3px 20px 3px 10px;
+            margin-left: 20px;
+            color: @af5213;
+            border-left: solid 1px @db8042;
+          }
+          span.pull-right img{
+            margin-right: 5px;
+            &:last-of-type{
+              margin-right: 0;
+            }
+          }
         }
       }
     }

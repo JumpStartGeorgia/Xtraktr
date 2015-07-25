@@ -43,7 +43,7 @@ private
   def generate_codebook_group_option(group)
     cls = group.parent_id.present? ? 'subgroup' : 'group' 
     content = 'data-content=\'<span>' + group.title + '</span><span class="pull-right">'
-    desc = group.description.present? ? group.description : I18n.t('app.common.jumpto_group')
+    desc = group.description.present? ? group.description : I18n.t('app.msgs.jumpto_group')
     if group.parent_id.present?
       content << subgroup_icon(desc)
     else

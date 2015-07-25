@@ -17,11 +17,11 @@
                 <% if question.group_id.present? %>
                   <ul class="question-link-groups list-unstyled">
                     <li>
-                      <span class="question-link-group" data-id="<%= current_group.id %>" title="<%= t('app.common.jumpto_group') %>"><%= current_group.title %></span>
+                      <span class="question-link-group" data-id="<%= current_group.id %>" title="<%= t('app.msgs.jumpto_group') %>"><%= current_group.title %></span>
                     </li>
                     <% if current_subgroup.present? && question.group_id == current_subgroup.id %>
                       <li>
-                        <span class="question-link-group subgroup" data-id="<%= current_subgroup.id %>" title="<%= t('app.common.jumpto_group') %>"><%= current_subgroup.title %></span>
+                        <span class="question-link-group subgroup" data-id="<%= current_subgroup.id %>" title="<%= t('app.msgs.jumpto_group') %>"><%= current_subgroup.title %></span>
                       </li>
                     <% end %>
                   </ul>

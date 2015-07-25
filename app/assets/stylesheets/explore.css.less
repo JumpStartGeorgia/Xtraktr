@@ -138,10 +138,10 @@
 
     /* allow the text to wrap in the drop downs for long text will make the drop down too wide */
     .dropdown-menu > li {
-        & > a{
-        white-space: normal;
         width: 500px;
         min-width: 250px;
+        & > a{
+        white-space: normal;
         span.pull-right img{
           margin-right: 5px;
           &:last-of-type{
@@ -259,6 +259,34 @@
           color: @777c86;
           padding: 6px 28px 6px 10px;
           border:1px solid @ddd;
+        }
+      }
+      .dropdown-menu.inner li {
+        a{
+          padding: 3px 20px;
+          &.group{
+            color: @db8042;
+            background-color: @f7f8f8;
+          }
+          &.subgroup{
+            color: @af5213;
+            background-color: @f7f8f8;
+            margin-left: 20px;
+            box-shadow: -1px 0 0px 0px @db8042;
+          }
+          &.grouped{
+            padding-left: 10px;
+            margin-left: 20px;
+            box-shadow: -1px 0 0px 0px @db8042;
+          }
+          &.subgrouped{
+            padding-left: 10px;
+            margin-left: 40px;
+            box-shadow: -1px 0 0px 0px @af5213, -20px 0 0 0 #fff, -21px 0 0 0 @db8042;
+          }
+        }
+        &.disabled a{
+          cursor: default;
         }
       }
     }

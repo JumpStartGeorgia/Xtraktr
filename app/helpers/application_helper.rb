@@ -112,44 +112,6 @@ module ApplicationHelper
   #devise mappings end
   
 
-
-  # generate the options for the explore data drop down list
-  def generate_explore_options(questions, options={})
-    skip_content = options[:skip_content].nil? ? false : options[:skip_content]
-    selected_code = options[:selected_code].nil? ? nil : options[:selected_code]
-    disabled_code = options[:disabled_code].nil? ? nil : options[:disabled_code]
-    disabled_code2 = options[:disabled_code2].nil? ? nil : options[:disabled_code2]
-
-    html_options = ''
-
-    questions.each_with_index do |question, index|
-      q_text = question.code_with_text
-      selected = selected_code.present? && selected_code == question.code ? 'selected=selected ' : ''
-      disabled = (disabled_code.present? && disabled_code == question.code) || (disabled_code2.present? && disabled_code2 == question.code) ? 'data-disabled=disabled ' : ''
-      can_exclude = question.has_can_exclude_answers? ? 'data-can-exclude=true ' : ''
-
-      # if the question is mappable or is excluded, show the icons for this
-      content = ''
-      if !skip_content && (question.is_mappable? || question.exclude?)
-        content << 'data-content=\'<span>' + q_text + '</span><span class="pull-right">'
-
-        if question.is_mappable?
-          content << mappable_question_icon
-        end
-
-        if question.exclude?
-          content << exclude_question_icon
-        end
-
-        content << '</span>\''
-      end
-
-      html_options << "<option value='#{question.code}' title='#{q_text}' #{selected} #{disabled} #{content.html_safe} #{can_exclude}>#{q_text}</option>"
-    end
-
-    return html_options.html_safe
-  end
-
   def exclude_question_icon
     '<img src="/assets/svg/lock.svg" title="' + I18n.t('app.common.private_question') + '" />'
   end
@@ -163,13 +125,13 @@ module ApplicationHelper
   end
 
   def group_icon(description=nil)
-    title = description.present? ? "title=\'#{description}\'" : ''
-    '<img src="/assets/svg/group.svg" ' + title + ' />'
+    # title = description.present? ? "title=\'#{description}\'" : ''
+    '<img src="/assets/svg/group.svg" title="' + (description.present? ? description.strip : '') + '" />'
   end
 
   def subgroup_icon(description=nil)
-    title = description.present? ? "title=\'#{description}\'" : ''
-    '<img src="/assets/svg/subgroup.svg" ' + title + ' />'
+    # title = description.present? ? "title=\'#{description}\'" : ''
+    '<img src="/assets/svg/subgroup.svg" title="' + (description.present? ? description.strip : '') + '" />'
   end
 
 
