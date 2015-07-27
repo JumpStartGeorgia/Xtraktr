@@ -10,13 +10,13 @@ class GroupsController < ApplicationController
    @dataset = Dataset.by_id_for_user(params[:dataset_id], current_user.id)
 
     if @dataset.present?
-      @groups = @dataset.groups.arranged
+      @items = @dataset.arranged_items(include_questions: true, include_groups: true, include_subgroups: true)
 
       add_common_options(false)
 
       respond_to do |format|
         format.html 
-        format.js { render json: @groups}
+        format.js { render json: @items}
       end
     else
       flash[:info] =  t('app.msgs.does_not_exist')
@@ -174,9 +174,12 @@ class GroupsController < ApplicationController
 
         # get questions already assigned to the group
         assigned_questions = dataset.questions.assigned_to_group_meta_only(params[:id])
+        
+        # combine the two sets of questions with the selected questions first
+        items = sort_objects_with_sort_order(assigned_questions).map{|x| x.json_for_groups(true)} + sort_objects_with_sort_order(questions).map{|x| x.json_for_groups}
 
         respond_to do |format|
-          format.json { render json: assigned_questions.map{|x| x.json_for_groups(true)} + questions.map{|x| x.json_for_groups} }
+          format.json { render json: items }
         end
         return
       end

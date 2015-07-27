@@ -79,17 +79,6 @@
 
   <%= f.inputs do %>
 
-    <div class="select required input form-group" id="group_parent_id_input">
-      <label class="control-label" for="group_parent_id">
-        <%= t(label_key + 'parent_id') %><abbr title="required">*</abbr><div class="help-inline" title="<%= t(hint_key + 'parent_id') %>"><div>?</div></div>
-      </label>
-
-      <select class="selectpicker-groups form-control" id="group_parent_id" name="group[parent_id]">
-        <option value=""><%= t('.option_top_level') %></option>
-        <%= options_for_groups(@main_groups, @group.parent_id) %>
-      </select>
-    </div>
-
     <div class="radio_buttons input optional form-group" id="group_include_in_charts_input">
       <label class="control-label" for="group_include_in_charts"><%= t(label_key + 'include_in_charts') %><div class="help-inline" title="<%= t(hint_key + 'include_in_charts') %>"><div>?</div></div>
       </label>
@@ -117,6 +106,18 @@
       </div>
 
     </div>
+
+    <div class="select required input form-group" id="group_parent_id_input">
+      <label class="control-label" for="group_parent_id">
+        <%= t(label_key + 'parent_id') %><abbr title="required">*</abbr><div class="help-inline" title="<%= t(hint_key + 'parent_id') %>"><div>?</div></div>
+      </label>
+
+      <select class="selectpicker-groups form-control" id="group_parent_id" name="group[parent_id]">
+        <option value=""><%= t('.option_top_level') %></option>
+        <%= options_for_groups(@main_groups, @group.parent_id) %>
+      </select>
+    </div>
+
     
     <div id="group-questions">
       <label class="control-label"><%= t(label_key + 'codes') %><div class="help-inline" title="<%= t(hint_key + 'codes') %>"><div>?</div></div></label>

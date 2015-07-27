@@ -209,38 +209,9 @@ private
 
       # add each question/answer
       # - use only questions/answers that can be downloaded and analyzed
-      items = is_admin ? dataset.questions.arranged : dataset.questions.arranged('download')
-      indent = ''
-      items.each do |item|
-        if item.class == Group
-          group = item
-          indent = '    '
-          group_indent = ''
-          subgroup_indent = '    '
-          subgroup_q_indent =  '        '
-
-          # add group
-          output << generate_codebook_group(group, group_indent)
-
-          # if have subgroups, add them
-          group.sub_groups.each do |subgroup|
-            output << generate_codebook_group(subgroup, subgroup_indent)
-
-            # if have questions, add them
-            subgroup.questions.each do |question|
-              output << generate_codebook_question(question, is_admin, subgroup_q_indent)
-            end
-          end
-
-          # if have questions, add them
-          group.questions.each do |question|
-            output << generate_codebook_question(question, is_admin, indent)
-          end
-
-        else  
-          output << generate_codebook_question(item, is_admin)
-        end
-      end
+      question_type = is_admin ? nil : 'download'
+      items = dataset.arranged_items(reload_items: true, question_type: question_type, include_questions: true, include_groups: true, include_subgroups: true)
+      output << generate_codebook_items(items, is_admin)
 
       #######################
       # create codebook file
@@ -270,6 +241,40 @@ private
 
     puts "--- it took #{(Time.now-start).round(3)} seconds to create the codebook file, is admin = #{is_admin}"
     return nil  
+  end
+
+  def self.generate_codebook_items(items, is_admin, group_type=nil)
+    output = ''
+    group_indent = ''
+    question_indent = ''
+
+    if group_type == 'group'
+      group_indent = '    '
+      question_indent = '    '
+    elsif group_type == 'subgroup'
+      group_indent = '    '
+      question_indent =  '    '
+    elsif group_type == 'subgroup2'
+      group_indent = '        '
+      question_indent =  '        '
+    end
+
+    items.each do |item|
+      if item.class == Group
+
+        # add group
+        output << generate_codebook_group(item, group_indent)
+
+        # add subgroup/questions
+        group_type = group_type.nil? ? 'group' : group_type == 'group' ? 'subgroup' : 'subgroup2'
+        output << generate_codebook_items(item.arranged_items, is_admin, group_type)
+
+      elsif item.class == Question
+        # add question
+        output << generate_codebook_question(item, is_admin, question_indent)
+      end
+    end
+    return output
   end
 
   def self.generate_codebook_group(group, indent='')

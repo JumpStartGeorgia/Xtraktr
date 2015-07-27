@@ -28,7 +28,7 @@ class Question < CustomTranslation
   # which group this question belongs
   field :group_id, type: Moped::BSON::ObjectId
   # number indicating the sort order
-  field :sort_order, type: Integer, default: 0
+  field :sort_order, type: Integer
 
   embedded_in :dataset
   embeds_many :answers do

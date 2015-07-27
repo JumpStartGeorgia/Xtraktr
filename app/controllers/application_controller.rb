@@ -167,6 +167,16 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 		session[:previous_urls].pop if session[:previous_urls].count > 1
     #Rails.logger.debug "****************** prev urls session = #{session[:previous_urls]}"
 	end
+
+  # sort a group of objects by sort_order field
+  # if object item sort_order is nil, move it to the end of the list of objects
+  def sort_objects_with_sort_order(objects)
+    sorted = []
+    if objects.present?
+      sorted =objects.select{|x| x.sort_order.present?}.sort_by{|x| x.sort_order} + objects.select{|x| x.sort_order.nil?}
+    end
+    return sorted
+  end
 	
   def clean_filename(filename)
     filename.strip.latinize.to_ascii.gsub(' ', '_').gsub(/[\\ \/ \: \* \? \" \< \> \| \, \. ]/,'')
@@ -235,8 +245,8 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     @questions = show_private_questions == true ? dataset.questions.for_analysis_with_exclude_questions : dataset.questions.for_analysis
 
     # get the appropriate questions/groups in the correct order
-    @question_type = show_private_questions == true ? 'analysis_with_exclude_questions' : 'analysis'
-    @items = dataset.questions.arranged(@question_type)
+    question_type = show_private_questions == true ? 'analysis_with_exclude_questions' : 'analysis'
+    @items = dataset.arranged_items(question_type: question_type, include_groups: true, include_subgroups: true, include_questions: true)
 
 
     if @questions.present?
