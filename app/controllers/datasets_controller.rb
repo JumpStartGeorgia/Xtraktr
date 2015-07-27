@@ -767,6 +767,23 @@ class DatasetsController < ApplicationController
     end
   end
 
+  # sort all groups/questions
+  def sort
+    @dataset = Dataset.by_id_for_user(params[:id], current_user.id)
+
+    if @dataset.present?
+      add_dataset_nav_options
+
+      respond_to do |format|
+        format.html # index.html.erb
+      end
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to datasets_path(:locale => I18n.locale)
+      return
+    end
+  end
+
 end
 
 

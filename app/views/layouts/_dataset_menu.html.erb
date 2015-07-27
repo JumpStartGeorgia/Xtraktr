@@ -83,6 +83,12 @@
                     <% end %>
                   </li>
                   <li role="menuitem">
+                    <%= link_to sort_dataset_path(dataset) do %>
+                      <span class="glyphicon glyphicon-sort"></span>
+                      <%= t('app.menu.admin_dataset.sort') %>
+                    <% end %>
+                  </li>
+                  <li role="menuitem">
                     <%= link_to mappable_dataset_path(dataset) do %>
                       <span class="glyphicon glyphicon-map-marker"></span>
                       <%= t('app.menu.admin_dataset.mappable') %>
