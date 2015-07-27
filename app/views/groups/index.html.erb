@@ -9,7 +9,7 @@
               :class => 'btn btn-primary' %>
 </div>
 
-<%= simple_format t('.explanation') %>
+<%= simple_format t('.explanation', link: link_to(t('.explanation_link_text'), sort_dataset_path(@dataset))) %>
 
 <hr />
 

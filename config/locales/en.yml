@@ -624,6 +624,7 @@ en:
         mass_changes_answers: Answer Mass Changes
         download_data: Download Data
         groups: Group Questions
+        sort: Sort Groups/Questions
       admin_time_series:
         explore_data: Explore Data
         heading: Time Series Options
@@ -852,6 +853,8 @@ en:
 
         This download is different than what is on the dashboard page in that this download includes the entire dataset, whereas the download from the dashboard page only includes the data that you have indicated can be downloaded by the public.
       no_files: The download files have not been generated yet. Please check back soon.
+    sort:
+      title: Sort Groups and Questions
   questions:
     index:
       title: "Edit Questions and their Answers"
@@ -899,7 +902,8 @@ en:
 
         Groups will be visible in the codebook and on the explore page. It is up to you on whether or not the group description is included in the chart titles.
 
-        By default, groups are put at the top of the codebook and all ungrouped questions will appear after the groups. You can use the Sorting page to further control the order of the groups and questions.
+        By default, groups are put at the top of the codebook and all ungrouped questions will appear after the groups. You can use the %{link} to further control the order of the groups and questions.
+      explanation_link_text: Sorting page
     table_row:
       question_count: '%{num} questions'    
     form:
