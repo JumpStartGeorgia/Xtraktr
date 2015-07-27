@@ -15,11 +15,12 @@
           <%= format_boolean_flag(group.include_in_charts) %>
         </td>
         <td>
-          <%= link_to t('.question_count', num: group.question_count), '#', class: 'questions btn btn-default' %>
+          <% questions = group.arranged_items.select{|x| x.class == Question} %>
+          <%= link_to t('.question_count', num: questions.length), '#', class: 'questions btn btn-default' %>
 
           <div class="group-questions">
             <ul>
-              <% group.get_questions_by_type.each do |question| %>
+              <% questions.each do |question| %>
                 <li>
                   <%= question.code_with_text %>
                 </li>

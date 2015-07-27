@@ -83,84 +83,11 @@ class Dataset < CustomTranslation
       where(parent_id: parent_id)
     end
 
-    # get groups arranged with main groups and their sub-groups as nested arrays
-    # if a group has sub-groups, then the attribute sub_groups will be an array of those sub-groups
-    def arranged
-      return main_groups
-      # groups = main_groups
-
-      # # if main group has sub-groups, add them
-      # groups.each do |group|
-      #   group.sub_groups = sub_groups(group.id)
-      # end
-
-      # return groups
-    end
-
   end
   accepts_nested_attributes_for :groups
 
   embeds_many :questions, cascade_callbacks: true do
     # these are functions that will query the questions documents
-
-    # organize all of the groups/questions
-    def arranged(type='all')
-      items = [] 
-
-      # get groups
-      items << base.groups.arranged
-      items.flatten!
-
-      # if groups exist get their subgroups and questions
-      if items.present?
-        items.each do |group|
-          group.get_questions_by_type(type)
-          group.get_sub_groups.each do |subgroup|
-            subgroup.get_questions_by_type(type)
-          end
-        end
-      end
-
-      # get questions that are not assigned to groups
-      case type
-        when 'download'
-          items << where(:can_download => true, :group_id => nil).to_a
-        when 'analysis'
-          items << where(:exclude => false, :has_code_answers => true, :group_id => nil).to_a
-        when 'anlysis_with_exclude_questions'
-          items << where(:has_code_answers => true, :group_id => nil).to_a
-        else
-          items << where(:group_id => nil).to_a
-      end
-      
-      return items.flatten
-    end
-
-
-    # organize all of the groups/questions
-    # def sorted
-    #   items = [] 
-    #   groups = base.groups.arranged
-
-    #   # if groups exist and they have desired questions, get them
-    #   if groups.present?
-    #     groups.each do |group|
-    #       items << group
-    #       if group.sub_groups.present?
-    #         group.sub_groups.each do |subgroup|
-    #           items << subgroup
-    #           items << subgroup.questions
-    #         end
-    #       end
-    #       items << group.questions
-    #     end
-    #   end
-
-    #   # get all questions that are not assigned to groups
-    #   items << where(:group_id => nil).to_a
-      
-    #   return items.flatten
-    # end
 
     # get the question that has the provided code
     def with_code(code)
@@ -188,31 +115,6 @@ class Dataset < CustomTranslation
       where(:can_download => true)
     end
 
-    # # organize all of the groups/questions that are not exlucde and have code answers
-    # def sorted_for_download
-    #   items = [] 
-    #   groups = base.groups.arranged
-
-    #   # if groups exist and they have desired questions, get them
-    #   if groups.present?
-    #     groups.each do |group|
-    #       items << group
-    #       if group.sub_groups.present?
-    #         group.sub_groups.each do |subgroup|
-    #           items << subgroup
-    #           items << subgroup.for_download
-    #         end
-    #       end
-    #       items << group.for_download
-    #     end
-    #   end
-
-    #   # get all questions that are not assigned to groups
-    #   items << where(:can_download => true, :group_id => nil).to_a
-      
-    #   return items.flatten
-    # end
-
     # get questions that are not excluded and have code answers
     def for_analysis
       where(:exclude => false, :has_code_answers => true).to_a
@@ -222,56 +124,6 @@ class Dataset < CustomTranslation
     def for_analysis_with_exclude_questions
       where(:has_code_answers => true).to_a
     end
-
-    # organize all of the groups/questions that are not exlucde and have code answers
-    # def sorted_for_analysis
-    #   items = [] 
-    #   groups = base.groups.arranged
-
-    #   # if groups exist and they have desired questions, get them
-    #   if groups.present?
-    #     groups.each do |group|
-    #       items << group
-    #       if group.sub_groups.present?
-    #         group.sub_groups.each do |subgroup|
-    #           items << subgroup
-    #           items << subgroup.questions_for_anlysis
-    #         end
-    #       end
-    #       items << group.questions_for_anlysis
-    #     end
-    #   end
-
-    #   # get all questions that are not assigned to groups
-    #   items << where(:exclude => false, :has_code_answers => true, :group_id => nil).to_a
-      
-    #   return items.flatten
-    # end
-
-    # # organize all of the groups/questions that have code answers
-    # def sorted_for_analysis_with_exclude_questions
-    #   items = [] 
-    #   groups = base.groups.arranged
-
-    #   # if groups exist and they have desired questions, get them
-    #   if groups.present?
-    #     groups.each do |group|
-    #       items << group
-    #       if group.sub_groups.present?
-    #         group.sub_groups.each do |subgroup|
-    #           items << subgroup
-    #           items << subgroup.questions_for_anlysis_with_exclude_questions
-    #         end
-    #       end
-    #       items << group.questions_for_anlysis_with_exclude_questions
-    #     end
-    #   end
-
-    #   # get all questions that are not assigned to groups
-    #   items << where(:has_code_answers => true, :group_id => nil).to_a
-      
-    #   return items.flatten
-    # end
 
     # get count questions that are not excluded and have code answers
     def for_analysis_count
@@ -415,21 +267,6 @@ class Dataset < CustomTranslation
       end
     end
 
-    # # get questions that are assigned to a group for download
-    # def assigned_to_group_for_download(group_id)
-    #   where(group_id: group_id, can_download: true).to_a
-    # end
-
-    # # get questions that are assigned to a group for anlyais
-    # def assigned_to_group_for_analysis(group_id)
-    #   where(group_id: group_id, exclude: false, has_code_answers: true).to_a
-    # end
-
-    # # get questions that are assigned to a group for anlyais
-    # def assigned_to_group_for_analysis_with_exclude_questions(group_id)
-    #   where(group_id: group_id, has_code_answers: true).to_a
-    # end
-
     # get count of questions that are assigned to a group
     def count_assigned_to_group(group_id)
       where(group_id: group_id).count
@@ -438,19 +275,22 @@ class Dataset < CustomTranslation
     # get questions that are not assigned to groups
     # - only get the id, code and title
     def not_assigned_group_meta_only
-      where(group_id: nil).only(:id, :code, :original_code, :title)
+      where(group_id: nil).only(:id, :code, :original_code, :title, :sort_order)
     end
 
     # get questions that are assigned to a group
     # - only get the id, code and title
     def assigned_to_group_meta_only(group_id)
-      where(group_id: group_id).only(:id, :code, :original_code, :title)
+      where(group_id: group_id).only(:id, :code, :original_code, :title, :sort_order)
     end
 
     # mark the answer can_exclude flag as true for the ids provided
     def assign_group(ids, group_id)
       where(:_id.in => ids).each do |q|
-        q.group_id = group_id
+        if q.group_id != group_id
+          q.group_id = group_id
+          q.sort_order = nil
+        end
       end
       return nil
     end
@@ -957,6 +797,100 @@ class Dataset < CustomTranslation
     url = x.urls.shape_file if x.present?
 
     return url
+  end
+
+
+  # get the groups and questions in sorted order
+  # options:
+  # - question_type - type of questions to get (download, analysis, anlysis_with_exclude_questions, or all)
+  # - reload_items - if items already exist, reload them (default = false)
+  # - group_id - arrange the groups/questions that are in this group_id
+  # - include_groups - flag indicating if should get groups (default = false)
+  # - include_subgroups - flag indicating if subgroups should also be loaded (default = false)
+  # - include_questions - flag indicating if should get questions (default = false)
+  def arranged_items(options={})
+    Rails.logger.debug "@@@@@@@@@@@@@@ dataset arranged_items"
+    if self.var_arranged_items.nil? || self.var_arranged_items.empty? || options[:reload_items]
+      Rails.logger.debug "@@@@@@@@@@@@@@ - building, options = #{options}"
+      self.var_arranged_items = build_arranged_items(options)
+    end
+
+    return self.var_arranged_items
+  end
+
+  # returnt an array of sorted gruops and questions, that match the provided options
+  # options:
+  # - question_type - type of questions to get (download, analysis, anlysis_with_exclude_questions, or all)
+  # - group_id - arrange the groups/questions that are in this group_id
+  # - include_groups - flag indicating if should get groups (default = false)
+  # - include_subgroups - flag indicating if subgroups should also be loaded (default = false)
+  # - include_questions - flag indicating if should get questions (default = false)
+  def build_arranged_items(options={})
+    Rails.logger.debug "=============== build start; options = #{options}"
+    indent = options[:group_id].present? ? '    ' : ''
+    Rails.logger.debug "#{indent}^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+    Rails.logger.debug "#{indent}=============== build start; options = #{options}"
+    items = []
+
+    if options[:include_groups] == true
+      Rails.logger.debug "#{indent}=============== -- include groups"
+      # get the groups
+      # - if group id provided, get subgroups in that group
+      # - else get main groups
+      if options[:group_id].present?
+        items << self.groups.sub_groups(options[:group_id])
+      else
+        items << self.groups.main_groups
+      end
+      items.flatten!
+
+      # now for each group, get its subgroups/questions and sort them
+      if options[:include_subgroups] == true
+        Rails.logger.debug "#{indent}=============== -- include subgroups"
+        group_options = options.dup
+
+        items.each do |group|
+          Rails.logger.debug "#{indent}>>>>>>>>>>>>>>> #{group.title}"
+          Rails.logger.debug "#{indent}=============== checking #{group.title} for subgroups"
+
+          # get all items for this group (subgroup/questions)
+          group_options[:group_id] = group.id
+          group.var_arranged_items = build_arranged_items(group_options)
+          Rails.logger.debug "#{indent}>>>>>>>>>>>>>> ----- added #{group.var_arranged_items.length} items for #{group.title}"
+
+        end
+      end
+    end
+
+    if options[:include_questions] == true
+      Rails.logger.debug "#{indent}=============== -- include questions"
+      # get questions that are not assigned to groups
+      # - if group_id not provided, then getting questions that are not assigned to group
+      items << case options[:question_type]
+        when 'download'
+          self.questions.where(:can_download => true, :group_id => options[:group_id])
+        when 'analysis'
+          self.questions.where(:exclude => false, :has_code_answers => true, :group_id => options[:group_id])
+        when 'anlysis_with_exclude_questions'
+          self.questions.where(:has_code_answers => true, :group_id => options[:group_id])
+        else
+          self.questions.where(:group_id => options[:group_id])
+      end
+    end
+
+    items.flatten!
+
+    Rails.logger.debug "#{indent}=============== there are a total of #{items.length} items added"
+
+
+    # sort these items
+    # way to sort: sort only items that have sort_order, then add groups with no sort_order, then add questions with no sort_order
+    items = items.select{|x| x.sort_order.present?}.sort_by{|x| x.sort_order} + 
+              items.select{|x| x.class == Group && x.sort_order.nil?} + 
+              items.select{|x| x.class == Question && x.sort_order.nil?}
+
+
+    return items
   end
 
   #############################

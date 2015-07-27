@@ -148,7 +148,8 @@
 
     <div role="tabpanel" class="tab-pane fade <%= codebook_active[:panel] %>" id="codebook">
       <% 
-        items = show_private_questions == true ? @dataset.questions.arranged('analysis_with_exclude_questions') : @dataset.questions.arranged('analysis') 
+        question_type = show_private_questions == true ? 'analysis_with_exclude_questions' : 'analysis'
+        items = @dataset.arranged_items(question_type: 'analysis_with_exclude_questions', include_groups: true, include_subgroups: true, include_questions: true)
       %>
       <div id="codebook-search">
         <input type="search" class="codebook-search" id="filter" value="" placeholder="<%= t('helpers.search') %>" />
@@ -176,7 +177,7 @@
         <% if groups.length > 0 %>
           <div class="codebook-jumpto">
             <select data-live-search="true" data-hide-disabled='true' data-width="auto" class="selectpicker-group" id="codebook-jumpto" title="<%= t('.jumpto_group') %>">
-              <%= generate_codebook_groups(groups) %>
+              <%= generate_codebook_group_options(groups) %>
             </select>
           </div>       
         <% end %>

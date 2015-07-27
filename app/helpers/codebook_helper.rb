@@ -1,12 +1,12 @@
 module CodebookHelper
 
   # generate the options for the codebook group jumpto select field
-  def generate_codebook_groups(groups)
+  def generate_codebook_group_options(groups)
     html_options = ''
 
     groups.each do |group|
       html_options << generate_codebook_group_option(group)
-      group.sub_groups.each do |subgroup|
+      group.arranged_items.select{|x| x.class == Group}.each do |subgroup|
         html_options << generate_codebook_group_option(subgroup)
       end
     end
@@ -84,22 +84,18 @@ private
     html << '</div>'
     html << "<ul class='list-unstyled #{cls3}'>"
 
-    # if have subgroups, add them
-    if group.sub_groups.present?
+    options = {show_private_questions: show_private_questions}
+    options[:group] = group.parent_id.present? ? group.parent : group
+    options[:subgroup] = group.parent_id.present? ? group : nil
+    
+    group.arranged_items.each do |item|
 
-      group.sub_groups.each do |subgroup|
-        # add group
-        html << generate_codebook_group_item(subgroup, show_private_questions)
+      if item.class == Group
+        html << generate_codebook_group_item(item, show_private_questions)
+      elsif item.class == Question
+        html << generate_codebook_question_item(item, options)
       end
 
-    end
-
-    # if have questions, add them
-    group.questions.each do |question|
-      options = {show_private_questions: show_private_questions}
-      options[:group] = group.parent_id.present? ? group.parent : group
-      options[:subgroup] = group.parent_id.present? ? group : nil
-      html << generate_codebook_question_item(question, options)
     end
 
     html << '</ul>'

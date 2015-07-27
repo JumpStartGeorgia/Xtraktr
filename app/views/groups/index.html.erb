@@ -11,7 +11,10 @@
 
 <%= simple_format t('.explanation') %>
 
-<% if @groups.present? %>
+<hr />
+
+<% groups = @items.select{|x| x.class == Group} %>
+<% if groups.present? %>
 
   <table id="group-datatable" class="table table-striped display">
     <thead>
@@ -25,9 +28,9 @@
       </tr>
     </thead>
     <tbody>
-      <% @groups.each do |group| %>
+      <% groups.each do |group| %>
         <%= render :partial => 'groups/table_row', locals: {group: group} %>
-        <% group.get_sub_groups.each do |sub_group| %>
+        <% group.arranged_items.select{|x| x.class == Group}.each do |sub_group| %>
           <%= render :partial => 'groups/table_row', locals: {group: sub_group, is_sub_group: true} %>
         <% end %>
       <% end %>

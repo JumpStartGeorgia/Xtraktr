@@ -9,14 +9,15 @@ class Group < CustomTranslation
   # id of group that this group belongs to
   field :parent_id, type: Moped::BSON::ObjectId
   # number indicating the sort order
-  field :sort_order, type: Integer, default: 0
+  field :sort_order, type: Integer
   
   #############################
   embedded_in :dataset
 
   #############################
   attr_accessible :title, :description, :title_translations, :description_translations, :include_in_charts, :parent_id, :sort_order
-  attr_accessor :questions, :sub_groups
+#  attr_accessor :questions, :sub_groups, :var_arranged_items
+  attr_accessor :var_arranged_items
 
   #############################
   # Validations
@@ -56,26 +57,31 @@ class Group < CustomTranslation
   def update_questions
     Rails.logger.debug ">>>>> updating questions after destroying group"
 
-    questions_to_update = self.dataset.questions.assigned_to_group_meta_only(self.id).map{|x| x.id}
-    Rails.logger.debug ">>>>> - need to update #{questions_to_update.length} questions in this group"
+    group_items = self.arranged_items(reload_items: true, include_groups: true, include_subgroups: true, include_questions: true)
+    sub_groups = group_items.select{|x| x.class == Group}
+    questions = []
+    questions << group_items.select{|x| x.class == Question}
 
-    # if this is not a sub-group, get questions from subgroups too that need to be updated
-    if self.parent_id.nil?
-      self.sub_groups.each do |sub_group|
-        questions_to_update += self.dataset.questions.assigned_to_group_meta_only(sub_group.id).map{|x| x.id}
+    # if have sub-groups, get questions from subgroups that need to be updated
+    if sub_groups.present?
+      sub_groups.each do |sub_group|
+        questions << sub_group.arranged_items.select{|x| x.class == Question}
       end
     end
-    Rails.logger.debug ">>>>> - need to update #{questions_to_update.length} questions in this group and all of its subgroups"
 
-    if questions_to_update.length > 0
-      self.dataset.questions.assign_group(questions_to_update, self.parent_id.present? ? self.parent_id : nil)
+    questions.flatten!
+
+    Rails.logger.debug ">>>>> - need to update #{questions.length} questions in this group and all of its subgroups"
+
+    if questions.length > 0
+      self.dataset.questions.assign_group(questions.map{|x| x.id}, self.parent_id.present? ? self.parent_id : nil)
       self.dataset.save
     end
 
-    # if this is not a sub-group, delete all of its sub-groups too
-    if self.parent_id.nil?
+    # delete all of its sub-groups
+    if sub_groups.present?
       Rails.logger.debug ">>>>> - deleting all subgroups"
-      self.sub_groups.delete_all
+      self.dataset.groups.in(id: sub_groups.map{|x| x.id}).delete_all
     end
 
   end
@@ -93,13 +99,13 @@ class Group < CustomTranslation
   #############################
 
   # get questions for a specific type and save to questions
-  def get_questions_by_type(type='all')
-    if !self.questions.present?
-      self.questions = self.dataset.questions.assigned_to_group(self.id, type)
-    end
+  # def get_questions_by_type(type='all')
+  #   if !self.questions.present?
+  #     self.questions = self.dataset.questions.assigned_to_group(self.id, type)
+  #   end
 
-    return self.questions
-  end
+  #   return self.questions
+  # end
 
   # # get questions that are in this group
   # def questions
@@ -123,8 +129,7 @@ class Group < CustomTranslation
 
   # get count of questions that are in this group
   def question_count
-    #self.dataset.questions.count_assigned_to_group(self.id)
-    get_questions_by_type.count
+    self.dataset.questions.count_assigned_to_group(self.id)
   end
 
   # get the parent group of this group
@@ -132,12 +137,37 @@ class Group < CustomTranslation
     self.dataset.groups.find(self.parent_id) if self.parent_id.present?
   end
 
-  # get the sub-groups and save to sub_groups
-  def get_sub_groups
-    if !self.sub_groups.present?
-      self.sub_groups = self.dataset.groups.sub_groups(self.id)
+  # # get the sub-groups and save to sub_groups
+  # def get_sub_groups
+  #   if !self.sub_groups.present?
+  #     self.sub_groups = self.dataset.groups.sub_groups(self.id)
+  #   end
+
+  #   return self.sub_groups
+  # end
+
+  # def has_subgroups?
+  #   self.dataset.groups.sub_groups(self.id).count > 0 ? true : false
+  # end
+
+  # get the groups and questions in sorted order that are assigned to this group
+  # options:
+  # - question_type - type of questions to get (download, analysis, anlysis_with_exclude_questions, or all)
+  # - reload_items - if items already exist, reload them (default = false)
+  # - include_groups - flag indicating if should get groups (default = false)
+  # - include_subgroups - flag indicating if subgroups should also be loaded (default = false)
+  # - include_questions - flag indicating if should get questions (default = false)
+  def arranged_items(options={})
+    Rails.logger.debug "$$$$$$$$$$$$$ group arranged_items"
+    Rails.logger.debug "---- var exists = #{self.var_arranged_items.nil?}"
+    if self.var_arranged_items.nil? || self.var_arranged_items.empty? || options[:reload_items]
+      options[:group_id] = self.id
+      Rails.logger.debug "$$$$$$$$$$$$$ - building, options = #{options}"
+      self.var_arranged_items = self.dataset.build_arranged_items(options)
     end
 
-    return self.sub_groups
+    return self.var_arranged_items
   end
+
+
 end
