@@ -772,7 +772,41 @@ class DatasetsController < ApplicationController
     @dataset = Dataset.by_id_for_user(params[:id], current_user.id)
 
     if @dataset.present?
+      @items = @dataset.arranged_items(include_questions: true, include_groups: true, include_subgroups: false, group_id: params[:group_id])
+
+      @group = params[:group_id].present? ? @dataset.groups.find(params[:group_id]) : nil
+
       add_dataset_nav_options
+      set_gon_datatables
+
+      # create data for datatables (faster to load this way)
+      gon.datatable_json = []
+      @items.each_with_index do |item, index|
+        id_name, type, name, desc, link, cls = nil
+        if item.class == Question
+          id_name = 'questions'
+          type = I18n.t('mongoid.models.question')
+          name = item.code_with_text
+        elsif item.class == Group
+          id_name = 'groups'
+          type = I18n.t('mongoid.models.group')
+          name = item.title
+          desc = item.description.present? ? " - #{item.description}" : ''
+          link = view_context.link_to(I18n.t('helpers.links.view_group_items'), params.merge(group_id: item.id), class: 'btn btn-default btn-view-group')
+          cls = item.parent_id.present? ? 'subgroup' : 'group'
+        end
+
+        gon.datatable_json << {
+          checkbox: "<input id='dataset_#{id_name}_attributes_#{index}_id' name='dataset[#{id_name}_attributes][#{index}][id]' type='hidden' value='#{item.id}'><input name='move-item' type='checkbox' value='true'>",
+          sort_order: "<input class='form-control sort-order' id='dataset_#{id_name}_attributes_#{index}_sort_order name='dataset[#{id_name}_attributes][#{index}][sort_order]' type='input' value='#{item.sort_order}'>",
+          type: type,
+          name: "<span class='#{cls}'>#{name}</span>#{desc}",
+          link: link
+        }
+      end
+
+      @css.push('bootstrap-select.min.css', 'sort.css')
+      @js.push('bootstrap-select.min.js', "sort.js")
 
       respond_to do |format|
         format.html # index.html.erb

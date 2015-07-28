@@ -123,7 +123,7 @@ $(document).ready(function(){
 
           // search boxes in footer
           $('#dataset-group-questions tfoot input').on('keyup click', function(){
-              datatable.column(1).search(this.value, true, false).draw();
+              datatable.column($(this).closest('td').index()).search(this.value, true, false).draw();
           });
         }
 

@@ -626,12 +626,20 @@ div.message {
     font:14px 'sourcesans_pro_l', 'sans-serif';
     color: @3c4352;
   }
-  table tfoot td{
-    padding: 8px 0;
-    input[type="text"]{
-      padding: 0 14px !important;
+  table tfoot {
+    display: table-header-group;
+    td{
+      padding: 8px 0;
+      input[type="text"]{
+        padding: 0 14px !important;
+      }
+      select{
+        color: #555;
+        background-color: #fff;
+        padding: 0 14px;
+        height: 34px;    
+      }
     }
-
   }
 }
 
