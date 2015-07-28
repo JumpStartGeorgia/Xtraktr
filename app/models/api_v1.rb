@@ -427,6 +427,11 @@ private
     # get the data for this code
     data = dataset.data_items.code_data(question[:code])
 
+    # only keep the data that is in the list of question answers 
+    # - this is where can_exclude removes the unwanted answers
+    answer_values = question[:answers].map{|x| x[:value]}
+    data.delete_if{|x| !answer_values.include?(x)}
+
     # if filter provided, then get data for filter
     # and then only pull out the code data that matches
     if filtered_by.present?
@@ -680,6 +685,12 @@ private
     # merge the data arrays into one array that 
     # has nested arrays
     data = question_data.zip(broken_down_data)
+
+    # only keep the data that is in the list of question/broken down by answers 
+    # - this is where can_exclude removes the unwanted answers
+    q_answer_values = question[:answers].map{|x| x[:value]}
+    bdb_answer_values = broken_down_by[:answers].map{|x| x[:value]}
+    data.delete_if{|x| !q_answer_values.include?(x[0]) || !bdb_answer_values.include?(x[1])}
 
     # if filter provided, then get data for filter
     # and then only pull out the code data that matches
