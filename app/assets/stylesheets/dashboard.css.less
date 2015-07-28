@@ -641,12 +641,8 @@
       position: relative;
     }
     li.group-item{
-      & > .question-group + ul > .group-item{
-        padding-top: 0;
-      }
-      & > .question-group + ul > li:first-of-type.question-item{
-        padding-top: 36px;
-        &:before{
+      & > .question-group {
+        &:after{
           content: "";
           position: absolute;
           width: 0; 
@@ -654,8 +650,11 @@
           border-left: 40px solid transparent;
           border-right: 40px solid transparent;
           border-top: 16px solid @f7f8f8;
-          top: 0px;
-          left: 60px;
+          bottom: -16px;
+          left: 100px;
+        }
+        & + ul > .group-item{
+          padding-top: 0;
         }
       }
       &:after{
