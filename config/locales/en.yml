@@ -491,6 +491,7 @@ en:
       embed_chart_high: px high
       highlight_description: Chart Description
       edit_description: Edit Description
+      view_group_items: View Items in This Group
     titles:
       edit: "Edit %{model}"
       save: "Save %{model}"
@@ -587,6 +588,7 @@ en:
       error_while_save: An error occurred while saving
       insert_description_text: "[Please enter description text so you can see it here]"
       datatable_regex_search: "Search for text that is only in this column. You can use regular expressions like ^ for beginning of string and $ for end of string."
+      datatable_select_search: "Filter the items in the table by selecting an item from the list."
       jumpto_group: Jump to this group
       is_group: This is a group of questions
       is_subgroup: This is a subgroup of questions
@@ -855,6 +857,24 @@ en:
       no_files: The download files have not been generated yet. Please check back soon.
     sort:
       title: Sort Groups and Questions
+      explanation: |
+        This page allows you to sort all groups and questions into the order that you desire. 
+
+        If you have created groups, you can view and sort the items in that group by clicking on the button in the last column in the table.
+
+        The default sort is to put all groups first and then all questions that are not in groups after the groups. Once you have started to sort items, any item that is not sorted will appear after the sorted items.
+      move_explanation: Move the selected items after this item
+      move_placeholder: Select an Item
+      headers:
+        sort: Sort Order
+        type: Item Type
+        name: Item Name
+      breadcrumb_start: Main Items
+      breadcrumb_title: View all of the main items
+      breadcrumb_title_group: View the items in this group
+      main_items: "Below are the main items - groups that are not subgroups and questions that are not assigned to groups"
+      group_items: "Below are the groups and questions assigned to group '%{name}'"
+      all_types: All Item Types
   questions:
     index:
       title: "Edit Questions and their Answers"

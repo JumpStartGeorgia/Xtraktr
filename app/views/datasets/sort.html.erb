@@ -1,3 +1,106 @@
 <% title t('.title') %>
 
-<p>coming soon...</p>
+<%= simple_format(t('.explanation')) %>
+
+<hr />
+
+<% if @items.present? %>
+
+  <%= form_tag sort_dataset_path(@dataset), id: 'frm-dataset-sort', class: 'form-data-loader' do %>
+
+    <div id="items-header">
+      <h2>
+        <% if @group.nil? %>
+          <%= t('.breadcrumb_start') %>
+        <% else %>
+          <%= link_to t('.breadcrumb_start'), params.merge(group_id: nil), title: t('.breadcrumb_title') %>
+          <span class="separator">></span>
+          <% if @group.parent_id.nil? %>
+            <%= @group.title %>
+          <% else %>
+            <%= link_to @group.parent.title, params.merge(group_id: @group.parent.id), title: t('.breadcrumb_title_group') %>
+            <span class="separator">></span>
+            <%= @group.title %>
+          <% end %>
+        <% end %>
+      </h2>
+      <p>
+        <% if @group.nil? %>
+          <%= t('.main_items') %>
+        <% else %>
+          <%= t('.group_items', name: @group.title) %>
+        <% end %>
+      </p>
+    </div>
+
+    <div id="move-items">
+      <label>
+        <%= t('.move_explanation') %>
+        <select data-live-search="true" data-width="300px" class="selectpicker-sort" id="move-to" title="<%= t('.move_placeholder') %>">
+          <% @items.each do |item| %>
+            <% 
+              text = item.class == Group ? item.title : item.code_with_text
+              cls = item.class == Group ? item.parent_id.present? ? 'subgroup' : 'group' : 'question'
+            %>
+            <option class="<%= cls %>" value="<%= item.id %>"><%= text %></option>
+          <% end %>
+        </select>
+      </label>
+    </div>
+
+    <table id='dataset-sort' class="table table-striped table-hover table-nonfluid">
+      <thead>
+        <tr>
+          <th>
+            <%= link_to '#', class: 'btn btn-default btn-xs btn-select-all', :'data-state' => 'all' do %>
+              <span class="glyphicon glyphicon-ok" title="<%= t('helpers.links.select_all') %>"></span>
+            <% end %>
+          </th>
+          <th><%= t('.headers.sort') %></th>
+          <th><%= t('.headers.type') %></th>
+          <th><%= t('.headers.name') %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+          <td>
+          </td>
+          <td>
+            <label class="control-label">
+              <input type="text" placeholder="<%= t('datatable.search_footer', name: t('.headers.sort')) %>" class="form-control"/>
+              <div class="help-inline" title="<%= t('app.msgs.datatable_regex_search') %>"><div>?</div></div>
+            </label>
+          </td>
+          <td>
+            <label class="control-label">
+              <select>
+                <option value=""><%= t('.all_types') %></option>
+                <option><%= t('mongoid.models.question') %></option>
+                <option><%= t('mongoid.models.group') %></option>
+              </select>
+              <div class="help-inline" title="<%= t('app.msgs.datatable_select_search') %>"><div>?</div></div>
+            </label>
+          </td>
+          <td>
+            <label class="control-label">
+              <input type="text" placeholder="<%= t('datatable.search_footer', name: t('.headers.name')) %>" class="form-control"/>
+              <div class="help-inline" title="<%= t('app.msgs.datatable_regex_search') %>"><div>?</div></div>
+            </label>
+          </td>
+          <td>
+          </td>
+        </tr>
+      </tfoot>
+      <tbody>
+      </tbody>
+    </table>
+    <div id="hidden-table-inputs" style="display:none;"></div>
+
+  <% end %>
+
+<% else %>
+
+  <p><%= t('.no_items') %></p>
+
+<% end %>
