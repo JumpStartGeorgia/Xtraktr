@@ -193,12 +193,6 @@ function build_datatable(json){
   // add the table to the page
   $('#container-table table').html(table);
 
-  // compute how many columns need to have this sort
-  var sort_array = [];
-  for(var i=1; i<$('#container-table table > thead tr:last-of-type th').length; i++){
-    sort_array.push(i);
-  }
-
   //initalize the datatable
   datatables = [];
   $('#container-table table').each(function(){
@@ -209,9 +203,6 @@ function build_datatable(json){
         "searchPlaceholder": gon.datatable_search
       },
       "pagingType": "full_numbers",
-      "columnDefs": [
-          { "type": "formatted-num", targets: sort_array }
-      ],
       "tableTools": {
         "sSwfPath": "/assets/dataTables/extras/swf/copy_csv_xls.swf",
         "aButtons": [
