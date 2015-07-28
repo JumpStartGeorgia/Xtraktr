@@ -1,4 +1,5 @@
 var group_ids = [];
+var codebook, li_items, li_length;
 
 jQuery.fn.unique_items = function()
 {
@@ -60,42 +61,51 @@ jQuery.fn.removeHighlight = function() {
 };
 
 function run_search(){
-    // Retrieve the input field text and reset the count to zero
+  // Retrieve the input field text
   var filter = $('#codebook input#filter').val();
   var filter_by = $('#codebook input[type="radio"]:checked').val();
-  // remove all highlights
-  $("#codebook").removeHighlight();
+  var regexp = new RegExp(filter, "i");
+  var filter_selector;
 
-  // Loop through the comment list
+  // remove all highlights
+  codebook.removeHighlight();
+
+  // Loop through the list
   if (filter != undefined && filter != ''){
-    $("#codebook li.question-item").each(function(){
+    var i=0;
+    var ths;
+    for (i; i < li_length; i++){
+      ths = li_items[i];
       // determine what text to search in
-      var filter_selector = $(this).find('.details .default-search');
-      if (filter_by == 'q'){
-        filter_selector = $(this).find('.question');
-      }else if (filter_by == 'code'){
-        filter_selector = $(this).find('.question-code');
-      }else if (filter_by == 'ans'){
-        filter_selector = $(this).find('.answers ul');
+      filter_selector = $('.details .default-search', ths);
+      if (filter_by != ''){
+        if (filter_by == 'q'){
+          filter_selector = $('.question', ths);
+        }else if (filter_by == 'code'){
+          filter_selector = $('.question-code', ths);
+        }else if (filter_by == 'ans'){
+          filter_selector = $('.answers ul', ths);
+        }
       }
 
       // If the list item does not contain the text phrase, hide it
-      if ($(filter_selector).text().search(new RegExp(filter, "i")) < 0) {
-        $(this).hide();
+      if (filter_selector.text().search(regexp) < 0) {
+        $(ths).css({'display':'none'});
 
-      // Show the list item if the phrase matches
+      // Show the list item when the phrase matches
       } else {
-        $(filter_selector).highlight(filter);
-        $(this).show();
-      }
-    });
+        filter_selector.highlight(filter);
+        $(ths).css({'display':'list-item'});
+      }      
+    }
+
 
     // show group header if questions in group are showing
     // - get list of groups that need to be shown from visible questions
     var search_group_ids = [];
     // cannot use :visible selector for li might be nested in another li that is no visible
     // so have to look by using list-item
-    $('#codebook li.question-item[style*="list-item"] .question-link').each(function(){
+    $('li.question-item[style*="list-item"] .question-link', codebook).each(function(){
       if ($(this).data('group') != ''){
         search_group_ids.push($(this).data('group'));
       }
@@ -103,69 +113,73 @@ function run_search(){
         search_group_ids.push($(this).data('subgroup'));
       }
     });
+
     // - get unique list of group ids to show
     search_group_ids = $(search_group_ids).unique_items();
 
     // - show correct groups
-    $('#codebook li.group-item').each(function(){
+    $('li.group-item', codebook).each(function(){
       if (search_group_ids.indexOf($(this).data('id')) == -1){
         $(this).hide();
       }else{
         $(this).show();
       }
     });
+
     // - show correct jumpto options
-    $('#codebook select.selectpicker-group option').each(function(){
+    $('select.selectpicker-group option', codebook).each(function(){
       if (search_group_ids.indexOf($(this).attr('value')) == -1){
         $(this).prop('disabled', true);
       }else{
         $(this).prop('disabled', false);
       }
     });
-    $('#codebook select.selectpicker-group').selectpicker('refresh');
+    $('select.selectpicker-group', codebook).selectpicker('refresh');
 
   }else{
-    $("#codebook li.question-item, #codebook li.group-item").show();
-    $('#codebook select.selectpicker-group option').prop('disabled', false);
-    $('#codebook select.selectpicker-group').selectpicker('refresh');
+    $("li.question-item, li.group-item", codebook).show();
+    $('select.selectpicker-group option', codebook).prop('disabled', false);
+    $('select.selectpicker-group', codebook).selectpicker('refresh');
   }  
-
-
 }
 
 $(document).ready(function(){
-  $("#codebook input#filter").keyup(debounce(function() {
+  codebook = $("#codebook");
+  li_items = $("li.question-item", codebook);
+  li_length = li_items.length;
+
+  $("input#filter", codebook).keyup(debounce(function() {
     run_search();
   }, 500));
 
   // re-run search when filter option changes
-  $('#codebook input[type="radio"]').change(function(){
+  $('input[type="radio"]', codebook).change(function(){
     // if search text exists, run search
-    if ($('#codebook input#filter').val().length > 0){
+    if ($('input#filter', codebook).val().length > 0){
       run_search();
     }
   });
 
   // group jumpto 
-  $('#codebook select.selectpicker-group').selectpicker();
+  $('select.selectpicker-group', codebook).selectpicker();
 
   // get unique list of group ids
   // - used during search so knows which groups to turn on and off
-  $('#codebook select.selectpicker-group option').map(function(){
+  $('select.selectpicker-group option', codebook).map(function(){
     if ($(this).attr('value') != ''){
       return group_ids.push($(this).attr('value'));
     }
   })
 
   // when select group, go to it
-  $('#codebook select.selectpicker-group').change(function(){
-    $('body').animate({ scrollTop: $('#codebook .group-item[data-id="' + $(this).val() + '"]').offset().top - $('nav.navbar').height() }, 1500);
+  $('select.selectpicker-group', codebook).change(function(){
+    $('body').animate({ scrollTop: $('.group-item[data-id="' + $(this).val() + '"]', codebook).offset().top - $('nav.navbar').height() }, 1500);
     // reset select to default value
     $(this).selectpicker('val', '');
   });
   // when click on group under question link, go to it
-  $('#codebook .question-link-groups .question-link-group').click(function(){
-    $('body').animate({ scrollTop: $('#codebook .group-item[data-id="' + $(this).data('id') + '"]').offset().top - $('nav.navbar').height() }, 1500);
+  $('.question-link-groups .question-link-group', codebook).click(function(){
+    $('body').animate({ scrollTop: $('.group-item[data-id="' + $(this).data('id') + '"]', codebook).offset().top - $('nav.navbar').height() }, 1500);
   });
 });
 
