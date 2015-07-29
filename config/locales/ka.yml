@@ -860,9 +860,11 @@ ka:
       explanation: |
         This page allows you to sort all groups and questions into the order that you desire. 
 
-        If you have created groups, you can view and sort the items in that group by clicking on the button in the last column in the table.
+        By defualt, the question sort order is set to be the same as the order of the questions in the data file.
 
-        The default sort is to put all groups first and then all questions that are not in groups after the groups. Once you have started to sort items, any item that is not sorted will appear after the sorted items.
+        When groups are added, the group sort order is initially set to 0 so they appear before all questions.
+
+        If you have created groups, you can view and sort the items in that group by clicking on the button in the last column in the table.
       move_explanation: Move the selected items after this item
       move_placeholder: Select an Item
       headers:
