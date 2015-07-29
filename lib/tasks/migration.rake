@@ -80,6 +80,11 @@ namespace :migration do
     require "./db/migrate/populate_has_can_exclude_answers.rb"
   end
 
+  desc "add sort order value to groups and questions that do not have it"
+  task :add_sort_order => :environment do
+    require "./db/migrate/add_sort_order.rb"
+  end
+
 
 
 end

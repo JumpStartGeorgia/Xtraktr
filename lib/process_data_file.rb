@@ -88,7 +88,7 @@ module ProcessDataFile
         question_codes = [] # record the question codes from the questions file
         if File.exists?(file_questions)
           line_number = 0
-          CSV.foreach(file_questions) do |row|
+          CSV.foreach(file_questions).each_with_index do |row, i|
             line_number += 1
 
             # record the question code even if it is missing text
@@ -102,7 +102,8 @@ module ProcessDataFile
               # mongo does not allow '.' in key names, so replace with '|'
               self.questions_attributes = [{code: clean_text(row[0], format_code: true), 
                                             original_code: clean_text(row[0]), 
-                                            text_translations: {self.default_language => clean_text(row[1])}
+                                            text_translations: {self.default_language => clean_text(row[1])},
+                                            sort_order: i+1
                                           }]
             # else
             #   # if there is question code but no question text, save this
