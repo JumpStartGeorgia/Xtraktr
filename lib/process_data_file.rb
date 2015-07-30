@@ -586,7 +586,10 @@ private
       (0..headers.length-1).each do |index|
         code = questions[index][0]
         # only add answer if it exists
-        data_items.map{|x| x[index]}.select{|x| x.present?}.uniq.sort.each do |uniq_answer| 
+        # - if answers are all of same type, sort them, else do not
+        items = data_items.map{|x| x[index]}.select{|x| x.present?}.uniq
+        items.sort! if items.map{|x| x.class}.uniq.length == 1
+        items.each do |uniq_answer| 
           answers << [code, uniq_answer, uniq_answer]
         end
       end
