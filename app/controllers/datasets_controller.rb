@@ -337,14 +337,14 @@ class DatasetsController < ApplicationController
             @dataset.questions.add_can_download(download_true_ids)
             @dataset.questions.remove_can_download(download_false_ids)
 
-            @msg = t('app.msgs.question_exclude_saved')
+            @msg = t('app.msgs.mass_change_question_saved')
             @success = true
             if !@dataset.save
               @msg = @dataset.errors.full_messages
               @success = false
             end
           rescue Exception => e 
-            @msg = t('app.msgs.question_exclude_not_saved')
+            @msg = t('app.msgs.mass_change_question_not_saved')
             @success = false
 
             # send the error notification
@@ -394,7 +394,7 @@ class DatasetsController < ApplicationController
 
         }
         format.js { 
-          @msg = t('app.msgs.answer_exclude_saved')
+          @msg = t('app.msgs.mass_change_answer_saved')
           @success = true
           begin
             # cannot use simple update_attributes for if value was checked but is not now, 
@@ -418,7 +418,7 @@ class DatasetsController < ApplicationController
               @success = false
             end
           rescue Exception => e 
-            @msg = t('app.msgs.question_exclude_not_saved')
+            @msg = t('app.msgs.mass_change_answer_not_saved')
             @success = false
 
             # send the error notification
