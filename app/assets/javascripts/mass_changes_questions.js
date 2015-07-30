@@ -13,12 +13,12 @@ $(document).ready(function(){
   // catch form submit and pull out all form values from the datatable
   // the post will return will a status message
   $('form#frm-dataset-exclude-questions').submit( function() {
-    var form_data = datatable.$('input').serialize();
+    $('.data-loader').fadeIn('fast');
 
     $.ajax({
         type: "POST",
         dataType: 'script',
-        data: form_data,
+        data: datatable.$('input').serialize(),
         url: $(this).attr('action')
     });
 
@@ -66,14 +66,5 @@ $(document).ready(function(){
 
     return false;
   });
-
-  // when form submits, get all checkboxes from datatable and then submit
-  // - have to do this because loading data via js and so dom does not know about all inputs
-  $('form').submit(function(){
-    // get all inputs from table and add to form
-    datatable.$('input').each(function(){
-      $(this).clone().appendTo('form #hidden-table-inputs');
-    });
-  });  
 
 });

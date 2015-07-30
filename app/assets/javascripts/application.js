@@ -297,7 +297,7 @@ function debounce(func, wait, immediate) {
 }
 function notification(state, text, extra_class) {
   state = ['success', 'error', 'info'].indexOf(state) !== -1 ? state : 'error';  
-  return "<div class='notification " + state + " " + extra_class + "'><div class='figure'></div><div class='text'>" + text + "</div><div class='closeup'></div></div>";
+  return "<div class='message notification " + state + " " + extra_class + "'><div class='figure'></div><div class='text'>" + text + "</div><div class='closeup'></div></div>";
 }
 function navbarToggle() {
   if (!$(".navbar-toggle").hasClass('collapsed')) {

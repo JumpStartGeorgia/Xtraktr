@@ -2,21 +2,17 @@
   var type="success";
   var msg = '<%= @msg %>';
   if (<%= @success %> == false){
-    type="danger";
+    type="error";
   }
 
-  var html = '<div class="alert alert-'+ type +' fade in">' +
-          '<a href="#" data-dismiss="alert" class="close">×</a>' +
-           msg +
-          '</div>';
+  var html = notification(type, msg);
 
   // hide the loader img
   $('.data-loader').fadeOut('fast');
 
-  // show the message
-  $('#flash-message').fadeOut(300, function(){
-    $('#flash-message').html(html).fadeIn(300);
-  });
+  $('#page-wrapper > .content').prepend(html);
+  $('.content > .message').delay(3000).fadeOut(3000);
+
 
   // scroll to the top
   $('html,body').animate({
@@ -24,3 +20,4 @@
   }, 1000);
 
 });
+
