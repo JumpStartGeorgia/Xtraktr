@@ -294,7 +294,7 @@ class Dataset < CustomTranslation
       :title_translations, :description_translations, :methodology_translations, :source_translations, :source_url_translations,
       :reset_download_files, :category_mappers_attributes, :category_ids, :permalink
 
-  attr_accessor :category_ids
+  attr_accessor :category_ids, :var_arranged_items, :check_question_exclude_status
 
   TYPE = {:onevar => 'onevar', :crosstab => 'crosstab'}
 
@@ -446,6 +446,18 @@ class Dataset < CustomTranslation
   after_save :update_stats
   before_save :set_public_at
   before_save :check_if_dirty
+  before_save :check_question_excludes
+
+
+  # when saving mass changes, callbacks in question model not being called so forcing the call here
+  def check_question_excludes
+    if self.check_question_exclude_status.present? && self.check_question_exclude_status == true
+      self.questions.each do |q|
+        q.update_flags
+        q.update_stats
+      end
+    end
+  end
 
   # this is used in the form to set the categories
   def set_category_ids
