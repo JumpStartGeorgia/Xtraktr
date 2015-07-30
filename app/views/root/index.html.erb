@@ -50,18 +50,6 @@
           </div>
       </div>
     </div>
-    <% if !@is_xtraktr %>
-      <div class="banner banner2">
-        <div class="boxic">
-          <%= link_to explore_time_series_dashboard_path(id: @wms_id), class: 'wms' do %>
-            <div class="figure">
-              <span class="title"><%= t('.wms_title').html_safe %></span>
-              <span class="slogan"><%= t('.wms_slogan').html_safe %></span>
-            </div>
-          <% end %>
-        </div>
-      </div>
-    <% end %>
     <div class="recents">
       <div class="boxic">
         <div class="header">
@@ -98,44 +86,35 @@
     </div>
     <div class="recents">
       <div class="boxic">
-        <% if @is_xtraktr %>
-            <div class="header">
-              <h2><%= t('.header_latest_time_series') %></h2>
-              <div class="cell"><div class="line"></div></div>
-            </div>
-            <% if @time_series.present? %>
-              <div class="t">
-                <% for i in 0..2 %>
-                  <div class="r">
-                    <% if i < @time_series.length %>
-                      <% time_series = @time_series[i] %>
-                      <div class="c">
-                          <%= link_to time_series.title, explore_time_series_dashboard_path(time_series) %>
-                          <%= "<div class='desc'>#{truncate(strip_tags_nbsp(time_series.description), length: 90, separator: ' ')}</div>".html_safe if time_series.description.present? %>
-                      </div>
-                    <% end %>
-                    <% if i+3 < @time_series.length %>
-                      <% time_series = @time_series[i+3] %>
-                      <div class="c c2">
-                          <%= link_to time_series.title, explore_time_series_dashboard_path(time_series) %>
-                          <%= "<div class='desc'>#{truncate(strip_tags_nbsp(time_series.description), length: 90, separator: ' ')}</div>".html_safe if time_series.description.present? %>
-                      </div>
-                    <% end %>
+        <div class="header">
+          <h2><%= t('.header_latest_time_series') %></h2>
+          <div class="cell"><div class="line"></div></div>
+        </div>
+        <% if @time_series.present? %>
+          <div class="t">
+            <% for i in 0..2 %>
+              <div class="r">
+                <% if i < @time_series.length %>
+                  <% time_series = @time_series[i] %>
+                  <div class="c">
+                      <%= link_to time_series.title, explore_time_series_dashboard_path(time_series) %>
+                      <%= "<div class='desc'>#{truncate(strip_tags_nbsp(time_series.description), length: 90, separator: ' ')}</div>".html_safe if time_series.description.present? %>
+                  </div>
+                <% end %>
+                <% if i+3 < @time_series.length %>
+                  <% time_series = @time_series[i+3] %>
+                  <div class="c c2">
+                      <%= link_to time_series.title, explore_time_series_dashboard_path(time_series) %>
+                      <%= "<div class='desc'>#{truncate(strip_tags_nbsp(time_series.description), length: 90, separator: ' ')}</div>".html_safe if time_series.description.present? %>
                   </div>
                 <% end %>
               </div>
-            <% else %>
-              <p>
-                <%= t('.no_time_series') %>
-              </p>
             <% end %>
+          </div>
         <% else %>
-            <%= link_to explore_time_series_dashboard_path(id: @wms_id), class: 'wms' do %>
-              <div class="figure">
-                <span class="title"><%= t('.wms_title').html_safe %></span>
-                <span class="slogan"><%= t('.wms_slogan').html_safe %></span>
-              </div>
-            <% end %>
+          <p>
+            <%= t('.no_time_series') %>
+          </p>
         <% end %>
       </div>
     </div>
