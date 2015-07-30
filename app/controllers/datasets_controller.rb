@@ -337,6 +337,9 @@ class DatasetsController < ApplicationController
             @dataset.questions.add_can_download(download_true_ids)
             @dataset.questions.remove_can_download(download_false_ids)
 
+            # force question callbacks
+            @dataset.check_question_exclude_status = true
+
             @msg = t('app.msgs.mass_change_question_saved')
             @success = true
             if !@dataset.save
@@ -412,6 +415,9 @@ class DatasetsController < ApplicationController
             can_exclude_false_ids = answers.map{|x| x.values}.flatten.select{|x| x[:can_exclude] != 'true'}.map{|x| x[:id]}
             @dataset.questions.add_answer_can_exclude(can_exclude_true_ids)
             @dataset.questions.remove_answer_can_exclude(can_exclude_false_ids)
+
+            # force question callbacks
+            @dataset.check_question_exclude_status = true
 
             if !@dataset.save
               @msg = @dataset.errors.full_messages
