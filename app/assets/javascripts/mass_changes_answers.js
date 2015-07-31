@@ -51,16 +51,17 @@ $(document).ready(function(){
   // else, desfelect all questions that match the current filter
   // - if not filter -> then all questions are deselected
   $('a.btn-select-all').click(function(){
-    type = $(this).attr('data-type');
-    if ($(this).attr('data-state') == 'all'){
-      $(datatable.$('tr', {"filter": "applied"})).find('td :checkbox.' + type + '-input').each(function () {
-        $(this).prop('checked', true);
-      });
+    var i=0;
+    var type = $(this).attr('data-type');
+    var rows = $(datatable.$('tr', {"filter": "applied"})).find('td :checkbox.' + type + '-input');
+    var rows_length = rows.length;
+    var state_all = $(this).attr('data-state') == 'all';
+    for(i;i<rows_length;i++){
+      $(rows[i]).prop('checked', state_all).trigger('change');
+    }
+    if (state_all){
       $(this).attr('data-state', 'none');
     }else{
-      $(datatable.$('tr', {"filter": "applied"})).find('td :checkbox.' + type + '-input').each(function () {
-        $(this).prop('checked', false);
-      });
       $(this).attr('data-state', 'all');
     }
 
