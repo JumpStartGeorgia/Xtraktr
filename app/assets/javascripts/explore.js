@@ -24,10 +24,10 @@ function map_chart_height(json){
   if (json.question.group != undefined && json.question.group.include_in_charts){
     chart_height += 24;
   }
-  if (json.broken_down_by.group != undefined && json.broken_down_by.group.include_in_charts){
+  if (json.broken_down_by != undefined && json.broken_down_by.group != undefined && json.broken_down_by.group.include_in_charts){
     chart_height += 24;
   }
-  if (json.filtered_by.group != undefined && json.filtered_by.group.include_in_charts){
+  if (json.filtered_by != undefined && json.filtered_by.group != undefined && json.filtered_by.group.include_in_charts){
     chart_height += 24;
   }
 
@@ -49,7 +49,7 @@ function pie_chart_height(json){
   if (json.question.group != undefined && json.question.group.include_in_charts){
     chart_height += 24;
   }
-  if (json.filtered_by.group != undefined && json.filtered_by.group.include_in_charts){
+  if (json.filtered_by != undefined && json.filtered_by.group != undefined && json.filtered_by.group.include_in_charts){
     chart_height += 24;
   }
 
@@ -74,10 +74,10 @@ function crosstab_chart_height(json){
   if (json.question.group != undefined && json.question.group.include_in_charts){
     chart_height += 24;
   }
-  if (json.broken_down_by.group != undefined && json.broken_down_by.group.include_in_charts){
+  if (json.broken_down_by != undefined && json.broken_down_by.group != undefined && json.broken_down_by.group.include_in_charts){
     chart_height += 24;
   }
-  if (json.filtered_by.group != undefined && json.filtered_by.group.include_in_charts){
+  if (json.filtered_by != undefined && json.filtered_by.group != undefined && json.filtered_by.group.include_in_charts){
     chart_height += 24;
   }
 
@@ -100,7 +100,7 @@ function time_series_chart_height(json){
   if (json.question.group != undefined && json.question.group.include_in_charts){
     chart_height += 24;
   }
-  if (json.filtered_by.group != undefined && json.filtered_by.group.include_in_charts){
+  if (json.filtered_by != undefined && json.filtered_by.group != undefined && json.filtered_by.group.include_in_charts){
     chart_height += 24;
   }
 
