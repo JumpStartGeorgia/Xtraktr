@@ -884,7 +884,7 @@ ka:
         You can sort groups and questions using two methods:
 
         1) Drag and Drop - Simply drag the row to the desired position.
-        2) Select & Checkboxes - Use the checkboxes to indciate which question(s) you want to move and then use the select box above the table to indicate where to move the questions to. 
+        2) Select & Checkboxes - Use the checkboxes to indciate which row(s) you want to move and then use the select box above the table to indicate where to move the row(s) to. 
   questions:
     index:
       title: "კითხვების და მათი პასუხების შესწორება"
