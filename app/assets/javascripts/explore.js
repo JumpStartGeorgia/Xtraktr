@@ -21,15 +21,6 @@ function map_chart_height(json){
   if (json.filtered_by && json.filtered_by.group  && json.filtered_by.group.include_in_charts){
     chart_height += 24;
   }
-  if (json.question.group != undefined && json.question.group.include_in_charts){
-    chart_height += 24;
-  }
-  if (json.broken_down_by != undefined && json.broken_down_by.group != undefined && json.broken_down_by.group.include_in_charts){
-    chart_height += 24;
-  }
-  if (json.filtered_by != undefined && json.filtered_by.group != undefined && json.filtered_by.group.include_in_charts){
-    chart_height += 24;
-  }
 
   return chart_height;
 }
@@ -44,12 +35,6 @@ function pie_chart_height(json){
     chart_height += 24;
   }
   if (json.filtered_by && json.filtered_by.group && json.filtered_by.group.include_in_charts){
-    chart_height += 24;
-  }
-  if (json.question.group != undefined && json.question.group.include_in_charts){
-    chart_height += 24;
-  }
-  if (json.filtered_by != undefined && json.filtered_by.group != undefined && json.filtered_by.group.include_in_charts){
     chart_height += 24;
   }
 
@@ -71,15 +56,6 @@ function crosstab_chart_height(json){
   if (json.filtered_by && json.filtered_by.group  && json.filtered_by.group.include_in_charts){
     chart_height += 24;
   }
-  if (json.question.group != undefined && json.question.group.include_in_charts){
-    chart_height += 24;
-  }
-  if (json.broken_down_by != undefined && json.broken_down_by.group != undefined && json.broken_down_by.group.include_in_charts){
-    chart_height += 24;
-  }
-  if (json.filtered_by != undefined && json.filtered_by.group != undefined && json.filtered_by.group.include_in_charts){
-    chart_height += 24;
-  }
 
   return chart_height;
 }
@@ -95,12 +71,6 @@ function time_series_chart_height(json){
     chart_height += 24;
   }
   if (json.filtered_by && json.filtered_by.group  && json.filtered_by.group.include_in_charts){
-    chart_height += 24;
-  }
-  if (json.question.group != undefined && json.question.group.include_in_charts){
-    chart_height += 24;
-  }
-  if (json.filtered_by != undefined && json.filtered_by.group != undefined && json.filtered_by.group.include_in_charts){
     chart_height += 24;
   }
 
@@ -328,8 +298,8 @@ function build_highmap(shape_question_code, adjustable_max, json_map_set, chart_
       colorAxis: {
         min: 0,
         max: max,
-        minColor: '#d1e5d5',
-        maxColor: '#477c52',
+        minColor: '#d2f1f9',
+        maxColor: '#0086a5',
         labels: {
             formatter: function () {
               return this.value + '%';
@@ -361,8 +331,8 @@ function build_highmap(shape_question_code, adjustable_max, json_map_set, chart_
           borderWidth: 2,
           states: {
               hover: {
-                  // color: '#0086a5',
-                  borderColor: '#d8bc48',
+                  color: '#0086a5',
+                  borderColor: '#3c4352',
                   borderWidth: 2
               }
           }
@@ -382,8 +352,8 @@ function build_highmap(shape_question_code, adjustable_max, json_map_set, chart_
           borderWidth: 2,
           states: {
             hover: {
-              // color: '#0086a5',
-              borderColor: '#d8bc48',
+              color: '#0086a5',
+              borderColor: '#3c4352',
               borderWidth: 2
             }
           },
@@ -466,7 +436,7 @@ function build_highmap(shape_question_code, adjustable_max, json_map_set, chart_
   add_highlight_description_button($(selector_path + ' #' + map_id), json_map_set.embed_id);
 
   // add disclaimer link
-  // add_disclaimer_link($(selector_path + ' #' + map_id));
+  add_disclaimer_link($(selector_path + ' #' + map_id));
 }
 
 
@@ -537,7 +507,7 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
     legend: {
         title: {
           text: broken_down_by_code,
-          style: { "color": "#d67456", "fontSize": "18px", "fontFamily":"'sourcesans_pro_sb', 'sans-serif'", "fontWeight": "normal" }
+          style: { "color": "#00adee", "fontSize": "18px", "fontFamily":"'sourcesans_pro_sb', 'sans-serif'", "fontWeight": "normal" }
         },
         useHTML: true,
         layout: 'vertical',
@@ -630,7 +600,7 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
   add_highlight_description_button($(selector_path + ' #' + chart_id), json_chart.embed_id);
 
   // add disclaimer link
-  // add_disclaimer_link($(selector_path + ' #' + chart_id));
+  add_disclaimer_link($(selector_path + ' #' + chart_id));
 }
 
 
@@ -815,7 +785,7 @@ function build_pie_chart(json_chart, chart_height){
   add_highlight_description_button($(selector_path + ' #' + chart_id), json_chart.embed_id);
 
   // add disclaimer link
-  // add_disclaimer_link($(selector_path + ' #' + chart_id));
+  add_disclaimer_link($(selector_path + ' #' + chart_id));
 }
 
 
@@ -954,7 +924,7 @@ function build_time_series_chart(json_chart, chart_height){
   add_highlight_description_button($(selector_path + ' #' + chart_id), json_chart.embed_id);
 
   // add disclaimer link
-  // add_disclaimer_link($(selector_path + ' #' + chart_id));
+  add_disclaimer_link($(selector_path + ' #' + chart_id));
 }
 
 
