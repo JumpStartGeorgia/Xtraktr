@@ -1,19 +1,19 @@
-var datatable, table_id, list_id, hidden_id, select_id;
+//= require jquery.ui.sortable
+
+
+var datatable, table_id, list_id, hidden_id, select_id, move_start_index, move_end_index;
 var is_dirty = false;
 
   // make sure the correct row is highlight from the drop down
   function highlight_move_after_row(){
-    var index = $('option:selected', select_id).index()-1;
-    var row_index = index - datatable.page.info().start;
+    var id = $('option:selected', select_id).val();
 
     // remove previous selection
     $('tbody tr').removeClass('move-after');
 
     // add class to selected item
-    // - is possible that row index is negative or greater than the number of rows on page -> ignore
-    if (row_index > -1 && row_index < datatable.page.info().length){
-      $('tbody tr:eq(' + row_index + ')').addClass('move-after');
-    }
+    $('tbody tr > td > input[value="' + id + '"]').closest('tr').addClass('move-after');
+    
   }
 
 
@@ -131,88 +131,72 @@ $(document).ready(function(){
     var base_index;
     var i=0;
     var value = select_id.val();
-    var items_to_move = $(':checkbox:checked', table_id);
+    var items_to_move = $(datatable.$('tr')).find('td :checkbox:checked');
     var items_to_move_length = items_to_move.length;
-    var row_index;
-    var row_indexes = [];
-    var index_before_offset = 0;
-    var base_index_offset;
-
-
-    console.log('-----------');
-    for(i;i<items_to_move_length;i++){
-      console.log(' -- ');
-
-      // get base_index because it might have moved
-      base_index = $('option:selected', select_id).index()-1;
-      console.log('base = ' + base_index + '; ' + $('option:selected', select_id).text() + '; ' + $('option:selected', select_id).attr('value'));
-      console.log($('tbody tr:eq(' + base_index + ')', table_id))
-
-      // get index to the row this checkbox is in
-      row_index = $(items_to_move[i]).closest('tr').index();
-
-      // if the row index is < base index, need to decrease row index to account for base index being moved up
-      // if row index > base index, need to add a base index offset
-      if (row_index < base_index){
-        row_index -= index_before_offset;
-        row_indexes.push(base_index - index_before_offset + i);
-        index_before_offset += 1;
-        base_index_offset = 0;
-      }else{
-        base_index_offset = 1;
-        row_indexes.push(base_index + base_index_offset + i);
-      }
-
-
-      console.log('row = ' + row_index + '; ' + $('option[value="' + $(items_to_move[i]).val() + '"]').text() + '; ' + $(items_to_move[i]).val());
-      console.log($('tbody tr:eq(' + row_index + ')', table_id))
-
-      // move it to after the base_index
-      // -- drop down
-      $('option:eq(' + (row_index + 1) + ')', select_id).insertAfter($('option:eq(' + (base_index + 1 + i) + ')', select_id));
-      // use selectpicker refresh to redraw the list in the correct order - happens after this loop is done
-      // $('li:eq(' + row_index + ')', list_id).insertAfter($('li:eq(' + (base_index + i) + ')', list_id));
-      // -- table row
-      //$('tbody tr:eq(' + row_index + ')', table_id).insertAfter($('tbody tr:eq(' + (base_index + i) + ')', table_id));
-      console.log('gon base index = ');
-      console.log(gon.datatable_json[base_index+base_index_offset+i]);
-      console.log('gon move index = ');
-      console.log(gon.datatable_json[row_index]);
-      gon.datatable_json.splice((base_index+base_index_offset+i), 0, gon.datatable_json.splice(row_index,1)[0]);
-
-      // -- hidden inputs
-      $('div:eq(' + row_index + ')', hidden_id).insertAfter($('div:eq(' + (base_index + i) + ')', hidden_id));
-
-      // // de-select
-      // // - trigger checkbox change so list is updated
-      // $(items_to_move[i]).prop('checked', false).trigger('change');
+    var items_to_move_ids = [];
+    var items_to_move_indexes = [];
+    var select_items =[];
+    var json_items = [];
+    var hidden_items = [];
+    // get the ids of the select items
+    for (i;i<items_to_move_length;i++){
+      items_to_move_ids.push($(items_to_move[i]).val());
+      items_to_move_indexes.push($('div[data-id="' + items_to_move_ids[i] + '"]', hidden_id).index());
     }
+
+    i = 0;
+
+    // pull out all records that need to be moved
+    for (i;i<items_to_move_length;i++){
+      // select
+      select_items.push($($('option', select_id)[items_to_move_indexes[i] + 1 - i]).remove());
+
+      // json data
+      json_items.push(gon.datatable_json.splice(items_to_move_indexes[i]-i,1)[0]);
+
+      // hidden
+      hidden_items.push($($('div', hidden_id)[items_to_move_indexes[i] - i]).remove());
+    }
+
+    // then insert them all in after the base index
+    i = 0;
+    base_index = $('option:selected', select_id).index()-1;
+    for (i;i<items_to_move_length;i++){
+      // select
+      $(select_items[i]).insertAfter($('option:eq(' + (base_index + 1 + i) + ')', select_id));
+
+      // json data
+      gon.datatable_json.splice((base_index+1+i), 0, json_items[i]);
+
+      // hidden
+      $(hidden_items[i]).insertAfter($('div:eq(' + (base_index + i) + ')', hidden_id));
+    }
+
     // reset the select value and refresh the selectpicker
     select_id.val('');
     select_id.selectpicker('refresh');
-    // $('tbody tr').removeClass('move-after');
     // redraw the table, keeping the current pagination
-    // datatable.rows().invalidate().draw(false);
     datatable.clear();
     datatable.rows.add(gon.datatable_json);
     datatable.draw(false);
 
-
-    // re-highlight the table rows for a moment so user can see what happened
-    row_index = $('option[value="' + value + '"]', select_id).index() - 1 - datatable.page.info().start;
-    console.log('row index = ' + row_index + '; page length = ' + datatable.page.info().length);
-
-    // add class to selected item
-    // - is possible that row index is negative or greater than the number of rows on page -> ignore
-    if (row_index > -1 && row_index < datatable.page.info().length){
-      $('tbody tr:eq(' + row_index + ')', table_id).addClass('move-after');
+    console.log('selected value was ' + value);
+    // if the selected value is showing the table, highlight it
+    var tr = $('tbody tr > td > input[value="' + value + '"]').closest('tr');
+    if (tr.length == 1){
+      tr.addClass('move-after');
+      // add to-move for the rows following the move after
+      // if the row is showing
+      var i=0;
+      var index;
+      for(i;i<items_to_move_length;i++){
+        index = tr.index() + 1 + i;
+        if (index < datatable.page.info().length){
+          $('tbody tr:eq(' + index + ')', table_id).addClass('to-move');
+        }
+      }
     }
-    var i=0;
-    var row_indexes_length = row_indexes.length;
-    console.log(row_indexes);
-    for (i;i<row_indexes_length;i++){
-      $('tbody tr:eq(' + row_indexes[i] + ')', table_id).addClass('to-move');
-    }
+
     // now turn off
     setTimeout(function(){
       $('tbody tr').removeClass('move-after').removeClass('to-move');
@@ -220,6 +204,9 @@ $(document).ready(function(){
 
 
   });
+
+
+
 
   // // when someone changes something, record that the form is dirty
   // $('form input.sort-order').change(function () {
@@ -253,5 +240,63 @@ $(document).ready(function(){
     return false;    
   });
 
+
+  // make rows drag/drop
+  $('tbody', table_id).sortable({
+    cursor: "move",
+    // record the start index
+    start: function(e, ui){
+      console.log('-----------');
+      console.log('start!');
+      move_start_index = $(ui.item).index();
+      console.log('start at ' + move_start_index);
+      $(ui.item).addClass('to-move');
+    },
+    // if the sorting stops, turn off the highlight
+    deactivate: function(e,ui){
+      $(ui.item).removeClass('to-move');
+    },
+    // record the end index and then update all of the other items to match
+    update: function(e,ui){
+      console.log('update');
+      move_end_index = $(ui.item).index();
+      console.log('end at ' + move_end_index);
+      console.log('-----------');
+
+      // adjust indexes based on pagination values
+      var page = datatable.page.info();
+      if (page.start != 0){
+        move_start_index += page.start;
+        move_end_index += page.start;
+      }
+      console.log('start index after adjustment ' + move_start_index);
+      console.log('end index after adjustment ' + move_end_index);
+
+      // -- drop down
+      $('option:eq(' + (move_start_index + 1) + ')', select_id).insertAfter($('option:eq(' + (move_end_index + 1)  + ')', select_id));
+
+      // -- table row
+      gon.datatable_json.splice((move_end_index), 0, gon.datatable_json.splice(move_start_index,1)[0]);
+
+      // -- hidden inputs
+      $('div:eq(' + move_start_index + ')', hidden_id).insertAfter($('div:eq(' + move_end_index + ')', hidden_id));
+
+      // reset the select value and refresh the selectpicker
+      select_id.val('');
+      select_id.selectpicker('refresh');
+      // redraw the table, keeping the current pagination
+      datatable.clear();
+      datatable.rows.add(gon.datatable_json);
+      datatable.draw(false);
+
+      // highlight row that was moved so user can see what they did
+      $('tbody tr:eq(' + (move_end_index-page.start) + ')', table_id).addClass('to-move');
+      // now turn off
+      setTimeout(function(){
+        $('tbody tr').removeClass('move-after').removeClass('to-move');
+      }, 2000);
+
+    }
+  });
 
 });
