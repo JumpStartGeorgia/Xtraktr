@@ -87,6 +87,8 @@ class GroupsController < ApplicationController
       @dataset.questions.assign_group(selected_ids, @group.id)
       @dataset.questions.assign_group(not_selected_ids, @group.parent_id.present? ? @group.parent_id : nil)
 
+      @dataset.force_group_validation = true
+
       respond_to do |format|
         if @dataset.save
           format.html { redirect_to dataset_groups_path, flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.group'))} }
@@ -119,6 +121,8 @@ class GroupsController < ApplicationController
       not_selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] != 'true'}.map{|k,v| v[:id]}
       @dataset.questions.assign_group(selected_ids, @group.id)
       @dataset.questions.assign_group(not_selected_ids, @group.parent_id.present? ? @group.parent_id : nil)
+
+      @dataset.force_group_validation = true
 
       respond_to do |format|
         if @dataset.save

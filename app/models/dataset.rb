@@ -361,7 +361,7 @@ class Dataset < CustomTranslation
       :title_translations, :description_translations, :methodology_translations, :source_translations, :source_url_translations,
       :reset_download_files, :category_mappers_attributes, :category_ids, :permalink, :groups_attributes
 
-  attr_accessor :category_ids, :var_arranged_items, :check_question_exclude_status
+  attr_accessor :category_ids, :var_arranged_items, :check_question_exclude_status, :force_group_validation
 
   TYPE = {:onevar => 'onevar', :crosstab => 'crosstab'}
 
@@ -508,6 +508,7 @@ class Dataset < CustomTranslation
   # Callbacks
 
   after_initialize :set_category_ids
+  before_validation :check_group_validatoin
   before_create :process_file
   after_create :create_quick_data_downloads
   before_save :create_urls_object
@@ -526,6 +527,15 @@ class Dataset < CustomTranslation
       self.questions.each do |q|
         q.update_flags
         q.update_stats
+      end
+    end
+  end
+
+
+  def check_group_validation
+    if self.force_group_validation == true
+      self.groups.each do |group|
+        group.validate_translations
       end
     end
   end
@@ -837,25 +847,30 @@ class Dataset < CustomTranslation
       # get the groups
       # - if group id provided, get subgroups in that group
       # - else get main groups
+      groups = []
       if options[:group_id].present?
-        items << self.groups.sub_groups(options[:group_id])
+        groups << self.groups.sub_groups(options[:group_id])
       else
-        items << self.groups.main_groups
+        groups << self.groups.main_groups
       end
-      items.flatten!
+      groups.flatten!
 
       # now for each group, get its subgroups/questions and sort them
       if options[:include_subgroups] == true
         Rails.logger.debug "#{indent}=============== -- include subgroups"
         group_options = options.dup
 
-        items.each do |group|
+        groups.each do |group|
           Rails.logger.debug "#{indent}>>>>>>>>>>>>>>> #{group.title}"
           Rails.logger.debug "#{indent}=============== checking #{group.title} for subgroups"
 
           # get all items for this group (subgroup/questions)
           group_options[:group_id] = group.id
           group.var_arranged_items = build_arranged_items(group_options)
+          # only add the group if it has content
+          if group.var_arranged_items.present?
+            items << group
+          end
           Rails.logger.debug "#{indent}>>>>>>>>>>>>>> ----- added #{group.var_arranged_items.length} items for #{group.title}"
 
         end
