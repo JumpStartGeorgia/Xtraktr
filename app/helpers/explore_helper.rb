@@ -14,16 +14,14 @@ module ExploreHelper
 
       if item.class == Group
         # add group
-        puts "adding group #{item.title}"
         html << generate_explore_group_option(item)
 
         # if have items, add them
-        options[:group_type] = options[:group_type].present? ? 'subgroup' : 'group'
+        options[:group_type] = group_type.present? ? 'subgroup' : 'group'
         html << generate_explore_options(item.arranged_items, options)
 
       elsif item.class == Question
         # add question
-        puts "adding question #{item.text}"
         html << generate_explore_question_option(item, skip_content, selected_code, disabled_code, disabled_code2, group_type)
       end
     end

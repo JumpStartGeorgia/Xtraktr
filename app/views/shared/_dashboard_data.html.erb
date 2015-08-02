@@ -4,7 +4,7 @@
   is_admin_page = request.path == dataset_path(@dataset)
   show_share = true if show_share.nil?
   show_private_questions = false if show_private_questions.nil?
-
+logger.debug "======= show_private_questions = #{show_private_questions}"
   subnav_left render(partial: 'shared/language_switcher', locals: {langs: @dataset.language_objects, current_locale: @dataset.current_locale, share: show_share})
 
 -%>
@@ -153,7 +153,7 @@
     <div role="tabpanel" class="tab-pane fade <%= codebook_active[:panel] %>" id="codebook">
       <% 
         question_type = show_private_questions == true ? 'analysis_with_exclude_questions' : 'analysis'
-        items = @dataset.arranged_items(question_type: 'analysis_with_exclude_questions', include_groups: true, include_subgroups: true, include_questions: true)
+        items = @dataset.arranged_items(question_type: question_type, include_groups: true, include_subgroups: true, include_questions: true)
       %>
       <div id="codebook-search">
         <input type="search" class="codebook-search" id="filter" value="" placeholder="<%= t('helpers.search') %>" />
