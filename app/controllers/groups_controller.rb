@@ -81,17 +81,29 @@ class GroupsController < ApplicationController
     if @dataset.present?
       @group = @dataset.groups.new(params[:group])
 
-      # assign the group ids to the questions
-      selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] == 'true'}.map{|k,v| v[:id]}
-      not_selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] != 'true'}.map{|k,v| v[:id]}
-      @dataset.questions.assign_group(selected_ids, @group.id)
-      @dataset.questions.assign_group(not_selected_ids, @group.parent_id.present? ? @group.parent_id : nil)
+      # check if group is valid
+      # - if not, stop
+      if @group.valid?
+        # assign the group ids to the questions
+        selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] == 'true'}.map{|k,v| v[:id]}
+        not_selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] != 'true'}.map{|k,v| v[:id]}
+        @dataset.questions.assign_group(selected_ids, @group.id)
+        @dataset.questions.assign_group(not_selected_ids, @group.parent_id.present? ? @group.parent_id : nil)
 
-      respond_to do |format|
-        if @dataset.save
-          format.html { redirect_to dataset_groups_path, flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.group'))} }
-          format.json { render json: @group, status: :created, location: @group }
-        else
+        respond_to do |format|
+          if @dataset.save
+            format.html { redirect_to dataset_groups_path, flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.group'))} }
+            format.json { render json: @group, status: :created, location: @group }
+          else
+            logger.debug "!!!!!!!!!!! error = #{@dataset.errors.messages.inspect}"
+            add_common_options
+
+            format.html { render action: "new" }
+            format.json { render json: @group.errors, status: :unprocessable_entity }
+          end
+        end
+      else
+        respond_to do |format|
           add_common_options
 
           format.html { render action: "new" }
@@ -114,17 +126,28 @@ class GroupsController < ApplicationController
       @group = @dataset.groups.find(params[:id])
       @group.assign_attributes(params[:group])
 
-      # assign the group ids to the questions
-      selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] == 'true'}.map{|k,v| v[:id]}
-      not_selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] != 'true'}.map{|k,v| v[:id]}
-      @dataset.questions.assign_group(selected_ids, @group.id)
-      @dataset.questions.assign_group(not_selected_ids, @group.parent_id.present? ? @group.parent_id : nil)
+      # check if group is valid
+      # - if not, stop
+      if @group.valid?
+        # assign the group ids to the questions
+        selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] == 'true'}.map{|k,v| v[:id]}
+        not_selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] != 'true'}.map{|k,v| v[:id]}
+        @dataset.questions.assign_group(selected_ids, @group.id)
+        @dataset.questions.assign_group(not_selected_ids, @group.parent_id.present? ? @group.parent_id : nil)
 
-      respond_to do |format|
-        if @dataset.save
-          format.html { redirect_to dataset_groups_path, flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.group'))} }
-          format.json { head :no_content }
-        else
+        respond_to do |format|
+          if @dataset.save
+            format.html { redirect_to dataset_groups_path, flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.group'))} }
+            format.json { head :no_content }
+          else
+            add_common_options
+
+            format.html { render action: "edit" }
+            format.json { render json: @group.errors, status: :unprocessable_entity }
+          end
+        end
+      else
+        respond_to do |format|
           add_common_options
 
           format.html { render action: "edit" }

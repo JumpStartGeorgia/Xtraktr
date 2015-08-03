@@ -564,6 +564,8 @@ ka:
       mass_change_question_not_saved: "An error occurred while saving the question settings."
       mass_change_answer_saved: "Answer settings were saved."
       mass_change_answer_not_saved: "An error occurred while saving the answer settings."
+      sort_saved: "Sort orders were saved."
+      sort_not_saved: "An error occurred while saving the sort orders."
       mapping_saved: "კითხვა წარმატებით იქნა რუკაზე დასატანი"
       mapping_not_save: "რუკაზე კითხვის დატანის დროს წარმოიშვა პრობლემა"
       mapping_deleted: "კითხვა აღარ არის რუკაზე დასატანი"
@@ -860,7 +862,7 @@ ka:
 
         By defualt, the question sort order is set to be the same as the order of the questions in the data file.
 
-        When groups are added, the group sort order is initially set to 0 so they appear before all questions.
+        When groups are added, the group sort order is initially set so the groups appear at the top of the list.
 
         If you have created groups, you can view and sort the items in that group by clicking on the button in the last column in the table.
       move_explanation: Move the selected items after this item
@@ -875,6 +877,12 @@ ka:
       main_items: "Below are the main items - groups that are not subgroups and questions that are not assigned to groups"
       group_items: "Below are the groups and questions assigned to group '%{name}'"
       all_types: All Item Types
+      form_header: Instructions
+      form_instructions: |
+        You can sort groups and questions using two methods:
+
+        1) Drag and Drop - Simply drag the row to the desired position.
+        2) Select & Checkboxes - Use the checkboxes to indciate which row(s) you want to move and then use the select box above the table to indicate where to move the row(s) to. 
   questions:
     index:
       title: "კითხვების და მათი პასუხების შესწორება"

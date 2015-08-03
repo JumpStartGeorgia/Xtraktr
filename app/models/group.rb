@@ -16,20 +16,20 @@ class Group < CustomTranslation
 
   #############################
   attr_accessible :title, :description, :title_translations, :description_translations, :include_in_charts, :parent_id, :sort_order
-#  attr_accessor :questions, :sub_groups, :var_arranged_items
   attr_accessor :var_arranged_items
 
   #############################
   # Validations
+  validate :validate_translations
 
   # validate the translation fields
   # text field needs to be validated for presence
   def validate_translations
-#    logger.debug "***** validates question translations"
+   logger.debug "***** validates group translations"
     if self.dataset.default_language.present?
-#      logger.debug "***** - default is present; title = #{self.title_translations[self.dataset.default_language]}"
+     logger.debug "***** - default is present; title = #{self.title_translations[self.dataset.default_language]}"
       if self.title_translations[self.dataset.default_language].blank?
-#        logger.debug "***** -- title not present!"
+       logger.debug "***** -- title not present!"
         errors.add(:base, I18n.t('errors.messages.translation_default_lang', 
             field_name: self.class.human_attribute_name('title'),
             language: Language.get_name(self.dataset.default_language),
@@ -37,7 +37,7 @@ class Group < CustomTranslation
       end
 
       if self.include_in_charts? && self.description_translations[self.dataset.default_language].blank?
-#        logger.debug "***** -- description not present!"
+       logger.debug "***** -- description not present and include in charts is true!"
         errors.add(:base, I18n.t('errors.messages.translation_default_lang', 
             field_name: self.class.human_attribute_name('description'),
             language: Language.get_name(self.dataset.default_language),

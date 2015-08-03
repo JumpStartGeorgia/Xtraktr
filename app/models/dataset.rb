@@ -530,6 +530,7 @@ class Dataset < CustomTranslation
     end
   end
 
+
   # this is used in the form to set the categories
   def set_category_ids
     self.category_ids = self.category_mappers.category_ids
@@ -837,25 +838,30 @@ class Dataset < CustomTranslation
       # get the groups
       # - if group id provided, get subgroups in that group
       # - else get main groups
+      groups = []
       if options[:group_id].present?
-        items << self.groups.sub_groups(options[:group_id])
+        groups << self.groups.sub_groups(options[:group_id])
       else
-        items << self.groups.main_groups
+        groups << self.groups.main_groups
       end
-      items.flatten!
+      groups.flatten!
 
       # now for each group, get its subgroups/questions and sort them
       if options[:include_subgroups] == true
         Rails.logger.debug "#{indent}=============== -- include subgroups"
         group_options = options.dup
 
-        items.each do |group|
+        groups.each do |group|
           Rails.logger.debug "#{indent}>>>>>>>>>>>>>>> #{group.title}"
           Rails.logger.debug "#{indent}=============== checking #{group.title} for subgroups"
 
           # get all items for this group (subgroup/questions)
           group_options[:group_id] = group.id
           group.var_arranged_items = build_arranged_items(group_options)
+          # only add the group if it has content
+          if group.var_arranged_items.present?
+            items << group
+          end
           Rails.logger.debug "#{indent}>>>>>>>>>>>>>> ----- added #{group.var_arranged_items.length} items for #{group.title}"
 
         end

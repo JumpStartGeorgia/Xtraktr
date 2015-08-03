@@ -6,7 +6,7 @@
 
 <% if @items.present? %>
 
-  <%= form_tag sort_dataset_path(@dataset), id: 'frm-dataset-sort', class: 'form-data-loader' do %>
+  <%= form_tag sort_dataset_path(@dataset), id: 'frm-dataset-sort', class: 'form-data-loader data-loader-container' do %>
 
     <div id="items-header">
       <h2>
@@ -31,9 +31,12 @@
           <%= t('.group_items', name: @group.title) %>
         <% end %>
       </p>
+
+      <h3><%= t('.form_header') %></h3>
+      <%= simple_format(t('.form_instructions')) %>
     </div>
 
-    <div id="move-items">
+    <div id="move-items" class="clear">
       <label>
         <%= t('.move_explanation') %>
         <select data-live-search="true" data-width="300px" class="selectpicker-sort" id="move-to" title="<%= t('.move_placeholder') %>">
@@ -45,7 +48,11 @@
             <option class="<%= cls %>" value="<%= item.id %>"><%= text %></option>
           <% end %>
         </select>
+        <div class="move-items-submit"><%= t('app.common.go') %></div>
       </label>
+      <div class="move-items-save-btn">
+        <%= submit_tag t('app.buttons.save_settings'), class: 'btn btn-success' %>
+      </div>
     </div>
 
     <table id='dataset-sort' class="table table-striped table-hover table-nonfluid">
@@ -56,7 +63,6 @@
               <span class="glyphicon glyphicon-ok" title="<%= t('helpers.links.select_all') %>"></span>
             <% end %>
           </th>
-          <th><%= t('.headers.sort') %></th>
           <th><%= t('.headers.type') %></th>
           <th><%= t('.headers.name') %></th>
           <th></th>
@@ -65,12 +71,6 @@
       <tfoot>
         <tr>
           <td>
-          </td>
-          <td>
-            <label class="control-label">
-              <input type="text" placeholder="<%= t('datatable.search_footer', name: t('.headers.sort')) %>" class="form-control"/>
-              <div class="help-inline" title="<%= t('app.msgs.datatable_regex_search') %>"><div>?</div></div>
-            </label>
           </td>
           <td>
             <label class="control-label">
@@ -95,7 +95,32 @@
       <tbody>
       </tbody>
     </table>
-    <div id="hidden-table-inputs" style="display:none;"></div>
+
+    <div class="move-items-save-btn">
+      <%= submit_tag t('app.buttons.save_settings'), class: 'btn btn-success' %>
+    </div>
+
+    <div id="hidden-inputs" style="display:none;">
+      <% @items.each_with_index do |item, index| %>
+        <div data-id="<%= item.id %>">
+          <%
+            id_name, type, name, desc, link, cls = nil
+            if item.class == Question
+              id_name = 'questions'
+            elsif item.class == Group
+              id_name = 'groups'
+            end
+          %>
+
+          <input id='dataset_<%=id_name%>_attributes_<%=index%>_id' name='dataset[<%=id_name%>_attributes][<%=index%>][id]' type='hidden' value='<%=item.id%>'>
+          <input class="input-sort-order" id='dataset_<%=id_name%>_attributes_<%=index%>_sort_order' name='dataset[<%=id_name%>_attributes][<%=index%>][sort_order]' type='hidden' value='<%=item.sort_order%>'>
+        </div>
+      <% end %>
+
+    </div>
+
+    <div class="data-loader"></div>
+
 
   <% end %>
 
