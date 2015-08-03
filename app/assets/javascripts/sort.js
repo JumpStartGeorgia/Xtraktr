@@ -9,10 +9,10 @@ var is_dirty = false;
     var id = $('option:selected', select_id).val();
 
     // remove previous selection
-    $('tbody tr').removeClass('move-after');
+    $('tbody tr', table_id).removeClass('move-after');
 
     // add class to selected item
-    $('tbody tr > td > input[value="' + id + '"]').closest('tr').addClass('move-after');
+    $('tbody tr > td > input[value="' + id + '"]', table_id).closest('tr').addClass('move-after');
     
   }
 
