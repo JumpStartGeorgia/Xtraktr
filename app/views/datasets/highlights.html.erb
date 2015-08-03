@@ -19,7 +19,7 @@
     <tbody>
       <% @highlights.each do |highlight| %>
         <tr>
-          <td><%= link_to t('helpers.links.view'), embed_v1_path(highlight.embed_id), class: 'btn btn-default', target: :blank %>
+          <td><%= link_to t('helpers.links.view'), embed_v2_path(highlight.embed_id), class: 'btn btn-default', target: :blank %>
           <td>
             <ul class="list-unstyled">
               <% q = @dataset.questions.with_code(highlight.question_code) %>
@@ -55,16 +55,16 @@
           </td>
           <td>
             <% if !highlight.show_home_page %>
-              <%= link_to home_page_highlight_dataset_path(id: highlight.dataset_id, embed_id: highlight.embed_id), 
+              <%= link_to home_page_highlight_dataset_path(id: highlight.dataset_id, embed_id: highlight.embed_id),
                           :title => t('.btn_show_home_page'),
                           :method => :post,
                           :class => 'btn btn-xs btn-default' do %>
-                          
+
                 <span class="glyphicon glyphicon-pushpin" aria-hidden="true"></span>
               <% end %>
             <% end %>
             <%= link_to '',
-                        '#', 
+                        '#',
                         :title => t('helpers.links.edit_description'),
                         :class => 'btn btn-xs btn-edit edit-highlight-description',
                         :'data-href' => highlights_edit_description_path,

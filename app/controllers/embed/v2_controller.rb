@@ -1,4 +1,4 @@
-class Api::V1Controller < ApplicationController
+class Api::V2Controller < ApplicationController
   before_filter :restrict_access, except: [:index, :documentation]
   before_filter :set_background
   after_filter :record_request, except: [:index, :documentation]
@@ -45,7 +45,7 @@ class Api::V1Controller < ApplicationController
   def dataset_catalog
     respond_to do |format|
       format.json {
-        render json: Api::V1.dataset_catalog, each_serializer: DatasetCatalogSerializer, root: 'datasets', callback: params[:callback]
+        render json: Api::V2.dataset_catalog, each_serializer: DatasetCatalogSerializer, root: 'datasets', callback: params[:callback]
       }
     end
   end
@@ -54,7 +54,7 @@ class Api::V1Controller < ApplicationController
   def dataset
     respond_to do |format|
       format.json {
-        render json: Api::V1.dataset(params[:dataset_id], clean_filtered_params(request.filtered_parameters)), each_serializer: DatasetSerializer, callback: params[:callback]
+        render json: Api::V2.dataset(params[:dataset_id], clean_filtered_params(request.filtered_parameters)), each_serializer: DatasetSerializer, callback: params[:callback]
       }
     end
   end
@@ -63,7 +63,7 @@ class Api::V1Controller < ApplicationController
   def dataset_codebook
     respond_to do |format|
       format.json {
-        render json: Api::V1.dataset_codebook(params[:dataset_id], clean_filtered_params(request.filtered_parameters)), each_serializer: QuestionSerializer, root: 'questions', callback: params[:callback]
+        render json: Api::V2.dataset_codebook(params[:dataset_id], clean_filtered_params(request.filtered_parameters)), each_serializer: QuestionSerializer, root: 'questions', callback: params[:callback]
       }
     end
   end
@@ -77,7 +77,7 @@ class Api::V1Controller < ApplicationController
   def dataset_analysis
     respond_to do |format|
       format.json {
-        render json: Api::V1.dataset_analysis(params[:dataset_id], params[:question_code], clean_filtered_params(request.filtered_parameters)), callback: params[:callback]
+        render json: Api::V2.dataset_analysis(params[:dataset_id], params[:question_code], clean_filtered_params(request.filtered_parameters)), callback: params[:callback]
       }
     end
   end
@@ -90,7 +90,7 @@ class Api::V1Controller < ApplicationController
   def time_series_catalog
     respond_to do |format|
       format.json {
-        render json: Api::V1.time_series_catalog, each_serializer: TimeSeriesCatalogSerializer, root: 'time_series', callback: params[:callback]
+        render json: Api::V2.time_series_catalog, each_serializer: TimeSeriesCatalogSerializer, root: 'time_series', callback: params[:callback]
       }
     end
   end
@@ -99,7 +99,7 @@ class Api::V1Controller < ApplicationController
   def time_series
     respond_to do |format|
       format.json {
-        render json: Api::V1.time_series(params[:time_series_id], clean_filtered_params(request.filtered_parameters)), each_serializer: TimeSeriesSerializer, callback: params[:callback]
+        render json: Api::V2.time_series(params[:time_series_id], clean_filtered_params(request.filtered_parameters)), each_serializer: TimeSeriesSerializer, callback: params[:callback]
       }
     end
   end
@@ -108,7 +108,7 @@ class Api::V1Controller < ApplicationController
   def time_series_codebook
     respond_to do |format|
       format.json {
-        render json: Api::V1.time_series_codebook(params[:time_series_id], clean_filtered_params(request.filtered_parameters)), each_serializer: TimeSeriesQuestionSerializer, root: 'questions', callback: params[:callback]
+        render json: Api::V2.time_series_codebook(params[:time_series_id], clean_filtered_params(request.filtered_parameters)), each_serializer: TimeSeriesQuestionSerializer, root: 'questions', callback: params[:callback]
       }
     end
   end
@@ -121,7 +121,7 @@ class Api::V1Controller < ApplicationController
   def time_series_analysis
     respond_to do |format|
       format.json {
-        render json: Api::V1.time_series_analysis(params[:time_series_id], params[:question_code], clean_filtered_params(request.filtered_parameters)), callback: params[:callback]
+        render json: Api::V2.time_series_analysis(params[:time_series_id], params[:question_code], clean_filtered_params(request.filtered_parameters)), callback: params[:callback]
       }
     end
   end

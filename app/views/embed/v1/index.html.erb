@@ -1,11 +1,11 @@
 <% title @highlight_data[:title] if @highlight_data[:title] %>
-<%- 
+<%-
   @show_title = true
   @show_links = true
   @is_embed = true
 -%>
 
-<%= render :partial => 'shared/embed_v1', :locals => {
+<%= render :partial => 'shared/embed_v2', :locals => {
     highlight: @highlight_data
-  } 
+  }
 %>
