@@ -966,7 +966,13 @@ en:
   weights:
     index:
       title: Dataset Weighting
-      question: Is your dataset weighted?
+      explanation: |
+        This section allows you to identify which question(s) contain a weight value and which questions that weight should be applied to.
+
+        A dataset can have multiple weights, but one must be selected as the default weight. A default weight is automatically applied to all questions. For weights that are not the default weight, you can choose to apply the weight all of the questions or only specific questions.
+
+        During analysis, if two questions are being compared and they are of different weights, the default weight is used for both.
+      no_weights: There are no weights on file for this dataset.
       add: Add Weights
       edit: Edit Weights
       confirm_delete: Are you sure you want to delete all weights on file?

@@ -1,5 +1,5 @@
 <% title t('.title') %>
-<%- 
+<%-
   label_key = "mongoid.attributes.weight."
 -%>
 
@@ -8,6 +8,12 @@
               new_dataset_weight_path,
               :class => 'btn btn-primary' %>
 </div>
+
+<%= simple_format t('.explanation') %>
+
+<hr />
+
+<% if @dataset.weights.present? %>
 
   <table id="weight-datatable" class="table table-striped display">
     <thead>
@@ -21,7 +27,7 @@
     </thead>
     <tbody>
     <% @dataset.weights.each do |weight| %>
-      <tr>  
+      <tr>
         <td>
           <%= weight.text %>
         </td>
@@ -34,7 +40,7 @@
         <td>
           <% if weight.applies_to_all? %>
             <%= t(label_key + 'all_questions') %>
-          <% elsif weight.codes.present? %> 
+          <% elsif weight.codes.present? %>
             <%= link_to t('.question_count', num: weight.codes.length), '#', class: 'applies-to btn btn-default' %>
 
             <div class="applies-to-questions">
@@ -50,7 +56,7 @@
         </td>
         <td>
         <%= link_to '',
-                    edit_dataset_weight_path(@dataset, weight), 
+                    edit_dataset_weight_path(@dataset, weight),
                     :title => t('helpers.links.edit'),
                     :class => 'btn btn-xs btn-edit' %>
         <%= link_to '',
@@ -73,3 +79,10 @@
   </div>
 </div>
 
+<% else %>
+
+  <p>
+    <%= t('.no_weights') %>
+  </p>
+
+<% end %>
