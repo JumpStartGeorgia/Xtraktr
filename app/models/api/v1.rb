@@ -1,4 +1,4 @@
-class ApiV1
+class Api::V1
   extend ActionView::Helpers::NumberHelper
   ANALYSIS_TYPE = {:single => 'single', :comparative => 'comparative', :time_series => 'time_series'}
 
@@ -69,7 +69,7 @@ class ApiV1
     return questions
   end
 
-  
+
   # analyse the dataset for the passed in parameters
   # parameters:
   #  - dataset_id - id of dataset to analyze (required)
@@ -92,7 +92,7 @@ class ApiV1
   #   chart: {title, data: [{name, y(percent), count, answer_value}, ...] } (optional)
   #   map: {question_code, title, data: [{shape_name, display_name, value, count}, ...] } (optional)
   #   errors: [{status, detail}] (optional)
-  # }  
+  # }
   def self.dataset_analysis(dataset_id, question_code, options={})
     data = {}
 
@@ -163,7 +163,7 @@ class ApiV1
     ########################
     # start populating the output
     data[:dataset] = {id: dataset.id, title: dataset.title}
-    data[:question] = create_dataset_question_hash(question, can_exclude, private_user_id)    
+    data[:question] = create_dataset_question_hash(question, can_exclude, private_user_id)
     data[:broken_down_by] = create_dataset_question_hash(broken_down_by, can_exclude, private_user_id) if broken_down_by.present?
     data[:filtered_by] = create_dataset_question_hash(filtered_by, can_exclude, private_user_id) if filtered_by.present?
     data[:analysis_type] = nil
@@ -272,7 +272,7 @@ class ApiV1
   #   results: {title, total_responses, analysis: [{dataset_label, answer_text, count, percent}, ...]}
   #   chart: {title, data: [{y(percent), count}, ...] } (optional)
   #   errors: [{status, detail}] (optional)
-  # }  
+  # }
   def self.time_series_analysis(time_series_id, question_code, options={})
     data = {}
 
@@ -342,7 +342,7 @@ class ApiV1
     # start populating the output
     data[:time_series] = {id: time_series.id, title: time_series.title}
     data[:datasets] = create_time_series_dataset_hash(datasets)
-    data[:question] = create_time_series_question_hash(question, can_exclude)    
+    data[:question] = create_time_series_question_hash(question, can_exclude)
     data[:filtered_by] = create_time_series_question_hash(filtered_by, can_exclude) if filtered_by.present?
     data[:analysis_type] = ANALYSIS_TYPE[:time_series]
     data[:results] = nil
@@ -385,7 +385,7 @@ private
       to_keep = %w(dataset_id time_series_id question_code broken_down_by_code filtered_by_code can_exclude with_title with_chart_data with_map_data language filtered_by_value visual_type broken_down_value filtered_by_value)
 
       # remove any keys that are not in the list
-      options = options.dup.delete_if{|k,v| !to_keep.include?(k.to_s)}    
+      options = options.dup.delete_if{|k,v| !to_keep.include?(k.to_s)}
     end
 
     return options
@@ -400,7 +400,7 @@ private
       # if this question belongs to a group, add it
       if question.group_id.present?
         group = question.group
-        if group.present? 
+        if group.present?
           # see if this is a subgroup
           if group.parent_id.present?
             hash[:group] = {title: group.parent.title, description: group.parent.description, include_in_charts: group.parent.include_in_charts}
@@ -429,7 +429,7 @@ private
     # get the data for this code
     data = dataset.data_items.code_data(question[:code])
 
-    # only keep the data that is in the list of question answers 
+    # only keep the data that is in the list of question answers
     # - this is where can_exclude removes the unwanted answers
     answer_values = question[:answers].map{|x| x[:value]}
     data.delete_if{|x| !answer_values.include?(x)}
@@ -521,7 +521,7 @@ private
 
   # convert the results into pie chart format
   # options are needed to create embed id
-  # return format: 
+  # return format:
   # - no filter: {:data => [ {name, y(percent), count, answer_value}, ...] }
   # - with filter: [ {filter_answer_value, filter_answer_text, filter_results => [ {:data => [ {name, y(percent), count, answer_value}, ...] } ] } ]
   def self.dataset_single_chart(data, with_title=false, options={})
@@ -531,7 +531,7 @@ private
         chart = []
         data[:results][:filter_analysis].each do |filter|
           chart_item = {filter_answer_value: filter[:filter_answer_value], filter_answer_text: filter[:filter_answer_text], filter_results: {} }
-  
+
           # set the titles
           # - assume titles are already set in data[:filtered_by][:results]
           if with_title
@@ -580,7 +580,7 @@ private
           end
         end
       end
-      
+
       return chart
     end
   end
@@ -589,16 +589,16 @@ private
   # format: {name, y(percent), count, answer_value}
   def self.dataset_single_chart_processing(answer, data_result)
     {
-      name: answer[:text], 
-      y: data_result[:percent], 
-      count: data_result[:count], 
+      name: answer[:text],
+      y: data_result[:percent],
+      count: data_result[:count],
       answer_value: answer[:value]
     }
   end
 
   # convert the results into highmaps map format
   # options are needed to create embed id
-  # return format: 
+  # return format:
   # - no filter: {shape_question_code, map_sets => {title, subtitle, data => [ {shape_name, display_name, value, count}, ... ] } }
   # - with filter: [{filter_answer_value, filter_answer_text, shape_question_code, filter_results => [ map_sets => {title, subtitle, data => [ {shape_name, display_name, value, count}, ... ] } ] } ]
   def self.dataset_single_map(answers, data, with_title=false, options={})
@@ -608,7 +608,7 @@ private
       if data[:filtered_by].present?
         map = []
         data[:results][:filter_analysis].each do |filter|
-          map_item = {filter_answer_value: filter[:filter_answer_value], filter_answer_text: filter[:filter_answer_text], 
+          map_item = {filter_answer_value: filter[:filter_answer_value], filter_answer_text: filter[:filter_answer_text],
                     filter_results: {shape_question_code: data[:question][:code], adjustable_max_range: data[:question][:has_map_adjustable_max_range], map_sets: {}}}
 
           # set the titles
@@ -669,9 +669,9 @@ private
   # format: {shape_name, display_name, value, count}
   def self.dataset_single_map_processing(answer, data_result)
     {
-      :shape_name => answer.shape_name, 
-      :display_name => answer.text, 
-      :value => data_result[:percent], 
+      :shape_name => answer.shape_name,
+      :display_name => answer.text,
+      :value => data_result[:percent],
       :count => data_result[:count]
     }
   end
@@ -684,11 +684,11 @@ private
     question_data = dataset.data_items.code_data(question[:code])
     broken_down_data = dataset.data_items.code_data(broken_down_by[:code])
 
-    # merge the data arrays into one array that 
+    # merge the data arrays into one array that
     # has nested arrays
     data = question_data.zip(broken_down_data)
 
-    # only keep the data that is in the list of question/broken down by answers 
+    # only keep the data that is in the list of question/broken down by answers
     # - this is where can_exclude removes the unwanted answers
     q_answer_values = question[:answers].map{|x| x[:value]}
     bdb_answer_values = broken_down_by[:answers].map{|x| x[:value]}
@@ -716,7 +716,7 @@ private
           filter_item = {filter_answer_value: filter_answer[:value], filter_answer_text: filter_answer[:text]}
 
           filter_item[:filter_results] = dataset_comparative_analysis_processing(question, broken_down_by, merged_data.select{|x| x[0].to_s == filter_answer[:value].to_s}.map{|x| x[1]}, with_title, filtered_by, filter_answer[:text])
-          
+
           filter_results[:filter_analysis] << filter_item
         end
 
@@ -819,7 +819,7 @@ private
 
   # convert the results into stacked bar chart format
   # options are needed to create embed id
-  # return format: 
+  # return format:
   # - no filter: {:data => [ {name, y(percent), count, answer_value}, ...] }
   # - with filter: [ {filter_answer_value, filter_results => [ {:data => [ {name, y(percent), count, answer_value}, ...] } ] } ]
   def self.dataset_comparative_chart(data, with_title=false, options={})
@@ -844,7 +844,7 @@ private
           chart_item[:filter_results][:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
 
           chart_item[:filter_results][:labels] = data[:question][:answers].map{|x| x[:text]}
-  
+
           # have to transpose the counts for highcharts
           counts = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:count]}}.transpose
           if counts.present?
@@ -880,7 +880,7 @@ private
           chart[:data] << {name: answer[:text], data: counts[i]}
         end
       end
-      
+
       return chart
     end
   end
@@ -889,9 +889,9 @@ private
   # return format: {:data => [ {name, y(percent), count, answer_value}, ...] }
   def self.dataset_comparative_chart_processing(answer, data_result)
     {
-      name: answer[:text], 
-      y: data_result[:percent], 
-      count: data_result[:count], 
+      name: answer[:text],
+      y: data_result[:percent],
+      count: data_result[:count],
       answer_value: answer[:value]
     }
   end
@@ -900,7 +900,7 @@ private
 
   # convert the results into highmaps map format
   # options are needed to create embed id
-  # return format: 
+  # return format:
   # - no filter: {shape_question_code, map_sets => [{title, subtitle, data => [ {shape_name, display_name, value, count}, ... ] } ] }
   # - with filter: [{filter_answer_value, filter_answer_text, shape_question_code, filter_results => [ map_sets => [{title, subtitle, data => [ {shape_name, display_name, value, count}, ... ] } ] } ]
   def self.dataset_comparative_map(question_answers, broken_down_by_answers, data, question_mappable=true, with_title=false, options={})
@@ -909,7 +909,7 @@ private
       if data[:filtered_by].present?
         map = []
         data[:results][:filter_analysis].each do |filter|
-          map_item = {filter_answer_value: filter[:filter_answer_value], filter_answer_text: filter[:filter_answer_text], 
+          map_item = {filter_answer_value: filter[:filter_answer_value], filter_answer_text: filter[:filter_answer_text],
                     filter_results: {}}
 
 
@@ -937,7 +937,7 @@ private
             map_item[:filter_results][:map_sets] = []
             broken_down_by_answers.each_with_index do |bdb_answer, bdb_index|
               item = {broken_down_answer_value: bdb_answer.value, broken_down_answer_text: bdb_answer.text}
-              
+
               # set the titles
               if with_title
                 item[:title] = {}
@@ -954,7 +954,7 @@ private
               options['broken_down_value'] = bdb_answer.value
               options['filtered_by_value'] = filter[:filter_answer_value]
               options['visual_type'] = 'map'
-              item[:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)                
+              item[:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
 
               # load the data
               item[:data] = []
@@ -966,7 +966,7 @@ private
               end
 
               map_item[:filter_results][:map_sets] << item
-            end        
+            end
           else
             # need question code so know which shape data to use
             map_item[:filter_results][:shape_question_code] = data[:broken_down_by][:code]
@@ -996,15 +996,15 @@ private
                 options['broken_down_value'] = q_answer.value
                 options['filtered_by_value'] = filter[:filter_answer_value]
                 options['visual_type'] = 'map'
-                item[:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)                
+                item[:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
 
                 # load the data
                 item[:data] = []
-                broken_down_by_answers.each_with_index do |bdb_answer, bdb_index|                  
+                broken_down_by_answers.each_with_index do |bdb_answer, bdb_index|
                   item[:data] << dataset_comparative_map_processing(bdb_answer, percents[q_index][bdb_index], counts[q_index][bdb_index])
                 end
                 map_item[:filter_results][:map_sets] << item
-              end        
+              end
             end
           end
 
@@ -1016,7 +1016,7 @@ private
       else
 
         map = {shape_question_code: nil, map_sets: []}
-        
+
         if question_mappable
           # need question code so know which shape data to use
           map[:shape_question_code] = data[:question][:code]
@@ -1066,7 +1066,7 @@ private
               end
             end
             map[:map_sets] << item
-          end        
+          end
         else
           # need question code so know which shape data to use
           map[:shape_question_code] = data[:broken_down_by][:code]
@@ -1094,14 +1094,14 @@ private
             options['broken_down_value'] = q_answer.value
             options['visual_type'] = 'map'
             item[:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
-            
+
             # load the data
             item[:data] = []
             broken_down_by_answers.each_with_index do |bdb_answer, bdb_index|
               item[:data] << dataset_comparative_map_processing(bdb_answer, percents[q_index][bdb_index], counts[q_index][bdb_index])
             end
             map[:map_sets] << item
-          end        
+          end
         end
       end
 
@@ -1112,9 +1112,9 @@ private
   # format: {shape_name, display_name, value, count}
   def self.dataset_comparative_map_processing(answer, percent, count)
     {
-      :shape_name => answer.shape_name, 
-      :display_name => answer.text, 
-      :value => percent, 
+      :shape_name => answer.shape_name,
+      :display_name => answer.text,
+      :value => percent,
       :count => count
     }
   end
@@ -1277,7 +1277,7 @@ private
 
   # convert the results into pie chart format
   # options are needed to create embed id
-  # return format: 
+  # return format:
   # - no filter: {title, subtitle, datasets, data => [ {name, y(percent), count, answer_value}, ...] }
   # - with filter: [ {filter_answer_value, filter_answer_text, filter_results => [ {title, subtitle, datasets, data => [ {name, y(percent), count, answer_value}, ...] } ] } ]
   def self.time_series_single_chart(data, with_title=false, options={})
@@ -1298,7 +1298,7 @@ private
           end
 
           chart_item[:filter_results][:datasets] = datasets
-  
+
           # create embed id
           # add filter value
           options['filtered_by_value'] = filter[:filter_answer_value]
@@ -1341,7 +1341,7 @@ private
         chart[:data] = []
         data[:question][:answers].each do |answer|
           chart_item = {name: answer[:text], data:[]}
-          
+
           data_result = data[:results][:analysis].select{|x| x[:answer_value] == answer[:value]}.first
           if data_result.present?
             data_result[:dataset_results].each do |dataset_result|
@@ -1352,7 +1352,7 @@ private
           chart[:data] << chart_item
         end
       end
-      
+
       return chart
     end
   end
@@ -1361,7 +1361,7 @@ private
   # format: {y(percent), count}
   def self.time_series_single_chart_processing(data_result)
     {
-      y: data_result[:percent], 
+      y: data_result[:percent],
       count: data_result[:count]
     }
   end
@@ -1397,7 +1397,7 @@ private
       end
     end
     return title.html_safe
-  end 
+  end
 
   def self.dataset_single_analysis_title_text(question, filtered_by=nil, filtered_by_answer=nil)
     group = ''
@@ -1423,7 +1423,7 @@ private
       end
     end
     return title
-  end 
+  end
 
   def self.dataset_comparative_analysis_title_html(question, broken_down_by, filtered_by=nil, filtered_by_answer=nil)
     group = ''
@@ -1440,7 +1440,7 @@ private
         group2 << I18n.t('explore_data.title_subgroup', text: broken_down_by[:subgroup][:description])
       end
     end
-    title = I18n.t('explore_data.comparative.html.title', :question_code => question[:original_code], :variable => question[:text], 
+    title = I18n.t('explore_data.comparative.html.title', :question_code => question[:original_code], :variable => question[:text],
               :broken_down_by_code => broken_down_by[:original_code], :broken_down_by => broken_down_by[:text], :group => group, :group2 => group2)
     if filtered_by.present?
       group = ''
@@ -1457,7 +1457,7 @@ private
       end
     end
     return title.html_safe
-  end 
+  end
 
   def self.dataset_comparative_analysis_title_text(question, broken_down_by, filtered_by=nil, filtered_by_answer=nil)
     group = ''
@@ -1474,7 +1474,7 @@ private
         group2 << I18n.t('explore_data.title_subgroup', text: broken_down_by[:subgroup][:description])
       end
     end
-    title = I18n.t('explore_data.comparative.text.title', :question_code => question[:original_code], :variable => question[:text], 
+    title = I18n.t('explore_data.comparative.text.title', :question_code => question[:original_code], :variable => question[:text],
               :broken_down_by_code => broken_down_by[:original_code], :broken_down_by => broken_down_by[:text], :group => group, :group2 => group2)
     if filtered_by.present?
       group = ''
@@ -1491,7 +1491,7 @@ private
       end
     end
     return title
-  end 
+  end
 
   def self.dataset_comparative_analysis_map_title_html(question, broken_down_by, broken_down_by_answer, filtered_by=nil, filtered_by_answer=nil)
     group = ''
@@ -1525,13 +1525,13 @@ private
       end
     end
     return title.html_safe
-  end 
+  end
 
   def self.dataset_comparative_analysis_map_title_text(question, broken_down_by, broken_down_by_answer, filtered_by=nil, filtered_by_answer=nil)
     group = ''
     if question[:group].present? && question[:group][:include_in_charts]
       group << I18n.t('explore_data.title_group', text: question[:group][:description])
-      if question[:subgroup].present? && question[:subgroup][:include_in_charts]  
+      if question[:subgroup].present? && question[:subgroup][:include_in_charts]
         group << I18n.t('explore_data.title_subgroup', text: question[:subgroup][:description])
       end
     end
@@ -1559,18 +1559,18 @@ private
       end
     end
     return title
-  end 
+  end
 
   def self.dataset_analysis_subtitle_html(total)
     title = "<br /> <span class='total_responses'>"
     title << I18n.t('explore_data.subtitle.html.title', :num => number_with_delimiter(total))
     title << "</span>"
     return title.html_safe
-  end 
+  end
 
   def self.dataset_analysis_subtitle_text(total)
     return I18n.t('explore_data.subtitle.text.title', :num => number_with_delimiter(total))
-  end 
+  end
 
   def self.dataset_analysis_subtitle_html_filtered(filtered_by_code, filtered_by_text, results)
     title = "<br /> <span class='total_responses'>"
@@ -1582,7 +1582,7 @@ private
     title << I18n.t('explore_data.subtitle.html.title_filter', :code => filtered_by_code, :variable => filtered_by_text, :nums => filter_responses.join)
     title << "</span>"
     return title.html_safe
-  end 
+  end
 
   def self.dataset_analysis_subtitle_text_filtered(filtered_by_code, filtered_by_text, results)
     filter_responses = []
@@ -1591,7 +1591,7 @@ private
       filter_responses << text
     end
     return I18n.t('explore_data.subtitle.text.title_filter', :code => filtered_by_code, :variable => filtered_by_text, :nums => filter_responses.join('; '))
-  end 
+  end
 
 
 
@@ -1607,7 +1607,7 @@ private
       end
     end
     return title.html_safe
-  end 
+  end
 
   def self.time_series_single_analysis_title_text(question, filtered_by=nil, filtered_by_answer=nil)
     title = I18n.t('explore_time_series.single.text.title', :code => question[:original_code], :variable => question[:text])
@@ -1619,7 +1619,7 @@ private
       end
     end
     return title
-  end 
+  end
 
   def self.time_series_analysis_subtitle_html(totals)
     title = "<br /> <span class='total_responses'>"
@@ -1630,7 +1630,7 @@ private
     title << I18n.t('explore_time_series.subtitle.html.title', :num => num.join('; '))
     title << "</span>"
     return title.html_safe
-  end 
+  end
 
   def self.time_series_analysis_subtitle_text(totals)
     num = []
@@ -1638,7 +1638,7 @@ private
       num << "#{total[:dataset_label]}: #{number_with_delimiter(total[:count])}"
     end
     return I18n.t('explore_time_series.subtitle.text.title', :num => num.join('; '))
-  end 
+  end
 
   def self.time_series_analysis_subtitle_html_filtered(filtered_by_code, filtered_by_text, results)
     title = "<br /> <span class='total_responses'>"
@@ -1655,7 +1655,7 @@ private
     title << I18n.t('explore_time_series.subtitle.html.title_filter', :code => filtered_by_code, :variable => filtered_by_text, :nums => filter_responses.join)
     title << "</span>"
     return title.html_safe
-  end 
+  end
 
   def self.time_series_analysis_subtitle_text_filtered(filtered_by_code, filtered_by_text, results)
     filter_responses = []
@@ -1669,6 +1669,6 @@ private
       filter_responses << text
     end
     return I18n.t('explore_time_series.subtitle.text.title_filter', :code => filtered_by_code, :variable => filtered_by_text, :nums => filter_responses.join('; '))
-  end 
+  end
 
 end

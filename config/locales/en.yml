@@ -1119,6 +1119,9 @@ en:
     embed_v1:
       title_site: Go to %{app_name}
       title_datalist: View All Datasets
+    embed_v2:
+      title_site: Go to %{app_name}
+      title_datalist: View All Datasets
   export_data:
     dataset: 'Dataset: %{title}'
     download_from: 'Downloaded From: %{app_name} at %{url}.'

@@ -1119,6 +1119,9 @@ ka:
     embed_v1:
       title_site: გადასვლა %{app_name} -ზე
       title_datalist: მონაცემთა ყველა ცხილის ნახვა
+    embed_v2:
+      title_site: გადასვლა %{app_name} -ზე
+      title_datalist: მონაცემთა ყველა ცხილის ნახვა
   export_data:
     dataset: "მონაცემთა ცხრილი: %{title}"
     download_from: "ჩამოტვირთულია აქედან: %{app_name} at %{url}."

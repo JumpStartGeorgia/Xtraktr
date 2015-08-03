@@ -1,4 +1,4 @@
-class Embed::V1Controller < ApplicationController
+class Embed::V2Controller < ApplicationController
 
   layout 'embed'
 
@@ -18,9 +18,6 @@ class Embed::V1Controller < ApplicationController
       gon.update_page_title = true
 
       gon.get_highlight_desc_link = highlights_get_description_path
-      gon.powered_by_link = @xtraktr_url
-      gon.powered_by_text = I18n.t('app.common.powered_by_xtraktr')
-      gon.powered_by_title = I18n.t('app.common.powered_by_xtraktr_title')
 
       # if the visual is a chart, include the highcharts file
       # if the visual is a map, include the highmaps file
@@ -61,7 +58,7 @@ class Embed::V1Controller < ApplicationController
       options = clean_filtered_params(options)
 
       if options['dataset_id'].present?
-        data = Api::V1.dataset_analysis(options['dataset_id'], options['question_code'], options)
+        data = Api::V2.dataset_analysis(options['dataset_id'], options['question_code'], options)
 
         # save dataset title
         @title = data[:dataset][:title] if data.present? && data[:dataset].present?
@@ -75,7 +72,7 @@ class Embed::V1Controller < ApplicationController
         gon.visual_link = explore_data_show_url(options)
 
       elsif options['time_series_id'].present?
-        data = Api::V1.time_series_analysis(options['time_series_id'], options['question_code'], options)
+        data = Api::V2.time_series_analysis(options['time_series_id'], options['question_code'], options)
 
         # save dataset title
         @title = data[:time_series][:title] if data.present? && data[:time_series].present?

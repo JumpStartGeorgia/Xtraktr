@@ -287,7 +287,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
         @css.push('bootstrap-select.min.css', "tabs.css", "explore.css", "datasets.css")
         @js.push('bootstrap-select.min.js', "explore.js", "explore_data.js", 'highcharts.js', 'highcharts-map.js', 'highcharts-exporting.js')
 
-        gon.embed_button_link = embed_v1_url('replace') if dataset.public?
+        gon.embed_button_link = embed_v2_url('replace') if dataset.public?
 
         # record javascript variables
         gon.hover_region = I18n.t('explore_data.hover_region')
@@ -344,7 +344,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
         @css.push('bootstrap-select.min.css', "tabs.css", "explore.css", "time_series.css")
         @js.push('bootstrap-select.min.js', "explore.js", "explore_time_series.js", 'highcharts.js', 'highcharts-exporting.js')
 
-        gon.embed_button_link = embed_v1_url('replace') if time_series.public?
+        gon.embed_button_link = embed_v2_url('replace') if time_series.public?
 
         # record javascript variables
         gon.na = I18n.t('explore_time_series.na')
@@ -384,7 +384,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
       if options['dataset_id'].present?
         output[:type] = 'dataset'
 
-        data = ApiV1.dataset_analysis(options['dataset_id'], options['question_code'], options)
+        data = Api::V1.dataset_analysis(options['dataset_id'], options['question_code'], options)
 
          if data.present? && data[:dataset].present?
           # save dataset title
@@ -406,7 +406,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
       elsif options['time_series_id'].present?
         output[:type] = 'time_series'
 
-        data = ApiV1.time_series_analysis(options['time_series_id'], options['question_code'], options)
+        data = Api::V1.time_series_analysis(options['time_series_id'], options['question_code'], options)
 
         if data.present? && data[:time_series].present?
           # save dataset title
