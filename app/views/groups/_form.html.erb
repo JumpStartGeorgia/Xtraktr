@@ -157,7 +157,15 @@
         <tbody>
         </tbody>
       </table>
-      <div id="hidden-table-inputs" style="display:none;"></div>
+      <div id="hidden-table-inputs" style="display:none;">
+        <% if params[:dataset].present? && params[:dataset][:questions_attributes].present? %>
+          <% params[:dataset][:questions_attributes].each do |index, question| %>
+            <% if question[:selected].present? %>
+              <input id="assigned-question-<%= question["id"] %>" type="hidden" value="true" />
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
       <div class="data-loader"></div>
     </div>
     

@@ -1,13 +1,15 @@
 var datatable;
+var form_id;
 
 $(document).ready(function(){
+  var form_id = $('form.group');
 
-  if ($('form.group').length > 0){
+  if (form_id.length > 0){
     // show the description example if include in charts is true
     function show_description_ex(){
-      if ($('form input[name="group[include_in_charts]"]:checked').val() == 'true'){
+      if ($('input[name="group[include_in_charts]"]:checked', form_id).val() == 'true'){
         // add description text and show example
-        var desc = $('form input.main-description').val();
+        var desc = $('input.main-description', form_id).val();
         if (desc == ''){
           desc = gon.insert_description_text;
         }
@@ -20,7 +22,7 @@ $(document).ready(function(){
     }
 
     // if chart title is true, show the example description
-    $('form input[name="group[include_in_charts]"]').change(function(){
+    $('input[name="group[include_in_charts]"]', form_id).change(function(){
       show_description_ex();
     });
     // show description ex when page loads if needed
@@ -28,7 +30,7 @@ $(document).ready(function(){
 
     // as the description changes, update the chart description example
     // only need this if the include in charts is true
-    $("form input.main-description").keyup(debounce(function() {
+    $("input.main-description", form_id).keyup(debounce(function() {
       if ($('form input[name="group[include_in_charts]"]:checked').val() == 'true'){
         var desc = $(this).val();
         if (desc == ''){
@@ -39,7 +41,7 @@ $(document).ready(function(){
     }, 250));
 
     // selectpicker
-    $('form select.selectpicker-groups').select2({width:'element'});
+    $('select.selectpicker-groups', form_id).select2({width:'element'});
 
 
     /* Create an array with the values of all the checkboxes in a column */
@@ -77,23 +79,30 @@ $(document).ready(function(){
       var start = Date.now();
 
       // turn on the loader
-      $('form #group-questions .data-loader').fadeIn('fast');
+      $('#group-questions .data-loader', form_id).fadeIn('fast');
 
       $.ajax({
         type: 'POST',
         url: gon.group_questions_path,
-        data: {group_id: $('form select#group_parent_id').val()},
+        data: {group_id: $('select#group_parent_id', form_id).val()},
         dataType: 'json'
       }).done(function (data) {
         var now = Date.now();
 
         // create checkbox
+        var checked;
         $.each(data, function(question_index, question){
-          question.checkbox = "<input id='dataset_questions_attributes_" + question_index + "_id' name='dataset[questions_attributes][" + question_index + "][id]' type='hidden' value='" + question.id + "'><input class='question-selected-input' name='dataset[questions_attributes][" + question_index + "][selected]' type='checkbox' value='true' " + (question.selected == true ? "checked=\'checked\'" : '') + ">";
+          if ($('#hidden-table-inputs input#assigned-question-' + question.id, form_id).length > 0 || question.selected == true){
+            checked = "checked='checked'";
+          }else{
+            checked = "";
+          }
+
+          question.checkbox = "<input id='dataset_questions_attributes_" + question_index + "_id' name='dataset[questions_attributes][" + question_index + "][id]' type='hidden' value='" + question.id + "'><input class='question-selected-input' name='dataset[questions_attributes][" + question_index + "][selected]' type='checkbox' value='true' " + checked + ">";
         });
 
 
-        // if table already exists, delete rows and destroy datatable
+        // if table already exists, clear and reload data
         now = Date.now();
         if (datatable != undefined){
           datatable.clear();
@@ -131,12 +140,12 @@ $(document).ready(function(){
 
       }).always(function () {
         // hide the loader
-        $('form #group-questions .data-loader').fadeOut('fast');
+        $('#group-questions .data-loader', form_id).fadeOut('fast');
       });
     }
 
     // when the group changes, update the group questions
-    $('form select#group_parent_id').change(function(){
+    $('select#group_parent_id', form_id).change(function(){
       get_group_questions();
 
       // update the explanation text
@@ -150,15 +159,19 @@ $(document).ready(function(){
     // when page loads get the group questions
     get_group_questions();
 
+
     // when form submits, get all checkboxes from datatable and then submit
     // - have to do this because loading data via js and so dom does not know about all inputs
-    $('form').submit(function(){
+    form_id.submit(function(){
       // show data loader
       $(this).find('> .data-loader').fadeIn('fast');
 
+      // empty out what was there
+      $('#hidden-table-inputs', this).empty();
+
       // get all inputs from table and add to form
       datatable.$('input').each(function(){
-        $(this).clone().appendTo('form #hidden-table-inputs');
+        $(this).clone().appendTo('#hidden-table-inputs', this);
       });
 
     });

@@ -361,7 +361,7 @@ class Dataset < CustomTranslation
       :title_translations, :description_translations, :methodology_translations, :source_translations, :source_url_translations,
       :reset_download_files, :category_mappers_attributes, :category_ids, :permalink, :groups_attributes
 
-  attr_accessor :category_ids, :var_arranged_items, :check_question_exclude_status, :force_group_validation
+  attr_accessor :category_ids, :var_arranged_items, :check_question_exclude_status
 
   TYPE = {:onevar => 'onevar', :crosstab => 'crosstab'}
 
@@ -508,7 +508,6 @@ class Dataset < CustomTranslation
   # Callbacks
 
   after_initialize :set_category_ids
-  before_validation :check_group_validatoin
   before_create :process_file
   after_create :create_quick_data_downloads
   before_save :create_urls_object
@@ -531,14 +530,6 @@ class Dataset < CustomTranslation
     end
   end
 
-
-  def check_group_validation
-    if self.force_group_validation == true
-      self.groups.each do |group|
-        group.validate_translations
-      end
-    end
-  end
 
   # this is used in the form to set the categories
   def set_category_ids
