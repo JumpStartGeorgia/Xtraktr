@@ -45,6 +45,13 @@ $(document).ready(function(){
     "orderClasses": false
   });
 
+  // update tooltip for disabled inputs in table
+  // $('#dataset-exclude-questions tbody tr td input[disabled="disabled"]').tooltip('fixTitle');
+  $('#dataset-exclude-questions tbody tr td input[disabled="disabled"]').tooltip({
+    selector: '[title]',
+    container: 'body'
+  });
+
 
   // if data-state = all, select all questions that match the current filter
   // - if not filter -> then all questions are selected

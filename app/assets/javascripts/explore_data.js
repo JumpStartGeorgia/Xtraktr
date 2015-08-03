@@ -809,7 +809,7 @@ $(document).ready(function() {
       // else, vice-versa
       if ($(this).attr('id') == 'question_code'){
         // update broken down by list
-        
+
         // turn on all hidden items
         $('.form-explore-broken-by .bootstrap-select ul.dropdown-menu li[style*="display: none"]').show();
 

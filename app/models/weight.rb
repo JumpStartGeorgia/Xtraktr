@@ -26,17 +26,19 @@ class Weight < CustomTranslation
 #      logger.debug "***** - default is present; text = #{self.text_translations[self.dataset.default_language]}"
       if self.text_translations[self.dataset.default_language].blank?
 #        logger.debug "***** -- text not present!"
-        errors.add(:base, I18n.t('errors.messages.translation_default_lang', 
+        errors.add(:base, I18n.t('errors.messages.translation_default_lang',
             field_name: self.class.human_attribute_name('text'),
             language: Language.get_name(self.dataset.default_language),
             msg: I18n.t('errors.messages.blank')) )
       end
     end
-  end 
+  end
 
   #############################
   # Callbacks
   before_save :reset_fields
+  before_save :set_question_flags
+  before_destroy :reset_question_flags
 
   # if is default or applies to all is true, codes should be empty
   def reset_fields
@@ -50,6 +52,24 @@ class Weight < CustomTranslation
     return true
   end
 
+  # the weight question must be included in the download and set flag indicating question is weight
+  def set_question_flags
+    q = self.dataset.questions.with_code(code)
+    if q.present?
+      q.is_weight = true
+      q.can_download = true
+    end
+  end
+
+  # indicate that this question is not a weight
+  def reset_question_flags
+    q = self.dataset.questions.with_code(code)
+    if q.present?
+      q.is_weight = false
+      q.can_download = true
+      q.save
+    end
+  end
 
   #############################
   ## override get methods for fields that are localized
