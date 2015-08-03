@@ -311,12 +311,13 @@ class DatasetsController < ApplicationController
           gon.datatable_json = []
           @dataset.questions.each_with_index do |question, question_index|
             disabled = question.is_weight? ? 'disabled=\'disabled\'' : ''
-            warning = question.is_weight? ? "<span class='download-warning'>#{view_context.image_tag('svg/exclamation.svg', title: I18n.t('app.msgs.must_include_weight'))}</span>" : ''
+            warning_exclude = question.is_weight? ? "<span class='exclude-warning'>#{view_context.image_tag('svg/exclamation.svg', title: I18n.t('app.msgs.cannot_include_weight'))}</span>" : ''
+            warning_download = question.is_weight? ? "<span class='download-warning'>#{view_context.image_tag('svg/exclamation.svg', title: I18n.t('app.msgs.must_include_weight'))}</span>" : ''
             gon.datatable_json << {
               code: question.original_code,
               text: question.text,
-              exclude: "<input id='dataset_questions_attributes_#{question_index}_id' name='dataset[questions_attributes][#{question_index}][id]' type='hidden' value='#{question.id}'><input class='exclude-input' name='dataset[questions_attributes][#{question_index}][exclude]' type='checkbox' value='true' #{question.exclude? ? 'checked=\'checked\'' : ''}>",
-              download: "<input class='download-input' name='dataset[questions_attributes][#{question_index}][can_download]' type='checkbox' value='true' #{question.can_download? ? 'checked=\'checked\'' : ''} #{disabled}>#{warning}"
+              exclude: "<input id='dataset_questions_attributes_#{question_index}_id' name='dataset[questions_attributes][#{question_index}][id]' type='hidden' value='#{question.id}'><input class='exclude-input' name='dataset[questions_attributes][#{question_index}][exclude]' type='checkbox' value='true' #{question.exclude? ? 'checked=\'checked\'' : ''} #{disabled}>#{warning_exclude}",
+              download: "<input class='download-input' name='dataset[questions_attributes][#{question_index}][can_download]' type='checkbox' value='true' #{question.can_download? ? 'checked=\'checked\'' : ''} #{disabled}>#{warning_download}"
             }
           end
 

@@ -57,6 +57,7 @@ class Weight < CustomTranslation
     q = self.dataset.questions.with_code(code)
     if q.present?
       q.is_weight = true
+      q.exclude = true
       q.can_download = true
     end
   end
@@ -66,7 +67,6 @@ class Weight < CustomTranslation
     q = self.dataset.questions.with_code(code)
     if q.present?
       q.is_weight = false
-      q.can_download = true
       q.save
     end
   end
