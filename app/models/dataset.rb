@@ -846,25 +846,22 @@ class Dataset < CustomTranslation
       end
       groups.flatten!
 
-      # now for each group, get its subgroups/questions and sort them
-      if options[:include_subgroups] == true
-        Rails.logger.debug "#{indent}=============== -- include subgroups"
-        group_options = options.dup
+      # if a group has items, add it
+      group_options = options.dup
+      group_options[:include_groups] = options[:include_subgroups] == true
+      groups.each do |group|
+        Rails.logger.debug "#{indent}>>>>>>>>>>>>>>> #{group.title}"
+        Rails.logger.debug "#{indent}=============== checking #{group.title} for subgroups"
 
-        groups.each do |group|
-          Rails.logger.debug "#{indent}>>>>>>>>>>>>>>> #{group.title}"
-          Rails.logger.debug "#{indent}=============== checking #{group.title} for subgroups"
-
-          # get all items for this group (subgroup/questions)
-          group_options[:group_id] = group.id
-          group.var_arranged_items = build_arranged_items(group_options)
-          # only add the group if it has content
-          if group.var_arranged_items.present?
-            items << group
-          end
-          Rails.logger.debug "#{indent}>>>>>>>>>>>>>> ----- added #{group.var_arranged_items.length} items for #{group.title}"
-
+        # get all items for this group (subgroup/questions)
+        group_options[:group_id] = group.id
+        group.var_arranged_items = build_arranged_items(group_options)
+        # only add the group if it has content
+        if group.var_arranged_items.present?
+          items << group
         end
+        Rails.logger.debug "#{indent}>>>>>>>>>>>>>> ----- added #{group.var_arranged_items.length} items for #{group.title}"
+
       end
     end
 
