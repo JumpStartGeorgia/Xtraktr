@@ -518,7 +518,7 @@ function build_details_item(selector, json_question){
         icon += $('.details-icons #detail-icon-mappable-question')[0].outerHTML;
       }
       tmp.find('.name-variable').html(icon + json_question.text);
-      
+
       tmp.find('.name-code').html(json_question.original_code);
       if (json_question.notes){
         tmp.find('.notes').html(json_question.notes);
@@ -547,13 +547,13 @@ function build_details_item(selector, json_question){
       for(var i=0;i<json_question.answers.length;i++){
         icon = '';
         if (json_question.answers[i].exclude){
-          icon += $('.details-icons #detail-icon-exclude-answer')[0].outerHTML; 
+          icon += $('.details-icons #detail-icon-exclude-answer')[0].outerHTML;
         }
         tmp.find('.list-answers').append('<li>' + icon + json_question.answers[i].text + '</li>');
       }
       tmp.show();
     }
-  }  
+  }
 }
 
 // build details (question and possible answers)
@@ -809,7 +809,7 @@ $(document).ready(function() {
       // else, vice-versa
       if ($(this).attr('id') == 'question_code'){
         // update broken down by list
-        
+
         // turn on all hidden items
         $('.form-explore-broken-by .bootstrap-select ul.dropdown-menu li[style*="display: none"]').show();
 

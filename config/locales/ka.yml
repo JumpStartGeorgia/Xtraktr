@@ -610,6 +610,7 @@ ka:
       is_group: This is a group of questions
       is_subgroup: This is a subgroup of questions
       weights_deleted: All weights have been deleted.
+      must_include_weight: The question is marked as a weight and must be included in the download.
     menu:
       explore_data: "მონაცემთა გაცნობა"
       explore_time_series: "პერიოდული შედარების გაცნობა"

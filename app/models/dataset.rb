@@ -436,6 +436,7 @@ class Dataset < CustomTranslation
   index ({ :'questions.answers.exclude' => 1})
   index ({ :'questions.sort_order' => 1})
   index ({ :'questions.group_id' => 1})
+  index ({ :'questions.is_weight' => 1})
   index ({ :private_share_key => 1})
   index ({ :'reports.title' => 1})
   index ({ :'reports.released_at' => 1})
@@ -936,8 +937,8 @@ class Dataset < CustomTranslation
 
     # sort these items
     # way to sort: sort only items that have sort_order, then add groups with no sort_order, then add questions with no sort_order
-    items = items.select{|x| x.sort_order.present?}.sort_by{|x| x.sort_order} + 
-              items.select{|x| x.class == Group && x.sort_order.nil?} + 
+    items = items.select{|x| x.sort_order.present?}.sort_by{|x| x.sort_order} +
+              items.select{|x| x.class == Group && x.sort_order.nil?} +
               items.select{|x| x.class == Question && x.sort_order.nil?}
 
 
@@ -1231,7 +1232,7 @@ class Dataset < CustomTranslation
             question.text = clean_string(row[indexes[locale]].strip)
             counts[locale] += 1
             locale_found = true
-          end          
+          end
         end
         counts['overall'] += 1 if locale_found
 
@@ -1399,7 +1400,7 @@ class Dataset < CustomTranslation
     else
       str
     end
-  end 
+  end
 
 
 end
