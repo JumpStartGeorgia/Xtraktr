@@ -983,7 +983,7 @@ class Dataset < CustomTranslation
     Category.in(id: self.category_mappers.map {|x| x.category_id } ).to_a
   end
 
-  def has_weights?
+  def is_weighted?
     self.weights.present?
   end
 

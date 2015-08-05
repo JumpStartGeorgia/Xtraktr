@@ -1,158 +1,126 @@
-class Api::V2Controller < ApplicationController
-  before_filter :restrict_access, except: [:index, :documentation]
-  before_filter :set_background
-  after_filter :record_request, except: [:index, :documentation]
+class Embed::V2Controller < ApplicationController
+
+  layout 'embed'
 
 
-
+  # show the embed chart if the id was provided and can be decoded and parsed into hash
+  # id - base64 encoded string of a hash of parameters
   def index
-    redirect_to api_path
-  end
+    @highlight_data = get_highlight_data(params[:id])
 
-  def documentation
-    @klass=@klass_footer=' white'
-    redirect = false
-    redirect = params[:method].nil?
+    if !@highlight_data[:error]
+      # save the js data into gon
+      gon.highlight_data = {}
+      gon.highlight_data[@highlight_data[:highlight_id].to_s] = @highlight_data[:js]
 
-    if !redirect
-      v = request.path.split('/')[3]
-      m = request.path.split('/').last
-      # see if version exists
-      @api_version = ApiVersion.is_public.by_permalink(v)
-      # see if method exists
-      @api_method = ApiMethod.is_public.by_permalink(@api_version.id, m) if @api_version.present?
+      set_gon_highcharts
 
-      redirect = @api_method.nil?
-    end
+      gon.update_page_title = true
 
-    if redirect
-      redirect_to api_path, :notice => t('app.msgs.does_not_exist')
-    else
-      @css.push('shCore.css', 'shThemeDefault.css', 'api.css')
-      @js.push('shCore.js', 'shBrushJScript.js', 'api.js')
+      gon.get_highlight_desc_link = highlights_get_description_path
 
-      respond_to do |format|
-        format.html {render 'api/documentation'}
+      # if the visual is a chart, include the highcharts file
+      # if the visual is a map, include the highmaps file
+      gon.visual_type = @highlight_data[:visual_type]
+      if @highlight_data[:visual_type] == 'chart'
+        @js.push('highcharts.js')
+      elsif @highlight_data[:visual_type] == 'map'
+        @js.push('highcharts.js', 'highcharts-map.js')
+
+        if @highlight_data[:type] == 'dataset'
+          # have to get the shape file url for this dataset
+          @shapes_url = Dataset.shape_file_url(@highlight_data[:id])
+        end
       end
+      @js.push('highcharts-exporting.js')
+
     end
-  end
 
-  ########################################
-  ## DATASETS
-  ########################################
-
-  # get list of all public datasets
-  def dataset_catalog
     respond_to do |format|
-      format.json {
-        render json: Api::V2.dataset_catalog, each_serializer: DatasetCatalogSerializer, root: 'datasets', callback: params[:callback]
-      }
+      format.html # index.html.erb
     end
+
   end
 
-  # get details about a dataset
-  def dataset
-    respond_to do |format|
-      format.json {
-        render json: Api::V2.dataset(params[:dataset_id], clean_filtered_params(request.filtered_parameters)), each_serializer: DatasetSerializer, callback: params[:callback]
-      }
+
+  def index_old
+    options = nil
+    @errors = false
+
+    begin
+      options = Rack::Utils.parse_query(Base64.urlsafe_decode64(params[:id]))
+    rescue
+      @errors = true
     end
-  end
 
-  # get codebook for a dataset
-  def dataset_codebook
-    respond_to do |format|
-      format.json {
-        render json: Api::V2.dataset_codebook(params[:dataset_id], clean_filtered_params(request.filtered_parameters)), each_serializer: QuestionSerializer, root: 'questions', callback: params[:callback]
-      }
-    end
-  end
+    # options must be present with dataset or time series id and question code; all other options are not required
+    if !@errors && options.present? && (options['dataset_id'].present? || options['time_series_id'].present?) && options['question_code'].present?
+      options = clean_filtered_params(options)
 
-  # analyse the dataset for the passed in parameters
-  # parameters:
-  #  - question_code - code of question to analyze (required)
-  #  - broken_down_by_code - code of question to compare against the first question (optional)
-  #  - filt_by_code - code of question to filter the anaylsis by (optioanl)
-  #  - can_exclude - boolean indicating if the can_exclude answers should by excluded (optional, default false)
-  def dataset_analysis
-    respond_to do |format|
-      format.json {
-        render json: Api::V2.dataset_analysis(params[:dataset_id], params[:question_code], clean_filtered_params(request.filtered_parameters)), callback: params[:callback]
-      }
-    end
-  end
+      if options['dataset_id'].present?
+        data = Api::V2.dataset_analysis(options['dataset_id'], options['question_code'], options)
 
-  ########################################
-  ## TIME SERIES
-  ########################################
+        # save dataset title
+        @title = data[:dataset][:title] if data.present? && data[:dataset].present?
 
-  # get list of all public time sereie
-  def time_series_catalog
-    respond_to do |format|
-      format.json {
-        render json: Api::V2.time_series_catalog, each_serializer: TimeSeriesCatalogSerializer, root: 'time_series', callback: params[:callback]
-      }
-    end
-  end
+        # create link to dashboard
+        @link = explore_data_dashboard_url(options['dataset_id'])
 
-  # get details about a time_series
-  def time_series
-    respond_to do |format|
-      format.json {
-        render json: Api::V2.time_series(params[:time_series_id], clean_filtered_params(request.filtered_parameters)), each_serializer: TimeSeriesSerializer, callback: params[:callback]
-      }
-    end
-  end
+        # create link to this item
+        options['id'] = options['dataset_id']
+        options['from_embed'] = true
+        gon.visual_link = explore_data_show_url(options)
 
-  # get codebook for a time_series
-  def time_series_codebook
-    respond_to do |format|
-      format.json {
-        render json: Api::V2.time_series_codebook(params[:time_series_id], clean_filtered_params(request.filtered_parameters)), each_serializer: TimeSeriesQuestionSerializer, root: 'questions', callback: params[:callback]
-      }
-    end
-  end
+      elsif options['time_series_id'].present?
+        data = Api::V2.time_series_analysis(options['time_series_id'], options['question_code'], options)
 
-  # analyse the time series for the passed in parameters
-  # parameters:
-  #  - question_code - code of question to analyze (required)
-  #  - filt_by_code - code of question to filter the anaylsis by (optioanl)
-  #  - can_exclude - boolean indicating if the can_exclude answers should by excluded (optional, default false)
-  def time_series_analysis
-    respond_to do |format|
-      format.json {
-        render json: Api::V2.time_series_analysis(params[:time_series_id], params[:question_code], clean_filtered_params(request.filtered_parameters)), callback: params[:callback]
-      }
-    end
-  end
+        # save dataset title
+        @title = data[:time_series][:title] if data.present? && data[:time_series].present?
 
+        # create link to dashboard
+        @link = explore_time_series_dashboard_url(options['time_series_id'])
 
+        # create link to this item
+        options['id'] = options['time_series_id']
+        options['from_embed'] = true
+        gon.visual_link = explore_time_series_show_url(options)
 
-private
-  # remove unwanted items from the filtered params
-  def clean_filtered_params(params)
-    params.except('access_token', 'controller', 'action', 'format', 'locale')
-  end
-
-  # make sure the access token is valid
-  def restrict_access
-    if !@is_xtraktr
-      @user_api_key = ApiKey.find_by(key: params[:access_token])
-      if @user_api_key.nil?
-        render json: {errors: [{status: '401', detail: I18n.t('api.msgs.no_key', url: settings_url) }]}
-        return false
       end
+
+      # check if errors exist
+      @errors = data[:errors].present?
+
+      if !@errors
+        # save data to gon so can be used for charts
+        gon.json_data = data
+        # save values of filters so can choose correct chart/map to show
+        gon.broken_down_by_value = options['broken_down_by_value'] if options['broken_down_by_value'].present? # only present if doing maps
+        gon.filtered_by_value = options['filtered_by_value'] if options['filtered_by_value'].present?
+
+        set_gon_highcharts
+
+      end
+
+      # if the visual is a chart, include the highcharts file
+      # if the visual is a map, include the highmaps file
+      gon.visual_type = options['visual_type']
+      if options['visual_type'] == 'chart'
+        @js.push('highcharts.js')
+      elsif options['visual_type'] == 'map'
+        @js.push('highcharts.js', 'highcharts-map.js')
+
+        if options['dataset_id'].present?
+          # have to get the shape file url for this dataset
+          @shapes_url = Dataset.shape_file_url(options['dataset_id'])
+        end
+      end
+      @js.push('highcharts-exporting.js')
+
     end
-  end
 
-  # record the api request
-  def record_request
-    ApiRequest.record_request(@user_api_key, request.remote_ip, request.filtered_parameters, @user_agent)
-  end
-
-  def set_background
-    @show_title = false
-    @api = true
+    respond_to do |format|
+      format.html # index.html.erb
+    end
   end
 
 end
