@@ -41,6 +41,24 @@
               <%= generate_explore_options(@items, selected_code: @filtered_by_code, disabled_code: @question_code, disabled_code2: @broken_down_by_code) %>
             </select>
           </div>
+
+          <% if @dataset.is_weighted? %>
+            <% # determine if need to show weight when page loads %>
+            <div class="form-weight-by">
+              <%= label_tag 'weighted_by_code', t('.form.weighted_by_code') %>
+              <select data-live-search="true" data-width="100%" class="selectpicker" id="weighted_by_code" name="weighted_by_code">
+                <% @dataset.weights.each do |weight| %>
+                  <%
+                    is_default = weight.is_default? ? 'data-default=true' : ''
+                    selected = (params[:weighted_by_code].nil? && weight.is_default?) || params[:weighted_by_code] == weight.code ? 'selected=selected' : ''
+                  %>
+                  <option value="<%= weight.code %>" <%= is_default %> <%= selected %>><%= weight.text %></option>
+                <% end %>
+                <option value="unweighted"><%= t('.form.no_weight') %></option>
+              </select>
+            </div>
+          <% end %>
+
           <%
             can_exclude_visibility = selected_question_has_can_exclude?(@questions, [@question_code, @broken_down_by_code, @filtered_by_code]) == true ? '' : 'style=\'visibility: hidden;\''
           %>
