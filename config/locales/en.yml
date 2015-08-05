@@ -399,10 +399,10 @@ en:
     subtitle:
       html:
         title: "Total Responses: <span class='number'>%{num}</span> out of %{total}"
-        title_filter: "Total Responses Filtered by Answers to '<span class='number'>%{code}</span> - %{variable}': %{nums}"
+        title_filter: "Total Responses out of %{total}, Filtered by Answers to '<span class='number'>%{code}</span> - %{variable}' : <br />%{nums}"
       text:
         title: "Total Responses: %{num} out of %{total}"
-        title_filter: "Total Responses Filtered by Answers to '%{code} - %{variable}': %{nums}"
+        title_filter: "Total Responses out of %{total}, Filtered by Answers to '%{code} - %{variable}': %{nums}"
   datatable:
     search: Search
     search_footer: 'Search %{name}'
@@ -558,8 +558,12 @@ en:
       notes: Notes
       group: Group
       subgroup: Subgroup
+      weight: Weight
       count: Count
       percent: Percent
+      unweighted_count: Unweighted Count
+      weighted_count: Weighted Count
+      weighted_percent: Weighted Percent
       dataset_dashboard: Dataset Dashboard
       time_series_dashboard: Time Series Dashboard
       terms: "I agree to the <a href='http://www.unicef.org/about/legal_terms.html' target='_blank'>Terms of Use</a>"
@@ -1056,6 +1060,7 @@ en:
         no_filter: No Filter
         can_exclude: Exclude Answers
         can_exclude_hint: At least one selected question has answers that can be excluded during analysis. Select this checkbox to remove these answers from the analysis.
+        weighted_by_code: Weighted By
       jumpto:
         chart: Jump to Chart
         map: Jump to Map

@@ -93,6 +93,11 @@ class Dataset < CustomTranslation
       where(is_default: true).first
     end
 
+    # get the weight with the question code
+    def with_code(code)
+      where(code: code).first
+    end
+
     # get the weights for a question
     def for_question(code, ignore_id=nil)
       if ignore_id.present?
