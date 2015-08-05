@@ -93,6 +93,22 @@ function add_disclaimer_link(visual_element){
 }
 
 
+////////////////////////////////////////////////
+// add powered by xtraktr link
+////////////////////////////////////////////////
+function add_powered_by_link(visual_element){
+  if (gon.powered_by_link && gon.powered_by_text){
+    var parent = $(visual_element).parent();
+
+    // create link
+    var link = '<a class="chart-powered-by" href="' + gon.powered_by_link + '" target="_blank" title="' + gon.powered_by_title + '">' + gon.powered_by_text + '</a>';
+
+    // add link to visual
+    $(visual_element).append(link);
+  }
+}
+
+
 
 ////////////////////////////////////////////////
 // determine which highlight button to add to chart
@@ -437,6 +453,9 @@ function build_highmap(shape_question_code, adjustable_max, json_map_set, chart_
 
   // add disclaimer link
   add_disclaimer_link($(selector_path + ' #' + map_id));
+
+  // add powered by link
+  add_powered_by_link($(selector_path + ' #' + map_id));
 }
 
 
@@ -601,6 +620,9 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
 
   // add disclaimer link
   add_disclaimer_link($(selector_path + ' #' + chart_id));
+
+  // add powered by link
+  add_powered_by_link($(selector_path + ' #' + chart_id));
 }
 
 
@@ -786,6 +808,9 @@ function build_pie_chart(json_chart, chart_height){
 
   // add disclaimer link
   add_disclaimer_link($(selector_path + ' #' + chart_id));
+
+  // add powered by link
+  add_powered_by_link($(selector_path + ' #' + chart_id));
 }
 
 
@@ -925,6 +950,9 @@ function build_time_series_chart(json_chart, chart_height){
 
   // add disclaimer link
   add_disclaimer_link($(selector_path + ' #' + chart_id));
+
+  // add powered by link
+  add_powered_by_link($(selector_path + ' #' + chart_id));
 }
 
 

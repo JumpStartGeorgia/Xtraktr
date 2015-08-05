@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
 
   layout 'app'
-  protect_from_forgery  
+  protect_from_forgery
 
   PER_PAGE_COUNT = 6
 
@@ -75,7 +75,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 	  @enable_omniauth = @is_xtraktr
 
     # get the id for addthis sharing
-    @addthis_id =  @is_xtraktr ? (Rails.env.production? ? ENV['XTRAKTR_ADDTHIS_PROFILE_ID'] : ENV['XTRAKTR_ADDTHIS_PROFILE_ID_DEV']) 
+    @addthis_id =  @is_xtraktr ? (Rails.env.production? ? ENV['XTRAKTR_ADDTHIS_PROFILE_ID'] : ENV['XTRAKTR_ADDTHIS_PROFILE_ID_DEV'])
                             : (Rails.env.production? ? ENV['UNICEF_ADDTHIS_PROFILE_ID']  : ENV['UNICEF_ADDTHIS_PROFILE_ID_DEV'])
 
 
@@ -83,7 +83,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     @data_editor_role = @is_xtraktr ? User::ROLES[:user] : User::ROLES[:data_editor]
     @site_admin_role = @is_xtraktr ? User::ROLES[:admin] : User::ROLES[:site_admin]
 
-    # for loading extra css/js files    
+    # for loading extra css/js files
     @css = []
     @js = []
 
@@ -96,6 +96,8 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 
     # get public question count
     @public_question_count = Stats.public_question_count
+
+    @xtraktr_url = "http://xtraktr.jumpstart.ge"
   end
 
 	def initialize_gon
@@ -106,7 +108,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 	  gon.datatable_i18n_url = "/datatable_#{I18n.locale}.txt"
 
     gon.visual_types = Highlight::VISUAL_TYPES
-    
+
     gon.get_highlight_desc_link = highlights_get_description_path
 	end
 
@@ -127,7 +129,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     end
   end
 
-	def after_sign_in_path_for(resource)    
+	def after_sign_in_path_for(resource)
 		session[:previous_urls].last || request.env['omniauth.origin'] || root_path(:locale => I18n.locale)
 	end
 
@@ -139,7 +141,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 	# only record the path if this is not an ajax call and not a users page (sign in, sign up, etc)
 	def store_location
 		session[:previous_urls] ||= []
-        
+
     if session[:download_url].present? && !user_signed_in? && !params[:d].present? && !(params[:controller] == 'users/registrations' && params[:action] == 'create' )
       session[:download_url] = nil
     end
@@ -149,17 +151,17 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     end
 
     if request.fullpath.index("/download/").nil?
-  		if session[:previous_urls].first != request.fullpath && 
+  		if session[:previous_urls].first != request.fullpath &&
           params[:format] != 'js' && params[:format] != 'json' && !request.xhr? &&
           request.fullpath.index("/users/").nil? &&
           request.fullpath.index("/embed/").nil?
-          
+
   	    session[:previous_urls].unshift request.fullpath
       elsif session[:previous_urls].first != request.fullpath &&
          request.xhr? && !request.fullpath.index("/users/").nil?  &&
           !request.fullpath.index("/embed/").nil?&&
          params[:return_url].present?
-         
+
         session[:previous_urls].unshift params[:return_url]
   		end
     end
@@ -177,7 +179,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     end
     return sorted
   end
-	
+
   def clean_filename(filename)
     filename.strip.latinize.to_ascii.gsub(' ', '_').gsub(/[\\ \/ \: \* \? \" \< \> \| \, \. ]/,'')
   end
@@ -209,7 +211,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     @time_series_url = time_series_path(@time_series) if set_url
     @is_time_series_admin = true
     gon.is_admin = true
-    
+
     @show_title = show_title
   end
 
@@ -292,7 +294,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
         gon.na = I18n.t('explore_data.na')
         gon.percent = I18n.t('explore_data.percent')
         gon.table_questions_header = I18n.t('app.common.questions')
-        
+
         set_gon_highcharts
         set_gon_datatables
 
@@ -300,8 +302,8 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
         gon.dataset_id = params[:id]
         gon.api_dataset_analysis_path = api_v1_dataset_analysis_path
 
-      } 
-    end   
+      }
+    end
   end
 
 
@@ -356,11 +358,11 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
         gon.time_series_id = params[:id]
         gon.api_time_series_analysis_path = api_v1_time_series_analysis_path
 
-      } 
-    end   
+      }
+    end
   end
 
-  # generate the data needed for the embed_id 
+  # generate the data needed for the embed_id
   # output: {type, title, dashboard_link, explore_link, error, visual_type, js}
   def get_highlight_data(embed_id, highlight_id=nil, use_admin_link=nil)
     highlight_id ||= SecureRandom.urlsafe_base64
@@ -392,7 +394,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
           permalink = Dataset.get_slug(options['dataset_id'])
           permalink = options['dataset_id'] if permalink.blank?
 
-          # create link to dashboard          
+          # create link to dashboard
           output[:dashboard_link] = use_admin_link.to_s == 'true' ? dataset_url(permalink) : explore_data_dashboard_url(permalink)
 
           # create link to this item
@@ -422,15 +424,15 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
           output[:id] = options['id']
           options['from_embed'] = true
           output[:explore_link] = use_admin_link.to_s == 'true' ? explore_time_series_url(options) : explore_time_series_show_url(options)
-        end        
+        end
       end
 
       # check if errors exist
       output[:error] = data[:error].present?
 
       # record if data exists
-      output[:has_data] = data[:results].present? && 
-        ((data[:results][:analysis].present? && data[:results][:analysis].length > 0) || 
+      output[:has_data] = data[:results].present? &&
+        ((data[:results][:analysis].present? && data[:results][:analysis].length > 0) ||
          (data[:results][:filter_analysis].present? && data[:results][:filter_analysis].length > 0)) if !output[:error]
 
       if !output[:error] && output[:has_data]
@@ -499,8 +501,8 @@ logger.debug "======= output js = #{output[:js]}"
     gon.highcharts_svg = I18n.t('highcharts.svg')
 
     gon.add_highlight_text = I18n.t('helpers.links.add_highlight')
-    gon.highlight_description_chart_text = I18n.t('helpers.links.highlight_description_chart') 
-    gon.embed_chart_text = I18n.t('helpers.links.embed_chart') 
+    gon.highlight_description_chart_text = I18n.t('helpers.links.highlight_description_chart')
+    gon.embed_chart_text = I18n.t('helpers.links.embed_chart')
     gon.delete_highlight_text = I18n.t('helpers.links.delete_highlight')
     gon.description_highlight_text = I18n.t('helpers.links.description_highlight')
     gon.confirm_text = I18n.t('helpers.links.confirm')

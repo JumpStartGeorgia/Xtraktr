@@ -19,7 +19,7 @@
             <span class="icon-bar"></span>
           </button>
 
-      
+
           <div class="m-box">
             <div class="m-share">
               <%= link_to '', "https://www.facebook.com/sharer/sharer.php?u=" +  root_url, class: 'facebook', onclick:"javascript:window.open(this.href,
@@ -56,15 +56,15 @@
             <div class="questions"><%= t('app.common.questions').upcase %></div>
           </div>
         </div>
-        
+
         <form class="navbar-form navbar-left" role="search" action="<%= explore_data_path %>">
           <div class="form-group">
             <input type="search" class="form-control" placeholder="<%= t('helpers.search') %>" name="q">
           </div>
         </form>
       <ul class="nav navbar-right navbar-top-links collapse" id="navbar-collapse">
-        
-        <% if user_signed_in? %>       
+
+        <% if user_signed_in? %>
           <li class="user">
             <div class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -97,11 +97,11 @@
             </div>
             <div>
               <%= link_to destroy_user_session_path, :method => :delete, title: t('helpers.links.sign_out'), class:"signout" do %>
-                <div class="img" alt="<%= t('helpers.links.sign_out') %>"></div>             
+                <div class="img" alt="<%= t('helpers.links.sign_out') %>"></div>
               <% end %>
             </div>
           </li>
-          
+
         <% else %>
           <li role="menuitem" class="user in">
             <%= link_to(t('helpers.links.sign_in2'), new_user_session_path, class: 'reattach sign_in')  %>/
@@ -115,18 +115,18 @@
         <% end %>
           <li class="sidebaritem sidebar">
             <div class="box">
-              <ul class="nav in" id="side-menu">          
+              <ul class="nav in" id="side-menu">
                 <% if !@is_xtraktr %>
                 <li><%= link_to t('.back'), 'http://www.unicef.ge', class: 'unicef', :target => :blank %></li>
                 <% end %>
                 <li><%= link_to_sidebar root_path, 'home' %></li>
-                <li><%= link_to_sidebar explore_data_path, 'datasets' %></li> 
+                <li><%= link_to_sidebar explore_data_path, 'datasets' %></li>
                 <% if @is_xtraktr %>
-                  <li><%= link_to_sidebar explore_time_path, 'time_series' %></li>            
-                <% end %>            
+                  <li><%= link_to_sidebar explore_time_path, 'time_series' %></li>
+                <% end %>
                 <li><%= link_to_sidebar instructions_path, 'instructions' %></li>
                 <li><%= link_to_sidebar api_path, 'api' %></li>
-                <li><%= link_to_sidebar contact_path, 'contact' %></li>                                        
+                <li><%= link_to_sidebar contact_path, 'contact' %></li>
               </ul>
               <div class="sidebar-bottom">
                 <div class="share">
@@ -137,10 +137,11 @@
                               '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;" %>
                 </div>
                 <%= link_to t('app.menu.disclaimer'), disclaimer_path, class: 'disclaimer' %>
-              </div> 
+                <%= link_to t('app.menu.powered_xtraktr').html_safe, @xtraktr_url, class: 'powered_xtratkr', target: :blank, title: t('app.menu.powered_xtraktr_title') %>
+              </div>
             </div>
         </li>
       </ul>
 
-      
+
     </nav>

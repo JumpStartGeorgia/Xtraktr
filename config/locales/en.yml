@@ -35,7 +35,7 @@ en:
         affiliation: Affiliation
         status: Status
         status_other: When other (Please specify)
-        description: Short description of research objective (<i>optional</i>)           
+        description: Short description of research objective (<i>optional</i>)
         notifications: I want to receive notifications when new datasets are added
         notification_locale: Notification Language
       message:
@@ -52,7 +52,7 @@ en:
         affiliation: Affiliation
         status: Status
         status_other: When other(Please specify)
-        description: Short description of research objective (<i>optional</i>)   
+        description: Short description of research objective (<i>optional</i>)
         dataset_id: Dataset
         dataset_type: File Type
         dataset_locale: Language
@@ -341,10 +341,10 @@ en:
         title_filter: " filtered by: '%{code} - %{variable}'"
         title_filter_value: " filtered by: '%{code} - %{variable} = %{value}'"
     subtitle:
-      html: 
+      html:
         title: "Total Responses: <span class='number'>%{num}</span>"
         title_filter: "Total Responses Filtered by Answers to '<span class='number'>%{code}</span> - %{variable}': %{nums}"
-      text: 
+      text:
         title: "Total Responses: %{num}"
         title_filter: "Total Responses Filtered by Answers to '%{code} - %{variable}': %{nums}"
   explore_data:
@@ -382,28 +382,28 @@ en:
         title_filter: ", filtered by: '%{code} - %{group} %{variable}'"
         title_filter_value: ", filtered by: '%{code} - %{group} %{variable} = %{value}'"
     subtitle:
-      html: 
+      html:
         title: "Total Responses: <span class='number'>%{num}</span>"
         title_filter: "Total Responses Filtered by Answers to '<span class='number'>%{code}</span> - %{variable}': %{nums}"
-      text: 
+      text:
         title: "Total Responses: %{num}"
         title_filter: "Total Responses Filtered by Answers to '%{code} - %{variable}': %{nums}"
   datatable:
     search: Search
     search_footer: 'Search %{name}'
-    copy: 
+    copy:
       title: Copy
       tooltip: Copy to clipboard
-    csv: 
+    csv:
       title: CSV
       tooltip: Save as CSV
-    xls: 
+    xls:
       title: XLS
       tooltip: Save as XLS
-    pdf: 
+    pdf:
       title: PDF
       tooltip: Save as PDF
-    print: 
+    print:
       title: Print
       tooltip: Print the table
   highcharts:
@@ -460,8 +460,8 @@ en:
       reset_or_sign_in: sign in with facebook or reset your password
       explanation: We are excited you are interested in our data. We would like to know a bit about who you are. Please complete our form to continue downloading this dataset.
       download_and_sign_up: "Download & Create Account"
-      like: Like   
-      likes: Likes      
+      like: Like
+      likes: Likes
       menu: Menu
       close: Close
       select_all: Select All
@@ -525,12 +525,12 @@ en:
       xtraktr:
         app_name: Xtraktr
         app_slogan: Insert xtraktr slogn here!
-        app_description: Insert xtraktr description here.      
+        app_description: Insert xtraktr description here.
       unicef:
         app_name: UNICEF Georgia Data Portal
         app_slogan: 'Helping to solve by measuring'
-        app_description: 'In collaboration with a wide range of partners, UNICEF Georgia gathers evidence on the situation of children in Georgia. It uses this knowledge to inform national and global decision-making with the objective of improving children’s well-being.'      
-      added_on: "Added on: %{date}" 
+        app_description: 'In collaboration with a wide range of partners, UNICEF Georgia gathers evidence on the situation of children in Georgia. It uses this knowledge to inform national and global decision-making with the objective of improving children’s well-being.'
+      added_on: "Added on: %{date}"
       jumpstart: JumpStart Georgia
       js_link_title: JumpStart Georgia - We communicate data better!
       question: Question
@@ -545,8 +545,8 @@ en:
       percent: Percent
       dataset_dashboard: Dataset Dashboard
       time_series_dashboard: Time Series Dashboard
-      terms: "I agree to the <a href='http://www.unicef.org/about/legal_terms.html' target='_blank'>Terms of Use</a>"  
-      or: Or 
+      terms: "I agree to the <a href='http://www.unicef.org/about/legal_terms.html' target='_blank'>Terms of Use</a>"
+      or: Or
       go: Go
       share: Share
       codebook_title: Download the Codebook
@@ -554,6 +554,8 @@ en:
       private_question: This quesiton is not available to the public
       private_answer: This answer is not available to the public
       mappable_question: This question displays a map
+      powered_by_xtraktr: Powered By Xtraktr
+      powered_by_xtraktr_title: This data was built using the Xtraktr platform. Learn more and add your own data on the Xtraktr website.
     msgs:
       does_not_exist: You tried to access a page that does not exist.
       not_authorized: You are not authorized to view that page.
@@ -598,8 +600,8 @@ en:
       datasets: Datasets
       time_series: Time Series
       user_settings: User Settings
-      about_dataset: About 
-      about_time_series: About 
+      about_dataset: About
+      about_time_series: About
       all_datasets: All Datasets
       all_time_series: All Time Series
       contact: Contact
@@ -607,10 +609,12 @@ en:
       instructions: Instructions
       home: Home
       disclaimer: Disclaimer
+      powered_xtraktr: Powered By<br />Xtraktr
+      powered_xtraktr_title: This data portal was built using the Xtraktr platform. Learn more and add your own data on the Xtraktr website.
       titles:
         explore_dataset: Explore the dataset data through charts, maps and tables
         explore_time_series: Explore the time series data through charts and tables
-        dataset_to_time_series: Explore this dataset as part of a time series 
+        dataset_to_time_series: Explore this dataset as part of a time series
       admin_dataset:
         explore_data: Explore Data
         heading: Dataset Options
@@ -653,7 +657,7 @@ en:
       international_organization: International Organization
       private_sector: Private Sector
       other: Other
-    wanna_account: Tired of filling out this form? To avoid this form in the future, create an account.    
+    wanna_account: Tired of filling out this form? To avoid this form in the future, create an account.
   layouts:
     nav:
       toggle: Toggle navigation
@@ -698,7 +702,7 @@ en:
         p1: "Someone has requested a link to change your password on %{app_name}, and you can do this through the link below."
         link_title: Change my password
         p2: "If you didn't request this, please ignore this email."
-        p3: "Your password won't change until you access the link above and create a new one."                
+        p3: "Your password won't change until you access the link above and create a new one."
   settings:
     index:
       title: User Settings
@@ -733,24 +737,24 @@ en:
     explore_data:
       title: Explore the Data
       search_datasets: Search Datasets
-      sort_by: 
+      sort_by:
         this: Sort By
         title: Title
         release: Date Released
         publish: Date Published Here
       no_data: 'At this time, no datasets have been loaded into the site.'
-      no_match: 'Sorry, no datasets match your search request.'      
+      no_match: 'Sorry, no datasets match your search request.'
     explore_data_show:
       title: Explore the Data
     explore_time_series:
       title: Explore Time Series Data
       search_time_series: Search Time Series
-      sort_by: 
+      sort_by:
         this: Sort By
         title: Title
         publish: Date Published Here
       no_data: 'At this time, no time series have been created in the site.'
-      no_match: 'Sorry, no time series match your search request.'      
+      no_match: 'Sorry, no time series match your search request.'
     explore_time_series_show:
       title: Explore Time Series Data
   api:
@@ -784,8 +788,8 @@ en:
       tab_bad_answers: Questions with Bad Answers
       tab_no_answers: Questions with No Answers
       tab_no_text: Questions with No Text
-      bad_answers: 'The following %{number} questions contain values that were not listed as one of the possible answers. For example, the list of possible answers was 1, 2, 3 or 4 and one record had a value of 5. The records with the extra values will not be used during analysis.' 
-      no_answers: "The following %{number} questions do not have a list of possible answers. For example, a question 'What is your age?' could come with answers like <20, 20-40, 40-60, >60 and each of these answers would represent a certain value like 1, 2, 3, 4 that is stored in the data. These questions will not be available for analysis unless a list of possible answers are provided." 
+      bad_answers: 'The following %{number} questions contain values that were not listed as one of the possible answers. For example, the list of possible answers was 1, 2, 3 or 4 and one record had a value of 5. The records with the extra values will not be used during analysis.'
+      no_answers: "The following %{number} questions do not have a list of possible answers. For example, a question 'What is your age?' could come with answers like <20, 20-40, 40-60, >60 and each of these answers would represent a certain value like 1, 2, 3, 4 that is stored in the data. These questions will not be available for analysis unless a list of possible answers are provided."
       no_text: "The following %{number} questions do not have text. For example a code of 'A1' was given, but no text describing what 'A1' represents was provided. These questions will not be available for analysis unless text is provided."
       no_bad_answers: Congratulations! All of the data file data contains valid answers.
       no_no_answers: Congratulations! All of the data file questions have answers.
@@ -804,7 +808,7 @@ en:
       explanation: "Use this page to indicate which questions are geographic in nature so that the analysis screen can include a map."
       no_shapes: "Sorry, at this time there are no pre-defined maps on file that you can use."
       add_shapes: Add Map Shapes
-      add_map_question: Add Mappable Question 
+      add_map_question: Add Mappable Question
     mappable_form:
       title: "Mappable Question Form"
       no_questions: "There are no questions available in '%{title}' to be made mappable."
@@ -835,7 +839,7 @@ en:
     highlights:
       title: Dataset Highlights
       instructions: |
-        Highlights are visuals (charts and maps) that highlight interesting aspects of your dataset and are shown on the dashboard page and the home page. 
+        Highlights are visuals (charts and maps) that highlight interesting aspects of your dataset and are shown on the dashboard page and the home page.
 
         To add a highlight, go to the explore page, select the indicators you want, and then in the charts that appear click the star button in the top left corner.
 
@@ -851,14 +855,14 @@ en:
     download_data:
       title: Download Complete Dataset
       instructions: |
-        You can use this page to download the entire dataset in any format you desire. 
+        You can use this page to download the entire dataset in any format you desire.
 
         This download is different than what is on the dashboard page in that this download includes the entire dataset, whereas the download from the dashboard page only includes the data that you have indicated can be downloaded by the public.
       no_files: The download files have not been generated yet. Please check back soon.
     sort:
       title: Sort Groups and Questions
       explanation: |
-        This page allows you to sort all groups and questions into the order that you desire. 
+        This page allows you to sort all groups and questions into the order that you desire.
 
         By defualt, the question sort order is set to be the same as the order of the questions in the data file.
 
@@ -882,7 +886,7 @@ en:
         You can sort groups and questions using two methods:
 
         1) Drag and Drop - Simply drag the row to the desired position.
-        2) Select & Checkboxes - Use the checkboxes to indciate which row(s) you want to move and then use the select box above the table to indicate where to move the row(s) to. 
+        2) Select & Checkboxes - Use the checkboxes to indciate which row(s) you want to move and then use the select box above the table to indicate where to move the row(s) to.
   questions:
     index:
       title: "Edit Questions and their Answers"
@@ -894,7 +898,7 @@ en:
       title: "Question: %{question}"
       header_answers: Answers
       no_answers: There are no pre-defined list of answers for this question.
-    form: 
+    form:
       header_answers: Answers
       explanation_answers: "The answer settings fields (value, sort order, etc) are only shown in the '%{lang}' tab."
       default_text: Default Text
@@ -911,7 +915,7 @@ en:
         template2: "The only columns that cannot be changed are: %{code}"
         template_link: Download Questions Template
         submit: Update Questions
-      answers: 
+      answers:
         header: Answers
         template: Clicking the button below will download a template of all answers in this dataset. Make the desired changes in the spreadsheet and then use the form below to update your changes.
         template2: "The only columns that cannot be changed are: %{code}, %{value}"
@@ -926,14 +930,14 @@ en:
       explanation: |
         This section allows you to put similar questions together in a group. You can also create a subgroup of questions.
 
-        Groups have a name and description. You can use the description to give context to the set of questions in the group. 
+        Groups have a name and description. You can use the description to give context to the set of questions in the group.
 
         Groups will be visible in the codebook and on the explore page. It is up to you on whether or not the group description is included in the chart titles.
 
         By default, groups are put at the top of the codebook and all ungrouped questions will appear after the groups. You can use the %{link} to further control the order of the groups and questions.
       explanation_link_text: Sorting page
     table_row:
-      question_count: '%{num} questions'    
+      question_count: '%{num} questions'
     form:
       option_top_level: This group is not a subgroup
       chart_description_explanation: "Below is an example of how your description text will look in the charts. The format is: Question Code - Group Description. Question Text."
@@ -941,13 +945,13 @@ en:
       questions_explanation_default: "All questions that are not assigned to any other group are avaiable to be assigned to this group."
       questions_explanation_subgroup: "Only the questions assinged to '%{group}' are available to be assigned to this subgroup."
   time_series:
-    form: 
+    form:
       header_datasets: Datasets
       header_add_dataset: Add a new dataset to this time series
     highlights:
       title: Time Series Highlights
       instructions: |
-        Highlights are visuals (charts and maps) that highlight interesting aspects of your time series and are shown on the dashboard page and the home page. 
+        Highlights are visuals (charts and maps) that highlight interesting aspects of your time series and are shown on the dashboard page and the home page.
 
         To add a highlight, go to the explore page, select the indicators you want, and then in the charts that appear click the star button in the top left corner.
 
@@ -970,7 +974,7 @@ en:
       btn_automatic: Automatically Assign Matching Questions
       btn_automatic_hint: Questions with the same Question Code in each dataset will automatically be added to the time series. This will take a few seconds to complete.
       header_dataset_question: "%{title} Question"
-    form: 
+    form:
       header_answers: Answers
       explanation_answers: "The answer settings fields (value, sort order, etc) are only shown in the '%{lang}' tab."
       default_text: Default Text
@@ -998,7 +1002,7 @@ en:
         no_comparison: No Comparison
         swap: Swap the Questions
         submit: Generate
-        reset: Reset 
+        reset: Reset
         filtered_by_code: Filtered By
         no_filter: No Filter
         can_exclude: Exclude Answers
@@ -1022,7 +1026,7 @@ en:
       form:
         question_code: Explore Answers To
         submit: Generate
-        reset: Reset 
+        reset: Reset
         filtered_by_code: Filtered By
         no_filter: No Filter
         can_exclude: Exclude "Don't know" & "Refuse"
@@ -1085,24 +1089,24 @@ en:
         - Codebook: %{codebook}
 
         - CSV: %{csv} The CSV is formatted to be loaded into SPSS, so it does not contain headers and the answers are the answer values, not the answer text.
-        
-        - SPS: The SPS file is a script file that you run in SPSS that will load the data from the CSV file and also create each variable and it's possible values. 
+
+        - SPS: The SPS file is a script file that you run in SPSS that will load the data from the CSV file and also create each variable and it's possible values.
                IMPORTANT - Before runing the script file in SPSS, you will need to update the line with 'DATA LIST FILE' to include the full path to the CSV file.
       stata: |
         The STATA download contains 3 files:
         - Codebook: %{codebook}
 
         - CSV: %{csv} The CSV is formatted to be loaded into STATA, so it does not contain headers and the answers are the answer text, not the answer values.
-        
-        - DO: The STATA DO file is a script file that you run in STATA that will load the data from the CSV file and also create each variable and it's possible values. 
+
+        - DO: The STATA DO file is a script file that you run in STATA that will load the data from the CSV file and also create each variable and it's possible values.
                IMPORTANT - Before runing the script file in STATA, you will need to update the line with 'using' at the end of the file to include the full path to the CSV file.
       r: |
         The R download contains 3 files:
         - Codebook: %{codebook}
 
         - CSV: %{csv} The CSV is formatted to be loaded into R, so the headers are the variables and the answers are the answer values, not the answer text.
-        
-        - R: The R file is a script file that you run in R that will load the data from the CSV file and also create each variable. 
+
+        - R: The R file is a script file that you run in R that will load the data from the CSV file and also create each variable.
                IMPORTANT - Before runing the script file in R, you will need to update the 'setwd' line to include the full path to the CSV file.
   download_data_options:
     text:
@@ -1112,6 +1116,6 @@ en:
       r: R
     title:
       csv: Data formatted for spreadsheets
-      spss: Data formatted for SPSS 
+      spss: Data formatted for SPSS
       stata: Data formatted for STATA
       r: Data formatted for R
