@@ -90,13 +90,13 @@ class RootController < ApplicationController
 
     @css.push('list.css')
     @js.push('list.js')
-    
+
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: { d: (render_to_string "root/_explore_data_datasets", formats: 'html', :layout => false) } }
-    end    
+    end
   end
-  
+
   def explore_data_dashboard
     @klass=' white'
     @klass_footer=''
@@ -128,7 +128,7 @@ class RootController < ApplicationController
       end
     end
   end
-  
+
   def explore_data_show
     @dataset = Dataset.is_public.find(params[:id])
 
@@ -158,7 +158,7 @@ class RootController < ApplicationController
       explore_data_generator(@dataset)
     end
   end
-  
+
 
 
   def explore_time_series
@@ -196,9 +196,9 @@ class RootController < ApplicationController
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: { d: (render_to_string "root/_explore_data_time_series", formats: 'html', :layout => false) } }
-    end    
+    end
   end
-  
+
   def explore_time_series_dashboard
     @klass=' white'
     @klass_footer=''
@@ -233,7 +233,7 @@ class RootController < ApplicationController
       end
     end
   end
-  
+
 
   def explore_time_series_show
     @time_series = TimeSeries.is_public.find(params[:id])
@@ -264,7 +264,7 @@ class RootController < ApplicationController
       explore_time_series_generator(@time_series)
     end
   end
-  
+
 
   def private_share
     @dataset = Dataset.by_private_key(params[:id])
@@ -272,12 +272,12 @@ class RootController < ApplicationController
     if @dataset.blank?
       redirect_to root_path, :notice => t('app.msgs.does_not_exist')
     elsif @dataset.public?
-      redirect_to explore_data_show_path(@dataset)      
+      redirect_to explore_data_show_path(@dataset)
     else
       @is_admin = false
       @dataset_url = private_share_path(@dataset.private_share_key)
       gon.explore_data = true
-      gon.api_dataset_analysis_path = api_v1_dataset_analysis_path
+      gon.api_dataset_analysis_path = api_v2_dataset_analysis_path
 
       # this method is in application_controller
       # and gets all of the required information
@@ -297,22 +297,22 @@ class RootController < ApplicationController
       mapper = FileMapper.create({ dataset_id: @dataset_id, dataset_type: @dataset_type, dataset_locale: @dataset_locale, download_type: @download_type })
       data[:url] = "/#{I18n.locale}/download/#{mapper.key}"
     else
-      @mod = Agreement.new({ dataset_id: @dataset_id, dataset_type: @dataset_type, dataset_locale: @dataset_locale, download_type: @download_type  })      
-      data[:form] = render_to_string "devise/registrations/new", :layout => false, :locals => { reg: false }       
-    end    
+      @mod = Agreement.new({ dataset_id: @dataset_id, dataset_type: @dataset_type, dataset_locale: @dataset_locale, download_type: @download_type  })
+      data[:form] = render_to_string "devise/registrations/new", :layout => false, :locals => { reg: false }
+    end
     respond_to do |format|
       format.json { render json: data }
     end
   end
   def download
-    begin      
+    begin
       mapper = FileMapper.find_by(key: params[:id])
       dat = Dataset.find(mapper.dataset_id)
       dat.current_locale = mapper.dataset_locale
       file = dat.urls[mapper.dataset_type][mapper.dataset_locale]
       mapper.destroy
       send_file  Rails.public_path + file,  :filename => clean_filename(dat.title + "--"+ mapper.dataset_type.upcase +  "--" + I18n.l(Time.now,format: :file)) +  ".zip",
-       :type=>"application/zip", :x_sendfile=>true        
+       :type=>"application/zip", :x_sendfile=>true
 
     rescue
       redirect_to (session[:previous_urls].last || request.env['omniauth.origin'] || root_path(:locale => I18n.locale))
@@ -338,7 +338,7 @@ class RootController < ApplicationController
         logger.debug "-------- no errors!"
 
         # save the html data
-        data[:html] = render_to_string "root/generate_highlights", formats: [:html], layout: false       
+        data[:html] = render_to_string "root/generate_highlights", formats: [:html], layout: false
 
         # save the js data
         data[:js] = {}
@@ -354,5 +354,5 @@ class RootController < ApplicationController
       format.json { render json: data }
     end
   end
-  
+
 end

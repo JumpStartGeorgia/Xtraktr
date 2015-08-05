@@ -300,7 +300,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 
         gon.explore_data = true
         gon.dataset_id = params[:id]
-        gon.api_dataset_analysis_path = api_v1_dataset_analysis_path
+        gon.api_dataset_analysis_path = api_v2_dataset_analysis_path
 
       }
     end
@@ -356,7 +356,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 
         gon.explore_time_series = true
         gon.time_series_id = params[:id]
-        gon.api_time_series_analysis_path = api_v1_time_series_analysis_path
+        gon.api_time_series_analysis_path = api_v2_time_series_analysis_path
 
       }
     end
@@ -384,7 +384,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
       if options['dataset_id'].present?
         output[:type] = 'dataset'
 
-        data = Api::V1.dataset_analysis(options['dataset_id'], options['question_code'], options)
+        data = Api::V2.dataset_analysis(options['dataset_id'], options['question_code'], options)
 
          if data.present? && data[:dataset].present?
           # save dataset title
@@ -406,7 +406,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
       elsif options['time_series_id'].present?
         output[:type] = 'time_series'
 
-        data = Api::V1.time_series_analysis(options['time_series_id'], options['question_code'], options)
+        data = Api::V2.time_series_analysis(options['time_series_id'], options['question_code'], options)
 
         if data.present? && data[:time_series].present?
           # save dataset title
