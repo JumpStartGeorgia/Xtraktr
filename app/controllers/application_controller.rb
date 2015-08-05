@@ -96,6 +96,8 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 
     # get public question count
     @public_question_count = Stats.public_question_count
+
+    @xtraktr_url = "http://xtraktr.jumpstart.ge"
   end
 
 	def initialize_gon
@@ -177,7 +179,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     end
     return sorted
   end
-	
+
   def clean_filename(filename)
     filename.strip.latinize.to_ascii.gsub(' ', '_').gsub(/[\\ \/ \: \* \? \" \< \> \| \, \. ]/,'')
   end

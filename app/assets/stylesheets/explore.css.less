@@ -685,7 +685,7 @@
           display: inline-block;
           position: relative;
           top: 1px;
-          margin-right: 7px;    
+          margin-right: 7px;
         }
       }
       .name-subgroup .group-title{
@@ -700,7 +700,7 @@
           display: inline-block;
           position: relative;
           top: 1px;
-          margin-right: 7px;    
+          margin-right: 7px;
         }
       }
       ul
@@ -1026,9 +1026,21 @@ span.total_responses{
 }
 #container-chart .chart a.chart-disclaimer, #container-map .map  a.chart-disclaimer{
   position: absolute;
-  bottom: 10px;
+  bottom: 0;
   right: 30px;
   color: #575F6D;
   font:14px 'sourcesans_pro', 'sans-serif';
   text-decoration: underline;
+}
+/* powered by xtraktr link in bottom right corner */
+#container-chart .chart a.chart-powered-by, #container-map .map  a.chart-powered-by{
+  position: absolute;
+  bottom: -15px;
+  right: 30px;
+  color: #afafaf;
+  font:12px 'sourcesans_pro', 'sans-serif';
+  text-decoration: none;
+  &:hover{
+    text-decoration: underline;
+  }
 }

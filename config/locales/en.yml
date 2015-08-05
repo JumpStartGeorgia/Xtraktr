@@ -391,7 +391,7 @@ en:
   datatable:
     search: Search
     search_footer: 'Search %{name}'
-    copy: 
+    copy:
       title: Copy
       tooltip: Copy to clipboard
     csv:
@@ -556,6 +556,8 @@ en:
       private_question: This quesiton is not available to the public
       private_answer: This answer is not available to the public
       mappable_question: This question displays a map
+      powered_by_xtraktr: Powered By Xtraktr
+      powered_by_xtraktr_title: This data was built using the Xtraktr platform. Learn more and add your own data on the Xtraktr website.
     msgs:
       does_not_exist: You tried to access a page that does not exist.
       not_authorized: You are not authorized to view that page.
@@ -862,7 +864,7 @@ en:
     sort:
       title: Sort Groups and Questions
       explanation: |
-        This page allows you to sort all groups and questions into the order that you desire. 
+        This page allows you to sort all groups and questions into the order that you desire.
 
         By defualt, the question sort order is set to be the same as the order of the questions in the data file.
 
@@ -886,7 +888,7 @@ en:
         You can sort groups and questions using two methods:
 
         1) Drag and Drop - Simply drag the row to the desired position.
-        2) Select & Checkboxes - Use the checkboxes to indciate which row(s) you want to move and then use the select box above the table to indicate where to move the row(s) to. 
+        2) Select & Checkboxes - Use the checkboxes to indciate which row(s) you want to move and then use the select box above the table to indicate where to move the row(s) to.
   questions:
     index:
       title: "Edit Questions and their Answers"
@@ -930,14 +932,14 @@ en:
       explanation: |
         This section allows you to put similar questions together in a group. You can also create a subgroup of questions.
 
-        Groups have a name and description. You can use the description to give context to the set of questions in the group. 
+        Groups have a name and description. You can use the description to give context to the set of questions in the group.
 
         Groups will be visible in the codebook and on the explore page. It is up to you on whether or not the group description is included in the chart titles.
 
         By default, groups are put at the top of the codebook and all ungrouped questions will appear after the groups. You can use the %{link} to further control the order of the groups and questions.
       explanation_link_text: Sorting page
     table_row:
-      question_count: '%{num} questions'    
+      question_count: '%{num} questions'
     form:
       option_top_level: This group is not a subgroup
       chart_description_explanation: "Below is an example of how your description text will look in the charts. The format is: Question Code - Group Description. Question Text."
