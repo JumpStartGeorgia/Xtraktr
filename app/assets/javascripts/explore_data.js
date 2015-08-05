@@ -296,7 +296,7 @@ function build_datatable(json){
       table += "</th>";
       var ln = json.broken_down_by.answers.length;
       for(i=0; i<ln;i++){
-        table += "<th colspan='" + col_header_count + "' class='color"+(ln-i%13)+"'>";
+        table += "<th colspan='" + col_header_count + "' class='color"+(i % 13 + 1)+"'>";
         table += json.broken_down_by.answers[i].text.toString();
         table += "</th>"
       }
@@ -351,7 +351,7 @@ function build_datatable(json){
 
       var ln = json.broken_down_by.answers.length;
       for(i=0; i<ln;i++){
-        table += "<th colspan='" + col_header_count + "' class='color"+(ln-i%13)+"'>";
+        table += "<th colspan='" + col_header_count + "' class='color"+(i % 13 + 1)+"'>";
         table += json.broken_down_by.answers[i].text.toString();
         table += "</th>"
       }
