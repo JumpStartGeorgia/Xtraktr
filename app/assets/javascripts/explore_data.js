@@ -705,6 +705,12 @@ function get_explore_data(is_back_button){
       url_querystring.push('filtered_by_code=' + ajax_data.filtered_by_code);
     }
 
+    // weighted by
+    if ($('select#weighted_by_code').val() != null && $('select#weighted_by_code').val() != ''){
+      ajax_data.weighted_by_code = $('select#weighted_by_code').val();
+      url_querystring.push('weighted_by_code=' + ajax_data.weighted_by_code);
+    }
+
     // can exclude
     if ($('input#can_exclude').is(':checked')){
       ajax_data.can_exclude = true;

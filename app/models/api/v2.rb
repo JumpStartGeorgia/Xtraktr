@@ -109,7 +109,7 @@ class Api::V2
     with_chart_data = options['with_chart_data'].present? && options['with_chart_data'].to_bool == true
     with_map_data = options['with_map_data'].present? && options['with_map_data'].to_bool == true
     language = options['language']
-    weight = options['weight']
+    weight = options['weighted_by_code']
 
     dataset = nil
     if private_user_id
