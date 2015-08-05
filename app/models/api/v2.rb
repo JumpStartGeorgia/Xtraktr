@@ -199,14 +199,13 @@ class Api::V2
 
     # get the weight question
     weight_question = nil
+    weight_item = nil
     if weight.present?
+      weight_item = dataset.weights.with_code(weight)
       weight_question =  dataset.questions.with_code(weight)
       # reset the weight option in case a bad one was sent in or questions do not share weight
       options[:weight] = weight
     end
-
-    puts "---- weight = #{weight_question.inspect}"
-
 
     ########################
     # start populating the output
@@ -214,7 +213,7 @@ class Api::V2
     data[:question] = create_dataset_question_hash(question, can_exclude: can_exclude, private_user_id: private_user_id)
     data[:broken_down_by] = create_dataset_question_hash(broken_down_by, can_exclude: can_exclude, private_user_id: private_user_id) if broken_down_by.present?
     data[:filtered_by] = create_dataset_question_hash(filtered_by, can_exclude: can_exclude, private_user_id: private_user_id) if filtered_by.present?
-    data[:weighted_by] = create_dataset_question_hash(weight_question, is_weight: true) if weight_question.present?
+    data[:weighted_by] = create_dataset_weight_hash(weight_item, weight_question) if weight_question.present?
     data[:analysis_type] = nil
     data[:results] = nil
 
@@ -443,34 +442,29 @@ private
   def self.create_dataset_question_hash(question, options={})
     can_exclude = options[:can_exclude].nil? ? false : options[:can_exclude]
     private_user_id = options[:private_user_id]
-    is_weight = options[:is_weight].nil? ? false : options[:is_weight]
 
     hash = {}
     if question.present?
-      if is_weight
-        hash = {code: question.code, original_code: question.original_code, text: question.text, notes: question.notes}
-      else
-        hash = {code: question.code, original_code: question.original_code, text: question.text, notes: question.notes, is_mappable: question.is_mappable, has_map_adjustable_max_range: question.has_map_adjustable_max_range}
-        # if this question belongs to a group, add it
-        if question.group_id.present?
-          group = question.group
-          if group.present?
-            # see if this is a subgroup
-            if group.parent_id.present?
-              hash[:group] = {title: group.parent.title, description: group.parent.description, include_in_charts: group.parent.include_in_charts}
-              hash[:subgroup] = {title: group.title, description: group.description, include_in_charts: group.include_in_charts}
-            else
-              hash[:group] = {title: group.title, description: group.description, include_in_charts: group.include_in_charts}
-            end
+      hash = {code: question.code, original_code: question.original_code, text: question.text, notes: question.notes, is_mappable: question.is_mappable, has_map_adjustable_max_range: question.has_map_adjustable_max_range}
+      # if this question belongs to a group, add it
+      if question.group_id.present?
+        group = question.group
+        if group.present?
+          # see if this is a subgroup
+          if group.parent_id.present?
+            hash[:group] = {title: group.parent.title, description: group.parent.description, include_in_charts: group.parent.include_in_charts}
+            hash[:subgroup] = {title: group.title, description: group.description, include_in_charts: group.include_in_charts}
+          else
+            hash[:group] = {title: group.title, description: group.description, include_in_charts: group.include_in_charts}
           end
         end
-        # if this is for admin, include whether the question is excluded
-        if private_user_id.present?
-          hash[:exclude] = question.exclude
-          hash[:answers] = (can_exclude == true ? question.answers.must_include_for_analysis : question.answers.sorted).map{|x| {value: x.value, text: x.text, exclude: x.exclude, can_exclude: x.can_exclude, sort_order: x.sort_order}}
-        else
-          hash[:answers] = (can_exclude == true ? question.answers.must_include_for_analysis : question.answers.all_for_analysis).map{|x| {value: x.value, text: x.text, can_exclude: x.can_exclude, sort_order: x.sort_order}}
-        end
+      end
+      # if this is for admin, include whether the question is excluded
+      if private_user_id.present?
+        hash[:exclude] = question.exclude
+        hash[:answers] = (can_exclude == true ? question.answers.must_include_for_analysis : question.answers.sorted).map{|x| {value: x.value, text: x.text, exclude: x.exclude, can_exclude: x.can_exclude, sort_order: x.sort_order}}
+      else
+        hash[:answers] = (can_exclude == true ? question.answers.must_include_for_analysis : question.answers.all_for_analysis).map{|x| {value: x.value, text: x.text, can_exclude: x.can_exclude, sort_order: x.sort_order}}
       end
     end
 
@@ -478,12 +472,22 @@ private
   end
 
 
+  # create weight hash for a dataset
+  def self.create_dataset_weight_hash(weight, question)
+    hash = {}
+    if weight.present? && question.present?
+      hash = {weight_name: weight.text, code: question.code, original_code: question.original_code, text: question.text, notes: question.notes}
+    end
+
+    return hash
+  end
+
 
   # for the given dataset and question, do a single analysis
   def self.dataset_single_analysis(dataset, data_hash, with_title=false)
     question = data_hash[:question]
     filtered_by = data_hash[:filtered_by]
-    weight = data_hash[:weight]
+    weight = data_hash[:weighted_by]
 
     # get the data for this code
     data = dataset.data_items.code_data(question[:code])
@@ -525,8 +529,8 @@ private
 
         if with_title
           # needed to run all anaylsis in order to have all total responses for subtitle
-          filter_results[:subtitle][:html] = dataset_analysis_subtitle_filtered('html', filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis])
-          filter_results[:subtitle][:text] = dataset_analysis_subtitle_filtered('text', filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis])
+          filter_results[:subtitle][:html] = dataset_analysis_subtitle_filtered('html', filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis], data.length)
+          filter_results[:subtitle][:text] = dataset_analysis_subtitle_filtered('text', filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis], data.length)
         end
 
         return filter_results
@@ -811,7 +815,7 @@ private
     question = data_hash[:question]
     broken_down_by = data_hash[:broken_down_by]
     filtered_by = data_hash[:filtered_by]
-    weight = data_hash[:weight]
+    weight = data_hash[:weighted_by]
 
 
     # get the values for the codes from the data
@@ -860,8 +864,8 @@ private
 
         if with_title
           # needed to run all anaylsis in order to have all total responses for subtitle
-          filter_results[:subtitle][:html] = dataset_analysis_subtitle_filtered('html', filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis])
-          filter_results[:subtitle][:text] = dataset_analysis_subtitle_filtered('text', filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis])
+          filter_results[:subtitle][:html] = dataset_analysis_subtitle_filtered('html', filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis], data.length)
+          filter_results[:subtitle][:text] = dataset_analysis_subtitle_filtered('text', filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis], data.length)
         end
 
         return filter_results
@@ -1046,7 +1050,7 @@ private
   def self.dataset_comparative_chart(data, with_title=false, options={})
     if data.present?
       chart = nil
-      count_key = data[:weight].present? ? :weighted_count : :count
+      count_key = data[:weighted_by].present? ? :weighted_count : :count
 
       if data[:filtered_by].present?
         chart = []
@@ -1119,8 +1123,8 @@ private
   def self.dataset_comparative_map(question_answers, broken_down_by_answers, data, question_mappable=true, with_title=false, options={})
     if question_answers.present? && broken_down_by_answers.present? && data.present?
       map = nil
-      count_key = data[:weight].present? ? :weighted_count : :count
-      percent_key = data[:weight].present? ? :weighted_percent : :percent
+      count_key = data[:weighted_by].present? ? :weighted_count : :count
+      percent_key = data[:weighted_by].present? ? :weighted_percent : :percent
 
       if data[:filtered_by].present?
         map = []
@@ -1242,7 +1246,7 @@ private
 
           # have to transpose the counts for highcharts (and re-calculate percents)
           counts = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[count_key]}}.transpose
-          for_total_resp = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:count]}}.transpose
+          for_total_resp = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:count]}}.transpose
           percents = []
           counts.each do |count_row|
             total = count_row.inject(:+)
@@ -1293,7 +1297,7 @@ private
 
           counts = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[count_key]}}
           percents = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[percent_key]}}
-          for_total_resp = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:count]}}.transpose
+          for_total_resp = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:count]}}.transpose
 
           question_answers.each_with_index do |q_answer, q_index|
             item = {broken_down_answer_value: q_answer.value, broken_down_answer_text: q_answer.text}
@@ -1696,7 +1700,7 @@ private
       return title.html_safe
   end
 
-  def self.dataset_analysis_subtitle_filtered(locale_key, filtered_by_code, filtered_by_text, results)
+  def self.dataset_analysis_subtitle_filtered(locale_key, filtered_by_code, filtered_by_text, results, total)
     title = ''
     join_text = locale_key == 'html' ? '' : '; '
     if locale_key == 'html'
@@ -1705,12 +1709,12 @@ private
     filter_responses = []
     results.each do |result|
       if locale_key == 'html'
-        filter_responses << "<br /> - #{result[:filter_answer_text]}: <span class='number'>#{number_with_delimiter(result[:filter_results][:total_responses])}</span>"
+        filter_responses << "<span class='filter_responses'>#{result[:filter_answer_text]}: <span class='number'>#{number_with_delimiter(result[:filter_results][:total_responses])}</span></span>"
       else
         filter_responses << " #{result[:filter_answer_text]}: #{number_with_delimiter(result[:filter_results][:total_responses])}"
       end
     end
-    title << I18n.t("explore_data.subtitle.#{locale_key}.title_filter", :code => filtered_by_code, :variable => filtered_by_text, :nums => filter_responses.join(join_text))
+    title << I18n.t("explore_data.subtitle.#{locale_key}.title_filter", :code => filtered_by_code, :variable => filtered_by_text, :nums => filter_responses.join(join_text), :total => total)
     if locale_key == 'html'
       title << "</span>"
     end

@@ -1012,6 +1012,14 @@ span.total_responses{
   font:14px 'sourcesans_pro_li', 'sans-serif';
   font-style:normal;
   color:@3c4352;
+  span.filter_responses{
+    display: inline-block;
+    border-right: solid 1px @3c4352;
+    padding: 0 5px;
+    &:last-of-type{
+      border-right: none;
+    }
+  }
   span.number{
     font:14px 'sourcesans_pro_sbi', 'sans-serif';
     color: @00adee;

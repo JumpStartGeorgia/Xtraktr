@@ -556,8 +556,12 @@ ka:
       notes: "შენიშვნები"
       group: Group
       subgroup: Subgroup
+      weight: Weight
       count: "დათვლა"
       percent: "პროცენტი"
+      unweighted_count: Unweighted Count
+      weighted_count: Weighted Count
+      weighted_percent: Weighted Percent
       dataset_dashboard: "მონაცემთა Dashboard"
       time_series_dashboard: "პერიოდული შედარების Dashboard"
       terms: "თანახმა ვარ <a href='http://www.unicef.org/about/legal_terms.html' target='_blank'>გამოყენების წესებზე</a>"
@@ -1054,6 +1058,7 @@ ka:
         no_filter: "ფილტრი არ არის"
         can_exclude: Exclude Answers
         can_exclude_hint: At least one selected question has answers that can be excluded during analysis. Select this checkbox to remove these answers from the analysis.
+        weighted_by_code: Weighted By
       jumpto:
         chart: "გრაფაზე გადასვლა"
         map: "რუკაზე გადასვლა"

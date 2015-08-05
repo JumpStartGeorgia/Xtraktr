@@ -1,4 +1,4 @@
-<%- 
+<%-
   show_private_questions = false if show_private_questions.nil?
 -%>
 
@@ -41,7 +41,7 @@
               <%= generate_explore_options(@items, selected_code: @filtered_by_code, disabled_code: @question_code, disabled_code2: @broken_down_by_code) %>
             </select>
           </div>
-          <%            
+          <%
             can_exclude_visibility = selected_question_has_can_exclude?(@questions, [@question_code, @broken_down_by_code, @filtered_by_code]) == true ? '' : 'style=\'visibility: hidden;\''
           %>
           <div id="can-exclude-container" class="checkbox-box" tabindex="0" <%= can_exclude_visibility.html_safe %>>
@@ -112,7 +112,9 @@
           <div id="container-table">
             <h3></h3>
             <table class="table-data table table-striped table-hover table-nonfluid"
-                  data-count="<%= t('app.common.count') %>" data-percent="<%= t('app.common.percent') %>">
+                  data-count="<%= t('app.common.count') %>" data-percent="<%= t('app.common.percent') %>"
+                  data-unweighted-count="<%= t('app.common.unweighted_count') %>" data-weighted-count="<%= t('app.common.weighted_count') %>"
+                  data-weighted-percent="<%= t('app.common.weighted_percent') %>">
             </table>
           </div>
         </div>
@@ -129,6 +131,10 @@
           </div>
           <div class="details-item" id="details-filtered-by-code">
             <h3><%= t('.form.filtered_by_code') %></h3>
+            <%= render partial: 'shared/explore_details_block' %>
+          </div>
+          <div class="details-item" id="details-weighted-by-code">
+            <h3><%= t('.form.weighted_by_code') %></h3>
             <%= render partial: 'shared/explore_details_block' %>
           </div>
 
