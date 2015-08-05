@@ -384,7 +384,7 @@ ka:
         title_filter_value: ", გაფილტრულია: '%{code} - %{variable} = %{value}'"
         map:
           title: "%{code} - %{variable}'"
-          title_broken_down_by: "ჩაშლილია: '%{code} - %{broken_down_by} = %{broken_down_by_answer}'"
+          title_broken_down_by: " ჩაშლილია: '%{code} - %{broken_down_by} = %{broken_down_by_answer}'"
           title_filter: ", გაფილტრულია: '%{code} - %{variable}'"
           title_filter_value: ", გაფილტრულია: '%{code} - %{variable} = %{value}'"
     single:

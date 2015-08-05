@@ -383,8 +383,8 @@ en:
         title_filter: ", filtered by: '%{code} - %{group} %{variable}'"
         title_filter_value: ", filtered by: '%{code} - %{group} %{variable} = %{value}'"
         map:
-          title: "'%{code} - %{group} %{variable}' "
-          title_broken_down_by: "broken down by: '%{code} - %{group} %{broken_down_by} = %{broken_down_by_answer}'"
+          title: "'%{code} - %{group} %{variable}'"
+          title_broken_down_by: " broken down by: '%{code} - %{group} %{broken_down_by} = %{broken_down_by_answer}'"
           title_filter: ", filtered by: '%{code} - %{group} %{variable}'"
           title_filter_value: ", filtered by: '%{code} - %{group} %{variable} = %{value}'"
     single:
@@ -393,15 +393,15 @@ en:
         title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
         title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable} = <span class='code-highlight'>%{value}</span>'"
       text:
-        title: "'%{code} - %{group} %{variable}' "
+        title: "'%{code} - %{group} %{variable}'"
         title_filter: ", filtered by: '%{code} - %{group} %{variable}'"
         title_filter_value: ", filtered by: '%{code} - %{group} %{variable} = %{value}'"
     subtitle:
       html:
-        title: "Total Responses: <span class='number'>%{num}</span>"
+        title: "Total Responses: <span class='number'>%{num}</span> out of %{total}"
         title_filter: "Total Responses Filtered by Answers to '<span class='number'>%{code}</span> - %{variable}': %{nums}"
       text:
-        title: "Total Responses: %{num}"
+        title: "Total Responses: %{num} out of %{total}"
         title_filter: "Total Responses Filtered by Answers to '%{code} - %{variable}': %{nums}"
   datatable:
     search: Search
