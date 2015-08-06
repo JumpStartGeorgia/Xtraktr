@@ -44,7 +44,7 @@
 
           <% if @dataset.is_weighted? %>
             <% # determine if need to show weight when page loads %>
-            <div class="form-explore-weighted-by">
+            <div class="form-explore-weight-by">
               <%= label_tag 'weighted_by_code', t('.form.weighted_by_code') %>
               <select data-live-search="true" data-width="100%" class="selectpicker-weight" id="weighted_by_code" name="weighted_by_code">
                 <% @dataset.weights.each do |weight| %>

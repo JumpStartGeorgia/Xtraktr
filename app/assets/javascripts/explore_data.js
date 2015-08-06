@@ -4,6 +4,7 @@ var datatables, h, i, j, k, json_data;
 function update_available_weights(){
   // update weight list if weights exist
   if ($('select#weighted_by_code').length > 0){
+    var old_value = $('select#weighted_by_code').val();
     var items = [
       $('select#question_code option:selected').data('weights'),
       $('select#broken_down_by_code option:selected').data('weights'),
@@ -29,7 +30,7 @@ function update_available_weights(){
       // show matches, hide rest
 
       // hide all items
-      $('.form-explore-weighted-by .bootstrap-select ul.dropdown-menu li').hide();
+      $('.form-explore-weight-by .bootstrap-select ul.dropdown-menu li').hide();
 
       // show matched weights
       var match_length = matches.length;
@@ -38,16 +39,21 @@ function update_available_weights(){
       for (i;i<match_length;i++){
         index = $('select#weighted_by_code option[value="' + matches[i] + '"]').index();
         if (index != -1){
-          $('.form-explore-weighted-by .bootstrap-select ul.dropdown-menu li:eq(' + index + ')').show();
+          $('.form-explore-weight-by .bootstrap-select ul.dropdown-menu li:eq(' + index + ')').show();
         }
       }
       // show unweighted
-      $('.form-explore-weighted-by .bootstrap-select ul.dropdown-menu li:last').show();
+      $('.form-explore-weight-by .bootstrap-select ul.dropdown-menu li:last').show();
+
+      // if the old value is no longer an option, select the first one
+      if (matches.indexOf(old_value) == -1){
+        $('select#weighted_by_code').selectpicker('val', $('select#weighted_by_code option:first').attr('value'));
+      }
 
       $('.form-weight-by').show();
     }else{
       $('.form-weight-by').hide();
-      $('select#weighted_by_code').val('unweighted');
+      $('select#weighted_by_code').selectpicker('val', 'unweighted');
     }
   }
 }
