@@ -14,7 +14,7 @@
         <div class="form-explore-question-code">
             <%= label_tag 'question_code', t('.form.question_code') %>
             <select data-live-search="true" data-width="100%" class="selectpicker" id="question_code" name="question_code">
-              <%= generate_explore_options(@items, selected_code: @question_code, disabled_code: @broken_down_by_code) %>
+              <%= generate_explore_options(@items, @dataset, selected_code: @question_code, disabled_code: @broken_down_by_code) %>
             </select>
         </div>
         <div class="form-explore-broken-by">
@@ -31,22 +31,22 @@
                 selected = @broken_down_by_code.blank? ? 'selected=selected' : '' %>
               %>
               <option value="" <%= selected %>><%= t('.form.no_comparison') %></option>
-              <%= generate_explore_options(@items, selected_code: @broken_down_by_code, disabled_code: @question_code) %>
+              <%= generate_explore_options(@items, @dataset, selected_code: @broken_down_by_code, disabled_code: @question_code) %>
             </select>
           </div>
           <div class="form-explore-filter-by">
             <%= label_tag 'filtered_by_code', t('.form.filtered_by_code') %>
             <select data-live-search="true" data-width="100%" class="selectpicker-filter" id="filtered_by_code" name="filtered_by_code">
               <option value=""><%= t('.form.no_filter') %></option>
-              <%= generate_explore_options(@items, selected_code: @filtered_by_code, disabled_code: @question_code, disabled_code2: @broken_down_by_code) %>
+              <%= generate_explore_options(@items, @dataset, selected_code: @filtered_by_code, disabled_code: @question_code, disabled_code2: @broken_down_by_code) %>
             </select>
           </div>
 
           <% if @dataset.is_weighted? %>
             <% # determine if need to show weight when page loads %>
-            <div class="form-weight-by">
+            <div class="form-explore-weighted-by">
               <%= label_tag 'weighted_by_code', t('.form.weighted_by_code') %>
-              <select data-live-search="true" data-width="100%" class="selectpicker" id="weighted_by_code" name="weighted_by_code">
+              <select data-live-search="true" data-width="100%" class="selectpicker-weight" id="weighted_by_code" name="weighted_by_code">
                 <% @dataset.weights.each do |weight| %>
                   <%
                     is_default = weight.is_default? ? 'data-default=true' : ''
@@ -54,7 +54,7 @@
                   %>
                   <option value="<%= weight.code %>" <%= is_default %> <%= selected %>><%= weight.text %></option>
                 <% end %>
-                <option value="unweighted"><%= t('.form.no_weight') %></option>
+                <option value="unweighted" data-unweighted="true"><%= t('.form.no_weight') %></option>
               </select>
             </div>
           <% end %>
