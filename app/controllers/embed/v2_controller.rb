@@ -18,6 +18,9 @@ class Embed::V2Controller < ApplicationController
       gon.update_page_title = true
 
       gon.get_highlight_desc_link = highlights_get_description_path
+      gon.powered_by_link = @xtraktr_url
+      gon.powered_by_text = I18n.t('app.common.powered_by_xtraktr')
+      gon.powered_by_title = I18n.t('app.common.powered_by_xtraktr_title')
 
       # if the visual is a chart, include the highcharts file
       # if the visual is a map, include the highmaps file
