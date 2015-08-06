@@ -85,6 +85,15 @@ ka:
         reports: "რეფორთები"
         category_ids: "კატეგორიები"
         permalink: მონაცემთა URL-ი
+        is_weighted: Weighted Data
+      stats:
+        questions_analyzable: Analyzable Questions
+        public_questions_analyzable: Public Analyzable Questions
+        questions_good: Questions With Predefined Answers
+        questions_no_text: No Question Text
+        questions_no_answers: No Predefined Answers
+        questions_bad_answers: Bad Answers
+        data_records: Sample Size
       question:
         code: "კითხვის კოდი"
         original_code: "კითხვის კოდი"
@@ -799,12 +808,6 @@ ka:
       no_content: "ამ მეთოდისთვის დოკუმენტაცია ჯერ არ შექმნილა"
   datasets:
     index:
-      stats:
-        data_records: "მონაცემთა ჩაწერა"
-        good_questions: "გაანალიზებადი კითხვები"
-        no_text: "კითხვის ტექსტი არ არის"
-        bad_answers: "არასწორი პასუხი"
-        no_answers: არ აქვს წინასწარ განსაზღვრული პასუხები
       view_warnings: "დეტალების ნახვა"
     warnings:
       title: "გაფრთხილება"

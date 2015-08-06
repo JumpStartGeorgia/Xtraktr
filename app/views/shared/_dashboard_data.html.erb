@@ -1,10 +1,10 @@
-<%- 
-  model_class = Dataset 
-  r_model_class = Report 
+<%-
+  model_class = Dataset
+  s_model_class = Stats
+  r_model_class = Report
   is_admin_page = request.path == dataset_path(@dataset)
   show_share = true if show_share.nil?
   show_private_questions = false if show_private_questions.nil?
-logger.debug "======= show_private_questions = #{show_private_questions}"
   subnav_left render(partial: 'shared/language_switcher', locals: {langs: @dataset.language_objects, current_locale: @dataset.current_locale, share: show_share})
 
 -%>
@@ -12,6 +12,23 @@ logger.debug "======= show_private_questions = #{show_private_questions}"
   <div class="meta">
     <div class="col">
       <h2><%=@dataset.title%></h2>
+      <div class="numbers">
+        <div class="number">
+          <span><%= s_model_class.human_attribute_name(:data_records) %>:</span>
+          <%= number_with_delimiter(@dataset.stats.data_records) %>
+        </div>
+        <div class="number">
+          <span><%= s_model_class.human_attribute_name(:questions_analyzable) %>:</span>
+          <%= number_with_delimiter(@dataset.stats.public_questions_analyzable) %>
+        </div>
+        <div class="number">
+          <span><%= model_class.human_attribute_name(:is_weighted) %>:</span>
+          <%= @dataset.is_weighted? ? t('formtastic.yes') : t('formtastic.no') %>
+        </div>
+        <% if !@is_dataset_admin %>
+          <div class="share share-box"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>
+        <% end %>
+      </div>
       <div class="info">
         <div class="calendar"></div>
         <div class="timestamps">
@@ -23,12 +40,9 @@ logger.debug "======= show_private_questions = #{show_private_questions}"
             <span><%= model_class.human_attribute_name(:released_at) %>:</span>
             <%= I18n.l(@dataset.released_at, format: :day_first) if @dataset.released_at.present? %>
           </div>
-        </div>   
-        <% if !@is_dataset_admin %>
-          <div class="share share-box"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>
-        <% end %>
+        </div>
       </div>
-      
+
       <% if @is_xtraktr %>
         <div class="source"><%= "#{model_class.human_attribute_name(:source)}: #{@dataset.source}" %></div>
       <% end %>
@@ -51,7 +65,7 @@ logger.debug "======= show_private_questions = #{show_private_questions}"
                   <% end %>
                 </li>
               <% } %>
-            </ul>         
+            </ul>
         <% end %>
       </div>
       <div class="links">
@@ -65,8 +79,8 @@ logger.debug "======= show_private_questions = #{show_private_questions}"
             <%= image_tag 'svg/timeseries.svg' %>
             <%= t('app.menu.time_series') %>
           <% end %>
-        <% end %>                    
-        <% if @dataset.urls.present? && @dataset.urls.codebook.present? %>     
+        <% end %>
+        <% if @dataset.urls.present? && @dataset.urls.codebook.present? %>
             <div class="download-wrapper" >
               <div class="download" data-id="<%= @dataset.id.to_s %>" data-lang="<%= @dataset.current_locale %>" data-download-type="public">
               <%= image_tag 'svg/download_big.svg', alt: t('helpers.links.download_data') %>
@@ -76,17 +90,17 @@ logger.debug "======= show_private_questions = #{show_private_questions}"
                 <li><div class="type" data-type='r' title="<%= t('download_data_options.title.r') %>" data-placement="left"><%= t('download_data_options.text.r') %></div></li>
                 <li><div class="type" data-type='spss' title="<%= t('download_data_options.title.spss') %>" data-placement="left"><%= t('download_data_options.text.spss') %></div></li>
                 <li><div class="type" data-type='stata' title="<%= t('download_data_options.title.stata') %>" data-placement="left"><%= t('download_data_options.text.stata') %></div></li>
-              </ul>                 
-            </div>        
+              </ul>
+            </div>
           </div>
         <% end %>
-     
+
       </div>
     </div>
   </div>
 
 <div id="dashboard-tabs" class="tabs style1" role="tabpanel">
-    <% 
+    <%
       highlight_active = {tab: '', panel: ''}
       method_active = {tab: 'active', panel: 'in active'}
       codebook_active = {tab: '', panel: ''}
@@ -94,12 +108,12 @@ logger.debug "======= show_private_questions = #{show_private_questions}"
       if @highlights.present?
         highlight_active = {tab: 'active', panel: 'in active'}
         method_active = {tab: '', panel: ''}
-        active_tab_label = t('.tabs.highlights') 
-      elsif !@dataset.methodology.present? 
+        active_tab_label = t('.tabs.highlights')
+      elsif !@dataset.methodology.present?
         method_active = {tab: '', panel: ''}
         codebook_active = {tab: 'active', panel: 'in active'}
-        active_tab_label = t('.tabs.codebook') 
-      end 
+        active_tab_label = t('.tabs.codebook')
+      end
     %>
   <div class="tab-header">
     <div class="tab-caption"><%= active_tab_label %></div>
@@ -136,7 +150,7 @@ logger.debug "======= show_private_questions = #{show_private_questions}"
         </p>
       <% end %>
     </div>
-    
+
     <div role="tabpanel" class="tab-pane fade <%= method_active[:panel] %>" id="methodology">
       <% if @dataset.methodology.present? %>
         <div class="tinymce_format">
@@ -149,16 +163,16 @@ logger.debug "======= show_private_questions = #{show_private_questions}"
         </p>
       <% end %>
     </div>
-    
+
     <div role="tabpanel" class="tab-pane fade <%= codebook_active[:panel] %>" id="codebook">
-      <% 
+      <%
         question_type = show_private_questions == true ? 'analysis_with_exclude_questions' : 'analysis'
         items = @dataset.arranged_items(question_type: question_type, include_groups: true, include_subgroups: true, include_questions: true)
       %>
       <div id="codebook-search">
         <input type="search" class="codebook-search" id="filter" value="" placeholder="<%= t('helpers.search') %>" />
         <%= link_to @dataset.urls.codebook, class: 'download-direct',  title: t("app.common.codebook_title") do %>
-                  <% end %>  
+                  <% end %>
         <div class="radio-box-group">
           <div class="radio-box" tabindex="0">
             <input checked id="filter_all" name="filter" type="radio" value="all" />
@@ -175,7 +189,7 @@ logger.debug "======= show_private_questions = #{show_private_questions}"
           <div class="radio-box" tabindex="0">
             <input id="filter_ans" name="filter" type="radio" value="ans" />
             <label class="filter" for="filter_ans"><%= t('.filter.answers') %></label>
-          </div>  
+          </div>
         </div>
         <% groups = items.select{|x| x.class == Group} %>
         <% if groups.length > 0 %>
@@ -183,13 +197,13 @@ logger.debug "======= show_private_questions = #{show_private_questions}"
             <select data-live-search="true" data-hide-disabled='true' data-width="auto" class="selectpicker-group" id="codebook-jumpto" title="<%= t('.jumpto_group') %>">
               <%= generate_codebook_group_options(groups) %>
             </select>
-          </div>       
+          </div>
         <% end %>
       </div>
       <div class="up"></div>
       <%= generate_codebook_list(items, show_private_questions) %>
     </div>
-    
+
     <div role="tabpanel" class="tab-pane fade list" id="reports">
       <ul>
         <% if @dataset.reports.present? %>
@@ -200,7 +214,7 @@ logger.debug "======= show_private_questions = #{show_private_questions}"
                 <div class="title" <%= lng %>><%= report.title %></div>
                 <%= link_to report.file.url, class: 'download-direct', target: :blank, title: "#{report.file_type} - #{number_to_human_size(report.file_file_size).to_s}" do %>
                 <% end %>
-              </div>                  
+              </div>
               <div class="info">
                 <div class="calendar"></div>
                 <div class="timestamps">

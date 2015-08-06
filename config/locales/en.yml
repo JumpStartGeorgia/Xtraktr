@@ -85,6 +85,15 @@ en:
         reports: Reports
         category_ids: Categories
         permalink: URL to Dataset
+        is_weighted: Weighted Data
+      stats:
+        questions_analyzable: Analyzable Questions
+        public_questions_analyzable: Public Analyzable Questions
+        questions_good: Questions With Predefined Answers
+        questions_no_text: No Question Text
+        questions_no_answers: No Predefined Answers
+        questions_bad_answers: Bad Answers
+        data_records: Sample Size
       question:
         code: Question Code
         original_code: Question Code
@@ -799,12 +808,6 @@ en:
       no_content: "No documentation for this method has been created yet."
   datasets:
     index:
-      stats:
-        data_records: Data Records
-        good_questions: Analyzable Questions
-        no_text: No Question Text
-        bad_answers: Bad Answers
-        no_answers: No Predefined Answers
       view_warnings: View Details
     warnings:
       title: "Warnings"
