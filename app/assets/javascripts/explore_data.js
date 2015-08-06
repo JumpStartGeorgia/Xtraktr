@@ -1,5 +1,56 @@
 var datatables, h, i, j, k, json_data;
 
+// update the list of avilable weights based on questions that are selected
+function update_available_weights(){
+  // update weight list if weights exist
+  if ($('select#weighted_by_code').length > 0){
+    var items = [
+      $('select#question_code option:selected').data('weights'),
+      $('select#broken_down_by_code option:selected').data('weights'),
+      $('select#filtered_by_code option:selected').data('weights')
+    ];
+    // remove undefined (undefined exists if a select does not have a value)
+    var und_ind = items.indexOf(undefined);
+    while(und_ind != -1){
+      if (und_ind != -1){
+        items.splice(und_ind, 1);
+      }
+      und_ind = items.indexOf(undefined);
+    }
+    var matches = items.shift().filter(function(v) {
+      return items.every(function(a) {
+        return a.indexOf(v) !== -1;
+      });
+    });
+
+    // if there are matches, show the weights that match, and unweighted
+    // else hide weight option and set value to unweighted
+    if (matches.length > 0){
+      // show matches, hide rest
+
+      // hide all items
+      $('.form-explore-weighted-by .bootstrap-select ul.dropdown-menu li').hide();
+
+      // show matched weights
+      var match_length = matches.length;
+      var i=0;
+      var index;
+      for (i;i<match_length;i++){
+        index = $('select#weighted_by_code option[value="' + matches[i] + '"]').index();
+        if (index != -1){
+          $('.form-explore-weighted-by .bootstrap-select ul.dropdown-menu li:eq(' + index + ')').show();
+        }
+      }
+      // show unweighted
+      $('.form-explore-weighted-by .bootstrap-select ul.dropdown-menu li:last').show();
+
+      $('.form-weight-by').show();
+    }else{
+      $('.form-weight-by').hide();
+      $('select#weighted_by_code').val('unweighted');
+    }
+  }
+}
 
 // show or hide the can exclude checkbox
 function set_can_exclude_visibility(){
@@ -853,6 +904,7 @@ $(document).ready(function() {
     // initalize the fancy select boxes
     $('select.selectpicker').selectpicker();
     $('select.selectpicker-filter').selectpicker();
+    $('select.selectpicker-weight').selectpicker();
 
     // if an option has data-disabled when page loads, make sure it is hidden in the selectpicker
     $('select#question_code option[data-disabled="disabled"]').each(function(){
@@ -864,6 +916,10 @@ $(document).ready(function() {
     $('select#filtered_by_code option[data-disabled="disabled"]').each(function(){
       $('.form-explore-filter-by .bootstrap-select ul.dropdown-menu li:eq(' + $(this).index() + ')').hide();
     });
+
+    // make sure the correct weights are being shown
+    update_available_weights();
+
 
     // if option changes, make sure the select option is not available in the other lists
     $('select.selectpicker').change(function(){
@@ -881,12 +937,6 @@ $(document).ready(function() {
         // turn on off this item
         $('.form-explore-broken-by .bootstrap-select ul.dropdown-menu li:eq(' + (index+1) + ')').hide();
 
-        // // remove all disabled
-        // $('select#broken_down_by_code option[disabled="disabled"]').removeAttr('disabled');
-        // // disable the new selection
-        // $('select#broken_down_by_code option[value="' + val + '"]').attr('disabled', 'disabled');
-        // // update the select list
-        // $('select#broken_down_by_code').selectpicker('refresh');
       }else if ($(this).attr('id') == 'broken_down_by_code'){
         // update question list
 
@@ -895,13 +945,6 @@ $(document).ready(function() {
 
         // turn on off this item
         $('.form-explore-question-code .bootstrap-select ul.dropdown-menu li:eq(' + (index-1) + ')').hide();
-
-        // // remove all disabled
-        // $('select#question_code option[disabled="disabled"]').removeAttr('disabled');
-        // // disable the new selection
-        // $('select#question_code option[value="' + val + '"]').attr('disabled', 'disabled');
-        // // update the select list
-        // $('select#question_code').selectpicker('refresh');
 
         // if val != '' then turn on swap button
         if (val == ''){
@@ -925,7 +968,7 @@ $(document).ready(function() {
       // turn on all hidden items
       $('.form-explore-filter-by .bootstrap-select ul.dropdown-menu li[style*="display: none"]').show();
 
-      // turn on off this item
+      // turn off this item
       if (q_index != -1){
         $('.form-explore-filter-by .bootstrap-select ul.dropdown-menu li:eq(' + (q_index + 1) + ')').hide();
       }
@@ -934,19 +977,11 @@ $(document).ready(function() {
       }
 
 
-
-      // $('select#filtered_by_code option[disabled="disabled"]').removeAttr('disabled');
-      // if (q != ''){
-      //   $('select#filtered_by_code option[value="' + q + '"]').attr('disabled','disabled');
-      // }
-      // if (bdb != ''){
-      //   $('select#filtered_by_code option[value="' + bdb + '"]').attr('disabled','disabled');
-      // }
-      // $('select#filtered_by_code').selectpicker('refresh');
-      // $('select#filtered_by_code').selectpicker('render');
+      // update the list of weights
+      update_available_weights();
 
       // update tooltip for selects
-      $('form button.selectpicker').tooltip('fixTitle')
+      $('form button.dropdown-toggle').tooltip('fixTitle');
 
       // if selected options have can_exclude, show the checkbox, else hide it
       set_can_exclude_visibility();
@@ -954,10 +989,19 @@ $(document).ready(function() {
 
     // update tooltip when filter tooltip changes
     $('select.selectpicker-filter').change(function(){
-      $('form button.selectpicker').tooltip('fixTitle')
-
       // if selected options have can_exclude, show the checkbox, else hide it
       set_can_exclude_visibility();
+
+      // update the list of weights
+      update_available_weights();
+
+      $('form button.dropdown-toggle').tooltip('fixTitle');
+
+    });
+
+    // update tooltip when weight tooltip changes
+    $('select.selectpicker-weight').change(function(){
+      $('form button.dropdown-toggle').tooltip('fixTitle');
     });
 
     // swap vars button

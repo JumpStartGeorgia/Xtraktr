@@ -17,6 +17,7 @@ class Weight < CustomTranslation
   # Validations
   validates_presence_of :code
   validates :codes, :presence => true, :unless => Proc.new { |x| x.applies_to_all? || x.is_default || (x.codes.is_a?(Array) && x.codes.empty?) }
+  validate :validate_translations
 
   # validate the translation fields
   # text field needs to be validated for presence
