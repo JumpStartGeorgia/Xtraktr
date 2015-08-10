@@ -913,8 +913,8 @@ class Dataset < CustomTranslation
         # only add the group if it has content
         if group.var_arranged_items.present?
           items << group
+          Rails.logger.debug "#{indent}>>>>>>>>>>>>>> ----- added #{group.var_arranged_items.length} items for #{group.title}"
         end
-        Rails.logger.debug "#{indent}>>>>>>>>>>>>>> ----- added #{group.var_arranged_items.length} items for #{group.title}"
 
       end
     end
