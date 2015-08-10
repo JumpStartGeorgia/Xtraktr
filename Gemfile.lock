@@ -190,7 +190,7 @@ GEM
       tzinfo (~> 0.3.29)
     mongoid-paperclip (0.0.9)
       paperclip (>= 2.3.6)
-    mongoid_slug (4.0.0)
+    mongoid-slug (4.0.0)
       mongoid (>= 3.0)
       stringex (~> 2.0)
     moped (1.5.2)
@@ -355,8 +355,8 @@ DEPENDENCIES
   mailcatcher (= 0.5.12)
   mongoid (~> 3.1.6)
   mongoid-paperclip
+  mongoid-slug (~> 4.0.0)
   mongoid_search!
-  mongoid_slug (~> 4.0.0)
   omniauth
   omniauth-facebook
   psych (~> 2.0.5)
@@ -378,3 +378,6 @@ DEPENDENCIES
   useragent!
   whenever
   zipruby-compat!
+
+BUNDLED WITH
+   1.10.6

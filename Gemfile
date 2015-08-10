@@ -7,7 +7,7 @@ gem "mongoid", "~> 3.1.6"
 #gem 'smarter_csv' # format csv into array of hashes
 
 gem "json"
-gem "jquery-rails", '~> 3.1.0' #"~> 1.0.19" 
+gem "jquery-rails", '~> 3.1.0' #"~> 1.0.19"
 gem 'devise', '~> 3.4.1' # user authentication
 #gem 'devise-encryptable'
 #gem "devise", "~> 2.0.4"
@@ -44,7 +44,7 @@ gem 'whenever' # schedule cron jobs
 # have to use this because zipruby and rubyzip use the same class names
 gem "zipruby-compat", :require => 'zipruby', :git => "git@github.com:jawspeak/zipruby-compatibility-with-rubyzip-fork.git", :tag => "v0.3.7"
 gem 'roadie', '~> 2.4.3' # apply easy styling to html emails
-gem 'mongoid_slug', '~> 4.0.0' # permalink urls with mongoid
+gem 'mongoid-slug', '~> 4.0.0' # permalink urls with mongoid
 gem "autoprefixer-rails" # no need to prefix css, it will automatically do it
 
 # Gems used only for assets and not required
@@ -57,7 +57,7 @@ group :assets do
   gem 'less-rails', git: 'git://github.com/metaskills/less-rails.git'
   gem 'twitter-bootstrap-rails', :git => 'git://github.com/seyhunak/twitter-bootstrap-rails.git'  , branch: 'bootstrap3'
   gem 'jquery-datatables-rails', '~> 3.1.1'
-  gem "jquery-ui-rails" , "~> 4.1.2"  
+  gem "jquery-ui-rails" , "~> 4.1.2"
 end
 
 
@@ -71,4 +71,3 @@ end
 group :staging, :production do
   gem 'unicorn', '~> 4.8.3' # http server
 end
-
