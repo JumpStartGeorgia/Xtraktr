@@ -10,7 +10,7 @@ class Group < CustomTranslation
   field :parent_id, type: Moped::BSON::ObjectId
   # number indicating the sort order
   field :sort_order, type: Integer, default: 0
-  
+
   #############################
   embedded_in :dataset
 
@@ -30,7 +30,7 @@ class Group < CustomTranslation
      logger.debug "***** - default is present; title = #{self.title_translations[self.dataset.default_language]}"
       if self.title_translations[self.dataset.default_language].blank?
        logger.debug "***** -- title not present!"
-        errors.add(:base, I18n.t('errors.messages.translation_default_lang', 
+        errors.add(:base, I18n.t('errors.messages.translation_default_lang',
             field_name: self.class.human_attribute_name('title'),
             language: Language.get_name(self.dataset.default_language),
             msg: I18n.t('errors.messages.blank')) )
@@ -38,13 +38,18 @@ class Group < CustomTranslation
 
       if self.include_in_charts? && self.description_translations[self.dataset.default_language].blank?
        logger.debug "***** -- description not present and include in charts is true!"
-        errors.add(:base, I18n.t('errors.messages.translation_default_lang', 
+        errors.add(:base, I18n.t('errors.messages.translation_default_lang',
             field_name: self.class.human_attribute_name('description'),
             language: Language.get_name(self.dataset.default_language),
             msg: I18n.t('errors.messages.blank')) )
       end
     end
-  end 
+  end
+
+  # this method gets called from the group controller create/update methods if there are no questions
+  def add_missing_questions_error
+    errors.add(:base, I18n.t('errors.messages.missing_questions') )
+  end
 
   #############################
   # Callbacks

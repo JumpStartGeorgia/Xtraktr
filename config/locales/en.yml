@@ -338,6 +338,7 @@ en:
       translation_any_lang: "%{field_name} for Language '%{language}' %{msg}"
       invalid_language: "'%{lang_locale}' is not a valid language locale"
       dataset_length: "At least two datasets are needed for a time series to be saved."
+      missing_questions: "At least one questions must be selected for a group to be saved."
   mass_uploads_msgs:
     bad_headers: The headers in the file do not match the headers from the template so it is not possible to determine what each column of data is. Please download the question template file and use the headers from that file.
     missing_code: "Row %{n}: Could not find question with code '%{code}'"
