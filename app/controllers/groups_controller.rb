@@ -88,7 +88,8 @@ class GroupsController < ApplicationController
         selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] == 'true'}.map{|k,v| v[:id]}
         not_selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] != 'true'}.map{|k,v| v[:id]}
 
-        if selected_ids.length > 0
+        # have to have subgroups or questions in order to be saved
+        if selected_ids.length > 0 || @group.subgroups.length > 0
           @dataset.questions.assign_group(selected_ids, @group.id)
           @dataset.questions.assign_group(not_selected_ids, @group.parent_id.present? ? @group.parent_id : nil)
 
@@ -145,7 +146,8 @@ class GroupsController < ApplicationController
         selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] == 'true'}.map{|k,v| v[:id]}
         not_selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] != 'true'}.map{|k,v| v[:id]}
 
-        if selected_ids.length > 0
+        # have to have subgroups or questions in order to be saved
+        if selected_ids.length > 0 || @group.subgroups.length > 0
           @dataset.questions.assign_group(selected_ids, @group.id)
           @dataset.questions.assign_group(not_selected_ids, @group.parent_id.present? ? @group.parent_id : nil)
           respond_to do |format|

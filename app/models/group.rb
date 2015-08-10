@@ -142,6 +142,11 @@ class Group < CustomTranslation
     self.dataset.groups.find(self.parent_id) if self.parent_id.present?
   end
 
+  # get the subgroups of this group
+  def subgroups
+    self.dataset.groups.where(parent_id: self.id)
+  end
+
   # # get the sub-groups and save to sub_groups
   # def get_sub_groups
   #   if !self.sub_groups.present?
