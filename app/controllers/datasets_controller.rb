@@ -771,7 +771,7 @@ class DatasetsController < ApplicationController
 
       respond_to do |format|
         format.html {
-          @items = @dataset.arranged_items(include_questions: true, include_groups: true, include_subgroups: false, group_id: params[:group_id])
+          @items = @dataset.arranged_items(include_questions: true, include_groups: true, include_subgroups: false, include_group_with_no_items: true, group_id: params[:group_id])
 
           @group = params[:group_id].present? ? @dataset.groups.find(params[:group_id]) : nil
 

@@ -863,6 +863,7 @@ class Dataset < CustomTranslation
   # - include_groups - flag indicating if should get groups (default = false)
   # - include_subgroups - flag indicating if subgroups should also be loaded (default = false)
   # - include_questions - flag indicating if should get questions (default = false)
+  # - include_group_with_no_items - flag indicating if should include groups even if it has no items, possibly due to other flags (default = false)
   def arranged_items(options={})
     Rails.logger.debug "@@@@@@@@@@@@@@ dataset arranged_items"
     if self.var_arranged_items.nil? || self.var_arranged_items.empty? || options[:reload_items]
@@ -880,6 +881,7 @@ class Dataset < CustomTranslation
   # - include_groups - flag indicating if should get groups (default = false)
   # - include_subgroups - flag indicating if subgroups should also be loaded (default = false)
   # - include_questions - flag indicating if should get questions (default = false)
+  # - include_group_with_no_items - flag indicating if should include groups even if it has no items, possibly due to other flags (default = false)
   def build_arranged_items(options={})
     Rails.logger.debug "=============== build start; options = #{options}"
     indent = options[:group_id].present? ? '    ' : ''
@@ -911,7 +913,7 @@ class Dataset < CustomTranslation
         group_options[:group_id] = group.id
         group.var_arranged_items = build_arranged_items(group_options)
         # only add the group if it has content
-        if group.var_arranged_items.present?
+        if group.var_arranged_items.present? || options[:include_group_with_no_items] == true
           items << group
           Rails.logger.debug "#{indent}>>>>>>>>>>>>>> ----- added #{group.var_arranged_items.length} items for #{group.title}"
         end

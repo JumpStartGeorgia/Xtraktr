@@ -167,6 +167,7 @@ class Group < CustomTranslation
   # - include_groups - flag indicating if should get groups (default = false)
   # - include_subgroups - flag indicating if subgroups should also be loaded (default = false)
   # - include_questions - flag indicating if should get questions (default = false)
+  # - include_group_with_no_items - flag indicating if should include groups even if it has no items, possibly due to other flags (default = false)
   def arranged_items(options={})
     Rails.logger.debug "$$$$$$$$$$$$$ group arranged_items"
     Rails.logger.debug "---- var exists = #{self.var_arranged_items.nil?}"
