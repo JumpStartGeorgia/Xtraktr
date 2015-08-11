@@ -5,6 +5,7 @@
   is_admin_page = request.path == dataset_path(@dataset)
   show_share = true if show_share.nil?
   show_private_questions = false if show_private_questions.nil?
+  show_questions_no_answers = false if show_questions_no_answers.nil?
   subnav_left render(partial: 'shared/language_switcher', locals: {langs: @dataset.language_objects, current_locale: @dataset.current_locale, share: show_share})
 
 -%>
@@ -201,6 +202,12 @@
         <% end %>
       </div>
       <div class="up"></div>
+      <% if show_questions_no_answers %>
+        <div class="notification wide info">
+          <div class='figure'></div>
+          <div class='text'><%= t('app.msgs.admin_codebook_questions') %></div>
+        </div>
+      <% end %>
       <%= generate_codebook_list(items, show_private_questions) %>
     </div>
 
