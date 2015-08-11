@@ -744,7 +744,7 @@
     display:block;
     min-width:150px;
     padding-bottom: 10px;
-    a
+    a, div.no-answers
     {
       font:16px/18px 'sourcesans_pro_sb', 'sans-serif';
       color:@3c4352;
@@ -773,6 +773,10 @@
       &.exclude-question:before
       {
         background:transparent url(/assets/svg/locked_question.svg) no-repeat center/34px;
+      }
+      &.no-answers:before
+      {
+        background:transparent url(/assets/svg/codebook_noanswers.svg) no-repeat center/34px;
       }
       span
       {
@@ -843,6 +847,16 @@
     }
     .item-icons{
       margin-right: 5px;
+
+      .icon-red-x:before{
+        content:"";
+        display:inline-block;
+        background:transparent url(/assets/svg/close.svg) no-repeat 0px;
+        width:15px;
+        height:15px;
+        position: relative;
+        top: 3px;
+      }
     }
     ul
     {
@@ -883,7 +897,7 @@
     .question-link {
       display:table-cell;
       min-width:350px;
-      a
+      a, div.no-answers
       {
         > div {
           width:300px;
