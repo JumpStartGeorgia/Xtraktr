@@ -16,7 +16,7 @@ module CodebookHelper
 
 
   # generate the ul list of codebook groups and questions
-  def generate_codebook_list(items, show_private_questions=false)
+def generate_codebook_list(items, show_private_questions=false)
     html = '<ul class="list-unstyled">'
 
     items.each do |item|
@@ -41,7 +41,7 @@ private
 
   # create option for codebook group jumpto
   def generate_codebook_group_option(group)
-    cls = group.parent_id.present? ? 'subgroup' : 'group' 
+    cls = group.parent_id.present? ? 'subgroup' : 'group'
     content = 'data-content=\'<span>' + group.title + '</span><span class="pull-right">'
     desc = group.description.present? ? group.description : I18n.t('app.msgs.jumpto_group')
     if group.parent_id.present?
@@ -50,7 +50,7 @@ private
       content << group_icon(desc)
     end
     content << '</span>\''
-    
+
     return "<option value='#{group.id}' class='#{cls}' #{content}>#{group.title}</option>"
   end
 
@@ -59,7 +59,7 @@ private
   # - options: group, subgroup, show_private_questions
   def generate_codebook_question_item(question, options={})
 
-    return render partial: 'shared/codebook_question_item', 
+    return render partial: 'shared/codebook_question_item',
                   locals: {question: question, current_group: options[:group], current_subgroup: options[:subgroup], show_private_questions: options[:show_private_questions]}
   end
 
@@ -87,7 +87,7 @@ private
     options = {show_private_questions: show_private_questions}
     options[:group] = group.parent_id.present? ? group.parent : group
     options[:subgroup] = group.parent_id.present? ? group : nil
-    
+
     group.arranged_items.each do |item|
 
       if item.class == Group

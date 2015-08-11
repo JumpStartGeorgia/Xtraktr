@@ -576,6 +576,7 @@ en:
       private_question: This quesiton is not available to the public
       private_answer: This answer is not available to the public
       mappable_question: This question displays a map
+      question_no_answers: This question does not have answers and cannot be analyzed
       powered_by_xtraktr: Powered By Xtraktr
       powered_by_xtraktr_title: This data was built using the Xtraktr platform. Learn more and add your own data on the Xtraktr website.
     msgs:
@@ -619,6 +620,8 @@ en:
       weights_deleted: All weights have been deleted.
       must_include_weight: The question is marked as a weight and must be included in the download.
       cannot_include_weight: The question is marked as a weight and cannot be included as a question in the analsysis.
+      question_no_answers: This question does not have answers and cannot be analyzed.
+      admin_codebook_questions: This administrative view of the codebook shows all questions including those that are excluded and those that have no answers, which can be identified by the icon next to the question name. Please be aware that questions that are excluded or have no answers will not be visible to the public.
     menu:
       explore_data: Explore Data
       explore_time_series: Explore Time Series
