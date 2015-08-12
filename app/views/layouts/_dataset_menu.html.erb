@@ -89,15 +89,15 @@
                     <% end %>
                   </li>
                   <li role="menuitem">
-                    <%= link_to mappable_dataset_path(dataset) do %>
-                      <span class="glyphicon glyphicon-map-marker"></span>
-                      <%= t('app.menu.admin_dataset.mappable') %>
-                    <% end %>
-                  </li>
-                  <li role="menuitem">
                     <%= link_to dataset_weights_path(dataset) do %>
                       <span class="glyphicon glyphicon-asterisk"></span>
                       <%= t('app.menu.admin_dataset.weights') %>
+                    <% end %>
+                  </li>
+                  <li role="menuitem">
+                    <%= link_to mappable_dataset_path(dataset) do %>
+                      <span class="glyphicon glyphicon-map-marker"></span>
+                      <%= t('app.menu.admin_dataset.mappable') %>
                     <% end %>
                   </li>
                   <li class="divider"></li>

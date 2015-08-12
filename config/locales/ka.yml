@@ -670,7 +670,7 @@ ka:
         download_data: Download Data
         groups: Group Questions
         sort: Sort Groups/Questions
-        weights: Apply Weights
+        weights: Weight Data
       admin_time_series:
         explore_data: "მონაცემების გაცნობა"
         heading: "პერიოდული შედარების დეტალები"

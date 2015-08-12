@@ -670,7 +670,7 @@ en:
         download_data: Download Data
         groups: Group Questions
         sort: Sort Groups/Questions
-        weights: Apply Weights
+        weights: Weight Data
       admin_time_series:
         explore_data: Explore Data
         heading: Time Series Options
