@@ -1,4 +1,4 @@
-<%- 
+<%-
   subnav_left render(partial: 'shared/language_switcher', locals: {langs: @time_series.language_objects, current_locale: @time_series.current_locale})
 -%>
 <div class="article explore-data">
@@ -31,13 +31,13 @@
           <%= check_box_tag 'can_exclude', true, params[:can_exclude].present? ? params[:can_exclude].to_bool : false %>
           <%= label_tag 'can_exclude', t('.form.can_exclude'), :title => t('.form.can_exclude_hint') %>
         </div>
-        <div class="submit-box" id="buttons"> 
+        <div class="submit-box" id="buttons">
           <%= submit_tag t('.form.reset'), :class => 'btn btn-reset', :id => 'btn-reset' %>
           <div class="submit-btn-box">
             <%= submit_tag t('.form.submit'), :class => 'btn btn-submit', :id => 'btn-submit' %>
           </div>
         </div>
-      <% end %> 
+      <% end %>
 
       <div id="jumpto">
         <h3><%= t('.jumpto.chart') %></h3>
@@ -61,7 +61,7 @@
         <li id="nav-chart" class="active"><a href="#tab-chart" role="tab" data-toggle="tab"><%= t('.tabs.chart') %></a></li>
         <li id="nav-table"><a href="#tab-table" role="tab" data-toggle="tab"><%= t('.tabs.table') %></a></li>
         <li id="nav-details"><a href="#tab-details" role="tab" data-toggle="tab"><%= t('.tabs.details') %></a></li>
-      </ul>      
+      </ul>
       <% if !@is_time_series_admin %>
         <div class="share share-box"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>
       <% end %>
@@ -81,7 +81,7 @@
         <div class="tab-pane fade" id="tab-table">
           <div id="container-table">
             <h3></h3>
-            <table class="table-data table table-striped table-hover table-nonfluid" 
+            <table class="table-data table table-striped table-hover table-nonfluid"
                   data-count="<%= t('app.common.count') %>" data-percent="<%= t('app.common.percent') %>">
             </table>
           </div>
@@ -107,7 +107,7 @@
               <div class="k"><%= t('app.common.answers') %></div>
               <ul class="list-answers">
             </div>
-            </ul> 
+            </ul>
           </div>
           <div class="details-item" id="details-filtered-by-code">
             <h3><%= t('.form.filtered_by_code') %></h3>
@@ -127,13 +127,16 @@
               <div class="k"><%= t('app.common.answers') %></div>
               <ul class="list-answers">
             </div>
-            </ul> 
+            </ul>
           </div>
         </div>
       </div>
       <div id="explore-data-loader"></div>
       <div id="explore-error">
         <p><%= t('app.msgs.explore_error') %></p>
+      </div>
+      <div id="explore-no-results">
+        <p><%= t('app.msgs.explore_no_data') %></p>
       </div>
     </div>
   <% else %>
