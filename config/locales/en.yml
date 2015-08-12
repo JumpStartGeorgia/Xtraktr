@@ -93,7 +93,7 @@ en:
         questions_no_text: No Question Text
         questions_no_answers: No Predefined Answers
         questions_bad_answers: Bad Answers
-        data_records: Sample Size
+        data_records: Total Responses
       question:
         code: Question Code
         original_code: Question Code
@@ -410,9 +410,13 @@ en:
       html:
         title: "Total Responses: <span class='number'>%{num}</span> out of %{total}"
         title_filter: "Total Responses out of %{total}, Filtered by Answers to '<span class='number'>%{code}</span> - %{variable}' : <br />%{nums}"
+        title_weighted: "Unweighted Total Responses<span class='footnote-flag'>*</span>: <span class='number'>%{num}</span> out of %{total}"
+        title_filter_weighted: "Unweighted Total Responses out of %{total}, Filtered by Answers to '<span class='number'>%{code}</span> - %{variable}'<span class='footnote-flag'>*</span>: <br />%{nums}"
       text:
         title: "Total Responses: %{num} out of %{total}"
         title_filter: "Total Responses out of %{total}, Filtered by Answers to '%{code} - %{variable}': %{nums}"
+        title_weighted: "Unweighted Total Responses*: %{num} out of %{total}"
+        title_filter_weighted: "Unweighted Total Responses out of %{total}, Filtered by Answers to '%{code} - %{variable}'*: %{nums}"
   datatable:
     search: Search
     search_footer: 'Search %{name}'
@@ -586,6 +590,7 @@ en:
       question_no_answers: This question does not have answers and cannot be analyzed
       powered_by_xtraktr: Powered By Xtraktr
       powered_by_xtraktr_title: This data was built using the Xtraktr platform. Learn more and add your own data on the Xtraktr website.
+      weighted_footnote: This data is weighted.
     msgs:
       does_not_exist: You tried to access a page that does not exist.
       not_authorized: You are not authorized to view that page.
@@ -666,7 +671,7 @@ en:
         download_data: Download Data
         groups: Group Questions
         sort: Sort Groups/Questions
-        weights: Apply Weights
+        weights: Weight Data
       admin_time_series:
         explore_data: Explore Data
         heading: Time Series Options
@@ -889,6 +894,12 @@ en:
 
         This download is different than what is on the dashboard page in that this download includes the entire dataset, whereas the download from the dashboard page only includes the data that you have indicated can be downloaded by the public.
       no_files: The download files have not been generated yet. Please check back soon.
+      generating_text: |
+        The download files are being generated.
+
+        This may take a couple minutes if this is a large dataset.
+
+        This page will reload when the processing is complete.
     sort:
       title: Sort Groups and Questions
       explanation: |

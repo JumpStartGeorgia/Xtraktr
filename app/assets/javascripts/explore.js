@@ -108,6 +108,22 @@ function add_powered_by_link(visual_element){
   }
 }
 
+////////////////////////////////////////////////
+// add weighted footnote
+////////////////////////////////////////////////
+function add_weighted_footnote(visual_element, is_weighted){
+  if (gon.weighted_footnote && is_weighted == true){
+    var parent = $(visual_element).parent();
+
+    // create link
+    var text = '<span class="chart-weighted-footnote"><span class="footnote-flag">*</span> ' + gon.weighted_footnote + '</span>';
+
+    // add link to visual
+    $(visual_element).append(text);
+  }
+}
+
+
 
 
 ////////////////////////////////////////////////
@@ -234,7 +250,7 @@ function build_visual_title(highlight_path, text){
 ////////////////////////////////////////////////
 // build highmap
 ////////////////////////////////////////////////
-function build_highmap(shape_question_code, adjustable_max, json_map_set, chart_height){
+function build_highmap(shape_question_code, adjustable_max, json_map_set, chart_height, is_weighted){
   if (chart_height == undefined){
     chart_height = 501; // need the 1 for the border bottom line
   }
@@ -456,6 +472,9 @@ function build_highmap(shape_question_code, adjustable_max, json_map_set, chart_
 
   // add powered by link
   add_powered_by_link($(selector_path + ' #' + map_id));
+
+  // add weighted footnote
+  add_weighted_footnote($(selector_path + ' #' + map_id), is_weighted);
 }
 
 
@@ -465,7 +484,7 @@ function build_highmap(shape_question_code, adjustable_max, json_map_set, chart_
 ////////////////////////////////////////////////
 // build crosstab chart
 ////////////////////////////////////////////////
-function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by_text, json_chart, chart_height){
+function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by_text, json_chart, chart_height, is_weighted){
   if (chart_height == undefined){
     chart_height = 501; // need the 1 for the border bottom line
   }
@@ -623,6 +642,9 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
 
   // add powered by link
   add_powered_by_link($(selector_path + ' #' + chart_id));
+
+  // add weighted footnote
+  add_weighted_footnote($(selector_path + ' #' + chart_id), is_weighted);
 }
 
 
@@ -632,7 +654,7 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
 ////////////////////////////////////////////////
 // build pie chart
 ////////////////////////////////////////////////
-function build_pie_chart(json_chart, chart_height){
+function build_pie_chart(json_chart, chart_height, is_weighted){
   if (chart_height == undefined){
     chart_height = 501; // need the 1 for the border bottom line
   }
@@ -811,13 +833,16 @@ function build_pie_chart(json_chart, chart_height){
 
   // add powered by link
   add_powered_by_link($(selector_path + ' #' + chart_id));
+
+  // add weighted footnote
+  add_weighted_footnote($(selector_path + ' #' + chart_id), is_weighted);
 }
 
 
 ////////////////////////////////////////////////
 // build time series line chart
 ////////////////////////////////////////////////
-function build_time_series_chart(json_chart, chart_height){
+function build_time_series_chart(json_chart, chart_height, is_weighted){
   if (chart_height == undefined){
     chart_height = 501; // need the 1 for the border bottom line
   }
@@ -953,6 +978,9 @@ function build_time_series_chart(json_chart, chart_height){
 
   // add powered by link
   add_powered_by_link($(selector_path + ' #' + chart_id));
+
+  // add weighted footnote
+  add_weighted_footnote($(selector_path + ' #' + chart_id), is_weighted);
 }
 
 

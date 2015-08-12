@@ -4,17 +4,34 @@
 
 <hr />
 
-<% if @dataset.urls.present? && @dataset.urls.admin_codebook.present? %>     
+<% if @dataset.urls.present? && @dataset.urls.admin_codebook.present? %>
+  <% if @dataset.reset_download_files? %>
+    <div class="notification wide info">
+      <div class='figure'></div>
+      <div class='text'>
+        The dataset settings have recently changed and the download files have not been updated yet to reflect these changes.
+        If you want the latest download files now, <span class="generate-files">click here to generate the files</span>.
+      </div>
+    </div>
+  <% end %>
+
   <div class="download data-download" data-id="<%= @dataset.id.to_s %>" data-lang="<%= @dataset.current_locale %>" data-download-type="admin">
       <ul class="list-inline">
         <li class="btn btn-default"><div class="type" data-type='csv' title="<%= t('download_data_options.title.csv') %>" data-placement="top"><%= t('download_data_options.text.csv') %></div></li>
         <li class="btn btn-default"><div class="type" data-type='r' title="<%= t('download_data_options.title.r') %>" data-placement="top"><%= t('download_data_options.text.r') %></div></li>
         <li class="btn btn-default"><div class="type" data-type='spss' title="<%= t('download_data_options.title.spss') %>" data-placement="top"><%= t('download_data_options.text.spss') %></div></li>
         <li class="btn btn-default"><div class="type" data-type='stata' title="<%= t('download_data_options.title.stata') %>" data-placement="top"><%= t('download_data_options.text.stata') %></div></li>
-      </ul>                 
+      </ul>
     </div>
+
 <% else %>
   <p>
     <%= t('.no_files') %>
   </p>
 <% end %>
+
+<div class="data-loader-message-container">
+  <div class="loader-text">
+    <%= simple_format(t('.generating_text')) %>
+  </div>
+</div>

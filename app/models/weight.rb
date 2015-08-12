@@ -60,6 +60,7 @@ class Weight < CustomTranslation
       q.is_weight = true
       q.exclude = true
       q.can_download = true
+      q.save
     end
   end
 
