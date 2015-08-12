@@ -616,6 +616,7 @@ ka:
       highlight_deleted: "გამორჩეული წაიშალა"
       highlight_description_updated: "The highlight description has been updated."
       explore_error: "თქვენი მოთხოვნის შერსულების დროს წარმოიშვა პრობლემა"
+      explore_no_data: "No data was found for your request."
       user_settings_updated: "თქვენი პარამეტრები წარამტებით განახლდა"
       api_key_created: "თქვენი API-ს დაშვების გასაღები წარმატებით შეიქმნა"
       api_key_deleted: "თქვენი API-ს დაშვების გასაღები წარმატებით წაიშალა"

@@ -801,9 +801,12 @@ function get_explore_data(is_back_button){
 
     if (json.errors){
       $('#jumpto-loader').fadeOut('slow');
-      $('#explore-data-loader').fadeOut('slow', function(){
-        $('#explore-error').fadeIn('slow').delay(3000).fadeOut('slow');
-      });
+      $('#explore-data-loader').fadeOut('slow');
+      $('#explore-error').fadeIn('slow');
+    }else if (json.results.analysis.length == 0){
+      $('#jumpto-loader').fadeOut('slow');
+      $('#explore-data-loader').fadeOut('slow');
+      $('#explore-no-results').fadeIn('slow');
     }else{
       // update content
       build_explore_data_page(json);
@@ -889,6 +892,8 @@ $(document).ready(function() {
     // form values in the url
     $("form#form-explore-data").submit(function(){
       $('#jumpto-loader').fadeIn('slow');
+      $('#explore-error').fadeOut('slow');
+      $('#explore-no-results').fadeOut('slow');
       $('#explore-data-loader').fadeIn('slow', function(){
         get_explore_data();
       });
@@ -899,6 +904,8 @@ $(document).ready(function() {
     $("form#form-explore-data input#btn-reset").click(function(e){
       e.preventDefault();
       $('#jumpto-loader').fadeIn('slow');
+      $('#explore-error').fadeOut('slow');
+      $('#explore-no-results').fadeOut('slow');
       $('#explore-data-loader').fadeIn('slow', function(){
         reset_filter_form();
         get_explore_data();
@@ -1046,6 +1053,8 @@ $(document).ready(function() {
     });
 
     // get the initial data
+    $('#explore-error').fadeOut('slow');
+    $('#explore-no-results').fadeOut('slow');
     $('#explore-data-loader').fadeIn('slow', function(){
       get_explore_data();
     });
@@ -1138,6 +1147,9 @@ $(document).ready(function() {
       }
 
       // reload the data
+      $('#jumpto-loader').fadeIn('slow');
+      $('#explore-error').fadeOut('slow');
+      $('#explore-no-results').fadeOut('slow');
       $('#explore-data-loader').fadeIn('slow', function(){
         get_explore_data(true);
       });

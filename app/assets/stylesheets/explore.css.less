@@ -814,7 +814,7 @@
       }
     }
   }
-  #explore-error {
+  #explore-error, #explore-no-results {
     background-color: rgba(0, 0, 0, 0.4);
     position: absolute;
     top: 0;
@@ -823,10 +823,18 @@
     display: none;
 
     p{
-      margin: 100px auto;
+      background-color: #efefef;
+      position: fixed;
+      width: 400px;
+      left: 50%;
+      top: 50%;
+      padding: 15px 15px;
       text-align: center;
-      font-size: 20px;
-      color: @fff;
+      -moz-border-radius: 20px;
+      -webkit-border-radius: 20px;
+      border-radius: 20px;
+      -khtml-border-radius: 20px;
+      font:20px 'sourcesans_pro', 'sans-serif';
     }
   }
   #explore-data-loader {
