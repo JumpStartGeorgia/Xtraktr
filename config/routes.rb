@@ -62,6 +62,8 @@ BootstrapStarter::Application.routes.draw do
         post 'highlights'
         post 'home_page_highlight'
         get 'download_data'
+        post 'generate_download_files', :defaults => { :format => 'json' }
+        post 'generate_download_file_status', :defaults => { :format => 'json' }
         get 'sort'
         post 'sort'
       end

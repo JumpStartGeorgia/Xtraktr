@@ -46,6 +46,7 @@ class Dataset < CustomTranslation
   field :languages, type: Array
   field :default_language, type: String
   field :reset_download_files, type: Boolean, default: true
+  field :force_reset_download_files, type: Boolean, default: false
   field :permalink, type: String
 
   has_many :category_mappers, dependent: :destroy do
@@ -408,7 +409,7 @@ class Dataset < CustomTranslation
       :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at,
       :languages, :default_language, :stats_attributes, :urls_attributes,
       :title_translations, :description_translations, :methodology_translations, :source_translations, :source_url_translations,
-      :reset_download_files, :category_mappers_attributes, :category_ids, :permalink, :groups_attributes
+      :reset_download_files, :force_reset_download_files, :category_mappers_attributes, :category_ids, :permalink, :groups_attributes
 
   attr_accessor :category_ids, :var_arranged_items, :check_question_exclude_status
 
@@ -805,6 +806,17 @@ class Dataset < CustomTranslation
     by_user(user_id).find(id)
   end
 
+  # get the status of the download files
+  def self.download_files_up_to_date?(id, user_id)
+    x = by_user(user_id).only(:reset_download_files).find(id)
+    if x.present?
+      return !x.reset_download_files?
+    else
+      return true
+    end
+  end
+
+
   def self.only_id_title_languages
     only(:id, :title, :languages)
   end
@@ -843,6 +855,11 @@ class Dataset < CustomTranslation
   # get the datasets that are missing download files or needs to have their files recreated due to changes
   def self.needs_download_files
     self.or({:reset_download_files => true}, {:urls.exists => false}, {:'urls.codebook'.exists => false})
+  end
+
+  # get the datasets that have been requested to generate download files now
+  def self.needs_download_files_now
+    self.where({:force_reset_download_files => true})
   end
 
   # get the shape file url

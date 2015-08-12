@@ -85,11 +85,13 @@ class GroupsController < ApplicationController
       # - if not, stop
       if @group.valid?
         # assign the group ids to the questions
-        selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] == 'true'}.map{|k,v| v[:id]}
-        not_selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] != 'true'}.map{|k,v| v[:id]}
+        if params[:dataset].present? && params[:dataset][:questions_attributes].present?
+          selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] == 'true'}.map{|k,v| v[:id]}
+          not_selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] != 'true'}.map{|k,v| v[:id]}
+        end
 
         # have to have subgroups or questions in order to be saved
-        if selected_ids.length > 0 || @group.subgroups.length > 0
+        if selected_ids.present? && selected_ids.length > 0 || @group.subgroups.length > 0
           @dataset.questions.assign_group(selected_ids, @group.id)
           @dataset.questions.assign_group(not_selected_ids, @group.parent_id.present? ? @group.parent_id : nil)
 
@@ -143,11 +145,13 @@ class GroupsController < ApplicationController
       # - if not, stop
       if @group.valid?
         # assign the group ids to the questions
-        selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] == 'true'}.map{|k,v| v[:id]}
-        not_selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] != 'true'}.map{|k,v| v[:id]}
+        if params[:dataset].present? && params[:dataset][:questions_attributes].present?
+          selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] == 'true'}.map{|k,v| v[:id]}
+          not_selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] != 'true'}.map{|k,v| v[:id]}
+        end
 
         # have to have subgroups or questions in order to be saved
-        if selected_ids.length > 0 || @group.subgroups.length > 0
+        if selected_ids.present? && selected_ids.length > 0 || @group.subgroups.length > 0
           @dataset.questions.assign_group(selected_ids, @group.id)
           @dataset.questions.assign_group(not_selected_ids, @group.parent_id.present? ? @group.parent_id : nil)
           respond_to do |format|

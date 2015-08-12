@@ -902,6 +902,12 @@ en:
 
         This download is different than what is on the dashboard page in that this download includes the entire dataset, whereas the download from the dashboard page only includes the data that you have indicated can be downloaded by the public.
       no_files: The download files have not been generated yet. Please check back soon.
+      generating_text: |
+        The download files are being generated.
+
+        This may take a couple minutes if this is a large dataset.
+
+        This page will reload when the processing is complete.
     sort:
       title: Sort Groups and Questions
       explanation: |
