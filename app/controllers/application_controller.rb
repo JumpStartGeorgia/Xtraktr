@@ -509,6 +509,7 @@ logger.debug "======= output js = #{output[:js]}"
 
     gon.disclaimer_text = I18n.t('app.menu.disclaimer')
     gon.disclaimer_link = disclaimer_url
+    gon.weighted_footnote = I18n.t('app.common.weighted_footnote')
   end
 
   def set_gon_datatables

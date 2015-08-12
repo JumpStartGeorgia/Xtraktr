@@ -529,8 +529,8 @@ private
 
         if with_title
           # needed to run all anaylsis in order to have all total responses for subtitle
-          filter_results[:subtitle][:html] = dataset_analysis_subtitle_filtered('html', filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis], data.length)
-          filter_results[:subtitle][:text] = dataset_analysis_subtitle_filtered('text', filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis], data.length)
+          filter_results[:subtitle][:html] = dataset_analysis_subtitle_filtered('html', filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis], data.length, weight.present?)
+          filter_results[:subtitle][:text] = dataset_analysis_subtitle_filtered('text', filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis], data.length, weight.present?)
         end
 
         return filter_results
@@ -578,8 +578,8 @@ private
           if with_title
             results[:title][:html] = dataset_single_analysis_title('html', question, filtered_by, filtered_by_answer)
             results[:title][:text] = dataset_single_analysis_title('text', question, filtered_by, filtered_by_answer)
-            results[:subtitle][:html] = dataset_analysis_subtitle('html', results[:total_responses], results[:total_possible_responses])
-            results[:subtitle][:text] = dataset_analysis_subtitle('text', results[:total_responses], results[:total_possible_responses])
+            results[:subtitle][:html] = dataset_analysis_subtitle('html', results[:total_responses], results[:total_possible_responses], weight_values.present?)
+            results[:subtitle][:text] = dataset_analysis_subtitle('text', results[:total_responses], results[:total_possible_responses], weight_values.present?)
           end
 
           # for each question answer, add the count and percent
@@ -612,8 +612,8 @@ private
           if with_title
             results[:title][:html] = dataset_single_analysis_title('html', question, filtered_by, filtered_by_answer)
             results[:title][:text] = dataset_single_analysis_title('text', question, filtered_by, filtered_by_answer)
-            results[:subtitle][:html] = dataset_analysis_subtitle('html', results[:total_responses], results[:total_possible_responses])
-            results[:subtitle][:text] = dataset_analysis_subtitle('text', results[:total_responses], results[:total_possible_responses])
+            results[:subtitle][:html] = dataset_analysis_subtitle('html', results[:total_responses], results[:total_possible_responses], weight_values.present?)
+            results[:subtitle][:text] = dataset_analysis_subtitle('text', results[:total_responses], results[:total_possible_responses], weight_values.present?)
           end
 
           # for each question answer, add the count and percent
@@ -864,8 +864,8 @@ private
 
         if with_title
           # needed to run all anaylsis in order to have all total responses for subtitle
-          filter_results[:subtitle][:html] = dataset_analysis_subtitle_filtered('html', filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis], data.length)
-          filter_results[:subtitle][:text] = dataset_analysis_subtitle_filtered('text', filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis], data.length)
+          filter_results[:subtitle][:html] = dataset_analysis_subtitle_filtered('html', filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis], data.length, weight.present?)
+          filter_results[:subtitle][:text] = dataset_analysis_subtitle_filtered('text', filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis], data.length, weight.present?)
         end
 
         return filter_results
@@ -966,8 +966,8 @@ private
           if with_title
             results[:title][:html] = dataset_comparative_analysis_title('html', question, broken_down_by, filtered_by, filtered_by_answer)
             results[:title][:text] = dataset_comparative_analysis_title('text', question, broken_down_by, filtered_by, filtered_by_answer)
-            results[:subtitle][:html] = dataset_analysis_subtitle('html', results[:total_responses], results[:total_possible_responses])
-            results[:subtitle][:text] = dataset_analysis_subtitle('text', results[:total_responses], results[:total_possible_responses])
+            results[:subtitle][:html] = dataset_analysis_subtitle('html', results[:total_responses], results[:total_possible_responses], weight_values.present?)
+            results[:subtitle][:text] = dataset_analysis_subtitle('text', results[:total_responses], results[:total_possible_responses], weight_values.present?)
           end
         end
       else
@@ -1032,8 +1032,8 @@ private
           if with_title
             results[:title][:html] = dataset_comparative_analysis_title('html', question, broken_down_by, filtered_by, filtered_by_answer)
             results[:title][:text] = dataset_comparative_analysis_title('text', question, broken_down_by, filtered_by, filtered_by_answer)
-            results[:subtitle][:html] = dataset_analysis_subtitle('html', results[:total_responses], results[:total_possible_responses])
-            results[:subtitle][:text] = dataset_analysis_subtitle('text', results[:total_responses], results[:total_possible_responses])
+            results[:subtitle][:html] = dataset_analysis_subtitle('html', results[:total_responses], results[:total_possible_responses], weight_values.present?)
+            results[:subtitle][:text] = dataset_analysis_subtitle('text', results[:total_responses], results[:total_possible_responses], weight_values.present?)
           end
         end
       end
@@ -1166,8 +1166,8 @@ private
                 item[:title][:text] = dataset_comparative_analysis_map_title('text', data[:question], data[:broken_down_by], bdb_answer.text, data[:filtered_by], filter[:filter_answer_text])
                 item[:subtitle] = {}
                 subtitle_count = for_total_resp[bdb_index].present? ? for_total_resp[bdb_index].inject(:+) : 0
-                item[:subtitle][:html] = dataset_analysis_subtitle('html', subtitle_count, filter[:filter_results][:total_possible_responses])
-                item[:subtitle][:text] = dataset_analysis_subtitle('text', subtitle_count, filter[:filter_results][:total_possible_responses])
+                item[:subtitle][:html] = dataset_analysis_subtitle('html', subtitle_count, filter[:filter_results][:total_possible_responses], data[:weighted_by].present?)
+                item[:subtitle][:text] = dataset_analysis_subtitle('text', subtitle_count, filter[:filter_results][:total_possible_responses], data[:weighted_by].present?)
               end
 
               # create embed id
@@ -1209,8 +1209,8 @@ private
                   item[:title][:text] = dataset_comparative_analysis_map_title('text', data[:broken_down_by], data[:question], q_answer.text, data[:filtered_by], filter[:filter_answer_text])
                   item[:subtitle] = {}
                   subtitle_count = for_total_resp[q_index].present? ? for_total_resp[q_index].inject(:+) : 0
-                  item[:subtitle][:html] = dataset_analysis_subtitle('html', subtitle_count, filter[:filter_results][:total_possible_responses])
-                  item[:subtitle][:text] = dataset_analysis_subtitle('text', subtitle_count, filter[:filter_results][:total_possible_responses])
+                  item[:subtitle][:html] = dataset_analysis_subtitle('html', subtitle_count, filter[:filter_results][:total_possible_responses], data[:weighted_by].present?)
+                  item[:subtitle][:text] = dataset_analysis_subtitle('text', subtitle_count, filter[:filter_results][:total_possible_responses], data[:weighted_by].present?)
                 end
 
                 # create embed id
@@ -1271,8 +1271,8 @@ private
               item[:title][:text] = dataset_comparative_analysis_map_title('text', data[:question], data[:broken_down_by], bdb_answer.text)
               item[:subtitle] = {}
               subtitle_count = for_total_resp[bdb_index].present? ? for_total_resp[bdb_index].inject(:+) : 0
-              item[:subtitle][:html] = dataset_analysis_subtitle('html', subtitle_count, data[:results][:total_possible_responses])
-              item[:subtitle][:text] = dataset_analysis_subtitle('text', subtitle_count, data[:results][:total_possible_responses])
+              item[:subtitle][:html] = dataset_analysis_subtitle('html', subtitle_count, data[:results][:total_possible_responses], data[:weighted_by].present?)
+              item[:subtitle][:text] = dataset_analysis_subtitle('text', subtitle_count, data[:results][:total_possible_responses], data[:weighted_by].present?)
             end
 
             # create embed id
@@ -1309,8 +1309,8 @@ private
               item[:title][:text] = dataset_comparative_analysis_map_title('text', data[:question], data[:broken_down_by], q_answer.text)
               item[:subtitle] = {}
               subtitle_count = for_total_resp[q_index].present? ? for_total_resp[q_index].inject(:+) : 0
-              item[:subtitle][:html] = dataset_analysis_subtitle('html', subtitle_count, data[:results][:total_possible_responses])
-              item[:subtitle][:text] = dataset_analysis_subtitle('text', subtitle_count, data[:results][:total_possible_responses])
+              item[:subtitle][:html] = dataset_analysis_subtitle('html', subtitle_count, data[:results][:total_possible_responses], data[:weighted_by].present?)
+              item[:subtitle][:text] = dataset_analysis_subtitle('text', subtitle_count, data[:results][:total_possible_responses], data[:weighted_by].present?)
             end
 
             # create embed id
@@ -1688,21 +1688,23 @@ private
   end
 
 
-  def self.dataset_analysis_subtitle(locale_key, num, total)
+  def self.dataset_analysis_subtitle(locale_key, num, total, is_weighted=false)
       title = ''
+      title_key = is_weighted == true ? 'title_weighted' : 'title'
       if locale_key == 'html'
         title << "<br /> <span class='total_responses'>"
       end
-      title << I18n.t("explore_data.subtitle.#{locale_key}.title", :num => number_with_delimiter(num), total: number_with_delimiter(total))
+      title << I18n.t("explore_data.subtitle.#{locale_key}.#{title_key}", :num => number_with_delimiter(num), total: number_with_delimiter(total))
       if locale_key == 'html'
         title << "</span>"
       end
       return title.html_safe
   end
 
-  def self.dataset_analysis_subtitle_filtered(locale_key, filtered_by_code, filtered_by_text, results, total)
+  def self.dataset_analysis_subtitle_filtered(locale_key, filtered_by_code, filtered_by_text, results, total, is_weighted=false)
     title = ''
     join_text = locale_key == 'html' ? '' : '; '
+    title_key = is_weighted == true ? 'title_filter_weighted' : 'title_filter'
     if locale_key == 'html'
       title = "<br /> <span class='total_responses'>"
     end
@@ -1714,7 +1716,7 @@ private
         filter_responses << " #{result[:filter_answer_text]}: #{number_with_delimiter(result[:filter_results][:total_responses])}"
       end
     end
-    title << I18n.t("explore_data.subtitle.#{locale_key}.title_filter", :code => filtered_by_code, :variable => filtered_by_text, :nums => filter_responses.join(join_text), :total => total)
+    title << I18n.t("explore_data.subtitle.#{locale_key}.#{title_key}", :code => filtered_by_code, :variable => filtered_by_text, :nums => filter_responses.join(join_text), :total => total)
     if locale_key == 'html'
       title << "</span>"
     end

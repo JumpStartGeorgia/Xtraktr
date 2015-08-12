@@ -32,7 +32,7 @@ function build_time_series_charts(json){
       // filters
       for(var i=0; i<json.chart.length; i++){
         // create chart
-        build_time_series_chart(json.chart[i].filter_results, chart_height);
+        build_time_series_chart(json.chart[i].filter_results, chart_height, json.weighted_by != undefined);
 
         // add jumpto link
         jumpto_text += '<option data-href="#chart-' + (i+1) + '">' + json.filtered_by.text + ' = ' + json.chart[i].filter_answer_text + '</option>';
@@ -47,8 +47,8 @@ function build_time_series_charts(json){
 
     }else{
       // no filters
-      build_time_series_chart(json.chart, chart_height);
-  
+      build_time_series_chart(json.chart, chart_height, json.weighted_by != undefined);
+
       // hide jumpto
       $('#jumpto').hide();
     }
@@ -221,10 +221,10 @@ function build_datatable(json){
             "sButtonText": gon.datatable_xls_title,
             "sToolTip": gon.datatable_xls_tooltip
           }
-        ]        
+        ]
       }
     }))
-  });    
+  });
 
 }
 
@@ -237,10 +237,10 @@ function build_details(json){
 
   // add questions
   if (json.question && json.question.text && json.question.answers){
-    $('#tab-details #details-question-code .name-variable').html(json.question.text);    
-    $('#tab-details #details-question-code .name-code').html(json.question.original_code);    
+    $('#tab-details #details-question-code .name-variable').html(json.question.text);
+    $('#tab-details #details-question-code .name-code').html(json.question.original_code);
     if (json.question.notes){
-      $('#tab-details #details-question-code .notes').html(json.question.notes);    
+      $('#tab-details #details-question-code .notes').html(json.question.notes);
       $('#tab-details #details-question-code .details-notes').show();
     }else{
       $('#tab-details #details-question-code .details-notes').hide();
@@ -253,10 +253,10 @@ function build_details(json){
 
   // add filters
   if (json.filtered_by && json.filtered_by.text && json.filtered_by.answers){
-    $('#tab-details #details-filtered-by-code .name-variable').html(json.filtered_by.text);    
-    $('#tab-details #details-filtered-by-code .name-code').html(json.filtered_by.original_code);    
+    $('#tab-details #details-filtered-by-code .name-variable').html(json.filtered_by.text);
+    $('#tab-details #details-filtered-by-code .name-code').html(json.filtered_by.original_code);
     if (json.filtered_by.notes){
-      $('#tab-details #details-filtered-by-code .notes').html(json.filtered_by.notes);    
+      $('#tab-details #details-filtered-by-code .notes').html(json.filtered_by.notes);
       $('#tab-details #details-filtered-by-code .details-notes').show();
     }else{
       $('#tab-details #details-filtered-by-code .details-notes').hide();
@@ -282,7 +282,7 @@ function build_explore_time_series_page(json){
   // if no visible tab is marked as active, mark the first active one
   if ($('#explore-tabs li.active:visible').length == 0){
     // turn on tab and its content
-    $('#explore-tabs li:visible:first a').trigger('click'); 
+    $('#explore-tabs li:visible:first a').trigger('click');
   }
 }
 
@@ -358,7 +358,7 @@ function get_explore_time_series(is_back_button){
     json_data = json;
 
     if (json.errors){
-      $('#jumpto-loader').fadeOut('slow');      
+      $('#jumpto-loader').fadeOut('slow');
       $('#explore-data-loader').fadeOut('slow', function(){
         $('#explore-error').fadeIn('slow').delay(3000).fadeOut('slow');
       });
@@ -375,7 +375,7 @@ function get_explore_time_series(is_back_button){
       }
 
       $('#explore-data-loader').fadeOut('slow');
-      $('#jumpto-loader').fadeOut('slow');      
+      $('#jumpto-loader').fadeOut('slow');
     }
 
 
@@ -412,20 +412,20 @@ $(document).ready(function() {
 
   if (gon.explore_time_series){
     // due to using tabs, chart and table cannot be properly drawn
-    // because they may be hidden. 
-    // this event catches when a tab is being shown to make sure 
+    // because they may be hidden.
+    // this event catches when a tab is being shown to make sure
     // the item is properly drawn
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
       switch($(this).attr('href')){
         case '#tab-chart':
           $('#container-chart .chart').each(function(){
-            $(this).highcharts().reflow();        
+            $(this).highcharts().reflow();
           });
           break;
         case '#tab-table':
           var ttInstances = TableTools.fnGetMasters();
           for (i in ttInstances) {
-          if (ttInstances[i].fnResizeRequired()) 
+          if (ttInstances[i].fnResizeRequired())
             ttInstances[i].fnResizeButtons();
           }
           break;
@@ -455,8 +455,8 @@ $(document).ready(function() {
 
 
     // initalize the fancy select boxes
-    $('select.selectpicker').selectpicker();    
-    $('select.selectpicker-filter').selectpicker();    
+    $('select.selectpicker').selectpicker();
+    $('select.selectpicker-filter').selectpicker();
 
     // if option changes, make sure the select option is not available in the other lists
     $('select.selectpicker').change(function(){
@@ -466,9 +466,9 @@ $(document).ready(function() {
       if ($('select#filtered_by_code').val() == question_code && question_code != ''){
         // reset value and hide filter answers
         $('select#filtered_by_code').selectpicker('val', '');
-      }   
+      }
       // mark selected items as disabled
-      $('select#filtered_by_code option[disabled="disabled"]').removeAttr('disabled');  
+      $('select#filtered_by_code option[disabled="disabled"]').removeAttr('disabled');
       if (question_code != ''){
         $('select#filtered_by_code option[value="' + question_code + '"]').attr('disabled','disabled');
       }
@@ -482,7 +482,7 @@ $(document).ready(function() {
 
       // if selected options have can_exclude, show the checkbox, else hide it
       set_can_exclude_visibility();
-    });  
+    });
 
     // update tooltip when filter tooltip changes
     $('select.selectpicker-filter').change(function(){
@@ -556,7 +556,6 @@ $(document).ready(function() {
       $('#explore-data-loader').fadeIn('slow', function(){
         get_explore_time_series(true);
       });
-    });  
+    });
   }
 });
-
