@@ -32,7 +32,7 @@ every :hour do
 end
 
 # check if someone has requested a dataset to have it download files generated
-every 30.seconds do
+every 2.minutes do
   rake "generate_files:force_download_data_files"
 end
 
