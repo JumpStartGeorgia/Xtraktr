@@ -88,6 +88,8 @@ module ExportData
       if dataset.force_reset_download_files?
         dataset.reset_download_files = true
         dataset.force_reset_download_files = false
+        # save the dataset now so if another cron job is started, this dataset will not be processed again
+        dataset.save
       end
 
       # create files for each locale in the dataset
