@@ -141,6 +141,9 @@ div#form-ka {
   font-size:14px;
   box-sizing:content-box;
 }
+.formtastic .radio, .formtastic .checkbox {
+    margin-right: 15px;
+  }
 
 /* fix styles when using tinymce */
 .tinymce_format{
@@ -163,6 +166,10 @@ div#form-ka {
 .table-nonfluid {
    width: auto;
    max-width: 100%;
+   margin: 0 auto;
+}
+
+.table-centered {
    margin: 0 auto;
 }
 
@@ -637,7 +644,7 @@ div.message {
         color: #555;
         background-color: #fff;
         padding: 0 14px;
-        height: 34px;    
+        height: 34px;
       }
     }
   }
@@ -652,6 +659,9 @@ div.message {
   position:relative;
   display:table;
   overflow:hidden;
+  &.wide{
+      max-width: 1000px;
+  }
  .figure {
     width:42px;
     height:39px;
@@ -865,8 +875,52 @@ g.highcharts-button{
     width: 100%;
     height: 100%;
     display: none;
+    .loader-text {
+      background: #efefef;
+      position: fixed;
+      width: 400px;
+      left: 50%;
+      top: 50%;
+      padding: 168px 15px 15px;
+      margin-top: -168px;
+      margin-left: -200px;
+      text-align: justify;
+      -moz-border-radius: 20px;
+      -webkit-border-radius: 20px;
+      border-radius: 20px;
+      -khtml-border-radius: 20px;
+    }
   }
 }
+
+/* data loader spinner with text message */
+.data-loader-message-container {
+  background:rgba(0,0,0,0.4);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  display: none;
+
+  .loader-text {
+    background: #efefef url(/assets/svg/loading.svg) no-repeat top;
+    position: fixed;
+    width: 400px;
+    left: 50%;
+    top: 50%;
+    padding: 168px 15px 15px;
+    margin-top: -168px;
+    margin-left: -200px;
+    text-align: justify;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
+    -khtml-border-radius: 20px;
+  }
+}
+
 
 /* fix select2 styles in forms */
 form .select2-container {

@@ -2,7 +2,7 @@ class Api::V1Controller < ApplicationController
   before_filter :restrict_access, except: [:index, :documentation]
   before_filter :set_background
   after_filter :record_request, except: [:index, :documentation]
-  
+
 
 
   def index
@@ -44,8 +44,8 @@ class Api::V1Controller < ApplicationController
   # get list of all public datasets
   def dataset_catalog
     respond_to do |format|
-      format.json { 
-        render json: ApiV1.dataset_catalog, each_serializer: DatasetCatalogSerializer, root: 'datasets', callback: params[:callback]
+      format.json {
+        render json: Api::V1.dataset_catalog, each_serializer: DatasetCatalogSerializer, root: 'datasets', callback: params[:callback]
       }
     end
   end
@@ -53,8 +53,8 @@ class Api::V1Controller < ApplicationController
   # get details about a dataset
   def dataset
     respond_to do |format|
-      format.json { 
-        render json: ApiV1.dataset(params[:dataset_id], clean_filtered_params(request.filtered_parameters)), each_serializer: DatasetSerializer, callback: params[:callback]
+      format.json {
+        render json: Api::V1.dataset(params[:dataset_id], clean_filtered_params(request.filtered_parameters)), each_serializer: DatasetSerializer, callback: params[:callback]
       }
     end
   end
@@ -62,8 +62,8 @@ class Api::V1Controller < ApplicationController
   # get codebook for a dataset
   def dataset_codebook
     respond_to do |format|
-      format.json { 
-        render json: ApiV1.dataset_codebook(params[:dataset_id], clean_filtered_params(request.filtered_parameters)), each_serializer: QuestionSerializer, root: 'questions', callback: params[:callback]
+      format.json {
+        render json: Api::V1.dataset_codebook(params[:dataset_id], clean_filtered_params(request.filtered_parameters)), each_serializer: QuestionSerializer, root: 'questions', callback: params[:callback]
       }
     end
   end
@@ -76,8 +76,8 @@ class Api::V1Controller < ApplicationController
   #  - can_exclude - boolean indicating if the can_exclude answers should by excluded (optional, default false)
   def dataset_analysis
     respond_to do |format|
-      format.json { 
-        render json: ApiV1.dataset_analysis(params[:dataset_id], params[:question_code], clean_filtered_params(request.filtered_parameters)), callback: params[:callback]
+      format.json {
+        render json: Api::V1.dataset_analysis(params[:dataset_id], params[:question_code], clean_filtered_params(request.filtered_parameters)), callback: params[:callback]
       }
     end
   end
@@ -89,8 +89,8 @@ class Api::V1Controller < ApplicationController
   # get list of all public time sereie
   def time_series_catalog
     respond_to do |format|
-      format.json { 
-        render json: ApiV1.time_series_catalog, each_serializer: TimeSeriesCatalogSerializer, root: 'time_series', callback: params[:callback]
+      format.json {
+        render json: Api::V1.time_series_catalog, each_serializer: TimeSeriesCatalogSerializer, root: 'time_series', callback: params[:callback]
       }
     end
   end
@@ -98,8 +98,8 @@ class Api::V1Controller < ApplicationController
   # get details about a time_series
   def time_series
     respond_to do |format|
-      format.json { 
-        render json: ApiV1.time_series(params[:time_series_id], clean_filtered_params(request.filtered_parameters)), each_serializer: TimeSeriesSerializer, callback: params[:callback]
+      format.json {
+        render json: Api::V1.time_series(params[:time_series_id], clean_filtered_params(request.filtered_parameters)), each_serializer: TimeSeriesSerializer, callback: params[:callback]
       }
     end
   end
@@ -107,8 +107,8 @@ class Api::V1Controller < ApplicationController
   # get codebook for a time_series
   def time_series_codebook
     respond_to do |format|
-      format.json { 
-        render json: ApiV1.time_series_codebook(params[:time_series_id], clean_filtered_params(request.filtered_parameters)), each_serializer: TimeSeriesQuestionSerializer, root: 'questions', callback: params[:callback]
+      format.json {
+        render json: Api::V1.time_series_codebook(params[:time_series_id], clean_filtered_params(request.filtered_parameters)), each_serializer: TimeSeriesQuestionSerializer, root: 'questions', callback: params[:callback]
       }
     end
   end
@@ -120,8 +120,8 @@ class Api::V1Controller < ApplicationController
   #  - can_exclude - boolean indicating if the can_exclude answers should by excluded (optional, default false)
   def time_series_analysis
     respond_to do |format|
-      format.json { 
-        render json: ApiV1.time_series_analysis(params[:time_series_id], params[:question_code], clean_filtered_params(request.filtered_parameters)), callback: params[:callback]
+      format.json {
+        render json: Api::V1.time_series_analysis(params[:time_series_id], params[:question_code], clean_filtered_params(request.filtered_parameters)), callback: params[:callback]
       }
     end
   end

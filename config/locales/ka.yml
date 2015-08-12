@@ -16,6 +16,7 @@ ka:
       categories: "კატეგორია"
       category_mappers: "კატეგორიები"
       group: Group
+      weight: Weight
     attributes:
       user:
         email: "ელ.ფოსტა"
@@ -84,6 +85,15 @@ ka:
         reports: "რეფორთები"
         category_ids: "კატეგორიები"
         permalink: მონაცემთა URL-ი
+        is_weighted: Weighted Data
+      stats:
+        questions_analyzable: Analyzable Questions
+        public_questions_analyzable: Public Analyzable Questions
+        questions_good: Questions With Predefined Answers
+        questions_no_text: No Question Text
+        questions_no_answers: No Predefined Answers
+        questions_bad_answers: Bad Answers
+        data_records: Total Responses
       question:
         code: "კითხვის კოდი"
         original_code: "კითხვის კოდი"
@@ -115,6 +125,14 @@ ka:
         codes: Questions in this Group
         parent_id: This Group is a Subgroup of
         sub_group: Subgroup
+      weight:
+        code: Question with Weight
+        text: Weight Name
+        is_default: Is Default Weight?
+        applies_to_all: Applies to All Questions
+        applies_to: Applies To
+        all_questions: All Questions
+        codes: Apply the Weight to the Following Questions
       report:
         title: "დასახელება"
         file: "ფაილი"
@@ -253,6 +271,12 @@ ka:
         include_in_charts: "If selected, the group description will appear in the title of the charts. The Description will then be required."
         codes: Select the questions that belong in this group
         parent_id: Use this to indicate that this group belongs to another group
+      weight:
+        code: The question that contains the weight values
+        text: 'A label for the weight - this will be visible to the public during analysis (e.g., Individual, Household, etc)'
+        is_default: 'If selected, this will be the weight that is applied to all questions during analysis by default if no weight is indicated'
+        applies_to_all: 'If selected, all questions will be assigned to this weight'
+        codes: Select the questions that you want to have this weight applied to
       report:
         title: "რეფორთის დასახელება"
         file: "რეფორთის ფაილი pdf, doc, odt ან txt დოკუმენტებში"
@@ -314,6 +338,7 @@ ka:
       translation_any_lang: "%{field_name} ენისთვის '%{language}' %{msg}"
       invalid_language: "%{lang_locale}' შეუსაბამო ადგილობრივი ენაა"
       dataset_length: "პერიოდული შედარების შენახვისთვის სულ მცირე მონაცემთა ორი ცხრილია საჭირო"
+      missing_questions: "At least one questions must be selected for a group to be saved."
   mass_uploads_msgs:
     bad_headers: "ფაილის საწყისი არ ემთხვევა ნიმუშის საწყის, შეუძლებელია მონაცემების თითოეული სვეტის განსაზღვრა. გთხოვთ ჩამოტვირთოთ კითხვის ნიმუშის ფაილი და გამოიყენოთ საწყისი ამ ფაილიდან."
     missing_code: "რიგი %{n}: ამ კოდით კითხვა არ მოიძებნა '%{code}'"
@@ -369,7 +394,7 @@ ka:
         title_filter_value: ", გაფილტრულია: '%{code} - %{variable} = %{value}'"
         map:
           title: "%{code} - %{variable}'"
-          title_broken_down_by: "ჩაშლილია: '%{code} - %{broken_down_by} = %{broken_down_by_answer}'"
+          title_broken_down_by: " ჩაშლილია: '%{code} - %{broken_down_by} = %{broken_down_by_answer}'"
           title_filter: ", გაფილტრულია: '%{code} - %{variable}'"
           title_filter_value: ", გაფილტრულია: '%{code} - %{variable} = %{value}'"
     single:
@@ -385,9 +410,13 @@ ka:
       html:
         title: "მთლიანი გამოხმაურება: <span class='number'>%{num}</span>"
         title_filter: "პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{code} - %{variable}: %{nums}"
+        title_weighted: "Unweighted Total Responses<span class='footnote-flag'>*</span>: <span class='number'>%{num}</span> out of %{total}"
+        title_filter_weighted: "Unweighted Total Responses out of %{total}, Filtered by Answers to '<span class='number'>%{code}</span> - %{variable}'<span class='footnote-flag'>*</span>: <br />%{nums}"
       text:
         title: "მთლიანი პასუხები: %{num}"
         title_filter: "პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{code} - %{variable}: %{nums}"
+        title_weighted: "Unweighted Total Responses*: %{num} out of %{total}"
+        title_filter_weighted: "Unweighted Total Responses out of %{total}, Filtered by Answers to '%{code} - %{variable}'*: %{nums}"
   datatable:
     search: ძიება
     search_footer: 'Search %{name}'
@@ -543,8 +572,12 @@ ka:
       notes: "შენიშვნები"
       group: Group
       subgroup: Subgroup
+      weight: Weight
       count: "დათვლა"
       percent: "პროცენტი"
+      unweighted_count: Unweighted Count
+      weighted_count: Weighted Count
+      weighted_percent: Weighted Percent
       dataset_dashboard: "მონაცემთა Dashboard"
       time_series_dashboard: "პერიოდული შედარების Dashboard"
       terms: "თანახმა ვარ <a href='http://www.unicef.org/about/legal_terms.html' target='_blank'>გამოყენების წესებზე</a>"
@@ -556,8 +589,10 @@ ka:
       private_question: This quesiton is not available to the public
       private_answer: This answer is not available to the public
       mappable_question: This question displays a map
+      question_no_answers: This question does not have answers and cannot be analyzed
       powered_by_xtraktr: Powered By Xtraktr
       powered_by_xtraktr_title: This data was built using the Xtraktr platform. Learn more and add your own data on the Xtraktr website.
+      weighted_footnote: This data is weighted.
     msgs:
       does_not_exist: "თქვენ ცდილობთ ისეთი გვერდის ნახვას, რომელიც არ არსებობს."
       not_authorized: "თქვენ არ გაქვთ ამ გვერდის ნახვის უფლება."
@@ -596,6 +631,11 @@ ka:
       jumpto_group: Jump to this group
       is_group: This is a group of questions
       is_subgroup: This is a subgroup of questions
+      weights_deleted: All weights have been deleted.
+      must_include_weight: The question is marked as a weight and must be included in the download.
+      cannot_include_weight: The question is marked as a weight and cannot be included as a question in the analsysis.
+      question_no_answers: This question does not have answers and cannot be analyzed.
+      admin_codebook_questions: This administrative view of the codebook shows all questions including those that are excluded and those that have no answers, which can be identified by the icon next to the question name. Please be aware that questions that are excluded or have no answers will not be visible to the public.
     menu:
       explore_data: "მონაცემთა გაცნობა"
       explore_time_series: "პერიოდული შედარების გაცნობა"
@@ -633,6 +673,7 @@ ka:
         download_data: Download Data
         groups: Group Questions
         sort: Sort Groups/Questions
+        weights: Weight Data
       admin_time_series:
         explore_data: "მონაცემების გაცნობა"
         heading: "პერიოდული შედარების დეტალები"
@@ -778,12 +819,6 @@ ka:
       no_content: "ამ მეთოდისთვის დოკუმენტაცია ჯერ არ შექმნილა"
   datasets:
     index:
-      stats:
-        data_records: "მონაცემთა ჩაწერა"
-        good_questions: "გაანალიზებადი კითხვები"
-        no_text: "კითხვის ტექსტი არ არის"
-        bad_answers: "არასწორი პასუხი"
-        no_answers: არ აქვს წინასწარ განსაზღვრული პასუხები
       view_warnings: "დეტალების ნახვა"
     warnings:
       title: "გაფრთხილება"
@@ -861,6 +896,12 @@ ka:
 
         This download is different than what is on the dashboard page in that this download includes the entire dataset, whereas the download from the dashboard page only includes the data that you have indicated can be downloaded by the public.
       no_files: The download files have not been generated yet. Please check back soon.
+      generating_text: |
+        The download files are being generated.
+
+        This may take a couple minutes if this is a large dataset.
+
+        This page will reload when the processing is complete.
     sort:
       title: Sort Groups and Questions
       explanation: |
@@ -946,6 +987,34 @@ ka:
       ex_question: Is the sky blue?
       questions_explanation_default: "All questions that are not assigned to any other group are avaiable to be assigned to this group."
       questions_explanation_subgroup: "Only the questions assinged to '%{group}' are available to be assigned to this subgroup."
+  weights:
+    index:
+      title: Dataset Weighting
+      explanation: |
+        This section allows you to identify which question(s) contain a weight value and which questions that weight should be applied to.
+
+        A dataset can have multiple weights, but one must be selected as the default weight. A default weight is automatically applied to all questions. For weights that are not the default weight, you can choose to apply the weight all of the questions or only specific questions.
+
+        During analysis, if two questions are being compared and they are of different weights, the default weight is used for both.
+      no_weights: There are no weights on file for this dataset.
+      add: Add Weights
+      edit: Edit Weights
+      confirm_delete: Are you sure you want to delete all weights on file?
+      question_count: '%{num} questions'
+      table:
+        headers:
+          name: Weight Name
+          question: Question with Weight
+          default: Is Default Weight?
+          apply_to: Apply Weight To
+      modal:
+        header: "Questions for Weight '[weight]'"
+    new:
+      title: Dataset Weighting Form
+    edit:
+      title: Dataset Weighting Form
+    form:
+      other_weights: Other Weights this Question Belongs To
   time_series:
     form:
       header_datasets: "მონაცემთა ცხრილები"
@@ -1009,6 +1078,7 @@ ka:
         no_filter: "ფილტრი არ არის"
         can_exclude: Exclude Answers
         can_exclude_hint: At least one selected question has answers that can be excluded during analysis. Select this checkbox to remove these answers from the analysis.
+        weighted_by_code: Weighted By
       jumpto:
         chart: "გრაფაზე გადასვლა"
         map: "რუკაზე გადასვლა"
@@ -1072,6 +1142,9 @@ ka:
     language_switcher:
       label: "ხელმისაწვდომი ენები"
     embed_v1:
+      title_site: გადასვლა %{app_name} -ზე
+      title_datalist: მონაცემთა ყველა ცხილის ნახვა
+    embed_v2:
       title_site: გადასვლა %{app_name} -ზე
       title_datalist: მონაცემთა ყველა ცხილის ნახვა
   export_data:

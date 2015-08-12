@@ -8,5 +8,12 @@ namespace :generate_files do
     ExportData.create_all_dataset_files(args.use_processed_csv)
   end
 
-end
 
+  desc "create the download data files for all datasets that have been requested to do it immediately"
+  task :force_download_data_files => :environment do |t, args|
+    require "export_data"
+
+    ExportData.create_all_forced_dataset_files
+  end
+
+end

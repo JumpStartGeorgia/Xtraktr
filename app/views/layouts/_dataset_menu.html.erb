@@ -1,6 +1,6 @@
 <%
   include_parent_div ||= false
-%>              
+%>
 
             <% if include_parent_div %>
               <div class="dropdown">
@@ -89,6 +89,12 @@
                     <% end %>
                   </li>
                   <li role="menuitem">
+                    <%= link_to dataset_weights_path(dataset) do %>
+                      <span class="glyphicon glyphicon-asterisk"></span>
+                      <%= t('app.menu.admin_dataset.weights') %>
+                    <% end %>
+                  </li>
+                  <li role="menuitem">
                     <%= link_to mappable_dataset_path(dataset) do %>
                       <span class="glyphicon glyphicon-map-marker"></span>
                       <%= t('app.menu.admin_dataset.mappable') %>
@@ -99,7 +105,7 @@
                     <%= link_to dataset_path(dataset),
                         :method => 'delete',
                         :data => { :confirm => t("helpers.links.confirm") } do %>
-  
+
                       <span class="glyphicon glyphicon-remove-circle"></span>
                       <%= t('app.menu.admin_dataset.delete') %>
                     <% end %>

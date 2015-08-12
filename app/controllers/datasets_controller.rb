@@ -18,7 +18,7 @@ class DatasetsController < ApplicationController
     set_gon_datatables
 
     respond_to do |format|
-      format.html 
+      format.html
       format.json { render json: @datasets }
     end
   end
@@ -33,7 +33,7 @@ class DatasetsController < ApplicationController
       redirect_to datasets_path(:locale => I18n.locale)
       return
     else
-      add_dataset_nav_options 
+      add_dataset_nav_options
 
       # if the language parameter exists and it is valid, use it instead of the default current_locale
       if params[:language].present? && @dataset.languages.include?(params[:language])
@@ -74,7 +74,7 @@ class DatasetsController < ApplicationController
       add_dataset_nav_options(show_title: false)
 
       gon.explore_data = true
-      gon.api_dataset_analysis_path = api_v1_dataset_analysis_path
+      gon.api_dataset_analysis_path = api_v2_dataset_analysis_path
       gon.embed_ids = @dataset.highlights.embed_ids
       gon.private_user = Base64.urlsafe_encode64(current_user.id.to_s)
 
@@ -103,7 +103,7 @@ class DatasetsController < ApplicationController
     add_dataset_nav_options(set_url: false)
 
     set_tabbed_translation_form_settings
-    
+
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @dataset }
@@ -142,7 +142,7 @@ class DatasetsController < ApplicationController
 
     if !@is_xtraktr
       # just automatically set the source to unicef georgia
-      @dataset.source = 'UNICEF Georgia'  
+      @dataset.source = 'UNICEF Georgia'
     end
 
     # if there are category_ids, create mapper objects with them
@@ -207,7 +207,7 @@ class DatasetsController < ApplicationController
           logger.debug "======= - checking form cat id #{category_id} for addition; class = #{category_id.class}"
           if !cat_ids.include?(category_id)
             logger.debug "======= -> adding new category #{category_id}"
-            @dataset.category_mappers.build(category_id: category_id) 
+            @dataset.category_mappers.build(category_id: category_id)
           end
         end
       else
@@ -309,21 +309,24 @@ class DatasetsController < ApplicationController
 
           # create data for datatables (faster to load this way)
           gon.datatable_json = []
-          @dataset.questions.with_code_answers.each_with_index do |question, question_index|
+          @dataset.questions.each_with_index do |question, question_index|
+            disabled = question.is_weight? ? 'disabled=\'disabled\'' : ''
+            warning_exclude = question.is_weight? ? "<span class='exclude-warning'>#{view_context.image_tag('svg/exclamation.svg', title: I18n.t('app.msgs.cannot_include_weight'))}</span>" : ''
+            warning_download = question.is_weight? ? "<span class='download-warning'>#{view_context.image_tag('svg/exclamation.svg', title: I18n.t('app.msgs.must_include_weight'))}</span>" : ''
             gon.datatable_json << {
               code: question.original_code,
               text: question.text,
-              exclude: "<input id='dataset_questions_attributes_#{question_index}_id' name='dataset[questions_attributes][#{question_index}][id]' type='hidden' value='#{question.id}'><input class='exclude-input' name='dataset[questions_attributes][#{question_index}][exclude]' type='checkbox' value='true' #{question.exclude == true ? 'checked=\'checked\'' : ''}>",
-              download: "<input class='download-input' name='dataset[questions_attributes][#{question_index}][can_download]' type='checkbox' value='true' #{question.can_download == true ? 'checked=\'checked\'' : ''}>"
+              exclude: "<input id='dataset_questions_attributes_#{question_index}_id' name='dataset[questions_attributes][#{question_index}][id]' type='hidden' value='#{question.id}'><input class='exclude-input' name='dataset[questions_attributes][#{question_index}][exclude]' type='checkbox' value='true' #{question.exclude? ? 'checked=\'checked\'' : ''} #{disabled}>#{warning_exclude}",
+              download: "<input class='download-input' name='dataset[questions_attributes][#{question_index}][can_download]' type='checkbox' value='true' #{question.can_download? ? 'checked=\'checked\'' : ''} #{disabled}>#{warning_download}"
             }
           end
 
           add_dataset_nav_options()
 
         }
-        format.js { 
+        format.js {
           begin
-            # cannot use simple update_attributes for if value was checked but is not now, 
+            # cannot use simple update_attributes for if value was checked but is not now,
             # no value exists in params and so no changes take place
             # -> get ids that are true and set them to true
             # -> set rest to false
@@ -337,16 +340,13 @@ class DatasetsController < ApplicationController
             @dataset.questions.add_can_download(download_true_ids)
             @dataset.questions.remove_can_download(download_false_ids)
 
-            # force question callbacks
-            @dataset.check_question_exclude_status = true
-
             @msg = t('app.msgs.mass_change_question_saved')
             @success = true
             if !@dataset.save
               @msg = @dataset.errors.full_messages
               @success = false
             end
-          rescue Exception => e 
+          rescue Exception => e
             @msg = t('app.msgs.mass_change_question_not_saved')
             @success = false
 
@@ -379,14 +379,14 @@ class DatasetsController < ApplicationController
 
           # create data for datatables (faster to load this way)
           gon.datatable_json = []
-          @dataset.questions.with_code_answers.each_with_index do |question, question_index|
+          @dataset.questions.each_with_index do |question, question_index|
             question.answers.each_with_index do |answer, answer_index|
               gon.datatable_json << {
                 code: question.original_code,
                 question: question.text,
                 answer: answer.text,
-                exclude: "<input id='dataset_questions_attributes_#{question_index}_answers_attributes_#{answer_index}_id' name='dataset[questions_attributes][#{question_index}][answers_attributes][#{answer_index}][id]' type='hidden' value='#{answer.id}'><input class='exclude-input' name='dataset[questions_attributes][#{question_index}][answers_attributes][#{answer_index}][exclude]' type='checkbox' value='true' #{answer.exclude == true ? 'checked=\'checked\'' : ''}>",
-                can_exclude: "<input class='can-exclude-input' name='dataset[questions_attributes][#{question_index}][answers_attributes][#{answer_index}][can_exclude]' type='checkbox' value='true' #{answer.can_exclude== true ? 'checked=\'checked\'' : ''}>"
+                exclude: "<input id='dataset_questions_attributes_#{question_index}_answers_attributes_#{answer_index}_id' name='dataset[questions_attributes][#{question_index}][answers_attributes][#{answer_index}][id]' type='hidden' value='#{answer.id}'><input class='exclude-input' name='dataset[questions_attributes][#{question_index}][answers_attributes][#{answer_index}][exclude]' type='checkbox' value='true' #{answer.exclude? ? 'checked=\'checked\'' : ''}>",
+                can_exclude: "<input class='can-exclude-input' name='dataset[questions_attributes][#{question_index}][answers_attributes][#{answer_index}][can_exclude]' type='checkbox' value='true' #{answer.can_exclude? ? 'checked=\'checked\'' : ''}>"
               }
             end
           end
@@ -396,11 +396,11 @@ class DatasetsController < ApplicationController
           add_dataset_nav_options()
 
         }
-        format.js { 
+        format.js {
           @msg = t('app.msgs.mass_change_answer_saved')
           @success = true
           begin
-            # cannot use simple update_attributes for if value was checked but is not now, 
+            # cannot use simple update_attributes for if value was checked but is not now,
             # no value exists in params and so no changes take place
             # -> get ids that are true and set them to true
             # -> set rest to false
@@ -416,14 +416,11 @@ class DatasetsController < ApplicationController
             @dataset.questions.add_answer_can_exclude(can_exclude_true_ids)
             @dataset.questions.remove_answer_can_exclude(can_exclude_false_ids)
 
-            # force question callbacks
-            @dataset.check_question_exclude_status = true
-
             if !@dataset.save
               @msg = @dataset.errors.full_messages
               @success = false
             end
-          rescue Exception => e 
+          rescue Exception => e
             @msg = t('app.msgs.mass_change_answer_not_saved')
             @success = false
 
@@ -457,11 +454,11 @@ class DatasetsController < ApplicationController
   #         add_dataset_nav_options()
 
   #       }
-  #       format.js { 
+  #       format.js {
   #         @msg = t('app.msgs.answer_can_exclude_saved')
   #         @success = true
   #         begin
-  #           # cannot use simple update_attributes for if value was checked but is not now, 
+  #           # cannot use simple update_attributes for if value was checked but is not now,
   #           # no value exists in params and so no changes take place
   #           # -> get ids that are true and set them to true
   #           # -> set rest to false
@@ -476,7 +473,7 @@ class DatasetsController < ApplicationController
   #             @msg = @dataset.errors.full_messages
   #             @success = false
   #           end
-  #         rescue Exception => e 
+  #         rescue Exception => e
   #           @msg = t('app.msgs.question_can_exclude_not_saved')
   #           @success = false
 
@@ -493,7 +490,7 @@ class DatasetsController < ApplicationController
   #     redirect_to datasets_path(:locale => I18n.locale)
   #     return
   #   end
-  # end  
+  # end
 
   # show which questions are assign to shape sets
   def mappable
@@ -515,7 +512,7 @@ class DatasetsController < ApplicationController
       redirect_to datasets_path(:locale => I18n.locale)
       return
     end
-  end  
+  end
 
   # assign questions to shape sets
   def mappable_form
@@ -563,7 +560,7 @@ class DatasetsController < ApplicationController
       redirect_to datasets_path(:locale => I18n.locale)
       return
     end
-  end  
+  end
 
   # edit an existing question mapping
   def mappable_form_edit
@@ -611,7 +608,7 @@ class DatasetsController < ApplicationController
       redirect_to datasets_path(:locale => I18n.locale)
       return
     end
-  end  
+  end
 
   # DELETE /datasets/1
   # DELETE /datasets/1.json
@@ -746,7 +743,6 @@ class DatasetsController < ApplicationController
       redirect_to datasets_path(:locale => I18n.locale)
       return
     end
-
   end
 
 
@@ -756,6 +752,11 @@ class DatasetsController < ApplicationController
 
     if @dataset.present?
       add_dataset_nav_options
+
+      gon.generate_download_files_dataset_path = generate_download_files_dataset_path(@dataset)
+      gon.generate_download_file_status_dataset_path = generate_download_file_status_dataset_path(@dataset)
+
+      @js.push('generate_download.js')
 
       respond_to do |format|
         format.html # index.html.erb
@@ -767,6 +768,28 @@ class DatasetsController < ApplicationController
     end
   end
 
+  # trigger the download files to be generated
+  def generate_download_files
+    dataset = Dataset.by_id_for_user(params[:id], current_user.id)
+    success = nil
+    if dataset.present?
+      dataset.force_reset_download_files = true
+      success = dataset.save
+    end
+    respond_to do |format|
+      format.json { render json: success }
+    end
+  end
+
+  # check the status on the download file generation
+  def generate_download_file_status
+    respond_to do |format|
+      format.json { render json: {finished: Dataset.download_files_up_to_date?(params[:id], current_user.id)} }
+    end
+  end
+
+
+
   # sort all groups/questions
   def sort
     @dataset = Dataset.by_id_for_user(params[:id], current_user.id)
@@ -775,7 +798,7 @@ class DatasetsController < ApplicationController
 
       respond_to do |format|
         format.html {
-          @items = @dataset.arranged_items(include_questions: true, include_groups: true, include_subgroups: false, group_id: params[:group_id])
+          @items = @dataset.arranged_items(include_questions: true, include_groups: true, include_subgroups: false, include_group_with_no_items: true, group_id: params[:group_id])
 
           @group = params[:group_id].present? ? @dataset.groups.find(params[:group_id]) : nil
 
@@ -812,7 +835,7 @@ class DatasetsController < ApplicationController
           @js.push('bootstrap-select.min.js', "sort.js")
 
         }
-        format.js { 
+        format.js {
           begin
 
             @dataset.assign_attributes(params[:dataset])
@@ -823,7 +846,7 @@ class DatasetsController < ApplicationController
               @msg = @dataset.errors.full_messages
               @success = false
             end
-          rescue Exception => e 
+          rescue Exception => e
             @msg = t('app.msgs.sort_not_saved')
             @success = false
 
@@ -843,5 +866,3 @@ class DatasetsController < ApplicationController
   end
 
 end
-
-

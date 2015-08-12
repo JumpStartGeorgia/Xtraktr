@@ -61,7 +61,7 @@ class Embed::V1Controller < ApplicationController
       options = clean_filtered_params(options)
 
       if options['dataset_id'].present?
-        data = ApiV1.dataset_analysis(options['dataset_id'], options['question_code'], options)
+        data = Api::V1.dataset_analysis(options['dataset_id'], options['question_code'], options)
 
         # save dataset title
         @title = data[:dataset][:title] if data.present? && data[:dataset].present?
@@ -75,7 +75,7 @@ class Embed::V1Controller < ApplicationController
         gon.visual_link = explore_data_show_url(options)
 
       elsif options['time_series_id'].present?
-        data = ApiV1.time_series_analysis(options['time_series_id'], options['question_code'], options)
+        data = Api::V1.time_series_analysis(options['time_series_id'], options['question_code'], options)
 
         # save dataset title
         @title = data[:time_series][:title] if data.present? && data[:time_series].present?

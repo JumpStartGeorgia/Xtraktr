@@ -103,6 +103,24 @@
       padding:40px 0 5px;
       margin:0px;
     }
+    .numbers{
+      position:relative;
+      max-width:1024px;
+      margin-bottom: 7px;
+      .number{
+        display: inline-block;
+        margin-right: 10px;
+        color:#d1af24;
+        font:16px 'sourcesans_pro_li', 'sans-serif';
+        line-height:18px;
+        span
+        {
+          font:16px 'sourcesans_pro_sbi', 'sans-serif';
+        }
+        &:lang(ka) {line-height:26px;}
+      }
+      .share { display:none; }
+    }
     .info
     {
       position:relative;
@@ -126,14 +144,14 @@
         font:16px 'sourcesans_pro_li', 'sans-serif';
         display:inline-block;
         line-height:18px;
+        margin-right: 10px;
         span
         {
           font:16px 'sourcesans_pro_sbi', 'sans-serif';
         }
         &:lang(ka) {line-height:26px;}
-        &:first-child { margin-right: 10px; }
+        &:last-child { margin-right: 0; }
       }
-      .share { display:none; }
 
     }
     .description
@@ -351,7 +369,7 @@
     .meta
     {
       padding:0px 50px 10px;
-      .info {
+      .numbers {
         .share {
           position:absolute;
           right:0px;
@@ -498,6 +516,8 @@
 #codebook{
   margin: 0;
   padding: 0 50px;
+  /* this is need for when screen is small and jumpto drop down goes up */
+  overflow: visible !important;
   #codebook-search{
     position:relative;
     margin-bottom:10px;
@@ -572,10 +592,10 @@
       background: transparent url(/assets/svg/vborder.svg) repeat-y left center;
       width: 1px;
       height:100%;
-      display: block;   
+      display: block;
       position: absolute;
       top: 0px;
-      bottom: 0px;    
+      bottom: 0px;
       left:0px;
     }
     .bootstrap-select{
@@ -616,7 +636,7 @@
 
   > ul {
     margin-left: -50px;
-    margin-right: -50px;        
+    margin-right: -50px;
     li.question-item, li.group-item
     {
       padding:20px 0px;
@@ -641,8 +661,8 @@
         &:after{
           content: "";
           position: absolute;
-          width: 0; 
-          height: 0; 
+          width: 0;
+          height: 0;
           border-left: 40px solid transparent;
           border-right: 40px solid transparent;
           border-top: 16px solid @f7f8f8;
@@ -689,7 +709,7 @@
         display: inline-block;
         position: relative;
         top: 1px;
-        margin-right: 7px;    
+        margin-right: 7px;
       }
     }
     .group-description{
@@ -713,7 +733,7 @@
           display: inline-block;
           position: relative;
           top: 1px;
-          margin-right: 7px;    
+          margin-right: 7px;
         }
       }
     }
@@ -722,7 +742,7 @@
     display:block;
     min-width:150px;
     padding-bottom: 10px;
-    a
+    a, div.no-answers
     {
       font:16px/18px 'sourcesans_pro_sb', 'sans-serif';
       color:@3c4352;
@@ -752,6 +772,10 @@
       {
         background:transparent url(/assets/svg/locked_question.svg) no-repeat center/34px;
       }
+      &.no-answers:before
+      {
+        background:transparent url(/assets/svg/codebook_noanswers.svg) no-repeat center/34px;
+      }
       span
       {
         text-transform:uppercase;
@@ -777,7 +801,7 @@
           display: inline-block;
           position: relative;
           top: 1px;
-          margin-right: 7px;    
+          margin-right: 7px;
         }
         &.subgroup{
           margin-top: 5px;
@@ -821,6 +845,16 @@
     }
     .item-icons{
       margin-right: 5px;
+
+      .icon-red-x:before{
+        content:"";
+        display:inline-block;
+        background:transparent url(/assets/svg/close.svg) no-repeat 0px;
+        width:15px;
+        height:15px;
+        position: relative;
+        top: 3px;
+      }
     }
     ul
     {
@@ -861,7 +895,7 @@
     .question-link {
       display:table-cell;
       min-width:350px;
-      a
+      a, div.no-answers
       {
         > div {
           width:300px;

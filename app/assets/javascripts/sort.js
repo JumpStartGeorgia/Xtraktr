@@ -11,9 +11,11 @@ var is_dirty = false;
     // remove previous selection
     $('tbody tr', table_id).removeClass('move-after');
 
-    // add class to selected item
-    $('tbody tr > td > input[value="' + id + '"]', table_id).closest('tr').addClass('move-after');
-    
+    if (id != ''){
+      // add class to selected item
+      $('tbody tr > td > input[value="' + id + '"]', table_id).closest('tr').addClass('move-after');
+    }
+
   }
 
 
@@ -71,7 +73,7 @@ $(document).ready(function(){
     ],
     "columnDefs": [
       { className: "text-center", "targets": [ 0, -1 ] }
-    ],            
+    ],
     "sort": false, // do not allow sorting
     "language": {
       "url": gon.datatable_i18n_url,
@@ -92,15 +94,11 @@ $(document).ready(function(){
 
   // when the table re-draws, make sure the correct row is highlighted from the drop down
   table_id.on( 'draw.dt', function () {
-    console.log('table is redrawing');
-      
     highlight_move_after_row();
   });
 
   // when select changes, highlight the row they selected
   select_id.change(function(){
-    console.log('form select change');
-
     highlight_move_after_row();
   });
 
@@ -124,7 +122,7 @@ $(document).ready(function(){
     }
   });
 
-  // when move items submit btn clicked, 
+  // when move items submit btn clicked,
   // - move the selected items in the drop down, table and the hidden inputs
   // - then deselect the selected items
   $('.move-items-submit').click(function(){
@@ -216,7 +214,7 @@ $(document).ready(function(){
   // // when click on button to view groups items and form is dirty, tell user
   // $('a.btn-view-group').click(function(){
   //   if (is_dirty == true){
-      
+
   //   }
   // });
 
@@ -235,9 +233,9 @@ $(document).ready(function(){
       dataType: 'script',
       data: $(this).serialize(),
       url: $(this).attr('action')
-    });    
+    });
 
-    return false;    
+    return false;
   });
 
 
@@ -273,13 +271,29 @@ $(document).ready(function(){
       console.log('end index after adjustment ' + move_end_index);
 
       // -- drop down
-      $('option:eq(' + (move_start_index + 1) + ')', select_id).insertAfter($('option:eq(' + (move_end_index + 1)  + ')', select_id));
+      if (move_end_index == 0){
+        $('option:eq(' + (move_start_index + 1) + ')', select_id).insertBefore($('option:eq(1)', select_id));
+      }else if (move_end_index < move_start_index){
+        // when moving up, use insertbefore
+        $('option:eq(' + (move_start_index+1) + ')', select_id).insertBefore($('option:eq(' + (move_end_index + 1)  + ')', select_id));
+      }else{
+        // when moving down, use insertafter
+        $('option:eq(' + (move_start_index + 1) + ')', select_id).insertAfter($('option:eq(' + (move_end_index + 1)  + ')', select_id));
+      }
 
       // -- table row
       gon.datatable_json.splice((move_end_index), 0, gon.datatable_json.splice(move_start_index,1)[0]);
 
       // -- hidden inputs
-      $('div:eq(' + move_start_index + ')', hidden_id).insertAfter($('div:eq(' + move_end_index + ')', hidden_id));
+      if (move_end_index == 0){
+        $('div:eq(' + move_start_index + ')', hidden_id).insertBefore($('div:eq(' + move_end_index + ')', hidden_id));
+      }else if (move_end_index < move_start_index){
+        // when moving down, use insertbefore
+        $('div:eq(' + move_start_index + ')', hidden_id).insertBefore($('div:eq(' + move_end_index + ')', hidden_id));
+      }else{
+        // when moving down, use insertafter
+        $('div:eq(' + move_start_index + ')', hidden_id).insertAfter($('div:eq(' + move_end_index + ')', hidden_id));
+      }
 
       // reset the select value and refresh the selectpicker
       select_id.val('');

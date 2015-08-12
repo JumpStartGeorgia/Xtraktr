@@ -10,7 +10,7 @@ class Group < CustomTranslation
   field :parent_id, type: Moped::BSON::ObjectId
   # number indicating the sort order
   field :sort_order, type: Integer, default: 0
-  
+
   #############################
   embedded_in :dataset
 
@@ -30,7 +30,7 @@ class Group < CustomTranslation
      logger.debug "***** - default is present; title = #{self.title_translations[self.dataset.default_language]}"
       if self.title_translations[self.dataset.default_language].blank?
        logger.debug "***** -- title not present!"
-        errors.add(:base, I18n.t('errors.messages.translation_default_lang', 
+        errors.add(:base, I18n.t('errors.messages.translation_default_lang',
             field_name: self.class.human_attribute_name('title'),
             language: Language.get_name(self.dataset.default_language),
             msg: I18n.t('errors.messages.blank')) )
@@ -38,13 +38,18 @@ class Group < CustomTranslation
 
       if self.include_in_charts? && self.description_translations[self.dataset.default_language].blank?
        logger.debug "***** -- description not present and include in charts is true!"
-        errors.add(:base, I18n.t('errors.messages.translation_default_lang', 
+        errors.add(:base, I18n.t('errors.messages.translation_default_lang',
             field_name: self.class.human_attribute_name('description'),
             language: Language.get_name(self.dataset.default_language),
             msg: I18n.t('errors.messages.blank')) )
       end
     end
-  end 
+  end
+
+  # this method gets called from the group controller create/update methods if there are no questions
+  def add_missing_questions_error
+    errors.add(:base, I18n.t('errors.messages.missing_questions') )
+  end
 
   #############################
   # Callbacks
@@ -137,6 +142,11 @@ class Group < CustomTranslation
     self.dataset.groups.find(self.parent_id) if self.parent_id.present?
   end
 
+  # get the subgroups of this group
+  def subgroups
+    self.dataset.groups.where(parent_id: self.id)
+  end
+
   # # get the sub-groups and save to sub_groups
   # def get_sub_groups
   #   if !self.sub_groups.present?
@@ -157,6 +167,7 @@ class Group < CustomTranslation
   # - include_groups - flag indicating if should get groups (default = false)
   # - include_subgroups - flag indicating if subgroups should also be loaded (default = false)
   # - include_questions - flag indicating if should get questions (default = false)
+  # - include_group_with_no_items - flag indicating if should include groups even if it has no items, possibly due to other flags (default = false)
   def arranged_items(options={})
     Rails.logger.debug "$$$$$$$$$$$$$ group arranged_items"
     Rails.logger.debug "---- var exists = #{self.var_arranged_items.nil?}"

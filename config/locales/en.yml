@@ -16,6 +16,7 @@ en:
       categories: Category
       category_mappers: Categories
       group: Group
+      weight: Weight
     attributes:
       user:
         email: Email Address
@@ -84,6 +85,15 @@ en:
         reports: Reports
         category_ids: Categories
         permalink: URL to Dataset
+        is_weighted: Weighted Data
+      stats:
+        questions_analyzable: Analyzable Questions
+        public_questions_analyzable: Public Analyzable Questions
+        questions_good: Questions With Predefined Answers
+        questions_no_text: No Question Text
+        questions_no_answers: No Predefined Answers
+        questions_bad_answers: Bad Answers
+        data_records: Total Responses
       question:
         code: Question Code
         original_code: Question Code
@@ -115,6 +125,14 @@ en:
         codes: Questions in this Group
         parent_id: This Group is a Subgroup of
         sub_group: Subgroup
+      weight:
+        code: Question with Weight
+        text: Weight Name
+        is_default: Is Default Weight?
+        applies_to_all: Applies to All Questions
+        applies_to: Applies To
+        all_questions: All Questions
+        codes: Apply the Weight to the Following Questions
       report:
         title: Title
         file: File
@@ -253,6 +271,12 @@ en:
         include_in_charts: "If selected, the group description will appear in the title of the charts. The Description will then be required."
         codes: Select the questions that belong in this group
         parent_id: Use this to indicate that this group belongs to another group
+      weight:
+        code: The question that contains the weight values
+        text: 'A label for the weight - this will be visible to the public during analysis (e.g., Individual, Household, etc)'
+        is_default: 'If selected, this will be the weight that is applied to all questions during analysis by default if no weight is indicated'
+        applies_to_all: 'If selected, all questions will be assigned to this weight'
+        codes: Select the questions that you want to have this weight applied to
       report:
         title: The title of the report
         file: "The report file in pdf, doc, odt or txt format"
@@ -314,6 +338,7 @@ en:
       translation_any_lang: "%{field_name} for Language '%{language}' %{msg}"
       invalid_language: "'%{lang_locale}' is not a valid language locale"
       dataset_length: "At least two datasets are needed for a time series to be saved."
+      missing_questions: "At least one questions must be selected for a group to be saved."
   mass_uploads_msgs:
     bad_headers: The headers in the file do not match the headers from the template so it is not possible to determine what each column of data is. Please download the question template file and use the headers from that file.
     missing_code: "Row %{n}: Could not find question with code '%{code}'"
@@ -368,8 +393,8 @@ en:
         title_filter: ", filtered by: '%{code} - %{group} %{variable}'"
         title_filter_value: ", filtered by: '%{code} - %{group} %{variable} = %{value}'"
         map:
-          title: "'%{code} - %{group} %{variable}' "
-          title_broken_down_by: "broken down by: '%{code} - %{group} %{broken_down_by} = %{broken_down_by_answer}'"
+          title: "'%{code} - %{group} %{variable}'"
+          title_broken_down_by: " broken down by: '%{code} - %{group} %{broken_down_by} = %{broken_down_by_answer}'"
           title_filter: ", filtered by: '%{code} - %{group} %{variable}'"
           title_filter_value: ", filtered by: '%{code} - %{group} %{variable} = %{value}'"
     single:
@@ -378,16 +403,20 @@ en:
         title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
         title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable} = <span class='code-highlight'>%{value}</span>'"
       text:
-        title: "'%{code} - %{group} %{variable}' "
+        title: "'%{code} - %{group} %{variable}'"
         title_filter: ", filtered by: '%{code} - %{group} %{variable}'"
         title_filter_value: ", filtered by: '%{code} - %{group} %{variable} = %{value}'"
     subtitle:
       html:
-        title: "Total Responses: <span class='number'>%{num}</span>"
-        title_filter: "Total Responses Filtered by Answers to '<span class='number'>%{code}</span> - %{variable}': %{nums}"
+        title: "Total Responses: <span class='number'>%{num}</span> out of %{total}"
+        title_filter: "Total Responses out of %{total}, Filtered by Answers to '<span class='number'>%{code}</span> - %{variable}' : <br />%{nums}"
+        title_weighted: "Unweighted Total Responses<span class='footnote-flag'>*</span>: <span class='number'>%{num}</span> out of %{total}"
+        title_filter_weighted: "Unweighted Total Responses out of %{total}, Filtered by Answers to '<span class='number'>%{code}</span> - %{variable}'<span class='footnote-flag'>*</span>: <br />%{nums}"
       text:
-        title: "Total Responses: %{num}"
-        title_filter: "Total Responses Filtered by Answers to '%{code} - %{variable}': %{nums}"
+        title: "Total Responses: %{num} out of %{total}"
+        title_filter: "Total Responses out of %{total}, Filtered by Answers to '%{code} - %{variable}': %{nums}"
+        title_weighted: "Unweighted Total Responses*: %{num} out of %{total}"
+        title_filter_weighted: "Unweighted Total Responses out of %{total}, Filtered by Answers to '%{code} - %{variable}'*: %{nums}"
   datatable:
     search: Search
     search_footer: 'Search %{name}'
@@ -543,8 +572,12 @@ en:
       notes: Notes
       group: Group
       subgroup: Subgroup
+      weight: Weight
       count: Count
       percent: Percent
+      unweighted_count: Unweighted Count
+      weighted_count: Weighted Count
+      weighted_percent: Weighted Percent
       dataset_dashboard: Dataset Dashboard
       time_series_dashboard: Time Series Dashboard
       terms: "I agree to the <a href='http://www.unicef.org/about/legal_terms.html' target='_blank'>Terms of Use</a>"
@@ -556,8 +589,10 @@ en:
       private_question: This quesiton is not available to the public
       private_answer: This answer is not available to the public
       mappable_question: This question displays a map
+      question_no_answers: This question does not have answers and cannot be analyzed
       powered_by_xtraktr: Powered By Xtraktr
       powered_by_xtraktr_title: This data was built using the Xtraktr platform. Learn more and add your own data on the Xtraktr website.
+      weighted_footnote: This data is weighted.
     msgs:
       does_not_exist: You tried to access a page that does not exist.
       not_authorized: You are not authorized to view that page.
@@ -596,6 +631,11 @@ en:
       jumpto_group: Jump to this group
       is_group: This is a group of questions
       is_subgroup: This is a subgroup of questions
+      weights_deleted: All weights have been deleted.
+      must_include_weight: The question is marked as a weight and must be included in the download.
+      cannot_include_weight: The question is marked as a weight and cannot be included as a question in the analsysis.
+      question_no_answers: This question does not have answers and cannot be analyzed.
+      admin_codebook_questions: This administrative view of the codebook shows all questions including those that are excluded and those that have no answers, which can be identified by the icon next to the question name. Please be aware that questions that are excluded or have no answers will not be visible to the public.
     menu:
       explore_data: Explore Data
       explore_time_series: Explore Time Series
@@ -633,6 +673,7 @@ en:
         download_data: Download Data
         groups: Group Questions
         sort: Sort Groups/Questions
+        weights: Weight Data
       admin_time_series:
         explore_data: Explore Data
         heading: Time Series Options
@@ -778,12 +819,6 @@ en:
       no_content: "No documentation for this method has been created yet."
   datasets:
     index:
-      stats:
-        data_records: Data Records
-        good_questions: Analyzable Questions
-        no_text: No Question Text
-        bad_answers: Bad Answers
-        no_answers: No Predefined Answers
       view_warnings: View Details
     warnings:
       title: "Warnings"
@@ -861,6 +896,12 @@ en:
 
         This download is different than what is on the dashboard page in that this download includes the entire dataset, whereas the download from the dashboard page only includes the data that you have indicated can be downloaded by the public.
       no_files: The download files have not been generated yet. Please check back soon.
+      generating_text: |
+        The download files are being generated.
+
+        This may take a couple minutes if this is a large dataset.
+
+        This page will reload when the processing is complete.
     sort:
       title: Sort Groups and Questions
       explanation: |
@@ -946,6 +987,34 @@ en:
       ex_question: Is the sky blue?
       questions_explanation_default: "All questions that are not assigned to any other group are avaiable to be assigned to this group."
       questions_explanation_subgroup: "Only the questions assinged to '%{group}' are available to be assigned to this subgroup."
+  weights:
+    index:
+      title: Dataset Weighting
+      explanation: |
+        This section allows you to identify which question(s) contain a weight value and which questions that weight should be applied to.
+
+        A dataset can have multiple weights, but one must be selected as the default weight. A default weight is automatically applied to all questions. For weights that are not the default weight, you can choose to apply the weight all of the questions or only specific questions.
+
+        During analysis, if two questions are being compared and they are of different weights, the default weight is used for both.
+      no_weights: There are no weights on file for this dataset.
+      add: Add Weights
+      edit: Edit Weights
+      confirm_delete: Are you sure you want to delete all weights on file?
+      question_count: '%{num} questions'
+      table:
+        headers:
+          name: Weight Name
+          question: Question with Weight
+          default: Is Default Weight?
+          apply_to: Apply Weight To
+      modal:
+        header: "Questions for Weight '[weight]'"
+    new:
+      title: Dataset Weighting Form
+    edit:
+      title: Dataset Weighting Form
+    form:
+      other_weights: Other Weights this Question Belongs To
   time_series:
     form:
       header_datasets: Datasets
@@ -1009,6 +1078,7 @@ en:
         no_filter: No Filter
         can_exclude: Exclude Answers
         can_exclude_hint: At least one selected question has answers that can be excluded during analysis. Select this checkbox to remove these answers from the analysis.
+        weighted_by_code: Weighted By
       jumpto:
         chart: Jump to Chart
         map: Jump to Map
@@ -1072,6 +1142,9 @@ en:
     language_switcher:
       label: Available Languages
     embed_v1:
+      title_site: Go to %{app_name}
+      title_datalist: View All Datasets
+    embed_v2:
       title_site: Go to %{app_name}
       title_datalist: View All Datasets
   export_data:

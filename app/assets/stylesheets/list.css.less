@@ -223,6 +223,23 @@
           display:table-cell;
         }
       }
+      .numbers{
+        position:relative;
+        max-width:1024px;
+        margin-bottom: 7px;
+        .number{
+          display: inline-block;
+          margin-right: 10px;
+          color:#d1af24;
+          font:16px 'sourcesans_pro_li', 'sans-serif';
+          line-height:18px;
+          span
+          {
+            font:16px 'sourcesans_pro_sbi', 'sans-serif';
+          }
+          &:lang(ka) {line-height:26px;}
+        }
+      }
       .info
       {
         max-width:1024px;
@@ -268,6 +285,7 @@
             line-height:18px;
             color:#d1af24;
             display:inline-block;
+            margin-right: 10px;
             &:lang(ka) {
               font:16px 'sourcesans_pro_li_ka', 'sans-serif';
             }
@@ -279,6 +297,7 @@
               }
             }
             &:lang(ka) {line-height:26px;}
+            &:last-child { margin-right: 0; }
           }
         }
         .language

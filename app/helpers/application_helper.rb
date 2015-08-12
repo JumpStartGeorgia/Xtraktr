@@ -36,7 +36,7 @@ module ApplicationHelper
   def current_url
     "#{request.protocol}#{request.host_with_port}#{request.fullpath}"
   end
-  
+
 	def full_url(path)
 		"#{request.protocol}#{request.host_with_port}#{path}"
 	end
@@ -44,7 +44,7 @@ module ApplicationHelper
 	# put the default locale first and then sort the remaining locales
 	def locales_sorted
     x = I18n.available_locales.dup
-    
+
     # sort
     x.sort!{|x,y| x <=> y}
 
@@ -93,7 +93,7 @@ module ApplicationHelper
     link_to path, class: (current ? ' active' : '') do
       tt = t('app.menu.' + name)
       ('<div alt="' + tt + '" class="'+klass+'side-menu-' + name + '"></div>
-      <span>' + tt + '</span>').html_safe      
+      <span>' + tt + '</span>').html_safe
     end
   end
 
@@ -101,16 +101,16 @@ module ApplicationHelper
   def resource_name
     :user
   end
- 
+
   def resource
     @resource ||= User.new
   end
- 
+
   def devise_mapping
     @devise_mapping ||= Devise.mappings[:user]
   end
   #devise mappings end
-  
+
 
   def exclude_question_icon
     '<img src="/assets/svg/lock.svg" title="' + I18n.t('app.common.private_question') + '" />'
@@ -124,13 +124,15 @@ module ApplicationHelper
     '<img src="/assets/svg/map.svg" title="' + I18n.t('app.common.mappable_question') + '" />'
   end
 
+  def no_answers_icon
+    '<img src="/assets/svg/noanswers.svg" title="' + I18n.t('app.common.question_no_answers') + '" />'
+  end
+
   def group_icon(description=nil)
-    # title = description.present? ? "title=\'#{description}\'" : ''
     '<img src="/assets/svg/group.svg" title="' + (description.present? ? description.strip : '') + '" />'
   end
 
   def subgroup_icon(description=nil)
-    # title = description.present? ? "title=\'#{description}\'" : ''
     '<img src="/assets/svg/subgroup.svg" title="' + (description.present? ? description.strip : '') + '" />'
   end
 

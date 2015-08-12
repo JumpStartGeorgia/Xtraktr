@@ -7,7 +7,7 @@ module ExportData
   # if type is not codebook, include coodebook in zip
   # update dataset with path to the file
   # type = codebook, csv, spss, stata, r
-  def self.create_file(dataset, type, use_processed_csv=false)
+  def self.create_file(dataset, type='codebook', use_processed_csv=false)
     start = Time.now
 
     # only contine if the dataset is valid
@@ -77,11 +77,20 @@ module ExportData
       # set global vars
       set_global_vars
 
-      current_locale = dataset.current_locale.dup    
+      current_locale = dataset.current_locale.dup
 
       # make sure dataset has url object
       dataset.create_urls_object
       get_url_params(dataset)
+
+      # if force_reset_download_files is true,
+      # make sure the reset_download_files flag is also true
+      if dataset.force_reset_download_files?
+        dataset.reset_download_files = true
+        dataset.force_reset_download_files = false
+        # save the dataset now so if another cron job is started, this dataset will not be processed again
+        dataset.save
+      end
 
       # create files for each locale in the dataset
       dataset.languages.each do |locale|
@@ -113,10 +122,10 @@ module ExportData
       # indicate that the files are up to date
       # unless using procesed csv because the real files still need to be created
       dataset.reset_download_files = use_processed_csv
-      
+
       dataset.save
     end
-    
+
     puts "@@@@@@@@@@@@@@@@ it took #{(Time.now-start).round(3)} seconds to create all files for dataset"
   end
 
@@ -125,7 +134,7 @@ module ExportData
   def self.create_all_dataset_files(use_processed_csv=false)
     start = Time.now
     puts "*** use_processed_csv = #{use_processed_csv}"
-    
+
     count = Dataset.needs_download_files.count
     Dataset.needs_download_files.each_with_index do |dataset, index|
       puts "=========================================="
@@ -147,6 +156,30 @@ module ExportData
   end
 
 
+  # generate download files for datasets that need it now
+  def self.create_all_forced_dataset_files
+    start = Time.now
+
+    count = Dataset.needs_download_files_now.count
+    Dataset.needs_download_files_now.each_with_index do |dataset, index|
+      puts "=========================================="
+      puts "=========================================="
+      puts "============ dataset #{index+1} out of #{count}"
+      puts "============ the script has been running for #{(Time.now-start).round(3)} seconds so far"
+      puts "=========================================="
+      puts "=========================================="
+      puts ""
+      puts ">>>>>>>>>> dataset: #{dataset.title}"
+      # create the data files for this dataset
+      create_all_files(dataset)
+    end
+
+    puts "=========================================="
+    puts "=========================================="
+    puts ">>>>>>>> it took #{(Time.now-start).round(3)} seconds to create all files for datasets that needed them now"
+  end
+
+
   #########################################
   #########################################
   #########################################
@@ -158,7 +191,7 @@ private
   #########################################
   #########################################
   # create codebook file
-  # format: 
+  # format:
   # question code - question
   # answers:
   #   value - text
@@ -174,14 +207,14 @@ private
 
 
     puts "-- it took #{(Time.now-start).round(3)} seconds to create the codebook files"
-    return nil  
+    return nil
   end
 
 
   #########################################
   #########################################
   # create codebook file
-  # format: 
+  # format:
   # question code - question
   # answers:
   #   value - text
@@ -207,11 +240,56 @@ private
       output << "Codebook Generated On: #{I18n.l(start, format: :file)}"
       output << "\n\n"
 
+      # if the dataset is weighted, list all of the weights and which questions they apply to
+      if dataset.is_weighted?
+        weights = dataset.weights
+        output << "============================"
+        output << "\n"
+        output << "WEIGHTS"
+        output << "\n\n"
+        if weights.length == 1
+          output << "This dataset contains a weight."
+          output << "\n"
+          output << "Below is the question that is the weight and a list of the questions that applies to the weight."
+        else
+          output << "This dataset contains weights."
+          output << "\n"
+          output << "Below are the questions that are the weights and a list of the questions that apply to the weights."
+        end
+        output << "\n\n"
+        weights.each do |weight|
+          output << "=============="
+          output << "\n"
+          output << "Weight Name: #{weight.text}"
+          output << "\n"
+          output << "Question With Weight Values: #{weight.source_question.code_with_text}"
+          output << "\n"
+          output << "Questions the Weight Applies To: "
+          if weight.is_default || weight.applies_to_all
+            output << "All Questions"
+          else
+            weight.applies_to_questions.each do |question|
+              output << "\n"
+              output << '    '
+              output << question.code_with_text
+            end
+          end
+          output << "\n\n"
+        end
+
+        output << "\n\n"
+      end
+
       # add each question/answer
       # - use only questions/answers that can be downloaded and analyzed
+      output << "============================"
+      output << "\n"
+      output << "QUESTIONS"
+      output << "\n\n"
       question_type = is_admin ? nil : 'download'
       items = dataset.arranged_items(reload_items: true, question_type: question_type, include_questions: true, include_groups: true, include_subgroups: true)
       output << generate_codebook_items(items, is_admin)
+      output << "============================"
 
       #######################
       # create codebook file
@@ -240,7 +318,7 @@ private
     end
 
     puts "--- it took #{(Time.now-start).round(3)} seconds to create the codebook file, is admin = #{is_admin}"
-    return nil  
+    return nil
   end
 
   def self.generate_codebook_items(items, is_admin, group_type=nil)
@@ -302,7 +380,7 @@ private
     output << "#{indent}#{question.original_code} - #{clean_text(question.text)}"
     output << "\n"
     if question.notes.present?
-      output << "#{indent}#{I18n.t('app.common.notes')}: #{question.notes}"        
+      output << "#{indent}#{I18n.t('app.common.notes')}: #{question.notes}"
       output << "\n"
     end
     answers = is_admin ? question.answers : question.answers.all_for_analysis
@@ -328,15 +406,15 @@ private
 
     csv_file = "csv.csv"
     csv_file_path = "#{@dataset_download_staging_path}/#{dataset.current_locale}/#{csv_file}"
-    
+
     # create the public files
     generate_csv(dataset, use_processed_csv)
 
     # create the admin files
     generate_csv(dataset, use_processed_csv, true)
-    
+
     puts "-- it took #{(Time.now-start).round(3)} seconds to create the csv files"
-    return nil  
+    return nil
   end
 
   # create csv file
@@ -354,7 +432,7 @@ private
     csv_file_path = "#{staging_path}/#{dataset.current_locale}/#{csv_file}"
     readme_file_path = "#{staging_path}/#{dataset.current_locale}/#{readme_name}"
     zip_file_path = "#{download_path}/#{dataset.current_locale}/#{zip_name}"
-    
+
     #######################
     # create csv file
     if !File.exists?(csv_file_path) || dataset.reset_download_files?
@@ -386,9 +464,9 @@ private
     else
       @urls[:csv][dataset.current_locale] = "#{dataset.data_download_path}/#{dataset.current_locale}/#{zip_name}"
     end
-    
+
     puts "--- it took #{(Time.now-start).round(3)} seconds to create the csv file, is admin = #{is_admin}"
-    return nil  
+    return nil
   end
 
 
@@ -396,7 +474,7 @@ private
   #########################################
   #########################################
   # create spss file
-  # notes 
+  # notes
   # - strings cannot be more than 60 chars
   def self.spss(dataset, use_processed_csv=false)
     puts '>>>>>>>>>>>>>>> creating spss'
@@ -404,7 +482,7 @@ private
 
     csv_file = "spss.csv"
     csv_file_path = "#{@dataset_download_staging_path}/#{dataset.current_locale}/#{csv_file}"
-    
+
 
     # create the public files
     generate_spss(dataset, use_processed_csv)
@@ -418,7 +496,7 @@ private
 
 
   # create spss file
-  # notes 
+  # notes
   # - strings cannot be more than 60 chars
   def self.generate_spss(dataset, use_processed_csv=false, is_admin=false)
     puts ">>> generating spss, is admin = #{is_admin}"
@@ -439,7 +517,7 @@ private
     csv_file_path = "#{staging_path}/#{dataset.current_locale}/#{csv_file}"
     readme_file_path = "#{staging_path}/#{dataset.current_locale}/#{readme_name}"
     zip_file_path = "#{download_path}/#{dataset.current_locale}/#{zip_name}"
-    
+
 
     if !File.exists?(spss_file_path) || dataset.reset_download_files?
       #######################
@@ -552,7 +630,7 @@ private
   # you tell stata that the variable has unique values by add ':name_fmt' after question code
   # create labels:
       # label define sexfmt 0 "Male" 1 "Female"
-      # infile str16 name sex:sexfmt age using persons        
+      # infile str16 name sex:sexfmt age using persons
   def self.stata(dataset, use_processed_csv=false)
     puts '>>>>>>>>>>>>>>> creating stata'
     start = Time.now
@@ -576,7 +654,7 @@ private
   # you tell stata that the variable has unique values by add ':name_fmt' after question code
   # create labels:
       # label define sexfmt 0 "Male" 1 "Female"
-      # infile str16 name sex:sexfmt age using persons        
+      # infile str16 name sex:sexfmt age using persons
   def self.generate_stata(dataset, use_processed_csv=false, is_admin=false)
     puts ">>> creating stata, is_admin = #{is_admin}"
     start = Time.now
@@ -714,7 +792,7 @@ private
       output << "\n"
       output << "###########################"
       output << "\n"
-      output << "setwd(\".\")"    
+      output << "setwd(\".\")"
       output << "\n\n"
       output << "# read in the csv file to a variable called 'data'"
       output << "\n"
@@ -774,7 +852,7 @@ private
 
   def self.clean_text(text)
     if !text.nil?
-      x = text.gsub('\\n', ' ').gsub('\\r', ' ').strip 
+      x = text.gsub('\\n', ' ').gsub('\\r', ' ').strip
       if x.present?
         return x
       end
@@ -793,7 +871,7 @@ private
   #########################################
 
   # build csv headers for both public and admin downloads
-  # for both code and code-text 
+  # for both code and code-text
   # values are stored in @headers hash
   def self.build_csv_headers(dataset)
     puts ">>>> building csv header"
@@ -998,14 +1076,14 @@ private
 
         # now use transpose to get in proper format
         data[:admin].transpose.each do |row|
-          csv_data[:admin] << row.map{|x| 
+          csv_data[:admin] << row.map{|x|
             y = x.nil? || x.empty? ? nil : clean_text(x)
             y.present? ? y : nil
           }
         end
 
         data[:public].transpose.each do |row|
-          csv_data[:public] << row.map{|x| 
+          csv_data[:public] << row.map{|x|
             y = x.nil? || x.empty? ? nil : clean_text(x)
             y.present? ? y : nil
           }
@@ -1084,19 +1162,19 @@ private
         when 'codebook'
           output << I18n.t('export_data.instructions.codebook')
         when 'csv'
-          output << I18n.t('export_data.instructions.csv', 
+          output << I18n.t('export_data.instructions.csv',
                     codebook: I18n.t('export_data.instructions.codebook'),
                     csv: I18n.t('export_data.instructions.csv_main'))
         when 'spss'
-          output << I18n.t('export_data.instructions.spss', 
+          output << I18n.t('export_data.instructions.spss',
                     codebook: I18n.t('export_data.instructions.codebook'),
                     csv: I18n.t('export_data.instructions.csv_main'))
         when 'stata'
-          output << I18n.t('export_data.instructions.stata', 
+          output << I18n.t('export_data.instructions.stata',
                     codebook: I18n.t('export_data.instructions.codebook'),
                     csv: I18n.t('export_data.instructions.csv_main'))
         when 'r'
-          output << I18n.t('export_data.instructions.r', 
+          output << I18n.t('export_data.instructions.r',
                     codebook: I18n.t('export_data.instructions.codebook'),
                     csv: I18n.t('export_data.instructions.csv_main'))
       end
@@ -1246,10 +1324,10 @@ private
     @processed_file_path = "#{Rails.public_path}/system/datasets/#{dataset.id}/processed/data.csv"
 
     # make sure path exists
-    FileUtils.mkpath("#{@dataset_download_path}/#{dataset.current_locale}")    
-    FileUtils.mkpath("#{@dataset_download_staging_path}/#{dataset.current_locale}")    
-    FileUtils.mkpath("#{@admin_dataset_download_path}/#{dataset.current_locale}")    
-    FileUtils.mkpath("#{@admin_dataset_download_staging_path}/#{dataset.current_locale}")    
+    FileUtils.mkpath("#{@dataset_download_path}/#{dataset.current_locale}")
+    FileUtils.mkpath("#{@dataset_download_staging_path}/#{dataset.current_locale}")
+    FileUtils.mkpath("#{@admin_dataset_download_path}/#{dataset.current_locale}")
+    FileUtils.mkpath("#{@admin_dataset_download_staging_path}/#{dataset.current_locale}")
 
     # set path to codebook here since used in all methods
     @codebook_file_path = "#{@dataset_download_staging_path}/#{dataset.current_locale}/#{@codebook_file}"

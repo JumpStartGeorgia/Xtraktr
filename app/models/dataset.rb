@@ -46,6 +46,7 @@ class Dataset < CustomTranslation
   field :languages, type: Array
   field :default_language, type: String
   field :reset_download_files, type: Boolean, default: true
+  field :force_reset_download_files, type: Boolean, default: false
   field :permalink, type: String
 
   has_many :category_mappers, dependent: :destroy do
@@ -67,6 +68,7 @@ class Dataset < CustomTranslation
     end
   end
 
+
   embeds_many :groups, cascade_callbacks: true do
     # get groups that are at the top level (are not sub-groups)
     # if exclude_id provided, remove it from the list
@@ -86,12 +88,55 @@ class Dataset < CustomTranslation
   end
   accepts_nested_attributes_for :groups
 
+  embeds_many :weights, cascade_callbacks: true do
+    # get the default weight
+    def default
+      where(is_default: true).first
+    end
+
+    # get the weight with the question code
+    def with_code(code)
+      where(code: code).first
+    end
+
+    # get the weights for a question
+    def for_question(code, ignore_id=nil)
+      if ignore_id.present?
+        return self.nin(id: ignore_id).or({is_default: true}, {applies_to_all: true}, {:codes.in => [code] })
+      else
+        return self.or({is_default: true}, {applies_to_all: true}, {:codes.in => [code] })
+      end
+    end
+
+    # get codes of questions that are being used as weights
+    # - if current code is passed in, do not include this code in the list
+    def weight_codes(current_code=nil)
+      x = only(:code).map{|x| x.code}
+      if current_code.present?
+        x.delete(current_code)
+      end
+      return x
+    end
+
+  end
+  accepts_nested_attributes_for :weights
+
+
   embeds_many :questions, cascade_callbacks: true do
     # these are functions that will query the questions documents
 
     # get the question that has the provided code
     def with_code(code)
       where(:code => code.downcase).first if code.present?
+    end
+
+    def text_with_code(code)
+      x = only(:title).where(:code => code.downcase).first
+      if x.present?
+        return x.text
+      else
+        return nil
+      end
     end
 
     def with_codes(codes)
@@ -295,6 +340,10 @@ class Dataset < CustomTranslation
       return nil
     end
 
+    # get questions that are not being used as weights and have no answers
+    def available_to_be_weights(current_code=nil)
+      nin(:code => base.weights.weight_codes(current_code)).where(has_code_answers: false)
+    end
 
   end
   accepts_nested_attributes_for :questions
@@ -355,11 +404,12 @@ class Dataset < CustomTranslation
 
   attr_accessible :title, :description, :methodology, :user_id, :has_warnings,
       :data_items_attributes, :questions_attributes, :reports_attributes, :questions_with_bad_answers,
+      :weights_attributes,
       :datafile, :public, :private_share_key, #:codebook,
       :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at,
       :languages, :default_language, :stats_attributes, :urls_attributes,
       :title_translations, :description_translations, :methodology_translations, :source_translations, :source_url_translations,
-      :reset_download_files, :category_mappers_attributes, :category_ids, :permalink, :groups_attributes
+      :reset_download_files, :force_reset_download_files, :category_mappers_attributes, :category_ids, :permalink, :groups_attributes
 
   attr_accessor :category_ids, :var_arranged_items, :check_question_exclude_status
 
@@ -392,11 +442,15 @@ class Dataset < CustomTranslation
   index ({ :'questions.answers.exclude' => 1})
   index ({ :'questions.sort_order' => 1})
   index ({ :'questions.group_id' => 1})
+  index ({ :'questions.is_weight' => 1})
   index ({ :private_share_key => 1})
   index ({ :'reports.title' => 1})
   index ({ :'reports.released_at' => 1})
   index ({ :'groups.parent_id' => 1})
   index ({ :'groups.sort_order' => 1})
+  index ({ :'weights.is_defualt' => 1})
+  index ({ :'weights.applies_to_all' => 1})
+  index ({ :'weights.codes' => 1})
 
 
   #############################
@@ -583,6 +637,7 @@ class Dataset < CustomTranslation
                         self.no_question_text_count > 0
 
     logger.debug "==== - has_warnings = #{self.has_warnings}"
+
     return true
   end
 
@@ -751,6 +806,17 @@ class Dataset < CustomTranslation
     by_user(user_id).find(id)
   end
 
+  # get the status of the download files
+  def self.download_files_up_to_date?(id, user_id)
+    x = by_user(user_id).only(:reset_download_files).find(id)
+    if x.present?
+      return !x.reset_download_files?
+    else
+      return true
+    end
+  end
+
+
   def self.only_id_title_languages
     only(:id, :title, :languages)
   end
@@ -791,6 +857,11 @@ class Dataset < CustomTranslation
     self.or({:reset_download_files => true}, {:urls.exists => false}, {:'urls.codebook'.exists => false})
   end
 
+  # get the datasets that have been requested to generate download files now
+  def self.needs_download_files_now
+    self.where({:force_reset_download_files => true})
+  end
+
   # get the shape file url
   def self.shape_file_url(dataset_id)
     url = nil
@@ -809,6 +880,7 @@ class Dataset < CustomTranslation
   # - include_groups - flag indicating if should get groups (default = false)
   # - include_subgroups - flag indicating if subgroups should also be loaded (default = false)
   # - include_questions - flag indicating if should get questions (default = false)
+  # - include_group_with_no_items - flag indicating if should include groups even if it has no items, possibly due to other flags (default = false)
   def arranged_items(options={})
     Rails.logger.debug "@@@@@@@@@@@@@@ dataset arranged_items"
     if self.var_arranged_items.nil? || self.var_arranged_items.empty? || options[:reload_items]
@@ -826,6 +898,7 @@ class Dataset < CustomTranslation
   # - include_groups - flag indicating if should get groups (default = false)
   # - include_subgroups - flag indicating if subgroups should also be loaded (default = false)
   # - include_questions - flag indicating if should get questions (default = false)
+  # - include_group_with_no_items - flag indicating if should include groups even if it has no items, possibly due to other flags (default = false)
   def build_arranged_items(options={})
     Rails.logger.debug "=============== build start; options = #{options}"
     indent = options[:group_id].present? ? '    ' : ''
@@ -857,10 +930,10 @@ class Dataset < CustomTranslation
         group_options[:group_id] = group.id
         group.var_arranged_items = build_arranged_items(group_options)
         # only add the group if it has content
-        if group.var_arranged_items.present?
+        if group.var_arranged_items.present? || options[:include_group_with_no_items] == true
           items << group
+          Rails.logger.debug "#{indent}>>>>>>>>>>>>>> ----- added #{group.var_arranged_items.length} items for #{group.title}"
         end
-        Rails.logger.debug "#{indent}>>>>>>>>>>>>>> ----- added #{group.var_arranged_items.length} items for #{group.title}"
 
       end
     end
@@ -888,8 +961,8 @@ class Dataset < CustomTranslation
 
     # sort these items
     # way to sort: sort only items that have sort_order, then add groups with no sort_order, then add questions with no sort_order
-    items = items.select{|x| x.sort_order.present?}.sort_by{|x| x.sort_order} + 
-              items.select{|x| x.class == Group && x.sort_order.nil?} + 
+    items = items.select{|x| x.sort_order.present?}.sort_by{|x| x.sort_order} +
+              items.select{|x| x.class == Group && x.sort_order.nil?} +
               items.select{|x| x.class == Question && x.sort_order.nil?}
 
 
@@ -934,6 +1007,9 @@ class Dataset < CustomTranslation
     Category.in(id: self.category_mappers.map {|x| x.category_id } ).to_a
   end
 
+  def is_weighted?
+    self.weights.present?
+  end
 
   # get list of quesitons with no text
   def questions_with_no_text
@@ -1180,7 +1256,7 @@ class Dataset < CustomTranslation
             question.text = clean_string(row[indexes[locale]].strip)
             counts[locale] += 1
             locale_found = true
-          end          
+          end
         end
         counts['overall'] += 1 if locale_found
 
@@ -1348,7 +1424,7 @@ class Dataset < CustomTranslation
     else
       str
     end
-  end 
+  end
 
 
 end

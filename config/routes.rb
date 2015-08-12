@@ -11,7 +11,7 @@ BootstrapStarter::Application.routes.draw do
 
 
     get 'omniauth/:provider' => 'omniauth#localized', as: :localized_omniauth
-    devise_for :users, skip: :omniauth_callbacks, :path_names => {:sign_in => 'login', :sign_out => 'logout'}, controllers: { registrations: 'users/registrations', sessions: 'users/sessions'} 
+    devise_for :users, skip: :omniauth_callbacks, :path_names => {:sign_in => 'login', :sign_out => 'logout'}, controllers: { registrations: 'users/registrations', sessions: 'users/sessions'}
 
 
     match '/admin', :to => 'admin#index', :as => :admin, :via => :get
@@ -33,6 +33,7 @@ BootstrapStarter::Application.routes.draw do
           post 'group_questions', :defaults => { :format => 'json' }
         end
       end
+      resources :weights, :except => [:show]
       resources :questions, :only => [:index, :show, :edit, :update] do
         collection do
           get 'mass_changes'
@@ -61,6 +62,8 @@ BootstrapStarter::Application.routes.draw do
         post 'highlights'
         post 'home_page_highlight'
         get 'download_data'
+        post 'generate_download_files', :defaults => { :format => 'json' }
+        post 'generate_download_file_status', :defaults => { :format => 'json' }
         get 'sort'
         post 'sort'
       end
@@ -92,13 +95,25 @@ BootstrapStarter::Application.routes.draw do
       match '/v1/time_series', to: 'v1#time_series', as: :v1_time_series, via: :get, :defaults => { :format => 'json' }
       match '/v1/time_series_codebook', to: 'v1#time_series_codebook', as: :v1_time_series_codebook, via: :get, :defaults => { :format => 'json' }
       match '/v1/time_series_analysis', to: 'v1#time_series_analysis', as: :v1_time_series_analysis, via: :get, :defaults => { :format => 'json' }
-    end    
+      ###
+      match '/v2', to: 'v2#index', as: :v2, via: :get
+      match '/v2/documentation(/:method)', to: 'v2#documentation', as: :v2_documentation, via: :get
+      match '/v2/dataset_catalog', to: 'v2#dataset_catalog', as: :v2_dataset_catalog, via: :get, :defaults => { :format => 'json' }
+      match '/v2/dataset', to: 'v2#dataset', as: :v2_dataset, via: :get, :defaults => { :format => 'json' }
+      match '/v2/dataset_codebook', to: 'v2#dataset_codebook', as: :v2_dataset_codebook, via: :get, :defaults => { :format => 'json' }
+      match '/v2/dataset_analysis', to: 'v2#dataset_analysis', as: :v2_dataset_analysis, via: :get, :defaults => { :format => 'json' }
+      match '/v2/time_series_catalog', to: 'v2#time_series_catalog', as: :v2_time_series_catalog, via: :get, :defaults => { :format => 'json' }
+      match '/v2/time_series', to: 'v2#time_series', as: :v2_time_series, via: :get, :defaults => { :format => 'json' }
+      match '/v2/time_series_codebook', to: 'v2#time_series_codebook', as: :v2_time_series_codebook, via: :get, :defaults => { :format => 'json' }
+      match '/v2/time_series_analysis', to: 'v2#time_series_analysis', as: :v2_time_series_analysis, via: :get, :defaults => { :format => 'json' }
+    end
 
     # embed pages
     match '/embed', to: 'embed#index', as: :embed, via: :get
     namespace :embed do
       match '/v1/:id', to: 'v1#index', as: :v1, via: :get
-    end    
+      match '/v2/:id', to: 'v2#index', as: :v2, via: :get
+    end
 
     # highlights
 #    match '/highlights', to: 'highlights#index', as: :highlights, via: :get

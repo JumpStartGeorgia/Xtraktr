@@ -29,6 +29,8 @@ class Question < CustomTranslation
   field :group_id, type: Moped::BSON::ObjectId
   # number indicating the sort order
   field :sort_order, type: Integer
+  # indicate that this question is a weight
+  field :is_weight, type: Boolean, default: false
 
   embedded_in :dataset
   embeds_many :answers do
@@ -66,8 +68,8 @@ class Question < CustomTranslation
     end
 
   end
-  accepts_nested_attributes_for :answers, :reject_if => lambda { |x| 
-    (x[:text_translations].blank? || x[:text_translations].keys.length == 0 || x[:text_translations][x[:text_translations].keys.first].blank?) && x[:value].blank? 
+  accepts_nested_attributes_for :answers, :reject_if => lambda { |x|
+    (x[:text_translations].blank? || x[:text_translations].keys.length == 0 || x[:text_translations][x[:text_translations].keys.first].blank?) && x[:value].blank?
     }, :allow_destroy => true
 
   #############################
@@ -94,13 +96,13 @@ class Question < CustomTranslation
 #      logger.debug "***** - default is present; text = #{self.text_translations[self.dataset.default_language]}"
       if self.text_translations[self.dataset.default_language].blank?
 #        logger.debug "***** -- text not present!"
-        errors.add(:base, I18n.t('errors.messages.translation_default_lang', 
+        errors.add(:base, I18n.t('errors.messages.translation_default_lang',
             field_name: self.class.human_attribute_name('text'),
             language: Language.get_name(self.dataset.default_language),
             msg: I18n.t('errors.messages.blank')) )
       end
     end
-  end 
+  end
 
 
   #############################
@@ -155,7 +157,7 @@ class Question < CustomTranslation
   # if the question changed, make sure the dataset.reset_download_files flag is set to true
   # if the only change is to the flags, the donwload does not need to be updated
   def check_if_dirty
-    puts "======= question changed? #{self.changed?}; changed: #{self.changed}"    
+    puts "======= question changed? #{self.changed?}; changed: #{self.changed}"
     ignore = [:has_can_exclude_answers, :has_code_answers]
     changed = self.changed
     if changed.present?
@@ -186,7 +188,7 @@ class Question < CustomTranslation
     self.dataset.groups.find(self.group_id) if self.group_id.present?
   end
 
-  # create json for groups 
+  # create json for groups
   def json_for_groups(selected=false)
     {
       id: self.id,
@@ -195,6 +197,16 @@ class Question < CustomTranslation
       text: self.text,
       selected: selected
     }
+  end
+
+  # get the weights for this question
+  def weights(ignore_id=nil)
+    self.dataset.weights.for_question(self.code, ignore_id)
+  end
+
+  # get the weight titles for this question
+  def weight_titles(ignore_id=nil)
+    return weights(ignore_id).map{|x| x.text}
   end
 
 end

@@ -31,8 +31,13 @@ every :hour do
   rake "generate_files:download_data_files"
 end
 
+# check if someone has requested a dataset to have it download files generated
+every 2.minutes do
+  rake "generate_files:force_download_data_files"
+end
+
+
 # send notifications
 every 30.minutes do
   runner "NotificationTrigger.process_all_types"
 end
-

@@ -1,17 +1,33 @@
 <%-
   model_class = Dataset
+  s_model_class = Stats
   r_model_class = Report
+  is_admin_page = request.path == dataset_path(@dataset)
   is_admin_page = request.path == dataset_path(@dataset)
   show_share = true if show_share.nil?
   show_private_questions = false if show_private_questions.nil?
-logger.debug "======= show_private_questions = #{show_private_questions}"
+  show_questions_no_answers = false if show_questions_no_answers.nil?
   subnav_left render(partial: 'shared/language_switcher', locals: {langs: @dataset.language_objects, current_locale: @dataset.current_locale, share: show_share})
-
 -%>
+
 <div class="article dashboard">
   <div class="meta">
     <div class="col">
       <h2><%=@dataset.title%></h2>
+      <div class="numbers">
+        <div class="number">
+          <span><%= s_model_class.human_attribute_name(:data_records) %>:</span>
+          <%= number_with_delimiter(@dataset.stats.data_records) %>
+        </div>
+        <div class="number">
+          <span><%= s_model_class.human_attribute_name(:questions_analyzable) %>:</span>
+          <%= number_with_delimiter(@dataset.stats.public_questions_analyzable) %>
+        </div>
+        <div class="number">
+          <span><%= model_class.human_attribute_name(:is_weighted) %>:</span>
+          <%= @dataset.is_weighted? ? t('formtastic.yes') : t('formtastic.no') %>
+        </div>
+      </div>
       <div class="info">
         <div class="timestamps">
           <div class="timestamp">
@@ -147,7 +163,7 @@ logger.debug "======= show_private_questions = #{show_private_questions}"
     </div>
 
     <div role="tabpanel" class="tab-pane fade <%= codebook_active[:panel] %>" id="codebook">
-      <% 
+      <%
         question_type = show_private_questions == true ? 'analysis_with_exclude_questions' : 'analysis'
         items = @dataset.arranged_items(question_type: question_type, include_groups: true, include_subgroups: true, include_questions: true)
       %>
@@ -171,7 +187,7 @@ logger.debug "======= show_private_questions = #{show_private_questions}"
           <div class="radio-box" tabindex="0">
             <input id="filter_ans" name="filter" type="radio" value="ans" />
             <label class="filter" for="filter_ans"><%= t('.filter.answers') %></label>
-          </div>  
+          </div>
         </div>
         <% groups = items.select{|x| x.class == Group} %>
         <% if groups.length > 0 %>
@@ -179,10 +195,16 @@ logger.debug "======= show_private_questions = #{show_private_questions}"
             <select data-live-search="true" data-hide-disabled='true' data-width="auto" class="selectpicker-group" id="codebook-jumpto" title="<%= t('.jumpto_group') %>">
               <%= generate_codebook_group_options(groups) %>
             </select>
-          </div>       
+          </div>
         <% end %>
       </div>
       <div class="up"></div>
+      <% if show_questions_no_answers %>
+        <div class="notification wide info">
+          <div class='figure'></div>
+          <div class='text'><%= t('app.msgs.admin_codebook_questions') %></div>
+        </div>
+      <% end %>
       <%= generate_codebook_list(items, show_private_questions) %>
     </div>
 

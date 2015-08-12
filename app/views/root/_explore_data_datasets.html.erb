@@ -1,3 +1,9 @@
+<%-
+  with_pagination = with_pagination.nil? ? true : with_pagination
+  with_time_series_link = with_time_series_link.nil? ? true : with_time_series_link
+  model_class = Dataset
+  s_model_class = Stats
+-%>
 <%- with_pagination = with_pagination.nil? ? true : with_pagination%>
 <%- with_time_series_link = with_time_series_link.nil? ? true : with_time_series_link%>
 <%- model_class = Dataset -%>
@@ -19,6 +25,20 @@
               </div>
             </div>
           <% end %>
+        </div>
+        <div class="numbers">
+          <div class="number">
+            <span><%= s_model_class.human_attribute_name(:data_records) %>:</span>
+            <%= number_with_delimiter(dataset.stats.data_records) %>
+          </div>
+          <div class="number">
+            <span><%= s_model_class.human_attribute_name(:questions_analyzable) %>:</span>
+            <%= number_with_delimiter(dataset.stats.public_questions_analyzable) %>
+          </div>
+          <div class="number">
+            <span><%= model_class.human_attribute_name(:is_weighted) %>:</span>
+            <%= dataset.is_weighted? ? t('formtastic.yes') : t('formtastic.no') %>
+          </div>
         </div>
         <div class="info">
           <div class="timestamps">

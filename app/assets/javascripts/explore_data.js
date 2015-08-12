@@ -1,5 +1,56 @@
-var datatables, i, j, json_data;
+var datatables, h, i, j, k, json_data;
 
+// update the list of avilable weights based on questions that are selected
+function update_available_weights(){
+  // update weight list if weights exist
+  if ($('select#weighted_by_code').length > 0){
+    var items = [
+      $('select#question_code option:selected').data('weights'),
+      $('select#broken_down_by_code option:selected').data('weights'),
+      $('select#filtered_by_code option:selected').data('weights')
+    ];
+    // remove undefined (undefined exists if a select does not have a value)
+    var und_ind = items.indexOf(undefined);
+    while(und_ind != -1){
+      if (und_ind != -1){
+        items.splice(und_ind, 1);
+      }
+      und_ind = items.indexOf(undefined);
+    }
+    var matches = items.shift().filter(function(v) {
+      return items.every(function(a) {
+        return a.indexOf(v) !== -1;
+      });
+    });
+
+    // if there are matches, show the weights that match, and unweighted
+    // else hide weight option and set value to unweighted
+    if (matches.length > 0){
+      // show matches, hide rest
+
+      // hide all items
+      $('.form-explore-weight-by .bootstrap-select ul.dropdown-menu li').hide();
+
+      // show matched weights
+      var match_length = matches.length;
+      var i=0;
+      var index;
+      for (i;i<match_length;i++){
+        index = $('select#weighted_by_code option[value="' + matches[i] + '"]').index();
+        if (index != -1){
+          $('.form-explore-weight-by .bootstrap-select ul.dropdown-menu li:eq(' + index + ')').show();
+        }
+      }
+      // show unweighted
+      $('.form-explore-weight-by .bootstrap-select ul.dropdown-menu li:last').show();
+
+      $('.form-weight-by').show();
+    }else{
+      $('.form-weight-by').hide();
+      $('select#weighted_by_code').selectpicker('val', 'unweighted');
+    }
+  }
+}
 
 // show or hide the can exclude checkbox
 function set_can_exclude_visibility(){
@@ -55,7 +106,7 @@ function build_highmaps(json){
       var jump_ary = [];
       var jump_item;
 
-      for(var h=0; h<json.map.length; h++){
+      for(h=0; h<json.map.length; h++){
         if (json.broken_down_by && json.map[h].filter_results.map_sets.constructor === Array){
           // add jumpto link
           jump_item = $(template).clone();
@@ -63,7 +114,7 @@ function build_highmaps(json){
           jumpto_text = '<option></option>';
 
           for(var i=0; i<json.map[h].filter_results.map_sets.length; i++){
-            build_highmap(json.map[h].filter_results.shape_question_code, json.map[h].filter_results.adjustable_max_range, json.map[h].filter_results.map_sets[i], chart_height);
+            build_highmap(json.map[h].filter_results.shape_question_code, json.map[h].filter_results.adjustable_max_range, json.map[h].filter_results.map_sets[i], chart_height, json.weighted_by != undefined);
 
             // add jumpto link
             jumpto_text += '<option data-href="#map-' + (map_index+1) + '">' + non_map_text + ' = ' + json.map[h].filter_results.map_sets[i].broken_down_answer_text + '</option>';
@@ -76,7 +127,7 @@ function build_highmaps(json){
           jump_ary.push(jump_item);
 
         }else{
-          build_highmap(json.map[h].filter_results.shape_question_code, json.map[h].filter_results.adjustable_max_range, json.map[h].filter_results.map_sets, chart_height);
+          build_highmap(json.map[h].filter_results.shape_question_code, json.map[h].filter_results.adjustable_max_range, json.map[h].filter_results.map_sets, chart_height, json.weighted_by != undefined);
 
           // add jumpto link
           jumpto_text += '<option data-href="#map-' + (map_index+1) + '">' + json.filtered_by.text + ' = ' + json.map[h].filter_answer_text + '</option>';
@@ -117,7 +168,7 @@ function build_highmaps(json){
       // no filters
       if (json.broken_down_by && json.map.map_sets.constructor === Array){
         for(var i=0; i<json.map.map_sets.length; i++){
-          build_highmap(json.map.shape_question_code, json.map.adjustable_max_range, json.map.map_sets[i], chart_height);
+          build_highmap(json.map.shape_question_code, json.map.adjustable_max_range, json.map.map_sets[i], chart_height, json.weighted_by != undefined);
 
           // add jumpto link
           jumpto_text += '<option data-href="#map-' + (i+1) + '">' + non_map_text + ' = ' + json.map.map_sets[i].broken_down_answer_text + '</option>';
@@ -132,7 +183,7 @@ function build_highmaps(json){
         $('#jumpto').show();
 
       }else{
-        build_highmap(json.map.shape_question_code, json.map.adjustable_max_range, json.map.map_sets, chart_height);
+        build_highmap(json.map.shape_question_code, json.map.adjustable_max_range, json.map.map_sets, chart_height, json.weighted_by != undefined);
 
         // hide jumpto
         $('#jumpto #jumpto-map').hide();
@@ -172,7 +223,7 @@ function build_crosstab_charts(json){
       // filters
       for(var i=0; i<json.chart.length; i++){
         // create chart
-        build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart[i].filter_results, chart_height);
+        build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart[i].filter_results, chart_height, json.weighted_by != undefined);
 
         // add jumpto link
         jumpto_text += '<option data-href="#chart-' + (i+1) + '">' + json.filtered_by.text + ' = ' + json.chart[i].filter_answer_text + '</option>';
@@ -188,7 +239,7 @@ function build_crosstab_charts(json){
 
     }else{
       // no filters
-      build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart, chart_height);
+      build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart, chart_height, json.weighted_by != undefined);
 
       // hide jumpto
       $('#jumpto #jumpt-chart').hide();
@@ -216,9 +267,9 @@ function build_pie_charts(json){
     // test if the filter is being used and build the chart(s) accordingly
     if (json.chart.constructor === Array){
       // filters
-      for(var i=0; i<json.chart.length; i++){
+      for(i=0; i<json.chart.length; i++){
         // create chart
-        build_pie_chart(json.chart[i].filter_results, chart_height);
+        build_pie_chart(json.chart[i].filter_results, chart_height, json.weighted_by != undefined);
 
         // add jumpto link
         jumpto_text += '<option data-href="#chart-' + (i+1) + '">' + json.filtered_by.text + ' = ' + json.chart[i].filter_answer_text + '</option>';
@@ -234,7 +285,7 @@ function build_pie_charts(json){
 
     }else{
       // no filters
-      build_pie_chart(json.chart, chart_height);
+      build_pie_chart(json.chart, chart_height, json.weighted_by != undefined);
 
       // hide jumpto
       $('#jumpto #jumpto-chart').hide();
@@ -255,11 +306,19 @@ function build_datatable(json){
 
   // if the datatable alread exists, kill it
   if (datatables != undefined && datatables.length > 0){
-    for (var i=0;i<datatables.length;i++){
+    for (i=0;i<datatables.length;i++){
       datatables[i].fnDestroy();
     }
   }
 
+  var col_headers = ['count', 'percent'];
+
+  // test if data is weighted so can build table accordingly
+  var is_weighted = json.weighted_by != undefined
+  if (is_weighted){
+    col_headers = ['unweighted-count', 'weighted-count', 'weighted-percent'];
+  }
+  var col_header_count = col_headers.length;
 
   // build the table
   var table = '';
@@ -277,7 +336,7 @@ function build_datatable(json){
       // question code question   count percent count percent .....
       table += "<tr class='th-center'>";
       table += "<th class='var1-col-red'>" + gon.table_questions_header + "</th>";
-      table += "<th class='code-highlight' colspan='" + (2*(json.broken_down_by.answers.length+1)).toString() + "'>";
+      table += "<th class='code-highlight' colspan='" + (col_header_count*(json.broken_down_by.answers.length+1)).toString() + "'>";
       table += json.broken_down_by.original_code;
       table += "</th>";
       table += "</tr>";
@@ -288,7 +347,7 @@ function build_datatable(json){
       table += "</th>";
       var ln = json.broken_down_by.answers.length;
       for(i=0; i<ln;i++){
-        table += "<th colspan='2' class='color"+(i % 13 + 1)+"'>";
+        table += "<th colspan='" + col_header_count + "' class='color"+(i % 13 + 1)+"'>";
         table += json.broken_down_by.answers[i].text.toString();
         table += "</th>"
       }
@@ -298,13 +357,12 @@ function build_datatable(json){
       // table += "<th class='var1-col code-highlight'>";
       // table += json.question.original_code;
       // table += "</th>";
-      for(i=0; i<json.broken_down_by.answers.length;i++){
-        table += "<th>";
-        table += $('#container-table table').data('count');
-        table += "</th>"
-        table += "<th>";
-        table += $('#container-table table').data('percent');
-        table += "</th>"
+      for(i=0; i<ln;i++){
+        for(j=0; j<col_header_count;j++){
+          table += "<th>";
+          table += $('#container-table table').data(col_headers[j]);
+          table += "</th>";
+        }
       }
       table += "</tr>";
     }else{
@@ -312,11 +370,13 @@ function build_datatable(json){
       table += "<tr class='th-center'>";
       table += "<th class='var1-col code-highlight'>";
       table += json.question.original_code;
-      table += "</th><th>";
-      table += $('#container-table table').data('count');
-      table += "</th><th>";
-      table += $('#container-table table').data('percent');
-      table += "</th></tr>";
+      table += "</th>";
+      for(j=0; j<col_header_count;j++){
+        table += "<th>";
+        table += $('#container-table table').data(col_headers[j]);
+        table += "</th>";
+      }
+      table += "</tr>";
     }
   }else{
     if (json.analysis_type == 'comparative'){
@@ -342,20 +402,19 @@ function build_datatable(json){
 
       var ln = json.broken_down_by.answers.length;
       for(i=0; i<ln;i++){
-        table += "<th colspan='2' class='color"+(i % 13 + 1)+"'>";
+      table += "<th colspan='" + col_header_count + "' class='color"+(i % 13 + 1)+"'>";
         table += json.broken_down_by.answers[i].text.toString();
         table += "</th>"
       }
       table += "</tr>";
 
       table += "<tr>";
-      for(i=0; i<json.broken_down_by.answers.length;i++){
-        table += "<th>";
-        table += $('#container-table table').data('count');
-        table += "</th>"
-        table += "<th>";
-        table += $('#container-table table').data('percent');
-        table += "</th>"
+      for(i=0; i<ln;i++){
+        for(j=0; j<col_header_count;j++){
+          table += "<th>";
+          table += $('#container-table table').data(col_headers[j]);
+          table += "</th>";
+        }
       }
       table += "</tr>";
 
@@ -368,11 +427,13 @@ function build_datatable(json){
       table += "</th>";
       table += "<th class='var1-col code-highlight'>";
       table += json.question.original_code;
-      table += "</th><th>";
-      table += $('#container-table table').data('count');
-      table += "</th><th>";
-      table += $('#container-table table').data('percent');
-      table += "</th></tr>";
+      table += "</th>";
+      for(j=0; j<col_header_count;j++){
+        table += "<th>";
+        table += $('#container-table table').data(col_headers[j]);
+        table += "</th>";
+      }
+      table += "</tr>";
     }
   }
   table += "</thead>";
@@ -380,6 +441,7 @@ function build_datatable(json){
 
   // build body
   table += "<tbody>";
+  var key_text;
   if (json.filtered_by == undefined){
     if (json.analysis_type == 'comparative'){
       // cells per row: question code answer, count/percent for each col
@@ -389,12 +451,20 @@ function build_datatable(json){
         table += json.results.analysis[i].answer_text;
         table += "</td>";
         for(j=0; j<json.results.analysis[i].broken_down_results.length; j++){
-          table += "<td data-order='" + json.results.analysis[i].broken_down_results[j].count + "'>";
-          table += Highcharts.numberFormat(json.results.analysis[i].broken_down_results[j].count,0);
-          table += "</td>";
-          table += "<td>";
-          table += json.results.analysis[i].broken_down_results[j].percent.toFixed(2);
-          table += "%</td>";
+          for(k=0; k<col_header_count;k++){
+            // key is written with '-' but for this part, it must be '_'
+            key_text = col_headers[k].replace('-', '_');
+            // percent is the last item and all items before are percent
+            if (k < col_header_count-1){
+              table += "<td data-order='" + json.results.analysis[i].broken_down_results[j][key_text] + "'>";
+              table += Highcharts.numberFormat(json.results.analysis[i].broken_down_results[j][key_text],0);
+              table += "</td>";
+            }else{
+              table += "<td>";
+              table += json.results.analysis[i].broken_down_results[j][key_text].toFixed(2);
+              table += "%</td>";
+            }
+          }
         }
         table += "</tr>";
       }
@@ -406,11 +476,21 @@ function build_datatable(json){
         table += "<tr>";
         table += "<td class='var1-col' data-order='" + json.question.answers[i].sort_order + "'>";
         table += json.results.analysis[i].answer_text;
-        table += "</td><td data-order='" + json.results.analysis[i].count + "'>";
-        table += Highcharts.numberFormat(json.results.analysis[i].count,0);
-        table += "</td><td>";
-        table += json.results.analysis[i].percent.toFixed(2);
-        table += "%</td>";
+        table += "</td>";
+        for(k=0; k<col_header_count;k++){
+          // key is written with '-' but for this part, it must be '_'
+          key_text = col_headers[k].replace('-', '_');
+          // percent is the last item and all items before are percent
+          if (k < col_header_count-1){
+            table += "<td data-order='" + json.results.analysis[i][key_text] + "'>";
+            table += Highcharts.numberFormat(json.results.analysis[i][key_text],0);
+            table += "</td>";
+          }else{
+            table += "<td>";
+            table += json.results.analysis[i][key_text].toFixed(2);
+            table += "%</td>";
+          }
+        }
         table += "</tr>";
       }
     }
@@ -431,12 +511,20 @@ function build_datatable(json){
           table += "</td>";
 
           for(j=0; j<json.results.filter_analysis[h].filter_results.analysis[i].broken_down_results.length; j++){
-            table += "<td data-order='" + json.results.filter_analysis[h].filter_results.analysis[i].broken_down_results[j].count + "'>";
-            table += Highcharts.numberFormat(json.results.filter_analysis[h].filter_results.analysis[i].broken_down_results[j].count,0);
-            table += "</td>";
-            table += "<td>";
-            table += json.results.filter_analysis[h].filter_results.analysis[i].broken_down_results[j].percent.toFixed(2);
-            table += "%</td>";
+            for(k=0; k<col_header_count;k++){
+              // key is written with '-' but for this part, it must be '_'
+              key_text = col_headers[k].replace('-', '_');
+              // percent is the last item and all items before are percent
+              if (k < col_header_count-1){
+                table += "<td data-order='" + json.results.filter_analysis[h].filter_results.analysis[i].broken_down_results[j][key_text] + "'>";
+                table += Highcharts.numberFormat(json.results.filter_analysis[h].filter_results.analysis[i].broken_down_results[j][key_text],0);
+                table += "</td>";
+              }else{
+                table += "<td>";
+                table += json.results.filter_analysis[h].filter_results.analysis[i].broken_down_results[j][key_text].toFixed(2);
+                table += "%</td>";
+              }
+            }
           }
           table += "</tr>";
         }
@@ -454,12 +542,20 @@ function build_datatable(json){
           table += "<td class='var1-col' data-order='" + json.question.answers[i].sort_order + "'>";
           table += json.results.filter_analysis[h].filter_results.analysis[i].answer_text;
           table += "</td>";
-          table += "<td data-order='" + json.results.filter_analysis[h].filter_results.analysis[i].count + "'>";
-          table += Highcharts.numberFormat(json.results.filter_analysis[h].filter_results.analysis[i].count,0);
-          table += "</td>";
-          table += "<td>";
-          table += json.results.filter_analysis[h].filter_results.analysis[i].percent.toFixed(2);
-          table += "%</td>";
+          for(k=0; k<col_header_count;k++){
+            // key is written with '-' but for this part, it must be '_'
+            key_text = col_headers[k].replace('-', '_');
+            // percent is the last item and all items before are percent
+            if (k < col_header_count-1){
+              table += "<td data-order='" + json.results.filter_analysis[h].filter_results.analysis[i][key_text] + "'>";
+              table += Highcharts.numberFormat(json.results.filter_analysis[h].filter_results.analysis[i][key_text],0);
+              table += "</td>";
+            }else{
+              table += "<td>";
+              table += json.results.filter_analysis[h].filter_results.analysis[i][key_text].toFixed(2);
+              table += "%</td>";
+            }
+          }
           table += "</tr>";
         }
       }
@@ -507,7 +603,7 @@ function build_datatable(json){
 ////////////////////////////////////////////////
 // populat a details item block
 function build_details_item(selector, json_question){
-  if (json_question && json_question.text && json_question.answers){
+  if (json_question && json_question.text){
     var tmp = $(selector);
     if (tmp.length > 0){
       var icon = '';
@@ -525,6 +621,12 @@ function build_details_item(selector, json_question){
         tmp.find('.details-notes').show();
       }else{
         tmp.find('.details-notes').hide();
+      }
+      if (json_question.weight_name){
+        tmp.find('.weight').html(json_question.weight_name);
+        tmp.find('.details-weight').show();
+      }else{
+        tmp.find('.details-weight').hide();
       }
       if (json_question.group){
         tmp.find('.name-group .group-title').html(json_question.group.title);
@@ -544,12 +646,17 @@ function build_details_item(selector, json_question){
       }else{
         tmp.find('.details-subgroup').hide();
       }
-      for(var i=0;i<json_question.answers.length;i++){
-        icon = '';
-        if (json_question.answers[i].exclude){
-          icon += $('.details-icons #detail-icon-exclude-answer')[0].outerHTML;
+      if (json_question.answers){
+        for(var i=0;i<json_question.answers.length;i++){
+          icon = '';
+          if (json_question.answers[i].exclude){
+            icon += $('.details-icons #detail-icon-exclude-answer')[0].outerHTML;
+          }
+          tmp.find('.list-answers').append('<li>' + icon + json_question.answers[i].text + '</li>');
         }
-        tmp.find('.list-answers').append('<li>' + icon + json_question.answers[i].text + '</li>');
+        tmp.find('.details-answers').show();
+      }else{
+        tmp.find('.details-answers').hide();
       }
       tmp.show();
     }
@@ -570,6 +677,9 @@ function build_details(json){
 
   // add filters
   build_details_item('#tab-details #details-filtered-by-code', json.filtered_by);
+
+  // add weight
+  build_details_item('#tab-details #details-weighted-by-code', json.weighted_by);
 }
 
 
@@ -644,6 +754,12 @@ function get_explore_data(is_back_button){
     if ($('select#filtered_by_code').val() != null && $('select#filtered_by_code').val() != ''){
       ajax_data.filtered_by_code = $('select#filtered_by_code').val();
       url_querystring.push('filtered_by_code=' + ajax_data.filtered_by_code);
+    }
+
+    // weighted by
+    if ($('select#weighted_by_code').val() != null && $('select#weighted_by_code').val() != ''){
+      ajax_data.weighted_by_code = $('select#weighted_by_code').val();
+      url_querystring.push('weighted_by_code=' + ajax_data.weighted_by_code);
     }
 
     // can exclude
@@ -788,6 +904,7 @@ $(document).ready(function() {
     // initalize the fancy select boxes
     $('select.selectpicker').selectpicker();
     $('select.selectpicker-filter').selectpicker();
+    $('select.selectpicker-weight').selectpicker();
 
     // if an option has data-disabled when page loads, make sure it is hidden in the selectpicker
     $('select#question_code option[data-disabled="disabled"]').each(function(){
@@ -800,6 +917,10 @@ $(document).ready(function() {
       $('.form-explore-filter-by .bootstrap-select ul.dropdown-menu li:eq(' + $(this).index() + ')').hide();
     });
 
+    // make sure the correct weights are being shown
+    update_available_weights();
+
+
     // if option changes, make sure the select option is not available in the other lists
     $('select.selectpicker').change(function(){
       val = $(this).val();
@@ -809,19 +930,13 @@ $(document).ready(function() {
       // else, vice-versa
       if ($(this).attr('id') == 'question_code'){
         // update broken down by list
-        
+
         // turn on all hidden items
         $('.form-explore-broken-by .bootstrap-select ul.dropdown-menu li[style*="display: none"]').show();
 
         // turn on off this item
         $('.form-explore-broken-by .bootstrap-select ul.dropdown-menu li:eq(' + (index+1) + ')').hide();
 
-        // // remove all disabled
-        // $('select#broken_down_by_code option[disabled="disabled"]').removeAttr('disabled');
-        // // disable the new selection
-        // $('select#broken_down_by_code option[value="' + val + '"]').attr('disabled', 'disabled');
-        // // update the select list
-        // $('select#broken_down_by_code').selectpicker('refresh');
       }else if ($(this).attr('id') == 'broken_down_by_code'){
         // update question list
 
@@ -830,13 +945,6 @@ $(document).ready(function() {
 
         // turn on off this item
         $('.form-explore-question-code .bootstrap-select ul.dropdown-menu li:eq(' + (index-1) + ')').hide();
-
-        // // remove all disabled
-        // $('select#question_code option[disabled="disabled"]').removeAttr('disabled');
-        // // disable the new selection
-        // $('select#question_code option[value="' + val + '"]').attr('disabled', 'disabled');
-        // // update the select list
-        // $('select#question_code').selectpicker('refresh');
 
         // if val != '' then turn on swap button
         if (val == ''){
@@ -860,7 +968,7 @@ $(document).ready(function() {
       // turn on all hidden items
       $('.form-explore-filter-by .bootstrap-select ul.dropdown-menu li[style*="display: none"]').show();
 
-      // turn on off this item
+      // turn off this item
       if (q_index != -1){
         $('.form-explore-filter-by .bootstrap-select ul.dropdown-menu li:eq(' + (q_index + 1) + ')').hide();
       }
@@ -869,19 +977,11 @@ $(document).ready(function() {
       }
 
 
-
-      // $('select#filtered_by_code option[disabled="disabled"]').removeAttr('disabled');
-      // if (q != ''){
-      //   $('select#filtered_by_code option[value="' + q + '"]').attr('disabled','disabled');
-      // }
-      // if (bdb != ''){
-      //   $('select#filtered_by_code option[value="' + bdb + '"]').attr('disabled','disabled');
-      // }
-      // $('select#filtered_by_code').selectpicker('refresh');
-      // $('select#filtered_by_code').selectpicker('render');
+      // update the list of weights
+      update_available_weights();
 
       // update tooltip for selects
-      $('form button.selectpicker').tooltip('fixTitle')
+      $('form button.dropdown-toggle').tooltip('fixTitle');
 
       // if selected options have can_exclude, show the checkbox, else hide it
       set_can_exclude_visibility();
@@ -889,10 +989,19 @@ $(document).ready(function() {
 
     // update tooltip when filter tooltip changes
     $('select.selectpicker-filter').change(function(){
-      $('form button.selectpicker').tooltip('fixTitle')
-
       // if selected options have can_exclude, show the checkbox, else hide it
       set_can_exclude_visibility();
+
+      // update the list of weights
+      update_available_weights();
+
+      $('form button.dropdown-toggle').tooltip('fixTitle');
+
+    });
+
+    // update tooltip when weight tooltip changes
+    $('select.selectpicker-weight').change(function(){
+      $('form button.dropdown-toggle').tooltip('fixTitle');
     });
 
     // swap vars button
