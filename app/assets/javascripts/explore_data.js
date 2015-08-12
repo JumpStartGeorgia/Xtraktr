@@ -29,7 +29,7 @@ function update_available_weights(){
       // show matches, hide rest
 
       // hide all items
-      $('.form-explore-weighted-by .bootstrap-select ul.dropdown-menu li').hide();
+      $('.form-explore-weight-by .bootstrap-select ul.dropdown-menu li').hide();
 
       // show matched weights
       var match_length = matches.length;
@@ -38,16 +38,16 @@ function update_available_weights(){
       for (i;i<match_length;i++){
         index = $('select#weighted_by_code option[value="' + matches[i] + '"]').index();
         if (index != -1){
-          $('.form-explore-weighted-by .bootstrap-select ul.dropdown-menu li:eq(' + index + ')').show();
+          $('.form-explore-weight-by .bootstrap-select ul.dropdown-menu li:eq(' + index + ')').show();
         }
       }
       // show unweighted
-      $('.form-explore-weighted-by .bootstrap-select ul.dropdown-menu li:last').show();
+      $('.form-explore-weight-by .bootstrap-select ul.dropdown-menu li:last').show();
 
       $('.form-weight-by').show();
     }else{
       $('.form-weight-by').hide();
-      $('select#weighted_by_code').val('unweighted');
+      $('select#weighted_by_code').selectpicker('val', 'unweighted');
     }
   }
 }

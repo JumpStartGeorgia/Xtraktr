@@ -819,12 +819,6 @@ en:
       no_content: "No documentation for this method has been created yet."
   datasets:
     index:
-      stats:
-        data_records: Data Records
-        good_questions: Analyzable Questions
-        no_text: No Question Text
-        bad_answers: Bad Answers
-        no_answers: No Predefined Answers
       view_warnings: View Details
     warnings:
       title: "Warnings"

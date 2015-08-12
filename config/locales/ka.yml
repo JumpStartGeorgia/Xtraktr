@@ -819,12 +819,6 @@ ka:
       no_content: "ამ მეთოდისთვის დოკუმენტაცია ჯერ არ შექმნილა"
   datasets:
     index:
-      stats:
-        data_records: "მონაცემთა ჩაწერა"
-        good_questions: "გაანალიზებადი კითხვები"
-        no_text: "კითხვის ტექსტი არ არის"
-        bad_answers: "არასწორი პასუხი"
-        no_answers: არ აქვს წინასწარ განსაზღვრული პასუხები
       view_warnings: "დეტალების ნახვა"
     warnings:
       title: "გაფრთხილება"

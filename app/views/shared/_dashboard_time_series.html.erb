@@ -133,7 +133,7 @@
         <div class="up"></div>
         <ul class="list-unstyled">
           <% @time_series.questions.sorted.each do |question| %>
-            <li>
+            <li class="question-item">
               <div class="col question-link">
                 <%= link_to url_time_series_explore(@time_series, question_code: question.code, language: params[:language]) do %>
                   <div><span><%= question.original_code %>:</span><br/>

@@ -1,17 +1,33 @@
 <%-
   model_class = Dataset
+  s_model_class = Stats
   r_model_class = Report
+  is_admin_page = request.path == dataset_path(@dataset)
   is_admin_page = request.path == dataset_path(@dataset)
   show_share = true if show_share.nil?
   show_private_questions = false if show_private_questions.nil?
   show_questions_no_answers = false if show_questions_no_answers.nil?
   subnav_left render(partial: 'shared/language_switcher', locals: {langs: @dataset.language_objects, current_locale: @dataset.current_locale, share: show_share})
-
 -%>
+
 <div class="article dashboard">
   <div class="meta">
     <div class="col">
       <h2><%=@dataset.title%></h2>
+      <div class="numbers">
+        <div class="number">
+          <span><%= s_model_class.human_attribute_name(:data_records) %>:</span>
+          <%= number_with_delimiter(@dataset.stats.data_records) %>
+        </div>
+        <div class="number">
+          <span><%= s_model_class.human_attribute_name(:questions_analyzable) %>:</span>
+          <%= number_with_delimiter(@dataset.stats.public_questions_analyzable) %>
+        </div>
+        <div class="number">
+          <span><%= model_class.human_attribute_name(:is_weighted) %>:</span>
+          <%= @dataset.is_weighted? ? t('formtastic.yes') : t('formtastic.no') %>
+        </div>
+      </div>
       <div class="info">
         <div class="timestamps">
           <div class="timestamp">
