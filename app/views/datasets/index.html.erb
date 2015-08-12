@@ -14,6 +14,7 @@
       <th><%= model_class.human_attribute_name(:title) %></th>
       <th><%= model_class.human_attribute_name(:source) %></th>
       <th><%= model_class.human_attribute_name(:languages) %></th>
+      <th><%= model_class.human_attribute_name(:is_weighted) %></th>
       <th><%= model_class.human_attribute_name(:public) %></th>
       <th><%= model_class.human_attribute_name(:stats) %></th>
       <th><%= model_class.human_attribute_name(:has_warnings) %></th>
@@ -27,6 +28,7 @@
         <td><%= link_to dataset.title, dataset_path(dataset) %></td>
         <td><%= dataset.source %></td>
         <td><%= format_languages(dataset) %></td>
+        <td><%= format_boolean_flag(dataset.is_weighted?) %></td>
         <td><%= format_public_status(dataset.public) %></td>
         <td data-order="<%= dataset.stats.data_records %>">
           <%= model_class_s.human_attribute_name(:data_records) %>: <%= number_with_delimiter(dataset.stats.data_records) %>
