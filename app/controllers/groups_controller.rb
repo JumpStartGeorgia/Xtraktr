@@ -15,7 +15,7 @@ class GroupsController < ApplicationController
       add_common_options(false)
 
       respond_to do |format|
-        format.html 
+        format.html
         format.js { render json: @items}
       end
     else
@@ -85,11 +85,13 @@ class GroupsController < ApplicationController
       # - if not, stop
       if @group.valid?
         # assign the group ids to the questions
-        selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] == 'true'}.map{|k,v| v[:id]}
-        not_selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] != 'true'}.map{|k,v| v[:id]}
-        @dataset.questions.assign_group(selected_ids, @group.id)
-        @dataset.questions.assign_group(not_selected_ids, @group.parent_id.present? ? @group.parent_id : nil)
-
+        if params[:dataset].present? && params[:dataset][:questions_attributes].present?
+          selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] == 'true'}.map{|k,v| v[:id]}
+          not_selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] != 'true'}.map{|k,v| v[:id]}
+          @dataset.questions.assign_group(selected_ids, @group.id)
+          @dataset.questions.assign_group(not_selected_ids, @group.parent_id.present? ? @group.parent_id : nil)
+        end
+        
         respond_to do |format|
           if @dataset.save
             format.html { redirect_to dataset_groups_path, flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.group'))} }
@@ -130,10 +132,12 @@ class GroupsController < ApplicationController
       # - if not, stop
       if @group.valid?
         # assign the group ids to the questions
-        selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] == 'true'}.map{|k,v| v[:id]}
-        not_selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] != 'true'}.map{|k,v| v[:id]}
-        @dataset.questions.assign_group(selected_ids, @group.id)
-        @dataset.questions.assign_group(not_selected_ids, @group.parent_id.present? ? @group.parent_id : nil)
+        if params[:dataset].present? && params[:dataset][:questions_attributes].present?
+          selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] == 'true'}.map{|k,v| v[:id]}
+          not_selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] != 'true'}.map{|k,v| v[:id]}
+          @dataset.questions.assign_group(selected_ids, @group.id)
+          @dataset.questions.assign_group(not_selected_ids, @group.parent_id.present? ? @group.parent_id : nil)
+        end
 
         respond_to do |format|
           if @dataset.save
@@ -197,7 +201,7 @@ class GroupsController < ApplicationController
 
         # get questions already assigned to the group
         assigned_questions = dataset.questions.assigned_to_group_meta_only(params[:id])
-        
+
         # combine the two sets of questions with the selected questions first
         items = sort_objects_with_sort_order(assigned_questions).map{|x| x.json_for_groups(true)} + sort_objects_with_sort_order(questions).map{|x| x.json_for_groups}
 
@@ -213,7 +217,7 @@ class GroupsController < ApplicationController
     end
   end
 
-private 
+private
   def add_common_options(for_form=true)
     @css.push("groups.css")
     @js.push("groups.js")
@@ -221,7 +225,7 @@ private
     if for_form
       @css.push('tabbed_translation_form.css', 'select2.css')
       @js.push('select2/select2.min.js')
-      
+
       @languages = Language.sorted
 
       # get list of current main groups
@@ -233,7 +237,7 @@ private
 
     add_dataset_nav_options
     set_gon_datatables
-    
+
   end
 
 end

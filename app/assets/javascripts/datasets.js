@@ -1,12 +1,12 @@
 $(function() {
   // when start/end date changes, set the max/min date of the opposite date
-  function customRange(dates) { 
-    if (this.id == 'dataset_start_gathered_at') { 
-      $('input#dataset_end_gathered_at').datepicker('option', 'minDate', dates || null); 
-    } 
-    else { 
-      $('input#dataset_start_gathered_at').datepicker('option', 'maxDate', dates || null); 
-    } 
+  function customRange(dates) {
+    if (this.id == 'dataset_start_gathered_at') {
+      $('input#dataset_end_gathered_at').datepicker('option', 'minDate', dates || null);
+    }
+    else {
+      $('input#dataset_start_gathered_at').datepicker('option', 'maxDate', dates || null);
+    }
   }
 
   // load the datepicker and selectpicker libraries for a report row
@@ -63,7 +63,7 @@ $(function() {
   {
     $('input#dataset_end_gathered_at').datepicker('option', 'minDate', new Date(gon.start_gathered_at));
   }
-     
+
   // released at
   $("input#dataset_released_at").datepicker({
     dateFormat: 'yy-mm-dd',
@@ -79,7 +79,7 @@ $(function() {
   // when adding reports - add datepicker and selectpicker
   $('table#dataset-reports tbody').on('cocoon:before-insert', function(e, insertedItem) {
     load_report_row(insertedItem);
-  });  
+  });
 
   // process all reports when page loads
   if ($('table#dataset-reports tbody tr').length > 0){
@@ -95,5 +95,6 @@ $(function() {
   $('form.dataset').submit(function(e){
     $('#saving-form-loader').fadeIn('fast');
   });
+
 
 });

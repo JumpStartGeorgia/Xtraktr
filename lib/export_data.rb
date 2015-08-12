@@ -83,6 +83,13 @@ module ExportData
       dataset.create_urls_object
       get_url_params(dataset)
 
+      # if force_reset_download_files is true,
+      # make sure the reset_download_files flag is also true
+      if dataset.force_reset_download_files?
+        dataset.reset_download_files = true
+        dataset.force_reset_download_files = false
+      end
+
       # create files for each locale in the dataset
       dataset.languages.each do |locale|
         puts "@@@@@@@@@@@@@@@@ creating files for locale #{locale}"
@@ -144,6 +151,30 @@ module ExportData
     puts "=========================================="
     puts "=========================================="
     puts ">>>>>>>> it took #{(Time.now-start).round(3)} seconds to create all files for all datasets"
+  end
+
+
+  # generate download files for datasets that need it now
+  def self.create_all_forced_dataset_files
+    start = Time.now
+
+    count = Dataset.needs_download_files_now.count
+    Dataset.needs_download_files_now.each_with_index do |dataset, index|
+      puts "=========================================="
+      puts "=========================================="
+      puts "============ dataset #{index+1} out of #{count}"
+      puts "============ the script has been running for #{(Time.now-start).round(3)} seconds so far"
+      puts "=========================================="
+      puts "=========================================="
+      puts ""
+      puts ">>>>>>>>>> dataset: #{dataset.title}"
+      # create the data files for this dataset
+      create_all_files(dataset)
+    end
+
+    puts "=========================================="
+    puts "=========================================="
+    puts ">>>>>>>> it took #{(Time.now-start).round(3)} seconds to create all files for datasets that needed them now"
   end
 
 

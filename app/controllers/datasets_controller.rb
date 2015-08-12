@@ -759,6 +759,11 @@ class DatasetsController < ApplicationController
     if @dataset.present?
       add_dataset_nav_options
 
+      gon.generate_download_files_dataset_path = generate_download_files_dataset_path(@dataset)
+      gon.generate_download_file_status_dataset_path = generate_download_file_status_dataset_path(@dataset)
+
+      @js.push('generate_download.js')
+
       respond_to do |format|
         format.html # index.html.erb
       end
@@ -768,6 +773,28 @@ class DatasetsController < ApplicationController
       return
     end
   end
+
+  # trigger the download files to be generated
+  def generate_download_files
+    dataset = Dataset.by_id_for_user(params[:id], current_user.id)
+    success = nil
+    if dataset.present?
+      dataset.force_reset_download_files = true
+      success = dataset.save
+    end
+    respond_to do |format|
+      format.json { render json: success }
+    end
+  end
+
+  # check the status on the download file generation
+  def generate_download_file_status
+    respond_to do |format|
+      format.json { render json: {finished: Dataset.download_files_up_to_date?(params[:id], current_user.id)} }
+    end
+  end
+
+
 
   # sort all groups/questions
   def sort
