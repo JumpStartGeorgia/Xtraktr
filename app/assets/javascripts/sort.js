@@ -272,8 +272,12 @@ $(document).ready(function(){
 
       // -- drop down
       if (move_end_index == 0){
-        $('option:eq(' + (move_start_index + 1) + ')', select_id).insertBefore($('option:eq(' + (move_end_index + 1)  + ')', select_id));
+        $('option:eq(' + (move_start_index + 1) + ')', select_id).insertBefore($('option:eq(1)', select_id));
+      }else if (move_end_index < move_start_index){
+        // when moving up, use insertbefore
+        $('option:eq(' + (move_start_index+1) + ')', select_id).insertBefore($('option:eq(' + (move_end_index + 1)  + ')', select_id));
       }else{
+        // when moving down, use insertafter
         $('option:eq(' + (move_start_index + 1) + ')', select_id).insertAfter($('option:eq(' + (move_end_index + 1)  + ')', select_id));
       }
 
@@ -283,7 +287,11 @@ $(document).ready(function(){
       // -- hidden inputs
       if (move_end_index == 0){
         $('div:eq(' + move_start_index + ')', hidden_id).insertBefore($('div:eq(' + move_end_index + ')', hidden_id));
+      }else if (move_end_index < move_start_index){
+        // when moving down, use insertbefore
+        $('div:eq(' + move_start_index + ')', hidden_id).insertBefore($('div:eq(' + move_end_index + ')', hidden_id));
       }else{
+        // when moving down, use insertafter
         $('div:eq(' + move_start_index + ')', hidden_id).insertAfter($('div:eq(' + move_end_index + ')', hidden_id));
       }
 
