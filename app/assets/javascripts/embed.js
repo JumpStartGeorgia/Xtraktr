@@ -1,10 +1,9 @@
 
-var keys = [], is_touch=null; var xxx;
+var keys = [], is_touch=null;
 
 ////////////////////////////////////////////////
 // build highmap
 function build_highmaps(json){
-  xxx = json;
   if (json.map){
     // adjust the height/width of the map to fit its container if this is embed
     if ($('body#embed').length > 0){
@@ -24,7 +23,7 @@ function build_highmaps(json){
           for(var i=0; i<json.map[h].filter_results.map_sets.length; i++){
             // create map for filter that matches gon.broken_down_by_value and broken down by that matches gon.broken_down_by_value
             if (json.map[h].filter_answer_value == gon.filtered_by_value && json.map[i].broken_down_answer_value == gon.broken_down_by_value){
-              build_highmap(json.map[h].filter_results.shape_question_code, json.map[h].filter_results.map_sets[i]);
+              build_highmap(json.map[h].filter_results.shape_question_code, json.map[h].filter_results.map_sets[i], json.weighted_by != undefined);
               stop_loop = true;
               break;
             }
@@ -40,7 +39,7 @@ function build_highmaps(json){
 
           // create map for filter that matches gon.filtered_by_value
           if (json.map[i].filter_answer_value == gon.filtered_by_value){
-            build_highmap(json.map[h].filter_results.shape_question_code, json.map[h].filter_results.map_sets);
+            build_highmap(json.map[h].filter_results.shape_question_code, json.map[h].filter_results.map_sets, json.weighted_by != undefined);
             break;
           }
 
@@ -57,13 +56,13 @@ function build_highmaps(json){
         for(var i=0; i<json.map.map_sets.length; i++){
           // create map for broken down by that matches gon.broken_down_by_value
           if (json.map.map_sets[i].broken_down_answer_value == gon.broken_down_by_value){
-            build_highmap(json.map.shape_question_code, json.map.map_sets[i]);
+            build_highmap(json.map.shape_question_code, json.map.map_sets[i], json.weighted_by != undefined);
             break;
           }
         }
 
       }else{
-        build_highmap(json.map.shape_question_code, json.map.map_sets);
+        build_highmap(json.map.shape_question_code, json.map.map_sets, json.weighted_by != undefined);
       }
     }
   }
@@ -83,14 +82,14 @@ function build_crosstab_charts(json){
       for(var i=0; i<json.chart.length; i++){
         // create chart for filter that matches gon.filtered_by_value
         if (json.chart[i].filter_answer_value == gon.filtered_by_value){
-          build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart[i].filter_results, chart_height);
+          build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart[i].filter_results, chart_height, json.weighted_by != undefined);
           break;
         }
       }
 
     }else{
       // no filters
-      build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart, chart_height);
+      build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart, chart_height, json.weighted_by != undefined);
     }
   }
 }
@@ -109,14 +108,14 @@ function build_pie_charts(json){
       for(var i=0; i<json.chart.length; i++){
         // create chart for filter that matches gon.filtered_by_value
         if (json.chart[i].filter_answer_value == gon.filtered_by_value){
-          build_pie_chart(json.chart[i].filter_results, chart_height);
+          build_pie_chart(json.chart[i].filter_results, chart_height, json.weighted_by != undefined);
           break;
         }
       }
 
     }else{
       // no filters
-      build_pie_chart(json.chart, chart_height);
+      build_pie_chart(json.chart, chart_height, json.weighted_by != undefined);
     }
   }
 }
@@ -135,14 +134,14 @@ function build_time_series_charts(json){
       for(var i=0; i<json.chart.length; i++){
         // create chart for filter that matches gon.filtered_by_value
         if (json.chart[i].filter_answer_value == gon.filtered_by_value){
-          build_time_series_chart(json.chart[i].filter_results, chart_height);
+          build_time_series_chart(json.chart[i].filter_results, chart_height, json.weighted_by != undefined);
           break;
         }
       }
 
     }else{
       // no filters
-      build_time_series_chart(json.chart, chart_height);
+      build_time_series_chart(json.chart, chart_height, json.weighted_by != undefined);
     }
   }
 }

@@ -32,7 +32,7 @@ function build_time_series_charts(json){
       // filters
       for(var i=0; i<json.chart.length; i++){
         // create chart
-        build_time_series_chart(json.chart[i].filter_results, chart_height);
+        build_time_series_chart(json.chart[i].filter_results, chart_height, json.weighted_by != undefined);
 
         // add jumpto link
         jumpto_text += '<option data-href="#chart-' + (i+1) + '">' + json.filtered_by.text + ' = ' + json.chart[i].filter_answer_text + '</option>';
@@ -47,7 +47,7 @@ function build_time_series_charts(json){
 
     }else{
       // no filters
-      build_time_series_chart(json.chart, chart_height);
+      build_time_series_chart(json.chart, chart_height, json.weighted_by != undefined);
 
       // hide jumpto
       $('#jumpto').hide();
