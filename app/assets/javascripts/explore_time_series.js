@@ -1,7 +1,61 @@
 var datatables, i, j, json_data;
 
+// update the list of avilable weights based on questions that are selected
+function update_available_weights(){
+  // update weight list if weights exist
+  if ($('select#weighted_by_code').length > 0){
+    var old_value = $('select#weighted_by_code').val();
+    var items = [
+      $('select#question_code option:selected').data('weights'),
+      $('select#filtered_by_code option:selected').data('weights')
+    ];
+    // remove undefined (undefined exists if a select does not have a value)
+    var und_ind = items.indexOf(undefined);
+    while(und_ind != -1){
+      if (und_ind != -1){
+        items.splice(und_ind, 1);
+      }
+      und_ind = items.indexOf(undefined);
+    }
+    var matches = items.shift().filter(function(v) {
+      return items.every(function(a) {
+        return a.indexOf(v) !== -1;
+      });
+    });
 
+    // if there are matches, show the weights that match, and unweighted
+    // else hide weight option and set value to unweighted
+    if (matches.length > 0){
+      // show matches, hide rest
 
+      // hide all items
+      $('.form-explore-weight-by .bootstrap-select ul.dropdown-menu li').hide();
+
+      // show matched weights
+      var match_length = matches.length;
+      var i=0;
+      var index;
+      for (i;i<match_length;i++){
+        index = $('select#weighted_by_code option[value="' + matches[i] + '"]').index();
+        if (index != -1){
+          $('.form-explore-weight-by .bootstrap-select ul.dropdown-menu li:eq(' + index + ')').show();
+        }
+      }
+      // show unweighted
+      $('.form-explore-weight-by .bootstrap-select ul.dropdown-menu li:last').show();
+
+      // if the old value is no longer an option, select the first one
+      if (matches.indexOf(old_value) == -1){
+        $('select#weighted_by_code').selectpicker('val', $('select#weighted_by_code option:first').attr('value'));
+      }
+
+      $('.form-weight-by').show();
+    }else{
+      $('.form-weight-by').hide();
+      $('select#weighted_by_code').selectpicker('val', 'unweighted');
+    }
+  }
+}
 
 // show or hide the can exclude checkbox
 function set_can_exclude_visibility(){
@@ -24,7 +78,7 @@ function build_time_series_charts(json){
     // remove all existing charts
     $('#container-chart').empty();
     // remove all existing chart links
-    $('#jumpto select').empty();
+    $('#jumpto #jumpto-chart select').empty();
     var jumpto_text = '';
 
     // test if the filter is being used and build the chart(s) accordingly
@@ -39,10 +93,11 @@ function build_time_series_charts(json){
       }
 
       // show jumpto links
-      $('#jumpto select').append(jumpto_text);
-      $('#jumpto select').val($('#jumpto select option:first').attr('value'));
-      $('#jumpto select').selectpicker('refresh');
-      $('#jumpto select').selectpicker('render');
+      $('#jumpto #jumpto-chart select').append(jumpto_text);
+      $('#jumpto #jumpto-chart select').val($('#jumpto #jumpto-chart select option:first').attr('value'));
+      $('#jumpto #jumpto-chart select').selectpicker('refresh');
+      $('#jumpto #jumpto-chart select').selectpicker('render');
+      $('#jumpto #jumpto-chart').show();
       $('#jumpto').show();
 
     }else{
@@ -50,6 +105,7 @@ function build_time_series_charts(json){
       build_time_series_chart(json.chart, chart_height, json.weighted_by != undefined);
 
       // hide jumpto
+      $('#jumpto #jumpt-chart').hide();
       $('#jumpto').hide();
     }
   }
@@ -71,6 +127,14 @@ function build_datatable(json){
     }
   }
 
+  var col_headers = ['count', 'percent'];
+
+  // test if data is weighted so can build table accordingly
+  var is_weighted = json.weighted_by != undefined
+  if (is_weighted){
+    col_headers = ['unweighted-count', 'weighted-count', 'weighted-percent'];
+  }
+  var col_header_count = col_headers.length;
 
   // build the table
   var table = '';
@@ -229,44 +293,75 @@ function build_datatable(json){
 }
 
 ////////////////////////////////////////////////
+// populat a details item block
+function build_details_item(selector, json_question){
+  if (json_question && json_question.text){
+    var tmp = $(selector);
+    if (tmp.length > 0){
+      tmp.find('.name-variable').html(json_question.text);
+
+      tmp.find('.name-code').html(json_question.original_code);
+      if (json_question.notes){
+        tmp.find('.notes').html(json_question.notes);
+        tmp.find('.details-notes').show();
+      }else{
+        tmp.find('.details-notes').hide();
+      }
+      if (json_question.weight_name){
+        tmp.find('.weight').html(json_question.weight_name);
+        tmp.find('.details-weight').show();
+      }else{
+        tmp.find('.details-weight').hide();
+      }
+      if (json_question.group){
+        tmp.find('.name-group .group-title').html(json_question.group.title);
+        if (json_question.group.description != ''){
+          tmp.find('.name-group .group-description').html(' - ' + json_question.group.description);
+        }
+        tmp.find('.details-group').show();
+      }else{
+        tmp.find('.details-group').hide();
+      }
+      if (json_question.subgroup){
+        tmp.find('.name-subgroup .group-title').html(json_question.subgroup.title);
+        if (json_question.subgroup.description != ''){
+          tmp.find('.name-subgroup .group-description').html(' - ' + json_question.subgroup.description);
+        }
+        tmp.find('.details-subgroup').show();
+      }else{
+        tmp.find('.details-subgroup').hide();
+      }
+      if (json_question.answers){
+        for(var i=0;i<json_question.answers.length;i++){
+          icon = '';
+          if (json_question.answers[i].exclude){
+            icon += $('.details-icons #detail-icon-exclude-answer')[0].outerHTML;
+          }
+          tmp.find('.list-answers').append('<li>' + icon + json_question.answers[i].text + '</li>');
+        }
+        tmp.find('.details-answers').show();
+      }else{
+        tmp.find('.details-answers').hide();
+      }
+      tmp.show();
+    }
+  }
+}
+
 // build details (question and possible answers)
 function build_details(json){
   // clear out existing content and hide
-  $('#tab-details .details-item .name-variable, #tab-details .details-item .notes, #tab-details .details-item .list-answers').empty();
-  $('#tab-details .details-item').hide();
+  var details_item = $('#tab-details .details-item').hide();
+  details_item.find('.name-group .group-title, .name-group .group-description, .name-subgroup .group-title, .name-subgroup .group-description, .name-variable, .name-code, .notes, .list-answers').empty();
 
   // add questions
-  if (json.question && json.question.text && json.question.answers){
-    $('#tab-details #details-question-code .name-variable').html(json.question.text);
-    $('#tab-details #details-question-code .name-code').html(json.question.original_code);
-    if (json.question.notes){
-      $('#tab-details #details-question-code .notes').html(json.question.notes);
-      $('#tab-details #details-question-code .details-notes').show();
-    }else{
-      $('#tab-details #details-question-code .details-notes').hide();
-    }
-    for(var i=0;i<json.question.answers.length;i++){
-      $('#tab-details #details-question-code .list-answers').append('<li>' + json.question.answers[i].text + '</li>');
-    }
-    $('#tab-details #details-question-code').show();
-  }
+  build_details_item('#tab-details #details-question-code', json.question);
 
   // add filters
-  if (json.filtered_by && json.filtered_by.text && json.filtered_by.answers){
-    $('#tab-details #details-filtered-by-code .name-variable').html(json.filtered_by.text);
-    $('#tab-details #details-filtered-by-code .name-code').html(json.filtered_by.original_code);
-    if (json.filtered_by.notes){
-      $('#tab-details #details-filtered-by-code .notes').html(json.filtered_by.notes);
-      $('#tab-details #details-filtered-by-code .details-notes').show();
-    }else{
-      $('#tab-details #details-filtered-by-code .details-notes').hide();
-    }
-    for(var i=0;i<json.filtered_by.answers.length;i++){
-      $('#tab-details #details-filtered-by-code .list-answers').append('<li>' + json.filtered_by.answers[i].text + '</li>');
-    }
-    $('#tab-details #details-filtered-by-code').show();
-  }
+  build_details_item('#tab-details #details-filtered-by-code', json.filtered_by);
 
+  // add weight
+  build_details_item('#tab-details #details-weighted-by-code', json.weighted_by);
 }
 
 
@@ -361,7 +456,7 @@ function get_explore_time_series(is_back_button){
       $('#jumpto-loader').fadeOut('slow');
       $('#explore-data-loader').fadeOut('slow');
       $('#explore-error').fadeIn('slow');
-    }else if (json.results.analysis.length == 0){
+    }else if ((json.results.analysis && json.results.analysis.length == 0) || json.results.filtered_analysis && json.results.filtered_analysis.length == 0){
       $('#jumpto-loader').fadeOut('slow');
       $('#explore-data-loader').fadeOut('slow');
       $('#explore-no-results').fadeIn('slow');
@@ -464,28 +559,46 @@ $(document).ready(function() {
     // initalize the fancy select boxes
     $('select.selectpicker').selectpicker();
     $('select.selectpicker-filter').selectpicker();
+    $('select.selectpicker-weight').selectpicker();
+
+    // if an option has data-disabled when page loads, make sure it is hidden in the selectpicker
+    $('select#question_code option[data-disabled="disabled"]').each(function(){
+      $('.form-explore-question-code .bootstrap-select ul.dropdown-menu li:eq(' + $(this).index() + ')').hide();
+    });
+    $('select#filtered_by_code option[data-disabled="disabled"]').each(function(){
+      $('.form-explore-filter-by .bootstrap-select ul.dropdown-menu li:eq(' + $(this).index() + ')').hide();
+    });
+
+    // make sure the correct weights are being shown
+    update_available_weights();
 
     // if option changes, make sure the select option is not available in the other lists
     $('select.selectpicker').change(function(){
+      val = $(this).val();
+      index = $(this).find('option[value="' + val + '"]').index();
+
       // update filter list
-      var question_code = $('select#question_code').val();
+      var q = $('select#question_code').val();
+      var q_index = $('select#question_code option[value="' + q + '"]').index();
       // if filter is one of these values, reset filter to no filter
-      if ($('select#filtered_by_code').val() == question_code && question_code != ''){
+      if ($('select#filtered_by_code').val() == q && q != ''){
         // reset value and hide filter answers
         $('select#filtered_by_code').selectpicker('val', '');
       }
-      // mark selected items as disabled
-      $('select#filtered_by_code option[disabled="disabled"]').removeAttr('disabled');
-      if (question_code != ''){
-        $('select#filtered_by_code option[value="' + question_code + '"]').attr('disabled','disabled');
+
+      // turn on all hidden items
+      $('.form-explore-filter-by .bootstrap-select ul.dropdown-menu li[style*="display: none"]').show();
+
+      // turn off this item
+      if (q_index != -1){
+        $('.form-explore-filter-by .bootstrap-select ul.dropdown-menu li:eq(' + (q_index + 1) + ')').hide();
       }
 
-      // refresh the filter list
-      $('select#filtered_by_code').selectpicker('refresh');
-      $('select#filtered_by_code').selectpicker('render');
+      // update the list of weights
+      update_available_weights();
 
       // update tooltip for selects
-      $('form button.selectpicker').tooltip('fixTitle')
+      $('form button.dropdown-toggle').tooltip('fixTitle');
 
       // if selected options have can_exclude, show the checkbox, else hide it
       set_can_exclude_visibility();
@@ -493,12 +606,19 @@ $(document).ready(function() {
 
     // update tooltip when filter tooltip changes
     $('select.selectpicker-filter').change(function(){
-      $('form button.selectpicker').tooltip('fixTitle')
-
       // if selected options have can_exclude, show the checkbox, else hide it
       set_can_exclude_visibility();
+
+      // update the list of weights
+      update_available_weights();
+
+      $('form button.dropdown-toggle').tooltip('fixTitle');
     });
 
+    // update tooltip when weight tooltip changes
+    $('select.selectpicker-weight').change(function(){
+      $('form button.dropdown-toggle').tooltip('fixTitle');
+    });
 
     // get the initial data
     $('#explore-error').fadeOut('slow');
@@ -511,17 +631,21 @@ $(document).ready(function() {
     // jumpto scrolling
     $("#jumpto").on('change', 'select', function(){
       var href = $(this).find('option:selected').data('href');
-      $('.tab-pane').animate({
+      $('.tab-pane.active').animate({
         scrollTop: Math.abs($('.tab-pane.active > div > div:first').offset().top - $('.tab-pane.active ' + href).offset().top)
       }, 1500);
     });
 
     // when chart tab clicked on, make sure the jumpto block is showing, else, hide it
     $('#explore-tabs li a').click(function(){
-      if ($(this).attr('href') == '#tab-chart' && $('#jumpto select option').length > 0){
+      var ths_link = $(this).find('a');
+
+      if ($(ths_link).attr('href') == '#tab-chart' && $('#jumpto #jumpto-chart select option').length > 0){
         $('#jumpto').show();
+        $('#jumpto #jumpto-chart').show();
       }else{
         $('#jumpto').hide();
+        $('#jumpto #jumpto-chart').hide();
       }
     });
 

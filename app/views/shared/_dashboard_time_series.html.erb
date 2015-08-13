@@ -110,6 +110,9 @@
       </div>
 
       <div role="tabpanel" class="tab-pane fade <%= codebook_active[:panel] %>" id="codebook">
+        <%
+          items = @time_series.arranged_items(include_groups: true, include_subgroups: true, include_questions: true)
+        %>
         <div id="codebook-search">
           <input type="search" class="codebook-search" id="filter" value="" placeholder="<%= t('helpers.search') %>" />
           <div class="radio-box-group">
@@ -130,53 +133,17 @@
               <label class="filter" for="filter_ans"><%= t('.filter.answers') %></label>
             </div>
           </div>
+          <% groups = items.select{|x| x.class == TimeSeriesGroup} %>
+          <% if groups.length > 0 %>
+            <div class="codebook-jumpto">
+              <select data-live-search="true" data-hide-disabled='true' data-width="auto" class="selectpicker-group" id="codebook-jumpto" title="<%= t('.jumpto_group') %>">
+                <%= generate_codebook_time_series_group_options(groups) %>
+              </select>
+            </div>
+          <% end %>
         </div>
         <div class="up"></div>
-        <ul class="list-unstyled">
-          <% @time_series.questions.sorted.each do |question| %>
-            <li class="question-item">
-              <div class="col question-link">
-                <%= link_to url_time_series_explore(@time_series, question_code: question.code, language: params[:language]) do %>
-                  <div><span><%= question.original_code %>:</span><br/>
-                  <%= question.text %></div>
-                <% end %>
-              </div>
-              <div class="col details">
-                <div>
-                  <div class="col k"><%= t('app.common.question') %>: </div>
-                  <div class="col default-search question"><%= question.text %></div>
-                </div>
-                <div>
-                  <div class="col k"><%= t('app.common.question_code') %>: </div>
-                  <div class="col default-search question-code">
-                    <%= question.original_code %>
-                  </div>
-                </div>
-                <% if question.notes.present? %>
-                  <div>
-                    <div class="col k"><%= t('app.common.notes') %>: </div>
-                    <div class="col default-search "><%= question.notes %></div>
-                  </div>
-                <% end %>
-                <div>
-                  <div class="col k"><%= t('app.common.answers') %>: </div>
-                  <div class="col answers default-search ">
-                    <%- answers = question.answers.sorted
-                      if answers.present?
-                    -%>
-                      <ul>
-                        <%- answers.each do |answer| -%>
-                          <li><%= answer.text %></li>
-                        <%- end -%>
-                      </ul>
-                    <% end %>
-                  </div>
-                </div>
-              </div>
-            </li>
-          <% end %>
-        </ul>
-      </div>
+        <%= generate_codebook_time_series_list(items) %>
 
       <div role="tabpanel" class="tab-pane fade list" id="datasets">
             <%= render partial: 'root/explore_data_datasets', locals: {with_pagination: false, with_time_series_link: false} %>

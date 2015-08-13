@@ -17,6 +17,8 @@ en:
       category_mappers: Categories
       group: Group
       weight: Weight
+      time_series_group: Group
+      time_series_weight: Weight
     attributes:
       user:
         email: Email Address
@@ -150,6 +152,7 @@ en:
         dates: Dates Included
         category_ids: Categories
         permalink: URL to Time Series
+        is_weighted: Weighted Data
       time_series_dataset:
         dataset_id: Dataset
         title: Label
@@ -159,6 +162,21 @@ en:
         original_code: Question Code
         text: Question
         notes: Notes
+      time_series_group:
+        title: Name
+        description: Description
+        include_in_charts: Include the Description in the Chart Titles?
+        codes: Questions in this Group
+        parent_id: This Group is a Subgroup of
+        sub_group: Subgroup
+      time_series_weight:
+        code: Question with Weight
+        text: Weight Name
+        is_default: Is Default Weight?
+        applies_to_all: Applies to All Questions
+        applies_to: Applies To
+        all_questions: All Questions
+        codes: Apply the Weight to the Following Questions
       time_series_dataset_question:
         code: Question Code
         text: Question
@@ -302,6 +320,18 @@ en:
         code: The code of the question as you want it to appear in the time series
         text: The text of the question as you want it to appear in the time series
         notes: Any special notes about the question
+      time_series_group:
+        title: The group name will appear in the codebook and on the explore page in the question drop-down lists
+        description: "The group description will appear in the codebook, on the explore page in the question drop-down lists and the chart titles, if desired."
+        include_in_charts: "If selected, the group description will appear in the title of the charts. The Description will then be required."
+        codes: Select the questions that belong in this group
+        parent_id: Use this to indicate that this group belongs to another group
+      time_series_weight:
+        code: The question that contains the weight values
+        text: 'A label for the weight - this will be visible to the public during analysis (e.g., Individual, Household, etc)'
+        is_default: 'If selected, this will be the weight that is applied to all questions during analysis by default if no weight is indicated'
+        applies_to_all: 'If selected, all questions will be assigned to this weight'
+        codes: Select the questions that you want to have this weight applied to
       time_series_dataset_question:
         text: 'Only questions from the dataset that are not already assigned to this time series will be shown. When you select a new question, the list of answers for this dataset below will automatically change.'
         notes: Any special notes about the question
@@ -682,6 +712,9 @@ en:
         warnings: Warnings
         delete: Delete
         private_share: Share Private Time Series
+        groups: Group Questions
+        sort: Sort Groups/Questions
+        weights: Weight Data
   user:
     age_group:
       g1: "17-24"
@@ -1034,6 +1067,34 @@ en:
       btn_show_home_page: Permanently Show on Home Page
       questions: Questions
       description: Description
+    sort:
+      title: Sort Groups and Questions
+      explanation: |
+        This page allows you to sort all groups and questions into the order that you desire.
+
+        By defualt, the question sort order is set to be the same as the order of the questions in the data file.
+
+        When groups are added, the group sort order is initially set so the groups appear at the top of the list.
+
+        If you have created groups, you can view and sort the items in that group by clicking on the button in the last column in the table.
+      move_explanation: Move the selected items after this item
+      move_placeholder: Select an Item
+      headers:
+        sort: Sort Order
+        type: Item Type
+        name: Item Name
+      breadcrumb_start: Main Items
+      breadcrumb_title: View all of the main items
+      breadcrumb_title_group: View the items in this group
+      main_items: "Below are the main items - groups that are not subgroups and questions that are not assigned to groups"
+      group_items: "Below are the groups and questions assigned to group '%{name}'"
+      all_types: All Item Types
+      form_header: Instructions
+      form_instructions: |
+        You can sort groups and questions using two methods:
+
+        1) Drag and Drop - Simply drag the row to the desired position.
+        2) Select & Checkboxes - Use the checkboxes to indciate which row(s) you want to move and then use the select box above the table to indicate where to move the row(s) to.
   time_series_questions:
     index:
       title: "Edit Time Series Questions and their Answers"
@@ -1057,6 +1118,29 @@ en:
       title: "Question: %{question}"
       header_answers: Answers
       no_answers: There are no answers for this question yet.
+  time_series_groups:
+    index:
+      title: Group Questions
+      no_groups: There are no groups on file for this time series.
+      modal:
+        header: "Questions for Group '[group]'"
+      explanation: |
+        This section allows you to put similar questions together in a group. You can also create a subgroup of questions.
+
+        Groups have a name and description. You can use the description to give context to the set of questions in the group.
+
+        Groups will be visible in the codebook and on the explore page. It is up to you on whether or not the group description is included in the chart titles.
+
+        By default, groups are put at the top of the codebook and all ungrouped questions will appear after the groups. You can use the %{link} to further control the order of the groups and questions.
+      explanation_link_text: Sorting page
+    table_row:
+      question_count: '%{num} questions'
+    form:
+      option_top_level: This group is not a subgroup
+      chart_description_explanation: "Below is an example of how your description text will look in the charts. The format is: Question Code - Group Description. Question Text."
+      ex_question: Is the sky blue?
+      questions_explanation_default: "All questions that are not assigned to any other group are avaiable to be assigned to this group."
+      questions_explanation_subgroup: "Only the questions assinged to '%{group}' are available to be assigned to this subgroup."
   shared:
     explore_data:
       no_matches: Your selections returned no data. Please try again with a different selection.
@@ -1138,6 +1222,7 @@ en:
         questions: Question Text
         codes: Question Code
         answers: Answer Text
+      jumpto_group: Jump To Group
     language_switcher:
       label: Available Languages
     embed_v1:

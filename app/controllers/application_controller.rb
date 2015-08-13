@@ -319,6 +319,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 
     # the questions for cross tab can only be those that have code answers and are not excluded
     @questions = time_series.questions
+    @items = time_series.arranged_items(include_groups: true, include_subgroups: true, include_questions: true)
 
     if @questions.present?
 

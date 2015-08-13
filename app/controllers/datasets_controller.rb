@@ -3,9 +3,6 @@ class DatasetsController < ApplicationController
   before_filter do |controller_instance|
     controller_instance.send(:valid_role?, @data_editor_role)
   end
-  # layout 'explore_data'
-
-
 
   # GET /datasets
   # GET /datasets.json

@@ -1,0 +1,54 @@
+<% title t('.title') %>
+<%-
+  label_key = "mongoid.attributes.time_series_group."
+-%>
+
+<div class="form-group form-group-admin-buttons">
+  <%= link_to t('.new', :default => t("helpers.links.new")),
+              new_time_series_time_series_group_path,
+              :class => 'btn btn-primary' %>
+</div>
+
+<%= simple_format t('.explanation', link: link_to(t('.explanation_link_text'), sort_time_series_path(@time_series))) %>
+
+<hr />
+
+<% groups = @items.select{|x| x.class == TimeSeriesGroup} %>
+<% if groups.present? %>
+
+  <table id="group-datatable" class="table table-striped display">
+    <thead>
+      <tr>
+        <th><%= t(label_key + 'title') %></th>
+        <th><%= t(label_key + 'sub_group') %></th>
+        <th><%= t(label_key + 'description') %></th>
+        <th><%= t(label_key + 'include_in_charts') %></th>
+        <th><%= t(label_key + 'codes') %></th>
+        <th><%=t '.actions', :default => t("helpers.actions") %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% groups.each do |group| %>
+        <%= render :partial => 'time_series_groups/table_row', locals: {group: group} %>
+        <% group.arranged_items.select{|x| x.class == TimeSeriesGroup}.each do |sub_group| %>
+          <%= render :partial => 'time_series_groups/table_row', locals: {group: sub_group, is_sub_group: true} %>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+
+  <div id="questions-popup" style="display:none;">
+    <div class='question-modal'>
+      <div class='header' data-title="<%= t('.modal.header') %>"></div>
+      <div class='text'></div>
+      <div class='closeup' onclick='js_modal_off();'></div>
+    </div>
+  </div>
+
+<% else %>
+
+  <p>
+    <%= t('.no_groups') %>
+  </p>
+
+<% end %>

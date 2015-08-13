@@ -6,7 +6,7 @@
 
 <% if @items.present? %>
 
-  <%= form_tag sort_dataset_path(@dataset), id: 'frm-dataset-sort', class: 'form-data-loader data-loader-container' do %>
+  <%= form_tag sort_time_series_path(@time_series), id: 'frm-time_series-sort', class: 'form-data-loader data-loader-container' do %>
 
     <div id="items-header">
       <h2>
@@ -42,8 +42,8 @@
         <select data-live-search="true" data-width="300px" class="selectpicker-sort" id="move-to" title="<%= t('.move_placeholder') %>">
           <% @items.each do |item| %>
             <%
-              text = item.class == Group ? item.title : item.code_with_text
-              cls = item.class == Group ? item.parent_id.present? ? 'subgroup' : 'group' : 'question'
+              text = item.class == TimeSeriesGroup ? item.title : item.code_with_text
+              cls = item.class == TimeSeriesGroup ? item.parent_id.present? ? 'subgroup' : 'group' : 'question'
             %>
             <option class="<%= cls %>" value="<%= item.id %>"><%= text %></option>
           <% end %>
@@ -105,15 +105,15 @@
         <div data-id="<%= item.id %>">
           <%
             id_name, type, name, desc, link, cls = nil
-            if item.class == Question
+            if item.class == TimeSeriesQuestion
               id_name = 'questions'
-            elsif item.class == Group
+            elsif item.class == TimeSeriesGroup
               id_name = 'groups'
             end
           %>
 
-          <input id='dataset_<%=id_name%>_attributes_<%=index%>_id' name='dataset[<%=id_name%>_attributes][<%=index%>][id]' type='hidden' value='<%=item.id%>'>
-          <input class="input-sort-order" id='dataset_<%=id_name%>_attributes_<%=index%>_sort_order' name='dataset[<%=id_name%>_attributes][<%=index%>][sort_order]' type='hidden' value='<%=item.sort_order%>'>
+          <input id='time_series_<%=id_name%>_attributes_<%=index%>_id' name='time_series[<%=id_name%>_attributes][<%=index%>][id]' type='hidden' value='<%=item.id%>'>
+          <input class="input-sort-order" id='time_series_<%=id_name%>_attributes_<%=index%>_sort_order' name='time_series[<%=id_name%>_attributes][<%=index%>][sort_order]' type='hidden' value='<%=item.sort_order%>'>
         </div>
       <% end %>
 
