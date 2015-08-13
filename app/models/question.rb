@@ -126,7 +126,7 @@ class Question < CustomTranslation
   before_save :check_if_dirty
 
   def update_flags
-#    logger.debug "updating question flags for #{self.code}"
+  #  logger.debug "******** updating question flags for #{self.code}"
     self.has_code_answers = self.answers.present?
     self.has_can_exclude_answers = self.answers.has_can_exclude?
 
