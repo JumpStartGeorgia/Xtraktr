@@ -284,6 +284,8 @@ class DatasetsController < ApplicationController
 
       add_dataset_nav_options()
 
+      @css.push('tabs.css')
+
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @dataset }
