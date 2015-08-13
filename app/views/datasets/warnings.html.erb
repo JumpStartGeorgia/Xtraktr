@@ -3,141 +3,142 @@
 <% title t('.title') %>
 
 <% if @dataset.has_warnings? %>
+  <div id="dataset-warnings" class="tabs style1">
+    <ul class="nav nav-tabs" role="tablist">
+      <li role="presentation" class="active"><a href="#no_text" role="tab" data-toggle="tab"><%= t('.tab_no_text') %></a></li>
+      <li role="presentation"><a href="#no_answers" role="tab" data-toggle="tab"><%= t('.tab_no_answers') %></a></li>
+      <li role="presentation"><a href="#bad_answers" role="tab" data-toggle="tab"><%= t('.tab_bad_answers') %></a></li>
+    </ul>
 
-  <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="#no_text" role="tab" data-toggle="tab"><%= t('.tab_no_text') %></a></li>
-    <li role="presentation"><a href="#no_answers" role="tab" data-toggle="tab"><%= t('.tab_no_answers') %></a></li>
-    <li role="presentation"><a href="#bad_answers" role="tab" data-toggle="tab"><%= t('.tab_bad_answers') %></a></li>
-  </ul>
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="no_text">
+        <% if @no_text.present? %>
+          <p>
+            <%= t('.no_text', :number => @no_text.length) %>
+          </p>
 
-  <div class="tab-content">
-    <div role="tabpanel" class="tab-pane fade in active" id="no_text">
-      <% if @no_text.present? %>
-        <p>
-          <%= t('.no_text', :number => @no_text.length) %>
-        </p>
-
-        <table class="table table-striped table-hover table-nonfluid">
-          <thead>
-            <tr>
-              <th><%= model_class.human_attribute_name(:code) %></th>
-              <th><%=t '.actions', :default => t("helpers.actions") %></th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @no_text.each do |question| %>
+          <table class="table table-striped table-hover table-nonfluid">
+            <thead>
               <tr>
-                <td>
-                  <%= question.original_code %>
-                </td>
-                <td>
-                  <%= link_to t('helpers.links.add_question_text'),
-                            edit_dataset_question_path(@dataset, question), :class => 'btn btn-default' %>
-                </td>
+                <th><%= model_class.human_attribute_name(:code) %></th>
+                <th><%=t '.actions', :default => t("helpers.actions") %></th>
               </tr>
-            <% end %>
-          </tbody>
-        </table>
-      <% else %>
+            </thead>
+            <tbody>
+              <% @no_text.each do |question| %>
+                <tr>
+                  <td>
+                    <%= question.original_code %>
+                  </td>
+                  <td>
+                    <%= link_to t('helpers.links.add_question_text'),
+                              edit_dataset_question_path(@dataset, question), :class => 'btn btn-default' %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        <% else %>
 
-        <p>
-          <%= t('.no_no_text') %>
-        </p>
-      <% end %>
-    </div>
+          <p>
+            <%= t('.no_no_text') %>
+          </p>
+        <% end %>
+      </div>
 
-    <div role="tabpanel" class="tab-pane fade" id="no_answers">
-      <% if @no_answers.present? %>
-        <p>
-          <%= t('.no_answers', :number => @no_answers.length) %>
-        </p>
+      <div role="tabpanel" class="tab-pane fade" id="no_answers">
+        <% if @no_answers.present? %>
+          <p>
+            <%= t('.no_answers', :number => @no_answers.length) %>
+          </p>
 
-        <table class="table table-striped table-hover table-nonfluid">
-          <thead>
-            <tr>
-              <th><%= model_class.human_attribute_name(:code) %></th>
-              <th><%= model_class.human_attribute_name(:text) %></th>
-              <th><%=t '.actions', :default => t("helpers.actions") %></th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @no_answers.each do |question| %>
+          <table class="table table-striped table-hover table-nonfluid">
+            <thead>
               <tr>
-                <td>
-                  <%= question.original_code %>
-                </td>
-                <td>
-                  <%= question.text %>
-                </td>
-                <td>
-                  <%= link_to t('helpers.links.add_answers'),
-                            edit_dataset_question_path(@dataset, question), :class => 'btn btn-default' %>
-                </td>
+                <th><%= model_class.human_attribute_name(:code) %></th>
+                <th><%= model_class.human_attribute_name(:text) %></th>
+                <th><%=t '.actions', :default => t("helpers.actions") %></th>
               </tr>
-            <% end %>
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              <% @no_answers.each do |question| %>
+                <tr>
+                  <td>
+                    <%= question.original_code %>
+                  </td>
+                  <td>
+                    <%= question.text %>
+                  </td>
+                  <td>
+                    <%= link_to t('helpers.links.add_answers'),
+                              edit_dataset_question_path(@dataset, question), :class => 'btn btn-default' %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
 
-      <% else %>
+        <% else %>
 
-        <p>
-          <%= t('.no_no_answers') %>
-        </p>
-      <% end %>
-    </div>
+          <p>
+            <%= t('.no_no_answers') %>
+          </p>
+        <% end %>
+      </div>
 
-    <div role="tabpanel" class="tab-pane fade" id="bad_answers">
-      <% if @bad_answers.present? %>
-        <p>
-          <%= t('.bad_answers', :number => @bad_answers.length) %>
-        </p>
+      <div role="tabpanel" class="tab-pane fade" id="bad_answers">
+        <% if @bad_answers.present? %>
+          <p>
+            <%= t('.bad_answers', :number => @bad_answers.length) %>
+          </p>
 
-        <table class="table table-striped table-hover table-nonfluid">
-          <thead>
-            <tr>
-              <th><%= model_class.human_attribute_name(:code) %></th>
-              <th><%= model_class.human_attribute_name(:text) %></th>
-              <th><%= model_class.human_attribute_name(:possible_answers) %></th>
-              <th><%= model_class.human_attribute_name(:data_answers) %></th>
-              <th><%=t '.actions', :default => t("helpers.actions") %></th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @bad_answers.each do |item| %>
-              <% question = @dataset.questions.with_original_code(item) %>
+          <table class="table table-striped table-hover table-nonfluid">
+            <thead>
               <tr>
-                <td>
-                  <%= question.original_code %>
-                </td>
-                <td>
-                  <%= question.text %>
-                </td>
-                <td>
-                  <%= question.answers.unique_values.delete_if{|x| x.nil?}.sort.join(', ') %>
-                </td>
-                <td>
-                  <%= @dataset.data_items.unique_code_data(item).delete_if{|x| x.nil?}.sort.join(', ') %>
-                </td>
-                <td>
-                  <%= link_to '',
-                            edit_dataset_question_path(@dataset, question), 
-                            :title => t('helpers.links.edit_answers'),
-                            :class => 'btn btn-edit btn-xs' %>
-                </td>
+                <th><%= model_class.human_attribute_name(:code) %></th>
+                <th><%= model_class.human_attribute_name(:text) %></th>
+                <th><%= model_class.human_attribute_name(:possible_answers) %></th>
+                <th><%= model_class.human_attribute_name(:data_answers) %></th>
+                <th><%=t '.actions', :default => t("helpers.actions") %></th>
               </tr>
-            <% end %>
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              <% @bad_answers.each do |item| %>
+                <% question = @dataset.questions.with_original_code(item) %>
+                <tr>
+                  <td>
+                    <%= question.original_code %>
+                  </td>
+                  <td>
+                    <%= question.text %>
+                  </td>
+                  <td>
+                    <%= question.answers.unique_values.select{|x| !x.nil?}.sort.join(', ') if question.answers.unique_values.present? %>
+                  </td>
+                  <td>
+                    <%= @dataset.data_items.unique_code_data(item).select{|x| !x.nil?}.sort.join(', ') if @dataset.data_items.unique_code_data(item).present? %>
+                  </td>
+                  <td>
+                    <%= link_to '',
+                              edit_dataset_question_path(@dataset, question),
+                              :title => t('helpers.links.edit_answers'),
+                              :class => 'btn btn-edit btn-xs' %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
 
-      <% else %>
+        <% else %>
 
-        <p>
-          <%= t('.no_bad_answers') %>
-        </p>
-      <% end %>
+          <p>
+            <%= t('.no_bad_answers') %>
+          </p>
+        <% end %>
+      </div>
+
+
     </div>
-
-
   </div>
 
 <% else %>
