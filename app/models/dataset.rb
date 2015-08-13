@@ -329,7 +329,7 @@ class Dataset < CustomTranslation
       where(group_id: group_id).only(:id, :code, :original_code, :title, :sort_order)
     end
 
-    # mark the answer can_exclude flag as true for the ids provided
+    # set the group id for the provided questions
     def assign_group(ids, group_id)
       where(:_id.in => ids).each do |q|
         if q.group_id != group_id
