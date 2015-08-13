@@ -25,7 +25,7 @@ $(document).ready(function(){
   select_id.selectpicker();
 
   form_id = $('form');
-  table_id = $('#dataset-sort');
+  table_id = $('#sort');
   list_id = $('.bootstrap-select .dropdown-menu.inner');
   hidden_id = $('#hidden-inputs');
 

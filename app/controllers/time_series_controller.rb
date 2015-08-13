@@ -1,9 +1,8 @@
 class TimeSeriesController < ApplicationController
   before_filter :authenticate_user!
   before_filter do |controller_instance|
-    controller_instance.send(:valid_role?, User::ROLES[:user])
+    controller_instance.send(:valid_role?, @data_editor_role)
   end
-  # layout "explore_time_series"
 
   # GET /time_series
   # GET /time_series.json
@@ -16,7 +15,7 @@ class TimeSeriesController < ApplicationController
     set_gon_datatables
 
     respond_to do |format|
-      format.html 
+      format.html
       format.json { render json: @time_series }
     end
   end
@@ -51,15 +50,15 @@ class TimeSeriesController < ApplicationController
 
       @show_title = false
 
-      @css.push("dashboard.css", 'highlights.css', 'list.css', 'boxic.css', 'tabs.css', 'explore.css')
-      @js.push("live_search.js", 'highlights.js', 'explore.js')
+      @css.push('bootstrap-select.min.css', 'list.css', "dashboard.css", 'highlights.css', 'boxic.css', 'tabs.css', 'explore.css')
+      @js.push('bootstrap-select.min.js', "live_search.js", 'highlights.js', 'explore.js')
 
       respond_to do |format|
         format.html # index.html.erb
       end
     end
   end
-  
+
 
   # GET /time_series/1
   # GET /time_series/1.json
@@ -110,7 +109,7 @@ class TimeSeriesController < ApplicationController
   # GET /time_series/1/edit
   def edit
     @time_series = TimeSeries.by_id_for_user(params[:id], current_user.id)
-  
+
     if @time_series.present?
       @datasets = Dataset.by_user(current_user.id).only_id_title_languages.sorted
 
@@ -191,7 +190,7 @@ end
           logger.debug "======= - checking form cat id #{category_id} for addition; class = #{category_id.class}"
           if !cat_ids.include?(category_id)
             logger.debug "======= -> adding new category #{category_id}"
-            @time_series.category_mappers.build(category_id: category_id) 
+            @time_series.category_mappers.build(category_id: category_id)
           end
         end
       else
@@ -350,6 +349,81 @@ logger.debug "@@@@@@@@@ there are #{@time_series.questions.length} questions"
       return
     end
 
+  end
+
+  # sort all groups/questions
+  def sort
+    @time_series = TimeSeries.by_id_for_user(params[:id], current_user.id)
+
+    if @time_series.present?
+
+      respond_to do |format|
+        format.html {
+          @items = @time_series.arranged_items(include_questions: true, include_groups: true, include_subgroups: false, include_group_with_no_items: true, group_id: params[:group_id])
+
+          @group = params[:group_id].present? ? @time_series.groups.find(params[:group_id]) : nil
+
+          add_time_series_nav_options
+          set_gon_datatables
+
+          # create data for datatables (faster to load this way)
+          gon.datatable_json = []
+          @items.each_with_index do |item, index|
+            id_name, type, name, desc, link, cls = nil
+            if item.class == TimeSeriesQuestion
+              id_name = 'questions'
+              type = I18n.t('mongoid.models.time_series_question')
+              name = item.code_with_text
+            elsif item.class == TimeSeriesGroup
+              id_name = 'groups'
+              type = I18n.t('mongoid.models.time_series_group')
+              name = item.title
+              desc = item.description.present? ? " - #{item.description}" : ''
+              link = view_context.link_to(I18n.t('helpers.links.view_group_items'), params.merge(group_id: item.id), class: 'btn btn-default btn-view-group btn-xs')
+              cls = item.parent_id.present? ? 'subgroup' : 'group'
+            end
+
+            gon.datatable_json << {
+              checkbox: "<input id='time_series_#{id_name}_attributes_#{index}_id' name='time_series[#{id_name}_attributes][#{index}][id]' type='hidden' value='#{item.id}'><input id='time_series_#{id_name}_attributes_#{index}_sort_order name='time_series[#{id_name}_attributes][#{index}][sort_order]' type='hidden' value='#{item.sort_order}'><input class='move-item' name='move-item' type='checkbox' value='#{item.id}'>",
+              sort_order: "<input class='form-control sort-order' id='time_series_#{id_name}_attributes_#{index}_sort_order name='time_series[#{id_name}_attributes][#{index}][sort_order]' type='input' value='#{item.sort_order}'>",
+              type: type,
+              name: "<span class='#{cls}'>#{name}</span>#{desc}",
+              link: link
+            }
+          end
+
+          @css.push('bootstrap-select.min.css', 'sort.css')
+          @js.push('bootstrap-select.min.js', "sort.js")
+
+        }
+        format.js {
+          begin
+
+            @time_series.assign_attributes(params[:time_series])
+
+            @msg = t('app.msgs.sort_saved')
+            @success = true
+            if !@time_series.save
+              @msg = @time_series.errors.full_messages
+              @success = false
+            end
+          rescue Exception => e
+            @msg = t('app.msgs.sort_not_saved')
+            @success = false
+
+            # send the error notification
+            ExceptionNotifier::Notifier
+              .exception_notification(request.env, e)
+              .deliver
+          end
+
+        }
+      end
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to time_series_index_path(:locale => I18n.locale)
+      return
+    end
   end
 
 end

@@ -1,13 +1,12 @@
-var datatable;
-var form_id;
+var datatable, form_id;
 
 $(document).ready(function(){
-  form_id = $('form.group');
+  form_id = $('form.time_series_group');
 
   if (form_id.length > 0){
     // show the description example if include in charts is true
     function show_description_ex(){
-      if ($('input[name="group[include_in_charts]"]:checked', form_id).val() == 'true'){
+      if ($('input[name="time_series_group[include_in_charts]"]:checked', form_id).val() == 'true'){
         // add description text and show example
         var desc = $('input.main-description', form_id).val();
         if (desc == ''){
@@ -22,7 +21,7 @@ $(document).ready(function(){
     }
 
     // if chart title is true, show the example description
-    $('input[name="group[include_in_charts]"]', form_id).change(function(){
+    $('input[name="time_series_group[include_in_charts]"]', form_id).change(function(){
       show_description_ex();
     });
     // show description ex when page loads if needed
@@ -31,7 +30,7 @@ $(document).ready(function(){
     // as the description changes, update the chart description example
     // only need this if the include in charts is true
     $("input.main-description", form_id).keyup(debounce(function() {
-      if ($('form input[name="group[include_in_charts]"]:checked').val() == 'true'){
+      if ($('form input[name="time_series_group[include_in_charts]"]:checked').val() == 'true'){
         var desc = $(this).val();
         if (desc == ''){
           desc = gon.insert_description_text;
@@ -84,7 +83,7 @@ $(document).ready(function(){
       $.ajax({
         type: 'POST',
         url: gon.group_questions_path,
-        data: {group_id: $('select#group_parent_id', form_id).val()},
+        data: {group_id: $('select#time_series_group_parent_id', form_id).val()},
         dataType: 'json'
       }).done(function (data) {
         var now = Date.now();
@@ -98,7 +97,7 @@ $(document).ready(function(){
             checked = "";
           }
 
-          question.checkbox = "<input id='dataset_questions_attributes_" + question_index + "_id' name='dataset[questions_attributes][" + question_index + "][id]' type='hidden' value='" + question.id + "'><input class='question-selected-input' name='dataset[questions_attributes][" + question_index + "][selected]' type='checkbox' value='true' " + checked + ">";
+          question.checkbox = "<input id='time_series_time_series_time_series_questions_attributes_" + question_index + "_id' name='time_series[time_series_questions_attributes][" + question_index + "][id]' type='hidden' value='" + question.id + "'><input class='question-selected-input' name='time_series[time_series_questions_attributes][" + question_index + "][selected]' type='checkbox' value='true' " + checked + ">";
         });
 
 
@@ -110,7 +109,7 @@ $(document).ready(function(){
           datatable.draw();
         }else{
           // create datatable
-          datatable = $('#dataset-group-questions').DataTable({
+          datatable = $('#time-series-group-questions').DataTable({
             "dom": '<"top"fli>t<"bottom"p><"clear">',
             "data": data,
             // "deferRender": true,
@@ -132,7 +131,7 @@ $(document).ready(function(){
           });
 
           // search boxes in footer
-          $('#dataset-group-questions tfoot input').on('keyup click', function(){
+          $('#time-series-group-questions tfoot input').on('keyup click', function(){
               datatable.column($(this).closest('td').index()).search(this.value, true, false).draw();
           });
         }
@@ -145,14 +144,14 @@ $(document).ready(function(){
     }
 
     // when the group changes, update the group questions
-    $('select#group_parent_id', form_id).change(function(){
+    $('select#time_series_group_parent_id', form_id).change(function(){
       get_group_questions();
 
       // update the explanation text
       if ($(this).val() == ''){
         $('#group-questions #group-question-explanation').html($('#group-questions #group-question-explanation').data('default'));
       }else{
-        $('#group-questions #group-question-explanation').html($('#group-questions #group-question-explanation').data('subgroup').replace('[group]', $('form select#group_parent_id option:selected').text()));
+        $('#group-questions #group-question-explanation').html($('#group-questions #group-question-explanation').data('subgroup').replace('[group]', $('form select#time_series_group_parent_id option:selected').text()));
       }
     });
 

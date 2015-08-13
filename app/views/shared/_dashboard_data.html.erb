@@ -193,7 +193,7 @@
         <% if groups.length > 0 %>
           <div class="codebook-jumpto">
             <select data-live-search="true" data-hide-disabled='true' data-width="auto" class="selectpicker-group" id="codebook-jumpto" title="<%= t('.jumpto_group') %>">
-              <%= generate_codebook_group_options(groups) %>
+              <%= generate_codebook_dataset_group_options(groups) %>
             </select>
           </div>
         <% end %>
@@ -205,7 +205,7 @@
           <div class='text'><%= t('app.msgs.admin_codebook_questions') %></div>
         </div>
       <% end %>
-      <%= generate_codebook_list(items, show_private_questions) %>
+      <%= generate_codebook_dataset_list(items, show_private_questions) %>
     </div>
 
     <div role="tabpanel" class="tab-pane fade list" id="reports">

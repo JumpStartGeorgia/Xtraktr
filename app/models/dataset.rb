@@ -940,7 +940,7 @@ class Dataset < CustomTranslation
 
     if options[:include_questions] == true
       Rails.logger.debug "#{indent}=============== -- include questions"
-      # get questions that are not assigned to groups
+      # get questions that are assigned to groups
       # - if group_id not provided, then getting questions that are not assigned to group
       items << case options[:question_type]
         when 'download'

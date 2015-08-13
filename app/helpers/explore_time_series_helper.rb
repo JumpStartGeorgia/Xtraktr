@@ -1,7 +1,7 @@
-module ExploreHelper
+module ExploreTimeSeriesHelper
 
   # generate the options for the explore data drop down list
-  def generate_explore_options(items, dataset, options={})
+  def generate_explore_time_series_options(items, time_series, options={})
     skip_content = options[:skip_content].nil? ? false : options[:skip_content]
     selected_code = options[:selected_code].nil? ? nil : options[:selected_code]
     disabled_code = options[:disabled_code].nil? ? nil : options[:disabled_code]
@@ -12,17 +12,17 @@ module ExploreHelper
 
     items.each do |item|
 
-      if item.class == Group
+      if item.class == TimeSeriesGroup
         # add group
         html << generate_explore_group_option(item)
 
         # if have items, add them
         options[:group_type] = group_type.present? ? 'subgroup' : 'group'
-        html << generate_explore_options(item.arranged_items, dataset, options)
+        html << generate_explore_time_series_options(item.arranged_items, time_series, options)
 
-      elsif item.class == Question
+      elsif item.class == TimeSeriesQuestion
         # add question
-        html << generate_explore_question_option(item, dataset, skip_content, selected_code, disabled_code, disabled_code2, group_type)
+        html << generate_explore_question_option(item, time_series, skip_content, selected_code, disabled_code, disabled_code2, group_type)
       end
     end
 
@@ -31,7 +31,7 @@ module ExploreHelper
 
 
   # determine if any of the selected questions have can_exclude answers
-  def selected_question_has_can_exclude?(questions, select_values=[])
+  def selected_time_series_question_has_can_exclude?(questions, select_values=[])
     has_can_exclude = false
 
     if select_values.present?
@@ -66,7 +66,7 @@ private
     return html
   end
 
-  def generate_explore_question_option(question, dataset, skip_content, selected_code, disabled_code, disabled_code2, group_type=nil)
+  def generate_explore_question_option(question, time_series, skip_content, selected_code, disabled_code, disabled_code2, group_type=nil)
     html = ''
     q_text = question.code_with_text
     selected = selected_code.present? && selected_code == question.code ? 'selected=selected ' : ''
@@ -75,8 +75,8 @@ private
     cls = group_type == 'group' ? 'grouped' : group_type == 'subgroup' ? 'grouped subgrouped' : ''
 
     weights = ''
-    if dataset.is_weighted? == true
-      w = dataset.weights.for_question(question.code)
+    if time_series.is_weighted? == true
+      w = time_series.weights.for_question(question.code)
       if w.present?
         weights = 'data-weights=\'["'
         weights << w.map{|x| x.code}.join('","')

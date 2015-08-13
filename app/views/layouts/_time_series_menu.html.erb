@@ -1,6 +1,6 @@
 <%
   include_parent_div ||= false
-%>              
+%>
 
             <% if include_parent_div %>
               <div class="dropdown">
@@ -47,7 +47,7 @@
                     </li>
                   <% end %>
 <%
-=end %>                  
+=end %>
                   <li class="divider"></li>
                   <li role="menuitem">
                     <%= link_to time_series_questions_path(time_series) do %>
@@ -55,11 +55,31 @@
                       <%= t('app.menu.admin_time_series.qa') %>
                     <% end %>
                   </li>
+                  <li class="divider"></li>
+                  <li role="menuitem">
+                    <%= link_to time_series_time_series_groups_path(time_series) do %>
+                      <span class="glyphicon glyphicon-th-large"></span>
+                      <%= t('app.menu.admin_time_series.groups') %>
+                    <% end %>
+                  </li>
+                  <li role="menuitem">
+                    <%= link_to sort_time_series_path(time_series) do %>
+                      <span class="glyphicon glyphicon-sort"></span>
+                      <%= t('app.menu.admin_time_series.sort') %>
+                    <% end %>
+                  </li>
+                  <li role="menuitem">
+                    <%= link_to time_series_time_series_weights_path(time_series) do %>
+                      <span class="glyphicon glyphicon-asterisk"></span>
+                      <%= t('app.menu.admin_time_series.weights') %>
+                    <% end %>
+                  </li>
+                  <li class="divider"></li>
                   <li role="menuitem">
                     <%= link_to time_series_path(time_series),
                         :method => 'delete',
                         :data => { :confirm => t("helpers.links.confirm") } do %>
-  
+
                       <span class="glyphicon glyphicon-remove-circle"></span>
                       <%= t('app.menu.admin_time_series.delete') %>
                     <% end %>
