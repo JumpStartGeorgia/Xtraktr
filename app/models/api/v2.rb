@@ -96,6 +96,7 @@ class Api::V2
   #   errors: [{status, detail}] (optional)
   # }
   def self.dataset_analysis(dataset_id, question_code, options={})
+    Rails.logger.debug "$$$$$$ dataset analysis options = #{options}"
     data = {}
 
     if dataset_id.nil? || question_code.nil?
@@ -169,7 +170,7 @@ class Api::V2
     if weight.present? && weight.downcase.strip == UNWEIGHTED
       weight = nil
 
-    # if dataset is weighted use the default weight
+    # if dataset is weighted but weight is not found use the default weight
     elsif dataset.is_weighted? || (weight.present? && !dataset.weights.weight_codes.include?(weight))
       weight = default_weight.present? ? default_weight.code : nil
     end
@@ -204,7 +205,7 @@ class Api::V2
       weight_item = dataset.weights.with_code(weight)
       weight_question =  dataset.questions.with_code(weight)
       # reset the weight option in case a bad one was sent in or questions do not share weight
-      options[:weight] = weight
+      options['weighted_by_code'] = weight
     end
 
     ########################
@@ -322,6 +323,7 @@ class Api::V2
   #   errors: [{status, detail}] (optional)
   # }
   def self.time_series_analysis(time_series_id, question_code, options={})
+    Rails.logger.debug "$$$$$$ time series analysis options = #{options}"
     data = {}
 
     if time_series_id.nil? || question_code.nil?
@@ -331,11 +333,12 @@ class Api::V2
 
     ########################
     # get options
-    private_user_id = options['private_user_id'].present? ? options['private_user_id'] : nil
+    private_user_id = options['private_user_id']
     can_exclude = options['can_exclude'].present? && options['can_exclude'].to_bool == true
     with_title = options['with_title'].present? && options['with_title'].to_bool == true
     with_chart_data = options['with_chart_data'].present? && options['with_chart_data'].to_bool == true
-    language = options['language'].present? ? options['language'].downcase : nil
+    language = options['language']
+    weight = options['weighted_by_code']
 
     time_series = nil
     if private_user_id
@@ -386,6 +389,28 @@ class Api::V2
       end
     end
 
+    # if time series is weighted, determine which weight to use
+    # if weight is unweighted, do not use weighted
+    default_weight = time_series.weights.default
+    if weight.present? && weight.downcase.strip == UNWEIGHTED
+      weight = nil
+
+    # if time series is weighted but weight is not found use the default weight
+    elsif time_series.is_weighted? || (weight.present? && !time_series.weights.weight_codes.include?(weight))
+      weight = default_weight.present? ? default_weight.code : nil
+    end
+
+    # get the weight question
+    weight_question = nil
+    weight_item = nil
+    if weight.present?
+      weight_item = time_series.weights.with_code(weight)
+      weight_question =  time_series.questions.with_code(weight)
+      # reset the weight option in case a bad one was sent in
+      options['weighted_by_code'] = weight
+    end
+
+
     ########################
     # start populating the output
     data[:time_series] = {id: time_series.id, title: time_series.title}
@@ -399,8 +424,11 @@ class Api::V2
     # do the analysis
     # run the analysis for each dataset
     individual_results = []
+    dataset_options = options.clone
+    # if the time series is not using a weight, make sure the datasets are not either
+    dataset_options['weighted_by_code'] = UNWEIGHTED if weight.nil?
     dataset_questions.each do |dq|
-      x = dataset_analysis(dq.dataset_id, question_code, options)
+      x = dataset_analysis(dq.dataset_id, question_code, dataset_options)
       if x.present?
         individual_results << {dataset_id: dq.dataset_id, dataset_results:x}
       end
