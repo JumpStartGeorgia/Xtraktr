@@ -461,8 +461,11 @@ function build_datatable(json){
               table += "</td>";
             }else{
               table += "<td>";
-              table += json.results.analysis[i].broken_down_results[j][key_text].toFixed(2);
-              table += "%</td>";
+              if (json.results.analysis[i].broken_down_results[j][key_text].percent){
+                table += json.results.analysis[i].broken_down_results[j][key_text].percent.toFixed(2);
+                table += "%"
+              }
+              table += "</td>";
             }
           }
         }
@@ -487,8 +490,11 @@ function build_datatable(json){
             table += "</td>";
           }else{
             table += "<td>";
-            table += json.results.analysis[i][key_text].toFixed(2);
-            table += "%</td>";
+            if (json.results.analysis[i][key_text].percent){
+              table += json.results.analysis[i][key_text].percent.toFixed(2);
+              table += "%"
+            }
+            table += "</td>";
           }
         }
         table += "</tr>";
@@ -521,8 +527,11 @@ function build_datatable(json){
                 table += "</td>";
               }else{
                 table += "<td>";
-                table += json.results.filter_analysis[h].filter_results.analysis[i].broken_down_results[j][key_text].toFixed(2);
-                table += "%</td>";
+                if (json.results.filter_analysis[h].filter_results.analysis[i].broken_down_results[j][key_text].percent){
+                  table += json.results.filter_analysis[h].filter_results.analysis[i].broken_down_results[j][key_text].percent.toFixed(2);
+                  table += "%"
+                }
+                table += "</td>";
               }
             }
           }
@@ -552,8 +561,11 @@ function build_datatable(json){
               table += "</td>";
             }else{
               table += "<td>";
-              table += json.results.filter_analysis[h].filter_results.analysis[i][key_text].toFixed(2);
-              table += "%</td>";
+              if (json.results.filter_analysis[h].filter_results.analysis[i][key_text].percent){
+                table += json.results.filter_analysis[h].filter_results.analysis[i][key_text].percent.toFixed(2);
+                table += "%"
+              }
+              table += "</td>";
             }
           }
           table += "</tr>";
