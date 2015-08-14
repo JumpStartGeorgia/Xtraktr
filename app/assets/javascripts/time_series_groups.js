@@ -205,6 +205,7 @@ $(document).ready(function(){
 
     });
 
+
     // datatable
     datatable = $('#group-datatable').dataTable({
       "dom": '<"top"fli>t<"bottom"p><"clear">',
