@@ -5,9 +5,9 @@ module CodebookTimeSeriesHelper
     html_options = ''
 
     groups.each do |group|
-      html_options << generate_codebook_group_option(group)
+      html_options << generate_codebook_time_series_group_option(group)
       group.arranged_items.select{|x| x.class == TimeSeriesGroup}.each do |subgroup|
-        html_options << generate_codebook_group_option(subgroup)
+        html_options << generate_codebook_time_series_group_option(subgroup)
       end
     end
 
@@ -23,11 +23,11 @@ def generate_codebook_time_series_list(items)
 
       if item.class == TimeSeriesGroup
         # add group
-        html << generate_codebook_group_item(item)
+        html << generate_codebook_time_series_group_item(item)
 
       elsif item.class == TimeSeriesQuestion
         # add question
-        html << generate_codebook_question_item(item)
+        html << generate_codebook_time_series_question_item(item)
       end
 
     end
@@ -40,7 +40,7 @@ def generate_codebook_time_series_list(items)
 private
 
   # create option for codebook group jumpto
-  def generate_codebook_group_option(group)
+  def generate_codebook_time_series_group_option(group)
     cls = group.parent_id.present? ? 'subgroup' : 'group'
     content = 'data-content=\'<span>' + group.title + '</span><span class="pull-right">'
     desc = group.description.present? ? group.description : I18n.t('app.msgs.jumpto_group')
@@ -57,7 +57,7 @@ private
 
   # create question for codebook
   # - options: group, subgroup
-  def generate_codebook_question_item(question, options={})
+  def generate_codebook_time_series_question_item(question, options={})
 
     return render partial: 'shared/codebook_time_series_question_item',
                   locals: {question: question, current_group: options[:group], current_subgroup: options[:subgroup]}
@@ -65,7 +65,7 @@ private
 
 
   # create group for codebook
-  def generate_codebook_group_item(group)
+  def generate_codebook_time_series_group_item(group)
     html = ''
     cls = 'group-item'
     cls2 = ''
@@ -91,9 +91,9 @@ private
     group.arranged_items.each do |item|
 
       if item.class == TimeSeriesGroup
-        html << generate_codebook_group_item(item)
+        html << generate_codebook_time_series_group_item(item)
       elsif item.class == TimeSeriesQuestion
-        html << generate_codebook_question_item(item, options)
+        html << generate_codebook_time_series_question_item(item, options)
       end
 
     end
