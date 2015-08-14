@@ -63,7 +63,7 @@ module BootstrapStarter
     config.assets.version = '1.0'
 
 
-    config.assets.precompile += %w( api.js datasets.js embed.js embed_layout.js explore.js explore_data.js explore_time_series.js generate_download.js groups.js highlights.js highlight_description.js list.js live_search.js mappable_form.js mass_changes_answers.js mass_changes_questions.js modal.js questions.js search.js sort.js tabbed_translation_form.js time_series.js time_series_questions.js weights.js)
+    config.assets.precompile += %w( api.js datasets.js embed.js embed_layout.js explore.js explore_data.js explore_time_series.js generate_download.js groups.js highlights.js highlight_description.js list.js live_search.js mappable_form.js mass_changes_answers.js mass_changes_questions.js modal.js questions.js search.js sort.js tabbed_translation_form.js time_series.js time_series_groups.js time_series_questions.js weights.js)
     config.assets.precompile += %w( api.css boxic.css dashboard.css datasets.css embed.css embed_layout.css explore.css groups.css highlights.css highlight_description.css list.css mappable_form.css mass_changes_answers.css mass_changes_questions.css modal.css questions.css root.css settings.css sort.css tabbed_translation_form.css tabs.css time_series.css time_series_questions.css tooltip.css variables.css weights.css)
     config.assets.precompile += %w( bootstrap.tooltip.js bootstrap-select.min.js highcharts.js highcharts-map.js highcharts-exporting.js masonry.pkgd.min.js select2/select2.min.js shBrushJScript.js shCore.js tinymce/*)
     config.assets.precompile += %w( bootstrap-select.min.css select2.css select2-bootstrap.css shCore.css shThemeDefault.css )
