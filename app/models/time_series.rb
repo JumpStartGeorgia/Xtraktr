@@ -544,7 +544,7 @@ class TimeSeries < CustomTranslation
     puts "- found #{matches.length} matches"
 
     # create record for each match
-    matches.each do |code|
+    matches_with_index.each do |code, index|
       answer_values = []
       question_answers = {}
 
@@ -565,6 +565,7 @@ class TimeSeries < CustomTranslation
               q.original_code = question.original_code
               q.text_translations = question.text_translations
               q.notes_translations = question.notes_translations
+              q.sort_order = index + 1
             end
 
             if question.has_code_answers?
