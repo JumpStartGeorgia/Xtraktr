@@ -5,9 +5,9 @@ module CodebookDatasetHelper
     html_options = ''
 
     groups.each do |group|
-      html_options << generate_codebook_group_option(group)
+      html_options << generate_codebook_dataset_group_option(group)
       group.arranged_items.select{|x| x.class == Group}.each do |subgroup|
-        html_options << generate_codebook_group_option(subgroup)
+        html_options << generate_codebook_dataset_group_option(subgroup)
       end
     end
 
@@ -23,11 +23,11 @@ def generate_codebook_dataset_list(items, show_private_questions=false)
 
       if item.class == Group
         # add group
-        html << generate_codebook_group_item(item, show_private_questions)
+        html << generate_codebook_dataset_group_item(item, show_private_questions)
 
       elsif item.class == Question
         # add question
-        html << generate_codebook_question_item(item, show_private_questions: show_private_questions)
+        html << generate_codebook_dataset_question_item(item, show_private_questions: show_private_questions)
       end
 
     end
@@ -40,7 +40,7 @@ def generate_codebook_dataset_list(items, show_private_questions=false)
 private
 
   # create option for codebook group jumpto
-  def generate_codebook_group_option(group)
+  def generate_codebook_dataset_group_option(group)
     cls = group.parent_id.present? ? 'subgroup' : 'group'
     content = 'data-content=\'<span>' + group.title + '</span><span class="pull-right">'
     desc = group.description.present? ? group.description : I18n.t('app.msgs.jumpto_group')
@@ -57,7 +57,7 @@ private
 
   # create question for codebook
   # - options: group, subgroup, show_private_questions
-  def generate_codebook_question_item(question, options={})
+  def generate_codebook_dataset_question_item(question, options={})
 
     return render partial: 'shared/codebook_data_question_item',
                   locals: {question: question, current_group: options[:group], current_subgroup: options[:subgroup], show_private_questions: options[:show_private_questions]}
@@ -65,7 +65,7 @@ private
 
 
   # create group for codebook
-  def generate_codebook_group_item(group, show_private_questions=false)
+  def generate_codebook_dataset_group_item(group, show_private_questions=false)
     html = ''
     cls = 'group-item'
     cls2 = ''
@@ -91,9 +91,9 @@ private
     group.arranged_items.each do |item|
 
       if item.class == Group
-        html << generate_codebook_group_item(item, show_private_questions)
+        html << generate_codebook_dataset_group_item(item, show_private_questions)
       elsif item.class == Question
-        html << generate_codebook_question_item(item, options)
+        html << generate_codebook_dataset_question_item(item, options)
       end
 
     end

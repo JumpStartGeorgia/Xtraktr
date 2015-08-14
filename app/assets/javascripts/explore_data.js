@@ -616,6 +616,14 @@ function build_datatable(json){
       }
     }))
   });
+
+  // if data is weighted, show footnote
+  if (json.weighted_by){
+    $('#tab-table .table-weighted-footnote').show();
+  }else{
+    $('#tab-table .table-weighted-footnote').hide();
+  }
+
 }
 
 ////////////////////////////////////////////////
