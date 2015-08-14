@@ -184,8 +184,11 @@ function build_datatable(json){
         table += Highcharts.numberFormat(json.results.analysis[i].dataset_results[j].count,0);
         table += "</td>";
         table += "<td>";
-        table += json.results.analysis[i].dataset_results[j].percent.toFixed(2);
-        table += "%</td>";
+        if (json.results.analysis[i].dataset_results[j].percent){
+          table += json.results.analysis[i].dataset_results[j].percent.toFixed(2);
+          table += "%"
+        }
+        table += "</td>";
       }
     }
 
@@ -244,8 +247,11 @@ function build_datatable(json){
           table += Highcharts.numberFormat(json.results.filter_analysis[h].filter_results.analysis[i].dataset_results[j].count,0);
           table += "</td>";
           table += "<td>";
-          table += json.results.filter_analysis[h].filter_results.analysis[i].dataset_results[j].percent.toFixed(2);
-          table += "%</td>";
+          if (json.results.filter_analysis[h].filter_results.analysis[i].dataset_results[j].percent){
+            table += json.results.filter_analysis[h].filter_results.analysis[i].dataset_results[j].percent.toFixed(2);
+            table += "%"
+          }
+          table += "</td>";
         }
         table += "</tr>";
       }
