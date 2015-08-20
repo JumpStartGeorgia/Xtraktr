@@ -15,7 +15,7 @@ class WeightsController < ApplicationController
       add_common_options(false)
 
       respond_to do |format|
-        format.html 
+        format.html
         format.js { render json: @weights}
       end
     else
@@ -43,6 +43,11 @@ class WeightsController < ApplicationController
 
     if @dataset.present?
       @weight = Weight.new(is_default: true, applies_to_all: true)
+      if params[:question_code].present?
+        @weight.code = params[:question_code]
+      end
+
+      logger.debug "--------- #{@weight.inspect}"
       gon.datatable_json = create_datatable_json(@dataset.questions, @weight.codes, @weight.id)
 
       add_common_options
@@ -163,7 +168,7 @@ class WeightsController < ApplicationController
     end
   end
 
-private 
+private
   def add_common_options(for_form=true)
     @css.push("weights.css")
     @js.push("weights.js")
@@ -171,7 +176,7 @@ private
     if for_form
       @css.push('bootstrap-select.min.css', 'tabbed_translation_form.css')
       @js.push('bootstrap-select.min.js')
-      
+
       @languages = Language.sorted
     end
 
@@ -187,8 +192,8 @@ private
 
     questions.each do |question|
       json << {
-        checkbox: "<input name='weight[codes][]' type='checkbox' value='#{question.code}' #{weight_codes.include?(question.code) ? 'checked=\'checked\'' : ''}>", 
-        code: question.code, 
+        checkbox: "<input name='weight[codes][]' type='checkbox' value='#{question.code}' #{weight_codes.include?(question.code) ? 'checked=\'checked\'' : ''}>",
+        code: question.code,
         text: question.text,
         other_weights: question.weight_titles(weight_id).join(', ')
       }

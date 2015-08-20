@@ -110,6 +110,7 @@ en:
         data_answers: Answer Values in Data
         can_download: Include Question in Download for Public
         has_map_adjustable_max_range: Max Range of Choropleth Map is Adjustable
+        is_weight: This question is a weight
       answer:
         value: Value
         text: Answer
@@ -273,9 +274,10 @@ en:
       question:
         text: The text of the question
         notes: Any special notes about the question
-        exclude: "If selected, this question will not be available during analysis."
-        is_mappable: "If the question is mappable in nature, you can match the question to a shapeset and be able to analyize the question on a map."
-        can_download: 'If selected, this question will be included in the data download available to the public.'
+        exclude: "If selected, this question will not be available during analysis"
+        is_mappable: "If the question is mappable in nature, you can match the question to a shapeset and be able to analyize the question on a map"
+        can_download: 'If selected, this question will be included in the data download available to the public'
+        is_weight: "If this question contains weight values, you can apply the weight to the dataset"
       answer:
         value: The value of the answer
         text: The text of the answer
@@ -386,28 +388,52 @@ en:
   explore_time_series:
     na: N/A
     percent: Percent (%)
+    group:
+      html:
+        title: "<span class='group-highlight'>%{text}</span> "
+      text:
+        title: "%{text}"
+    subgroup:
+      html:
+        title: "<span class='subgroup-highlight'>%{text}</span> "
+      text:
+        title: "%{text}"
     single:
       html:
-        title: "'<span class='code-highlight'>%{code}</span> - %{variable}'"
-        title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
-        title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'"
+        title: "'<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
+        title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
+        title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable} = <span class='code-highlight'>%{value}</span>'"
       text:
-        title: "'%{code} - %{variable}'"
-        title_filter: " filtered by: '%{code} - %{variable}'"
-        title_filter_value: " filtered by: '%{code} - %{variable} = %{value}'"
+        title: "'%{code} - %{group} %{variable}'"
+        title_filter: ", filtered by: '%{code} - %{group} %{variable}'"
+        title_filter_value: ", filtered by: '%{code} - %{group} %{variable} = %{value}'"
     subtitle:
       html:
-        title: "Total Responses: <span class='number'>%{num}</span>"
-        title_filter: "Total Responses Filtered by Answers to '<span class='number'>%{code}</span> - %{variable}': %{nums}"
+        title: "Total Responses: <br />%{x_of_y}"
+        title_x_of_y: "%{dataset}: <span class='number'>%{num}</span> out of %{total}"
+        title_filter: "Total Responses <br />(out of a possible: %{totals}): <br />%{nums}"
+        title_weighted: "Unweighted Total Responses<span class='footnote-flag'>*</span>: <br />%{x_of_y}"
+        title_filter_weighted: "Unweighted Total Responses<span class='footnote-flag'>*</span> <br />(out of a possible: %{totals}): <br />%{nums}"
       text:
-        title: "Total Responses: %{num}"
-        title_filter: "Total Responses Filtered by Answers to '%{code} - %{variable}': %{nums}"
+        title: "Total Responses: %{x_of_y}"
+        title_x_of_y: "%{dataset}: %{num} out of %{total}"
+        title_filter: "Total Responses: %{nums}"
+        title_weighted: "Unweighted Total Responses*: %{x_of_y}"
+        title_filter_weighted: "Unweighted Total Responses* (out of a possible: %{totals}): %{nums}"
   explore_data:
     hover_region: Hover over a Region
     na: N/A
     percent: Percent
-    title_group: "<span class='group-highlight'>%{text}</span> "
-    title_subgroup: "<span class='subgroup-highlight'>%{text}</span> "
+    group:
+      html:
+        title: "<span class='group-highlight'>%{text}</span> "
+      text:
+        title: "%{text}"
+    subgroup:
+      html:
+        title: "<span class='subgroup-highlight'>%{text}</span> "
+      text:
+        title: "%{text}"
     comparative:
       html:
         title: "'<span class='code-highlight'>%{question_code}</span> - %{group}%{variable}' <br /> <span class='title-highlight'>broken down by:</span> <br /> '<span class='code-highlight'>%{broken_down_by_code}</span> - %{group2}%{broken_down_by}'"
@@ -439,14 +465,14 @@ en:
     subtitle:
       html:
         title: "Total Responses: <span class='number'>%{num}</span> out of %{total}"
-        title_filter: "Total Responses out of %{total}, Filtered by Answers to '<span class='number'>%{code}</span> - %{variable}' : <br />%{nums}"
+        title_filter: "Total Responses out of %{total}: <br />%{nums}"
         title_weighted: "Unweighted Total Responses<span class='footnote-flag'>*</span>: <span class='number'>%{num}</span> out of %{total}"
-        title_filter_weighted: "Unweighted Total Responses out of %{total}, Filtered by Answers to '<span class='number'>%{code}</span> - %{variable}'<span class='footnote-flag'>*</span>: <br />%{nums}"
+        title_filter_weighted: "Unweighted Total Responses out of %{total}<span class='footnote-flag'>*</span>: <br />%{nums}"
       text:
         title: "Total Responses: %{num} out of %{total}"
-        title_filter: "Total Responses out of %{total}, Filtered by Answers to '%{code} - %{variable}': %{nums}"
+        title_filter: "Total Responses out of %{total}: %{nums}"
         title_weighted: "Unweighted Total Responses*: %{num} out of %{total}"
-        title_filter_weighted: "Unweighted Total Responses out of %{total}, Filtered by Answers to '%{code} - %{variable}'*: %{nums}"
+        title_filter_weighted: "Unweighted Total Responses out of %{total}*: %{nums}"
   datatable:
     search: Search
     search_footer: 'Search %{name}'
@@ -551,6 +577,7 @@ en:
       highlight_description: Chart Description
       edit_description: Edit Description
       view_group_items: View Items in This Group
+      assign_weight: Assign Weight
     titles:
       edit: "Edit %{model}"
       save: "Save %{model}"
@@ -620,7 +647,7 @@ en:
       question_no_answers: This question does not have answers and cannot be analyzed
       powered_by_xtraktr: Powered By Xtraktr
       powered_by_xtraktr_title: This data was built using the Xtraktr platform. Learn more and add your own data on the Xtraktr website.
-      weighted_footnote: This data is weighted.
+      weighted_footnote: 'Applied weight: '
     msgs:
       does_not_exist: You tried to access a page that does not exist.
       not_authorized: You are not authorized to view that page.

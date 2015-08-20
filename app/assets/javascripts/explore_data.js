@@ -105,6 +105,8 @@ function build_highmaps(json){
       }
     }
 
+    var weight_name = json.weighted_by ? json.weighted_by.weight_name : undefined;
+
     // test if the filter is being used and build the chart(s) accordingly
     if (json.map.constructor === Array){
       // filters
@@ -120,7 +122,7 @@ function build_highmaps(json){
           jumpto_text = '<option></option>';
 
           for(var i=0; i<json.map[h].filter_results.map_sets.length; i++){
-            build_highmap(json.map[h].filter_results.shape_question_code, json.map[h].filter_results.adjustable_max_range, json.map[h].filter_results.map_sets[i], chart_height, json.weighted_by != undefined);
+            build_highmap(json.map[h].filter_results.shape_question_code, json.map[h].filter_results.adjustable_max_range, json.map[h].filter_results.map_sets[i], chart_height, weight_name);
 
             // add jumpto link
             jumpto_text += '<option data-href="#map-' + (map_index+1) + '">' + non_map_text + ' = ' + json.map[h].filter_results.map_sets[i].broken_down_answer_text + '</option>';
@@ -133,7 +135,7 @@ function build_highmaps(json){
           jump_ary.push(jump_item);
 
         }else{
-          build_highmap(json.map[h].filter_results.shape_question_code, json.map[h].filter_results.adjustable_max_range, json.map[h].filter_results.map_sets, chart_height, json.weighted_by != undefined);
+          build_highmap(json.map[h].filter_results.shape_question_code, json.map[h].filter_results.adjustable_max_range, json.map[h].filter_results.map_sets, chart_height, weight_name);
 
           // add jumpto link
           jumpto_text += '<option data-href="#map-' + (map_index+1) + '">' + json.filtered_by.text + ' = ' + json.map[h].filter_answer_text + '</option>';
@@ -174,7 +176,7 @@ function build_highmaps(json){
       // no filters
       if (json.broken_down_by && json.map.map_sets.constructor === Array){
         for(var i=0; i<json.map.map_sets.length; i++){
-          build_highmap(json.map.shape_question_code, json.map.adjustable_max_range, json.map.map_sets[i], chart_height, json.weighted_by != undefined);
+          build_highmap(json.map.shape_question_code, json.map.adjustable_max_range, json.map.map_sets[i], chart_height, weight_name);
 
           // add jumpto link
           jumpto_text += '<option data-href="#map-' + (i+1) + '">' + non_map_text + ' = ' + json.map.map_sets[i].broken_down_answer_text + '</option>';
@@ -189,7 +191,7 @@ function build_highmaps(json){
         $('#jumpto').show();
 
       }else{
-        build_highmap(json.map.shape_question_code, json.map.adjustable_max_range, json.map.map_sets, chart_height, json.weighted_by != undefined);
+        build_highmap(json.map.shape_question_code, json.map.adjustable_max_range, json.map.map_sets, chart_height, weight_name);
 
         // hide jumpto
         $('#jumpto #jumpto-map').hide();
@@ -223,13 +225,14 @@ function build_crosstab_charts(json){
     // remove all existing chart links
     $('#jumpto #jumpto-chart select').empty();
     var jumpto_text = '';
+    var weight_name = json.weighted_by ? json.weighted_by.weight_name : undefined;
 
     // test if the filter is being used and build the chart(s) accordingly
     if (json.chart.constructor === Array){
       // filters
       for(var i=0; i<json.chart.length; i++){
         // create chart
-        build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart[i].filter_results, chart_height, json.weighted_by != undefined);
+        build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart[i].filter_results, chart_height, weight_name);
 
         // add jumpto link
         jumpto_text += '<option data-href="#chart-' + (i+1) + '">' + json.filtered_by.text + ' = ' + json.chart[i].filter_answer_text + '</option>';
@@ -245,7 +248,7 @@ function build_crosstab_charts(json){
 
     }else{
       // no filters
-      build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart, chart_height, json.weighted_by != undefined);
+      build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart, chart_height, weight_name);
 
       // hide jumpto
       $('#jumpto #jumpt-chart').hide();
@@ -269,13 +272,14 @@ function build_pie_charts(json){
     // remove all existing chart links
     $('#jumpto #jumpto-chart select').empty();
     var jumpto_text = '';
+    var weight_name = json.weighted_by ? json.weighted_by.weight_name : undefined;
 
     // test if the filter is being used and build the chart(s) accordingly
     if (json.chart.constructor === Array){
       // filters
       for(i=0; i<json.chart.length; i++){
         // create chart
-        build_pie_chart(json.chart[i].filter_results, chart_height, json.weighted_by != undefined);
+        build_pie_chart(json.chart[i].filter_results, chart_height, weight_name);
 
         // add jumpto link
         jumpto_text += '<option data-href="#chart-' + (i+1) + '">' + json.filtered_by.text + ' = ' + json.chart[i].filter_answer_text + '</option>';
@@ -291,7 +295,7 @@ function build_pie_charts(json){
 
     }else{
       // no filters
-      build_pie_chart(json.chart, chart_height, json.weighted_by != undefined);
+      build_pie_chart(json.chart, chart_height, weight_name);
 
       // hide jumpto
       $('#jumpto #jumpto-chart').hide();
@@ -467,10 +471,12 @@ function build_datatable(json){
               table += "</td>";
             }else{
               table += "<td>";
-              if (json.results.analysis[i].broken_down_results[j][key_text].percent){
-                table += json.results.analysis[i].broken_down_results[j][key_text].percent.toFixed(2);
-                table += "%"
+              if (json.results.analysis[i].broken_down_results[j][key_text]){
+                table += json.results.analysis[i].broken_down_results[j][key_text].toFixed(2);
+              }else{
+                table += '0';
               }
+              table += "%"
               table += "</td>";
             }
           }
@@ -496,10 +502,12 @@ function build_datatable(json){
             table += "</td>";
           }else{
             table += "<td>";
-            if (json.results.analysis[i][key_text].percent){
-              table += json.results.analysis[i][key_text].percent.toFixed(2);
-              table += "%"
+            if (json.results.analysis[i][key_text]){
+              table += json.results.analysis[i][key_text].toFixed(2);
+            }else{
+              table += '0';
             }
+            table += "%"
             table += "</td>";
           }
         }
@@ -533,10 +541,12 @@ function build_datatable(json){
                 table += "</td>";
               }else{
                 table += "<td>";
-                if (json.results.filter_analysis[h].filter_results.analysis[i].broken_down_results[j][key_text].percent){
-                  table += json.results.filter_analysis[h].filter_results.analysis[i].broken_down_results[j][key_text].percent.toFixed(2);
-                  table += "%"
+                if (json.results.filter_analysis[h].filter_results.analysis[i].broken_down_results[j][key_text]){
+                  table += json.results.filter_analysis[h].filter_results.analysis[i].broken_down_results[j][key_text].toFixed(2);
+                }else{
+                  table += '0';
                 }
+                table += "%"
                 table += "</td>";
               }
             }
@@ -567,10 +577,12 @@ function build_datatable(json){
               table += "</td>";
             }else{
               table += "<td>";
-              if (json.results.filter_analysis[h].filter_results.analysis[i][key_text].percent){
-                table += json.results.filter_analysis[h].filter_results.analysis[i][key_text].percent.toFixed(2);
-                table += "%"
+              if (json.results.filter_analysis[h].filter_results.analysis[i][key_text]){
+                table += json.results.filter_analysis[h].filter_results.analysis[i][key_text].toFixed(2);
+              }else{
+                table += '0';
               }
+              table += "%"
               table += "</td>";
             }
           }
@@ -619,8 +631,10 @@ function build_datatable(json){
 
   // if data is weighted, show footnote
   if (json.weighted_by){
+    $('#tab-table .table-weighted-footnote .footnote-weight-name').html(json.weighted_by.weight_name);
     $('#tab-table .table-weighted-footnote').show();
   }else{
+    $('#tab-table .table-weighted-footnote .footnote-weight-name').empty();
     $('#tab-table .table-weighted-footnote').hide();
   }
 
