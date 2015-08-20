@@ -7,7 +7,7 @@ module ProcessDataFile
   ##
   ## run a data file (spss, sas, etc) throuh an R script
   ## that generates CSV files of data, questions and answers
-  ## 
+  ##
   #######################
   #######################
 
@@ -31,7 +31,7 @@ module ProcessDataFile
   # process a data file
   def process_data_file
     puts "$$$$$$ process_data_file"
-    
+
     # if file extension does not exist, get it
     self.file_extension = File.extname(self.datafile.url).gsub('.', '').downcase if self.file_extension.blank?
 
@@ -41,9 +41,9 @@ module ProcessDataFile
         true
       else
         false
-    end    
+    end
 
-    puts "$$$$$$$ file ext = #{self.file_extension}; is spreadsheet = #{is_spreadsheet}"   
+    puts "$$$$$$$ file ext = #{self.file_extension}; is spreadsheet = #{is_spreadsheet}"
 
     path = @@path.sub('[dataset_id]', self.id.to_s)
     # check if file has been saved yet
@@ -69,7 +69,7 @@ module ProcessDataFile
       results = nil
       case self.file_extension
         when 'sav'
-          results = process_spss(file_to_process, file_r, file_sps, file_data, file_questions, file_answers_complete)          
+          results = process_spss(file_to_process, file_r, file_sps, file_data, file_questions, file_answers_complete)
         when 'dta'
           results = process_stata(file_to_process, file_r, file_sps, file_data, file_questions, file_answers_complete)
         when 'csv', 'xls', 'xlsx', 'ods'
@@ -100,8 +100,8 @@ module ProcessDataFile
             # only add if the code is presetn ## and text are present
             if row[0].present? && row[0].strip.present?# && row[1].present? && row[1].strip.present?
               # mongo does not allow '.' in key names, so replace with '|'
-              self.questions_attributes = [{code: clean_text(row[0], format_code: true), 
-                                            original_code: clean_text(row[0]), 
+              self.questions_attributes = [{code: clean_text(row[0], format_code: true),
+                                            original_code: clean_text(row[0]),
                                             text_translations: {self.default_language => clean_text(row[1])},
                                             sort_order: i+1
                                           }]
@@ -123,15 +123,20 @@ module ProcessDataFile
 
         puts "=============================="
         puts "saving data from #{file_data} and saving to data_items attribute"
-        data = CSV.read(file_data, :quote_char => "\0")
+        # if this is a spreadsheet do not use the quote char setting
+        if is_spreadsheet
+          data = CSV.read(file_data)
+        else
+          data = CSV.read(file_data, :quote_char => "\0")
+        end
         # only conintue if the # of cols match the # of quesiton codes
         # - have to subtract 1 from cols because csv file has ',' after last item
         if (is_spreadsheet && data.first.length == question_codes.length) || (!is_spreadsheet && data.first.length-1 == question_codes.length)
           question_codes.each_with_index do |code, code_index|
             code_data = data.map{|x| x[code_index]}
             if code_data.present?
-              self.data_items_attributes = [{code: clean_text(code, format_code: true), 
-                                            original_code: clean_text(code), 
+              self.data_items_attributes = [{code: clean_text(code, format_code: true),
+                                            original_code: clean_text(code),
                                             data: code_data
                                           }]
             else
@@ -154,7 +159,7 @@ module ProcessDataFile
         puts "=============================="
         puts "adding header to data csv"
         # read in data file and create new file with header
-        # - need to use the quote char of \0 (null) 
+        # - need to use the quote char of \0 (null)
         #   - R does not put data in quotes so any quotes in file cause illegal quote error
         data = CSV.read(file_data, :quote_char => "\0")
         CSV.open(file_data, 'w', write_headers: true, headers: self.questions.unique_codes) do |csv|
@@ -198,8 +203,8 @@ module ProcessDataFile
                   # create sort order that is based on order they are listed in data file
                   sort_order += 1
                   # - if this is the first answer for this question, initialize the array
-                  question.answers_attributes  = [{value: clean_text(row[1]), 
-                                                  text_translations: { self.default_language => clean_text(row[2]) }, 
+                  question.answers_attributes  = [{value: clean_text(row[1]),
+                                                  text_translations: { self.default_language => clean_text(row[2]) },
                                                   sort_order: sort_order
                                                 }]
                   # update question to indciate it has answers
@@ -212,7 +217,7 @@ module ProcessDataFile
                   puts "******************************"
                 end
               end
-            end              
+            end
           else
             File.open(file_answers_complete, "r") do |f|
               last_key = nil
@@ -239,8 +244,8 @@ module ProcessDataFile
                     # create sort order that is based on order they are listed in data file
                     sort_order += 1
                     # - if this is the first answer for this question, initialize the array
-                    question.answers_attributes  = [{value: clean_text(values[1]), 
-                                                    text_translations: { self.default_language => clean_text(values[2]) }, 
+                    question.answers_attributes  = [{value: clean_text(values[1]),
+                                                    text_translations: { self.default_language => clean_text(values[2]) },
                                                     sort_order: sort_order
                                                   }]
                     # update question to indciate it has answers
@@ -262,8 +267,8 @@ module ProcessDataFile
                 end
               end
             end
-          end   
-        end   
+          end
+        end
 
         if !is_spreadsheet
           # if answers exists, write to csv file
@@ -280,7 +285,7 @@ module ProcessDataFile
 
           puts "=============================="
           puts "reading in incomplete answers from sps file #{file_sps}"
-          # open the sps file and convert the list of answers into a csv file 
+          # open the sps file and convert the list of answers into a csv file
           # row format: question_code, answer code, answer text
           answers_incomplete = []
           found_labels = false
@@ -319,7 +324,7 @@ module ProcessDataFile
         #            puts "++ -- found answer: #{line}"
 
                     index = answer.index(' "')
-                    if index.nil? 
+                    if index.nil?
                       puts "******************************"
                       puts "ERROR"
                       puts "An error occurred on line #{line_number} of #{file_sps} while parsing the answers."
@@ -338,7 +343,7 @@ module ProcessDataFile
                 found_labels = true
               end
             end
-          end  
+          end
 
           puts "=============================="
 
@@ -357,7 +362,7 @@ module ProcessDataFile
           # if complete answers length != bad answers length, show error message
           # this will happen if the data contains values that are not in the defined list of answers
           if answers_complete.length != answers_incomplete.length
-            complete_questions = answers_complete.map{|x| x[0]}.uniq    
+            complete_questions = answers_complete.map{|x| x[0]}.uniq
             incomplete_questions = answers_incomplete.map{|x| x[0]}.uniq
             # record question codes to questions_with_bad_answers attribute
             self.questions_with_bad_answers = complete_questions - incomplete_questions
@@ -447,8 +452,8 @@ private
               break
             end
           end
-        end   
-      end   
+        end
+      end
 
       # write the re-formatted questions to csv file
       if questions_formatted.present?
@@ -492,8 +497,8 @@ private
                 break
               end
             end
-          end   
-        end   
+          end
+        end
 
         if temp_answers_formatted.present?
           # now have answers
@@ -589,7 +594,7 @@ private
         # - if answers are all of same type, sort them, else do not
         items = data_items.map{|x| x[index]}.select{|x| x.present?}.uniq
         items.sort! if items.map{|x| x.class}.uniq.length == 1
-        items.each do |uniq_answer| 
+        items.each do |uniq_answer|
           answers << [code, uniq_answer, uniq_answer]
         end
       end
@@ -653,7 +658,7 @@ private
   #     # get the answers
   #     (0..headers.length-1).each do |index|
   #       code = questions[index][0]
-  #       data.map{|x| x[index]}.uniq.sort.each do |uniq_answer| 
+  #       data.map{|x| x[index]}.uniq.sort.each do |uniq_answer|
   #         # only add answer if it exists
   #         if uniq_answer.strip.present?
   #           answers << [code, uniq_answer, uniq_answer]
@@ -710,10 +715,10 @@ private
 
     if !str.nil? && str.length > 0
       x = str.dup.encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
-      
+
       if options[:format_code] == true
         x.gsub!('.', '|')
-        x.downcase! 
+        x.downcase!
       end
 
       y = x.gsub("<91>", single_quote).gsub("\\x91", single_quote)
@@ -729,5 +734,5 @@ private
     else
       return str
     end
-  end 
+  end
 end
