@@ -1540,7 +1540,9 @@ private
 
         # see if this dataset had results
         individual_result = individual_results.select{|x| x[:dataset_id].to_s == dataset[:dataset_id].to_s}.first
-        if individual_result.present?
+        if individual_result.present? && !individual_result[:dataset_results].has_key?(:errors)
+          puts "+++++++++++++++++++++++++++++++++++++++"
+          pp individual_result
           # get results from dataset
           dataset_answer_results = nil
           if filter_answer_value.present?
@@ -1574,7 +1576,7 @@ private
 
       # see if this dataset had results
       individual_result = individual_results.select{|x| x[:dataset_id].to_s == dataset[:dataset_id].to_s}.first
-      if individual_result.present?
+      if individual_result.present? && !individual_result[:dataset_results].has_key?(:errors)
         if filter_answer_value.present?
           filter_results = individual_result[:dataset_results][:results][:filter_analysis].select{|x| x[:filter_answer_value] == filter_answer_value}.first
           if filter_results.present?
@@ -1594,7 +1596,7 @@ private
     if with_title
       if filter_answer_value.present?
         # look for any match in filter results with the filter answer value
-        filter_result = individual_results.map{|x| x[:dataset_results][:results][:filter_analysis]}.flatten.select{|x| x[:filter_answer_value] == filter_answer_value}.first
+        filter_result = individual_results.select{|x| !x[:dataset_results].has_key?(:errors)}.map{|x| x[:dataset_results][:results][:filter_analysis]}.flatten.select{|x| x[:filter_answer_value] == filter_answer_value}.first
         if filter_result.present?
           results[:title][:html] = time_series_single_analysis_title('html', question, filtered_by, filter_result[:filter_answer_text])
           results[:title][:text] = time_series_single_analysis_title('text', question, filtered_by, filter_result[:filter_answer_text])
