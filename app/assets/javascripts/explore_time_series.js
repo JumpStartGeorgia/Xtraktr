@@ -80,13 +80,14 @@ function build_time_series_charts(json){
     // remove all existing chart links
     $('#jumpto #jumpto-chart select').empty();
     var jumpto_text = '';
+    var weight_name = json.weighted_by ? json.weighted_by.weight_name : undefined;
 
     // test if the filter is being used and build the chart(s) accordingly
     if (json.chart.constructor === Array){
       // filters
       for(var i=0; i<json.chart.length; i++){
         // create chart
-        build_time_series_chart(json.chart[i].filter_results, chart_height, json.weighted_by != undefined);
+        build_time_series_chart(json.chart[i].filter_results, chart_height, weight_name);
 
         // add jumpto link
         jumpto_text += '<option data-href="#chart-' + (i+1) + '">' + json.filtered_by.text + ' = ' + json.chart[i].filter_answer_text + '</option>';
@@ -102,7 +103,7 @@ function build_time_series_charts(json){
 
     }else{
       // no filters
-      build_time_series_chart(json.chart, chart_height, json.weighted_by != undefined);
+      build_time_series_chart(json.chart, chart_height, weight_name);
 
       // hide jumpto
       $('#jumpto #jumpt-chart').hide();
@@ -151,7 +152,7 @@ function build_datatable(json){
 
     var ln = json.datasets.length;
     for(i=0; i<ln;i++){
-      table += "<th colspan='2' class='code-highlight color"+(i % 13 + 1)+"'>";
+      table += "<th colspan='" + col_header_count + "' class='code-highlight color"+(i % 13 + 1)+"'>";
       table += json.datasets[i].label;
       table += "</th>"
     }
@@ -161,12 +162,11 @@ function build_datatable(json){
     table += json.question.original_code;
     table += "</th>";
     for(i=0; i<json.datasets.length;i++){
-      table += "<th>";
-      table += $('#container-table table').data('count');
-      table += "</th>"
-      table += "<th>";
-      table += $('#container-table table').data('percent');
-      table += "</th>"
+      for(j=0; j<col_header_count;j++){
+        table += "<th>";
+        table += $('#container-table table').data(col_headers[j]);
+        table += "</th>";
+      }
     }
     table += "</tr>";
     table += "</thead>";
@@ -180,15 +180,25 @@ function build_datatable(json){
       table += json.results.analysis[i].answer_text;
       table += "</td>";
       for(j=0; j<json.results.analysis[i].dataset_results.length; j++){
-        table += "<td data-order='" + json.results.analysis[i].dataset_results[j].count + "'>";
-        table += Highcharts.numberFormat(json.results.analysis[i].dataset_results[j].count,0);
-        table += "</td>";
-        table += "<td>";
-        if (json.results.analysis[i].dataset_results[j].percent){
-          table += json.results.analysis[i].dataset_results[j].percent.toFixed(2);
-          table += "%"
+        for(k=0; k<col_header_count;k++){
+          // key is written with '-' but for this part, it must be '_'
+          key_text = col_headers[k].replace('-', '_');
+          // percent is the last item and all items before are percent
+          if (k < col_header_count-1){
+            table += "<td data-order='" + json.results.analysis[i].dataset_results[j][key_text] + "'>";
+            table += Highcharts.numberFormat(json.results.analysis[i].dataset_results[j][key_text],0);
+            table += "</td>";
+          }else{
+            table += "<td>";
+            if (json.results.analysis[i].dataset_results[j][key_text]){
+              table += json.results.analysis[i].dataset_results[j][key_text].toFixed(2);
+            }else{
+              table += '0';
+            }
+            table += "%"
+            table += "</td>";
+          }
         }
-        table += "</td>";
       }
     }
 
@@ -205,7 +215,7 @@ function build_datatable(json){
     table += "<th class='var1-col-red' colspan='2'>" + gon.table_questions_header + "</th>";
     var ln = json.datasets.length;
     for(i=0; i<ln;i++){
-      table += "<th colspan='2' class='code-highlight color"+(i % 13 + 1)+"'>";
+      table += "<th colspan='" + col_header_count + "' class='code-highlight color"+(i % 13 + 1)+"'>";
       table += json.datasets[i].label;
       table += "</th>"
     }
@@ -219,12 +229,11 @@ function build_datatable(json){
     table += json.question.original_code;
     table += "</th>";
     for(i=0; i<json.datasets.length;i++){
-      table += "<th>";
-      table += $('#container-table table').data('count');
-      table += "</th>"
-      table += "<th>";
-      table += $('#container-table table').data('percent');
-      table += "</th>"
+      for(j=0; j<col_header_count;j++){
+        table += "<th>";
+        table += $('#container-table table').data(col_headers[j]);
+        table += "</th>";
+      }
     }
     table += "</tr>";
     table += "</thead>";
@@ -243,15 +252,25 @@ function build_datatable(json){
         table += json.results.filter_analysis[h].filter_results.analysis[i].answer_text;
         table += "</td>";
         for(j=0; j<json.results.filter_analysis[h].filter_results.analysis[i].dataset_results.length; j++){
-          table += "<td data-order='" + json.results.filter_analysis[h].filter_results.analysis[i].dataset_results[j].count + "'>";
-          table += Highcharts.numberFormat(json.results.filter_analysis[h].filter_results.analysis[i].dataset_results[j].count,0);
-          table += "</td>";
-          table += "<td>";
-          if (json.results.filter_analysis[h].filter_results.analysis[i].dataset_results[j].percent){
-            table += json.results.filter_analysis[h].filter_results.analysis[i].dataset_results[j].percent.toFixed(2);
-            table += "%"
+          for(k=0; k<col_header_count;k++){
+            // key is written with '-' but for this part, it must be '_'
+            key_text = col_headers[k].replace('-', '_');
+            // percent is the last item and all items before are percent
+            if (k < col_header_count-1){
+              table += "<td data-order='" + json.results.filter_analysis[h].filter_results.analysis[i].dataset_results[j][key_text] + "'>";
+              table += Highcharts.numberFormat(json.results.filter_analysis[h].filter_results.analysis[i].dataset_results[j][key_text],0);
+              table += "</td>";
+            }else{
+              table += "<td>";
+              if (json.results.filter_analysis[h].filter_results.analysis[i].dataset_results[j][key_text]){
+                table += json.results.filter_analysis[h].filter_results.analysis[i].dataset_results[j][key_text].toFixed(2);
+              }else{
+                table += '0';
+              }
+              table += "%"
+              table += "</td>";
+            }
           }
-          table += "</td>";
         }
         table += "</tr>";
       }
@@ -295,6 +314,15 @@ function build_datatable(json){
       }
     }))
   });
+
+  // if data is weighted, show footnote
+  if (json.weighted_by){
+    $('#tab-table .table-weighted-footnote .footnote-weight-name').html(json.weighted_by.weight_name);
+    $('#tab-table .table-weighted-footnote').show();
+  }else{
+    $('#tab-table .table-weighted-footnote .footnote-weight-name').empty();
+    $('#tab-table .table-weighted-footnote').hide();
+  }
 
 }
 
@@ -425,6 +453,12 @@ function get_explore_time_series(is_back_button){
     if ($('select#filtered_by_code').val() != null && $('select#filtered_by_code').val() != ''){
       ajax_data.filtered_by_code = $('select#filtered_by_code').val();
       url_querystring.push('filtered_by_code=' + ajax_data.filtered_by_code);
+    }
+
+    // weighted by
+    if ($('select#weighted_by_code').val() != null && $('select#weighted_by_code').val() != ''){
+      ajax_data.weighted_by_code = $('select#weighted_by_code').val();
+      url_querystring.push('weighted_by_code=' + ajax_data.weighted_by_code);
     }
 
     // can exclude

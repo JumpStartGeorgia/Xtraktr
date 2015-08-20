@@ -21,6 +21,7 @@ class QuestionsController < ApplicationController
           view: view_context.link_to(I18n.t('helpers.links.view'), dataset_question_path(@dataset, question), class: 'btn btn-default'),
           code: question.original_code,
           text: question.text,
+          is_weight: view_context.format_boolean_flag(question.is_weight),
           has_answers: view_context.format_boolean_flag(question.has_code_answers),
           exclude: view_context.format_boolean_flag(question.exclude),
           download: view_context.format_boolean_flag(question.can_download),
@@ -32,7 +33,7 @@ class QuestionsController < ApplicationController
       add_common_options
 
       respond_to do |format|
-        format.html 
+        format.html
         format.js { render json: @questions}
       end
     else
@@ -54,7 +55,7 @@ class QuestionsController < ApplicationController
       #set_tabbed_translation_form_settings
 
       respond_to do |format|
-        format.html 
+        format.html
         format.js { render json: @question}
       end
     else
@@ -175,14 +176,14 @@ class QuestionsController < ApplicationController
         end
         respond_to do |format|
           format.csv {
-            send_data csv, 
+            send_data csv,
               :type => 'text/csv; header=present',
               :disposition => "attachment; filename=#{clean_filename(filename)}.csv"
           }
         end
       else
         respond_to do |format|
-          format.html 
+          format.html
         end
       end
     else
@@ -244,7 +245,7 @@ class QuestionsController < ApplicationController
     end
   end
 
-private 
+private
   def add_common_options
     @css.push('tabbed_translation_form.css', "questions.css")
     @js.push('cocoon.js', "questions.js")

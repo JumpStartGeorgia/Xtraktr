@@ -1,6 +1,11 @@
 class TimeSeriesWeight < CustomTranslation
   include Mongoid::Document
 
+  #############################
+
+  belongs_to :dataset
+
+  #############################
   field :code, type: String
   field :text, type: String, localize: true
   field :is_default, type: Boolean, default: false
@@ -10,12 +15,31 @@ class TimeSeriesWeight < CustomTranslation
   #############################
   embedded_in :time_series
 
+  embeds_many :assignments, class_name: 'TimeSeriesWeightAssignment', cascade_callbacks: true do
+    # get the assignment for a dataset
+    def with_dataset(dataset_id)
+      where(dataset_id: dataset_id).first
+    end
+
+    # get the weight values for a dataset
+    def dataset_weight_values(dataset_id)
+      x = where(dataset_id: dataset_id).first
+      if x.present?
+        x.weight_values
+      else
+        return nil
+      end
+    end
+
+  end
+  accepts_nested_attributes_for :assignments
+
   #############################
-  attr_accessible :code, :text, :text_translations, :is_default, :codes, :applies_to_all
+  attr_accessible :code, :text, :text_translations, :is_default, :codes, :applies_to_all, :dataset_id, :assignments_attributes
 
   #############################
   # Validations
-  validates_presence_of :code
+  validates_presence_of :code, :dataset_id
   validates :codes, :presence => true, :unless => Proc.new { |x| x.applies_to_all? || x.is_default || (x.codes.is_a?(Array) && x.codes.empty?) }
   validate :validate_translations
 
@@ -39,6 +63,7 @@ class TimeSeriesWeight < CustomTranslation
   # Callbacks
   before_save :reset_fields
   before_save :set_question_flags
+  before_save :generate_weight_values
   before_destroy :reset_question_flags
 
   # if is default or applies to all is true, codes should be empty
@@ -73,6 +98,67 @@ class TimeSeriesWeight < CustomTranslation
     end
   end
 
+  # get the weight values and then for each dataset, get the unique ids and re-order the weight values to be in the correct order
+  # - doing this so analysis is simple and just need to pass in the weight values for each dataset
+  # - if the weight values do not have a value for an ID, give it a value of 0
+  # - only need to run this if the dataset id, weight code or assignment code unique id changed
+  def generate_weight_values
+    puts "generate_weight_values: start"
+    assingment_changed = self.assignments.map{|x| x.code_unique_id_changed?}.include?(true)
+    puts "- dataset id changed = #{self.dataset_id_changed?}; code changed = #{self.code_changed?}; assignment changed = #{assingment_changed}"
+    if self.dataset_id_changed? || self.code_changed? || assingment_changed
+      puts "- something changed, re-generated weight value arrays"
+      # for each dataset, get unique ids
+      # also get the weight values from the dataset that has the unique values
+      weight_values = nil
+      dataset_unique_ids = {}
+      self.time_series.datasets.dataset_ids.each do |dataset_id|
+        # if this is the dataset with the weight, get the weight values
+        if dataset_id == self.dataset_id
+          weight_values = DataItem.dataset_code_data(dataset_id, self.code)
+        end
+
+        # get the unique id values for this dataset
+        assignment = self.assignments.with_dataset(dataset_id)
+        dataset_unique_ids[dataset_id] = []
+        if assignment.present?
+          dataset_unique_ids[dataset_id] = DataItem.dataset_code_data(dataset_id, assignment.code_unique_id)
+        end
+      end
+
+      if weight_values.present? && dataset_unique_ids.keys.present?
+        # for each dataset, re-arrange the weight values to be in the correct order for the dataset
+        dataset_unique_ids.keys.each do |dataset_id|
+          assignment = self.assignments.with_dataset(dataset_id)
+
+          # if the dataset is the dataset that has the weight, no work is needed to be done
+          # for the weights are already in the correct order
+          if dataset_id == self.dataset_id
+            assignment.weight_values = weight_values
+          else
+            # look for the unique id in the dataset that has the weight
+            # if found, use the index to get the weight value, else 0
+            dataset_weight_values = []
+            dataset_unique_ids[dataset_id].each do |data_item|
+              index = dataset_unique_ids[self.dataset_id].index{|x| x == data_item}
+              if index.present?
+                dataset_weight_values << weight_values[index]
+              else
+                dataset_weight_values << 0
+              end
+            end
+            assignment.weight_values = dataset_weight_values
+          end
+        end
+      else
+        # reset the assignment weight values to nil
+        self.assignments.each do |assignment|
+          assignment.weight_values = nil
+        end
+      end
+    end
+  end
+
   #############################
   ## override get methods for fields that are localized
   def text
@@ -91,5 +177,7 @@ class TimeSeriesWeight < CustomTranslation
   def applies_to_questions
     self.time_series.questions.with_codes(self.codes)
   end
+
+  #############################
 
 end

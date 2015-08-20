@@ -9,6 +9,7 @@ $(document).ready(function(){
       {"data":"view"},
       {"data":"code"},
       {"data":"text", "width":"25%"},
+      {"data":"is_weight"},
       {"data":"has_answers"},
       {"data":"exclude"},
       {"data":"download"},
@@ -54,7 +55,7 @@ $(document).ready(function(){
     for (var i=1; i < $('form.question .tab-content .tab-pane').length; i++){
       var tab_pane = $('form.question .tab-content .tab-pane')[i];
       var new_locale = $(tab_pane).data('locale');
-      
+
       $(tab_pane).find('table#dataset-answers tbody')
         .append(row.replace(new RegExp('_' + default_locale, 'g'), '_' + new_locale).replace(new RegExp('\\[' + default_locale + '\\]', 'g'), '[' + new_locale + ']'));
 

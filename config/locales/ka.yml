@@ -110,6 +110,7 @@ ka:
         data_answers: "პასუხების მნიშვნელობები მონაცემებში"
         can_download: Include Question in Download for Public
         has_map_adjustable_max_range: Max Range of Choropleth Map is Adjustable
+        is_weight: This question is a weight
       answer:
         value: "მნიშვნელობა"
         text: "პასუხი"
@@ -275,7 +276,8 @@ ka:
         notes: "რაიმე სპეციალური შენიშვნა კითხვასთან დაკავშრებით"
         exclude: "მონიშვნის შემთხვევაში ეს კითხვა არ იქნება ხელმისაწვდომი ანალიზის დროს"
         is_mappable: "თუ კითხვები ბუნებრივად შეიძლება დატანილი იყვნენ რუკაზე, შეგიძლიათ დაამთხვიოთ კითხვა ფორმები ცხრილს და რუკაზე გაანალიზოთ შეკითხვა"
-        can_download: 'If selected, this question will be included in the data download available to the public.'
+        can_download: 'If selected, this question will be included in the data download available to the public'
+        is_weight: "If this question contains weight values, you can apply the weight to the dataset"
       answer:
         value: "პასუხის მნიშვნელობა"
         text: "პასუხის ტექსტი"
@@ -386,28 +388,52 @@ ka:
   explore_time_series:
     na: "არ არის ხელმისაწვდომი"
     percent: "პროცენტი (%)"
+    group:
+      html:
+        title: "<span class='group-highlight'>%{text}</span> "
+      text:
+        title: "%{text}"
+    subgroup:
+      html:
+        title: "<span class='subgroup-highlight'>%{text}</span> "
+      text:
+        title: "%{text}"
     single:
       html:
-        title: "'<span class='code-highlight'>%{code}</span> - %{variable}'"
-        title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
-        title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = %{value}'"
+        title: "'<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
+        title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
+        title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable} = <span class='code-highlight'>%{value}</span>'"
       text:
-        title: "'%{code} - %{variable}'"
-        title_filter: "გაფილტრულია: '%{code} - %{variable}'"
-        title_filter_value: "გაფილტრულია: '%{code} - %{variable} = %{value}'"
+        title: "'%{code} - %{group} %{variable}'"
+        title_filter: ", გაფილტრულია: '%{code} - %{group} %{variable}'"
+        title_filter_value: ", გაფილტრულია: '%{code} - %{group} %{variable} = %{value}'"
     subtitle:
       html:
-        title: "მთლიანი გამოხმაურება: %{num}"
-        title_filter: "პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{code} - %{variable}: %{nums}"
+        title: "Total Responses: <br />%{x_of_y}"
+        title_x_of_y: "%{dataset}: <span class='number'>%{num}</span> out of %{total}"
+        title_filter: "Total Responses <br />(out of a possible: %{totals}): <br />%{nums}"
+        title_weighted: "Unweighted Total Responses<span class='footnote-flag'>*</span>: <br />%{x_of_y}"
+        title_filter_weighted: "Unweighted Total Responses<span class='footnote-flag'>*</span> <br />(out of a possible: %{totals}): <br />%{nums}"
       text:
-        title: "მთლიანი პასუხები: %{num}"
-        title_filter: "პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{code} - %{variable}: %{nums}"
+        title: "Total Responses: %{x_of_y}"
+        title_x_of_y: "%{dataset}: %{num} out of %{total}"
+        title_filter: "Total Responses: %{nums}"
+        title_weighted: "Unweighted Total Responses*: %{x_of_y}"
+        title_filter_weighted: "Unweighted Total Responses* (out of a possible: %{totals}): %{nums}"
   explore_data:
     hover_region: Hover over a Region
     na: "არ არის ხელმისაწვდომი"
     percent: "პროცენტი"
-    title_group: "<span class='group-highlight'>%{text}</span> "
-    title_subgroup: "<span class='subgroup-highlight'>%{text}</span> "
+    group:
+      html:
+        title: "<span class='group-highlight'>%{text}</span> "
+      text:
+        title: "%{text}"
+    subgroup:
+      html:
+        title: "<span class='subgroup-highlight'>%{text}</span> "
+      text:
+        title: "%{text}"
     comparative:
       html:
         title: "'<span class='code-highlight'>%{question_code}</span> - %{variable}' <br /> <span class='title-highlight'>ჩაშლილია:</span> <br /> '<span class='code-highlight'>%{broken_down_by_code}</span> - %{broken_down_by}'"
@@ -438,15 +464,15 @@ ka:
         title_filter_value: ", გაფილტრულია: '%{code} - %{variable} = %{value}'"
     subtitle:
       html:
-        title: "მთლიანი გამოხმაურება: <span class='number'>%{num}</span>"
-        title_filter: "პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{code} - %{variable}: %{nums}"
+        title: "Total Responses: <span class='number'>%{num}</span> out of %{total}"
+        title_filter: "Total Responses out of %{total}: <br />%{nums}"
         title_weighted: "Unweighted Total Responses<span class='footnote-flag'>*</span>: <span class='number'>%{num}</span> out of %{total}"
-        title_filter_weighted: "Unweighted Total Responses out of %{total}, Filtered by Answers to '<span class='number'>%{code}</span> - %{variable}'<span class='footnote-flag'>*</span>: <br />%{nums}"
+        title_filter_weighted: "Unweighted Total Responses out of %{total}<span class='footnote-flag'>*</span>: <br />%{nums}"
       text:
-        title: "მთლიანი პასუხები: %{num}"
-        title_filter: "პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{code} - %{variable}: %{nums}"
+        title: "Total Responses: %{num} out of %{total}"
+        title_filter: "Total Responses out of %{total}: %{nums}"
         title_weighted: "Unweighted Total Responses*: %{num} out of %{total}"
-        title_filter_weighted: "Unweighted Total Responses out of %{total}, Filtered by Answers to '%{code} - %{variable}'*: %{nums}"
+        title_filter_weighted: "Unweighted Total Responses out of %{total}*: %{nums}"
   datatable:
     search: ძიება
     search_footer: 'Search %{name}'
@@ -551,6 +577,7 @@ ka:
       highlight_description: Chart Description
       edit_description: Edit Description
       view_group_items: View Items in This Group
+      assign_weight: Assign Weight
     titles:
       edit: "შეცვლა %{model}"
       save: "შენახვა %{model}"
@@ -622,7 +649,7 @@ ka:
       question_no_answers: This question does not have answers and cannot be analyzed
       powered_by_xtraktr: Powered By Xtraktr
       powered_by_xtraktr_title: This data was built using the Xtraktr platform. Learn more and add your own data on the Xtraktr website.
-      weighted_footnote: This data is weighted.
+      weighted_footnote: 'Applied weight: '
     msgs:
       does_not_exist: "თქვენ ცდილობთ ისეთი გვერდის ნახვას, რომელიც არ არსებობს."
       not_authorized: "თქვენ არ გაქვთ ამ გვერდის ნახვის უფლება."

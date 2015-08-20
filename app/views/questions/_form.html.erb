@@ -1,4 +1,4 @@
-<%- 
+<%-
   label_key = "mongoid.attributes.question."
   hint_key = "mongoid.hints.question."
   a_label_key = "mongoid.attributes.answer."
@@ -55,42 +55,61 @@
 
   <div class="input">
     <label class="control-label">
+      <%= t(label_key + 'is_weight') %><div class="help-inline" title="<%= t(hint_key + 'is_weight') %>"><div>?</div></div>
+    </label>
+    <% if @question.is_weight? %>
+      <%= t('formtastic.yes') %>
+      <%= link_to '',
+            edit_dataset_weight_path(@dataset, @dataset.weights.with_code(@question.code)),
+            :title => t('helpers.links.edit'),
+            target: :blank, class: 'btn btn-edit btn-xs' %>
+    <% else %>
+      <%= t('formtastic.no') %>
+      <% if !@question.has_code_answers? %>
+        <%= link_to t('helpers.links.assign_weight'), new_dataset_weight_path(@dataset, :question_code => @question.code),
+              target: :blank, class: 'btn btn-default btn-xs' %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="input">
+    <label class="control-label">
       <%= t(label_key + 'is_mappable') %><div class="help-inline" title="<%= t(hint_key + 'is_mappable') %>"><div>?</div></div>
     </label>
     <% if @question.is_mappable? %>
       <%= t('formtastic.yes') %>
       <%= link_to '',
-            mappable_form_edit_dataset_path(:id => @dataset, :question_id => @question.id), 
+            mappable_form_edit_dataset_path(:id => @dataset, :question_id => @question.id),
             :title => t('helpers.links.edit'),
-            target: :blank, class: 'btn btn-edit' %>
+            target: :blank, class: 'btn btn-edit btn-xs' %>
     <% else %>
       <%= t('formtastic.no') %>
-      <%= link_to t('helpers.links.make_mappable'), mappable_form_dataset_path(:id => @dataset, :question_id => @question.id), 
-            target: :blank, class: 'btn btn-default' %>
+      <%= link_to t('helpers.links.make_mappable'), mappable_form_dataset_path(:id => @dataset, :question_id => @question.id),
+            target: :blank, class: 'btn btn-default btn-xs' %>
     <% end %>
   </div>
 
   <hr />
 
   <div role="tabpanel" class="tabbed-translation-fields">
-    <% 
-      locales = [I18n.locale] 
+    <%
+      locales = [I18n.locale]
       locales = @dataset.languages_sorted if @dataset.languages.present?
     %>
 
     <ul class="nav nav-tabs" role="tablist">
       <%
-        default_locale = I18n.locale.to_s 
-        default_lang = '' 
+        default_locale = I18n.locale.to_s
+        default_lang = ''
       %>
       <% locales.each_with_index do |locale, index| %>
         <%
           lang = @languages.select{|x| x.locale == locale.to_s}.first
           cls = ''
           if index == 0
-            cls = 'class=active' 
+            cls = 'class=active'
             default_locale = locale
-            default_lang = lang.present? ? lang.name : locale 
+            default_lang = lang.present? ? lang.name : locale
           end
         %>
         <li role="presentation" <%= cls %> data-locale="<%= locale %>">
@@ -114,7 +133,7 @@
 
         <div role="tabpanel" class="tab-pane fade <%= cls %>" id="<%= locale %>" data-locale="<%= locale %>">
           <%= f.fields_for :text_translations, OpenStruct.new(f.object.text_translations) do |translation| %>
-            <% 
+            <%
               label = t(label_key + 'text')
               hint = t(hint_key + 'text')
               if index > 0
@@ -125,7 +144,7 @@
           <% end %>
 
           <%= f.fields_for :notes_translations, OpenStruct.new(f.object.notes_translations) do |translation| %>
-            <% 
+            <%
               label = t(label_key + 'notes')
               hint = t(hint_key + 'notes')
               if index > 0
@@ -162,9 +181,9 @@
             </tbody>
             <% if index == 0 %>
               <tfoot>
-                <% 
+                <%
                   missing_answers = @question.missing_answers
-                  if missing_answers.present? 
+                  if missing_answers.present?
                 %>
                   <tr>
                     <td colspan="3"><%= t('.header_add_missing_answer').html_safe %></td>
@@ -176,7 +195,7 @@
                 <tr>
                   <td colspan="3"><%= t('.header_add_answer') %></td>
                   <td colspan="2">
-                    <%= link_to_add_association t('helpers.links.add_answer'), f, :answers, 
+                    <%= link_to_add_association t('helpers.links.add_answer'), f, :answers,
                         :class => 'btn btn-success',
                         :'data-association-insertion-node' => '.tab-content .tab-pane:first #dataset-answers tbody',
                         :'data-association-insertion-method' => 'append',
@@ -185,7 +204,7 @@
                 </tr>
               </tfoot>
             <% end %>
-          </table>                  
+          </table>
 
         </div>
       <% end %>
@@ -199,4 +218,3 @@
     <%= link_to t('helpers.links.cancel'), dataset_questions_path, :class => 'btn btn-warning' %>
   </div>
 <% end %>
-

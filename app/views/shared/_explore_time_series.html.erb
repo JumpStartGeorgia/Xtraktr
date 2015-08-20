@@ -101,8 +101,11 @@
           <div id="container-table">
             <h3></h3>
             <table class="table-data table table-striped table-hover table-nonfluid"
-                  data-count="<%= t('app.common.count') %>" data-percent="<%= t('app.common.percent') %>">
+              data-count="<%= t('app.common.count') %>" data-percent="<%= t('app.common.percent') %>"
+              data-unweighted-count="<%= t('app.common.unweighted_count') %>" data-weighted-count="<%= t('app.common.weighted_count') %>"
+              data-weighted-percent="<%= t('app.common.weighted_percent') %>">
             </table>
+            <p class="table-weighted-footnote"><span class="footnote-flag">*</span><%= t('app.common.weighted_footnote') %><span class="footnote-weight-name"></span></p>
           </div>
         </div>
 
