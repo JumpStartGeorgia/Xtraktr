@@ -42,11 +42,16 @@ class TimeSeriesWeightsController < ApplicationController
     @time_series = TimeSeries.by_id_for_user(params[:time_series_id], current_user.id)
 
     if @time_series.present?
-      @weight = Weight.new(is_default: true, applies_to_all: true)
-      gon.datatable_json = create_datatable_json(@time_series.questions, @weight.codes, @weight.id)
+      @weight = @time_series.weights.new(is_default: true, applies_to_all: true)
 
       add_common_options
-      #set_tabbed_translation_form_settings
+
+      # build the dataset questions
+      @datasets.each do |dataset|
+        @weight.assignments.build(dataset_id: dataset.dataset_id)
+      end
+
+      @is_new = true
 
       respond_to do |format|
         format.html # new.html.erb
@@ -65,7 +70,6 @@ class TimeSeriesWeightsController < ApplicationController
 
     if @time_series.present?
       @weight = @time_series.weights.find(params[:id])
-      gon.datatable_json = create_datatable_json(@time_series.questions, @weight.codes, @weight.id)
 
       add_common_options
       #set_tabbed_translation_form_settings
@@ -87,16 +91,15 @@ class TimeSeriesWeightsController < ApplicationController
     @time_series = TimeSeries.by_id_for_user(params[:time_series_id], current_user.id)
 
     if @time_series.present?
-      @weight = @time_series.weights.new(params[:weight])
+      @weight = @time_series.weights.new(params[:time_series_weight])
 
       respond_to do |format|
         if @weight.save
           format.html { redirect_to time_series_weights_path, flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.time_series_weight'))} }
           format.json { render json: @weight, status: :created, location: @weight }
         else
-          gon.datatable_json = create_datatable_json(@time_series.questions, @weight.codes, @weight.id)
-
           add_common_options
+          @is_new = true
 
           format.html { render action: "new" }
           format.json { render json: @weight.errors, status: :unprocessable_entity }
@@ -119,12 +122,10 @@ class TimeSeriesWeightsController < ApplicationController
 
       if @weight.present?
         respond_to do |format|
-          if @weight.update_attributes(params[:weight])
+          if @weight.update_attributes(params[:time_series_weight])
             format.html { redirect_to time_series_weights_path, flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.time_series_weight'))} }
             format.json { head :no_content }
           else
-            gon.datatable_json = create_datatable_json(@time_series.questions, @weight.codes, @weight.id)
-
             add_common_options
 
             format.html { render action: "edit" }
@@ -166,13 +167,24 @@ class TimeSeriesWeightsController < ApplicationController
 private
   def add_common_options(for_form=true)
     @css.push("weights.css")
-    @js.push("weights.js")
+    @js.push("time_series_weights.js")
 
     if for_form
       @css.push('bootstrap-select.min.css', 'tabbed_translation_form.css')
       @js.push('bootstrap-select.min.js')
 
       @languages = Language.sorted
+
+      @datasets = @time_series.datasets.sorted
+
+      # get the list of questions for each dataset that do not have answers
+      @questions = {}
+      @datasets.each do |ts_dataset|
+        @questions[ts_dataset.dataset_id.to_s] = ts_dataset.dataset.questions.available_to_have_unique_ids
+      end
+
+      gon.datatable_json = create_datatable_json(@time_series.questions, @weight.codes, @weight.id)
+
     end
 
     add_time_series_nav_options
@@ -187,7 +199,7 @@ private
 
     questions.each do |question|
       json << {
-        checkbox: "<input name='weight[codes][]' type='checkbox' value='#{question.code}' #{weight_codes.include?(question.code) ? 'checked=\'checked\'' : ''}>",
+        checkbox: "<input name='time_series_weight[codes][]' type='checkbox' value='#{question.code}' #{weight_codes.include?(question.code) ? 'checked=\'checked\'' : ''}>",
         code: question.code,
         text: question.text,
         other_weights: question.weight_titles(weight_id).join(', ')

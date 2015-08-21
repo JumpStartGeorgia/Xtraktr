@@ -170,7 +170,7 @@ class TimeSeriesWeight < CustomTranslation
 
   # get the question that is the weight
   def source_question
-    self.time_series.questions.with_code(self.code)
+    self.dataset.questions.with_code(self.code)
   end
 
   # get questions that this weight applies to
