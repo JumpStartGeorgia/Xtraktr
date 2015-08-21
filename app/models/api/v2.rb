@@ -220,10 +220,10 @@ class Api::V2
     data[:question] = create_dataset_question_hash(question, can_exclude: can_exclude, private_user_id: private_user_id)
     data[:broken_down_by] = create_dataset_question_hash(broken_down_by, can_exclude: can_exclude, private_user_id: private_user_id) if broken_down_by.present?
     data[:filtered_by] = create_dataset_question_hash(filtered_by, can_exclude: can_exclude, private_user_id: private_user_id) if filtered_by.present?
-    data[:weighted_by] = if weight.present? && weight.downcase.strip == WEIGHT_TYPE[:time_series]
-      WEIGHT_TYPE[:time_series]
+    if weight.present? && weight.downcase.strip == WEIGHT_TYPE[:time_series]
+      data[:weighted_by] = WEIGHT_TYPE[:time_series]
     elsif weight_question.present?
-      create_dataset_weight_hash(weight_item, weight_question)
+      data[:weighted_by] = create_dataset_weight_hash(weight_item, weight_question)
     end
     data[:analysis_type] = nil
     data[:results] = nil
@@ -558,11 +558,6 @@ private
       end
     end
 
-    # only keep the data that is in the list of question answers
-    # - this is where can_exclude removes the unwanted answers
-    answer_values = question[:answers].map{|x| x[:value]}
-    data.delete_if{|x| !answer_values.include?(x)}
-
     # if filter provided, then get data for filter
     # and then only pull out the code data that matches
     if filtered_by.present?
@@ -572,6 +567,11 @@ private
         # and then pull out the data that has the corresponding filter value
         merged_data = filter_data.zip(data)
         merged_weight_values = weight_values.present? ? filter_data.zip(weight_values) : []
+
+        # only keep the data that is in the list of question answers
+        # - this is where can_exclude removes the unwanted answers
+        answer_values = question[:answers].map{|x| x[:value]}
+        merged_data.delete_if{|x| !answer_values.include?(x[1])}
 
         filter_results = nil
         if with_title
@@ -600,6 +600,11 @@ private
         return filter_results
       end
     else
+      # only keep the data that is in the list of question answers
+      # - this is where can_exclude removes the unwanted answers
+      answer_values = question[:answers].map{|x| x[:value]}
+      data.delete_if{|x| !answer_values.include?(x)}
+
       return dataset_single_analysis_processing(question, data.length, data, with_title: with_title, weight_values: weight_values)
     end
 
@@ -892,12 +897,6 @@ private
     # has nested arrays
     data = question_data.zip(broken_down_data)
 
-    # only keep the data that is in the list of question/broken down by answers
-    # - this is where can_exclude removes the unwanted answers
-    q_answer_values = question[:answers].map{|x| x[:value]}
-    bdb_answer_values = broken_down_by[:answers].map{|x| x[:value]}
-    data.delete_if{|x| !q_answer_values.include?(x[0]) && !bdb_answer_values.include?(x[1])}
-
     # if filter provided, then get data for filter
     # and then only pull out the code data that matches
     if filtered_by.present?
@@ -907,6 +906,12 @@ private
         # and then pull out the data that has the corresponding filter value
         merged_data = filter_data.zip(data)
         merged_weight_values = weight_values.present? ? filter_data.zip(weight_values) : []
+
+        # only keep the data that is in the list of question/broken down by answers
+        # - this is where can_exclude removes the unwanted answers
+        q_answer_values = question[:answers].map{|x| x[:value]}
+        bdb_answer_values = broken_down_by[:answers].map{|x| x[:value]}
+        merged_data.delete_if{|x| !q_answer_values.include?(x[1]) && !bdb_answer_values.include?(x[2])}
 
         filter_results = nil
         if with_title
@@ -935,6 +940,12 @@ private
         return filter_results
       end
     else
+      # only keep the data that is in the list of question/broken down by answers
+      # - this is where can_exclude removes the unwanted answers
+      q_answer_values = question[:answers].map{|x| x[:value]}
+      bdb_answer_values = broken_down_by[:answers].map{|x| x[:value]}
+      data.delete_if{|x| !q_answer_values.include?(x[0]) && !bdb_answer_values.include?(x[1])}
+
       return dataset_comparative_analysis_processing(question, broken_down_by, data.length, data, with_title: with_title, weight_values: weight_values)
     end
 
