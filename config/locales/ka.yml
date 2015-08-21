@@ -19,6 +19,7 @@ ka:
       weight: Weight
       time_series_group: Group
       time_series_weight: Weight
+      time_series_weight_assignment: Weight Assignment
     attributes:
       user:
         email: "ელ.ფოსტა"
@@ -171,6 +172,7 @@ ka:
         parent_id: This Group is a Subgroup of
         sub_group: Subgroup
       time_series_weight:
+        dataset_id: Dataset with Weight
         code: Question with Weight
         text: Weight Name
         is_default: Is Default Weight?
@@ -178,6 +180,9 @@ ka:
         applies_to: Applies To
         all_questions: All Questions
         codes: Apply the Weight to the Following Questions
+      time_series_weight_assignment:
+        dataset_id: Dataset
+        code_unique_id: Question with Unique Response IDs
       time_series_dataset_question:
         code: "კითხვის კოდი"
         text: "კითხვა"
@@ -329,11 +334,14 @@ ka:
         codes: Select the questions that belong in this group
         parent_id: Use this to indicate that this group belongs to another group
       time_series_weight:
+        dataset_id: The dataset that contains the question with the weight values
         code: The question that contains the weight values
         text: 'A label for the weight - this will be visible to the public during analysis (e.g., Individual, Household, etc)'
         is_default: 'If selected, this will be the weight that is applied to all questions during analysis by default if no weight is indicated'
         applies_to_all: 'If selected, all questions will be assigned to this weight'
         codes: Select the questions that you want to have this weight applied to
+      time_series_weight_assignment:
+        code_unique_id: Select the question from each dataset that contains the unique ID of the responders. This ID will be used to assign the weight to the correct responses in each dataset.
       time_series_dataset_question:
         text: "მონაცემთა ცხრილიდან მხოლოდ ის კითხვები იქნება ნაჩვენები, რომლებიც არ არიან ჩანიშნულნი პერიოდულ შედარებაში."
         notes: "რაიმე სპეციალური შენიშვნა კითხვასთან დაკავშრებით"
@@ -1054,7 +1062,7 @@ ka:
       explanation: |
         This section allows you to identify which question(s) contain a weight value and which questions that weight should be applied to.
 
-        A dataset can have multiple weights, but one must be selected as the default weight. A default weight is automatically applied to all questions. For weights that are not the default weight, you can choose to apply the weight all of the questions or only specific questions.
+        A dataset can have multiple weights, but one must be selected as the default weight. A default weight is automatically applied to all questions. For weights that are not the default weight, you can choose to apply the weight to all of the questions or only specific questions.
 
         During analysis, if two questions are being compared and they are of different weights, the default weight is used for both.
       no_weights: There are no weights on file for this dataset.
@@ -1170,6 +1178,36 @@ ka:
       ex_question: Is the sky blue?
       questions_explanation_default: "All questions that are not assigned to any other group are avaiable to be assigned to this group."
       questions_explanation_subgroup: "Only the questions assinged to '%{group}' are available to be assigned to this subgroup."
+  time_series_weights:
+    index:
+      title: Time Series Weighting
+      explanation: |
+        This section allows you to identify which question(s) contain a weight value and which questions that weight should be applied to.
+
+        A time series can have multiple weights, but one must be selected as the default weight. A default weight is automatically applied to all questions. For weights that are not the default weight, you can choose to apply the weight to all of the questions or only specific questions.
+
+        During analysis, if two questions are being compared and they are of different weights, the default weight is used for both.
+      no_weights: There are no weights on file for this time series.
+      add: Add Weights
+      edit: Edit Weights
+      confirm_delete: Are you sure you want to delete all weights on file?
+      question_count: '%{num} questions'
+      table:
+        headers:
+          name: Weight Name
+          question: Question with Weight
+          default: Is Default Weight?
+          apply_to: Apply Weight To
+      modal:
+        header: "Questions for Weight '[weight]'"
+    new:
+      title: Time Series Weighting Form
+    edit:
+      title: Time SeriesWeighting Form
+    form:
+      other_weights: Other Weights this Question Belongs To
+      weight_question_explanation: Indicate which question to use as the weight by selectig the dataset that has the question and then selecting the question.
+      unique_id_explanation: Select the question from each dataset that contains the unique ID of the responders. This ID will be used to assign the weight to the correct responses in each dataset.
   shared:
     explore_data:
       no_matches: "თქვენი მონიშნული დაბრუნდა მონაცემებში. გთხოვთ სცადოთ თავიდან სხვა მონიშვნით."

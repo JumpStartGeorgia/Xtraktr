@@ -76,7 +76,7 @@ BootstrapStarter::Application.routes.draw do
           post 'group_questions', :defaults => { :format => 'json' }
         end
       end
-      resources :time_series_weights, :except => [:show]
+      resources :time_series_weights, :except => [:show], :path => 'weights', :as => 'weights'
       member do
         get 'explore'
         get 'automatically_assign_questions'

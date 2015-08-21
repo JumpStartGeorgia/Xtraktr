@@ -345,6 +345,12 @@ class Dataset < CustomTranslation
       nin(:code => base.weights.weight_codes(current_code)).where(has_code_answers: false)
     end
 
+    # get questions without code answers and that are not weights
+    # - used in time series when selecting question with unique ids
+    def available_to_have_unique_ids
+      where(has_code_answers: false)
+    end
+
   end
   accepts_nested_attributes_for :questions
 
