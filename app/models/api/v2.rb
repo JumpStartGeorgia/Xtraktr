@@ -65,9 +65,7 @@ class Api::V2
       dataset.current_locale = language
     end
 
-    questions = dataset.questions.for_analysis
-
-    return questions
+    return dataset
   end
 
 
@@ -309,9 +307,7 @@ class Api::V2
       time_series.current_locale = language
     end
 
-    questions = time_series.questions.sorted
-
-    return questions
+    return time_series
   end
 
   # analyse the time series for the passed in parameters

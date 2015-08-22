@@ -26,7 +26,7 @@ class Report
   #############################
   # Validations
   validates_presence_of :title, :released_at, :language_id
-  validates_attachment :file, 
+  validates_attachment :file,
       :content_type => { :content_type => ["text/plain", "application/pdf", "application/vnd.oasis.opendocument.text", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/msword"] }
   validates_attachment_file_name :file, :matches => [/txt\Z/i, /pdf\Z/i, /odt\Z/i, /doc?x\Z/i]
 
