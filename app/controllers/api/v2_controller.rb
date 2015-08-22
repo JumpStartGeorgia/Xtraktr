@@ -52,18 +52,20 @@ class Api::V2Controller < ApplicationController
 
   # get details about a dataset
   def dataset
+    Rails.logger.debug "================= dataset"
     respond_to do |format|
       format.json {
-        render json: Api::V2.dataset(params[:dataset_id], clean_filtered_params(request.filtered_parameters)), each_serializer: DatasetSerializer, callback: params[:callback]
+        render json: Api::V2.dataset(params[:dataset_id], clean_filtered_params(request.filtered_parameters)), serializer: DatasetSerializer, callback: params[:callback]
       }
     end
   end
 
   # get codebook for a dataset
   def dataset_codebook
+    Rails.logger.debug "================= dataset codebook"
     respond_to do |format|
       format.json {
-        render json: Api::V2.dataset_codebook(params[:dataset_id], clean_filtered_params(request.filtered_parameters)), each_serializer: QuestionSerializer, root: 'questions', callback: params[:callback]
+        render json: Api::V2.dataset_codebook(params[:dataset_id], clean_filtered_params(request.filtered_parameters)), serializer: DatasetCodebookSerializer, callback: params[:callback]
       }
     end
   end
@@ -99,7 +101,7 @@ class Api::V2Controller < ApplicationController
   def time_series
     respond_to do |format|
       format.json {
-        render json: Api::V2.time_series(params[:time_series_id], clean_filtered_params(request.filtered_parameters)), each_serializer: TimeSeriesSerializer, callback: params[:callback]
+        render json: Api::V2.time_series(params[:time_series_id], clean_filtered_params(request.filtered_parameters)), serializer: TimeSeriesSerializer, callback: params[:callback]
       }
     end
   end
@@ -108,7 +110,7 @@ class Api::V2Controller < ApplicationController
   def time_series_codebook
     respond_to do |format|
       format.json {
-        render json: Api::V2.time_series_codebook(params[:time_series_id], clean_filtered_params(request.filtered_parameters)), each_serializer: TimeSeriesQuestionSerializer, root: 'questions', callback: params[:callback]
+        render json: Api::V2.time_series_codebook(params[:time_series_id], clean_filtered_params(request.filtered_parameters)), serializer: TimeSeriesCodebookSerializer, callback: params[:callback]
       }
     end
   end
