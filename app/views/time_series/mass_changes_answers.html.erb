@@ -1,10 +1,8 @@
-<%- model_class = Question -%>
-<%- model_class_a = Answer -%>
+<%- model_class = TimeSeriesQuestion -%>
+<%- model_class_a = TimeSeriesAnswer -%>
 <% title t('.title') %>
 
-<% if @dataset.questions.with_code_answers.present? %>
-
-  <%= form_tag mass_changes_answers_dataset_path(@dataset), id: 'frm-exclude-answers', class: 'form-data-loader form-dataset' do %>
+  <%= form_tag mass_changes_answers_time_series_path(@time_series), id: 'frm-exclude-answers', class: 'form-data-loader form-time-series' do %>
 
     <p>
       <%= t('.explanation') %>
@@ -22,12 +20,6 @@
             <th><%= model_class.human_attribute_name(:code) %></th>
             <th><%= model_class.human_attribute_name(:text) %></th>
             <th><%= model_class_a.human_attribute_name(:text) %></th>
-            <th>
-              <%= model_class_a.human_attribute_name(:exclude) %>
-              <%= link_to '#', class: 'btn btn-default btn-xs btn-select-all', :'data-state' => 'all', :'data-type' => 'exclude' do %>
-                <span class="glyphicon glyphicon-ok" title="<%= t('helpers.links.select_all') %>"></span>
-              <% end %>
-            </th>
             <th>
               <%= model_class_a.human_attribute_name(:can_exclude) %>
               <%= link_to '#', class: 'btn btn-default btn-xs btn-select-all', :'data-state' => 'all', :'data-type' => 'can-exclude' do %>
@@ -47,9 +39,3 @@
       <div class="data-loader"></div>
     </div>
   <% end %>
-
-<% else %>
-  <p>
-    <%= t('.no_questions') %>
-  </p>
-<% end %>

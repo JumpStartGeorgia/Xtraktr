@@ -11,7 +11,7 @@ $(document).ready(function(){
 
   // catch form submit and pull out all form values from the datatable
   // the post will return will a status message
-  $('form#frm-dataset-exclude-answers').submit( function() {
+  $('form#frm-exclude-answers').submit( function() {
     $('.data-loader').fadeIn('fast');
 
     $.ajax({
@@ -25,25 +25,39 @@ $(document).ready(function(){
   });
 
   // datatable
-  datatable = $('#dataset-exclude-answers').dataTable({
-    "dom": '<"top"fli>t<"bottom"p><"clear">',
-    "data": gon.datatable_json,
-    "columns": [
+  var columns = [];
+  if ($('form#frm-exclude-answers').hasClass('form-dataset')){
+    columns = [
       {"data":"code"},
       {"data":"question", "width":"33%"},
       {"data":"answer", "width":"33%"},
       {"data":"exclude", "orderDataType": "dom-checkbox"},
       {"data":"can_exclude", "orderDataType": "dom-checkbox"}
-    ],
-    "sorting": [],
-    // "order": [[0, 'asc']],
-    "language": {
-      "url": gon.datatable_i18n_url,
-      "searchPlaceholder": gon.datatable_search
-    },
-    "pagingType": "full_numbers",
-    "orderClasses": false
-  });
+    ];
+  }else if ($('form#frm-exclude-answers').hasClass('form-time-series')){
+    columns = [
+      {"data":"code"},
+      {"data":"question", "width":"33%"},
+      {"data":"answer", "width":"33%"},
+      {"data":"can_exclude", "orderDataType": "dom-checkbox"}
+    ];
+  }
+
+  if (columns.length > 1){
+    datatable = $('#exclude-answers').dataTable({
+      "dom": '<"top"fli>t<"bottom"p><"clear">',
+      "data": gon.datatable_json,
+      "columns": columns,
+      "sorting": [],
+      // "order": [[0, 'asc']],
+      "language": {
+        "url": gon.datatable_i18n_url,
+        "searchPlaceholder": gon.datatable_search
+      },
+      "pagingType": "full_numbers",
+      "orderClasses": false
+    });
+  }
 
 
   // if data-state = all, select all questions that match the current filter

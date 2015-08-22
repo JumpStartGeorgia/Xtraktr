@@ -20,14 +20,14 @@ class TimeSeriesQuestion < CustomTranslation
   # indicate that this question is a weight
   field :is_weight, type: Boolean, default: false
 
-  embeds_many :dataset_questions, class_name: 'TimeSeriesDatasetQuestion' do
+  embeds_many :dataset_questions, class_name: 'TimeSeriesDatasetQuestion', cascade_callbacks: true do
     # get the record for a dataset
     def by_dataset_id(dataset_id)
       where(dataset_id: dataset_id).first
     end
   end
 
-  embeds_many :answers, class_name: 'TimeSeriesAnswer' do
+  embeds_many :answers, class_name: 'TimeSeriesAnswer', cascade_callbacks: true do
     # see if answers have can exclude
     def has_can_exclude?
       where(can_exclude: true).count > 0 ? true : false
