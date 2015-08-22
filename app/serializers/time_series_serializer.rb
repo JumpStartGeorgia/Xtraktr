@@ -1,6 +1,8 @@
 class TimeSeriesSerializer < ActiveModel::Serializer
   attributes :id, :url, :title, :dates_included,
-      :description, :public_at, :languages, :default_language
+      :description, :public_at,
+      :is_weighted, :categories,
+      :languages, :default_language
 
   has_many :datasets
 
@@ -11,5 +13,14 @@ class TimeSeriesSerializer < ActiveModel::Serializer
   def datasets
     object.datasets.sorted
   end
+
+  def is_weighted
+    object.is_weighted?
+  end
+
+  def categories
+    object.categories.map{|x| x.name}
+  end
+
 
 end
