@@ -102,10 +102,14 @@ class TimeSeries < CustomTranslation
   end
   accepts_nested_attributes_for :weights
 
-  embeds_many :questions, class_name: 'TimeSeriesQuestion' do
+  embeds_many :questions, class_name: 'TimeSeriesQuestion', cascade_callbacks: true do
     # get the question that has the provided code
     def with_code(code)
       where(:code => code.downcase).first if code.present?
+    end
+
+    def with_original_code(original_code)
+      where(:original_code => original_code).first
     end
 
     # get the dataset question records for the provided code
@@ -178,6 +182,24 @@ class TimeSeries < CustomTranslation
     def available_to_be_weights(current_code=nil)
       nin(:code => base.weights.weight_codes(current_code)).where(has_code_answers: false)
     end
+
+    # mark the answer can_exclude flag as true for the ids provided
+    def add_answer_can_exclude(ids)
+      map{|x| x.answers}.flatten.select{|x| ids.index(x.id.to_s).present?}.each do |a|
+        a.can_exclude = true
+      end
+      return nil
+    end
+
+    # mark the answer can_exclude flag as false for the ids provided
+    def remove_answer_can_exclude(ids)
+      map{|x| x.answers}.flatten.select{|x| ids.index(x.id.to_s).present?}.each do |a|
+        a.can_exclude = false
+      end
+      return nil
+    end
+
+
   end
 
   #############################
@@ -622,5 +644,294 @@ class TimeSeries < CustomTranslation
     return count
   end
 
+  ##################################
+  ##################################
+  ## CSV upload and download
+  ##################################
+  ##################################
+  QUESTION_HEADERS={code: 'Question Code', question: 'Question'}
+  # create csv to download questions
+  # columns: code, text (for each translation)
+  def generate_questions_csv
+    csv_data = CSV.generate do |csv|
+      # create header for csv
+      header = [QUESTION_HEADERS[:code]]
+      locales = self.languages_sorted
+      locales.each do |locale|
+        header << "#{QUESTION_HEADERS[:question]} (#{locale})"
+      end
+      csv << header
+
+      # add questions
+      self.questions.each do |question|
+        row = [question.original_code]
+        locales.each do |locale|
+          if question.text_translations[locale].present?
+            row << question.text_translations[locale]
+          else
+            row << ''
+          end
+        end
+        csv << row
+      end
+    end
+
+    return csv_data
+  end
+
+
+  # create csv to download answers
+  # columns: code, value, text (for each translation), exclude, can exclude
+  ANSWER_HEADERS={code: 'Question Code', value: 'Value', sort: 'Sort Order', answer: 'Answer', can_exclude: 'Can Exclude During Analysis (leave blank to always show answer)'}
+  def generate_answers_csv
+    csv_data = CSV.generate do |csv|
+      # create header for csv
+      header = [ANSWER_HEADERS[:code], ANSWER_HEADERS[:value], ANSWER_HEADERS[:sort]]
+      locales = self.languages_sorted
+      locales.each do |locale|
+        header << "#{ANSWER_HEADERS[:answer]} (#{locale})"
+      end
+      header << ANSWER_HEADERS[:can_exclude]
+      csv << header.flatten
+
+      # add questions
+      self.questions.each do |question|
+        question.answers.sorted.each do |answer|
+          row = [question.original_code]
+          row << answer.value
+          row << answer.sort_order
+          locales.each do |locale|
+            if answer.text_translations[locale].present?
+              row << answer.text_translations[locale]
+            else
+              row << ''
+            end
+          end
+          row << (answer.can_exclude == true ? 'Y' : nil)
+          csv << row
+        end
+      end
+    end
+
+    return csv_data
+  end
+
+  # read in the csv and update the question text as necessary
+  def process_questions_csv(file)
+    start = Time.now
+    infile = file.read
+    n, msg = 0, ""
+    locales = self.languages_sorted
+    orig_locale = I18n.locale
+
+    # to indicate where the columns are in the csv doc
+    indexes = Hash[locales.map{|x| [x,nil]}]
+    indexes['code'] = nil
+
+    # create counter to see how many items in each locale changed
+    counts = Hash[locales.map{|x| [x,0]}]
+    counts['overall'] = 0
+
+    CSV.parse(infile) do |row|
+      startRow = Time.now
+      n += 1
+      puts "@@@@@@@@@@@@@@@@@@ processing row #{n}"
+
+      if n == 1
+        foundAllHeaders = false
+        # look at headers and set indexes
+        # - doing this in case the user re-arranged the columns
+        # if header in csv is not known, throw error
+
+        # code
+        idx = row.index(QUESTION_HEADERS[:code])
+        indexes['code'] = idx if idx.present?
+
+        # text translations
+        locales.each do |locale|
+          idx = row.index("#{QUESTION_HEADERS[:question]} (#{locale})")
+          indexes[locale] = idx if idx.present?
+        end
+
+        if !indexes.values.include?(nil)
+          # found all columns, so can stop
+          foundAllHeaders = true
+        end
+
+        if !foundAllHeaders
+            msg = I18n.t('mass_uploads_msgs.bad_headers')
+            puts "@@@@@@@@@@> #{msg}"
+          return msg
+        end
+
+        puts "%%%%%%%%%% col indexes = #{indexes}"
+
+      else
+        # get question for this row
+        question = self.questions.with_original_code(row[indexes['code']])
+        if question.nil?
+          msg = I18n.t('mass_uploads_msgs.missing_code', n: n, code: row[indexes['code']])
+          puts "@@@@@@@@@@> #{msg}"
+          return msg
+        end
+
+        locale_found = false
+        locales.each do |locale|
+          # if question text is provided and not the same, update it
+          I18n.locale = locale.to_sym
+          puts "-> question.text = #{question.text}; row[indexes[locale]] = #{row[indexes[locale]]}"
+          if row[indexes[locale]].present? && question.text != row[indexes[locale]].strip
+            puts "- setting text for #{locale}"
+            question.text = clean_string(row[indexes[locale]].strip)
+            counts[locale] += 1
+            locale_found = true
+          end
+        end
+        counts['overall'] += 1 if locale_found
+
+        puts "---> question.valid = #{question.valid?}"
+
+        puts "******** time to process row: #{Time.now-startRow} seconds"
+        puts "************************ total time so far : #{Time.now-start} seconds"
+      end
+    end
+
+    puts "=========== valid = #{self.valid?}; errors = #{self.errors.full_messages}"
+
+    success = self.save
+
+    puts "=========== success save = #{success}"
+
+    puts "****************** total changes: #{counts.map{|k,v| k + ' - ' + v.to_s}.join(', ')}"
+    puts "****************** time to process question csv: #{Time.now-start} seconds for #{n} rows"
+
+    I18n.locale = orig_locale
+
+    return msg, counts
+  end
+
+
+
+  # read in the csv and update the answer text as necessary
+  def process_answers_csv(file)
+    start = Time.now
+    infile = file.read
+    n, msg = 0, ""
+    locales = self.languages_sorted
+    last_question_code = nil
+    question = nil
+    orig_locale = I18n.locale
+
+    # to indicate where the columns are in the csv doc
+    indexes = Hash[locales.map{|x| [x,nil]}]
+    indexes['code'] = nil
+    indexes['value'] = nil
+    indexes['sort_order'] = nil
+    indexes['can_exclude'] = nil
+
+    # create counter to see how many items in each locale changed
+    counts = Hash[locales.map{|x| [x,0]}]
+    counts['overall'] = 0
+
+    CSV.parse(infile.force_encoding('utf-8')) do |row|
+      startRow = Time.now
+      # translation_changed = false
+      n += 1
+      puts "@@@@@@@@@@@@@@@@@@ processing row #{n}"
+
+      if n == 1
+        foundAllHeaders = false
+        # look at headers and set indexes
+        # - doing this in case the user re-arranged the columns
+        # if header in csv is not known, throw error
+
+        # code
+        idx = row.index(ANSWER_HEADERS[:code])
+        indexes['code'] = idx if idx.present?
+        # value
+        idx = row.index(ANSWER_HEADERS[:value])
+        indexes['value'] = idx if idx.present?
+        # sort_order
+        idx = row.index(ANSWER_HEADERS[:sort])
+        indexes['sort_order'] = idx if idx.present?
+        # can exclude
+        idx = row.index(ANSWER_HEADERS[:can_exclude])
+        indexes['can_exclude'] = idx if idx.present?
+
+        # text translations
+        locales.each do |locale|
+          idx = row.index("#{ANSWER_HEADERS[:answer]} (#{locale})")
+          indexes[locale] = idx if idx.present?
+        end
+
+        if !indexes.values.include?(nil)
+          # found all columns, so can stop
+          foundAllHeaders = true
+        end
+
+        if !foundAllHeaders
+            msg = I18n.t('mass_uploads_msgs.bad_headers')
+          return msg
+        end
+
+        puts "%%%%%%%%%% col indexes = #{indexes}"
+
+      else
+        ########################
+        # have to save the question and all of its answers
+        # if try to just save an answer, mongoid uses incorrect index for question
+        ########################
+
+        # if the question is different, save the previous question before moving on to the new question
+        if last_question_code != row[indexes['code']]
+          # get question for this row
+          question = self.questions.with_original_code(row[indexes['code']])
+          if question.nil?
+            msg = I18n.t('mass_uploads_msgs.missing_code', n: n, code: row[indexes['code']])
+            return msg
+          end
+        end
+
+        # get answer for this row
+        answer = question.answers.with_value(row[indexes['value']])
+        if answer.nil?
+          msg = I18n.t('mass_uploads.answers.missing_answer', n: n, code: row[indexes['code']], value: row[indexes['value']])
+          return msg
+        end
+
+        answer.sort_order = row[indexes['sort_order']]
+        answer.can_exclude = row[indexes['can_exclude']].present?
+
+        # temp_text = answer.text_translations.dup
+        locale_found = false
+        locales.each do |locale|
+          I18n.locale = locale.to_sym
+          # if answer text is provided and not the same, update it
+          if row[indexes[locale]].present? && answer.text != row[indexes[locale]].strip
+            puts "- setting text for #{locale}"
+            # question.text_will_change!
+            answer.text = clean_string(row[indexes[locale]].strip)
+            counts[locale] += 1
+            locale_found = true
+          end
+        end
+        counts['overall'] += 1 if locale_found
+
+        puts "******** time to process row: #{Time.now-startRow} seconds"
+        puts "************************ total time so far : #{Time.now-start} seconds"
+      end
+    end
+
+    puts "=========== valid = #{self.valid?}; errors = #{self.errors.full_messages}"
+
+    self.save
+
+    puts "****************** total changes: #{counts.map{|k,v| k + ' - ' + v.to_s}.join(', ')}"
+    puts "****************** time to process answer csv: #{Time.now-start} seconds for #{n} rows"
+
+    I18n.locale = orig_locale
+
+    return msg, counts
+  end
 
 end
