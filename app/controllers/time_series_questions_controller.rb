@@ -17,7 +17,7 @@ class TimeSeriesQuestionsController < ApplicationController
       add_common_options
 
       respond_to do |format|
-        format.html 
+        format.html
         format.js { render json: @questions}
       end
     else
@@ -212,9 +212,98 @@ class TimeSeriesQuestionsController < ApplicationController
     end
   end
 
+  # allow the user to use csv files to update text and settings for questions and answers
+  def mass_changes
+    @time_series = TimeSeries.by_id_for_user(params[:time_series_id], current_user.id)
+
+    if @time_series.present?
+
+      add_common_options
+
+      if params[:download].present? && ['questions', 'answers'].include?(params[:download].downcase)
+        csv = nil
+        filename = @time_series.title
+        if params[:download].downcase == 'questions'
+          csv = @time_series.generate_questions_csv
+          filename << "-#{I18n.t('time_series_questions.mass_changes.questions.header')}"
+          filename << "-#{I18n.l Time.now, :format => :file}"
+        else #answers
+          csv = @time_series.generate_answers_csv
+          filename << "-#{I18n.t('time_series_questions.mass_changes.answers.header')}"
+          filename << "-#{I18n.l Time.now, :format => :file}"
+        end
+        respond_to do |format|
+          format.csv {
+            send_data csv,
+              :type => 'text/csv; header=present',
+              :disposition => "attachment; filename=#{clean_filename(filename)}.csv"
+          }
+        end
+      else
+        respond_to do |format|
+          format.html
+        end
+      end
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to time_series_index_path(:locale => I18n.locale)
+      return
+    end
+  end
+
+  def load_mass_changes_questions
+    @time_series = TimeSeries.by_id_for_user(params[:time_series_id], current_user.id)
+
+    if @time_series.present?
+      if params[:file].present?
+        msg, counts = @time_series.process_questions_csv(params[:file])
+
+        # if no msg than there were no errors
+        if msg.blank?
+          logger.debug "****************** total changes: #{counts.map{|k,v| k + ' - ' + v.to_s}.join(', ')}"
+          flash[:success] =  t('app.msgs.mass_upload_questions_success', count: view_context.number_with_delimiter(counts['overall']))
+        else
+          logger.debug "****************** error = #{msg}"
+          flash[:error] =  t('app.msgs.mass_upload_questions_error', msg: msg)
+        end
+      end
+
+      redirect_to mass_changes_time_series_questions_path
+      return
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to time_series_index_path(:locale => I18n.locale)
+      return
+    end
+  end
 
 
-private 
+  def load_mass_changes_answers
+    @time_series = TimeSeries.by_id_for_user(params[:time_series_id], current_user.id)
+
+    if @time_series.present?
+      if params[:file].present?
+        msg, counts = @time_series.process_answers_csv(params[:file])
+
+        # if no msg than there were no errors
+        if msg.blank?
+          logger.debug "****************** total changes: #{counts.map{|k,v| k + ' - ' + v.to_s}.join(', ')}"
+          flash[:success] =  t('app.msgs.mass_upload_answers_success', count: view_context.number_with_delimiter(counts['overall']))
+        else
+          flash[:error] =  t('app.msgs.mass_upload_answers_error', msg: msg)
+        end
+      end
+
+      redirect_to mass_changes_time_series_questions_path
+      return
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to time_series_index_path(:locale => I18n.locale)
+      return
+    end
+  end
+
+private
   def add_common_options
     @css.push('tabbed_translation_form.css', 'select2.css', "time_series_questions.css")
     @js.push('cocoon.js', 'select2/select2.min.js', "time_series_questions.js")

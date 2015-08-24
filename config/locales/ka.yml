@@ -743,6 +743,8 @@ ka:
         heading: "პერიოდული შედარების დეტალები"
         settings: "პარამეტრები"
         qa: "კითხვების/პასუხების შესწორება"
+        mass_changes: Mass Changes Via Spreadsheet
+        mass_changes_answers: Answer Mass Changes
         highlights: მნიშვნელოვანი
         warnings: "გაფრთხილება"
         delete: "წაშლა"
@@ -1086,6 +1088,10 @@ ka:
     form:
       header_datasets: "მონაცემთა ცხრილები"
       header_add_dataset: "პერიოდული შედარებაში ახალი მონაცემთა ცხრილების დამატება"
+    mass_changes_answers:
+      title: "Answer Mass Changes"
+      explanation: "Use this page to indicate which answers can be included during analysis, but have the ability to be excluded (e.g., answers like: Don't Know, Refuse to Answer, etc)."
+      no_questions: There are no questions on file for this time series.
     highlights:
       title: "პერიოდული შედარება გამორჩეული"
       instructions: |
@@ -1153,6 +1159,23 @@ ka:
       title: "კითხვა: %{question}"
       header_answers: "პასუხი"
       no_answers: "ამ კითხვისთვის პასუხი ჯერ ვერ მოიძებნა"
+    mass_changes:
+      title: Mass Changes for Questions/Answers
+      explanation: Use this page to upload a spreadsheet of Questions or Answers to quickly change the text or settings for many records at once.
+      template: Template
+      upload: Upload Your Spreadsheet of Changes
+      questions:
+        header: Questions
+        template: Clicking the button below will download a template of all questions in this time series. Make the desired changes in the spreadsheet and then use the form below to update your changes.
+        template2: "The only columns that cannot be changed are: %{code}"
+        template_link: Download Questions Template
+        submit: Update Questions
+      answers:
+        header: Answers
+        template: Clicking the button below will download a template of all answers in this time series. Make the desired changes in the spreadsheet and then use the form below to update your changes.
+        template2: "The only columns that cannot be changed are: %{code}, %{value}"
+        template_link: Download Answers Template
+        submit: Update Answers
   time_series_groups:
     index:
       title: Group Questions

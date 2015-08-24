@@ -694,45 +694,4 @@ private
   # end
 
 
-
-  # strip the string and fix any bad characters
-  # some text is in microsoft ansi encoding and needs to be fixed
-  # reference: https://msdn.microsoft.com/en-us/library/cc195054.aspx
-  # - <91> = ‘
-  # - <92> = ’
-  # - <93> = “
-  # - <94> = ”
-  # - <96> = —
-  # - <97> = —
-  # - \xa0 = space
-  # if string = '' or '\\N' return nil
-  def clean_text(str, options={})
-    options[:format_code] = false if options[:format_code].nil?
-    single_quote = "'"
-    double_quote = '"'
-    dash = "-"
-    space = " "
-
-    if !str.nil? && str.length > 0
-      x = str.dup.encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
-
-      if options[:format_code] == true
-        x.gsub!('.', '|')
-        x.downcase!
-      end
-
-      y = x.gsub("<91>", single_quote).gsub("\\x91", single_quote)
-            .gsub("<92>", single_quote).gsub("\\x92", single_quote)
-            .gsub("<93>", double_quote).gsub("\\x93", double_quote)
-            .gsub("<94>", double_quote).gsub("\\x94", double_quote)
-            .gsub("<96>", dash).gsub("\\x96", dash)
-            .gsub("<97>", dash).gsub("\\x97", dash)
-            .gsub("\\xa0", space).chomp.strip
-
-      y = nil if y.empty? || y == "\\N"
-      return y
-    else
-      return str
-    end
-  end
 end
