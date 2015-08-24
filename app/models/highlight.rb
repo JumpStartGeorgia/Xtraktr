@@ -48,6 +48,13 @@ class Highlight < CustomTranslation
   #############################
   # Scopes
 
+  # get all highglights for public datasets and time series
+  def self.public_highlights
+    dataset_ids = Dataset.where(public: true).pluck(:id)
+    time_series_ids = TimeSeries.where(public: true).pluck(:id)
+    self.or({:dataset_id.in => dataset_ids}, {:time_series_id.in => time_series_ids}).order_by([[:created_at, :desc]])
+  end
+
   # get all highlights for a dataset
   def self.by_dataset(dataset_id)
     where(dataset_id: dataset_id)
@@ -66,11 +73,11 @@ class Highlight < CustomTranslation
   # get the required home page highlight and random highlights until the limit is reached
   def self.for_home_page(limit=2)
     items = []
-    count = self.count
+    count = self.public_highlights.count
 
     if count > 0
       # get the required highlight
-      required = where(show_home_page: true).first
+      required = public_highlights.where(show_home_page: true).first
       if required.present?
         items << required
       end
@@ -80,17 +87,17 @@ class Highlight < CustomTranslation
       index = items.length
       if limit-index != 0 && limit-index <= count
         while index < limit
-          random = with_out_home_page.skip(rand(Highlight.count)).first
+          random = public_highlights.with_out_home_page.skip(rand(Highlight.public_highlights.count)).first
 
           # make sure random is not already in items
           if random.present? && !items.include?(random)
             items << random
-            index += 1 
+            index += 1
           end
         end
       end
     end
-    
+
     return items
   end
 
@@ -140,7 +147,7 @@ class Highlight < CustomTranslation
 
 
 
-private 
+private
 
   def decode
     Rack::Utils.parse_query(Base64.urlsafe_decode64(self.embed_id))
