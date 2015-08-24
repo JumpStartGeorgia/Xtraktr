@@ -1548,8 +1548,6 @@ private
         # see if this dataset had results
         individual_result = individual_results.select{|x| x[:dataset_id].to_s == dataset[:dataset_id].to_s}.first
         if individual_result.present? && !individual_result[:dataset_results].has_key?(:errors)
-          puts "+++++++++++++++++++++++++++++++++++++++"
-          pp individual_result
           # get results from dataset
           dataset_answer_results = nil
           if filter_answer_value.present?
