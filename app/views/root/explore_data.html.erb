@@ -6,7 +6,7 @@
     <div class="filters" data-path="<%= explore_data_path %>">
       <div class="search" data-filter='search'><div class="box"><input type="search" placeholder="<%= t('helpers.search') %>" value="<%=params[:q]%>"><div class="go"><%= t('app.common.go') %></div></div></div>
       <div class="sort"  data-filter='sort'>
-        <label><%= t('.sort_by.this') %>:</label>         
+        <label><%= t('.sort_by.this') %>:</label>
         <select>
           <option value="title"><%= t('.sort_by.title') %></option>
           <option value="release"><%= t('.sort_by.release') %></option>
@@ -49,8 +49,10 @@
     <div class="list">
       <% if @datasets.present? %>
         <%= render partial: 'explore_data_datasets' %>
+      <% elsif params[:q].present? || params[:category].present? %>
+        <p class="no-data-found"><%= t('.no_match') %></p>
       <% else %>
-        <p><%= t('.no_data') %></p>
+        <p class="no-data-found"><%= t('.no_data') %></p>
       <% end %>
     </div>
 </div>
