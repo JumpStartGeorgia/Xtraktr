@@ -100,6 +100,7 @@ class RootController < ApplicationController
     @datasets = Kaminari.paginate_array(@datasets).page(params[:page]).per(per_page)
 
     @show_title = false
+    @categories = Category.sorted
 
     @css.push('list.css')
     @js.push('list.js')
@@ -198,6 +199,7 @@ class RootController < ApplicationController
     end
 
     @time_series = Kaminari.paginate_array(@time_series).page(params[:page]).per(per_page)
+    @categories = Category.sorted
 
     @show_title = false
 

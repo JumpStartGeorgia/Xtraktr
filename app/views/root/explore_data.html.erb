@@ -6,7 +6,7 @@
     <div class="filters" data-path="<%= explore_data_path %>">
       <div class="search" data-filter='search'><div class="box"><input type="search" placeholder="<%= t('helpers.search') %>" value="<%=params[:q]%>"><div class="go"><%= t('app.common.go') %></div></div></div>
       <div class="sort"  data-filter='sort'>
-        <label><%= t('.sort_by.this') %>:</label>         
+        <label><%= t('.sort_by.this') %>:</label>
         <select>
           <option value="title"><%= t('.sort_by.title') %></option>
           <option value="release"><%= t('.sort_by.release') %></option>
@@ -14,43 +14,33 @@
         </select>
       </div>
 
-      <div class="category"  data-filter='category'>
-      <%-
-          current = params[:category].present? ? params[:category] : 'none'
-          cat = Category.by_permalink(current)
-      -%>
-        <div class="selector" data-selected="<%= current %>">
-          <div class="item item1">
-            <%- if cat.present? -%>
-                <div class="text"><span><%= cat.name %></span></div>
-                <div class="box"><div class="img <%= cat.permalink %>" alt="<%= cat.name %>"></div></div>
-            <%- end -%>
+      <% if @categories.present? %>
+        <div class="category"  data-filter='category'>
+          <%-
+              current = params[:category].present? ? params[:category] : 'none'
+              cat = @categories.select{|x| x.permalink == current}
+          -%>
+          <div class="selector" data-selected="<%= current %>">
+            <div class="text"><%= t('app.buttons.choose_category').html_safe %>:</div>
           </div>
-          <div class="text"><%= t('app.buttons.choose_category').html_safe %></div>
+          <select>
+            <option value="none" <%='selected' if current == 'none' %>><%= t('app.buttons.all_categories') %></option>
+            <% @categories.each {|x| %>
+              <option value="<%= x.permalink %>" <%='selected' if current == x.permalink %>><%= x.name %></option>
+            <% } %>
+          </select>
         </div>
+      <% end %>
 
-        <ul class="js-hide">
-          <% Category.sorted.each {|x| %>
-            <li class="item<%= ' active' if x.permalink == current %>" data-filter-value="<%= x.permalink %>">
-              <div class="text"><span><%= x.name %></span></div>
-              <div class="box"><div class="img <%= x.permalink %>" alt="<%= x.name %>"></div></div>
-            </li>
-          <% } %>
-        </ul>
-        <select>
-          <option value="none" <%='selected' if current == 'none' %>><%= t('app.buttons.all_categories') %></option>
-          <% Category.sorted.each {|x| %>
-            <option value="<%= x.permalink %>" <%='selected' if current == x.permalink %>><%= x.name %></option>
-          <% } %>
-        </select>
-      </div>
     </div>
 
     <div class="list">
       <% if @datasets.present? %>
         <%= render partial: 'explore_data_datasets' %>
+      <% elsif params[:q].present? || params[:category].present? %>
+        <p class="no-data-found"><%= t('.no_match') %></p>
       <% else %>
-        <p><%= t('.no_data') %></p>
+        <p class="no-data-found"><%= t('.no_data') %></p>
       <% end %>
     </div>
 </div>

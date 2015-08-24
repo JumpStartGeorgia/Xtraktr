@@ -838,7 +838,6 @@ en:
       wms_title: Welfare <br />Monitoring Survey
       wms_slogan: Comparing the <br />well-being of children <br />from 2009, 20011 and 2013
       header_highlights: Highlights
-      header_categories: Browse Categories
       search_datasets: Search Datasets
     contact:
       title: Contact
@@ -857,6 +856,8 @@ en:
         release: Date Released
         publish: Date Published Here
       no_data: 'At this time, no datasets have been loaded into the site.'
+      no_match: 'Sorry, no datasets match your search request.'
+    explore_data_datasets:
       no_match: 'Sorry, no datasets match your search request.'
     explore_data_show:
       title: Explore the Data

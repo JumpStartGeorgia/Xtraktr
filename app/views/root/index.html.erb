@@ -1,10 +1,9 @@
-<%- model_class = Dataset -%>
 <div class="article root">
-  <div class="intro">
-    <div class="slogan"><span><%= t("app.common.#{@app_key_name}.app_name") %>:</span> <%= t("app.common.#{@app_key_name}.app_slogan") %></div>
-    <div class="desc"><%= t("app.common.#{@app_key_name}.app_description") %></div>
-  </div>
   <div class="jsrow">
+    <div class="intro">
+      <div class="slogan"><span><%= t("app.common.#{@app_key_name}.app_name") %>:</span> <%= t("app.common.#{@app_key_name}.app_slogan") %></div>
+      <div class="desc"><%= t("app.common.#{@app_key_name}.app_description") %></div>
+    </div>
     <div class="categories">
       <div class="boxic">
         <form role="search" class="search" action="<%= explore_data_path %>">
@@ -13,43 +12,25 @@
             <div class="go-submit"><%= t('app.common.go') %></div>
           </div>
         </form>
-        <div class="header">
-          <h2><%= t('.header_categories') %></h2>
-          <div class="cell"><div class="line"></div></div>
-        </div>
-         <div class="t">
-          <% plusone = !(@categories.length%2 == 0) %>
-          <% rows = @categories.length/2 %>
-
-            <% for i in 0..rows-1 %>
-              <div class="r">
-                  <div class="c">
-                        <%= link_to explore_data_path(category: @categories[i].permalink) do %>
-                          <div class='img <%= "#{@categories[i].permalink}" %>'></div>
-                          <span><%= @categories[i].name %></span>
-                        <% end %>
-                  </div>
-                  <div class="c">
-                        <%= link_to explore_data_path(category: @categories[i+rows].permalink) do %>
-                          <div class='img <%= "#{@categories[i+rows].permalink}" %>'></div>
-                          <span><%= @categories[i+rows].name %></span>
-                        <% end %>
-                  </div>
-              </div>
-            <% end %>
-            <% if plusone %>
-              <div class="r">
-                <div class="c">
-                  <%= link_to explore_data_path(category: @categories[@categories.length-1].permalink) do %>
-                    <div class='img <%= "#{@categories[@categories.length-1].permalink}" %>'></div>
-                    <span><%= @categories[@categories.length-1].name %></span>
-                  <% end %>
-                </div>
-              </div>
-            <% end %>
+        <% if @categories.present? %>
+          <div class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <%= t('app.buttons.categories') %>
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" role="menu">
+              <% @categories.each do |category| %>
+                <li role="menuitem">
+                  <%= link_to category.name, explore_data_path(category: category.permalink) %>
+                </li>
+              <% end %>
+            </ul>
           </div>
+        <% end %>
       </div>
     </div>
+  </div>
+  <div class="jsrow">
     <div class="recents">
       <div class="boxic">
         <div class="header">
@@ -78,13 +59,13 @@
             <% end %>
           </div>
         <% else %>
-          <p>
+          <p class="no-items">
             <%= t('.no_datasets') %>
           </p>
         <% end %>
       </div>
     </div>
-    <div class="recents">
+    <div class="recents time-series">
       <div class="boxic">
         <div class="header">
           <h2><%= t('.header_latest_time_series') %></h2>
@@ -112,7 +93,7 @@
             <% end %>
           </div>
         <% else %>
-          <p>
+          <p class="no-items">
             <%= t('.no_time_series') %>
           </p>
         <% end %>

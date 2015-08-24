@@ -27,6 +27,9 @@
           <span><%= model_class.human_attribute_name(:is_weighted) %>:</span>
           <%= @dataset.is_weighted? ? t('formtastic.yes') : t('formtastic.no') %>
         </div>
+        <% if !@is_dataset_admin %>
+          <div class="share share-box"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>
+        <% end %>
       </div>
       <div class="info">
         <div class="timestamps">
@@ -40,9 +43,6 @@
           </div>
         </div>
         <div class="source"><span><%= "#{model_class.human_attribute_name(:source)}: " %></span><%= "#{@dataset.source}" %></div>
-        <% if !@is_dataset_admin %>
-          <div class="share share-box"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>
-        <% end %>
       </div>
       <% if @dataset.description.present? %>
         <div class="description">
@@ -59,7 +59,6 @@
                 <li class="item">
                   <%= link_to explore_data_path(category: x.permalink) do %>
                     <div class="text"><span><%= x.name %></span></div>
-                    <div class="box"><div class="img <%= x.permalink %>" alt="<%= x.name %>"></div></div>
                   <% end %>
                 </li>
               <% } %>
