@@ -547,7 +547,7 @@ function build_crosstab_chart(question_text, broken_down_by_code, broken_down_by
     legend: {
         title: {
           text: broken_down_by_code,
-          style: { "color": "#00adee", "fontSize": "18px", "fontFamily":"'sourcesans_pro_sb', 'sans-serif'", "fontWeight": "normal" }
+          style: { "color": "#d67456", "fontSize": "18px", "fontFamily":"'sourcesans_pro_sb', 'sans-serif'", "fontWeight": "normal" }
         },
         useHTML: true,
         layout: 'vertical',

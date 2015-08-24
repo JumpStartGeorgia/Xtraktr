@@ -725,61 +725,64 @@ Line #,Key,en Version,ka Translation
 724,ka.root.explore_time_series.no_data,"At this time, no time series have been created in the site.",ამ მომენტისთვის ვებ-გვერდზე არ შექმნილა პერიოდული შედარება.
 725,ka.root.explore_time_series.no_match,"Sorry, no time series match your search request.","უკაცრავად, თქვენს მოთხოვნას არცერთი პერიოდული შედარება არ შეესაბამება"
 726,ka.root.explore_time_series_show.title,Explore Time Series Data,გაეცანით პერიოდული შედარების მონაცემებს
-727,ka.api.msgs.no_key,You must provide an API Access Token in order to use the API. You can quickly get a API Access Token by going to %{url}.,API-ს გამოსაყენებლად თქვენ უნდა წარმაოდგინოთ API-ს დაშვების გასაღები. თქენ მარტივად შეგიძლიათ API-ის დაშვების გასაღების მიღება შემდეგ მისამართზე გადასვლით %{url}.
-728,ka.api.msgs.no_dataset,The Dataset could not be found.,მონაცემთა ცხრილი ვერ მოიძებნა
-729,ka.api.msgs.no_question,The Question could not be found.,კითხვა ვერ მოიძებნა
-730,ka.api.msgs.no_broken_down_by,The Broken Down By Question could not be found.,კითხვებით ჩაშლა ვერ მოიძებნა
-731,ka.api.msgs.no_filtered_by,The Filter By Question could not be found.,კითხვებით გაფილტრვა ვერ მოიძებნა
-732,ka.api.msgs.no_time_series,The Time Series could not be found.,პერიოდული შედარება ვერ მოიძებნა
-733,ka.api.msgs.no_time_series_dataset,The Time Series does not have any datasets assigned to it.,პერიოდული შედარებას არ აქვს მასთან დაკავშირებული მონაცემთა ცხრილი.
-734,ka.api.msgs.no_time_series_dataset_error,There was an error getting the data for the datasets in the time series.,პერიოდული შედარებაში მონაცემთა ცხრილის მიღების დროს წარმოიშვა პრობლემა.
-735,ka.api.msgs.missing_required_params,Please provide all required parameters.,Please provide all required parameters.
-736,ka.api.index.title,API,API
-737,ka.api.index.no_versions,No documentation for the API has been created yet.,API-სთვის დოკუმენტაცია ჯერ არ შექმნილა
-738,ka.api.index.no_methods,No documentation for this version has been created yet.,ამ ვერსიისთვის დოკუმენტაცია ჯერ არ შექმნილა
-739,ka.api.documentation.no_content,No documentation for this method has been created yet.,ამ მეთოდისთვის დოკუმენტაცია ჯერ არ შექმნილა
-740,ka.datasets.index.view_warnings,View Details,დეტალების ნახვა
-741,ka.datasets.warnings.title,Warnings,გაფრთხილება
-742,ka.datasets.warnings.tab_bad_answers,Questions with Bad Answers,კითხვები ცუდი პასუხებით
-743,ka.datasets.warnings.tab_no_answers,Questions with No Answers,კითხვები პასუხების გარეშე
-744,ka.datasets.warnings.tab_no_text,Questions with No Text,კითხვები ტექსტის გარეშე
-745,ka.datasets.warnings.bad_answers,"The following %{number} questions contain values that were not listed as one of the possible answers. For example, the list of possible answers was 1, 2, 3 or 4 and one record had a value of 5. The records with the extra values will not be used during analysis.","წინამდებარე კითხვას %{number} გააჩნია ისეთი მნიშვნელობა, რომელიც არ იყო ჩამოთვლილი ერთ-ერთ სავარაუდო პასუხად. ეს მონაცემები, დამატებითი მნიშნელობებით, არ იქნება გამოყენებული ანალიზი დროს."
-746,ka.datasets.warnings.no_answers,"The following %{number} questions do not have a list of possible answers. For example, a question 'What is your age?' could come with answers like <20, 20-40, 40-60, >60 and each of these answers would represent a certain value like 1, 2, 3, 4 that is stored in the data. These questions will not be available for analysis unless a list of possible answers are provided.","წინამდებარე კითხვას %{number} გააჩნია ისეთი მნიშვნელობა, რომელიც არ იყო ჩამოთვლილი ერთ-ერთ სავარაუდო პასუხად. ეს მონაცემები, დამატებითი მნიშნელობებით, არ იქნება გამოყენებული ანალიზი დროს ვიდრე სავარაუდო პასუხების სია არ იქნება მოწოდებული."
-747,ka.datasets.warnings.no_text,"The following %{number} questions do not have text. For example a code of 'A1' was given, but no text describing what 'A1' represents was provided. These questions will not be available for analysis unless text is provided.","წინამდებარე კითხვას %{number} გააჩნია ისეთი მნიშვნელობა, რომელიც არ იყო ჩამოთვლილი ერთ-ერთ სავარაუდო პასუხად. ეს მონაცემები, დამატებითი მნიშნელობებით, არ იქნება გამოყენებული ანალიზი დროს ვიდრე ტექსტი არ იქნება მოწოდებული."
-748,ka.datasets.warnings.no_bad_answers,Congratulations! All of the data file data contains valid answers.,გილოცავთ! მონაცემების ფაილის ყველა მონაცემი შეიცავს სწორ პასუხს.
-749,ka.datasets.warnings.no_no_answers,Congratulations! All of the data file questions have answers.,გილოცავთ! მონაცემების ყველა ფაილს აქვს პასუხი.
-750,ka.datasets.warnings.no_no_text,Congratulations! All of the data file questions have text.,გილოცავთ! მონაცემების ყველა ფაილს აქვს ტექსტი.
-751,ka.datasets.warnings.no_warnings,Congratulations! Your data file contains no issues that may effect the way the data is analyzed.,გილოცავთ! თქენი მონაცემები არ შეიცავენ ისეთ საკითხებს რომლებსაც შეუძლიათ ზეგავლენა მოახდინონ მონაცემთა ანალიზზე.
-752,ka.datasets.mass_changes_questions.title,Question Mass Changes,Question Mass Changes
-753,ka.datasets.mass_changes_questions.explanation,Use this page to indicate which questions should not be included during analysis and which should be included when the public download's the data.,Use this page to indicate which questions should not be included during analysis and which should be included when the public download's the data.
-754,ka.datasets.mass_changes_questions.no_questions,There are no questions on file for this dataset.,ამ ცხრილისთვის არ არის კითხვები ან ფაილები
-755,ka.datasets.mass_changes_answers.title,Answer Mass Changes,Answer Mass Changes
-756,ka.datasets.mass_changes_answers.explanation,"Use this page to indicate which answers should not be included during analysis and which answers can be included during analysis, but have the ability to be excluded (e.g., answers like: Don't Know, Refuse to Answer, etc).","Use this page to indicate which answers should not be included during analysis and which answers can be included during analysis, but have the ability to be excluded (e.g., answers like: Don't Know, Refuse to Answer, etc)."
-757,ka.datasets.mass_changes_answers.no_questions,There are no questions on file for this dataset.,ამ ცხრილისთვის არ არის კითხვები ან ფაილები
-758,ka.datasets.mappable.title,Make Questions Mappable,გახადოს კითხვა რუკაზე დასატანი
-759,ka.datasets.mappable.explanation,Use this page to indicate which questions are geographic in nature so that the analysis screen can include a map.,"გამოყენეთ ეს გვერდი რათა მიუთითოთ როელი კითხვები არიან ბუნებრივად გეოგრაფიული ტიპის, რათა ანალიზის ეკრანს შეეძლოს რუკის გამოყენება."
-760,ka.datasets.mappable.no_shapes,"Sorry, at this time there are no pre-defined maps on file that you can use.","უკაცრავად, ამ დროისთვის ფაილში არ არის წინასწარ განსაზღვრული რუკები რომლის გამოყენებასაც თქვენ შეძლებდით."
-761,ka.datasets.mappable.add_shapes,Add Map Shapes,რუკის ფორმის დამატება
-762,ka.datasets.mappable.add_map_question,Add Mappable Question,რუკაზე დასატანი კითხვების დამატება
-763,ka.datasets.mappable_form.title,Mappable Question Form,რუკაზე დასატანი კითხვების ფორმა
-764,ka.datasets.mappable_form.no_questions,There are no questions available in '%{title}' to be made mappable.,"%{title}'-ში არ არის ისეთი ხელმისაწვდომი კითხვები, რომელიც შეიძლება იყოს რუკაზე დასატანი"
-765,ka.datasets.mappable_form.no_shapes,"Sorry, at this time there are no pre-defined maps on file that you can use.","უკაცრავად, ამ დროისთვის ფაილში არ არის წინასწარ განსაზღვრული რუკები რომლის გამოყენებასაც თქვენ შეძლებდით."
-766,ka.datasets.mappable_form.question_label,Question to make mappable,გახადოს კითხვა რუკაზე დასატანი
-767,ka.datasets.mappable_form.shapeset_label,Map to use,გამოყენებადი რუკა
-768,ka.datasets.mappable_form.matching_header,Mapping '[question]' to '[shapeset]',[question]' დატანა '[shapeset]' რუკაზე 
-769,ka.datasets.mappable_form.matching_explanation,"For each answer to '[question]', select the matching map shape from '[shapeset]'.","[question]'-ის თითოეული პასუხისთვის, აირჩიეთ შესატყვისი რუკის ფორმა '[shapeset]'-დან."
-770,ka.datasets.mappable_form.adjustable_range_header,Do you want an adjustable scale when mapped?,Do you want an adjustable scale when mapped?
-771,ka.datasets.mappable_form.adjustable_range_p1,Do you want the choropleth map colors to always show results between 0 and 100% or would you prefer that the max range value be adjusted based on the max value of the analysis? Going with an adjustable max value could result in the choropleth map showing more varied colors.,Do you want the choropleth map colors to always show results between 0 and 100% or would you prefer that the max range value be adjusted based on the max value of the analysis? Going with an adjustable max value could result in the choropleth map showing more varied colors.
-772,ka.datasets.mappable_form.adjustable_range_p2,"Let's assume that the following are the resulting percentage values from the analysis: 4, 8, 16, 32, 40. If the question did not use an adjustable max value, the choropleth map colors will vary between 0 and 100%  resulting in 4 and 8 and 16 having very similar, and possibly not discernable, colors. However, if the question did use an adjustable max value, the choropleth map colors will vary between 0 and 40% resulting in 4 and 8 having similar colors, but 16 having a color that is discernable as different.","Let's assume that the following are the resulting percentage values from the analysis: 4, 8, 16, 32, 40. If the question did not use an adjustable max value, the choropleth map colors will vary between 0 and 100%  resulting in 4 and 8 and 16 having very similar, and possibly not discernable, colors. However, if the question did use an adjustable max value, the choropleth map colors will vary between 0 and 40% resulting in 4 and 8 having similar colors, but 16 having a color that is discernable as different."
-773,ka.datasets.mappable_form_edit.title,Mappable Question Form,რუკაზე დასატანი კითხვების ფორმა
-774,ka.datasets.mappable_form_edit.matching_header,Mapping '%{question}' to '%{shapeset}',[question]' დატანა '[shapeset]' რუკაზე 
-775,ka.datasets.mappable_form_edit.matching_explanation,"For each answer to '%{question}', select the matching map shape from '%{shapeset}'.","[question]'-ის თითოეული პასუხისთვის, აირჩიეთ შესატყვისი რუკის ფორმა '[shapeset]'-დან."
-776,ka.datasets.mappable_form_edit.adjustable_range_header,Do you want an adjustable scale when mapped?,Do you want an adjustable scale when mapped?
-777,ka.datasets.mappable_form_edit.adjustable_range_p1,Do you want the choropleth map colors to always show results between 0 and 100% or would you prefer that the max range value be adjusted based on the max value of the analysis? Going with an adjustable max value could result in the choropleth map showing more varied colors.,Do you want the choropleth map colors to always show results between 0 and 100% or would you prefer that the max range value be adjusted based on the max value of the analysis? Going with an adjustable max value could result in the choropleth map showing more varied colors.
-778,ka.datasets.mappable_form_edit.adjustable_range_p2,"Let's assume that the following are the resulting percentage values from the analysis: 4, 8, 16, 32, 40. If the question did not use an adjustable max value, the choropleth map colors will vary between 0 and 100%  resulting in 4 and 8 and 16 having very similar, and possibly not discernable, colors. However, if the question did use an adjustable max value, the choropleth map colors will vary between 0 and 40% resulting in 4 and 8 having similar colors, but 16 having a color that is discernable as different.","Let's assume that the following are the resulting percentage values from the analysis: 4, 8, 16, 32, 40. If the question did not use an adjustable max value, the choropleth map colors will vary between 0 and 100%  resulting in 4 and 8 and 16 having very similar, and possibly not discernable, colors. However, if the question did use an adjustable max value, the choropleth map colors will vary between 0 and 40% resulting in 4 and 8 having similar colors, but 16 having a color that is discernable as different."
-779,ka.datasets.form.reports,Reports,რეფორთები
-780,ka.datasets.form.header_add_report,Add a report for this dataset,მონაცემთა ცხრილში რეფორთის დამატება
-781,ka.datasets.form.saving_text,"Your file is being loaded, the data is being processed and validated, and the download files are being generated - this may take a couple minutes.
+727,ka.root.highlights.title,Highlights,Highlights
+728,ka.root.highlights.explanation,Below is a collection of data highlights from all datasets and time series. The most recently generated highlights are shown first.,Below is a collection of data highlights from all datasets and time series. The most recently generated highlights are shown first.
+729,ka.root.highlights.no_highlights,"Sorry, no highglights have been created yet.","Sorry, no highglights have been created yet."
+730,ka.api.msgs.no_key,You must provide an API Access Token in order to use the API. You can quickly get a API Access Token by going to %{url}.,API-ს გამოსაყენებლად თქვენ უნდა წარმაოდგინოთ API-ს დაშვების გასაღები. თქენ მარტივად შეგიძლიათ API-ის დაშვების გასაღების მიღება შემდეგ მისამართზე გადასვლით %{url}.
+731,ka.api.msgs.no_dataset,The Dataset could not be found.,მონაცემთა ცხრილი ვერ მოიძებნა
+732,ka.api.msgs.no_question,The Question could not be found.,კითხვა ვერ მოიძებნა
+733,ka.api.msgs.no_broken_down_by,The Broken Down By Question could not be found.,კითხვებით ჩაშლა ვერ მოიძებნა
+734,ka.api.msgs.no_filtered_by,The Filter By Question could not be found.,კითხვებით გაფილტრვა ვერ მოიძებნა
+735,ka.api.msgs.no_time_series,The Time Series could not be found.,პერიოდული შედარება ვერ მოიძებნა
+736,ka.api.msgs.no_time_series_dataset,The Time Series does not have any datasets assigned to it.,პერიოდული შედარებას არ აქვს მასთან დაკავშირებული მონაცემთა ცხრილი.
+737,ka.api.msgs.no_time_series_dataset_error,There was an error getting the data for the datasets in the time series.,პერიოდული შედარებაში მონაცემთა ცხრილის მიღების დროს წარმოიშვა პრობლემა.
+738,ka.api.msgs.missing_required_params,Please provide all required parameters.,Please provide all required parameters.
+739,ka.api.index.title,API,API
+740,ka.api.index.no_versions,No documentation for the API has been created yet.,API-სთვის დოკუმენტაცია ჯერ არ შექმნილა
+741,ka.api.index.no_methods,No documentation for this version has been created yet.,ამ ვერსიისთვის დოკუმენტაცია ჯერ არ შექმნილა
+742,ka.api.documentation.no_content,No documentation for this method has been created yet.,ამ მეთოდისთვის დოკუმენტაცია ჯერ არ შექმნილა
+743,ka.datasets.index.view_warnings,View Details,დეტალების ნახვა
+744,ka.datasets.warnings.title,Warnings,გაფრთხილება
+745,ka.datasets.warnings.tab_bad_answers,Questions with Bad Answers,კითხვები ცუდი პასუხებით
+746,ka.datasets.warnings.tab_no_answers,Questions with No Answers,კითხვები პასუხების გარეშე
+747,ka.datasets.warnings.tab_no_text,Questions with No Text,კითხვები ტექსტის გარეშე
+748,ka.datasets.warnings.bad_answers,"The following %{number} questions contain values that were not listed as one of the possible answers. For example, the list of possible answers was 1, 2, 3 or 4 and one record had a value of 5. The records with the extra values will not be used during analysis.","წინამდებარე კითხვას %{number} გააჩნია ისეთი მნიშვნელობა, რომელიც არ იყო ჩამოთვლილი ერთ-ერთ სავარაუდო პასუხად. ეს მონაცემები, დამატებითი მნიშნელობებით, არ იქნება გამოყენებული ანალიზი დროს."
+749,ka.datasets.warnings.no_answers,"The following %{number} questions do not have a list of possible answers. For example, a question 'What is your age?' could come with answers like <20, 20-40, 40-60, >60 and each of these answers would represent a certain value like 1, 2, 3, 4 that is stored in the data. These questions will not be available for analysis unless a list of possible answers are provided.","წინამდებარე კითხვას %{number} გააჩნია ისეთი მნიშვნელობა, რომელიც არ იყო ჩამოთვლილი ერთ-ერთ სავარაუდო პასუხად. ეს მონაცემები, დამატებითი მნიშნელობებით, არ იქნება გამოყენებული ანალიზი დროს ვიდრე სავარაუდო პასუხების სია არ იქნება მოწოდებული."
+750,ka.datasets.warnings.no_text,"The following %{number} questions do not have text. For example a code of 'A1' was given, but no text describing what 'A1' represents was provided. These questions will not be available for analysis unless text is provided.","წინამდებარე კითხვას %{number} გააჩნია ისეთი მნიშვნელობა, რომელიც არ იყო ჩამოთვლილი ერთ-ერთ სავარაუდო პასუხად. ეს მონაცემები, დამატებითი მნიშნელობებით, არ იქნება გამოყენებული ანალიზი დროს ვიდრე ტექსტი არ იქნება მოწოდებული."
+751,ka.datasets.warnings.no_bad_answers,Congratulations! All of the data file data contains valid answers.,გილოცავთ! მონაცემების ფაილის ყველა მონაცემი შეიცავს სწორ პასუხს.
+752,ka.datasets.warnings.no_no_answers,Congratulations! All of the data file questions have answers.,გილოცავთ! მონაცემების ყველა ფაილს აქვს პასუხი.
+753,ka.datasets.warnings.no_no_text,Congratulations! All of the data file questions have text.,გილოცავთ! მონაცემების ყველა ფაილს აქვს ტექსტი.
+754,ka.datasets.warnings.no_warnings,Congratulations! Your data file contains no issues that may effect the way the data is analyzed.,გილოცავთ! თქენი მონაცემები არ შეიცავენ ისეთ საკითხებს რომლებსაც შეუძლიათ ზეგავლენა მოახდინონ მონაცემთა ანალიზზე.
+755,ka.datasets.mass_changes_questions.title,Question Mass Changes,Question Mass Changes
+756,ka.datasets.mass_changes_questions.explanation,Use this page to indicate which questions should not be included during analysis and which should be included when the public download's the data.,Use this page to indicate which questions should not be included during analysis and which should be included when the public download's the data.
+757,ka.datasets.mass_changes_questions.no_questions,There are no questions on file for this dataset.,ამ ცხრილისთვის არ არის კითხვები ან ფაილები
+758,ka.datasets.mass_changes_answers.title,Answer Mass Changes,Answer Mass Changes
+759,ka.datasets.mass_changes_answers.explanation,"Use this page to indicate which answers should not be included during analysis and which answers can be included during analysis, but have the ability to be excluded (e.g., answers like: Don't Know, Refuse to Answer, etc).","Use this page to indicate which answers should not be included during analysis and which answers can be included during analysis, but have the ability to be excluded (e.g., answers like: Don't Know, Refuse to Answer, etc)."
+760,ka.datasets.mass_changes_answers.no_questions,There are no questions on file for this dataset.,ამ ცხრილისთვის არ არის კითხვები ან ფაილები
+761,ka.datasets.mappable.title,Make Questions Mappable,გახადოს კითხვა რუკაზე დასატანი
+762,ka.datasets.mappable.explanation,Use this page to indicate which questions are geographic in nature so that the analysis screen can include a map.,"გამოყენეთ ეს გვერდი რათა მიუთითოთ როელი კითხვები არიან ბუნებრივად გეოგრაფიული ტიპის, რათა ანალიზის ეკრანს შეეძლოს რუკის გამოყენება."
+763,ka.datasets.mappable.no_shapes,"Sorry, at this time there are no pre-defined maps on file that you can use.","უკაცრავად, ამ დროისთვის ფაილში არ არის წინასწარ განსაზღვრული რუკები რომლის გამოყენებასაც თქვენ შეძლებდით."
+764,ka.datasets.mappable.add_shapes,Add Map Shapes,რუკის ფორმის დამატება
+765,ka.datasets.mappable.add_map_question,Add Mappable Question,რუკაზე დასატანი კითხვების დამატება
+766,ka.datasets.mappable_form.title,Mappable Question Form,რუკაზე დასატანი კითხვების ფორმა
+767,ka.datasets.mappable_form.no_questions,There are no questions available in '%{title}' to be made mappable.,"%{title}'-ში არ არის ისეთი ხელმისაწვდომი კითხვები, რომელიც შეიძლება იყოს რუკაზე დასატანი"
+768,ka.datasets.mappable_form.no_shapes,"Sorry, at this time there are no pre-defined maps on file that you can use.","უკაცრავად, ამ დროისთვის ფაილში არ არის წინასწარ განსაზღვრული რუკები რომლის გამოყენებასაც თქვენ შეძლებდით."
+769,ka.datasets.mappable_form.question_label,Question to make mappable,გახადოს კითხვა რუკაზე დასატანი
+770,ka.datasets.mappable_form.shapeset_label,Map to use,გამოყენებადი რუკა
+771,ka.datasets.mappable_form.matching_header,Mapping '[question]' to '[shapeset]',[question]' დატანა '[shapeset]' რუკაზე 
+772,ka.datasets.mappable_form.matching_explanation,"For each answer to '[question]', select the matching map shape from '[shapeset]'.","[question]'-ის თითოეული პასუხისთვის, აირჩიეთ შესატყვისი რუკის ფორმა '[shapeset]'-დან."
+773,ka.datasets.mappable_form.adjustable_range_header,Do you want an adjustable scale when mapped?,Do you want an adjustable scale when mapped?
+774,ka.datasets.mappable_form.adjustable_range_p1,Do you want the choropleth map colors to always show results between 0 and 100% or would you prefer that the max range value be adjusted based on the max value of the analysis? Going with an adjustable max value could result in the choropleth map showing more varied colors.,Do you want the choropleth map colors to always show results between 0 and 100% or would you prefer that the max range value be adjusted based on the max value of the analysis? Going with an adjustable max value could result in the choropleth map showing more varied colors.
+775,ka.datasets.mappable_form.adjustable_range_p2,"Let's assume that the following are the resulting percentage values from the analysis: 4, 8, 16, 32, 40. If the question did not use an adjustable max value, the choropleth map colors will vary between 0 and 100%  resulting in 4 and 8 and 16 having very similar, and possibly not discernable, colors. However, if the question did use an adjustable max value, the choropleth map colors will vary between 0 and 40% resulting in 4 and 8 having similar colors, but 16 having a color that is discernable as different.","Let's assume that the following are the resulting percentage values from the analysis: 4, 8, 16, 32, 40. If the question did not use an adjustable max value, the choropleth map colors will vary between 0 and 100%  resulting in 4 and 8 and 16 having very similar, and possibly not discernable, colors. However, if the question did use an adjustable max value, the choropleth map colors will vary between 0 and 40% resulting in 4 and 8 having similar colors, but 16 having a color that is discernable as different."
+776,ka.datasets.mappable_form_edit.title,Mappable Question Form,რუკაზე დასატანი კითხვების ფორმა
+777,ka.datasets.mappable_form_edit.matching_header,Mapping '%{question}' to '%{shapeset}',[question]' დატანა '[shapeset]' რუკაზე 
+778,ka.datasets.mappable_form_edit.matching_explanation,"For each answer to '%{question}', select the matching map shape from '%{shapeset}'.","[question]'-ის თითოეული პასუხისთვის, აირჩიეთ შესატყვისი რუკის ფორმა '[shapeset]'-დან."
+779,ka.datasets.mappable_form_edit.adjustable_range_header,Do you want an adjustable scale when mapped?,Do you want an adjustable scale when mapped?
+780,ka.datasets.mappable_form_edit.adjustable_range_p1,Do you want the choropleth map colors to always show results between 0 and 100% or would you prefer that the max range value be adjusted based on the max value of the analysis? Going with an adjustable max value could result in the choropleth map showing more varied colors.,Do you want the choropleth map colors to always show results between 0 and 100% or would you prefer that the max range value be adjusted based on the max value of the analysis? Going with an adjustable max value could result in the choropleth map showing more varied colors.
+781,ka.datasets.mappable_form_edit.adjustable_range_p2,"Let's assume that the following are the resulting percentage values from the analysis: 4, 8, 16, 32, 40. If the question did not use an adjustable max value, the choropleth map colors will vary between 0 and 100%  resulting in 4 and 8 and 16 having very similar, and possibly not discernable, colors. However, if the question did use an adjustable max value, the choropleth map colors will vary between 0 and 40% resulting in 4 and 8 having similar colors, but 16 having a color that is discernable as different.","Let's assume that the following are the resulting percentage values from the analysis: 4, 8, 16, 32, 40. If the question did not use an adjustable max value, the choropleth map colors will vary between 0 and 100%  resulting in 4 and 8 and 16 having very similar, and possibly not discernable, colors. However, if the question did use an adjustable max value, the choropleth map colors will vary between 0 and 40% resulting in 4 and 8 having similar colors, but 16 having a color that is discernable as different."
+782,ka.datasets.form.reports,Reports,რეფორთები
+783,ka.datasets.form.header_add_report,Add a report for this dataset,მონაცემთა ცხრილში რეფორთის დამატება
+784,ka.datasets.form.saving_text,"Your file is being loaded, the data is being processed and validated, and the download files are being generated - this may take a couple minutes.
 
 This would be a good time to get some water, go to the bathroom, check your social media updates, or watch that cat video.
 
@@ -790,8 +793,8 @@ This would be a good time to get some water, go to the bathroom, check your soci
 
 This page will reload when the processing is complete.
 "
-782,ka.datasets.highlights.title,Dataset Highlights,მონაცემთა ცხრილის გამორჩეულები
-783,ka.datasets.highlights.instructions,"Highlights are visuals (charts and maps) that highlight interesting aspects of your dataset and are shown on the dashboard page and the home page.
+785,ka.datasets.highlights.title,Dataset Highlights,მონაცემთა ცხრილის გამორჩეულები
+786,ka.datasets.highlights.instructions,"Highlights are visuals (charts and maps) that highlight interesting aspects of your dataset and are shown on the dashboard page and the home page.
 
 To add a highlight, go to the explore page, select the indicators you want, and then in the charts that appear click the star button in the top left corner.
 
@@ -802,24 +805,24 @@ You can use this page to quickly remove highlights or to indicate which highligh
 
 თქვენ შეგიძლიათ გამოიყენოთ ეს გვერდი გამორჩეულის მარტივად წასაშლელად ან იმის მისათითებლად თუ რომელი გამორჩეული იყოს მთავარ გვერდზე მუდმივად ნაჩვენები - ყველა ცხრილიდან მხოლოდ ერთი გამორჩეული შეიძლება იყოს არჩეული.
 "
-784,ka.datasets.highlights.no_highlights,There are no highlights on file for this dataset.,ფაილში ამ ცხრილისთვის არ არის გამორჩეული
-785,ka.datasets.highlights.question_code,Question,კითხვა
-786,ka.datasets.highlights.broken_down_by_code,Broken Down By,ჩაშლილია
-787,ka.datasets.highlights.filtered_by_code,Filtered By,გაფილტრულია
-788,ka.datasets.highlights.show_home_page,Permanently Shown on Home Page,Permanently Shown on Home Page
-789,ka.datasets.highlights.btn_show_home_page,Permanently Show on Home Page,Permanently Show on Home Page
-790,ka.datasets.highlights.questions,Questions,Questions
-791,ka.datasets.highlights.description,Description,Description
-792,ka.datasets.download_data.title,Download Complete Dataset,Download Complete Dataset
-793,ka.datasets.download_data.instructions,"You can use this page to download the entire dataset in any format you desire.
+787,ka.datasets.highlights.no_highlights,There are no highlights on file for this dataset.,ფაილში ამ ცხრილისთვის არ არის გამორჩეული
+788,ka.datasets.highlights.question_code,Question,კითხვა
+789,ka.datasets.highlights.broken_down_by_code,Broken Down By,ჩაშლილია
+790,ka.datasets.highlights.filtered_by_code,Filtered By,გაფილტრულია
+791,ka.datasets.highlights.show_home_page,Permanently Shown on Home Page,Permanently Shown on Home Page
+792,ka.datasets.highlights.btn_show_home_page,Permanently Show on Home Page,Permanently Show on Home Page
+793,ka.datasets.highlights.questions,Questions,Questions
+794,ka.datasets.highlights.description,Description,Description
+795,ka.datasets.download_data.title,Download Complete Dataset,Download Complete Dataset
+796,ka.datasets.download_data.instructions,"You can use this page to download the entire dataset in any format you desire.
 
 This download is different than what is on the dashboard page in that this download includes the entire dataset, whereas the download from the dashboard page only includes the data that you have indicated can be downloaded by the public.
 ","You can use this page to download the entire dataset in any format you desire.
 
 This download is different than what is on the dashboard page in that this download includes the entire dataset, whereas the download from the dashboard page only includes the data that you have indicated can be downloaded by the public.
 "
-794,ka.datasets.download_data.no_files,The download files have not been generated yet. Please check back soon.,The download files have not been generated yet. Please check back soon.
-795,ka.datasets.download_data.generating_text,"The download files are being generated.
+797,ka.datasets.download_data.no_files,The download files have not been generated yet. Please check back soon.,The download files have not been generated yet. Please check back soon.
+798,ka.datasets.download_data.generating_text,"The download files are being generated.
 
 This may take a couple minutes if this is a large dataset.
 
@@ -830,8 +833,8 @@ This may take a couple minutes if this is a large dataset.
 
 This page will reload when the processing is complete.
 "
-796,ka.datasets.sort.title,Sort Groups and Questions,Sort Groups and Questions
-797,ka.datasets.sort.explanation,"This page allows you to sort all groups and questions into the order that you desire.
+799,ka.datasets.sort.title,Sort Groups and Questions,Sort Groups and Questions
+800,ka.datasets.sort.explanation,"This page allows you to sort all groups and questions into the order that you desire.
 
 By defualt, the question sort order is set to be the same as the order of the questions in the data file.
 
@@ -846,19 +849,19 @@ When groups are added, the group sort order is initially set so the groups appea
 
 If you have created groups, you can view and sort the items in that group by clicking on the button in the last column in the table.
 "
-798,ka.datasets.sort.move_explanation,Move the selected items after this item,Move the selected items after this item
-799,ka.datasets.sort.move_placeholder,Select an Item,Select an Item
-800,ka.datasets.sort.headers.sort,Sort Order,Sort Order
-801,ka.datasets.sort.headers.type,Item Type,Item Type
-802,ka.datasets.sort.headers.name,Item Name,Item Name
-803,ka.datasets.sort.breadcrumb_start,Main Items,Main Items
-804,ka.datasets.sort.breadcrumb_title,View all of the main items,View all of the main items
-805,ka.datasets.sort.breadcrumb_title_group,View the items in this group,View the items in this group
-806,ka.datasets.sort.main_items,Below are the main items - groups that are not subgroups and questions that are not assigned to groups,Below are the main items - groups that are not subgroups and questions that are not assigned to groups
-807,ka.datasets.sort.group_items,Below are the groups and questions assigned to group '%{name}',Below are the groups and questions assigned to group '%{name}'
-808,ka.datasets.sort.all_types,All Item Types,All Item Types
-809,ka.datasets.sort.form_header,Instructions,Instructions
-810,ka.datasets.sort.form_instructions,"You can sort groups and questions using two methods:
+801,ka.datasets.sort.move_explanation,Move the selected items after this item,Move the selected items after this item
+802,ka.datasets.sort.move_placeholder,Select an Item,Select an Item
+803,ka.datasets.sort.headers.sort,Sort Order,Sort Order
+804,ka.datasets.sort.headers.type,Item Type,Item Type
+805,ka.datasets.sort.headers.name,Item Name,Item Name
+806,ka.datasets.sort.breadcrumb_start,Main Items,Main Items
+807,ka.datasets.sort.breadcrumb_title,View all of the main items,View all of the main items
+808,ka.datasets.sort.breadcrumb_title_group,View the items in this group,View the items in this group
+809,ka.datasets.sort.main_items,Below are the main items - groups that are not subgroups and questions that are not assigned to groups,Below are the main items - groups that are not subgroups and questions that are not assigned to groups
+810,ka.datasets.sort.group_items,Below are the groups and questions assigned to group '%{name}',Below are the groups and questions assigned to group '%{name}'
+811,ka.datasets.sort.all_types,All Item Types,All Item Types
+812,ka.datasets.sort.form_header,Instructions,Instructions
+813,ka.datasets.sort.form_instructions,"You can sort groups and questions using two methods:
 
 1) Drag and Drop - Simply drag the row to the desired position.
 2) Select & Checkboxes - Use the checkboxes to indciate which row(s) you want to move and then use the select box above the table to indicate where to move the row(s) to.
@@ -867,37 +870,37 @@ If you have created groups, you can view and sort the items in that group by cli
 1) Drag and Drop - Simply drag the row to the desired position.
 2) Select & Checkboxes - Use the checkboxes to indciate which row(s) you want to move and then use the select box above the table to indicate where to move the row(s) to.
 "
-811,ka.questions.index.title,Edit Questions and their Answers,კითხვების და მათი პასუხების შესწორება
-812,ka.questions.index.explanation,Use this page to select a question to edit it and/or it's answers.,გამოიყენეთ ეს გვერდი კითხვის ან/და მისი პასუხის ჩასასწორებლად
-813,ka.questions.index.mass_changes,You can also use the %{link} to change multiple items at once via a spreadsheet upload.,"თქვენ ასევე შეგიძლია გამოიყენოთ %{link} რამდენიმე საკითხის ერთხელ შესაცვლელად, ონლაინ ცხრილის ატვირთვით."
-814,ka.questions.index.mass_changes_link,Mass Changes page,ფართო ცვლილებების გვერდი
-815,ka.questions.index.no_questions,There are no questions on file for this dataset.,ამ ცხრილისთვის არ არის კითხვები ან ფაილები
-816,ka.questions.show.title,Question: %{question},კითხვა: %{question}
-817,ka.questions.show.header_answers,Answers,პასუხი
-818,ka.questions.show.no_answers,There are no pre-defined list of answers for this question.,ამ კითხვისთვის არ არის წონასწარ განსაზღვრული პასუხების სია
-819,ka.questions.form.header_answers,Answers,პასუხები
-820,ka.questions.form.explanation_answers,"The answer settings fields (value, sort order, etc) are only shown in the '%{lang}' tab.","პასუხის პარამეტრები (მნიშვნელობა, დახარისხების წყობა, ა.შ.) ნაჩვენებია მხოლოდ '%{lang}' ჩანართში."
-821,ka.questions.form.default_text,Default Text,ძირითადი ტექსტი
-822,ka.questions.form.header_add_answer,Add a new answer for this question,ამ კითხვისთვის ახალი პასუხის დამატება
-823,ka.questions.form.header_add_missing_answer,The following values are in the data but are not provided as one of the answers. <br/>Select a value to add it as an answer and have it included in the analysis.,"აღნიშნული მნიშვნელობები მონაცემებში არიან, მაგრამ არ არიან მოწოდებულნი როგორც პასუხის ერთ ერთი ვარიანტი. <br/>აირჩიეთ მნიშვნელობა რათა დაამატოთ იგირ როგორც პასუხი და ანალიზმა მოიცვას იგი."
-824,ka.questions.mass_changes.title,Mass Changes for Questions/Answers,კითხვების/პასუხების ფართო ცვლილებები
-825,ka.questions.mass_changes.explanation,Use this page to upload a spreadsheet of Questions or Answers to quickly change the text or settings for many records at once.,გამოიყენეთ ეს გვერდი კითხვების ან პასუხების ასატვირთად ან მარავალი ჩანაწერის ტექსტისა და პარამეტრების შესაცვლლეად.
-826,ka.questions.mass_changes.template,Template,ნიმუში
-827,ka.questions.mass_changes.upload,Upload Your Spreadsheet of Changes,ატვირთეთ თქვენი შესწორებების ონლაინ ცხრილი
-828,ka.questions.mass_changes.questions.header,Questions,კითხვები
-829,ka.questions.mass_changes.questions.template,Clicking the button below will download a template of all questions in this dataset. Make the desired changes in the spreadsheet and then use the form below to update your changes.,ქვემოთ მოცემულ ღილაკზე დაჭერით ჩამოიტვირთება მონაცემთა ცხრილში არსებული ყველა პასუხის ნიმუში. გააკეთეთ თქვენთვის სასურველი ცვლილებები ონლაინ ცხრილში და შემდეგ გამოიყენეთ ქვემოთ მოცემული ფორმა თქვენი ცვლილებების განახლებისთვის.
-830,ka.questions.mass_changes.questions.template2,The only columns that cannot be changed are: %{code},"სვეტები, რომლის შეცვლაც შეუძლებელია: %{code}"
-831,ka.questions.mass_changes.questions.template_link,Download Questions Template,კითხვების ნიმუშების ჩამოტვირთვა
-832,ka.questions.mass_changes.questions.submit,Update Questions,კითხვების განახლება
-833,ka.questions.mass_changes.answers.header,Answers,პასუხები
-834,ka.questions.mass_changes.answers.template,Clicking the button below will download a template of all answers in this dataset. Make the desired changes in the spreadsheet and then use the form below to update your changes.,ქვემოთ მოცემულ ღილაკზე დაჭერით ჩამოიტვირთება მონაცემთა ცხრილში არსებული ყველა პასუხის ნიმუში. გააკეთეთ თქვენთვის სასურველი ცვლილებები ონლაინ ცხრილში და შემდეგ გამოიყენეთ ქვემოთ მოცემული ფორმა თქვენი ცვლილებების განახლებისთვის.
-835,ka.questions.mass_changes.answers.template2,"The only columns that cannot be changed are: %{code}, %{value}","სვეტები, რომლის შეცვლაც შეუძლებელია: %{code}, %{value}"
-836,ka.questions.mass_changes.answers.template_link,Download Answers Template,პასუხების ნიმუშების ჩამოტვირთვა
-837,ka.questions.mass_changes.answers.submit,Update Answers,პასუხების განახლება
-838,ka.groups.index.title,Group Questions,Group Questions
-839,ka.groups.index.no_groups,There are no groups on file for this dataset.,There are no groups on file for this dataset.
-840,ka.groups.index.modal.header,Questions for Group '[group]',Questions for Group '[group]'
-841,ka.groups.index.explanation,"This section allows you to put similar questions together in a group. You can also create a subgroup of questions.
+814,ka.questions.index.title,Edit Questions and their Answers,კითხვების და მათი პასუხების შესწორება
+815,ka.questions.index.explanation,Use this page to select a question to edit it and/or it's answers.,გამოიყენეთ ეს გვერდი კითხვის ან/და მისი პასუხის ჩასასწორებლად
+816,ka.questions.index.mass_changes,You can also use the %{link} to change multiple items at once via a spreadsheet upload.,"თქვენ ასევე შეგიძლია გამოიყენოთ %{link} რამდენიმე საკითხის ერთხელ შესაცვლელად, ონლაინ ცხრილის ატვირთვით."
+817,ka.questions.index.mass_changes_link,Mass Changes page,ფართო ცვლილებების გვერდი
+818,ka.questions.index.no_questions,There are no questions on file for this dataset.,ამ ცხრილისთვის არ არის კითხვები ან ფაილები
+819,ka.questions.show.title,Question: %{question},კითხვა: %{question}
+820,ka.questions.show.header_answers,Answers,პასუხი
+821,ka.questions.show.no_answers,There are no pre-defined list of answers for this question.,ამ კითხვისთვის არ არის წონასწარ განსაზღვრული პასუხების სია
+822,ka.questions.form.header_answers,Answers,პასუხები
+823,ka.questions.form.explanation_answers,"The answer settings fields (value, sort order, etc) are only shown in the '%{lang}' tab.","პასუხის პარამეტრები (მნიშვნელობა, დახარისხების წყობა, ა.შ.) ნაჩვენებია მხოლოდ '%{lang}' ჩანართში."
+824,ka.questions.form.default_text,Default Text,ძირითადი ტექსტი
+825,ka.questions.form.header_add_answer,Add a new answer for this question,ამ კითხვისთვის ახალი პასუხის დამატება
+826,ka.questions.form.header_add_missing_answer,The following values are in the data but are not provided as one of the answers. <br/>Select a value to add it as an answer and have it included in the analysis.,"აღნიშნული მნიშვნელობები მონაცემებში არიან, მაგრამ არ არიან მოწოდებულნი როგორც პასუხის ერთ ერთი ვარიანტი. <br/>აირჩიეთ მნიშვნელობა რათა დაამატოთ იგირ როგორც პასუხი და ანალიზმა მოიცვას იგი."
+827,ka.questions.mass_changes.title,Mass Changes for Questions/Answers,კითხვების/პასუხების ფართო ცვლილებები
+828,ka.questions.mass_changes.explanation,Use this page to upload a spreadsheet of Questions or Answers to quickly change the text or settings for many records at once.,გამოიყენეთ ეს გვერდი კითხვების ან პასუხების ასატვირთად ან მარავალი ჩანაწერის ტექსტისა და პარამეტრების შესაცვლლეად.
+829,ka.questions.mass_changes.template,Template,ნიმუში
+830,ka.questions.mass_changes.upload,Upload Your Spreadsheet of Changes,ატვირთეთ თქვენი შესწორებების ონლაინ ცხრილი
+831,ka.questions.mass_changes.questions.header,Questions,კითხვები
+832,ka.questions.mass_changes.questions.template,Clicking the button below will download a template of all questions in this dataset. Make the desired changes in the spreadsheet and then use the form below to update your changes.,ქვემოთ მოცემულ ღილაკზე დაჭერით ჩამოიტვირთება მონაცემთა ცხრილში არსებული ყველა პასუხის ნიმუში. გააკეთეთ თქვენთვის სასურველი ცვლილებები ონლაინ ცხრილში და შემდეგ გამოიყენეთ ქვემოთ მოცემული ფორმა თქვენი ცვლილებების განახლებისთვის.
+833,ka.questions.mass_changes.questions.template2,The only columns that cannot be changed are: %{code},"სვეტები, რომლის შეცვლაც შეუძლებელია: %{code}"
+834,ka.questions.mass_changes.questions.template_link,Download Questions Template,კითხვების ნიმუშების ჩამოტვირთვა
+835,ka.questions.mass_changes.questions.submit,Update Questions,კითხვების განახლება
+836,ka.questions.mass_changes.answers.header,Answers,პასუხები
+837,ka.questions.mass_changes.answers.template,Clicking the button below will download a template of all answers in this dataset. Make the desired changes in the spreadsheet and then use the form below to update your changes.,ქვემოთ მოცემულ ღილაკზე დაჭერით ჩამოიტვირთება მონაცემთა ცხრილში არსებული ყველა პასუხის ნიმუში. გააკეთეთ თქვენთვის სასურველი ცვლილებები ონლაინ ცხრილში და შემდეგ გამოიყენეთ ქვემოთ მოცემული ფორმა თქვენი ცვლილებების განახლებისთვის.
+838,ka.questions.mass_changes.answers.template2,"The only columns that cannot be changed are: %{code}, %{value}","სვეტები, რომლის შეცვლაც შეუძლებელია: %{code}, %{value}"
+839,ka.questions.mass_changes.answers.template_link,Download Answers Template,პასუხების ნიმუშების ჩამოტვირთვა
+840,ka.questions.mass_changes.answers.submit,Update Answers,პასუხების განახლება
+841,ka.groups.index.title,Group Questions,Group Questions
+842,ka.groups.index.no_groups,There are no groups on file for this dataset.,There are no groups on file for this dataset.
+843,ka.groups.index.modal.header,Questions for Group '[group]',Questions for Group '[group]'
+844,ka.groups.index.explanation,"This section allows you to put similar questions together in a group. You can also create a subgroup of questions.
 
 Groups have a name and description. You can use the description to give context to the set of questions in the group.
 
@@ -912,15 +915,15 @@ Groups will be visible in the codebook and on the explore page. It is up to you 
 
 By default, groups are put at the top of the codebook and all ungrouped questions will appear after the groups. You can use the %{link} to further control the order of the groups and questions.
 "
-842,ka.groups.index.explanation_link_text,Sorting page,Sorting page
-843,ka.groups.table_row.question_count,%{num} questions,%{num} questions
-844,ka.groups.form.option_top_level,This group is not a subgroup,This group is not a subgroup
-845,ka.groups.form.chart_description_explanation,Below is an example of how your description text will look in the charts. The format is: Question Code - Group Description. Question Text.,Below is an example of how your description text will look in the charts. The format is: Question Code - Group Description. Question Text.
-846,ka.groups.form.ex_question,Is the sky blue?,Is the sky blue?
-847,ka.groups.form.questions_explanation_default,All questions that are not assigned to any other group are avaiable to be assigned to this group.,All questions that are not assigned to any other group are avaiable to be assigned to this group.
-848,ka.groups.form.questions_explanation_subgroup,Only the questions assinged to '%{group}' are available to be assigned to this subgroup.,Only the questions assinged to '%{group}' are available to be assigned to this subgroup.
-849,ka.weights.index.title,Dataset Weighting,Dataset Weighting
-850,ka.weights.index.explanation,"This section allows you to identify which question(s) contain a weight value and which questions that weight should be applied to.
+845,ka.groups.index.explanation_link_text,Sorting page,Sorting page
+846,ka.groups.table_row.question_count,%{num} questions,%{num} questions
+847,ka.groups.form.option_top_level,This group is not a subgroup,This group is not a subgroup
+848,ka.groups.form.chart_description_explanation,Below is an example of how your description text will look in the charts. The format is: Question Code - Group Description. Question Text.,Below is an example of how your description text will look in the charts. The format is: Question Code - Group Description. Question Text.
+849,ka.groups.form.ex_question,Is the sky blue?,Is the sky blue?
+850,ka.groups.form.questions_explanation_default,All questions that are not assigned to any other group are avaiable to be assigned to this group.,All questions that are not assigned to any other group are avaiable to be assigned to this group.
+851,ka.groups.form.questions_explanation_subgroup,Only the questions assinged to '%{group}' are available to be assigned to this subgroup.,Only the questions assinged to '%{group}' are available to be assigned to this subgroup.
+852,ka.weights.index.title,Dataset Weighting,Dataset Weighting
+853,ka.weights.index.explanation,"This section allows you to identify which question(s) contain a weight value and which questions that weight should be applied to.
 
 A dataset can have multiple weights, but one must be selected as the default weight. A default weight is automatically applied to all questions. For weights that are not the default weight, you can choose to apply the weight to all of the questions or only specific questions.
 
@@ -931,26 +934,26 @@ A dataset can have multiple weights, but one must be selected as the default wei
 
 During analysis, if two questions are being compared and they are of different weights, the default weight is used for both.
 "
-851,ka.weights.index.no_weights,There are no weights on file for this dataset.,There are no weights on file for this dataset.
-852,ka.weights.index.add,Add Weights,Add Weights
-853,ka.weights.index.edit,Edit Weights,Edit Weights
-854,ka.weights.index.confirm_delete,Are you sure you want to delete all weights on file?,Are you sure you want to delete all weights on file?
-855,ka.weights.index.question_count,%{num} questions,%{num} questions
-856,ka.weights.index.table.headers.name,Weight Name,Weight Name
-857,ka.weights.index.table.headers.question,Question with Weight,Question with Weight
-858,ka.weights.index.table.headers.default,Is Default Weight?,Is Default Weight?
-859,ka.weights.index.table.headers.apply_to,Apply Weight To,Apply Weight To
-860,ka.weights.index.modal.header,Questions for Weight '[weight]',Questions for Weight '[weight]'
-861,ka.weights.new.title,Dataset Weighting Form,Dataset Weighting Form
-862,ka.weights.edit.title,Dataset Weighting Form,Dataset Weighting Form
-863,ka.weights.form.other_weights,Other Weights this Question Belongs To,Other Weights this Question Belongs To
-864,ka.time_series.form.header_datasets,Datasets,მონაცემთა ცხრილები
-865,ka.time_series.form.header_add_dataset,Add a new dataset to this time series,პერიოდული შედარებაში ახალი მონაცემთა ცხრილების დამატება
-866,ka.time_series.mass_changes_answers.title,Answer Mass Changes,Answer Mass Changes
-867,ka.time_series.mass_changes_answers.explanation,"Use this page to indicate which answers can be included during analysis, but have the ability to be excluded (e.g., answers like: Don't Know, Refuse to Answer, etc).","Use this page to indicate which answers can be included during analysis, but have the ability to be excluded (e.g., answers like: Don't Know, Refuse to Answer, etc)."
-868,ka.time_series.mass_changes_answers.no_questions,There are no questions on file for this time series.,There are no questions on file for this time series.
-869,ka.time_series.highlights.title,Time Series Highlights,პერიოდული შედარება გამორჩეული
-870,ka.time_series.highlights.instructions,"Highlights are visuals (charts and maps) that highlight interesting aspects of your time series and are shown on the dashboard page and the home page.
+854,ka.weights.index.no_weights,There are no weights on file for this dataset.,There are no weights on file for this dataset.
+855,ka.weights.index.add,Add Weights,Add Weights
+856,ka.weights.index.edit,Edit Weights,Edit Weights
+857,ka.weights.index.confirm_delete,Are you sure you want to delete all weights on file?,Are you sure you want to delete all weights on file?
+858,ka.weights.index.question_count,%{num} questions,%{num} questions
+859,ka.weights.index.table.headers.name,Weight Name,Weight Name
+860,ka.weights.index.table.headers.question,Question with Weight,Question with Weight
+861,ka.weights.index.table.headers.default,Is Default Weight?,Is Default Weight?
+862,ka.weights.index.table.headers.apply_to,Apply Weight To,Apply Weight To
+863,ka.weights.index.modal.header,Questions for Weight '[weight]',Questions for Weight '[weight]'
+864,ka.weights.new.title,Dataset Weighting Form,Dataset Weighting Form
+865,ka.weights.edit.title,Dataset Weighting Form,Dataset Weighting Form
+866,ka.weights.form.other_weights,Other Weights this Question Belongs To,Other Weights this Question Belongs To
+867,ka.time_series.form.header_datasets,Datasets,მონაცემთა ცხრილები
+868,ka.time_series.form.header_add_dataset,Add a new dataset to this time series,პერიოდული შედარებაში ახალი მონაცემთა ცხრილების დამატება
+869,ka.time_series.mass_changes_answers.title,Answer Mass Changes,Answer Mass Changes
+870,ka.time_series.mass_changes_answers.explanation,"Use this page to indicate which answers can be included during analysis, but have the ability to be excluded (e.g., answers like: Don't Know, Refuse to Answer, etc).","Use this page to indicate which answers can be included during analysis, but have the ability to be excluded (e.g., answers like: Don't Know, Refuse to Answer, etc)."
+871,ka.time_series.mass_changes_answers.no_questions,There are no questions on file for this time series.,There are no questions on file for this time series.
+872,ka.time_series.highlights.title,Time Series Highlights,პერიოდული შედარება გამორჩეული
+873,ka.time_series.highlights.instructions,"Highlights are visuals (charts and maps) that highlight interesting aspects of your time series and are shown on the dashboard page and the home page.
 
 To add a highlight, go to the explore page, select the indicators you want, and then in the charts that appear click the star button in the top left corner.
 
@@ -961,16 +964,16 @@ You can use this page to quickly remove highlights or to indicate which highligh
 
 თქვენ შეგიძლიათ გამოიყენოთ ეს გვერდი გამორჩეულის მარტივად წასაშლელად ან იმის მისათითებლად თუ რომელი გამორჩეული იყოს მთავარ გვერდზე მუდმივად ნაჩვენები - ყველა ცხრილიდან მხოლოდ ერთი გამორჩეული შეიძლება იყოს არჩეული.
 "
-871,ka.time_series.highlights.no_highlights,There are no highlights on file for this time series.,ფაილში ამ პერიოდული შედარებისთვის არ არის გამორჩეული
-872,ka.time_series.highlights.question_code,Question,კითხვა
-873,ka.time_series.highlights.broken_down_by_code,Broken Down By,ჩაშლილია
-874,ka.time_series.highlights.filtered_by_code,Filtered By,გაფილტრულია
-875,ka.time_series.highlights.show_home_page,Permanently Shown on Home Page,Permanently Shown on Home Page
-876,ka.time_series.highlights.btn_show_home_page,Permanently Show on Home Page,Permanently Show on Home Page
-877,ka.time_series.highlights.questions,Questions,Questions
-878,ka.time_series.highlights.description,Description,Description
-879,ka.time_series.sort.title,Sort Groups and Questions,Sort Groups and Questions
-880,ka.time_series.sort.explanation,"This page allows you to sort all groups and questions into the order that you desire.
+874,ka.time_series.highlights.no_highlights,There are no highlights on file for this time series.,ფაილში ამ პერიოდული შედარებისთვის არ არის გამორჩეული
+875,ka.time_series.highlights.question_code,Question,კითხვა
+876,ka.time_series.highlights.broken_down_by_code,Broken Down By,ჩაშლილია
+877,ka.time_series.highlights.filtered_by_code,Filtered By,გაფილტრულია
+878,ka.time_series.highlights.show_home_page,Permanently Shown on Home Page,Permanently Shown on Home Page
+879,ka.time_series.highlights.btn_show_home_page,Permanently Show on Home Page,Permanently Show on Home Page
+880,ka.time_series.highlights.questions,Questions,Questions
+881,ka.time_series.highlights.description,Description,Description
+882,ka.time_series.sort.title,Sort Groups and Questions,Sort Groups and Questions
+883,ka.time_series.sort.explanation,"This page allows you to sort all groups and questions into the order that you desire.
 
 By defualt, the question sort order is set to be the same as the order of the questions in the data file.
 
@@ -985,19 +988,19 @@ When groups are added, the group sort order is initially set so the groups appea
 
 If you have created groups, you can view and sort the items in that group by clicking on the button in the last column in the table.
 "
-881,ka.time_series.sort.move_explanation,Move the selected items after this item,Move the selected items after this item
-882,ka.time_series.sort.move_placeholder,Select an Item,Select an Item
-883,ka.time_series.sort.headers.sort,Sort Order,Sort Order
-884,ka.time_series.sort.headers.type,Item Type,Item Type
-885,ka.time_series.sort.headers.name,Item Name,Item Name
-886,ka.time_series.sort.breadcrumb_start,Main Items,Main Items
-887,ka.time_series.sort.breadcrumb_title,View all of the main items,View all of the main items
-888,ka.time_series.sort.breadcrumb_title_group,View the items in this group,View the items in this group
-889,ka.time_series.sort.main_items,Below are the main items - groups that are not subgroups and questions that are not assigned to groups,Below are the main items - groups that are not subgroups and questions that are not assigned to groups
-890,ka.time_series.sort.group_items,Below are the groups and questions assigned to group '%{name}',Below are the groups and questions assigned to group '%{name}'
-891,ka.time_series.sort.all_types,All Item Types,All Item Types
-892,ka.time_series.sort.form_header,Instructions,Instructions
-893,ka.time_series.sort.form_instructions,"You can sort groups and questions using two methods:
+884,ka.time_series.sort.move_explanation,Move the selected items after this item,Move the selected items after this item
+885,ka.time_series.sort.move_placeholder,Select an Item,Select an Item
+886,ka.time_series.sort.headers.sort,Sort Order,Sort Order
+887,ka.time_series.sort.headers.type,Item Type,Item Type
+888,ka.time_series.sort.headers.name,Item Name,Item Name
+889,ka.time_series.sort.breadcrumb_start,Main Items,Main Items
+890,ka.time_series.sort.breadcrumb_title,View all of the main items,View all of the main items
+891,ka.time_series.sort.breadcrumb_title_group,View the items in this group,View the items in this group
+892,ka.time_series.sort.main_items,Below are the main items - groups that are not subgroups and questions that are not assigned to groups,Below are the main items - groups that are not subgroups and questions that are not assigned to groups
+893,ka.time_series.sort.group_items,Below are the groups and questions assigned to group '%{name}',Below are the groups and questions assigned to group '%{name}'
+894,ka.time_series.sort.all_types,All Item Types,All Item Types
+895,ka.time_series.sort.form_header,Instructions,Instructions
+896,ka.time_series.sort.form_instructions,"You can sort groups and questions using two methods:
 
 1) Drag and Drop - Simply drag the row to the desired position.
 2) Select & Checkboxes - Use the checkboxes to indciate which row(s) you want to move and then use the select box above the table to indicate where to move the row(s) to.
@@ -1006,43 +1009,43 @@ If you have created groups, you can view and sort the items in that group by cli
 1) Drag and Drop - Simply drag the row to the desired position.
 2) Select & Checkboxes - Use the checkboxes to indciate which row(s) you want to move and then use the select box above the table to indicate where to move the row(s) to.
 "
-894,ka.time_series_questions.index.title,Edit Time Series Questions and their Answers,პერიოდული შედარების კითხვების და პასუხების შესწორება
-895,ka.time_series_questions.index.explanation,Use this page to add questions to the time series or edit questions already in the time series.,გამოიყენეთ ეს გვერდი პერიოდულ შედარებაში ახალი კითხვების დასამატებლად ან არსებული კითხვების შესასწორებლად
-896,ka.time_series_questions.index.no_questions,There are no questions on file for this time series yet.,პერიოდული შედარებისთვის კითხვა ან ფაილი ვერ მოიძებნა
-897,ka.time_series_questions.index.btn_add_question,Add a Question,კითხვის დამატება
-898,ka.time_series_questions.index.btn_add_question_hint,Match a question from each dataset and add the question to the time series.,მოანცემთა თითოეული ცხრილიდან დაამთხვიოს კითხვა და დაამატოს პერიოდულ შედარებაში.
-899,ka.time_series_questions.index.btn_automatic,Automatically Assign Matching Questions,ავტომატურად დააკავშიროს ერთნაირი კითხვები
-900,ka.time_series_questions.index.btn_automatic_hint,Questions with the same Question Code in each dataset will automatically be added to the time series. This will take a few seconds to complete.,მონაცემთა თითოეული ცხრილიდან ერთი და იმავე კოდის მქონე კითხვები ავტომატურად დაემატება პერიოდულ შედარებაში. ამის დასრულებას დასჭირდება რამდენიმე წამი.
-901,ka.time_series_questions.index.header_dataset_question,%{title} Question,%{title} კითხვა
-902,ka.time_series_questions.form.header_answers,Answers,პასუხი
-903,ka.time_series_questions.form.explanation_answers,"The answer settings fields (value, sort order, etc) are only shown in the '%{lang}' tab.","პასუხის პარამეტრები (მნიშვნელობა, დახარისხების წყობა, ა.შ.) ნაჩვენებია მხოლოდ '%{lang}' ჩანართში."
-904,ka.time_series_questions.form.default_text,Default Text,მთავარი ტექსტი
-905,ka.time_series_questions.form.header_add_answer,Add a new answer for this question,ამ კითხვისთვის ახალი პასუხის დამატება
-906,ka.time_series_questions.form.auto_create_answers_link,Auto-Create Answers,Auto-Create Answers
-907,ka.time_series_questions.form.auto_create_answers_title,"For each answer in the questions selected above, add it to the list below","For each answer in the questions selected above, add it to the list below"
-908,ka.time_series_questions.form.delete_all_answers_link,Delete All Answers,Delete All Answers
-909,ka.time_series_questions.form.delete_all_answers_title,Delete all answers below,Delete all answers below
-910,ka.time_series_questions.show.title,Question: %{question},კითხვა: %{question}
-911,ka.time_series_questions.show.header_answers,Answers,პასუხი
-912,ka.time_series_questions.show.no_answers,There are no answers for this question yet.,ამ კითხვისთვის პასუხი ჯერ ვერ მოიძებნა
-913,ka.time_series_questions.mass_changes.title,Mass Changes for Questions/Answers,Mass Changes for Questions/Answers
-914,ka.time_series_questions.mass_changes.explanation,Use this page to upload a spreadsheet of Questions or Answers to quickly change the text or settings for many records at once.,Use this page to upload a spreadsheet of Questions or Answers to quickly change the text or settings for many records at once.
-915,ka.time_series_questions.mass_changes.template,Template,Template
-916,ka.time_series_questions.mass_changes.upload,Upload Your Spreadsheet of Changes,Upload Your Spreadsheet of Changes
-917,ka.time_series_questions.mass_changes.questions.header,Questions,Questions
-918,ka.time_series_questions.mass_changes.questions.template,Clicking the button below will download a template of all questions in this time series. Make the desired changes in the spreadsheet and then use the form below to update your changes.,Clicking the button below will download a template of all questions in this time series. Make the desired changes in the spreadsheet and then use the form below to update your changes.
-919,ka.time_series_questions.mass_changes.questions.template2,The only columns that cannot be changed are: %{code},The only columns that cannot be changed are: %{code}
-920,ka.time_series_questions.mass_changes.questions.template_link,Download Questions Template,Download Questions Template
-921,ka.time_series_questions.mass_changes.questions.submit,Update Questions,Update Questions
-922,ka.time_series_questions.mass_changes.answers.header,Answers,Answers
-923,ka.time_series_questions.mass_changes.answers.template,Clicking the button below will download a template of all answers in this time series. Make the desired changes in the spreadsheet and then use the form below to update your changes.,Clicking the button below will download a template of all answers in this time series. Make the desired changes in the spreadsheet and then use the form below to update your changes.
-924,ka.time_series_questions.mass_changes.answers.template2,"The only columns that cannot be changed are: %{code}, %{value}","The only columns that cannot be changed are: %{code}, %{value}"
-925,ka.time_series_questions.mass_changes.answers.template_link,Download Answers Template,Download Answers Template
-926,ka.time_series_questions.mass_changes.answers.submit,Update Answers,Update Answers
-927,ka.time_series_groups.index.title,Group Questions,Group Questions
-928,ka.time_series_groups.index.no_groups,There are no groups on file for this time series.,There are no groups on file for this time series.
-929,ka.time_series_groups.index.modal.header,Questions for Group '[group]',Questions for Group '[group]'
-930,ka.time_series_groups.index.explanation,"This section allows you to put similar questions together in a group. You can also create a subgroup of questions.
+897,ka.time_series_questions.index.title,Edit Time Series Questions and their Answers,პერიოდული შედარების კითხვების და პასუხების შესწორება
+898,ka.time_series_questions.index.explanation,Use this page to add questions to the time series or edit questions already in the time series.,გამოიყენეთ ეს გვერდი პერიოდულ შედარებაში ახალი კითხვების დასამატებლად ან არსებული კითხვების შესასწორებლად
+899,ka.time_series_questions.index.no_questions,There are no questions on file for this time series yet.,პერიოდული შედარებისთვის კითხვა ან ფაილი ვერ მოიძებნა
+900,ka.time_series_questions.index.btn_add_question,Add a Question,კითხვის დამატება
+901,ka.time_series_questions.index.btn_add_question_hint,Match a question from each dataset and add the question to the time series.,მოანცემთა თითოეული ცხრილიდან დაამთხვიოს კითხვა და დაამატოს პერიოდულ შედარებაში.
+902,ka.time_series_questions.index.btn_automatic,Automatically Assign Matching Questions,ავტომატურად დააკავშიროს ერთნაირი კითხვები
+903,ka.time_series_questions.index.btn_automatic_hint,Questions with the same Question Code in each dataset will automatically be added to the time series. This will take a few seconds to complete.,მონაცემთა თითოეული ცხრილიდან ერთი და იმავე კოდის მქონე კითხვები ავტომატურად დაემატება პერიოდულ შედარებაში. ამის დასრულებას დასჭირდება რამდენიმე წამი.
+904,ka.time_series_questions.index.header_dataset_question,%{title} Question,%{title} კითხვა
+905,ka.time_series_questions.form.header_answers,Answers,პასუხი
+906,ka.time_series_questions.form.explanation_answers,"The answer settings fields (value, sort order, etc) are only shown in the '%{lang}' tab.","პასუხის პარამეტრები (მნიშვნელობა, დახარისხების წყობა, ა.შ.) ნაჩვენებია მხოლოდ '%{lang}' ჩანართში."
+907,ka.time_series_questions.form.default_text,Default Text,მთავარი ტექსტი
+908,ka.time_series_questions.form.header_add_answer,Add a new answer for this question,ამ კითხვისთვის ახალი პასუხის დამატება
+909,ka.time_series_questions.form.auto_create_answers_link,Auto-Create Answers,Auto-Create Answers
+910,ka.time_series_questions.form.auto_create_answers_title,"For each answer in the questions selected above, add it to the list below","For each answer in the questions selected above, add it to the list below"
+911,ka.time_series_questions.form.delete_all_answers_link,Delete All Answers,Delete All Answers
+912,ka.time_series_questions.form.delete_all_answers_title,Delete all answers below,Delete all answers below
+913,ka.time_series_questions.show.title,Question: %{question},კითხვა: %{question}
+914,ka.time_series_questions.show.header_answers,Answers,პასუხი
+915,ka.time_series_questions.show.no_answers,There are no answers for this question yet.,ამ კითხვისთვის პასუხი ჯერ ვერ მოიძებნა
+916,ka.time_series_questions.mass_changes.title,Mass Changes for Questions/Answers,Mass Changes for Questions/Answers
+917,ka.time_series_questions.mass_changes.explanation,Use this page to upload a spreadsheet of Questions or Answers to quickly change the text or settings for many records at once.,Use this page to upload a spreadsheet of Questions or Answers to quickly change the text or settings for many records at once.
+918,ka.time_series_questions.mass_changes.template,Template,Template
+919,ka.time_series_questions.mass_changes.upload,Upload Your Spreadsheet of Changes,Upload Your Spreadsheet of Changes
+920,ka.time_series_questions.mass_changes.questions.header,Questions,Questions
+921,ka.time_series_questions.mass_changes.questions.template,Clicking the button below will download a template of all questions in this time series. Make the desired changes in the spreadsheet and then use the form below to update your changes.,Clicking the button below will download a template of all questions in this time series. Make the desired changes in the spreadsheet and then use the form below to update your changes.
+922,ka.time_series_questions.mass_changes.questions.template2,The only columns that cannot be changed are: %{code},The only columns that cannot be changed are: %{code}
+923,ka.time_series_questions.mass_changes.questions.template_link,Download Questions Template,Download Questions Template
+924,ka.time_series_questions.mass_changes.questions.submit,Update Questions,Update Questions
+925,ka.time_series_questions.mass_changes.answers.header,Answers,Answers
+926,ka.time_series_questions.mass_changes.answers.template,Clicking the button below will download a template of all answers in this time series. Make the desired changes in the spreadsheet and then use the form below to update your changes.,Clicking the button below will download a template of all answers in this time series. Make the desired changes in the spreadsheet and then use the form below to update your changes.
+927,ka.time_series_questions.mass_changes.answers.template2,"The only columns that cannot be changed are: %{code}, %{value}","The only columns that cannot be changed are: %{code}, %{value}"
+928,ka.time_series_questions.mass_changes.answers.template_link,Download Answers Template,Download Answers Template
+929,ka.time_series_questions.mass_changes.answers.submit,Update Answers,Update Answers
+930,ka.time_series_groups.index.title,Group Questions,Group Questions
+931,ka.time_series_groups.index.no_groups,There are no groups on file for this time series.,There are no groups on file for this time series.
+932,ka.time_series_groups.index.modal.header,Questions for Group '[group]',Questions for Group '[group]'
+933,ka.time_series_groups.index.explanation,"This section allows you to put similar questions together in a group. You can also create a subgroup of questions.
 
 Groups have a name and description. You can use the description to give context to the set of questions in the group.
 
@@ -1057,15 +1060,15 @@ Groups will be visible in the codebook and on the explore page. It is up to you 
 
 By default, groups are put at the top of the codebook and all ungrouped questions will appear after the groups. You can use the %{link} to further control the order of the groups and questions.
 "
-931,ka.time_series_groups.index.explanation_link_text,Sorting page,Sorting page
-932,ka.time_series_groups.table_row.question_count,%{num} questions,%{num} questions
-933,ka.time_series_groups.form.option_top_level,This group is not a subgroup,This group is not a subgroup
-934,ka.time_series_groups.form.chart_description_explanation,Below is an example of how your description text will look in the charts. The format is: Question Code - Group Description. Question Text.,Below is an example of how your description text will look in the charts. The format is: Question Code - Group Description. Question Text.
-935,ka.time_series_groups.form.ex_question,Is the sky blue?,Is the sky blue?
-936,ka.time_series_groups.form.questions_explanation_default,All questions that are not assigned to any other group are avaiable to be assigned to this group.,All questions that are not assigned to any other group are avaiable to be assigned to this group.
-937,ka.time_series_groups.form.questions_explanation_subgroup,Only the questions assinged to '%{group}' are available to be assigned to this subgroup.,Only the questions assinged to '%{group}' are available to be assigned to this subgroup.
-938,ka.time_series_weights.index.title,Time Series Weighting,Time Series Weighting
-939,ka.time_series_weights.index.explanation,"This section allows you to identify which question(s) contain a weight value and which questions that weight should be applied to.
+934,ka.time_series_groups.index.explanation_link_text,Sorting page,Sorting page
+935,ka.time_series_groups.table_row.question_count,%{num} questions,%{num} questions
+936,ka.time_series_groups.form.option_top_level,This group is not a subgroup,This group is not a subgroup
+937,ka.time_series_groups.form.chart_description_explanation,Below is an example of how your description text will look in the charts. The format is: Question Code - Group Description. Question Text.,Below is an example of how your description text will look in the charts. The format is: Question Code - Group Description. Question Text.
+938,ka.time_series_groups.form.ex_question,Is the sky blue?,Is the sky blue?
+939,ka.time_series_groups.form.questions_explanation_default,All questions that are not assigned to any other group are avaiable to be assigned to this group.,All questions that are not assigned to any other group are avaiable to be assigned to this group.
+940,ka.time_series_groups.form.questions_explanation_subgroup,Only the questions assinged to '%{group}' are available to be assigned to this subgroup.,Only the questions assinged to '%{group}' are available to be assigned to this subgroup.
+941,ka.time_series_weights.index.title,Time Series Weighting,Time Series Weighting
+942,ka.time_series_weights.index.explanation,"This section allows you to identify which question(s) contain a weight value and which questions that weight should be applied to.
 
 A time series can have multiple weights, but one must be selected as the default weight. A default weight is automatically applied to all questions. For weights that are not the default weight, you can choose to apply the weight to all of the questions or only specific questions.
 
@@ -1076,98 +1079,98 @@ A time series can have multiple weights, but one must be selected as the default
 
 During analysis, if two questions are being compared and they are of different weights, the default weight is used for both.
 "
-940,ka.time_series_weights.index.no_weights,There are no weights on file for this time series.,There are no weights on file for this time series.
-941,ka.time_series_weights.index.add,Add Weights,Add Weights
-942,ka.time_series_weights.index.edit,Edit Weights,Edit Weights
-943,ka.time_series_weights.index.confirm_delete,Are you sure you want to delete all weights on file?,Are you sure you want to delete all weights on file?
-944,ka.time_series_weights.index.question_count,%{num} questions,%{num} questions
-945,ka.time_series_weights.index.table.headers.name,Weight Name,Weight Name
-946,ka.time_series_weights.index.table.headers.question,Question with Weight,Question with Weight
-947,ka.time_series_weights.index.table.headers.default,Is Default Weight?,Is Default Weight?
-948,ka.time_series_weights.index.table.headers.apply_to,Apply Weight To,Apply Weight To
-949,ka.time_series_weights.index.modal.header,Questions for Weight '[weight]',Questions for Weight '[weight]'
-950,ka.time_series_weights.new.title,Time Series Weighting Form,Time Series Weighting Form
-951,ka.time_series_weights.edit.title,Time SeriesWeighting Form,Time SeriesWeighting Form
-952,ka.time_series_weights.form.other_weights,Other Weights this Question Belongs To,Other Weights this Question Belongs To
-953,ka.time_series_weights.form.weight_question_explanation,Indicate which question to use as the weight by selectig the dataset that has the question and then selecting the question.,Indicate which question to use as the weight by selectig the dataset that has the question and then selecting the question.
-954,ka.time_series_weights.form.unique_id_explanation,Select the question from each dataset that contains the unique ID of the responders. This ID will be used to assign the weight to the correct responses in each dataset.,Select the question from each dataset that contains the unique ID of the responders. This ID will be used to assign the weight to the correct responses in each dataset.
-955,ka.shared.explore_data.no_matches,Your selections returned no data. Please try again with a different selection.,თქვენი მონიშნული დაბრუნდა მონაცემებში. გთხოვთ სცადოთ თავიდან სხვა მონიშვნით.
-956,ka.shared.explore_data.no_data,'%{title}' does not have any data that is analyzable at this time.,"%{title}' არ შეიცავს მონაცემებს, რომლებიც გაანალიზებადია ამ დროისთვის."
-957,ka.shared.explore_data.hover_region,Hover over a Region,Hover over a Region
-958,ka.shared.explore_data.na,N/A,არ არის ხელმისაწვდომი
-959,ka.shared.explore_data.percent,Percent,პროცენტი
-960,ka.shared.explore_data.dataset_title,Dataset,მონაცემები
-961,ka.shared.explore_data.form.question_code,Explore Answers To,გაეცანით პასუხებს
-962,ka.shared.explore_data.form.broken_down_by_code,Broken Down By,ჩაშლილია
-963,ka.shared.explore_data.form.optional,optional,არჩევითი
-964,ka.shared.explore_data.form.no_comparison,No Comparison,არ არის შედარება
-965,ka.shared.explore_data.form.swap,Swap the Questions,კითხვის შეცვლა
-966,ka.shared.explore_data.form.submit,Generate,დაანგარიშება
-967,ka.shared.explore_data.form.reset,Reset,გადატვირთვა
-968,ka.shared.explore_data.form.filtered_by_code,Filtered By,გაფილტრულია
-969,ka.shared.explore_data.form.no_filter,No Filter,ფილტრი არ არის
-970,ka.shared.explore_data.form.can_exclude,Exclude Answers,Exclude Answers
-971,ka.shared.explore_data.form.can_exclude_hint,At least one selected question has answers that can be excluded during analysis. Select this checkbox to remove these answers from the analysis.,At least one selected question has answers that can be excluded during analysis. Select this checkbox to remove these answers from the analysis.
-972,ka.shared.explore_data.form.weighted_by_code,Weighted By,Weighted By
-973,ka.shared.explore_data.jumpto.chart,Jump to Chart,გრაფაზე გადასვლა
-974,ka.shared.explore_data.jumpto.map,Jump to Map,რუკაზე გადასვლა
-975,ka.shared.explore_data.tabs.map,Map,რუკა
-976,ka.shared.explore_data.tabs.chart,Chart,გრაფა
-977,ka.shared.explore_data.tabs.table,Table,ცხრილი
-978,ka.shared.explore_data.tabs.details,Details,დეტალები
-979,ka.shared.explore_data.map.filter,Filter map by selecting an answer to '%{text}':,რუკის გაფილტვრა ამ პასუხის არჩევით '%{text}':
-980,ka.shared.explore_time_series.no_matches,Your selections returned no data. Please try again with a different selection.,თქვენი მონიშნული დაბრუნდა მონაცემებში. გთხოვთ სცადოთ თავიდან სხვა მონიშვნით.
-981,ka.shared.explore_time_series.no_data,'%{title}' does not have any data that is analyzable at this time.,"%{title}' არ შეიცავს მონაცემებს, რომლებიც გაანალიზებადია ამ დროისთვის."
-982,ka.shared.explore_time_series.na,N/A,არ არის ხელმისაწვდომი
-983,ka.shared.explore_time_series.percent,Percent,პროცენტი
-984,ka.shared.explore_time_series.time_series_title,Time Series,პერიოდული შედარება
-985,ka.shared.explore_time_series.form.question_code,Explore Answers To,გაეცანით პასუხებს
-986,ka.shared.explore_time_series.form.submit,Generate,დაანგარიშება
-987,ka.shared.explore_time_series.form.reset,Reset,გადატვირთვა
-988,ka.shared.explore_time_series.form.filtered_by_code,Filtered By,გაფილტრულია
-989,ka.shared.explore_time_series.form.no_filter,No Filter,ფილტრი არ არის
-990,ka.shared.explore_time_series.form.can_exclude,"Exclude ""Don't know"" & ""Refuse""","გამორიცხე ""არ ვიცი"" & ""უარი პასუხზე"""
-991,ka.shared.explore_time_series.form.can_exclude_hint,"Remove answers like ""Don't know"" & ""Refuse"" from the analysis","ანალიზიდან წაშალე პასუხები ""არ ვიცი"" & ""უარი პასუხზე"""
-992,ka.shared.explore_time_series.jumpto.chart,Jump to Chart,გრაფაზე გადასვლა
-993,ka.shared.explore_time_series.tabs.chart,Chart,გრაფა
-994,ka.shared.explore_time_series.tabs.table,Table,ცხრილი
-995,ka.shared.explore_time_series.tabs.details,Details,დეტალები
-996,ka.shared.dashboard_data.tabs.highlights,Highlights,მნიშვნელოვანი
-997,ka.shared.dashboard_data.tabs.methodology,Methodology,მეთოდოლოგია
-998,ka.shared.dashboard_data.tabs.codebook,Codebook,კოდირება
-999,ka.shared.dashboard_data.tabs.reports,Reports,რეფორთები
-1000,ka.shared.dashboard_data.tabs.licensing,License,License
-1001,ka.shared.dashboard_data.no_methodology,There is no methodology on file for this dataset.,ამ ცხრილისთვის მეთოდოლოგია არ მოიძებნა
-1002,ka.shared.dashboard_data.no_reports,There are no reports on file for this dataset.,ამ ცხრილისთვის რეფორთები არ მოიძებნა
-1003,ka.shared.dashboard_data.no_highlights,There are no highlights on file for this dataset.,ამ ცხრილისთვის გამორჩეული არ მოიძებნა
-1004,ka.shared.dashboard_data.filter.all,All Text,ყველა ტექსტი
-1005,ka.shared.dashboard_data.filter.questions,Question Text,კითხვის ტექსტი
-1006,ka.shared.dashboard_data.filter.codes,Question Code,Question Code
-1007,ka.shared.dashboard_data.filter.answers,Answer Text,პასუხის ტექსტი
-1008,ka.shared.dashboard_data.jumpto_group,Jump To Group,Jump To Group
-1009,ka.shared.dashboard_time_series.tabs.highlights,Highlights,მნიშვნელოვანი
-1010,ka.shared.dashboard_time_series.tabs.methodology,Methodology,მეთოდოლოგია
-1011,ka.shared.dashboard_time_series.tabs.codebook,Codebook,კოდირება
-1012,ka.shared.dashboard_time_series.tabs.reports,Reports,რეფორთები
-1013,ka.shared.dashboard_time_series.tabs.licensing,License,License
-1014,ka.shared.dashboard_time_series.tabs.datasets,Datasets,მონაცემები
-1015,ka.shared.dashboard_time_series.no_highlights,There are no highlights on file for this time series.,ამ პერიოდული შედარებისთვის გამორჩეული არ მოიძებნა
-1016,ka.shared.dashboard_time_series.filter.all,All Text,ყველა ტექსტი
-1017,ka.shared.dashboard_time_series.filter.questions,Question Text,კითხვის ტექსტი
-1018,ka.shared.dashboard_time_series.filter.codes,Question Code,Question Code
-1019,ka.shared.dashboard_time_series.filter.answers,Answer Text,პასუხის ტექსტი
-1020,ka.shared.dashboard_time_series.jumpto_group,Jump To Group,Jump To Group
-1021,ka.shared.language_switcher.label,Available Languages,ხელმისაწვდომი ენები
-1022,ka.shared.embed_v1.title_site,Go to %{app_name},გადასვლა %{app_name} -ზე
-1023,ka.shared.embed_v1.title_datalist,View All Datasets,მონაცემთა ყველა ცხილის ნახვა
-1024,ka.shared.embed_v2.title_site,Go to %{app_name},გადასვლა %{app_name} -ზე
-1025,ka.shared.embed_v2.title_datalist,View All Datasets,მონაცემთა ყველა ცხილის ნახვა
-1026,ka.export_data.dataset,Dataset: %{title},მონაცემთა ცხრილი: %{title}
-1027,ka.export_data.download_from,Downloaded From: %{app_name} at %{url}.,ჩამოტვირთულია აქედან: %{app_name} at %{url}.
-1028,ka.export_data.last_update,Data Last Updated: %{date},მონაცემები ბოლოს განახლებულია: %{date}
-1029,ka.export_data.instructions.codebook,The codebook is a list of all questions and answers available in this dataset. It is provided as a reference to help you quickly find items of interest.,"კოდირება არის მონაცემთა ცხრილში არსებული ყველა შესაძლო კითვა და პასუხი. ის წარმოადგენს დამხმარე ცნობარს, რომელიც გეხმარებათ თქვენთვის საინტერესო ინფორმაციის მოძიებაში."
-1030,ka.export_data.instructions.csv_main,"The CSV file is a spreadsheet of all of the data in the dataset. You can open this file in OpenOffice, Excel, Google Spreadsheets or any other spreadsheet software. ","CSV ფაილი არის მონაცემთა ცხრილში არსებული ყველა მონაცემის ონლაინ ცხრილი. თქვენი მისი გახსნა შეგიძლიათ შემდეგი პროგრამების საშუალებით: OpenOffice, Excel, Google Spreadsheets ან სხვა ნებისმიერი ონლაინ ცხრილის პროგრამით."
-1031,ka.export_data.instructions.csv,"The CSV download contains 2 files:
+943,ka.time_series_weights.index.no_weights,There are no weights on file for this time series.,There are no weights on file for this time series.
+944,ka.time_series_weights.index.add,Add Weights,Add Weights
+945,ka.time_series_weights.index.edit,Edit Weights,Edit Weights
+946,ka.time_series_weights.index.confirm_delete,Are you sure you want to delete all weights on file?,Are you sure you want to delete all weights on file?
+947,ka.time_series_weights.index.question_count,%{num} questions,%{num} questions
+948,ka.time_series_weights.index.table.headers.name,Weight Name,Weight Name
+949,ka.time_series_weights.index.table.headers.question,Question with Weight,Question with Weight
+950,ka.time_series_weights.index.table.headers.default,Is Default Weight?,Is Default Weight?
+951,ka.time_series_weights.index.table.headers.apply_to,Apply Weight To,Apply Weight To
+952,ka.time_series_weights.index.modal.header,Questions for Weight '[weight]',Questions for Weight '[weight]'
+953,ka.time_series_weights.new.title,Time Series Weighting Form,Time Series Weighting Form
+954,ka.time_series_weights.edit.title,Time SeriesWeighting Form,Time SeriesWeighting Form
+955,ka.time_series_weights.form.other_weights,Other Weights this Question Belongs To,Other Weights this Question Belongs To
+956,ka.time_series_weights.form.weight_question_explanation,Indicate which question to use as the weight by selectig the dataset that has the question and then selecting the question.,Indicate which question to use as the weight by selectig the dataset that has the question and then selecting the question.
+957,ka.time_series_weights.form.unique_id_explanation,Select the question from each dataset that contains the unique ID of the responders. This ID will be used to assign the weight to the correct responses in each dataset.,Select the question from each dataset that contains the unique ID of the responders. This ID will be used to assign the weight to the correct responses in each dataset.
+958,ka.shared.explore_data.no_matches,Your selections returned no data. Please try again with a different selection.,თქვენი მონიშნული დაბრუნდა მონაცემებში. გთხოვთ სცადოთ თავიდან სხვა მონიშვნით.
+959,ka.shared.explore_data.no_data,'%{title}' does not have any data that is analyzable at this time.,"%{title}' არ შეიცავს მონაცემებს, რომლებიც გაანალიზებადია ამ დროისთვის."
+960,ka.shared.explore_data.hover_region,Hover over a Region,Hover over a Region
+961,ka.shared.explore_data.na,N/A,არ არის ხელმისაწვდომი
+962,ka.shared.explore_data.percent,Percent,პროცენტი
+963,ka.shared.explore_data.dataset_title,Dataset,მონაცემები
+964,ka.shared.explore_data.form.question_code,Explore Answers To,გაეცანით პასუხებს
+965,ka.shared.explore_data.form.broken_down_by_code,Broken Down By,ჩაშლილია
+966,ka.shared.explore_data.form.optional,optional,არჩევითი
+967,ka.shared.explore_data.form.no_comparison,No Comparison,არ არის შედარება
+968,ka.shared.explore_data.form.swap,Swap the Questions,კითხვის შეცვლა
+969,ka.shared.explore_data.form.submit,Generate,დაანგარიშება
+970,ka.shared.explore_data.form.reset,Reset,გადატვირთვა
+971,ka.shared.explore_data.form.filtered_by_code,Filtered By,გაფილტრულია
+972,ka.shared.explore_data.form.no_filter,No Filter,ფილტრი არ არის
+973,ka.shared.explore_data.form.can_exclude,Exclude Answers,Exclude Answers
+974,ka.shared.explore_data.form.can_exclude_hint,At least one selected question has answers that can be excluded during analysis. Select this checkbox to remove these answers from the analysis.,At least one selected question has answers that can be excluded during analysis. Select this checkbox to remove these answers from the analysis.
+975,ka.shared.explore_data.form.weighted_by_code,Weighted By,Weighted By
+976,ka.shared.explore_data.jumpto.chart,Jump to Chart,გრაფაზე გადასვლა
+977,ka.shared.explore_data.jumpto.map,Jump to Map,რუკაზე გადასვლა
+978,ka.shared.explore_data.tabs.map,Map,რუკა
+979,ka.shared.explore_data.tabs.chart,Chart,გრაფა
+980,ka.shared.explore_data.tabs.table,Table,ცხრილი
+981,ka.shared.explore_data.tabs.details,Details,დეტალები
+982,ka.shared.explore_data.map.filter,Filter map by selecting an answer to '%{text}':,რუკის გაფილტვრა ამ პასუხის არჩევით '%{text}':
+983,ka.shared.explore_time_series.no_matches,Your selections returned no data. Please try again with a different selection.,თქვენი მონიშნული დაბრუნდა მონაცემებში. გთხოვთ სცადოთ თავიდან სხვა მონიშვნით.
+984,ka.shared.explore_time_series.no_data,'%{title}' does not have any data that is analyzable at this time.,"%{title}' არ შეიცავს მონაცემებს, რომლებიც გაანალიზებადია ამ დროისთვის."
+985,ka.shared.explore_time_series.na,N/A,არ არის ხელმისაწვდომი
+986,ka.shared.explore_time_series.percent,Percent,პროცენტი
+987,ka.shared.explore_time_series.time_series_title,Time Series,პერიოდული შედარება
+988,ka.shared.explore_time_series.form.question_code,Explore Answers To,გაეცანით პასუხებს
+989,ka.shared.explore_time_series.form.submit,Generate,დაანგარიშება
+990,ka.shared.explore_time_series.form.reset,Reset,გადატვირთვა
+991,ka.shared.explore_time_series.form.filtered_by_code,Filtered By,გაფილტრულია
+992,ka.shared.explore_time_series.form.no_filter,No Filter,ფილტრი არ არის
+993,ka.shared.explore_time_series.form.can_exclude,"Exclude ""Don't know"" & ""Refuse""","გამორიცხე ""არ ვიცი"" & ""უარი პასუხზე"""
+994,ka.shared.explore_time_series.form.can_exclude_hint,"Remove answers like ""Don't know"" & ""Refuse"" from the analysis","ანალიზიდან წაშალე პასუხები ""არ ვიცი"" & ""უარი პასუხზე"""
+995,ka.shared.explore_time_series.jumpto.chart,Jump to Chart,გრაფაზე გადასვლა
+996,ka.shared.explore_time_series.tabs.chart,Chart,გრაფა
+997,ka.shared.explore_time_series.tabs.table,Table,ცხრილი
+998,ka.shared.explore_time_series.tabs.details,Details,დეტალები
+999,ka.shared.dashboard_data.tabs.highlights,Highlights,მნიშვნელოვანი
+1000,ka.shared.dashboard_data.tabs.methodology,Methodology,მეთოდოლოგია
+1001,ka.shared.dashboard_data.tabs.codebook,Codebook,კოდირება
+1002,ka.shared.dashboard_data.tabs.reports,Reports,რეფორთები
+1003,ka.shared.dashboard_data.tabs.licensing,License,License
+1004,ka.shared.dashboard_data.no_methodology,There is no methodology on file for this dataset.,ამ ცხრილისთვის მეთოდოლოგია არ მოიძებნა
+1005,ka.shared.dashboard_data.no_reports,There are no reports on file for this dataset.,ამ ცხრილისთვის რეფორთები არ მოიძებნა
+1006,ka.shared.dashboard_data.no_highlights,There are no highlights on file for this dataset.,ამ ცხრილისთვის გამორჩეული არ მოიძებნა
+1007,ka.shared.dashboard_data.filter.all,All Text,ყველა ტექსტი
+1008,ka.shared.dashboard_data.filter.questions,Question Text,კითხვის ტექსტი
+1009,ka.shared.dashboard_data.filter.codes,Question Code,Question Code
+1010,ka.shared.dashboard_data.filter.answers,Answer Text,პასუხის ტექსტი
+1011,ka.shared.dashboard_data.jumpto_group,Jump To Group,Jump To Group
+1012,ka.shared.dashboard_time_series.tabs.highlights,Highlights,მნიშვნელოვანი
+1013,ka.shared.dashboard_time_series.tabs.methodology,Methodology,მეთოდოლოგია
+1014,ka.shared.dashboard_time_series.tabs.codebook,Codebook,კოდირება
+1015,ka.shared.dashboard_time_series.tabs.reports,Reports,რეფორთები
+1016,ka.shared.dashboard_time_series.tabs.licensing,License,License
+1017,ka.shared.dashboard_time_series.tabs.datasets,Datasets,მონაცემები
+1018,ka.shared.dashboard_time_series.no_highlights,There are no highlights on file for this time series.,ამ პერიოდული შედარებისთვის გამორჩეული არ მოიძებნა
+1019,ka.shared.dashboard_time_series.filter.all,All Text,ყველა ტექსტი
+1020,ka.shared.dashboard_time_series.filter.questions,Question Text,კითხვის ტექსტი
+1021,ka.shared.dashboard_time_series.filter.codes,Question Code,Question Code
+1022,ka.shared.dashboard_time_series.filter.answers,Answer Text,პასუხის ტექსტი
+1023,ka.shared.dashboard_time_series.jumpto_group,Jump To Group,Jump To Group
+1024,ka.shared.language_switcher.label,Available Languages,ხელმისაწვდომი ენები
+1025,ka.shared.embed_v1.title_site,Go to %{app_name},გადასვლა %{app_name} -ზე
+1026,ka.shared.embed_v1.title_datalist,View All Datasets,მონაცემთა ყველა ცხილის ნახვა
+1027,ka.shared.embed_v2.title_site,Go to %{app_name},გადასვლა %{app_name} -ზე
+1028,ka.shared.embed_v2.title_datalist,View All Datasets,მონაცემთა ყველა ცხილის ნახვა
+1029,ka.export_data.dataset,Dataset: %{title},მონაცემთა ცხრილი: %{title}
+1030,ka.export_data.download_from,Downloaded From: %{app_name} at %{url}.,ჩამოტვირთულია აქედან: %{app_name} at %{url}.
+1031,ka.export_data.last_update,Data Last Updated: %{date},მონაცემები ბოლოს განახლებულია: %{date}
+1032,ka.export_data.instructions.codebook,The codebook is a list of all questions and answers available in this dataset. It is provided as a reference to help you quickly find items of interest.,"კოდირება არის მონაცემთა ცხრილში არსებული ყველა შესაძლო კითვა და პასუხი. ის წარმოადგენს დამხმარე ცნობარს, რომელიც გეხმარებათ თქვენთვის საინტერესო ინფორმაციის მოძიებაში."
+1033,ka.export_data.instructions.csv_main,"The CSV file is a spreadsheet of all of the data in the dataset. You can open this file in OpenOffice, Excel, Google Spreadsheets or any other spreadsheet software. ","CSV ფაილი არის მონაცემთა ცხრილში არსებული ყველა მონაცემის ონლაინ ცხრილი. თქვენი მისი გახსნა შეგიძლიათ შემდეგი პროგრამების საშუალებით: OpenOffice, Excel, Google Spreadsheets ან სხვა ნებისმიერი ონლაინ ცხრილის პროგრამით."
+1034,ka.export_data.instructions.csv,"The CSV download contains 2 files:
 - Codebook: %{codebook}
 
 - CSV: %{csv} The CSV is formatted with headers (format: code - name) and the answers are the answer text, not the answer value.
@@ -1176,7 +1179,7 @@ During analysis, if two questions are being compared and they are of different w
 
 - CSV: %{csv} CSV ფორმატირებულია სათაურებით (ცვლადი კოდი და სახელი) და პასუხები იყენებენ პასუხის ტექსტს და არა პასუხის მნიშვნელობას.
 "
-1032,ka.export_data.instructions.spss,"The SPSS download contains 3 files:
+1035,ka.export_data.instructions.spss,"The SPSS download contains 3 files:
 - Codebook: %{codebook}
 
 - CSV: %{csv} The CSV is formatted to be loaded into SPSS, so it does not contain headers and the answers are the answer values, not the answer text.
@@ -1189,7 +1192,7 @@ During analysis, if two questions are being compared and they are of different w
 - CSV: %{csv} CSV დაფორმატირებულია SPSS-ის ჩატვირთვის ფორმატში, ამიტომ ის არ შეიცავს სათაურს და პასუხები იყენებენ პასუხის მნიშვნელობას და არა პასუხის ტექსტს.
 
 - SPS: SPS ფაილი არის კოდირებული ფაილი, რომელიც გაიშვება SPSS-ში და ჩატვირთავს მონაცემებს CSV-დან, აგრეთვე ქმნის თითოეულ ცვლად და მის შესაძლო მნიშვნელობას. მნიშვნელოვანია - SPSS-ში კოდირებული ტექსტის გაშვებამდე, თქვენ უნდა განაახლოთ 'DATA LIST FILE' რათა გქონდეთ სრული ხელმისაწვდომობა CSV ფაილამდე."
-1033,ka.export_data.instructions.stata,"The STATA download contains 3 files:
+1036,ka.export_data.instructions.stata,"The STATA download contains 3 files:
 - Codebook: %{codebook}
 
 - CSV: %{csv} The CSV is formatted to be loaded into STATA, so it does not contain headers and the answers are the answer text, not the answer values.
@@ -1205,7 +1208,7 @@ During analysis, if two questions are being compared and they are of different w
 
 IMPORTANT - STATA-ში კოდირებული ტექსტის გაშვებამდე, თქვენ უნდა განაახლოთ 'using' ფაილის ბოლოს რათა გქონდეთ სრული ხელმისაწვდომობა CSV ფაილამდე.
 "
-1034,ka.export_data.instructions.r,"The R download contains 3 files:
+1037,ka.export_data.instructions.r,"The R download contains 3 files:
 - Codebook: %{codebook}
 
 - CSV: %{csv} The CSV is formatted to be loaded into R, so the headers are the variables and the answers are the answer values, not the answer text.
@@ -1220,11 +1223,11 @@ IMPORTANT - STATA-ში კოდირებული ტექსტის �
 - R: R არის კოდირებული ფაილი, რომელიც გაიშვება R-ში რომელიც ტვირთავს მონაცემებს CSV-დან და ქმნის თოთიეულ ცვლადს.
      მნიშვნელოვანია - R-ში კოდირებული ტექსტის გაშვებამდე, თქვენ უნდა განაახლოთ 'setwd' რათა გქონდეთ სრული ხელმისაწვდომობა CSV ფაილამდე.
 "
-1035,ka.download_data_options.text.csv,CSV,CSV
-1036,ka.download_data_options.text.spss,SPSS,SPSS
-1037,ka.download_data_options.text.stata,STATA,STATA
-1038,ka.download_data_options.text.r,R,R
-1039,ka.download_data_options.title.csv,Data formatted for spreadsheets,ონლაინ ცხრილისთვის დაფორმატებული მონაცემები
-1040,ka.download_data_options.title.spss,Data formatted for SPSS,SPSS-სთვის დაფორმატებული მონაცემები
-1041,ka.download_data_options.title.stata,Data formatted for STATA,STATA-სთვის დაფორმატებული მონაცემები
-1042,ka.download_data_options.title.r,Data formatted for R,R-სთვის დაფორმატებული მონაცემები
+1038,ka.download_data_options.text.csv,CSV,CSV
+1039,ka.download_data_options.text.spss,SPSS,SPSS
+1040,ka.download_data_options.text.stata,STATA,STATA
+1041,ka.download_data_options.text.r,R,R
+1042,ka.download_data_options.title.csv,Data formatted for spreadsheets,ონლაინ ცხრილისთვის დაფორმატებული მონაცემები
+1043,ka.download_data_options.title.spss,Data formatted for SPSS,SPSS-სთვის დაფორმატებული მონაცემები
+1044,ka.download_data_options.title.stata,Data formatted for STATA,STATA-სთვის დაფორმატებული მონაცემები
+1045,ka.download_data_options.title.r,Data formatted for R,R-სთვის დაფორმატებული მონაცემები

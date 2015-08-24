@@ -314,6 +314,7 @@
   - en.app.menu.admin_dataset.highlights
   - en.app.menu.admin_time_series.highlights
   - en.root.index.header_highlights
+  - en.root.highlights.title
   - en.shared.dashboard_data.tabs.highlights
   - en.shared.dashboard_time_series.tabs.highlights
 - - en.app.menu.about

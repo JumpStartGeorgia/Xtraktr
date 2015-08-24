@@ -57,6 +57,15 @@ class RootController < ApplicationController
   end
 
   def highlights
+    @highlights = Highlight.public_highlights
+    gon.highlight_ids = @highlights.map{|x| x.id} if @highlights.present?
+    gon.highlight_show_title = true
+    gon.highlight_show_links = false
+    load_highlight_assets(@highlights.map{|x| x.embed_id}) if @highlights.present?
+
+    @css.push('highlights.css', 'boxic.css')
+    @js.push('highlights.js')
+
     respond_to do |format|
       format.html # index.html.erb
     end

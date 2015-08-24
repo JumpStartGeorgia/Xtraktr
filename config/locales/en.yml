@@ -871,6 +871,10 @@ en:
       no_match: 'Sorry, no time series match your search request.'
     explore_time_series_show:
       title: Explore Time Series Data
+    highlights:
+      title: Highlights
+      explanation: Below is a collection of data highlights from all datasets and time series. The most recently generated highlights are shown first.
+      no_highlights: Sorry, no highglights have been created yet.
   api:
     msgs:
       no_key: 'You must provide an API Access Token in order to use the API. You can quickly get a API Access Token by going to %{url}.'
