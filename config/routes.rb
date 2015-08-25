@@ -70,7 +70,20 @@ BootstrapStarter::Application.routes.draw do
     end
 
     resources :time_series, path: :manage_time_series do
-      resources :time_series_questions, :only => [:index, :show, :new, :create, :edit, :update], :path => 'questions', :as => 'questions'
+      resources :time_series_questions, :only => [:index, :show, :new, :create, :edit, :update], :path => 'questions', :as => 'questions' do
+        collection do
+          get 'mass_changes'
+          post 'mass_changes'
+          post 'load_mass_changes_questions'
+          post 'load_mass_changes_answers'
+        end
+      end
+      resources :time_series_groups, :except => [:show] do
+        member do
+          post 'group_questions', :defaults => { :format => 'json' }
+        end
+      end
+      resources :time_series_weights, :except => [:show], :path => 'weights', :as => 'weights'
       member do
         get 'explore'
         get 'automatically_assign_questions'
@@ -79,6 +92,10 @@ BootstrapStarter::Application.routes.draw do
         get 'highlights'
         post 'highlights'
         post 'home_page_highlight'
+        get 'sort'
+        post 'sort'
+        get 'mass_changes_answers'
+        post 'mass_changes_answers'
       end
     end
 

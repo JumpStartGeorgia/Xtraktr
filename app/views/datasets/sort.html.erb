@@ -41,7 +41,7 @@
         <%= t('.move_explanation') %>
         <select data-live-search="true" data-width="300px" class="selectpicker-sort" id="move-to" title="<%= t('.move_placeholder') %>">
           <% @items.each do |item| %>
-            <% 
+            <%
               text = item.class == Group ? item.title : item.code_with_text
               cls = item.class == Group ? item.parent_id.present? ? 'subgroup' : 'group' : 'question'
             %>
@@ -55,7 +55,7 @@
       </div>
     </div>
 
-    <table id='dataset-sort' class="table table-striped table-hover table-nonfluid">
+    <table id='sort' class="table table-striped table-hover table-nonfluid">
       <thead>
         <tr>
           <th>

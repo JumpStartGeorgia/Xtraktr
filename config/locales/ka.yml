@@ -17,6 +17,9 @@ ka:
       category_mappers: "კატეგორიები"
       group: Group
       weight: Weight
+      time_series_group: Group
+      time_series_weight: Weight
+      time_series_weight_assignment: Weight Assignment
     attributes:
       user:
         email: "ელ.ფოსტა"
@@ -86,6 +89,8 @@ ka:
         category_ids: "კატეგორიები"
         permalink: მონაცემთა URL-ი
         is_weighted: Weighted Data
+        created_at: Date Added to Site
+        updated_at: Date Last Updated
       stats:
         questions_analyzable: Analyzable Questions
         public_questions_analyzable: Public Analyzable Questions
@@ -108,6 +113,7 @@ ka:
         data_answers: "პასუხების მნიშვნელობები მონაცემებში"
         can_download: Include Question in Download for Public
         has_map_adjustable_max_range: Max Range of Choropleth Map is Adjustable
+        is_weight: This question is a weight
       answer:
         value: "მნიშვნელობა"
         text: "პასუხი"
@@ -150,6 +156,9 @@ ka:
         dates: "მოიცავს თარიღებს"
         category_ids: "კატეგორიები"
         permalink: პერიოდული შედარების URL-ი
+        is_weighted: Weighted Data
+        created_at: Date Added to Site
+        updated_at: Date Last Updated
       time_series_dataset:
         dataset_id: მონაცემები
         title: "ეტიკეტი"
@@ -159,6 +168,25 @@ ka:
         original_code: "კითხვის კოდი"
         text: "კითხვა"
         notes: "შენიშვნა"
+      time_series_group:
+        title: Name
+        description: Description
+        include_in_charts: Include the Description in the Chart Titles?
+        codes: Questions in this Group
+        parent_id: This Group is a Subgroup of
+        sub_group: Subgroup
+      time_series_weight:
+        dataset_id: Dataset with Weight
+        code: Question with Weight
+        text: Weight Name
+        is_default: Is Default Weight?
+        applies_to_all: Applies to All Questions
+        applies_to: Applies To
+        all_questions: All Questions
+        codes: Apply the Weight to the Following Questions
+      time_series_weight_assignment:
+        dataset_id: Dataset
+        code_unique_id: Question with Unique Response IDs
       time_series_dataset_question:
         code: "კითხვის კოდი"
         text: "კითხვა"
@@ -257,7 +285,8 @@ ka:
         notes: "რაიმე სპეციალური შენიშვნა კითხვასთან დაკავშრებით"
         exclude: "მონიშვნის შემთხვევაში ეს კითხვა არ იქნება ხელმისაწვდომი ანალიზის დროს"
         is_mappable: "თუ კითხვები ბუნებრივად შეიძლება დატანილი იყვნენ რუკაზე, შეგიძლიათ დაამთხვიოთ კითხვა ფორმები ცხრილს და რუკაზე გაანალიზოთ შეკითხვა"
-        can_download: 'If selected, this question will be included in the data download available to the public.'
+        can_download: 'If selected, this question will be included in the data download available to the public'
+        is_weight: "If this question contains weight values, you can apply the weight to the dataset"
       answer:
         value: "პასუხის მნიშვნელობა"
         text: "პასუხის ტექსტი"
@@ -302,6 +331,21 @@ ka:
         code: "კითხვის კოდი რომლის გამოჩენაც გსურთ პერიოდული შედარებაში"
         text: "კითხვის ტექსტი, რომლის გამოჩენაც გსურთ პერიოდული შედარებაში"
         notes: "რაიმე სპეციალური შენიშვნა კითხვასთან დაკავშრებით"
+      time_series_group:
+        title: The group name will appear in the codebook and on the explore page in the question drop-down lists
+        description: "The group description will appear in the codebook, on the explore page in the question drop-down lists and the chart titles, if desired."
+        include_in_charts: "If selected, the group description will appear in the title of the charts. The Description will then be required."
+        codes: Select the questions that belong in this group
+        parent_id: Use this to indicate that this group belongs to another group
+      time_series_weight:
+        dataset_id: The dataset that contains the question with the weight values
+        code: The question that contains the weight values
+        text: 'A label for the weight - this will be visible to the public during analysis (e.g., Individual, Household, etc)'
+        is_default: 'If selected, this will be the weight that is applied to all questions during analysis by default if no weight is indicated'
+        applies_to_all: 'If selected, all questions will be assigned to this weight'
+        codes: Select the questions that you want to have this weight applied to
+      time_series_weight_assignment:
+        code_unique_id: Select the question from each dataset that contains the unique ID of the responders. This ID will be used to assign the weight to the correct responses in each dataset.
       time_series_dataset_question:
         text: "მონაცემთა ცხრილიდან მხოლოდ ის კითხვები იქნება ნაჩვენები, რომლებიც არ არიან ჩანიშნულნი პერიოდულ შედარებაში."
         notes: "რაიმე სპეციალური შენიშვნა კითხვასთან დაკავშრებით"
@@ -356,28 +400,52 @@ ka:
   explore_time_series:
     na: "არ არის ხელმისაწვდომი"
     percent: "პროცენტი (%)"
+    group:
+      html:
+        title: "<span class='group-highlight'>%{text}</span> "
+      text:
+        title: "%{text}"
+    subgroup:
+      html:
+        title: "<span class='subgroup-highlight'>%{text}</span> "
+      text:
+        title: "%{text}"
     single:
       html:
-        title: "'<span class='code-highlight'>%{code}</span> - %{variable}'"
-        title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
-        title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = %{value}'"
+        title: "'<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
+        title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
+        title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable} = <span class='code-highlight'>%{value}</span>'"
       text:
-        title: "'%{code} - %{variable}'"
-        title_filter: "გაფილტრულია: '%{code} - %{variable}'"
-        title_filter_value: "გაფილტრულია: '%{code} - %{variable} = %{value}'"
+        title: "'%{code} - %{group} %{variable}'"
+        title_filter: ", გაფილტრულია: '%{code} - %{group} %{variable}'"
+        title_filter_value: ", გაფილტრულია: '%{code} - %{group} %{variable} = %{value}'"
     subtitle:
       html:
-        title: "მთლიანი გამოხმაურება: %{num}"
-        title_filter: "პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{code} - %{variable}: %{nums}"
+        title: "Total Responses: <br />%{x_of_y}"
+        title_x_of_y: "%{dataset}: <span class='number'>%{num}</span> out of %{total}"
+        title_filter: "Total Responses <br />(out of a possible: %{totals}): <br />%{nums}"
+        title_weighted: "Unweighted Total Responses<span class='footnote-flag'>*</span>: <br />%{x_of_y}"
+        title_filter_weighted: "Unweighted Total Responses<span class='footnote-flag'>*</span> <br />(out of a possible: %{totals}): <br />%{nums}"
       text:
-        title: "მთლიანი პასუხები: %{num}"
-        title_filter: "პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{code} - %{variable}: %{nums}"
+        title: "Total Responses: %{x_of_y}"
+        title_x_of_y: "%{dataset}: %{num} out of %{total}"
+        title_filter: "Total Responses: %{nums}"
+        title_weighted: "Unweighted Total Responses*: %{x_of_y}"
+        title_filter_weighted: "Unweighted Total Responses* (out of a possible: %{totals}): %{nums}"
   explore_data:
     hover_region: Hover over a Region
     na: "არ არის ხელმისაწვდომი"
     percent: "პროცენტი"
-    title_group: "<span class='group-highlight'>%{text}</span> "
-    title_subgroup: "<span class='subgroup-highlight'>%{text}</span> "
+    group:
+      html:
+        title: "<span class='group-highlight'>%{text}</span> "
+      text:
+        title: "%{text}"
+    subgroup:
+      html:
+        title: "<span class='subgroup-highlight'>%{text}</span> "
+      text:
+        title: "%{text}"
     comparative:
       html:
         title: "'<span class='code-highlight'>%{question_code}</span> - %{variable}' <br /> <span class='title-highlight'>ჩაშლილია:</span> <br /> '<span class='code-highlight'>%{broken_down_by_code}</span> - %{broken_down_by}'"
@@ -408,15 +476,15 @@ ka:
         title_filter_value: ", გაფილტრულია: '%{code} - %{variable} = %{value}'"
     subtitle:
       html:
-        title: "მთლიანი გამოხმაურება: <span class='number'>%{num}</span>"
-        title_filter: "პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{code} - %{variable}: %{nums}"
+        title: "Total Responses: <span class='number'>%{num}</span> out of %{total}"
+        title_filter: "Total Responses out of %{total}: <br />%{nums}"
         title_weighted: "Unweighted Total Responses<span class='footnote-flag'>*</span>: <span class='number'>%{num}</span> out of %{total}"
-        title_filter_weighted: "Unweighted Total Responses out of %{total}, Filtered by Answers to '<span class='number'>%{code}</span> - %{variable}'<span class='footnote-flag'>*</span>: <br />%{nums}"
+        title_filter_weighted: "Unweighted Total Responses out of %{total}<span class='footnote-flag'>*</span>: <br />%{nums}"
       text:
-        title: "მთლიანი პასუხები: %{num}"
-        title_filter: "პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{code} - %{variable}: %{nums}"
+        title: "Total Responses: %{num} out of %{total}"
+        title_filter: "Total Responses out of %{total}: %{nums}"
         title_weighted: "Unweighted Total Responses*: %{num} out of %{total}"
-        title_filter_weighted: "Unweighted Total Responses out of %{total}, Filtered by Answers to '%{code} - %{variable}'*: %{nums}"
+        title_filter_weighted: "Unweighted Total Responses out of %{total}*: %{nums}"
   datatable:
     search: ძიება
     search_footer: 'Search %{name}'
@@ -521,6 +589,7 @@ ka:
       highlight_description: Chart Description
       edit_description: Edit Description
       view_group_items: View Items in This Group
+      assign_weight: Assign Weight
     titles:
       edit: "შეცვლა %{model}"
       save: "შენახვა %{model}"
@@ -592,7 +661,7 @@ ka:
       question_no_answers: This question does not have answers and cannot be analyzed
       powered_by_xtraktr: Powered By Xtraktr
       powered_by_xtraktr_title: This data was built using the Xtraktr platform. Learn more and add your own data on the Xtraktr website.
-      weighted_footnote: This data is weighted.
+      weighted_footnote: 'Applied weight: '
     msgs:
       does_not_exist: "თქვენ ცდილობთ ისეთი გვერდის ნახვას, რომელიც არ არსებობს."
       not_authorized: "თქვენ არ გაქვთ ამ გვერდის ნახვის უფლება."
@@ -680,10 +749,15 @@ ka:
         heading: "პერიოდული შედარების დეტალები"
         settings: "პარამეტრები"
         qa: "კითხვების/პასუხების შესწორება"
+        mass_changes: Mass Changes Via Spreadsheet
+        mass_changes_answers: Answer Mass Changes
         highlights: მნიშვნელოვანი
         warnings: "გაფრთხილება"
         delete: "წაშლა"
         private_share: "პირადი პერიოდული შედარების გაზიარება"
+        groups: Group Questions
+        sort: Sort Groups/Questions
+        weights: Weight Data
   user:
     age_group:
       g1: 17-24
@@ -768,7 +842,6 @@ ka:
       wms_title: "კეთილდღეობის <br />მონიტორინგის კვლევა"
       wms_slogan: "ბავშვთა შინამეურნეობების კეთილდღეობის <br />შედარება <br />2009, 2011 და <br/>2013 წლებში"
       header_highlights: მნიშვნელოვანი
-      header_categories: "კატეგორიების დათვალიერება"
       search_datasets: მონაცემთა ძიება
     contact:
       title: "კონტაქტი"
@@ -788,6 +861,8 @@ ka:
         publish: "აქ გამოქვეყნების თარიღი"
       no_data: "ამ მომენტისთვის ვებ-გვერდზე არ ჩატვირთულა მონაცემთა ცხრილი"
       no_match: "უკაცრავად, თქვენი არცერთი მოთხოვნა არ ემთხვევა პერიოდული შედარებას"
+    explore_data_datasets:
+      no_match: "უკაცრავად, თქვენი არცერთი მოთხოვნა არ ემთხვევა პერიოდული შედარებას"
     explore_data_show:
       title: "პერიოდული შედარების მონაცემების გაცნობა"
     explore_time_series:
@@ -799,8 +874,14 @@ ka:
         publish: "აქ გამოქვეყნების თარიღი"
       no_data: "ამ მომენტისთვის ვებ-გვერდზე არ შექმნილა პერიოდული შედარება."
       no_match: 'უკაცრავად, თქვენს მოთხოვნას არცერთი პერიოდული შედარება არ შეესაბამება'
+    explore_data_time_series:
+      no_match: 'უკაცრავად, თქვენს მოთხოვნას არცერთი პერიოდული შედარება არ შეესაბამება'
     explore_time_series_show:
       title: გაეცანით პერიოდული შედარების მონაცემებს
+    highlights:
+      title: Highlights
+      explanation: Below is a collection of data highlights from all datasets and time series. The most recently generated highlights are shown first.
+      no_highlights: Sorry, no highglights have been created yet.
   api:
     msgs:
       no_key: API-ს გამოსაყენებლად თქვენ უნდა წარმაოდგინოთ API-ს დაშვების გასაღები. თქენ მარტივად შეგიძლიათ API-ის დაშვების გასაღების მიღება შემდეგ მისამართზე გადასვლით %{url}.
@@ -994,7 +1075,7 @@ ka:
       explanation: |
         This section allows you to identify which question(s) contain a weight value and which questions that weight should be applied to.
 
-        A dataset can have multiple weights, but one must be selected as the default weight. A default weight is automatically applied to all questions. For weights that are not the default weight, you can choose to apply the weight all of the questions or only specific questions.
+        A dataset can have multiple weights, but one must be selected as the default weight. A default weight is automatically applied to all questions. For weights that are not the default weight, you can choose to apply the weight to all of the questions or only specific questions.
 
         During analysis, if two questions are being compared and they are of different weights, the default weight is used for both.
       no_weights: There are no weights on file for this dataset.
@@ -1020,6 +1101,10 @@ ka:
     form:
       header_datasets: "მონაცემთა ცხრილები"
       header_add_dataset: "პერიოდული შედარებაში ახალი მონაცემთა ცხრილების დამატება"
+    mass_changes_answers:
+      title: "Answer Mass Changes"
+      explanation: "Use this page to indicate which answers can be included during analysis, but have the ability to be excluded (e.g., answers like: Don't Know, Refuse to Answer, etc)."
+      no_questions: There are no questions on file for this time series.
     highlights:
       title: "პერიოდული შედარება გამორჩეული"
       instructions: |
@@ -1036,6 +1121,34 @@ ka:
       btn_show_home_page: Permanently Show on Home Page
       questions: Questions
       description: Description
+    sort:
+      title: Sort Groups and Questions
+      explanation: |
+        This page allows you to sort all groups and questions into the order that you desire.
+
+        By defualt, the question sort order is set to be the same as the order of the questions in the data file.
+
+        When groups are added, the group sort order is initially set so the groups appear at the top of the list.
+
+        If you have created groups, you can view and sort the items in that group by clicking on the button in the last column in the table.
+      move_explanation: Move the selected items after this item
+      move_placeholder: Select an Item
+      headers:
+        sort: Sort Order
+        type: Item Type
+        name: Item Name
+      breadcrumb_start: Main Items
+      breadcrumb_title: View all of the main items
+      breadcrumb_title_group: View the items in this group
+      main_items: "Below are the main items - groups that are not subgroups and questions that are not assigned to groups"
+      group_items: "Below are the groups and questions assigned to group '%{name}'"
+      all_types: All Item Types
+      form_header: Instructions
+      form_instructions: |
+        You can sort groups and questions using two methods:
+
+        1) Drag and Drop - Simply drag the row to the desired position.
+        2) Select & Checkboxes - Use the checkboxes to indciate which row(s) you want to move and then use the select box above the table to indicate where to move the row(s) to.
   time_series_questions:
     index:
       title: "პერიოდული შედარების კითხვების და პასუხების შესწორება"
@@ -1059,6 +1172,76 @@ ka:
       title: "კითხვა: %{question}"
       header_answers: "პასუხი"
       no_answers: "ამ კითხვისთვის პასუხი ჯერ ვერ მოიძებნა"
+    mass_changes:
+      title: Mass Changes for Questions/Answers
+      explanation: Use this page to upload a spreadsheet of Questions or Answers to quickly change the text or settings for many records at once.
+      template: Template
+      upload: Upload Your Spreadsheet of Changes
+      questions:
+        header: Questions
+        template: Clicking the button below will download a template of all questions in this time series. Make the desired changes in the spreadsheet and then use the form below to update your changes.
+        template2: "The only columns that cannot be changed are: %{code}"
+        template_link: Download Questions Template
+        submit: Update Questions
+      answers:
+        header: Answers
+        template: Clicking the button below will download a template of all answers in this time series. Make the desired changes in the spreadsheet and then use the form below to update your changes.
+        template2: "The only columns that cannot be changed are: %{code}, %{value}"
+        template_link: Download Answers Template
+        submit: Update Answers
+  time_series_groups:
+    index:
+      title: Group Questions
+      no_groups: There are no groups on file for this time series.
+      modal:
+        header: "Questions for Group '[group]'"
+      explanation: |
+        This section allows you to put similar questions together in a group. You can also create a subgroup of questions.
+
+        Groups have a name and description. You can use the description to give context to the set of questions in the group.
+
+        Groups will be visible in the codebook and on the explore page. It is up to you on whether or not the group description is included in the chart titles.
+
+        By default, groups are put at the top of the codebook and all ungrouped questions will appear after the groups. You can use the %{link} to further control the order of the groups and questions.
+      explanation_link_text: Sorting page
+    table_row:
+      question_count: '%{num} questions'
+    form:
+      option_top_level: This group is not a subgroup
+      chart_description_explanation: "Below is an example of how your description text will look in the charts. The format is: Question Code - Group Description. Question Text."
+      ex_question: Is the sky blue?
+      questions_explanation_default: "All questions that are not assigned to any other group are avaiable to be assigned to this group."
+      questions_explanation_subgroup: "Only the questions assinged to '%{group}' are available to be assigned to this subgroup."
+  time_series_weights:
+    index:
+      title: Time Series Weighting
+      explanation: |
+        This section allows you to identify which question(s) contain a weight value and which questions that weight should be applied to.
+
+        A time series can have multiple weights, but one must be selected as the default weight. A default weight is automatically applied to all questions. For weights that are not the default weight, you can choose to apply the weight to all of the questions or only specific questions.
+
+        During analysis, if two questions are being compared and they are of different weights, the default weight is used for both.
+      no_weights: There are no weights on file for this time series.
+      add: Add Weights
+      edit: Edit Weights
+      confirm_delete: Are you sure you want to delete all weights on file?
+      question_count: '%{num} questions'
+      table:
+        headers:
+          name: Weight Name
+          question: Question with Weight
+          default: Is Default Weight?
+          apply_to: Apply Weight To
+      modal:
+        header: "Questions for Weight '[weight]'"
+    new:
+      title: Time Series Weighting Form
+    edit:
+      title: Time SeriesWeighting Form
+    form:
+      other_weights: Other Weights this Question Belongs To
+      weight_question_explanation: Indicate which question to use as the weight by selectig the dataset that has the question and then selecting the question.
+      unique_id_explanation: Select the question from each dataset that contains the unique ID of the responders. This ID will be used to assign the weight to the correct responses in each dataset.
   shared:
     explore_data:
       no_matches: "თქვენი მონიშნული დაბრუნდა მონაცემებში. გთხოვთ სცადოთ თავიდან სხვა მონიშვნით."
@@ -1117,6 +1300,7 @@ ka:
         codebook: "კოდირება"
         reports: "რეფორთები"
         licensing: License
+        meta: Metadata
       no_methodology: "ამ ცხრილისთვის მეთოდოლოგია არ მოიძებნა"
       no_reports: "ამ ცხრილისთვის რეფორთები არ მოიძებნა"
       no_highlights: "ამ ცხრილისთვის გამორჩეული არ მოიძებნა"
@@ -1134,12 +1318,14 @@ ka:
         reports: "რეფორთები"
         licensing: License
         datasets: მონაცემები
+        meta: Meta Data
       no_highlights: "ამ პერიოდული შედარებისთვის გამორჩეული არ მოიძებნა"
       filter:
         all: "ყველა ტექსტი"
         questions: "კითხვის ტექსტი"
         codes: Question Code
         answers: "პასუხის ტექსტი"
+      jumpto_group: Jump To Group
     language_switcher:
       label: "ხელმისაწვდომი ენები"
     embed_v1:

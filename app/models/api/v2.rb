@@ -1,7 +1,7 @@
 class Api::V2
   extend ActionView::Helpers::NumberHelper
   ANALYSIS_TYPE = {:single => 'single', :comparative => 'comparative', :time_series => 'time_series'}
-  UNWEIGHTED = 'unweighted'
+  WEIGHT_TYPE = {:unweighted => 'unweighted', :time_series => 'time_series'}
 
   ########################################
   ## DATASETS
@@ -65,9 +65,7 @@ class Api::V2
       dataset.current_locale = language
     end
 
-    questions = dataset.questions.for_analysis
-
-    return questions
+    return dataset
   end
 
 
@@ -82,7 +80,8 @@ class Api::V2
   #  - with_chart_data - boolean indicating if results should include data formatted for highcharts (optional, default false)
   #  - with_map_data - boolean indicating if results should include data formatted for highmaps (optional, default false)
   #  - language - locale of language to get data in (optional)
-  #  - weight - code of question to use as weight; if no weight provided and dataset is weighted, use default weight (optional)
+  #  - weighted_by_code - code of question to use as weight; if no weight provided and dataset is weighted, use default weight (optional)
+  #  - weight_values - array of values to use as the weights; only used if weight = WEIGHT_TYPE[:time_series] (coming from time series)
   # return format:
   # {
   #   dataset: {id, title},
@@ -96,6 +95,7 @@ class Api::V2
   #   errors: [{status, detail}] (optional)
   # }
   def self.dataset_analysis(dataset_id, question_code, options={})
+#    puts "$$$$$$ dataset analysis options = #{options}"
     data = {}
 
     if dataset_id.nil? || question_code.nil?
@@ -104,12 +104,13 @@ class Api::V2
 
     # get options
     private_user_id = options['private_user_id']
-    can_exclude = options['can_exclude'].present? && options['can_exclude'].to_bool == true
-    with_title = options['with_title'].present? && options['with_title'].to_bool == true
-    with_chart_data = options['with_chart_data'].present? && options['with_chart_data'].to_bool == true
-    with_map_data = options['with_map_data'].present? && options['with_map_data'].to_bool == true
+    can_exclude = options['can_exclude'].present? && options['can_exclude'].to_s.to_bool == true
+    with_title = options['with_title'].present? && options['with_title'].to_s.to_bool == true
+    with_chart_data = options['with_chart_data'].present? && options['with_chart_data'].to_s.to_bool == true
+    with_map_data = options['with_map_data'].present? && options['with_map_data'].to_s.to_bool == true
     language = options['language']
     weight = options['weighted_by_code']
+    weight_values = options['weight_values'] # only present for weighted time series analysis that class this method
 
     dataset = nil
     if private_user_id
@@ -166,46 +167,50 @@ class Api::V2
     # if dataset is weighted, determine which weight to use
     # if weight is unweighted, do not use weighted
     default_weight = dataset.weights.default
-    if weight.present? && weight.downcase.strip == UNWEIGHTED
-      weight = nil
+    if weight.present? && weight.downcase.strip != WEIGHT_TYPE[:time_series]
+      if weight.downcase.strip == WEIGHT_TYPE[:unweighted]
+        weight = nil
 
-    # if dataset is weighted use the default weight
-    elsif dataset.is_weighted? || (weight.present? && !dataset.weights.weight_codes.include?(weight))
-      weight = default_weight.present? ? default_weight.code : nil
-    end
-
-    # check if questions are assigned to same weight
-    # if not, choose default weight
-    if weight.present?
-      q_weights = question.weights
-      brb_weights = broken_down_by.present? ? broken_down_by.weights : nil
-      fb_weights = filtered_by.present? ? filtered_by.weights : nil
-
-      all_have_weight = true
-      if !q_weights.map{|x| x.code}.include?(weight)
-        all_have_weight = false
-      end
-      if brb_weights.present? && !brb_weights.map{|x| x.code}.include?(weight)
-        all_have_weight = false
-      end
-      if fb_weights.present? && !fb_weights.map{|x| x.code}.include?(weight)
-        all_have_weight = false
-      end
-
-      if !all_have_weight
+      # if dataset is weighted but weight is not found use the default weight
+      elsif dataset.is_weighted? || (weight.present? && !dataset.weights.weight_codes.include?(weight))
         weight = default_weight.present? ? default_weight.code : nil
       end
+
+      # check if questions are assigned to same weight
+      # if not, choose default weight
+      if weight.present?
+        q_weights = question.weights
+        brb_weights = broken_down_by.present? ? broken_down_by.weights : nil
+        fb_weights = filtered_by.present? ? filtered_by.weights : nil
+
+        all_have_weight = true
+        if !q_weights.map{|x| x.code}.include?(weight)
+          all_have_weight = false
+        end
+        if brb_weights.present? && !brb_weights.map{|x| x.code}.include?(weight)
+          all_have_weight = false
+        end
+        if fb_weights.present? && !fb_weights.map{|x| x.code}.include?(weight)
+          all_have_weight = false
+        end
+
+        if !all_have_weight
+          weight = default_weight.present? ? default_weight.code : nil
+        end
+      end
+
+      # get the weight question
+      weight_question = nil
+      weight_item = nil
+      if weight.present?
+        weight_item = dataset.weights.with_code(weight)
+        weight_question =  dataset.questions.with_code(weight)
+        # reset the weight option in case a bad one was sent in or questions do not share weight
+        options['weighted_by_code'] = weight
+      end
     end
 
-    # get the weight question
-    weight_question = nil
-    weight_item = nil
-    if weight.present?
-      weight_item = dataset.weights.with_code(weight)
-      weight_question =  dataset.questions.with_code(weight)
-      # reset the weight option in case a bad one was sent in or questions do not share weight
-      options[:weight] = weight
-    end
+    puts "==- dataset weight = #{weight}"
 
     ########################
     # start populating the output
@@ -213,9 +218,15 @@ class Api::V2
     data[:question] = create_dataset_question_hash(question, can_exclude: can_exclude, private_user_id: private_user_id)
     data[:broken_down_by] = create_dataset_question_hash(broken_down_by, can_exclude: can_exclude, private_user_id: private_user_id) if broken_down_by.present?
     data[:filtered_by] = create_dataset_question_hash(filtered_by, can_exclude: can_exclude, private_user_id: private_user_id) if filtered_by.present?
-    data[:weighted_by] = create_dataset_weight_hash(weight_item, weight_question) if weight_question.present?
+    if weight.present? && weight.downcase.strip == WEIGHT_TYPE[:time_series]
+      data[:weighted_by] = WEIGHT_TYPE[:time_series]
+    elsif weight_question.present?
+      data[:weighted_by] = create_dataset_weight_hash(weight_item, weight_question)
+    end
     data[:analysis_type] = nil
     data[:results] = nil
+
+    puts "==- dataset data[:weighted_by] = #{data[:weighted_by]}"
 
     ########################
     # do the analysis
@@ -228,7 +239,7 @@ class Api::V2
       data[:map] = dataset_comparative_map(question.answers, broken_down_by.answers, data, question.is_mappable?, with_title, options) if with_map_data && (question.is_mappable? || broken_down_by.is_mappable?)
     else
       data[:analysis_type] = ANALYSIS_TYPE[:single]
-      data[:results] = dataset_single_analysis(dataset, data, with_title)
+      data[:results] = dataset_single_analysis(dataset, data, with_title, weight_values)
       data[:chart] = dataset_single_chart(data, with_title, options) if with_chart_data
       data[:map] = dataset_single_map(question.answers, data, with_title, options) if with_map_data && question.is_mappable?
     end
@@ -296,9 +307,7 @@ class Api::V2
       time_series.current_locale = language
     end
 
-    questions = time_series.questions.sorted
-
-    return questions
+    return time_series
   end
 
   # analyse the time series for the passed in parameters
@@ -306,6 +315,7 @@ class Api::V2
   #  - time_series_id - id of time_series to analyze (required)
   #  - question_code - code of question to analyze (required)
   #  - filtered_by_code - code of question to filter the analysis by (optioanl)
+  #  - weighted_by_code - code of question to use as weight; if no weight provided and time series is weighted, use default weight (optional)
   #  - can_exclude - boolean indicating if the can_exclude answers should by excluded (optional, default false)
   #  - with_title - boolean indicating if results should include title (optional, default false)
   #  - with_chart_data - boolean indicating if results should include data formatted for highcharts (optional, default false)
@@ -322,6 +332,7 @@ class Api::V2
   #   errors: [{status, detail}] (optional)
   # }
   def self.time_series_analysis(time_series_id, question_code, options={})
+#    puts "$$$$$$ time series analysis options = #{options}"
     data = {}
 
     if time_series_id.nil? || question_code.nil?
@@ -331,11 +342,12 @@ class Api::V2
 
     ########################
     # get options
-    private_user_id = options['private_user_id'].present? ? options['private_user_id'] : nil
-    can_exclude = options['can_exclude'].present? && options['can_exclude'].to_bool == true
-    with_title = options['with_title'].present? && options['with_title'].to_bool == true
-    with_chart_data = options['with_chart_data'].present? && options['with_chart_data'].to_bool == true
-    language = options['language'].present? ? options['language'].downcase : nil
+    private_user_id = options['private_user_id']
+    can_exclude = options['can_exclude'].present? && options['can_exclude'].to_s.to_bool == true
+    with_title = options['with_title'].present? && options['with_title'].to_s.to_bool == true
+    with_chart_data = options['with_chart_data'].present? && options['with_chart_data'].to_s.to_bool == true
+    language = options['language']
+    weight = options['weighted_by_code']
 
     time_series = nil
     if private_user_id
@@ -386,21 +398,56 @@ class Api::V2
       end
     end
 
+    # if time series is weighted, determine which weight to use
+    # if weight is unweighted, do not use weighted
+    default_weight = time_series.weights.default
+    if weight.present? && weight.downcase.strip == WEIGHT_TYPE[:unweighted]
+      weight = nil
+
+    # if time series is weighted but weight is not found use the default weight
+    elsif time_series.is_weighted? || (weight.present? && !time_series.weights.weight_codes.include?(weight))
+      weight = default_weight.present? ? default_weight.code : nil
+    end
+
+    # get the weight question
+    weight_question = nil
+    weight_item = nil
+    if weight.present?
+      weight_item = time_series.weights.with_code(weight)
+      weight_question =  weight_item.dataset.questions.with_code(weight)
+      # reset the weight option in case a bad one was sent in
+      options['weighted_by_code'] = weight
+    end
+
+    puts "== time series weight = #{weight}; item = #{weight_item.inspect}; question = #{weight_question.inspect}"
+
     ########################
     # start populating the output
     data[:time_series] = {id: time_series.id, title: time_series.title}
     data[:datasets] = create_time_series_dataset_hash(datasets)
     data[:question] = create_time_series_question_hash(question, can_exclude)
     data[:filtered_by] = create_time_series_question_hash(filtered_by, can_exclude) if filtered_by.present?
+    data[:weighted_by] = create_time_series_weight_hash(weight_item, weight_question) if weight_question.present?
     data[:analysis_type] = ANALYSIS_TYPE[:time_series]
     data[:results] = nil
+
+    puts "== weighted by hash = #{data[:weighted_by]}"
 
     ########################
     # do the analysis
     # run the analysis for each dataset
     individual_results = []
+    dataset_options = options.clone
+    # if the time series is not using a weight, make sure the datasets are not either
+    dataset_options['weighted_by_code'] = weight.nil? ? WEIGHT_TYPE[:unweighted] : WEIGHT_TYPE[:time_series]
     dataset_questions.each do |dq|
-      x = dataset_analysis(dq.dataset_id, question_code, options)
+      # if using weights, get the weight values for this dataset
+      if weight.present?
+        dataset_options['weight_values'] = weight_item.assignments.dataset_weight_values(dq.dataset_id)
+        puts "==- dataset #{dq.dataset_id} has #{dataset_options['weight_values'].length} weight values"
+      end
+
+      x = dataset_analysis(dq.dataset_id, question_code, dataset_options)
       if x.present?
         individual_results << {dataset_id: dq.dataset_id, dataset_results:x}
       end
@@ -411,7 +458,7 @@ class Api::V2
       return {errors: [{status: '404', detail: I18n.t('api.msgs.no_time_series_dataset_error') }]}
     end
 
-    data[:results] = time_series_single_analysis(data[:datasets], individual_results, data[:question], data[:filtered_by], with_title)
+    data[:results] = time_series_single_analysis(data, individual_results, with_title)
     data[:chart] = time_series_single_chart(data, with_title, options) if with_chart_data
 
     return data
@@ -428,7 +475,7 @@ private
   def self.clean_options(options)
     if options.class == Hash
       # list of keys to keep
-      to_keep = %w(dataset_id time_series_id question_code broken_down_by_code filtered_by_code can_exclude with_title with_chart_data with_map_data language filtered_by_value visual_type broken_down_value filtered_by_value)
+      to_keep = %w(dataset_id time_series_id question_code broken_down_by_code filtered_by_code can_exclude with_title with_chart_data with_map_data language filtered_by_value visual_type broken_down_value filtered_by_value weighted_by_code)
 
       # remove any keys that are not in the list
       options = options.dup.delete_if{|k,v| !to_keep.include?(k.to_s)}
@@ -484,20 +531,28 @@ private
 
 
   # for the given dataset and question, do a single analysis
-  def self.dataset_single_analysis(dataset, data_hash, with_title=false)
+  def self.dataset_single_analysis(dataset, data_hash, with_title=false, provided_weight_values=nil)
     question = data_hash[:question]
     filtered_by = data_hash[:filtered_by]
     weight = data_hash[:weighted_by]
 
+    puts "==== dataset single analysis weight = #{weight}; provide weight values length = #{provided_weight_values.nil? ? 0 : provided_weight_values.length}"
+
     # get the data for this code
     data = dataset.data_items.code_data(question[:code])
     # get the data for the weight
-    weight_values = weight.present? ? dataset.data_items.code_data(weight[:code]) : []
-
-    # only keep the data that is in the list of question answers
-    # - this is where can_exclude removes the unwanted answers
-    answer_values = question[:answers].map{|x| x[:value]}
-    data.delete_if{|x| !answer_values.include?(x)}
+    # - if the weight is from time series, use the provided weight values,
+    #   otherwise get the weight values from the dataset
+    weight_values = []
+    if weight.present?
+      if weight == WEIGHT_TYPE[:time_series] && provided_weight_values.present?
+        puts "==-- using time series weights"
+        weight_values = provided_weight_values
+      elsif weight != WEIGHT_TYPE[:time_series] && weight.class == Hash
+        puts "==-- using dataset weights"
+        weight_values = dataset.data_items.code_data(weight[:code])
+      end
+    end
 
     # if filter provided, then get data for filter
     # and then only pull out the code data that matches
@@ -508,6 +563,11 @@ private
         # and then pull out the data that has the corresponding filter value
         merged_data = filter_data.zip(data)
         merged_weight_values = weight_values.present? ? filter_data.zip(weight_values) : []
+
+        # only keep the data that is in the list of question answers
+        # - this is where can_exclude removes the unwanted answers
+        answer_values = question[:answers].map{|x| x[:value]}
+        merged_data.delete_if{|x| !answer_values.include?(x[1])}
 
         filter_results = nil
         if with_title
@@ -536,6 +596,11 @@ private
         return filter_results
       end
     else
+      # only keep the data that is in the list of question answers
+      # - this is where can_exclude removes the unwanted answers
+      answer_values = question[:answers].map{|x| x[:value]}
+      data.delete_if{|x| !answer_values.include?(x)}
+
       return dataset_single_analysis_processing(question, data.length, data, with_title: with_title, weight_values: weight_values)
     end
 
@@ -828,12 +893,6 @@ private
     # has nested arrays
     data = question_data.zip(broken_down_data)
 
-    # only keep the data that is in the list of question/broken down by answers
-    # - this is where can_exclude removes the unwanted answers
-    q_answer_values = question[:answers].map{|x| x[:value]}
-    bdb_answer_values = broken_down_by[:answers].map{|x| x[:value]}
-    data.delete_if{|x| !q_answer_values.include?(x[0]) && !bdb_answer_values.include?(x[1])}
-
     # if filter provided, then get data for filter
     # and then only pull out the code data that matches
     if filtered_by.present?
@@ -843,6 +902,12 @@ private
         # and then pull out the data that has the corresponding filter value
         merged_data = filter_data.zip(data)
         merged_weight_values = weight_values.present? ? filter_data.zip(weight_values) : []
+
+        # only keep the data that is in the list of question/broken down by answers
+        # - this is where can_exclude removes the unwanted answers
+        q_answer_values = question[:answers].map{|x| x[:value]}
+        bdb_answer_values = broken_down_by[:answers].map{|x| x[:value]}
+        merged_data.delete_if{|x| !q_answer_values.include?(x[1]) && !bdb_answer_values.include?(x[2])}
 
         filter_results = nil
         if with_title
@@ -871,6 +936,12 @@ private
         return filter_results
       end
     else
+      # only keep the data that is in the list of question/broken down by answers
+      # - this is where can_exclude removes the unwanted answers
+      q_answer_values = question[:answers].map{|x| x[:value]}
+      bdb_answer_values = broken_down_by[:answers].map{|x| x[:value]}
+      data.delete_if{|x| !q_answer_values.include?(x[0]) && !bdb_answer_values.include?(x[1])}
+
       return dataset_comparative_analysis_processing(question, broken_down_by, data.length, data, with_title: with_title, weight_values: weight_values)
     end
 
@@ -1371,7 +1442,30 @@ private
     hash = {}
     if question.present?
       hash = {code: question.code, original_code: question.original_code, text: question.text, notes: question.notes}
+      # if this question belongs to a group, add it
+      if question.group_id.present?
+        group = question.group
+        if group.present?
+          # see if this is a subgroup
+          if group.parent_id.present?
+            hash[:group] = {title: group.parent.title, description: group.parent.description, include_in_charts: group.parent.include_in_charts}
+            hash[:subgroup] = {title: group.title, description: group.description, include_in_charts: group.include_in_charts}
+          else
+            hash[:group] = {title: group.title, description: group.description, include_in_charts: group.include_in_charts}
+          end
+        end
+      end
       hash[:answers] = (can_exclude == true ? question.answers.must_include_for_analysis : question.answers.sorted).map{|x| {value: x.value, text: x.text, can_exclude: x.can_exclude, sort_order: x.sort_order}}
+    end
+
+    return hash
+  end
+
+  # create weight hash for a time series
+  def self.create_time_series_weight_hash(weight, question)
+    hash = {}
+    if weight.present? && question.present?
+      hash = {weight_name: weight.text, code: question.code, original_code: question.original_code, text: question.text, notes: question.notes}
     end
 
     return hash
@@ -1379,7 +1473,12 @@ private
 
 
   # for the given time_series and question, do a single analysis
-  def self.time_series_single_analysis(datasets, individual_results, question, filtered_by=nil, with_title=false)
+  def self.time_series_single_analysis(data_hash, individual_results, with_title=false)
+    datasets = data_hash[:datasets]
+    question = data_hash[:question]
+    filtered_by = data_hash[:filtered_by]
+    weight = data_hash[:weighted_by]
+
     # if filter provided, then get data for filter
     # and then only pull out the code data that matches
     if filtered_by.present?
@@ -1387,8 +1486,8 @@ private
       if with_title
         filter_results = {title: {html: nil, text: nil}, subtitle: {html: nil, text: nil}, filter_analysis: []}
 
-        filter_results[:title][:html] = time_series_single_analysis_title_html(question, filtered_by)
-        filter_results[:title][:text] = time_series_single_analysis_title_text(question, filtered_by)
+        filter_results[:title][:html] = time_series_single_analysis_title('html', question, filtered_by)
+        filter_results[:title][:text] = time_series_single_analysis_title('text', question, filtered_by)
       else
         filter_results = {filter_analysis: []}
       end
@@ -1396,20 +1495,20 @@ private
       filtered_by[:answers].each do |filter_answer|
         filter_item = {filter_answer_value: filter_answer[:value], filter_answer_text: filter_answer[:text]}
 
-        filter_item[:filter_results] = time_series_single_analysis_processing(datasets, individual_results, question, with_title, filtered_by, filter_answer[:value])
+        filter_item[:filter_results] = time_series_single_analysis_processing(datasets, individual_results, question, with_title: with_title, is_weighted: weight.present?, filtered_by: filtered_by, filter_answer_value: filter_answer[:value])
 
         filter_results[:filter_analysis] << filter_item
       end
 
       if with_title
         # needed to run all anaylsis in order to have all total responses for subtitle
-        filter_results[:subtitle][:html] = time_series_analysis_subtitle_html_filtered(filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis])
-        filter_results[:subtitle][:text] = time_series_analysis_subtitle_text_filtered(filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis])
+        filter_results[:subtitle][:html] = time_series_analysis_subtitle_filtered('html', filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis], weight.present?)
+        filter_results[:subtitle][:text] = time_series_analysis_subtitle_filtered('text', filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis], weight.present?)
       end
 
       return filter_results
     else
-      return time_series_single_analysis_processing(datasets, individual_results, question, with_title)
+      return time_series_single_analysis_processing(datasets, individual_results, question, with_title: with_title, is_weighted: weight.present?)
     end
 
   end
@@ -1417,7 +1516,14 @@ private
 
 
   # for the given question and it's data, do a single analysis and convert into counts and percents
-  def self.time_series_single_analysis_processing(datasets, individual_results, question, with_title=false, filter_by=nil, filter_answer_value=nil)
+  def self.time_series_single_analysis_processing(datasets, individual_results, question, options={})
+    with_title = options[:with_title].nil? ? false : options[:with_title]
+    is_weighted = options[:is_weighted].nil? ? false : options[:is_weighted]
+    filtered_by = options[:filtered_by]
+    filter_answer_value = options[:filter_answer_value]
+
+    puts "===- time series single analysis processing options = #{options}"
+
     results = nil
     if with_title
       results = {title: {html: nil, text: nil}, subtitle: {html: nil, text: nil}, total_responses: [], analysis: []}
@@ -1429,11 +1535,19 @@ private
       answer_item = {answer_value: answer[:value], answer_text: answer[:text], dataset_results: []}
 
       datasets.each do |dataset|
-        dataset_item = {dataset_label: dataset[:label], dataset_title: dataset[:title], count: 0, percent: 0}
+        dataset_item = {dataset_label: dataset[:label], dataset_title: dataset[:title]}
+        if is_weighted == true
+          dataset_item[:unweighted_count] = 0
+          dataset_item[:weighted_count] = 0
+          dataset_item[:weighted_percent] = 0
+        else
+          dataset_item[:count] = 0
+          dataset_item[:percent] = 0
+        end
 
         # see if this dataset had results
         individual_result = individual_results.select{|x| x[:dataset_id].to_s == dataset[:dataset_id].to_s}.first
-        if individual_result.present?
+        if individual_result.present? && !individual_result[:dataset_results].has_key?(:errors)
           # get results from dataset
           dataset_answer_results = nil
           if filter_answer_value.present?
@@ -1444,8 +1558,14 @@ private
           end
 
           if dataset_answer_results.present?
-            dataset_item[:count] = dataset_answer_results[:count]
-            dataset_item[:percent] = dataset_answer_results[:percent]
+            if is_weighted == true
+              dataset_item[:unweighted_count] = dataset_answer_results[:unweighted_count]
+              dataset_item[:weighted_count] = dataset_answer_results[:weighted_count]
+              dataset_item[:weighted_percent] = dataset_answer_results[:weighted_percent]
+            else
+              dataset_item[:count] = dataset_answer_results[:count]
+              dataset_item[:percent] = dataset_answer_results[:percent]
+            end
           end
         end
         answer_item[:dataset_results] << dataset_item
@@ -1457,16 +1577,20 @@ private
 
     # add total responses for each dataset
     datasets.each do |dataset|
-      response_item = {dataset_label: dataset[:label], dataset_title: dataset[:title], count: 0}
+      response_item = {dataset_label: dataset[:label], dataset_title: dataset[:title], total_responses: 0, total_possible_responses: 0}
 
       # see if this dataset had results
       individual_result = individual_results.select{|x| x[:dataset_id].to_s == dataset[:dataset_id].to_s}.first
-      if individual_result.present?
+      if individual_result.present? && !individual_result[:dataset_results].has_key?(:errors)
         if filter_answer_value.present?
           filter_results = individual_result[:dataset_results][:results][:filter_analysis].select{|x| x[:filter_answer_value] == filter_answer_value}.first
-          response_item[:count] = filter_results[:filter_results][:total_responses] if filter_results.present?
+          if filter_results.present?
+            response_item[:total_responses] = filter_results[:filter_results][:total_responses]
+            response_item[:total_possible_responses] = filter_results[:filter_results][:total_possible_responses]
+          end
         else
-          response_item[:count] = individual_result[:dataset_results][:results][:total_responses]
+          response_item[:total_responses] = individual_result[:dataset_results][:results][:total_responses]
+          response_item[:total_possible_responses] = individual_result[:dataset_results][:results][:total_possible_responses]
         end
       end
 
@@ -1477,18 +1601,18 @@ private
     if with_title
       if filter_answer_value.present?
         # look for any match in filter results with the filter answer value
-        filter_result = individual_results.map{|x| x[:dataset_results][:results][:filter_analysis]}.flatten.select{|x| x[:filter_answer_value] == filter_answer_value}.first
+        filter_result = individual_results.select{|x| !x[:dataset_results].has_key?(:errors)}.map{|x| x[:dataset_results][:results][:filter_analysis]}.flatten.select{|x| x[:filter_answer_value] == filter_answer_value}.first
         if filter_result.present?
-          results[:title][:html] = time_series_single_analysis_title_html(question, filter_by, filter_result[:filter_answer_text])
-          results[:title][:text] = time_series_single_analysis_title_text(question, filter_by, filter_result[:filter_answer_text])
-          results[:subtitle][:html] = time_series_analysis_subtitle_html(results[:total_responses])
-          results[:subtitle][:text] = time_series_analysis_subtitle_text(results[:total_responses])
+          results[:title][:html] = time_series_single_analysis_title('html', question, filtered_by, filter_result[:filter_answer_text])
+          results[:title][:text] = time_series_single_analysis_title('text', question, filtered_by, filter_result[:filter_answer_text])
+          results[:subtitle][:html] = time_series_analysis_subtitle('html', results[:total_responses], is_weighted)
+          results[:subtitle][:text] = time_series_analysis_subtitle('text', results[:total_responses], is_weighted)
         end
       else
-        results[:title][:html] = time_series_single_analysis_title_html(question)
-        results[:title][:text] = time_series_single_analysis_title_text(question)
-        results[:subtitle][:html] = time_series_analysis_subtitle_html(results[:total_responses])
-        results[:subtitle][:text] = time_series_analysis_subtitle_text(results[:total_responses])
+        results[:title][:html] = time_series_single_analysis_title('html', question)
+        results[:title][:text] = time_series_single_analysis_title('text', question)
+        results[:subtitle][:html] = time_series_analysis_subtitle('html', results[:total_responses], is_weighted)
+        results[:subtitle][:text] = time_series_analysis_subtitle('text', results[:total_responses], is_weighted)
       end
     end
 
@@ -1581,10 +1705,17 @@ private
 
   # format: {y(percent), count}
   def self.time_series_single_chart_processing(data_result)
-    {
-      y: data_result[:percent],
-      count: data_result[:count]
-    }
+    if data_result.has_key?(:weighted_count)
+      {
+        y: data_result[:weighted_percent],
+        count: data_result[:weighted_count]
+      }
+    else
+      {
+        y: data_result[:percent],
+        count: data_result[:count]
+      }
+    end
   end
 
 
@@ -1596,18 +1727,18 @@ private
   def self.dataset_single_analysis_title(locale_key, question, filtered_by=nil, filtered_by_answer=nil)
     group = ''
     if question[:group].present? && question[:group][:include_in_charts]
-      group << I18n.t('explore_data.title_group', text: question[:group][:description])
+      group << I18n.t("explore_data.group.#{locale_key}.title", text: question[:group][:description])
       if question[:subgroup].present? && question[:subgroup][:include_in_charts]
-        group << I18n.t('explore_data.title_subgroup', text: question[:subgroup][:description])
+        group << I18n.t("explore_data.subgroup.#{locale_key}.title", text: question[:subgroup][:description])
       end
     end
     title = I18n.t("explore_data.single.#{locale_key}.title", :code => question[:original_code], :variable => question[:text], :group => group)
     if filtered_by.present?
       group = ''
       if filtered_by[:group].present? && filtered_by[:group][:include_in_charts]
-        group << I18n.t('explore_data.title_group', text: filtered_by[:group][:description])
+        group << I18n.t("explore_data.group.#{locale_key}.title", text: filtered_by[:group][:description])
         if filtered_by[:subgroup].present? && filtered_by[:subgroup][:include_in_charts]
-          group << I18n.t('explore_data.title_subgroup', text: filtered_by[:subgroup][:description])
+          group << I18n.t("explore_data.subgroup.#{locale_key}.title", text: filtered_by[:subgroup][:description])
         end
       end
       if filtered_by_answer.present?
@@ -1622,16 +1753,16 @@ private
   def self.dataset_comparative_analysis_title(locale_key, question, broken_down_by, filtered_by=nil, filtered_by_answer=nil)
     group = ''
     if question[:group].present? && question[:group][:include_in_charts]
-      group << I18n.t('explore_data.title_group', text: question[:group][:description])
+      group << I18n.t("explore_data.group.#{locale_key}.title", text: question[:group][:description])
       if question[:subgroup].present? && question[:subgroup][:include_in_charts]
-        group << I18n.t('explore_data.title_subgroup', text: question[:subgroup][:description])
+        group << I18n.t("explore_data.subgroup.#{locale_key}.title", text: question[:subgroup][:description])
       end
     end
     group2 = ''
     if broken_down_by[:group].present? && broken_down_by[:group][:include_in_charts]
-      group2 << I18n.t('explore_data.title_group', text: broken_down_by[:group][:description])
+      group2 << I18n.t("explore_data.group.#{locale_key}.title", text: broken_down_by[:group][:description])
       if broken_down_by[:subgroup].present? && broken_down_by[:subgroup][:include_in_charts]
-        group2 << I18n.t('explore_data.title_subgroup', text: broken_down_by[:subgroup][:description])
+        group2 << I18n.t("explore_data.subgroup.#{locale_key}.title", text: broken_down_by[:subgroup][:description])
       end
     end
     title = I18n.t("explore_data.comparative.#{locale_key}.title", :question_code => question[:original_code], :variable => question[:text],
@@ -1639,9 +1770,9 @@ private
     if filtered_by.present?
       group = ''
       if filtered_by[:group].present? && filtered_by[:group][:include_in_charts]
-        group << I18n.t('explore_data.title_group', text: filtered_by[:group][:description])
+        group << I18n.t("explore_data.group.#{locale_key}.title", text: filtered_by[:group][:description])
         if filtered_by[:subgroup].present? && filtered_by[:subgroup][:include_in_charts]
-          group << I18n.t('explore_data.title_subgroup', text: filtered_by[:subgroup][:description])
+          group << I18n.t("explore_data.subgroup.#{locale_key}.title", text: filtered_by[:subgroup][:description])
         end
       end
       if filtered_by_answer.present?
@@ -1656,16 +1787,16 @@ private
   def self.dataset_comparative_analysis_map_title(locale_key, question, broken_down_by, broken_down_by_answer, filtered_by=nil, filtered_by_answer=nil)
     group = ''
     if question[:group].present? && question[:group][:include_in_charts]
-      group << I18n.t('explore_data.title_group', text: question[:group][:description])
+      group << I18n.t("explore_data.group.#{locale_key}.title", text: question[:group][:description])
       if question[:subgroup].present? && question[:subgroup][:include_in_charts]
-        group << I18n.t('explore_data.title_subgroup', text: question[:subgroup][:description])
+        group << I18n.t("explore_data.subgroup.#{locale_key}.title", text: question[:subgroup][:description])
       end
     end
     group2 = ''
     if broken_down_by[:group].present? && broken_down_by[:group][:include_in_charts]
-      group2 << I18n.t('explore_data.title_group', text: broken_down_by[:group][:description])
+      group2 << I18n.t("explore_data.group.#{locale_key}.title", text: broken_down_by[:group][:description])
       if broken_down_by[:subgroup].present? && broken_down_by[:subgroup][:include_in_charts]
-        group2 << I18n.t('explore_data.title_subgroup', text: broken_down_by[:subgroup][:description])
+        group2 << I18n.t("explore_data.subgroup.#{locale_key}.title", text: broken_down_by[:subgroup][:description])
       end
     end
     title = I18n.t("explore_data.comparative.#{locale_key}.map.title", :code => question[:original_code], :variable => question[:text], :group => group)
@@ -1673,9 +1804,9 @@ private
     if filtered_by.present?
       group = ''
       if filtered_by[:group].present? && filtered_by[:group][:include_in_charts]
-        group << I18n.t('explore_data.title_group', text: filtered_by[:group][:description])
+        group << I18n.t("explore_data.group.#{locale_key}.title", text: filtered_by[:group][:description])
         if filtered_by[:subgroup].present? && filtered_by[:subgroup][:include_in_charts]
-          group << I18n.t('explore_data.title_subgroup', text: filtered_by[:subgroup][:description])
+          group << I18n.t("explore_data.subgroup.#{locale_key}.title", text: filtered_by[:subgroup][:description])
         end
       end
       if filtered_by_answer.present?
@@ -1716,7 +1847,7 @@ private
         filter_responses << " #{result[:filter_answer_text]}: #{number_with_delimiter(result[:filter_results][:total_responses])}"
       end
     end
-    title << I18n.t("explore_data.subtitle.#{locale_key}.#{title_key}", :code => filtered_by_code, :variable => filtered_by_text, :nums => filter_responses.join(join_text), :total => total)
+    title << I18n.t("explore_data.subtitle.#{locale_key}.#{title_key}", :code => filtered_by_code, :variable => filtered_by_text, :nums => filter_responses.join(join_text), :total => number_with_delimiter(total))
     if locale_key == 'html'
       title << "</span>"
     end
@@ -1727,78 +1858,93 @@ private
 
 
 
-  def self.time_series_single_analysis_title_html(question, filtered_by=nil, filtered_by_answer=nil)
-    title = I18n.t('explore_time_series.single.html.title', :code => question[:original_code], :variable => question[:text])
+  def self.time_series_single_analysis_title(locale_key, question, filtered_by=nil, filtered_by_answer=nil)
+    group = ''
+    if question[:group].present? && question[:group][:include_in_charts]
+      group << I18n.t("explore_time_series.group.#{locale_key}.title", text: question[:group][:description])
+      if question[:subgroup].present? && question[:subgroup][:include_in_charts]
+        group << I18n.t("explore_time_series.subgroup.#{locale_key}.title", text: question[:subgroup][:description])
+      end
+    end
+    title = I18n.t("explore_time_series.single.#{locale_key}.title", :code => question[:original_code], :variable => question[:text], :group => group)
     if filtered_by.present?
+      group = ''
+      if filtered_by[:group].present? && filtered_by[:group][:include_in_charts]
+        group << I18n.t("explore_time_series.group.#{locale_key}.title", text: filtered_by[:group][:description])
+        if filtered_by[:subgroup].present? && filtered_by[:subgroup][:include_in_charts]
+          group << I18n.t("explore_time_series.subgroup.#{locale_key}.title", text: filtered_by[:subgroup][:description])
+        end
+      end
       if filtered_by_answer.present?
-        title << I18n.t('explore_time_series.single.html.title_filter_value', :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer )
+        title << I18n.t("explore_time_series.single.#{locale_key}.title_filter_value", :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer, :group => group )
       else
-        title << I18n.t('explore_time_series.single.html.title_filter', :code => filtered_by[:original_code], :variable => filtered_by[:text] )
+        title << I18n.t("explore_time_series.single.#{locale_key}.title_filter", :code => filtered_by[:original_code], :variable => filtered_by[:text], :group => group )
       end
     end
     return title.html_safe
   end
 
-  def self.time_series_single_analysis_title_text(question, filtered_by=nil, filtered_by_answer=nil)
-    title = I18n.t('explore_time_series.single.text.title', :code => question[:original_code], :variable => question[:text])
-    if filtered_by.present?
-      if filtered_by_answer.present?
-        title << I18n.t('explore_time_series.single.text.title_filter_value', :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer )
-      else
-        title << I18n.t('explore_time_series.single.text.title_filter', :code => filtered_by[:original_code], :variable => filtered_by[:text] )
-      end
+  def self.time_series_analysis_subtitle(locale_key, totals, is_weighted=false)
+    title = ''
+    title_key = is_weighted == true ? 'title_weighted' : 'title'
+    join_key = locale_key == 'html' ? '<br /> ' : '; '
+    if locale_key == 'html'
+      title << "<br /> <span class='total_responses'>"
     end
-    return title
-  end
-
-  def self.time_series_analysis_subtitle_html(totals)
-    title = "<br /> <span class='total_responses'>"
     num = []
     totals.each do |total|
-      num << "#{total[:dataset_label]}: <span class='number'>#{number_with_delimiter(total[:count])}</span>"
+      num << I18n.t("explore_time_series.subtitle.#{locale_key}.title_x_of_y", dataset: total[:dataset_label], num: number_with_delimiter(total[:total_responses]), total: number_with_delimiter(total[:total_possible_responses]))
     end
-    title << I18n.t('explore_time_series.subtitle.html.title', :num => num.join('; '))
-    title << "</span>"
+    title << I18n.t("explore_time_series.subtitle.#{locale_key}.#{title_key}", :x_of_y => num.join(join_key))
+    if locale_key == 'html'
+      title << "</span>"
+    end
     return title.html_safe
   end
 
-  def self.time_series_analysis_subtitle_text(totals)
-    num = []
-    totals.each do |total|
-      num << "#{total[:dataset_label]}: #{number_with_delimiter(total[:count])}"
+  def self.time_series_analysis_subtitle_filtered(locale_key, filtered_by_code, filtered_by_text, results, is_weighted=false)
+    title = ''
+    join_text = locale_key == 'html' ? '' : '; '
+    title_key = is_weighted == true ? 'title_filter_weighted' : 'title_filter'
+    if locale_key == 'html'
+      title = "<br /> <span class='total_responses'>"
     end
-    return I18n.t('explore_time_series.subtitle.text.title', :num => num.join('; '))
-  end
 
-  def self.time_series_analysis_subtitle_html_filtered(filtered_by_code, filtered_by_text, results)
-    title = "<br /> <span class='total_responses'>"
+    # put together the total responses for each result in each dataset
     filter_responses = []
     results.each do |result|
-      text = "<br /> - #{result[:filter_answer_text]}: "
-      num = []
-      result[:filter_results][:total_responses].each do |response|
-        num << "#{response[:dataset_label]}: <span class='number'>#{number_with_delimiter(response[:count])}</span>"
+      text = ''
+      if locale_key == 'html'
+        text << "<span class='filter_responses'>#{result[:filter_answer_text]}: "
+        num = []
+        result[:filter_results][:total_responses].each do |response|
+          num << "#{response[:dataset_label]}: <span class='number'>#{number_with_delimiter(response[:total_responses])}</span>"
+        end
+        text << num.join('; ')
+        text << '</span>'
+      else
+        text = "#{result[:filter_answer_text]}: "
+        num = []
+        result[:filter_results][:total_responses].each do |response|
+          num << "#{response[:dataset_label]}: #{number_with_delimiter(response[:total_responses])}"
+        end
+        text << num.join('; ')
       end
-      text << num.join('; ')
+
       filter_responses << text
     end
-    title << I18n.t('explore_time_series.subtitle.html.title_filter', :code => filtered_by_code, :variable => filtered_by_text, :nums => filter_responses.join)
-    title << "</span>"
+
+    # put together the total possible responses
+    totals = []
+    results[0][:filter_results][:total_responses].each do |response|
+      totals << "#{response[:dataset_label]}: #{number_with_delimiter(response[:total_possible_responses])}"
+    end
+
+    title << I18n.t("explore_time_series.subtitle.#{locale_key}.#{title_key}", :code => filtered_by_code, :variable => filtered_by_text, :nums => filter_responses.join, totals: totals.join('; '))
+    if locale_key == 'html'
+      title << "</span>"
+    end
     return title.html_safe
-  end
-
-  def self.time_series_analysis_subtitle_text_filtered(filtered_by_code, filtered_by_text, results)
-    filter_responses = []
-    results.each do |result|
-      text = " #{result[:filter_answer_text]}: "
-      num = []
-      result[:filter_results][:total_responses].each do |response|
-        num << "#{response[:dataset_label]}: #{number_with_delimiter(response[:count])}"
-      end
-      text << num.join('; ')
-      filter_responses << text
-    end
-    return I18n.t('explore_time_series.subtitle.text.title_filter', :code => filtered_by_code, :variable => filtered_by_text, :nums => filter_responses.join('; '))
   end
 
 end

@@ -1,7 +1,6 @@
 class Group < CustomTranslation
   include Mongoid::Document
 
-
   field :title, type: String, localize: true
   field :description, type: String, localize: true
   # if true, the description text will appear in the chart titles
@@ -103,35 +102,6 @@ class Group < CustomTranslation
 
   #############################
 
-  # get questions for a specific type and save to questions
-  # def get_questions_by_type(type='all')
-  #   if !self.questions.present?
-  #     self.questions = self.dataset.questions.assigned_to_group(self.id, type)
-  #   end
-
-  #   return self.questions
-  # end
-
-  # # get questions that are in this group
-  # def questions
-  #   self.dataset.questions.assigned_to_group(self.id)
-  # end
-
-  # # get questions that are in this group for analysis
-  # def for_download
-  #   self.dataset.questions.assigned_to_group_for_download(self.id)
-  # end
-
-  # # get questions that are in this group for analysis
-  # def questions_for_anlysis
-  #   self.dataset.questions.assigned_to_group_for_analysis(self.id)
-  # end
-
-  # # get questions that are in this group for analysis
-  # def questions_for_anlysis_with_exclude_questions
-  #   self.dataset.questions.assigned_to_group_for_analysis_with_exclude_questions(self.id)
-  # end
-
   # get count of questions that are in this group
   def question_count
     self.dataset.questions.count_assigned_to_group(self.id)
@@ -146,19 +116,6 @@ class Group < CustomTranslation
   def subgroups
     self.dataset.groups.where(parent_id: self.id)
   end
-
-  # # get the sub-groups and save to sub_groups
-  # def get_sub_groups
-  #   if !self.sub_groups.present?
-  #     self.sub_groups = self.dataset.groups.sub_groups(self.id)
-  #   end
-
-  #   return self.sub_groups
-  # end
-
-  # def has_subgroups?
-  #   self.dataset.groups.sub_groups(self.id).count > 0 ? true : false
-  # end
 
   # get the groups and questions in sorted order that are assigned to this group
   # options:

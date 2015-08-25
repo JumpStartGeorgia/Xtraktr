@@ -33,6 +33,7 @@ class Question < CustomTranslation
   field :is_weight, type: Boolean, default: false
 
   embedded_in :dataset
+
   embeds_many :answers do
     # these are functions that will query the answers documents
 
@@ -81,7 +82,7 @@ class Question < CustomTranslation
 
   #############################
   attr_accessible :code, :text, :original_code, :has_code_answers, :is_mappable, :has_can_exclude_answers, :has_map_adjustable_max_range,
-      :answers_attributes, :exclude, :text_translations, :notes, :notes_translations, :group_id, :sort_order
+      :answers_attributes, :exclude, :text_translations, :notes, :notes_translations, :group_id, :sort_order, :is_weight
 
   #############################
   # Validations

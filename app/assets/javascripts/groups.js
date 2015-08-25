@@ -2,7 +2,7 @@ var datatable;
 var form_id;
 
 $(document).ready(function(){
-  var form_id = $('form.group');
+  form_id = $('form.group');
 
   if (form_id.length > 0){
     // show the description example if include in charts is true
@@ -121,7 +121,7 @@ $(document).ready(function(){
             ],
             "columnDefs": [
               { className: "text-center", "targets": [ 0 ] }
-            ],            
+            ],
             "sorting": [],
             "language": {
               "url": gon.datatable_i18n_url,

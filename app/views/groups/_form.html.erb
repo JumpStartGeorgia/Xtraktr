@@ -1,4 +1,4 @@
-<%- 
+<%-
   model_class = Question
   label_key = "mongoid.attributes.group."
   hint_key = "mongoid.hints.group."
@@ -9,24 +9,24 @@
 
 
   <div role="tabpanel" class="tabbed-translation-fields">
-    <% 
-      locales = [I18n.locale] 
+    <%
+      locales = [I18n.locale]
       locales = @dataset.languages_sorted if @dataset.languages.present?
     %>
 
     <ul class="nav nav-tabs" role="tablist">
       <%
-        default_locale = I18n.locale.to_s 
-        default_lang = '' 
+        default_locale = I18n.locale.to_s
+        default_lang = ''
       %>
       <% locales.each_with_index do |locale, index| %>
         <%
           lang = @languages.select{|x| x.locale == locale.to_s}.first
           cls = ''
           if index == 0
-            cls = 'class=active' 
+            cls = 'class=active'
             default_locale = locale
-            default_lang = lang.present? ? lang.name : locale 
+            default_lang = lang.present? ? lang.name : locale
           end
         %>
         <li role="presentation" <%= cls %> data-locale="<%= locale %>">
@@ -49,7 +49,7 @@
 
         <div role="tabpanel" class="tab-pane fade <%= cls %>" id="<%= locale %>" data-locale="<%= locale %>">
           <%= f.fields_for :title_translations, OpenStruct.new(f.object.title_translations) do |translation| %>
-            <% 
+            <%
               label = t(label_key + 'title')
               hint = t(hint_key + 'title')
               if index > 0
@@ -59,7 +59,7 @@
             <%= translation.input locale, hint: hint, label: label.html_safe %>
           <% end %>
           <%= f.fields_for :description_translations, OpenStruct.new(f.object.description_translations) do |translation| %>
-            <% 
+            <%
               label = t(label_key + 'description')
               hint = t(hint_key + 'description')
               cls = index == 0 ? 'main-description' : ''
@@ -118,7 +118,7 @@
       </select>
     </div>
 
-    
+
     <div id="group-questions">
       <label class="control-label"><%= t(label_key + 'codes') %><div class="help-inline" title="<%= t(hint_key + 'codes') %>"><div>?</div></div></label>
       <p id="group-question-explanation" data-subgroup="<%= t('.questions_explanation_subgroup', group: '[group]') %>" data-default="<%= t('.questions_explanation_default') %>">
@@ -168,7 +168,7 @@
       </div>
       <div class="data-loader"></div>
     </div>
-    
+
 
   <% end %>
 

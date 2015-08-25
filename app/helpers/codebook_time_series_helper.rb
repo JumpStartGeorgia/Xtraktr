@@ -1,13 +1,13 @@
-module CodebookHelper
+module CodebookTimeSeriesHelper
 
   # generate the options for the codebook group jumpto select field
-  def generate_codebook_group_options(groups)
+  def generate_codebook_time_series_group_options(groups)
     html_options = ''
 
     groups.each do |group|
-      html_options << generate_codebook_group_option(group)
-      group.arranged_items.select{|x| x.class == Group}.each do |subgroup|
-        html_options << generate_codebook_group_option(subgroup)
+      html_options << generate_codebook_time_series_group_option(group)
+      group.arranged_items.select{|x| x.class == TimeSeriesGroup}.each do |subgroup|
+        html_options << generate_codebook_time_series_group_option(subgroup)
       end
     end
 
@@ -16,18 +16,18 @@ module CodebookHelper
 
 
   # generate the ul list of codebook groups and questions
-def generate_codebook_list(items, show_private_questions=false)
+def generate_codebook_time_series_list(items)
     html = '<ul class="list-unstyled">'
 
     items.each do |item|
 
-      if item.class == Group
+      if item.class == TimeSeriesGroup
         # add group
-        html << generate_codebook_group_item(item, show_private_questions)
+        html << generate_codebook_time_series_group_item(item)
 
-      elsif item.class == Question
+      elsif item.class == TimeSeriesQuestion
         # add question
-        html << generate_codebook_question_item(item, show_private_questions: show_private_questions)
+        html << generate_codebook_time_series_question_item(item)
       end
 
     end
@@ -40,7 +40,7 @@ def generate_codebook_list(items, show_private_questions=false)
 private
 
   # create option for codebook group jumpto
-  def generate_codebook_group_option(group)
+  def generate_codebook_time_series_group_option(group)
     cls = group.parent_id.present? ? 'subgroup' : 'group'
     content = 'data-content=\'<span>' + group.title + '</span><span class="pull-right">'
     desc = group.description.present? ? group.description : I18n.t('app.msgs.jumpto_group')
@@ -56,16 +56,16 @@ private
 
 
   # create question for codebook
-  # - options: group, subgroup, show_private_questions
-  def generate_codebook_question_item(question, options={})
+  # - options: group, subgroup
+  def generate_codebook_time_series_question_item(question, options={})
 
-    return render partial: 'shared/codebook_question_item',
-                  locals: {question: question, current_group: options[:group], current_subgroup: options[:subgroup], show_private_questions: options[:show_private_questions]}
+    return render partial: 'shared/codebook_time_series_question_item',
+                  locals: {question: question, current_group: options[:group], current_subgroup: options[:subgroup]}
   end
 
 
   # create group for codebook
-  def generate_codebook_group_item(group, show_private_questions=false)
+  def generate_codebook_time_series_group_item(group)
     html = ''
     cls = 'group-item'
     cls2 = ''
@@ -84,16 +84,16 @@ private
     html << '</div>'
     html << "<ul class='list-unstyled #{cls3}'>"
 
-    options = {show_private_questions: show_private_questions}
+    options = {}
     options[:group] = group.parent_id.present? ? group.parent : group
     options[:subgroup] = group.parent_id.present? ? group : nil
 
     group.arranged_items.each do |item|
 
-      if item.class == Group
-        html << generate_codebook_group_item(item, show_private_questions)
-      elsif item.class == Question
-        html << generate_codebook_question_item(item, options)
+      if item.class == TimeSeriesGroup
+        html << generate_codebook_time_series_group_item(item)
+      elsif item.class == TimeSeriesQuestion
+        html << generate_codebook_time_series_question_item(item, options)
       end
 
     end

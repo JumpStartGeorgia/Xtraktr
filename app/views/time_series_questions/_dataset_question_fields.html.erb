@@ -9,7 +9,7 @@
     <%= f.input :dataset_id, as: :hidden %>
   </td>
   <td>
-    <%= f.input :code, as: :select, collection: questions.map{|x| ["#{x.original_code} - #{x.text}", x.original_code]}, include_blank: true, label: false, input_html: {class: 'selectpicker dataset-question'} %>
+    <%= f.input :code, as: :select, collection: questions.map{|x| [x.code_with_text, x.original_code]}, include_blank: true, label: false, input_html: {class: 'selectpicker dataset-question'} %>
     <%= f.input :text, as: :hidden, label: false, input_html: {class: 'dataset_question_text'} %>
   </td>
 </tr>

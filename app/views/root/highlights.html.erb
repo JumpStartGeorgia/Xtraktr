@@ -1,2 +1,17 @@
-<% title 'Highlights' %>
-<p>coming soon...</p>
+<% title t('.title') %>
+
+<% if @highlights.present? %>
+  <p>
+    <%= t('.explanation') %>
+  </p>
+  <div id="highlights" class="highlights">
+  </div>
+
+  <div class="highlights-loader data-loader-container">
+    <div class="data-loader"></div>
+  </div>
+<% else %>
+  <p>
+    <%= t('.no_highlights') %>
+  </p>
+<% end %>

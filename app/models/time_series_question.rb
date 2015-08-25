@@ -13,15 +13,21 @@ class TimeSeriesQuestion < CustomTranslation
   field :notes, type: String, localize: true
   # whether or not the answers has a can exclude
   field :has_can_exclude_answers, type: Boolean, default: false
+  # which group this question belongs
+  field :group_id, type: Moped::BSON::ObjectId
+  # number indicating the sort order
+  field :sort_order, type: Integer
+  # indicate that this question is a weight
+  field :is_weight, type: Boolean, default: false
 
-  embeds_many :dataset_questions, class_name: 'TimeSeriesDatasetQuestion' do
+  embeds_many :dataset_questions, class_name: 'TimeSeriesDatasetQuestion', cascade_callbacks: true do
     # get the record for a dataset
     def by_dataset_id(dataset_id)
       where(dataset_id: dataset_id).first
     end
   end
 
-  embeds_many :answers, class_name: 'TimeSeriesAnswer' do
+  embeds_many :answers, class_name: 'TimeSeriesAnswer', cascade_callbacks: true do
     # see if answers have can exclude
     def has_can_exclude?
       where(can_exclude: true).count > 0 ? true : false
@@ -49,7 +55,7 @@ class TimeSeriesQuestion < CustomTranslation
   accepts_nested_attributes_for :answers
 
   attr_accessible :code, :text, :original_code, :notes, :notes_translations, :has_can_exclude_answers,
-                  :answers_attributes, :text_translations, :dataset_questions_attributes
+                  :answers_attributes, :text_translations, :dataset_questions_attributes, :group_id, :sort_order, :is_weight
 
   #############################
   # Validations
@@ -81,6 +87,31 @@ class TimeSeriesQuestion < CustomTranslation
   #############################
   def code_with_text
     "#{self.original_code} - #{self.text}"
+  end
+
+  def group
+    self.time_series.groups.find(self.group_id) if self.group_id.present?
+  end
+
+  # create json for groups
+  def json_for_groups(selected=false)
+    {
+      id: self.id,
+      code: self.code,
+      original_code: self.original_code,
+      text: self.text,
+      selected: selected
+    }
+  end
+
+  # get the weights for this question
+  def weights(ignore_id=nil)
+    self.time_series.weights.for_question(self.code, ignore_id)
+  end
+
+  # get the weight titles for this question
+  def weight_titles(ignore_id=nil)
+    return weights(ignore_id).map{|x| x.text}
   end
 
 end

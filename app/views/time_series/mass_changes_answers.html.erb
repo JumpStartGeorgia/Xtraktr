@@ -1,0 +1,41 @@
+<%- model_class = TimeSeriesQuestion -%>
+<%- model_class_a = TimeSeriesAnswer -%>
+<% title t('.title') %>
+
+  <%= form_tag mass_changes_answers_time_series_path(@time_series), id: 'frm-exclude-answers', class: 'form-data-loader form-time-series' do %>
+
+    <p>
+      <%= t('.explanation') %>
+    </p>
+
+    <div class="data-loader-container">
+
+      <div class="exclude-answers-save">
+        <%= submit_tag t('app.buttons.save_settings'), class: 'btn btn-success' %>
+      </div>
+
+      <table id='exclude-answers' class="table table-striped table-hover table-nonfluid">
+        <thead>
+          <tr>
+            <th><%= model_class.human_attribute_name(:code) %></th>
+            <th><%= model_class.human_attribute_name(:text) %></th>
+            <th><%= model_class_a.human_attribute_name(:text) %></th>
+            <th>
+              <%= model_class_a.human_attribute_name(:can_exclude) %>
+              <%= link_to '#', class: 'btn btn-default btn-xs btn-select-all', :'data-state' => 'all', :'data-type' => 'can-exclude' do %>
+                <span class="glyphicon glyphicon-ok" title="<%= t('helpers.links.select_all') %>"></span>
+              <% end %>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+
+      <div class="exclude-answers-save">
+        <%= submit_tag t('app.buttons.save_settings'), class: 'btn btn-success' %>
+      </div>
+
+      <div class="data-loader"></div>
+    </div>
+  <% end %>

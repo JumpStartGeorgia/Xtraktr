@@ -57,6 +57,15 @@ class RootController < ApplicationController
   end
 
   def highlights
+    @highlights = Highlight.public_highlights
+    gon.highlight_ids = @highlights.map{|x| x.id} if @highlights.present?
+    gon.highlight_show_title = true
+    gon.highlight_show_links = false
+    load_highlight_assets(@highlights.map{|x| x.embed_id}) if @highlights.present?
+
+    @css.push('highlights.css', 'boxic.css')
+    @js.push('highlights.js')
+
     respond_to do |format|
       format.html # index.html.erb
     end
@@ -91,6 +100,7 @@ class RootController < ApplicationController
     @datasets = Kaminari.paginate_array(@datasets).page(params[:page]).per(per_page)
 
     @show_title = false
+    @categories = Category.sorted
 
     @css.push('list.css')
     @js.push('list.js')
@@ -189,6 +199,7 @@ class RootController < ApplicationController
     end
 
     @time_series = Kaminari.paginate_array(@time_series).page(params[:page]).per(per_page)
+    @categories = Category.sorted
 
     @show_title = false
 
@@ -227,8 +238,8 @@ class RootController < ApplicationController
 
       @show_title = false
 
-      @css.push("dashboard.css", 'highlights.css', 'boxic.css', 'list.css', 'tabs.css', 'explore.css')
-      @js.push("live_search.js", 'highlights.js', 'explore.js')
+      @css.push('bootstrap-select.min.css', "list.css", "dashboard.css", 'highlights.css', 'boxic.css', 'tabs.css', 'explore.css')
+      @js.push('bootstrap-select.min.js', "live_search.js", 'highlights.js', 'explore.js')
 
       respond_to do |format|
         format.html # index.html.erb

@@ -14,32 +14,14 @@
   <div class="meta">
     <div class="col">
       <h2><%=@dataset.title%></h2>
-      <div class="numbers">
-        <div class="number">
-          <span><%= s_model_class.human_attribute_name(:data_records) %>:</span>
-          <%= number_with_delimiter(@dataset.stats.data_records) %>
-        </div>
-        <div class="number">
-          <span><%= s_model_class.human_attribute_name(:questions_analyzable) %>:</span>
-          <%= number_with_delimiter(@dataset.stats.public_questions_analyzable) %>
-        </div>
-        <div class="number">
-          <span><%= model_class.human_attribute_name(:is_weighted) %>:</span>
-          <%= @dataset.is_weighted? ? t('formtastic.yes') : t('formtastic.no') %>
-        </div>
-      </div>
       <div class="info">
         <div class="timestamps">
           <div class="timestamp">
             <span><%= model_class.human_attribute_name(:gathered_at) %>:</span>
             <%= format_gathered_dates(@dataset.start_gathered_at, @dataset.end_gathered_at) %>
           </div>
-          <div class="timestamp">
-            <span><%= model_class.human_attribute_name(:released_at) %>:</span>
-            <%= I18n.l(@dataset.released_at, format: :day_first) if @dataset.released_at.present? %>
-          </div>
+          <div class="source"><span><%= "#{model_class.human_attribute_name(:source)}: " %></span><%= "#{@dataset.source}" %></div>
         </div>
-        <div class="source"><span><%= "#{model_class.human_attribute_name(:source)}: " %></span><%= "#{@dataset.source}" %></div>
         <% if !@is_dataset_admin %>
           <div class="share share-box"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>
         <% end %>
@@ -59,7 +41,6 @@
                 <li class="item">
                   <%= link_to explore_data_path(category: x.permalink) do %>
                     <div class="text"><span><%= x.name %></span></div>
-                    <div class="box"><div class="img <%= x.permalink %>" alt="<%= x.name %>"></div></div>
                   <% end %>
                 </li>
               <% } %>
@@ -136,6 +117,9 @@
       <a href="#reports" aria-controls="reports" role="tab" data-toggle="tab"><%= t('.tabs.reports') %></a>
     </li>
     <li role="presentation">
+      <a href="#meta" aria-controls="meta-data" role="tab" data-toggle="tab"><%= t('.tabs.meta') %></a>
+    </li>
+    <li role="presentation">
       <a href="#licensing" aria-controls="licensing" role="tab" data-toggle="tab"><%= t('.tabs.licensing') %></a>
     </li>
   </ul>
@@ -193,7 +177,7 @@
         <% if groups.length > 0 %>
           <div class="codebook-jumpto">
             <select data-live-search="true" data-hide-disabled='true' data-width="auto" class="selectpicker-group" id="codebook-jumpto" title="<%= t('.jumpto_group') %>">
-              <%= generate_codebook_group_options(groups) %>
+              <%= generate_codebook_dataset_group_options(groups) %>
             </select>
           </div>
         <% end %>
@@ -205,7 +189,7 @@
           <div class='text'><%= t('app.msgs.admin_codebook_questions') %></div>
         </div>
       <% end %>
-      <%= generate_codebook_list(items, show_private_questions) %>
+      <%= generate_codebook_dataset_list(items, show_private_questions) %>
     </div>
 
     <div role="tabpanel" class="tab-pane fade list" id="reports">
@@ -239,14 +223,77 @@
        </ul>
     </div>
 
-    <div role="tabpanel" class="tab-pane fade" id="licensing">
-      <% if @license.present? %>
-        <div class="tinymce_format">
-          <%= simple_format_no_tags(@license.content, {}, {sanitize: false}) %>
+    <div role="tabpanel" class="tab-pane fade" id="meta">
+
+      <div class="col details">
+
+        <div>
+          <div class="col k"><%= model_class.human_attribute_name(:source) %>: </div>
+          <div class="col">
+            <% if @dataset.source_url.present? %>
+              <%= link_to @dataset.source, @dataset.source_url, target: :blank %>            
+            <% else %>
+              <%= @dataset.source %>
+            <% end %>
+          </div>
         </div>
-      <% else %>
-        comming soon...
-      <% end %>
+
+        <div>
+          <div class="col k"><%= model_class.human_attribute_name(:gathered_at) %>: </div>
+          <div class="col">
+            <%= format_gathered_dates(@dataset.start_gathered_at, @dataset.end_gathered_at) %>
+          </div>
+        </div>
+
+        <div>
+          <div class="col k"><%= model_class.human_attribute_name(:released_at) %>: </div>
+          <div class="col">
+            <%= l @dataset.released_at, format: :day_first if @dataset.released_at.present? %>
+          </div>
+        </div>
+
+        <div>
+          <div class="col k"><%= s_model_class.human_attribute_name(:data_records) %>: </div>
+          <div class="col">
+            <%= number_with_delimiter(@dataset.stats.data_records) %>
+          </div>
+        </div>
+
+        <div>
+          <div class="col k"><%= s_model_class.human_attribute_name(:questions_analyzable) %>: </div>
+          <div class="col">
+            <%= number_with_delimiter(@dataset.stats.public_questions_analyzable) %>
+          </div>
+        </div>
+
+        <div>
+          <div class="col k"><%= model_class.human_attribute_name(:is_weighted) %>: </div>
+          <div class="col">
+            <%= @dataset.is_weighted? ? t('formtastic.yes') : t('formtastic.no') %>
+          </div>
+        </div>
+
+        <div>
+          <div class="col k"><%= model_class.human_attribute_name(:created_at) %>: </div>
+          <div class="col">
+            <%= l @dataset.created_at, format: :day_first %>
+          </div>
+        </div>
+
+        <div>
+          <div class="col k"><%= model_class.human_attribute_name(:updated_at) %>: </div>
+          <div class="col">
+            <%= l @dataset.updated_at, format: :day_first %>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div role="tabpanel" class="tab-pane fade" id="licensing">
+      <div class="tinymce_format">
+        <%= simple_format_no_tags(@license.content, {}, {sanitize: false}) %>
+      </div>
     </div>
   </div>
 

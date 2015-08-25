@@ -33,7 +33,7 @@ function set_applies_to_all_change(page_load){
       });
     }
     $('form.weight #weight_codes').fadeIn();
-  }  
+  }
 }
 
 $(document).ready(function(){
@@ -65,7 +65,7 @@ $(document).ready(function(){
 
     // make sure the correct fields are shown
     set_is_default_change(true);
-    set_applies_to_all_change(true);    
+    set_applies_to_all_change(true);
 
 
     // datatable for exclude answers page

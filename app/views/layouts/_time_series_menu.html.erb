@@ -1,6 +1,6 @@
 <%
   include_parent_div ||= false
-%>              
+%>
 
             <% if include_parent_div %>
               <div class="dropdown">
@@ -30,24 +30,6 @@
                       <%= t('app.menu.admin_time_series.highlights') %>
                     <% end %>
                   </li>
-<%
-=begin %>
-                  <li role="menuitem">
-                    <%= link_to warnings_time_series_path(time_series) do %>
-                      <span class="glyphicon glyphicon-exclamation-sign"></span>
-                      <%= t('app.menu.admin_time_series.warnings') %>
-                    <% end %>
-                  </li>
-                  <% if !time_series.public? %>
-                    <li role="menuitem">
-                      <%= link_to '#private-share', :'data-toggle' => "modal"  do %>
-                        <span class="glyphicon glyphicon-lock"></span>
-                        <%= t('app.menu.admin_time_series.private_share') %>
-                      <% end %>
-                    </li>
-                  <% end %>
-<%
-=end %>                  
                   <li class="divider"></li>
                   <li role="menuitem">
                     <%= link_to time_series_questions_path(time_series) do %>
@@ -56,10 +38,42 @@
                     <% end %>
                   </li>
                   <li role="menuitem">
+                    <%= link_to mass_changes_time_series_questions_path(time_series) do %>
+                      <span class="glyphicon glyphicon-list-admin"></span>
+                      <%= t('app.menu.admin_time_series.mass_changes') %>
+                    <% end %>
+                  </li>
+                  <li role="menuitem">
+                    <%= link_to mass_changes_answers_time_series_path(time_series) do %>
+                      <span class="glyphicon glyphicon-ok"></span>
+                      <%= t('app.menu.admin_time_series.mass_changes_answers') %>
+                    <% end %>
+                  </li>
+                  <li class="divider"></li>
+                  <li role="menuitem">
+                    <%= link_to time_series_time_series_groups_path(time_series) do %>
+                      <span class="glyphicon glyphicon-th-large"></span>
+                      <%= t('app.menu.admin_time_series.groups') %>
+                    <% end %>
+                  </li>
+                  <li role="menuitem">
+                    <%= link_to sort_time_series_path(time_series) do %>
+                      <span class="glyphicon glyphicon-sort"></span>
+                      <%= t('app.menu.admin_time_series.sort') %>
+                    <% end %>
+                  </li>
+                  <li role="menuitem">
+                    <%= link_to time_series_weights_path(time_series) do %>
+                      <span class="glyphicon glyphicon-asterisk"></span>
+                      <%= t('app.menu.admin_time_series.weights') %>
+                    <% end %>
+                  </li>
+                  <li class="divider"></li>
+                  <li role="menuitem">
                     <%= link_to time_series_path(time_series),
                         :method => 'delete',
                         :data => { :confirm => t("helpers.links.confirm") } do %>
-  
+
                       <span class="glyphicon glyphicon-remove-circle"></span>
                       <%= t('app.menu.admin_time_series.delete') %>
                     <% end %>

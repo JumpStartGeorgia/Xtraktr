@@ -26,7 +26,7 @@ $(document).ready(function(){
       data: data,
       dataType: 'json',
       success: function (data)
-      {      
+      {
         if (data != undefined && data.html != undefined && data.js != undefined){
           // add the html
           $('#highlights').append(data.html);
@@ -44,6 +44,8 @@ $(document).ready(function(){
               itemSelector: '.highlight',
               "gutter": 20
             });
+
+            $('.highlights-loader.data-loader-container').fadeOut();
         }
       }
     });
