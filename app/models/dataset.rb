@@ -61,6 +61,13 @@ class Dataset < CustomTranslation
   end
   accepts_nested_attributes_for :category_mappers, reject_if: :all_blank, :allow_destroy => true
 
+  has_many :country_mappers, dependent: :destroy do
+    def country_ids
+      pluck(:country_id)
+    end
+  end
+  accepts_nested_attributes_for :country_mappers, reject_if: :all_blank, :allow_destroy => true
+
   has_many :highlights, dependent: :destroy do
     # get highlight by embed id
     def with_embed_id(embed_id)
@@ -421,11 +428,11 @@ class Dataset < CustomTranslation
       :languages, :default_language, :stats_attributes, :urls_attributes,
       :title_translations, :description_translations, :methodology_translations, :source_translations, :source_url_translations,
       :reset_download_files, :force_reset_download_files, :category_mappers_attributes, :category_ids, :permalink, :groups_attributes,
-      :donor, :license_title, :license_description, :license_url,
+      :donor, :license_title, :license_description, :license_url, :country_mappers_attributes, :country_ids,
       :donor_translations, :license_title_translations, :license_description_translations, :license_url_translations
 
 
-  attr_accessor :category_ids, :var_arranged_items, :check_question_exclude_status
+  attr_accessor :category_ids, :country_ids, :var_arranged_items, :check_question_exclude_status
 
   TYPE = {:onevar => 'onevar', :crosstab => 'crosstab'}
 
@@ -615,6 +622,7 @@ class Dataset < CustomTranslation
   # Callbacks
 
   after_initialize :set_category_ids
+  after_initialize :set_country_ids
   before_create :process_file
   after_create :create_quick_data_downloads
   before_save :create_urls_object
@@ -641,6 +649,11 @@ class Dataset < CustomTranslation
   # this is used in the form to set the categories
   def set_category_ids
     self.category_ids = self.category_mappers.category_ids
+  end
+
+  # this is used in the form to set the countries
+  def set_country_ids
+    self.country_ids = self.country_mappers.country_ids
   end
 
   # process the datafile and save all of the information from it
@@ -835,6 +848,15 @@ class Dataset < CustomTranslation
     cat = Category.find_by(permalink: cat)
     if cat.present?
       self.in(id: CategoryMapper.where(category_id: cat.id).pluck(:dataset_id))
+    else
+      all
+    end
+  end
+
+  def self.with_country(country_id)
+    country = Country.find(country_id)
+    if country.present?
+      self.in(id: CountryMapper.where(country_id: country.id).pluck(:dataset_id))
     else
       all
     end
@@ -1058,6 +1080,10 @@ class Dataset < CustomTranslation
 
   def categories
     Category.in(id: self.category_mappers.map {|x| x.category_id } ).to_a
+  end
+
+  def countries
+    Country.in(id: self.country_mappers.map {|x| x.country_id } ).to_a
   end
 
   def is_weighted?

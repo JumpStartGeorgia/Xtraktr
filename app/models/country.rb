@@ -1,6 +1,7 @@
-class Category
+class Country
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Slug
 
   #############################
 
@@ -9,21 +10,25 @@ class Category
   #############################
 
   field :name, type: String, localize: true
-  field :permalink, type: String
-  field :sort_order, type: Integer, default: 1
+  field :iso_num, type: String
+  field :iso_alpha, type: String
+  field :exclude, type: Boolean, default: false
 
   #############################
-  attr_accessible :name, :permalink, :sort_order, :name_translations
+  attr_accessible :name, :iso_num, :iso_alpha, :name_translations
 
   #############################
   # indexes
-  index ({ :permalink => 1})
+  index ({ :iso_alpha => 1})
   index ({ :name => 1})
-  index ({ :sort_order => 1})
+
+  #############################
+  # permalink slug
+  slug :iso_alpha
 
   #############################
   # Validations
-  validates_presence_of :permalink, :sort_order
+  validates_presence_of :iso_num, :iso_alpha
   validate :validate_translations
 
   # validate the translation fields
@@ -54,10 +59,11 @@ class Category
   #############################
 
   def self.sorted
-    order_by([[:sort_order, :asc], [:name, :asc]])
+    order_by([[:name, :asc]])
   end
 
-  def self.by_permalink(permalink)
-    find_by(permalink: permalink)
+  def self.not_excluded
+    where(exclude: false)
   end
+
 end

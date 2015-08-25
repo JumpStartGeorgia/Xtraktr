@@ -13,8 +13,10 @@ ka:
       api_version: API ვერსია
       api_method: API მეთოდი
       api_key: API დაშვების გასაღები
-      categories: "კატეგორია"
-      category_mappers: "კატეგორიები"
+      category: "კატეგორია"
+      category_mapper: "კატეგორიები"
+      country: Country
+      country_mappery: Countries
       group: Group
       weight: Weight
       time_series_group: Group
@@ -87,6 +89,7 @@ ka:
         created_at: "დამატებულია"
         reports: "რეფორთები"
         category_ids: "კატეგორიები"
+        country_ids: Country(s) Data Represents
         permalink: მონაცემთა URL-ი
         is_weighted: Weighted Data
         created_at: Date Added to Site
@@ -278,6 +281,7 @@ ka:
         languages: "იმ შემთხვევაშიც კი, თუ თქვენი მონაცემები მხოლოდ ერთ ენაზეა, თქვენ შეგიძლიათ ამ ფორმების გამოყენება, რათა თარგმნოთ ყველა კითხვა და პასუხი თქვენთვის სასურველ ნებისმიერ ენაზე"
         default_language: "მონაცემთა ენა, რომელიც ნაჩვენებია მთავარ ენად, თუ რომელიმე კონკრეტული ენა არ არის მოთხოვნილი მომხმარებლის მიერ"
         category_ids: მიაკუთვნეთ მონაცემები ერთ ან მეტ კატეგორიას
+        country_ids: Select which country(s) the dataset data represents
         permalink: "მონაცემების შემოკლებული სახელი, რომელიც გსურთ, რომ გამოჩნდეს URL-ში (მაგალითად, 'wms', რომელიც გულისხმობს 'Welfare Monitoring Survey'). ყველა სპეციალური სიმბოლოების ავტომატურად წაიშლება."
         donor: Person(s) or organization(s) that funded your data collection
         license_title: The title of the license

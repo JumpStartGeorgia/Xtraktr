@@ -246,6 +246,13 @@
         </div>
 
         <div>
+          <div class="col k"><%= model_class.human_attribute_name(:country_ids) %>: </div>
+          <div class="col">
+            <%= @dataset.countries.map{|x| x.name}.join(', ') %>
+          </div>
+        </div>
+
+        <div>
           <div class="col k"><%= model_class.human_attribute_name(:gathered_at) %>: </div>
           <div class="col">
             <%= format_gathered_dates(@dataset.start_gathered_at, @dataset.end_gathered_at) %>

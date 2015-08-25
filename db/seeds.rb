@@ -1302,3 +1302,32 @@ Category.create(permalink: 'transport',
 Category.create(permalink: 'defense',
                 name_translations:{'en' => 'Defense', 'ka' => 'თავდაცვა'},
                 sort_order: 1) if Category.by_permalink('defense').nil?
+
+
+
+#####################
+## Create Countries
+#####################
+puts 'Creating countries'
+# csv order: num, alpha, en name, ka name
+orig_locale = I18n.locale
+CSV.read("#{Rails.root}/data_files/country_names.csv", headers: true).each do |country|
+  # if the country does not already exist, add it
+  existing_country = Country.where(iso_num: country[0].strip).first
+  if existing_country.present?
+    existing_country.iso_alpha = country[1].strip
+    I18n.available_locales.each do |locale|
+      I18n.locale = locale
+      existing_country.name = locale == :ka ? country[3].present? ? country[3].strip : nil : country[2].strip
+    end
+    existing_country.save
+  else
+    existing_country = Country.new(iso_num: country[0].strip, iso_alpha: country[1].strip)
+    I18n.available_locales.each do |locale|
+      I18n.locale = locale
+      existing_country.name = locale == :ka ? country[3].present? ? country[3].strip : nil : country[2].strip
+    end
+    existing_country.save
+  end
+end
+I18n.locale = orig_locale

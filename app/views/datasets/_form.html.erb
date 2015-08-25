@@ -253,6 +253,13 @@
               :'data-live-search' => "true", :'data-selected-text-format' => "count>3", :'data-size' => "7",
               :'data-width' => "72%"} %>
       </div>
+      <div class="col-sm-4">
+        <%= f.input :country_ids, as: :select, hint: t(hint_key + 'country_ids'),
+              :collection => Country.not_excluded.sorted.map{|x| [x.name, x.id]}, multiple: true,
+              :input_html => {class: 'selectpicker',
+              :'data-live-search' => "true", :'data-selected-text-format' => "count>3", :'data-size' => "7",
+              :'data-width' => "72%"} %>
+      </div>
     </div>
 
     <div class="row">
