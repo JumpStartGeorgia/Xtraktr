@@ -103,24 +103,6 @@
       padding:40px 0 5px;
       margin:0px;
     }
-    .numbers{
-      position:relative;
-      max-width:1024px;
-      margin-bottom: 7px;
-      .number{
-        display: inline-block;
-        margin-right: 10px;
-        color:#5faac1;
-        font:16px 'sourcesans_pro_li', 'sans-serif';
-        line-height:18px;
-        span
-        {
-          font:16px 'sourcesans_pro_sbi', 'sans-serif';
-        }
-        &:lang(ka) {line-height:26px;}
-      }
-      .share { display:none; }
-    }
     .info
     {
       position:relative;
@@ -159,7 +141,7 @@
           &:last-child { margin-right: 0; }
         }
       }
-
+      .share { display:none; }
     }
     .description
     {
@@ -376,7 +358,7 @@
     .meta
     {
       padding:0px 50px 10px;
-      .numbers {
+      .info {
         .share {
           position:absolute;
           right:0px;
@@ -517,7 +499,7 @@
     }
   }
 }
-#codebook{
+#codebook, #meta{
   margin: 0;
   padding: 0 50px;
   /* this is need for when screen is small and jumpto drop down goes up */
@@ -881,6 +863,10 @@
     }
   }
 }
+#meta .details .k{
+  min-width: 200px;
+}
+
 .tab-content .up {
   background:transparent url(/assets/svg/top.svg) no-repeat center/32px 42px;
   width:32px;

@@ -89,6 +89,8 @@ en:
         category_ids: Categories
         permalink: URL to Dataset
         is_weighted: Weighted Data
+        created_at: Date Added to Site
+        updated_at: Date Last Updated
       stats:
         questions_analyzable: Analyzable Questions
         public_questions_analyzable: Public Analyzable Questions
@@ -155,6 +157,8 @@ en:
         category_ids: Categories
         permalink: URL to Time Series
         is_weighted: Weighted Data
+        created_at: Date Added to Site
+        updated_at: Date Last Updated
       time_series_dataset:
         dataset_id: Dataset
         title: Label
@@ -1287,6 +1291,7 @@ en:
         codebook: Codebook
         reports: Reports
         licensing: Legal
+        meta: Meta Data
       no_methodology: There is no methodology on file for this dataset.
       no_reports: There are no reports on file for this dataset.
       no_highlights: There are no highlights on file for this dataset.
@@ -1304,6 +1309,7 @@ en:
         reports: Reports
         licensing: Legal
         datasets: Datasets
+        meta: Meta Data
       no_highlights: There are no highlights on file for this time series.
       filter:
         all: All Text

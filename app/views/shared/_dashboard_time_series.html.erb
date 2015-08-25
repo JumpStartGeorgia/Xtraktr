@@ -27,7 +27,7 @@
             </div>
             <div class="timestamp">
               <span><%= model_class_d.human_attribute_name(:released_at) %>:</span>
-              <%= I18n.l(dataset.released_at, format: :day_first) if dataset.released_at.present? %>
+              <%= l dataset.released_at, format: :day_first if dataset.released_at.present? %>
             </div>
           </div>
           <% if dataset_index == 0 && !@is_time_series_admin %>
@@ -96,6 +96,9 @@
         <a href="#datasets" aria-controls="datasets" role="tab" data-toggle="tab"><%= t('.tabs.datasets') %></a>
       </li>
       <li role="presentation">
+        <a href="#meta" aria-controls="meta-data" role="tab" data-toggle="tab"><%= t('.tabs.meta') %></a>
+      </li>
+      <li role="presentation">
         <a href="#licensing" aria-controls="licensing" role="tab" data-toggle="tab"><%= t('.tabs.licensing') %></a>
       </li>
     </ul>
@@ -144,19 +147,65 @@
         </div>
         <div class="up"></div>
         <%= generate_codebook_time_series_list(items) %>
+      </div>
 
       <div role="tabpanel" class="tab-pane fade list" id="datasets">
-            <%= render partial: 'root/explore_data_datasets', locals: {with_pagination: false, with_time_series_link: false} %>
+        <%= render partial: 'root/explore_data_datasets', locals: {with_pagination: false, with_time_series_link: false} %>
+      </div>
+
+      <div role="tabpanel" class="tab-pane fade" id="meta">
+        <div class="col details">
+
+          <div>
+            <div class="col k"><%= model_class_d.human_attribute_name(:gathered_at) %>: </div>
+            <div class="col">
+              <ul>
+                <% @datasets.each_with_index do |dataset, dataset_index| %>
+                  <li>
+                    <%= @time_series.dates_included[dataset_index] %>:
+                    <%= format_gathered_dates(dataset.start_gathered_at, dataset.end_gathered_at) %>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+
+
+          <div>
+            <div class="col k"><%= model_class_d.human_attribute_name(:released_at) %>: </div>
+            <div class="col">
+              <ul>
+                <% @datasets.each_with_index do |dataset, dataset_index| %>
+                  <li>
+                    <%= @time_series.dates_included[dataset_index] %>:
+                    <%= l dataset.released_at, format: :day_first if dataset.released_at.present? %>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+
+          <div>
+            <div class="col k"><%= model_class.human_attribute_name(:created_at) %>: </div>
+            <div class="col">
+              <%= l @time_series.created_at, format: :day_first %>
+            </div>
+          </div>
+
+          <div>
+            <div class="col k"><%= model_class.human_attribute_name(:updated_at) %>: </div>
+            <div class="col">
+              <%= l @time_series.updated_at, format: :day_first %>
+            </div>
+          </div>
+
+        </div>
       </div>
 
       <div role="tabpanel" class="tab-pane fade" id="licensing">
-        <% if @license.present? %>
-          <div class="tinymce_format">
-            <%= simple_format_no_tags(@license.content, {}, {sanitize: false}) %>
-          </div>
-        <% else %>
-          comming soon...
-        <% end %>
+        <div class="tinymce_format">
+          <%= simple_format_no_tags(@license.content, {}, {sanitize: false}) %>
+        </div>
       </div>
     </div>
 

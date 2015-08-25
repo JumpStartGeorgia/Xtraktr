@@ -13,23 +13,6 @@
   <div class="meta">
     <div class="col">
       <h2><%=@dataset.title%></h2>
-      <div class="numbers">
-        <div class="number">
-          <span><%= s_model_class.human_attribute_name(:data_records) %>:</span>
-          <%= number_with_delimiter(@dataset.stats.data_records) %>
-        </div>
-        <div class="number">
-          <span><%= s_model_class.human_attribute_name(:questions_analyzable) %>:</span>
-          <%= number_with_delimiter(@dataset.stats.public_questions_analyzable) %>
-        </div>
-        <div class="number">
-          <span><%= model_class.human_attribute_name(:is_weighted) %>:</span>
-          <%= @dataset.is_weighted? ? t('formtastic.yes') : t('formtastic.no') %>
-        </div>
-        <% if !@is_dataset_admin %>
-          <div class="share share-box"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>
-        <% end %>
-      </div>
       <div class="info">
         <div class="calendar"></div>
         <div class="timestamps">
@@ -39,9 +22,12 @@
           </div>
           <div class="timestamp">
             <span><%= model_class.human_attribute_name(:released_at) %>:</span>
-            <%= I18n.l(@dataset.released_at, format: :day_first) if @dataset.released_at.present? %>
+            <%= l @dataset.released_at, format: :day_first if @dataset.released_at.present? %>
           </div>
         </div>
+        <% if !@is_dataset_admin %>
+          <div class="share share-box"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>
+        <% end %>
       </div>
 
       <% if @is_xtraktr %>
@@ -137,6 +123,9 @@
     </li>
     <li role="presentation">
       <a href="#reports" aria-controls="reports" role="tab" data-toggle="tab"><%= t('.tabs.reports') %></a>
+    </li>
+    <li role="presentation">
+      <a href="#meta" aria-controls="meta-data" role="tab" data-toggle="tab"><%= t('.tabs.meta') %></a>
     </li>
     <li role="presentation">
       <a href="#licensing" aria-controls="licensing" role="tab" data-toggle="tab"><%= t('.tabs.licensing') %></a>
@@ -242,14 +231,65 @@
        </ul>
     </div>
 
-    <div role="tabpanel" class="tab-pane fade" id="licensing">
-      <% if @license.present? %>
-        <div class="tinymce_format">
-          <%= simple_format_no_tags(@license.content, {}, {sanitize: false}) %>
+    <div role="tabpanel" class="tab-pane fade" id="meta">
+
+      <div class="col details">
+        <div>
+          <div class="col k"><%= model_class.human_attribute_name(:gathered_at) %>: </div>
+          <div class="col">
+            <%= format_gathered_dates(@dataset.start_gathered_at, @dataset.end_gathered_at) %>
+          </div>
         </div>
-      <% else %>
-        comming soon...
-      <% end %>
+
+        <div>
+          <div class="col k"><%= model_class.human_attribute_name(:released_at) %>: </div>
+          <div class="col">
+            <%= l @dataset.released_at, format: :day_first if @dataset.released_at.present? %>
+          </div>
+        </div>
+
+        <div>
+          <div class="col k"><%= s_model_class.human_attribute_name(:data_records) %>: </div>
+          <div class="col">
+            <%= number_with_delimiter(@dataset.stats.data_records) %>
+          </div>
+        </div>
+
+        <div>
+          <div class="col k"><%= s_model_class.human_attribute_name(:questions_analyzable) %>: </div>
+          <div class="col">
+            <%= number_with_delimiter(@dataset.stats.public_questions_analyzable) %>
+          </div>
+        </div>
+
+        <div>
+          <div class="col k"><%= model_class.human_attribute_name(:is_weighted) %>: </div>
+          <div class="col">
+            <%= @dataset.is_weighted? ? t('formtastic.yes') : t('formtastic.no') %>
+          </div>
+        </div>
+
+        <div>
+          <div class="col k"><%= model_class.human_attribute_name(:created_at) %>: </div>
+          <div class="col">
+            <%= l @dataset.created_at, format: :day_first %>
+          </div>
+        </div>
+
+        <div>
+          <div class="col k"><%= model_class.human_attribute_name(:updated_at) %>: </div>
+          <div class="col">
+            <%= l @dataset.updated_at, format: :day_first %>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div role="tabpanel" class="tab-pane fade" id="licensing">
+      <div class="tinymce_format">
+        <%= simple_format_no_tags(@license.content, {}, {sanitize: false}) %>
+      </div>
     </div>
   </div>
 
