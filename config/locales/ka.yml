@@ -89,6 +89,8 @@ ka:
         category_ids: "კატეგორიები"
         permalink: მონაცემთა URL-ი
         is_weighted: Weighted Data
+        created_at: Date Added to Site
+        updated_at: Date Last Updated
       stats:
         questions_analyzable: Analyzable Questions
         public_questions_analyzable: Public Analyzable Questions
@@ -155,6 +157,8 @@ ka:
         category_ids: "კატეგორიები"
         permalink: პერიოდული შედარების URL-ი
         is_weighted: Weighted Data
+        created_at: Date Added to Site
+        updated_at: Date Last Updated
       time_series_dataset:
         dataset_id: მონაცემები
         title: "ეტიკეტი"
@@ -1296,6 +1300,7 @@ ka:
         codebook: "კოდირება"
         reports: "რეფორთები"
         licensing: License
+        meta: Meta Data
       no_methodology: "ამ ცხრილისთვის მეთოდოლოგია არ მოიძებნა"
       no_reports: "ამ ცხრილისთვის რეფორთები არ მოიძებნა"
       no_highlights: "ამ ცხრილისთვის გამორჩეული არ მოიძებნა"
@@ -1313,6 +1318,7 @@ ka:
         reports: "რეფორთები"
         licensing: License
         datasets: მონაცემები
+        meta: Meta Data
       no_highlights: "ამ პერიოდული შედარებისთვის გამორჩეული არ მოიძებნა"
       filter:
         all: "ყველა ტექსტი"

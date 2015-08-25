@@ -25,6 +25,7 @@ ka:
       long: "%d %b %Y %H:%M"
       file: "%Y %m %d %H:%M:%S"
       date_only: "%d-%m-%Y"
+      day_first: '%d %b, %Y'
     am: "am"
     pm: "pm"
 
