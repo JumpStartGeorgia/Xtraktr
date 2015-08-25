@@ -1291,7 +1291,7 @@ ka:
         codebook: "კოდირება"
         reports: "რეფორთები"
         licensing: ლეგალური
-        meta: Meta Data
+        meta: Metadata
       no_methodology: "ამ ცხრილისთვის მეთოდოლოგია არ მოიძებნა"
       no_reports: "ამ ცხრილისთვის რეფორთები არ მოიძებნა"
       no_highlights: "ამ ცხრილისთვის გამორჩეული არ მოიძებნა"
