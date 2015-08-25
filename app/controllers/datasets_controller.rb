@@ -37,8 +37,6 @@ class DatasetsController < ApplicationController
         @dataset.current_locale = params[:language]
       end
 
-      @license = PageContent.by_name('license')
-
       @highlights = Highlight.by_dataset(@dataset.id)
       gon.highlight_ids = @highlights.map{|x| x.id}.shuffle if @highlights.present?
       gon.highlight_show_title = false

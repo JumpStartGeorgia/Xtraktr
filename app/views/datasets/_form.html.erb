@@ -33,18 +33,6 @@
 
 
     <div class="row">
-      <div class="col-sm-4">
-        <%= f.input :start_gathered_at, :as => :string, hint: t(hint_key + 'start_gathered_at'), :input_html => { :size => 20 } %>
-      </div>
-      <div class="col-sm-4">
-        <%= f.input :end_gathered_at, :as => :string, hint: t(hint_key + 'end_gathered_at'), :input_html => { :size => 20 } %>
-      </div>
-      <div class="col-sm-4">
-        <%= f.input :released_at, :as => :string, hint: t(hint_key + 'released_at'), :input_html => { :size => 20 } %>
-      </div>
-    </div>
-
-    <div class="row">
       <div class="col-sm-6">
         <%= f.input :languages, as: :select, hint: t(hint_key + 'languages'),
               :collection => @languages.map{|x| [x.name, x.locale]}, multiple: true, required: true,
@@ -137,28 +125,39 @@
             %>
             <%= translation.input locale, hint: hint, label: label.html_safe %>
           <% end %>
-          <% if @is_xtraktr %>
-            <%= f.fields_for :source_translations, OpenStruct.new(f.object.source_translations) do |translation| %>
-              <%
-                label = t(label_key + 'source')
-                hint = t(hint_key + 'source')
-                if index > 0
-                  label << show_default_text(@dataset.source_translations[default_locale])
-                end
-              %>
-              <%= translation.input locale, hint: hint, label: label.html_safe %>
-            <% end %>
-            <%= f.fields_for :source_url_translations, OpenStruct.new(f.object.source_url_translations) do |translation| %>
-              <%
-                label = t(label_key + 'source_url')
-                hint = t(hint_key + 'source_url')
-                if index > 0
-                  label << show_default_text(@dataset.source_url_translations[default_locale], 'url')
-                end
-              %>
-              <%= translation.input locale, as: :url, required: false, hint: hint, label: label.html_safe %>
-            <% end %>
+          <%= f.fields_for :source_translations, OpenStruct.new(f.object.source_translations) do |translation| %>
+            <%
+              label = t(label_key + 'source')
+              hint = t(hint_key + 'source')
+              if index > 0
+                label << show_default_text(@dataset.source_translations[default_locale])
+              end
+            %>
+            <%= translation.input locale, hint: hint, label: label.html_safe %>
           <% end %>
+          <%= f.fields_for :source_url_translations, OpenStruct.new(f.object.source_url_translations) do |translation| %>
+            <%
+              label = t(label_key + 'source_url')
+              hint = t(hint_key + 'source_url')
+              if index > 0
+                label << show_default_text(@dataset.source_url_translations[default_locale], 'url')
+              end
+            %>
+            <%= translation.input locale, as: :url, required: false, hint: hint, label: label.html_safe %>
+          <% end %>
+
+          <%= f.fields_for :donor_translations, OpenStruct.new(f.object.donor_translations) do |translation| %>
+            <%
+              label = t(label_key + 'donor')
+              hint = t(hint_key + 'donor')
+              if index > 0
+                label << show_default_text(@dataset.donor_translations[default_locale], 'url')
+              end
+            %>
+            <%= translation.input locale, required: false, hint: hint, label: label.html_safe %>
+          <% end %>
+
+
           <%= f.fields_for :description_translations, OpenStruct.new(f.object.description_translations) do |translation| %>
             <%
               label = t(label_key + 'description')
@@ -170,6 +169,7 @@
             <%= translation.input locale, :as => :text, required: false, rows: 10, hint: hint, label: label.html_safe,
                 :input_html => { class: "tinymce" } %>
           <% end %>
+
           <%= f.fields_for :methodology_translations, OpenStruct.new(f.object.methodology_translations) do |translation| %>
             <%
               label = t(label_key + 'methodology')
@@ -181,6 +181,47 @@
             <%= translation.input locale, :as => :text, required: false, rows: 10, hint: hint, label: label.html_safe,
                 :input_html => { class: "tinymce" } %>
           <% end %>
+
+          <hr />
+
+          <h3><%= t('.license') %></h3>
+
+          <p><%= t('.license_explanation').html_safe %></p>
+
+          <%= f.fields_for :license_title_translations, OpenStruct.new(f.object.license_title_translations) do |translation| %>
+            <%
+              label = t(label_key + 'license_title')
+              hint = t(hint_key + 'license_title')
+              if index > 0
+                label << show_default_text(@dataset.license_title_translations[default_locale])
+              end
+            %>
+            <%= translation.input locale, required: false, hint: hint, label: label.html_safe %>
+          <% end %>
+
+          <%= f.fields_for :license_description_translations, OpenStruct.new(f.object.license_description_translations) do |translation| %>
+            <%
+              label = t(label_key + 'license_description')
+              hint = t(hint_key + 'license_description')
+              if index > 0
+                label << show_default_text(@dataset.license_description_translations[default_locale])
+              end
+            %>
+            <%= translation.input locale, :as => :text, required: false, hint: hint, label: label.html_safe,
+                :input_html => { class: "tinymce" } %>
+          <% end %>
+
+          <%= f.fields_for :license_url_translations, OpenStruct.new(f.object.license_url_translations) do |translation| %>
+            <%
+              label = t(label_key + 'license_url')
+              hint = t(hint_key + 'license_url')
+              if index > 0
+                label << show_default_text(@dataset.license_url_translations[default_locale], 'url')
+              end
+            %>
+            <%= translation.input locale, as: :url, required: false, hint: hint, label: label.html_safe %>
+          <% end %>
+
         </div>
       <% end %>
     </div>
@@ -190,10 +231,21 @@
   <hr />
 
   <%= f.inputs do %>
+
     <div class="row">
       <div class="col-sm-4">
-        <%= f.input :permalink, :as => :string, hint: t(hint_key + 'permalink'), :input_html => { :size => 40 } %>
+        <%= f.input :start_gathered_at, :as => :string, hint: t(hint_key + 'start_gathered_at'), :input_html => { :size => 20 } %>
       </div>
+      <div class="col-sm-4">
+        <%= f.input :end_gathered_at, :as => :string, hint: t(hint_key + 'end_gathered_at'), :input_html => { :size => 20 } %>
+      </div>
+      <div class="col-sm-4">
+        <%= f.input :released_at, :as => :string, hint: t(hint_key + 'released_at'), :input_html => { :size => 20 } %>
+      </div>
+    </div>
+
+
+    <div class="row">
       <div class="col-sm-4">
         <%= f.input :category_ids, as: :select, hint: t(hint_key + 'category_ids'),
               :collection => Category.sorted.map{|x| [x.name, x.id]}, multiple: true,
@@ -201,6 +253,9 @@
               :'data-live-search' => "true", :'data-selected-text-format' => "count>3", :'data-size' => "7",
               :'data-width' => "72%"} %>
       </div>
+    </div>
+
+    <div class="row">
       <div class="col-sm-4">
         <div class="radio_buttons input optional form-group" id="dataset_public_input">
           <label class="  control-label" for="dataset_public"><%= t(label_key + 'public') %><div class="help-inline" title="<%= t(hint_key + 'public') %>"><div>?</div></div>
@@ -221,8 +276,12 @@
           </div>
         </div>
       </div>
+      <div class="col-sm-4">
+        <%= f.input :permalink, :as => :string, hint: t(hint_key + 'permalink'), :input_html => { :size => 40 } %>
+      </div>
     </div>
   <% end %>
+
 
   <hr />
 

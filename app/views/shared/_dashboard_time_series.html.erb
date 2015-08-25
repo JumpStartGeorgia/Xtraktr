@@ -201,9 +201,19 @@
       </div>
 
       <div role="tabpanel" class="tab-pane fade" id="licensing">
-        <div class="tinymce_format">
-          <%= simple_format_no_tags(@license.content, {}, {sanitize: false}) %>
-        </div>
+        <% if @time_series.license_title.present? %>
+          <h3><%= @time_series.license_title %></h3>
+          <% if @time_series.license_description.present? %>
+            <%= simple_format_no_tags(@time_series.license_description, {}, {sanitize: false}) %>
+          <% end %>
+          <% if @time_series.license_url.present? %>
+            <p>
+              <%= link_to t('.learn_more'), @time_series.license_url, target: :blank %>
+            </p>
+          <% end %>
+        <% else %>
+          <p><%= t('.no_license') %></p>
+        <% end %>
       </div>
     </div>
 

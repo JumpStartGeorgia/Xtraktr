@@ -3,7 +3,7 @@
   function allAreEqual(array){
     if(!array.length) return true;
     return array.reduce(function(a, b){return (a === b)?a:("false"+b);}) === array[0];
-  } 
+  }
 
   // insert an item into an array at an index
   // from: http://stackoverflow.com/a/5086688
@@ -24,7 +24,7 @@ $(document).ready(function(){
   // load tinymce
   // set the width and height so even the tabs that are not showing still have the correct size
   if (typeof tinyMCE !== "undefined"){
-    gon.tinymce_options.height = $('form.tabbed-translation-form .tab-content .tab-pane:first textarea').height();
+    // gon.tinymce_options.height = $('form.tabbed-translation-form .tab-content .tab-pane:first textarea').height();
     gon.tinymce_options.width = $('form.tabbed-translation-form .tab-content .tab-pane:first textarea').width();
     tinyMCE.init(gon.tinymce_options);
   }
@@ -53,7 +53,7 @@ $(document).ready(function(){
           $(this).removeClass('hide');
         }
       })
-  
+
       // update the default language list
       // - if current default lang is not in the language list, reset the value to the first selected lang
       var default_language = $('form.tabbed-translation-form select.default-language').val();
@@ -128,7 +128,7 @@ $(document).ready(function(){
       $(form).find('label').each(function(){
         $(this).attr('for', $(this).attr('for').replace('_' + old_locale, '_' + new_locale));
       });
-      
+
       // remove active class unless there is only one tab
       if ($('form.tabbed-translation-form ul.nav.nav-tabs li').length > 1){
         $(form).removeClass('in').removeClass('active');
@@ -163,7 +163,7 @@ $(document).ready(function(){
     if ( default_language != null && default_language != '' && $('form.tabbed-translation-form ul.nav.nav-tabs li:first').data('locale') != default_language ){
       //console.log('-- making sure default language is first tab');
       var ptab = $('form.tabbed-translation-form ul.nav.nav-tabs li[data-locale="' + default_language + '"]');
-      var pform = $('form.tabbed-translation-form .tab-content .tab-pane[data-locale="' + default_language + '"]') 
+      var pform = $('form.tabbed-translation-form .tab-content .tab-pane[data-locale="' + default_language + '"]')
 
       // have to turn off tinymce first
       tinyMCE.execCommand('mceFocus', false, $(pform).find('textarea').attr('id'));
@@ -174,7 +174,7 @@ $(document).ready(function(){
 
       // have to rebuild tinymce
       tinyMCE.execCommand('mceAddControl', true, $(pform).find('textarea').attr('id'));
-    }    
+    }
 
     // add icon to default language
     // first remove all icons
@@ -191,7 +191,7 @@ $(document).ready(function(){
     if (values == null || values.length == 0){
       //console.log('- no selections so defualt to current app locale');
       // no items selected so default to all available locales
-      values = I18n.available_locales; 
+      values = I18n.available_locales;
     }
     //console.log('--> current selected langs = ' + values);
 
@@ -207,7 +207,7 @@ $(document).ready(function(){
     //console.log('--> existing tab indexes = ');
     //console.log(existing_indexes);
 
-    // if currently there are more than one tab, 
+    // if currently there are more than one tab,
     // see if any of the tabs are the currently selected locale(s)
     // if so - keep it
     // else, remove it
@@ -229,8 +229,8 @@ $(document).ready(function(){
 
         i++;
       }
-      
-      // work on form 
+
+      // work on form
       //console.log('--> removing un needed forms');
       i = 0;
       for(var index=0; index<$('form.tabbed-translation-form .tab-content .tab-pane').length; index++){
@@ -257,7 +257,7 @@ $(document).ready(function(){
         //console.log('--> updating first block with new locale');
         // now update first block to use the new locale
         update_block_with_new_locale(values[index], $('form.tabbed-translation-form ul.nav.nav-tabs li:first'), $('form.tabbed-translation-form .tab-content .tab-pane:first'))
-      
+
       }else if ( existing_indexes[index] == -1 ){
         //console.log('--> add new block');
         // this is a new locale, need to add it

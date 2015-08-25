@@ -124,8 +124,6 @@ class RootController < ApplicationController
         @dataset.current_locale = params[:language]
       end
 
-      @license = PageContent.by_name('license')
-
       @highlights = Highlight.by_dataset(@dataset.id)
       gon.highlight_ids = @highlights.map{|x| x.id}.shuffle if @highlights.present?
       gon.highlight_show_title = false
@@ -227,8 +225,6 @@ class RootController < ApplicationController
       end
 
       @datasets = Dataset.is_public.in(id: @time_series.datasets.dataset_ids)
-
-      @license = PageContent.by_name('license')
 
       @highlights = Highlight.by_time_series(@time_series.id)
       gon.highlight_ids = @highlights.map{|x| x.id}.shuffle if @highlights.present?

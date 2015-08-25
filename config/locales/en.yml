@@ -91,6 +91,10 @@ en:
         is_weighted: Weighted Data
         created_at: Date Added to Site
         updated_at: Date Last Updated
+        donor: Donor
+        license_title: License Title
+        license_description: License Description
+        license_url: License URL
       stats:
         questions_analyzable: Analyzable Questions
         public_questions_analyzable: Public Analyzable Questions
@@ -159,6 +163,9 @@ en:
         is_weighted: Weighted Data
         created_at: Date Added to Site
         updated_at: Date Last Updated
+        license_title: License Title
+        license_description: License Description
+        license_url: License URL
       time_series_dataset:
         dataset_id: Dataset
         title: Label
@@ -272,6 +279,10 @@ en:
         default_language: The dataset language that is shown by default if no specific language is requested by user
         category_ids: Assign the dataset to one or more categories
         permalink: "An abbreviated name of the dataset that you want to appear in the URL (e.g., 'wms' for 'Welfare Monitoring Survey'). All special characters will be automatically removed."
+        donor: Person(s) or organization(s) that funded your data collection
+        license_title: The title of the license
+        license_description: A brief description of the license
+        license_url: A URL to webpage that has more information about the license
       shapeset:
         title: The title of your shapeset
         description: Short summary of what is in the shapeset
@@ -323,6 +334,9 @@ en:
         default_language: The time series language that is shown by default if no specific language is requested by user
         category_ids: Assign the time series to one or more categories
         permalink: "An abbreviated name of the time series that you want to appear in the URL (e.g., 'wms' for 'Welfare Monitoring Survey'). All special characters will be automatically removed."
+        license_title: The title of the license
+        license_description: A brief description of the license
+        license_url: A URL to webpage that has more information about the license
       time_series_dataset:
         dataset_id: Select the dataset to add to this time series
         title: "The text that will represent this data set in the time series, most likely a time indicator. For example, if your dataset is from 2015, you could enter 2015; or if it is from January 2015, you can enter January 2015."
@@ -383,6 +397,7 @@ en:
       invalid_language: "'%{lang_locale}' is not a valid language locale"
       dataset_length: "At least two datasets are needed for a time series to be saved."
       missing_questions: "At least one questions must be selected for a group to be saved."
+      license_requirements: 'The License Title and License Description fields are both required for Language %{language} if you are providing a license.'
   mass_uploads_msgs:
     bad_headers: The headers in the file do not match the headers from the template so it is not possible to determine what each column of data is. Please download the question template file and use the headers from that file.
     missing_code: "Row %{n}: Could not find question with code '%{code}'"
@@ -874,6 +889,8 @@ en:
         publish: Date Published Here
       no_data: 'At this time, no time series have been created in the site.'
       no_match: 'Sorry, no time series match your search request.'
+    explore_data_time_series:
+      no_match: 'Sorry, no time series match your search request.'
     explore_time_series_show:
       title: Explore Time Series Data
     highlights:
@@ -946,6 +963,8 @@ en:
       adjustable_range_p2: "Let's assume that the following are the resulting percentage values from the analysis: 4, 8, 16, 32, 40. If the question did not use an adjustable max value, the choropleth map colors will vary between 0 and 100%  resulting in 4 and 8 and 16 having very similar, and possibly not discernable, colors. However, if the question did use an adjustable max value, the choropleth map colors will vary between 0 and 40% resulting in 4 and 8 having similar colors, but 16 having a color that is discernable as different."
     form:
       reports: Reports
+      license: License
+      license_explanation: You may enter a license that lets people know how they can use your data. You can enter your own licensing terms or you can copy a pre-established license like those located at <a href="http://opendatacommons.org/" target="_blank">Open Data Commons</a>. If you provide a license, the Title and Description fields are both required.
       header_add_report: Add a report for this dataset
       saving_text: |
         Your file is being loaded, the data is being processed and validated, and the download files are being generated - this may take a couple minutes.
@@ -1099,6 +1118,8 @@ en:
     form:
       header_datasets: Datasets
       header_add_dataset: Add a new dataset to this time series
+      license: License
+      license_explanation: You may enter a license that lets people know how they can use your data. You can enter your own licensing terms or you can copy a pre-established license like those located at <a href="http://opendatacommons.org/" target="_blank">Open Data Commons</a>. If you provide a license, the Title and Description fields are both required.
     mass_changes_answers:
       title: "Answer Mass Changes"
       explanation: "Use this page to indicate which answers can be included during analysis, but have the ability to be excluded (e.g., answers like: Don't Know, Refuse to Answer, etc)."
@@ -1302,6 +1323,8 @@ en:
       no_methodology: There is no methodology on file for this dataset.
       no_reports: There are no reports on file for this dataset.
       no_highlights: There are no highlights on file for this dataset.
+      no_license: This dataset currently has no defined license.
+      learn_more: Learn more about this license
       filter:
         all: All Text
         questions: Question Text
@@ -1318,6 +1341,8 @@ en:
         datasets: Datasets
         meta: Meta Data
       no_highlights: There are no highlights on file for this time series.
+      no_license: This time series currently has no defined license.
+      learn_more: Learn more about this license
       filter:
         all: All Text
         questions: Question Text

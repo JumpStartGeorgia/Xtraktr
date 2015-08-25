@@ -39,8 +39,6 @@ class TimeSeriesController < ApplicationController
 
       @datasets = Dataset.in(id: @time_series.datasets.dataset_ids)
 
-      @license = PageContent.by_name('license')
-
       @highlights = Highlight.by_time_series(@time_series.id)
       gon.highlight_ids = @highlights.map{|x| x.id}.shuffle if @highlights.present?
       gon.highlight_show_title = false

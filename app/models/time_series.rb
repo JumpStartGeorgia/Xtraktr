@@ -12,6 +12,9 @@ class TimeSeries < CustomTranslation
 
   field :title, type: String, localize: true
   field :description, type: String, localize: true
+  field :license_title, type: String, localize: true
+  field :license_description, type: String, localize: true
+  field :license_url, type: String, localize: true
   # whether or not dataset can be shown to public
   field :public, type: Boolean, default: false
   # when made public
@@ -214,7 +217,9 @@ class TimeSeries < CustomTranslation
       :languages, :default_language,
       :title_translations, :description_translations,
       :category_mappers_attributes, :category_ids, :permalink,
-      :weights_attributes, :groups_attributes
+      :weights_attributes, :groups_attributes,
+      :license_title, :license_description, :license_url,
+      :license_title_translations, :license_description_translations, :license_url_translations
 
   attr_accessor :category_ids, :var_arranged_items
 
@@ -264,6 +269,8 @@ class TimeSeries < CustomTranslation
   validate :validate_languages
   validate :validate_translations
   validate :validate_dataset_presence
+  validate :validate_url
+  validate :validate_license
 
   # validate that at least one item in languages exists
   def validate_languages
@@ -303,6 +310,33 @@ class TimeSeries < CustomTranslation
     if self.datasets.blank? || self.datasets.length < 2
       logger.debug "***** -- not enough datasets!"
       errors.add(:base, I18n.t('errors.messages.dataset_length'))
+    end
+  end
+
+  # have to do custom url validation because validate format with does not work on localized fields
+  def validate_url
+    self.license_url_translations.keys.each do |key|
+      if self.license_url_translations[key].present? && (self.license_url_translations[key] =~ URI::regexp(['http','https'])).nil?
+        errors.add(:base, I18n.t('errors.messages.translation_any_lang',
+            field_name: self.class.human_attribute_name('license_url'),
+            language: Language.get_name(key),
+            msg: I18n.t('errors.messages.invalid')) )
+        return
+      end
+    end
+  end
+
+  # if the license is provided, title and description are required
+  def validate_license
+    self.languages.each do |locale|
+      if self.license_title_translations[locale].present? || self.license_description_translations[locale].present? || self.license_url_translations[locale].present?
+        # some license info exists, make sure title and desc provided
+        if !self.license_title_translations[locale].present? || !self.license_description_translations[locale].present?
+          errors.add(:base, I18n.t('errors.messages.license_requirements',
+              language: Language.get_name(locale) ))
+          return
+        end
+      end
     end
   end
 

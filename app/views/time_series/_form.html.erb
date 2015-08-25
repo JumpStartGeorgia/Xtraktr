@@ -1,4 +1,4 @@
-<%- 
+<%-
   label_key = "mongoid.attributes.time_series."
   hint_key = "mongoid.hints.time_series."
   d_label_key = "mongoid.attributes.time_series_dataset."
@@ -31,7 +31,7 @@
         <tfoot>
           <tr>
             <td colspan="4">
-              <%= link_to_add_association t('helpers.links.add_dataset'), f, :datasets, 
+              <%= link_to_add_association t('helpers.links.add_dataset'), f, :datasets,
                   :class => 'btn btn-success',
                   :title => t('.header_add_dataset'),
                   :'data-association-insertion-node' => 'table#time_series_datasets tbody',
@@ -45,25 +45,25 @@
 
     <div class="row">
       <div class="col-sm-6">
-        <%= f.input :languages, as: :select, hint: t(hint_key + 'languages'), 
+        <%= f.input :languages, as: :select, hint: t(hint_key + 'languages'),
               :collection => @languages.map{|x| [x.name, x.locale]}, multiple: true, required: true,
-              :input_html => {class: 'selectpicker-language-disabled languages', 
+              :input_html => {class: 'selectpicker-language-disabled languages',
                 :'data-live-search' => "true", :'data-selected-text-format' => "count>3", :'data-size' => "7",
                 :'data-width' => "72%"} %>
       </div>
       <div class="col-sm-6">
-        <% 
+        <%
           primaries = nil
           if @time_series.languages.present?
             primaries = @languages.select{|x| @time_series.languages.include?(x.locale)}
           end
         %>
-       
+
         <div class="select input required form-group" id="time_series_default_language_input">
           <label class="control-label" for="time_series_default_language">
             <%= t(label_key + 'default_language') %><abbr title="required">*</abbr><div class="help-inline" title="<%= t(hint_key + 'default_language') %>"><div>?</div></div>
           </label>
-          <select class="selectpicker-language form-control default-language" data-live-search="true" data-selected-text-format="count>3" data-size="7" data-width="72%" 
+          <select class="selectpicker-language form-control default-language" data-live-search="true" data-selected-text-format="count>3" data-size="7" data-width="72%"
                   id="time_series_default_language" name="time_series[default_language]">
             <% if @languages.present? %>
               <% @languages.each do |lang| %>
@@ -90,25 +90,25 @@
   <hr />
 
   <div role="tabpanel" class="tabbed-translation-fields">
-    <% 
-      locales = [I18n.locale] 
+    <%
+      locales = [I18n.locale]
       locales = @time_series.languages_sorted if @time_series.languages.present?
     %>
 
-    <ul class="nav nav-tabs" role="tablist" 
+    <ul class="nav nav-tabs" role="tablist"
         data-default-language-icon="<span class='glyphicon glyphicon-star' title='<%= t('helpers.default_language') %>'></span>">
       <%
-        default_locale = I18n.locale.to_s 
-        default_lang = '' 
+        default_locale = I18n.locale.to_s
+        default_lang = ''
       %>
       <% locales.each_with_index do |locale, index| %>
-        <% 
+        <%
           lang = @languages.select{|x| x.locale == locale.to_s}.first
           cls = ''
           if index == 0
-            cls = 'class=active' 
+            cls = 'class=active'
             default_locale = locale
-            default_lang = lang.present? ? lang.name : locale 
+            default_lang = lang.present? ? lang.name : locale
           end
         %>
         <li role="presentation" <%= cls %> data-locale="<%= locale %>">
@@ -128,7 +128,7 @@
 
         <div role="tabpanel" class="tab-pane fade <%= cls %>" id="<%= locale %>" data-locale="<%= locale %>">
           <%= f.fields_for :title_translations, OpenStruct.new(f.object.title_translations) do |translation| %>
-            <% 
+            <%
               label = t(label_key + 'title')
               hint = t(hint_key + 'title')
               if index > 0
@@ -138,16 +138,57 @@
             <%= translation.input locale, hint: hint, label: label.html_safe %>
           <% end %>
           <%= f.fields_for :description_translations, OpenStruct.new(f.object.description_translations) do |translation| %>
-            <% 
+            <%
               label = t(label_key + 'description')
               hint = t(hint_key + 'description')
               if index > 0
                 label << show_default_text(@time_series.description_translations[default_locale])
               end
             %>
-            <%= translation.input locale, :as => :text, required: false, rows: 10, hint: hint, label: label.html_safe, 
+            <%= translation.input locale, :as => :text, required: false, rows: 10, hint: hint, label: label.html_safe,
                 :input_html => { class: "tinymce" } %>
           <% end %>
+
+          <hr />
+
+          <h3><%= t('.license') %></h3>
+
+          <p><%= t('.license_explanation').html_safe %></p>
+
+          <%= f.fields_for :license_title_translations, OpenStruct.new(f.object.license_title_translations) do |translation| %>
+            <%
+              label = t(label_key + 'license_title')
+              hint = t(hint_key + 'license_title')
+              if index > 0
+                label << show_default_text(@time_series.license_title_translations[default_locale])
+              end
+            %>
+            <%= translation.input locale, required: false, hint: hint, label: label.html_safe %>
+          <% end %>
+
+          <%= f.fields_for :license_description_translations, OpenStruct.new(f.object.license_description_translations) do |translation| %>
+            <%
+              label = t(label_key + 'license_description')
+              hint = t(hint_key + 'license_description')
+              if index > 0
+                label << show_default_text(@time_series.license_description_translations[default_locale])
+              end
+            %>
+            <%= translation.input locale, :as => :text, required: false, hint: hint, label: label.html_safe,
+                :input_html => { class: "tinymce" } %>
+          <% end %>
+
+          <%= f.fields_for :license_url_translations, OpenStruct.new(f.object.license_url_translations) do |translation| %>
+            <%
+              label = t(label_key + 'license_url')
+              hint = t(hint_key + 'license_url')
+              if index > 0
+                label << show_default_text(@time_series.license_url_translations[default_locale], 'url')
+              end
+            %>
+            <%= translation.input locale, as: :url, required: false, hint: hint, label: label.html_safe %>
+          <% end %>
+
         </div>
       <% end %>
     </div>
@@ -162,11 +203,11 @@
         <%= f.input :permalink, :as => :string, hint: t(hint_key + 'permalink'), :input_html => { :size => 40 } %>
       </div>
       <div class="col-sm-4">
-        <%= f.input :category_ids, as: :check_boxes, hint: t(hint_key + 'category_ids'), 
+        <%= f.input :category_ids, as: :check_boxes, hint: t(hint_key + 'category_ids'),
               :collection => Category.sorted.map{|x| [x.name, x.id]} %>
-        <%#= f.input :category_ids, as: :select, hint: t(hint_key + 'category_ids'), 
-              :collection => Category.sorted.map{|x| [x.name, x.id]}, multiple: true, 
-              :input_html => {class: 'selectpicker', 
+        <%#= f.input :category_ids, as: :select, hint: t(hint_key + 'category_ids'),
+              :collection => Category.sorted.map{|x| [x.name, x.id]}, multiple: true,
+              :input_html => {class: 'selectpicker',
               :'data-live-search' => "true", :'data-selected-text-format' => "count>3", :'data-size' => "7",
               :'data-width' => "72%"} %>
       </div>
@@ -191,7 +232,7 @@
         </div>
       </div>
 
-    </div>  
+    </div>
   <% end %>
 
   <div class="form-group">
@@ -202,4 +243,3 @@
 <% end %>
 
 <%= tinymce_assets %>
-

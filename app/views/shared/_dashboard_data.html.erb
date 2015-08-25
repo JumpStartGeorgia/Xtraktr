@@ -231,10 +231,17 @@
           <div class="col k"><%= model_class.human_attribute_name(:source) %>: </div>
           <div class="col">
             <% if @dataset.source_url.present? %>
-              <%= link_to @dataset.source, @dataset.source_url, target: :blank %>            
+              <%= link_to @dataset.source, @dataset.source_url, target: :blank %>
             <% else %>
               <%= @dataset.source %>
             <% end %>
+          </div>
+        </div>
+
+        <div>
+          <div class="col k"><%= model_class.human_attribute_name(:donor) %>: </div>
+          <div class="col">
+            <%= @dataset.donor %>
           </div>
         </div>
 
@@ -291,9 +298,19 @@
     </div>
 
     <div role="tabpanel" class="tab-pane fade" id="licensing">
-      <div class="tinymce_format">
-        <%= simple_format_no_tags(@license.content, {}, {sanitize: false}) %>
-      </div>
+      <% if @dataset.license_title.present? %>
+        <h3><%= @dataset.license_title %></h3>
+        <% if @dataset.license_description.present? %>
+          <%= simple_format_no_tags(@dataset.license_description, {}, {sanitize: false}) %>
+        <% end %>
+        <% if @dataset.license_url.present? %>
+          <p>
+            <%= link_to t('.learn_more'), @dataset.license_url, target: :blank %>
+          </p>
+        <% end %>
+      <% else %>
+        <p><%= t('.no_license') %></p>
+      <% end %>
     </div>
   </div>
 

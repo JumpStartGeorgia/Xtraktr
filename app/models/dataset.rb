@@ -22,6 +22,10 @@ class Dataset < CustomTranslation
   field :methodology, type: String, localize: true
   field :source, type: String, localize: true
   field :source_url, type: String, localize: true
+  field :donor, type: String, localize: true
+  field :license_title, type: String, localize: true
+  field :license_description, type: String, localize: true
+  field :license_url, type: String, localize: true
   field :start_gathered_at, type: Date
   field :end_gathered_at, type: Date
   field :released_at, type: Date
@@ -48,6 +52,7 @@ class Dataset < CustomTranslation
   field :reset_download_files, type: Boolean, default: true
   field :force_reset_download_files, type: Boolean, default: false
   field :permalink, type: String
+
 
   has_many :category_mappers, dependent: :destroy do
     def category_ids
@@ -415,7 +420,10 @@ class Dataset < CustomTranslation
       :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at,
       :languages, :default_language, :stats_attributes, :urls_attributes,
       :title_translations, :description_translations, :methodology_translations, :source_translations, :source_url_translations,
-      :reset_download_files, :force_reset_download_files, :category_mappers_attributes, :category_ids, :permalink, :groups_attributes
+      :reset_download_files, :force_reset_download_files, :category_mappers_attributes, :category_ids, :permalink, :groups_attributes,
+      :donor, :license_title, :license_description, :license_url,
+      :donor_translations, :license_title_translations, :license_description_translations, :license_url_translations
+
 
   attr_accessor :category_ids, :var_arranged_items, :check_question_exclude_status
 
@@ -461,7 +469,7 @@ class Dataset < CustomTranslation
 
   #############################
   # Full text search
-  search_in :title, :description, :methodology, :source, :questions => [:original_code, :text, :notes, :answers => [:text]]
+  search_in :title, :description, :methodology, :source, :donor, :questions => [:original_code, :text, :notes, :answers => [:text]]
 
 
   #############################
@@ -491,6 +499,7 @@ class Dataset < CustomTranslation
   validate :validate_languages
   validate :validate_translations
   validate :validate_url
+  validate :validate_license
 
   # validate that at least one item in languages exists
   def validate_languages
@@ -543,6 +552,33 @@ class Dataset < CustomTranslation
         return
       end
     end
+
+    self.license_url_translations.keys.each do |key|
+      if self.license_url_translations[key].present? && (self.license_url_translations[key] =~ URI::regexp(['http','https'])).nil?
+        errors.add(:base, I18n.t('errors.messages.translation_any_lang',
+            field_name: self.class.human_attribute_name('license_url'),
+            language: Language.get_name(key),
+            msg: I18n.t('errors.messages.invalid')) )
+        return
+      end
+    end
+  end
+
+  # if the license is provided, title and description are required
+  def validate_license
+    self.languages.each do |locale|
+      logger.debug "******** validate_license, locale = #{locale}"
+      logger.debug "******** - title present: #{self.license_title_translations[locale].present?}; desc present: #{self.license_description_translations[locale].present?}; url present: #{self.license_url_translations[locale].present?}"
+      if self.license_title_translations[locale].present? || self.license_description_translations[locale].present? || self.license_url_translations[locale].present?
+        # some license info exists, make sure title and desc provided
+        logger.debug "******** - something is present, title or desc not present: #{!(self.license_title_translations[locale].present? && self.license_description_translations[locale].present?)} "
+        if !(self.license_title_translations[locale].present? && self.license_description_translations[locale].present?)
+          errors.add(:base, I18n.t('errors.messages.license_requirements',
+              language: Language.get_name(locale) ))
+          return
+        end
+      end
+    end
   end
 
   #############################
@@ -562,7 +598,18 @@ class Dataset < CustomTranslation
   def source_url
     get_translation(self.source_url_translations)
   end
-
+  def donor
+    get_translation(self.donor_translations)
+  end
+  def license_title
+    get_translation(self.license_title_translations)
+  end
+  def license_description
+    get_translation(self.license_description_translations)
+  end
+  def license_url
+    get_translation(self.license_url_translations)
+  end
 
   #############################
   # Callbacks

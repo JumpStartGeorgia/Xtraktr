@@ -1,9 +1,10 @@
 class DatasetSerializer < ActiveModel::Serializer
-  attributes :id, :url, :title, :description, :source, :source_url,
+  attributes :id, :url, :title, :description, :source, :source_url, :donor,
       :start_gathered_at, :end_gathered_at, :released_at, :public_at,
       :total_responses, :analyzable_questions, :is_weighted,
       :is_mappable, :categories,
-      :languages, :default_language, :methodology
+      :languages, :default_language, :methodology,
+      :license_title, :license_description, :license_url
 
       has_many :reports
 
