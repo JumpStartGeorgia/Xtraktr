@@ -1298,7 +1298,7 @@ en:
         codebook: Codebook
         reports: Reports
         licensing: License
-        meta: Meta Data
+        meta: Metadata
       no_methodology: There is no methodology on file for this dataset.
       no_reports: There are no reports on file for this dataset.
       no_highlights: There are no highlights on file for this dataset.
