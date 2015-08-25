@@ -20,12 +20,8 @@
             <span><%= model_class.human_attribute_name(:gathered_at) %>:</span>
             <%= format_gathered_dates(@dataset.start_gathered_at, @dataset.end_gathered_at) %>
           </div>
-          <div class="timestamp">
-            <span><%= model_class.human_attribute_name(:released_at) %>:</span>
-            <%= l @dataset.released_at, format: :day_first if @dataset.released_at.present? %>
-          </div>
+          <div class="source"><span><%= "#{model_class.human_attribute_name(:source)}: " %></span><%= "#{@dataset.source}" %></div>
         </div>
-        <div class="source"><span><%= "#{model_class.human_attribute_name(:source)}: " %></span><%= "#{@dataset.source}" %></div>
         <% if !@is_dataset_admin %>
           <div class="share share-box"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>
         <% end %>
@@ -230,6 +226,18 @@
     <div role="tabpanel" class="tab-pane fade" id="meta">
 
       <div class="col details">
+
+        <div>
+          <div class="col k"><%= model_class.human_attribute_name(:source) %>: </div>
+          <div class="col">
+            <% if @dataset.source_url.present? %>
+              <%= link_to @dataset.source, @dataset.source_url, target: :blank %>            
+            <% else %>
+              <%= @dataset.source %>
+            <% end %>
+          </div>
+        </div>
+
         <div>
           <div class="col k"><%= model_class.human_attribute_name(:gathered_at) %>: </div>
           <div class="col">

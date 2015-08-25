@@ -32,12 +32,8 @@
               <span><%= model_class.human_attribute_name(:gathered_at) %>:</span>
               <%= format_gathered_dates(dataset.start_gathered_at, dataset.end_gathered_at) %>
             </div>
-            <div class="timestamp meta">
-              <span><%= model_class.human_attribute_name(:released_at) %>:</span>
-              <%= I18n.l(dataset.released_at, format: :day_first) if dataset.released_at.present? %>
-            </div>
+            <div class="source meta"><span><%= "#{model_class.human_attribute_name(:source)}: " %></span><%= "#{dataset.source}" %></div>
           </div>
-          <div class="source meta"><span><%= "#{model_class.human_attribute_name(:source)}: " %></span><%= "#{dataset.source}" %></div>
           <% if with_time_series_link && dataset.time_series_datasets.present? %>
             <div class="time-series" title="<%= t('app.menu.titles.dataset_to_time_series') %>" data-placement="left"  data-class="tooltip-time-series">
               <%= link_to  image_tag("svg/timeseries.svg", alt: t('app.menu.titles.dataset_to_time_series')), explore_time_series_dashboard_path(dataset.time_series_datasets.first.time_series_permalink)%>
