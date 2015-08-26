@@ -23,9 +23,9 @@
   - en.mongoid.attributes.time_series_answer.text
 - - en.mongoid.models.api_version
   - en.mongoid.attributes.api_request.api_version
-- - en.mongoid.models.categories
+- - en.mongoid.models.category
   - en.app.buttons.category
-- - en.mongoid.models.category_mappers
+- - en.mongoid.models.category_mapper
   - en.mongoid.attributes.dataset.category_ids
   - en.mongoid.attributes.time_series.category_ids
   - en.app.buttons.categories
@@ -104,13 +104,22 @@
   - en.mongoid.attributes.shapeset.default_language
 - - en.mongoid.attributes.dataset.created_at
   - en.mongoid.attributes.time_series.created_at
-  - en.mongoid.attributes.shapeset.created_at
 - - en.mongoid.attributes.dataset.reports
   - en.datasets.form.reports
   - en.shared.dashboard_data.tabs.reports
   - en.shared.dashboard_time_series.tabs.reports
+- - en.mongoid.attributes.dataset.country_ids
+  - en.mongoid.attributes.time_series.country_ids
 - - en.mongoid.attributes.dataset.is_weighted
   - en.mongoid.attributes.time_series.is_weighted
+- - en.mongoid.attributes.dataset.updated_at
+  - en.mongoid.attributes.time_series.updated_at
+- - en.mongoid.attributes.dataset.license_title
+  - en.mongoid.attributes.time_series.license_title
+- - en.mongoid.attributes.dataset.license_description
+  - en.mongoid.attributes.time_series.license_description
+- - en.mongoid.attributes.dataset.license_url
+  - en.mongoid.attributes.time_series.license_url
 - - en.mongoid.attributes.question.code
   - en.mongoid.attributes.question.original_code
   - en.mongoid.attributes.time_series_question.code
@@ -182,6 +191,14 @@
   - en.mongoid.attributes.api_method.updated_at
 - - en.mongoid.hints.dataset.source_url
   - en.mongoid.hints.shapeset.source_url
+- - en.mongoid.hints.dataset.country_ids
+  - en.mongoid.hints.time_series.country_ids
+- - en.mongoid.hints.dataset.license_title
+  - en.mongoid.hints.time_series.license_title
+- - en.mongoid.hints.dataset.license_description
+  - en.mongoid.hints.time_series.license_description
+- - en.mongoid.hints.dataset.license_url
+  - en.mongoid.hints.time_series.license_url
 - - en.mongoid.hints.question.notes
   - en.mongoid.hints.time_series_question.notes
   - en.mongoid.hints.time_series_dataset_question.notes
@@ -368,8 +385,12 @@
   - en.root.explore_time_series.sort_by.this
 - - en.root.explore_data.sort_by.publish
   - en.root.explore_time_series.sort_by.publish
+- - en.root.explore_data.no_match
+  - en.root.explore_data_datasets.no_match
 - - en.root.explore_time_series.title
   - en.root.explore_time_series_show.title
+- - en.root.explore_time_series.no_match
+  - en.root.explore_data_time_series.no_match
 - - en.datasets.mappable.no_shapes
   - en.datasets.mappable_form.no_shapes
 - - en.datasets.mappable_form.title
@@ -380,6 +401,12 @@
   - en.datasets.mappable_form_edit.adjustable_range_p1
 - - en.datasets.mappable_form.adjustable_range_p2
   - en.datasets.mappable_form_edit.adjustable_range_p2
+- - en.datasets.form.license
+  - en.time_series.form.license
+  - en.shared.dashboard_data.tabs.licensing
+  - en.shared.dashboard_time_series.tabs.licensing
+- - en.datasets.form.license_explanation
+  - en.time_series.form.license_explanation
 - - en.datasets.highlights.no_highlights
   - en.shared.dashboard_data.no_highlights
 - - en.datasets.highlights.broken_down_by_code
@@ -499,8 +526,8 @@
   - en.shared.explore_time_series.tabs.table
 - - en.shared.explore_data.tabs.details
   - en.shared.explore_time_series.tabs.details
-- - en.shared.dashboard_data.tabs.licensing
-  - en.shared.dashboard_time_series.tabs.licensing
+- - en.shared.dashboard_data.learn_more
+  - en.shared.dashboard_time_series.learn_more
 - - en.shared.dashboard_data.filter.all
   - en.shared.dashboard_time_series.filter.all
 - - en.shared.dashboard_data.filter.questions
