@@ -93,7 +93,7 @@ Language.collection.insert(langs)
 ## Build search index
 #####################
 puts 'Building search index'
-if Dataset.first._keywords.nil? || TimeSeries.first._keywords.nil?
+if (Dataset.first.present? && Dataset.first._keywords.nil?) || (TimeSeries.first.present? && TimeSeries.first._keywords.nil?)
   puts "- starting index"
   Rake::Task['mongoid_search:index'].invoke
   puts "- finished index"
