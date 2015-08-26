@@ -104,13 +104,14 @@
   - en.mongoid.attributes.shapeset.default_language
 - - en.mongoid.attributes.dataset.created_at
   - en.mongoid.attributes.time_series.created_at
-  - en.mongoid.attributes.shapeset.created_at
 - - en.mongoid.attributes.dataset.reports
   - en.datasets.form.reports
   - en.shared.dashboard_data.tabs.reports
   - en.shared.dashboard_time_series.tabs.reports
 - - en.mongoid.attributes.dataset.is_weighted
   - en.mongoid.attributes.time_series.is_weighted
+- - en.mongoid.attributes.dataset.updated_at
+  - en.mongoid.attributes.time_series.updated_at
 - - en.mongoid.attributes.question.code
   - en.mongoid.attributes.question.original_code
   - en.mongoid.attributes.time_series_question.code
