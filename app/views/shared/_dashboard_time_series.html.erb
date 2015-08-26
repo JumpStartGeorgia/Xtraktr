@@ -155,6 +155,13 @@
         <div class="col details">
 
           <div>
+            <div class="col k"><%= model_class.human_attribute_name(:country_ids) %>: </div>
+            <div class="col">
+              <%= @time_series.countries.map{|x| x.name}.join(', ') %>
+            </div>
+          </div>
+
+          <div>
             <div class="col k"><%= model_class_d.human_attribute_name(:gathered_at) %>: </div>
             <div class="col">
               <ul>

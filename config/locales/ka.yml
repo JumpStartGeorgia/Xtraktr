@@ -162,6 +162,7 @@ ka:
         datasets: მონაცემები
         dates: "მოიცავს თარიღებს"
         category_ids: "კატეგორიები"
+        country_ids: Country(s) Data Represents
         permalink: პერიოდული შედარების URL-ი
         is_weighted: Weighted Data
         created_at: Date Added to Site
@@ -337,6 +338,7 @@ ka:
         languages: "თქვენი პერიოდული შედარების ენები ავტომატურად განისაზღვრება მონაცემთა ცხრილის ენების მიერ"
         default_language: "პერიოდული შედარების ენა რომელიც ნაჩვენებია მთავარ ენად, თუ სხვა ენა არ არის მოთხოვნილი მომხმარებლის მიერ"
         category_ids: "აირჩიეთ პერიოდული შედარების ერთი ან მეტი კატეგორია"
+        country_ids: Select which country(s) the dataset data represents
         permalink: "პერიოდული შედარების შემოკლებული სახელი, რომელიც გსურთ, რომ გამოჩნდეს URL-ში (მაგალითად, 'wms', რომელიც გულისხმობს 'Welfare Monitoring Survey'). ყველა სპეციალური სიმბოლოების ავტომატურად წაიშლება."
         license_title: The title of the license
         license_description: A brief description of the license

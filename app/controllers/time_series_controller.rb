@@ -137,6 +137,13 @@ end
       @time_series.category_mappers.build(category_id: category_id)
     end
 
+    # if there are country_ids, create mapper objects with them
+    params[:time_series][:country_ids].delete('')
+      # - remove '' from list
+    params[:time_series][:country_ids].each do |country_id|
+      @time_series.country_mappers.build(country_id: country_id)
+    end
+
     respond_to do |format|
       if @time_series.save
         format.html { redirect_to time_series_questions_path(@time_series), flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.time_series'))} }
@@ -203,6 +210,46 @@ end
 
       # if any mappers are marked as destroy, destroy them
       CategoryMapper.in(id: mappers_to_delete).destroy_all
+
+
+      # if there are country_ids, see if already exist in mapper - if not add
+      # - remove '' from list
+      params[:time_series][:country_ids].delete('')
+      country_ids = @time_series.country_mappers.country_ids.map{|x| x.to_s}
+      mappers_to_delete = []
+      logger.debug "====== existing categories = #{country_ids}; class = #{country_ids.first.class}"
+      if params[:time_series][:country_ids].present?
+        logger.debug "======= country ids present"
+        # if mapper country is not in list, mark for deletion
+        @time_series.country_mappers.each do |mapper|
+          logger.debug "======= - checking marker country id #{mapper.country_id} for destroy"
+
+          if !params[:time_series][:country_ids].include?(mapper.country_id.to_s)
+            logger.debug "======= -> marking #{mapper.country_id} for destroy"
+            mappers_to_delete << mapper.id
+          end
+        end
+        # if cateogry id not in mapper, add id
+        params[:time_series][:country_ids].each do |country_id|
+          logger.debug "======= - checking form country id #{country_id} for addition; class = #{country_id.class}"
+          if !country_ids.include?(country_id)
+            logger.debug "======= -> adding new country #{country_id}"
+            @time_series.country_mappers.build(country_id: country_id)
+          end
+        end
+      else
+        logger.debug "======= country ids not present"
+        # no categories so make sure mapper is nil
+        @time_series.country_mappers.each do |mapper|
+          mappers_to_delete << mapper.id
+        end
+      end
+
+      logger.debug "========== -> need to delete #{mappers_to_delete} mapper records"
+
+      # if any mappers are marked as destroy, destroy them
+      CountryMapper.in(id: mappers_to_delete).destroy_all
+
 
       respond_to do |format|
         if @time_series.save

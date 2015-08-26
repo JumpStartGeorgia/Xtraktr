@@ -162,6 +162,7 @@ en:
         datasets: Datasets
         dates: Dates Included
         category_ids: Categories
+        country_ids: Country(s) Data Represents
         permalink: URL to Time Series
         is_weighted: Weighted Data
         created_at: Date Added to Site
@@ -337,6 +338,7 @@ en:
         languages: "The languages of your time series are automatically determined by the languages of the datasets"
         default_language: The time series language that is shown by default if no specific language is requested by user
         category_ids: Assign the time series to one or more categories
+        country_ids: Select which country(s) the dataset data represents
         permalink: "An abbreviated name of the time series that you want to appear in the URL (e.g., 'wms' for 'Welfare Monitoring Survey'). All special characters will be automatically removed."
         license_title: The title of the license
         license_description: A brief description of the license
