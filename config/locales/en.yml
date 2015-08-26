@@ -968,7 +968,7 @@ en:
     form:
       reports: Reports
       license: License
-      license_explanation: You may enter a license that lets people know how they can use your data. You can enter your own licensing terms or you can copy a pre-established license like those located at <a href="http://opendatacommons.org/" target="_blank">Open Data Commons</a>. If you provide a license, the Title and Description fields are both required.
+      license_explanation: You may enter a license that lets people know how they can use your data. You can enter your own licensing terms or you can copy a pre-established license like those located at <a class="form-link" href="http://opendatacommons.org/" target="_blank">Open Data Commons</a>. If you provide a license, the Title and Description fields are both required.
       header_add_report: Add a report for this dataset
       saving_text: |
         Your file is being loaded, the data is being processed and validated, and the download files are being generated - this may take a couple minutes.
@@ -1123,7 +1123,7 @@ en:
       header_datasets: Datasets
       header_add_dataset: Add a new dataset to this time series
       license: License
-      license_explanation: You may enter a license that lets people know how they can use your data. You can enter your own licensing terms or you can copy a pre-established license like those located at <a href="http://opendatacommons.org/" target="_blank">Open Data Commons</a>. If you provide a license, the Title and Description fields are both required.
+      license_explanation: You may enter a license that lets people know how they can use your data. You can enter your own licensing terms or you can copy a pre-established license like those located at <a class="form-link" href="http://opendatacommons.org/" target="_blank">Open Data Commons</a>. If you provide a license, the Title and Description fields are both required.
     mass_changes_answers:
       title: "Answer Mass Changes"
       explanation: "Use this page to indicate which answers can be included during analysis, but have the ability to be excluded (e.g., answers like: Don't Know, Refuse to Answer, etc)."

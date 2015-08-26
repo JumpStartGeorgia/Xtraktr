@@ -306,14 +306,14 @@
 
     <div role="tabpanel" class="tab-pane fade" id="licensing">
       <% if @dataset.license_title.present? %>
-        <h3><%= @dataset.license_title %></h3>
+        <h3>
+          <%= @dataset.license_title %>
+          <% if @dataset.license_url.present? %>
+            <%= link_to t('.learn_more'), @dataset.license_url, target: :blank, class: 'pull-right btn btn-primary btn-xs' %>
+          <% end %>
+        </h3>
         <% if @dataset.license_description.present? %>
           <%= simple_format_no_tags(@dataset.license_description, {}, {sanitize: false}) %>
-        <% end %>
-        <% if @dataset.license_url.present? %>
-          <p>
-            <%= link_to t('.learn_more'), @dataset.license_url, target: :blank %>
-          </p>
         <% end %>
       <% else %>
         <p><%= t('.no_license') %></p>
