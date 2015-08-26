@@ -643,17 +643,20 @@ class Dataset < CustomTranslation
         q.update_stats
       end
     end
+    return true
   end
 
 
   # this is used in the form to set the categories
   def set_category_ids
     self.category_ids = self.category_mappers.category_ids
+    return true
   end
 
   # this is used in the form to set the countries
   def set_country_ids
     self.country_ids = self.country_mappers.country_ids
+    return true
   end
 
   # process the datafile and save all of the information from it

@@ -26,7 +26,7 @@ iso num,iso_alpha,en_name,ka_name
 60,BMU,Bermuda, ბერმუდის კუნძულები
 64,BTN,Bhutan, ბჰუტანი
 68,BOL,Bolivia, ბოლივია
-535,BES,"Bonaire, Sint Eustatius and Saba",
+535,BES,"Bonaire, Sint Eustatius and Saba","ბონეირი, სინტ-ესტატიუსი და საბა"
 70,BIH,Bosnia and Herzegovina, ბოსნია და ჰერცეგოვინა
 72,BWA,Botswana, ბოტსვანა
 74,BVT,Bouvet Island,ბუვე
@@ -56,7 +56,7 @@ iso num,iso_alpha,en_name,ka_name
 384,CIV,Cote d'Ivoire, კოტ-დ’ივუარი
 191,HRV,Croatia, ხორვატია
 192,CUB,Cuba, კუბა
-531,CUW,Curacao,
+531,CUW,Curacao,კიურასაო
 196,CYP,Cyprus, კვიპროსი
 203,CZE,Czech Republic, ჩეხეთი
 208,DNK,Denmark, დანია
@@ -199,14 +199,14 @@ iso num,iso_alpha,en_name,ka_name
 690,SYC,Seychelles, სეიშელი
 694,SLE,Sierra Leone, სიერა-ლეონე
 702,SGP,Singapore, სინგაპური
-534,SXM,Sint Maarten (Dutch part),
+534,SXM,Sint Maarten (Dutch part),სინტ-მარტენი
 703,SVK,Slovakia, სლოვაკეთი
 705,SVN,Slovenia, სლოვენია
 90,SLB,Solomon Islands, სოლომონის კუნძულები
 706,SOM,Somalia, სომალი
 710,ZAF,South Africa, სამხრეთ აფრიკა
 239,SGS,South Georgia and the South Sandwich Islands, სამხრეთი გეორგია და სამხრეთ სენდვიჩის კუნძულები
-728,SSD,South Sudan,
+728,SSD,South Sudan,სამხრეთ სუდანი
 724,ESP,Spain, ესპანეთი
 144,LKA,Sri Lanka, შრი-ლანკა
 729,SDN,Sudan, სუდანი

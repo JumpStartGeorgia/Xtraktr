@@ -31,6 +31,13 @@ class TimeSeries < CustomTranslation
     end
   end
 
+  has_many :country_mappers, dependent: :destroy do
+    def country_ids
+      pluck(:country_id)
+    end
+  end
+  accepts_nested_attributes_for :country_mappers, reject_if: :all_blank, :allow_destroy => true
+
   has_many :highlights, dependent: :destroy do
     # get highlight by embed id
     def with_embed_id(embed_id)
@@ -217,11 +224,12 @@ class TimeSeries < CustomTranslation
       :languages, :default_language,
       :title_translations, :description_translations,
       :category_mappers_attributes, :category_ids, :permalink,
+      :country_mappers_attributes, :country_ids,
       :weights_attributes, :groups_attributes,
       :license_title, :license_description, :license_url,
       :license_title_translations, :license_description_translations, :license_url_translations
 
-  attr_accessor :category_ids, :var_arranged_items
+  attr_accessor :category_ids, :country_ids, :var_arranged_items
 
   #############################
   # indexes
@@ -353,13 +361,19 @@ class TimeSeries < CustomTranslation
   #############################
   # Callbacks
   after_initialize :set_category_ids
+  after_initialize :set_country_ids
   before_create :create_private_share_key
   before_save :set_public_at
 
   # this is used in the form to set the categories
   def set_category_ids
     self.category_ids = self.category_mappers.category_ids
+    return true
+  end
 
+  # this is used in the form to set the countries
+  def set_country_ids
+    self.country_ids = self.country_mappers.country_ids
     return true
   end
 
@@ -451,6 +465,16 @@ class TimeSeries < CustomTranslation
     end
   end
 
+  def self.with_country(country_id)
+    country = Country.find(country_id)
+    if country.present?
+      self.in(id: CountryMapper.where(country_id: country.id).pluck(:time_series_id))
+    else
+      all
+    end
+  end
+
+
 
   #############################
 
@@ -461,6 +485,10 @@ class TimeSeries < CustomTranslation
 
   def categories
     Category.in(id: self.category_mappers.map {|x| x.category_id } ).to_a
+  end
+
+  def countries
+    Country.in(id: self.country_mappers.map {|x| x.country_id } ).to_a
   end
 
   def is_weighted?
