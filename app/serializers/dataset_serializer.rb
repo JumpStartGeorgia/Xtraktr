@@ -2,9 +2,9 @@ class DatasetSerializer < ActiveModel::Serializer
   attributes :id, :url, :title, :description, :source, :source_url, :donor,
       :start_gathered_at, :end_gathered_at, :released_at, :public_at,
       :total_responses, :analyzable_questions, :is_weighted,
-      :is_mappable, :categories,
+      :is_mappable, :categories, :countries,
       :languages, :default_language, :methodology,
-      :license_title, :license_description, :license_url
+      :license
 
       has_many :reports
 
@@ -29,8 +29,23 @@ class DatasetSerializer < ActiveModel::Serializer
     object.categories.map{|x| x.name}
   end
 
+  def countries
+    object.countries.map{|x| x.name}
+  end
+
   def reports
     object.reports.sorted
   end
 
+  def license
+    if object.license_title.present?
+      {
+        title: object.license_title,
+        description: object.license_description,
+        url: object.license_url
+      }
+    else
+      nil
+    end
+  end
 end

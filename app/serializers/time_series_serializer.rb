@@ -1,9 +1,9 @@
 class TimeSeriesSerializer < ActiveModel::Serializer
   attributes :id, :url, :title, :dates_included,
       :description, :public_at,
-      :is_weighted, :categories,
+      :is_weighted, :categories, :countries,
       :languages, :default_language,
-      :license_title, :license_description, :license_url
+      :license
 
   has_many :datasets
 
@@ -23,5 +23,20 @@ class TimeSeriesSerializer < ActiveModel::Serializer
     object.categories.map{|x| x.name}
   end
 
+  def countries
+    object.countries.map{|x| x.name}
+  end
+
+  def license
+    if object.license_title.present?
+      {
+        title: object.license_title,
+        description: object.license_description,
+        url: object.license_url
+      }
+    else
+      nil
+    end
+  end
 
 end
