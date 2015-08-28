@@ -1,4 +1,7 @@
 class TimeSeriesWeightSerializer < ActiveModel::Serializer
-  attributes :text, :is_default, :applies_to_all, :codes
+  attributes :name, :is_default, :applies_to_all, :codes
 
+  def name
+    object.text
+  end
 end

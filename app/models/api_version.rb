@@ -80,7 +80,7 @@ class ApiVersion
   end
 
   def self.sorted
-    order_by([[:public_at, :asc], [:title, :asc]])
+    order_by([[:public_at, :desc], [:title, :asc]])
   end
 
   def self.by_permalink(permalink)

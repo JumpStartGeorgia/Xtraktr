@@ -1,6 +1,8 @@
 class TimeSeriesSerializer < ActiveModel::Serializer
-  attributes :id, :url, :title, :dates_included,
-      :description, :public_at,
+  attributes :id, :url, :title,
+      :description,
+      :dates_included, :datasets,
+      :public_at,
       :is_weighted, :categories, :countries,
       :languages, :default_language,
       :license
