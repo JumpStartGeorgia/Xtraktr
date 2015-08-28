@@ -53,7 +53,7 @@ class User
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable, 
+         :recoverable, :rememberable, :trackable, :validatable,
          :omniauthable, :omniauth_providers => [:facebook]
 
   ## Constants
@@ -91,10 +91,10 @@ class User
   field :age_group, type: Integer #{ 1 => '17-24', 2 => '25-34', 3 => '35-44', 4 => '45-54', 5 => '55-64', 6 => 'above'}
   field :residence, type: String
   field :affiliation, type: String
-  field :status, type: Integer #{ 1 => 'researcher', 2 => 'student', 3 => 'journalist', 4 => 'ngo', 5 => 'government_official', 6 => 'international_organization', 7 => 'private_sector', 8 => 'other' } 
+  field :status, type: Integer #{ 1 => 'researcher', 2 => 'student', 3 => 'journalist', 4 => 'ngo', 5 => 'government_official', 6 => 'international_organization', 7 => 'private_sector', 8 => 'other' }
   field :status_other, type: String
   field :description, type: String
-  field :terms, type: Boolean, default: false
+  field :terms, type: Boolean, default: true
   field :notifications, type: Boolean, default: true
   field :notification_locale, type: String, default: I18n.default_locale.to_s
 
@@ -123,7 +123,7 @@ class User
   field :provider,  :type => String
   field :uid,  :type => String
   field :nickname,  :type => String
-  field :avatar,  :type => String  
+  field :avatar,  :type => String
 
   #############################
 
@@ -135,10 +135,10 @@ class User
 
   #############################
   attr_accessor :account, :is_registration
-  attr_accessible :email, :password, :password_confirmation, :remember_me, 
+  attr_accessible :email, :password, :password_confirmation, :remember_me,
                   :role, :provider, :uid, :nickname, :avatar,
                   :first_name, :last_name, :age_group, :residence,
-                  :affiliation, :status, :status_other, :description, :terms, :account, 
+                  :affiliation, :status, :status_other, :description, :terms, :account,
                   :notifications, :notification_locale, :api_keys_attributes, :is_registration
 
   #############################
@@ -201,7 +201,7 @@ class User
     end
     return false
   end
-  
+
   def role_name
     ROLES.keys[ROLES.values.index(self.role)].to_s
   end
@@ -231,7 +231,7 @@ class User
       end
     end
   end
-  
+
   # if user logged in with omniauth, password is not required
   def password_required?
     super && provider.blank?
@@ -256,7 +256,7 @@ class User
       })
     a.valid?
   end
-  # def to_json(opts={})  
+  # def to_json(opts={})
   #   opts.merge!(:only => [:email])
   #   super(opts)
   # end
