@@ -42,13 +42,13 @@ class ApiVersion
     if default_language.present?
       logger.debug "***** - default is present; title = #{self.title_translations[default_language]}"
       if self.title_translations[default_language].blank?
-        errors.add(:base, I18n.t('errors.messages.translation_default_lang', 
+        errors.add(:base, I18n.t('errors.messages.translation_default_lang',
             field_name: self.class.human_attribute_name('title'),
             language: Language.get_name(default_language),
             msg: I18n.t('errors.messages.blank')) )
       end
     end
-  end 
+  end
 
   #############################
   # Callbacks
@@ -58,9 +58,9 @@ class ApiVersion
   # if title are '', reset value to nil so fallback works
   def set_to_nil
     self.title_translations.keys.each do |key|
-      self.title_translations[key] = nil if self.title_translations[key].empty?
+      self.title_translations[key] = nil if self.title_translations[key].nil?
     end
-  end 
+  end
 
   # if public and public at not exist, set it
   # else, make nil
