@@ -102,11 +102,12 @@ end
 #####################
 ## Create app user and api key
 #####################
-puts 'Creating app user and api key'
 email = 'application@mail.com'
-if User.where(email: email).nil?
+if User.where(email: email).count == 0
+  puts 'Creating app user and api key'
   #User.where(email: email).destroy
-  u = User.create(email: email, password: Devise.friendly_token[0,20], role: 0)
+  u = User.new(email: email, password: Devise.friendly_token[0,20], role: 0)
+  u.save(validate: false)
   u.api_keys.create
 end
 
