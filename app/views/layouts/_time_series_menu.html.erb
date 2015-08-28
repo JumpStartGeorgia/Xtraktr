@@ -1,11 +1,14 @@
 <%
   include_parent_div ||= false
+  make_button ||= false
+
+  btn_class = make_button == true ? 'btn btn-default' : ''
 %>
 
             <% if include_parent_div %>
               <div class="dropdown">
             <% end %>
-                <a href="#" class="options-menu dropdown-toggle" data-toggle="dropdown">
+                <a href="#" class="options-menu dropdown-toggle <%= btn_class %>" data-toggle="dropdown">
                   <!-- <img src="/assets/svg/options.svg"/> -->
                   <%= t('app.menu.admin_time_series.heading') %>
                   <img src="/assets/svg/arrow.svg"/>

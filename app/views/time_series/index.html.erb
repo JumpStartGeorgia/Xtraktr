@@ -35,7 +35,7 @@
         <td><%= format_public_status(time_series.public) %></td>
         <td><%= l time_series.created_at, format: :date_only %></td>
         <td class="dropdown">
-          <%= render partial: 'layouts/time_series_menu', locals: {time_series: time_series, include_parent_div: true} %>
+          <%= render partial: 'layouts/time_series_menu', locals: {time_series: time_series, include_parent_div: true, make_button: true} %>
         </td>
       </tr>
     <% end %>
