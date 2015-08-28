@@ -50,7 +50,8 @@ class RootController < ApplicationController
 
   def about
     @page_content = PageContent.by_name('about')
-    @css.push('root.css')
+    @css.push('root.css', 'tabs.css')
+
     respond_to do |format|
       format.html # index.html.erb
     end

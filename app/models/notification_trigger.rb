@@ -21,7 +21,7 @@ class NotificationTrigger
   index({ :notification_type => 1}, { background: true})
   index({ :processed => 1}, { background: true})
 
-    
+
   #############################
   ## Validations
 
@@ -56,13 +56,13 @@ class NotificationTrigger
   def self.process_new_user
     puts "========================================="
     puts "--> Notification Triggers - process new users"
-    triggers = NotificationTrigger.where(:notification_type => TYPES[:new_user]).not_processed    
+    triggers = NotificationTrigger.where(:notification_type => TYPES[:new_user]).not_processed
     if triggers.present?
       puts "--- triggers exist"
-      I18n.available_locales.each do |locale|          
+      I18n.available_locales.each do |locale|
         puts "---- #{locale}"
         emails = User.only(:email)
-            .where(:notifications => true, :notification_locale => locale)         
+            .where(:notifications => true, :notification_locale => locale)
             .in(:id => triggers.map{|x| x.user_id}.uniq)
         if emails.present?
           puts "----- sending to #{emails.length} users"
@@ -72,12 +72,12 @@ class NotificationTrigger
           message.bcc = emails_string
           message.locale = locale
           message.subject = I18n.t("mailer.notification.new_user.subject", :locale => locale)
-          message.message = I18n.t("mailer.notification.new_user.message", :locale => locale)                  
+          message.message = I18n.t("mailer.notification.new_user.message", :locale => locale)
           puts " ---> message: #{message.inspect}; bcc = #{message.bcc}; locale = #{message.locale}"
           NotificationMailer.send_new_user(message).deliver if !Rails.env.staging?
         end
       end
-      NotificationTrigger.where(:id => triggers.map{|x| x.id}).update_all(:processed => true)
+      NotificationTrigger.in(:id => triggers.map{|x| x.id}).update_all(:processed => true)
     end
   end
 
@@ -97,12 +97,12 @@ class NotificationTrigger
   def self.process_new_data
     puts "========================================="
     puts "--> Notification Triggers - process new data"
-    triggers = NotificationTrigger.in(:notification_type => [TYPES[:new_dataset], TYPES[:new_time_series]]).not_processed    
+    triggers = NotificationTrigger.in(:notification_type => [TYPES[:new_dataset], TYPES[:new_time_series]]).not_processed
     if triggers.present?
       puts "--- triggers exist"
-      I18n.available_locales.each do |locale|          
+      I18n.available_locales.each do |locale|
         puts "---- #{locale}"
-        emails = User.only(:email).where(:notifications => true, :notification_locale => locale)         
+        emails = User.only(:email).where(:notifications => true, :notification_locale => locale)
 
         if emails.present?
           puts "----- found #{emails.length} users to notification"
@@ -117,12 +117,12 @@ class NotificationTrigger
           message.bcc = emails
           message.locale = locale
           message.subject = I18n.t("mailer.notification.new_data.subject", :locale => locale)
-          message.message = I18n.t("mailer.notification.new_data.message", :locale => locale)                  
+          message.message = I18n.t("mailer.notification.new_data.message", :locale => locale)
           puts " ---> message: #{message.inspect}"
           NotificationMailer.send_new_data(message, dataset_ids, time_series_ids).deliver if !Rails.env.staging?
         end
       end
-      NotificationTrigger.where(:id => triggers.map{|x| x.id}).update_all(:processed => true)
+      NotificationTrigger.in(:id => triggers.map{|x| x.id}).update_all(:processed => true)
     end
   end
 
