@@ -88,8 +88,10 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     @js = []
 
     # get the api key for the app user
-    api_key = User.find_by(email: 'application@mail.com').api_keys.first
-    @app_api_key = api_key.key if api_key.present?
+    user = User.find_by(email: 'application@mail.com')
+    if user.present?
+      @app_api_key = user.api_keys.first
+    end
 
     # show h1 title by default
     @show_title = true
