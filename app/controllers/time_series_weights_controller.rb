@@ -46,6 +46,8 @@ class TimeSeriesWeightsController < ApplicationController
 
       add_common_options
 
+      @weight.dataset_id = @datasets.last.dataset_id
+
       # build the dataset questions
       @datasets.each do |dataset|
         @weight.assignments.build(dataset_id: dataset.dataset_id)

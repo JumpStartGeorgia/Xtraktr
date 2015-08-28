@@ -78,7 +78,7 @@
         <%= f.input :dataset_id, as: :select, collection: @datasets.map{|x| [x.dataset_title, x.dataset_id]}, required: true, hint: t(hint_key + 'dataset_id'), input_html: {class: 'selectpicker-weights', :'data-width' => '72%', :'data-live-search' => true} %>
       </div>
       <div class="col-sm-6">
-        <%= f.input :code, as: :select, collection: @time_series.questions.available_to_be_weights(@weight.code).map{|x| [x.code_with_text, x.code]} , hint: t(hint_key + 'code'), input_html: {class: 'selectpicker-weights', :'data-width' => '72%', :'data-live-search' => true} %>
+        <%= f.input :code, as: :select, collection: @questions[@weight.dataset_id.to_s].map{|x| [x.code_with_text, x.original_code]}, hint: t(hint_key + 'code'), input_html: {class: 'selectpicker-weights', :'data-width' => '72%', :'data-live-search' => true} %>
       </div>
     </div>
 

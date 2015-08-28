@@ -54,7 +54,7 @@
         </td>
         <td><%= l dataset.created_at, format: :date_only %></td>
         <td class="dropdown">
-          <%= render partial: 'layouts/dataset_menu', locals: {dataset: dataset, include_parent_div: true} %>
+          <%= render partial: 'layouts/dataset_menu', locals: {dataset: dataset, include_parent_div: true, make_button: true} %>
         </td>
       </tr>
     <% end %>

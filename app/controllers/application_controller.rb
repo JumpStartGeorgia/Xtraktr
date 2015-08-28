@@ -72,7 +72,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     @app_key_name = @is_xtraktr ? 'xtraktr' : 'unicef'
 
     # indicate that whether login should allow local and omniauth or just locale
-	  @enable_omniauth = @is_xtraktr
+	  @enable_omniauth = false#@is_xtraktr
 
     # get the id for addthis sharing
     @addthis_id =  @is_xtraktr ? (Rails.env.production? ? ENV['XTRAKTR_ADDTHIS_PROFILE_ID'] : ENV['XTRAKTR_ADDTHIS_PROFILE_ID_DEV'])
