@@ -8,7 +8,7 @@
     <%= f.input :email, :as => :email, :input_html => { :size => 35 , :class => "login-username" }, :placeholder => model_class.human_attribute_name(:email).upcase+" *" , :label => false  %>
   </div>
     <input id="user_account" name="user[is_registration]" type="hidden" value="1">
-    <% if reg %>      
+    <% if reg %>
         <input id="user_account" name="user[account]" type="hidden" value="1">
     <% else %>
       <div class="boolean input optional checkbox form-group wanna_account" id="user_account_input">
@@ -17,11 +17,11 @@
           <input id="user_account" name="user[account]" type="checkbox" value="1">
           <label class="control-label" for="user_account"><%= t('user.wanna_account').html_safe %></label>
         </div>
-      </div>  
+      </div>
     <% end %>
 
     <div class="r<%= reg ? '' : ' js-hide' %> ghost-box">
-  
+
         <%= f.input :password, :input_html => { :size => 35 , :class => "login-password" }, :placeholder => model_class.human_attribute_name(:password).upcase+" *" , :label => false  %>
         <%= f.input :password_confirmation, :input_html => { :size => 35 , :class => "login-password-confirmation" }, :placeholder => model_class.human_attribute_name(:password_confirmation).upcase+" *" , :label => false  %>
 
@@ -52,16 +52,16 @@
             <label class="choice" for="user_status_<%= d[1] %>"><%= "#{d[0]}" %></label>
         </div>
       <% end %>
-    </div>  
+    </div>
     <%= f.input :status_other, :placeholder => model_class.human_attribute_name(:status_other).upcase+" *"  , :label => false  %>
 
     <%= f.input :description, :as => :text, :input_html => { :class => 'autogrow', :rows => 5  }  %>
 
     <% if !reg %>
       <input id="dataset_id" name="agreement[dataset_id]" type="hidden" value="<%= @mod.dataset_id %>">
-      <input id="dataset_type" name="agreement[dataset_type]" type="hidden" value="<%= @mod.dataset_type %>">   
-      <input id="dataset_locale" name="agreement[dataset_locale]" type="hidden" value="<%= @mod.dataset_locale %>">      
-      <input id="download_type" name="agreement[download_type]" type="hidden" value="<%= @mod.download_type %>">      
+      <input id="dataset_type" name="agreement[dataset_type]" type="hidden" value="<%= @mod.dataset_type %>">
+      <input id="dataset_locale" name="agreement[dataset_locale]" type="hidden" value="<%= @mod.dataset_locale %>">
+      <input id="download_type" name="agreement[download_type]" type="hidden" value="<%= @mod.download_type %>">
     <% end %>
 
     <div class="boolean input optional checkbox form-group <%= reg ? '' : ' js-hide' %> ghost-box" id="user_notifications_input">
@@ -70,7 +70,7 @@
         <input id="user_notifications" name="user[notifications]" type="checkbox" value="1" <%= resource.notifications == true ? 'checked' : '' %>>
         <label class="control-label" for="user_notifications"><%= model_class.human_attribute_name(:notifications) %></label>
       </div>
-    </div>  
+    </div>
     <div class="radio_buttons input required form-group horizontal <%= reg && resource.notifications == true ? '' : ' js-hide' %> ghost-box" id="user_notification_locale_input">
       <label class="  control-label" for="user_notification_locale"><%= model_class.human_attribute_name(:notification_locale).upcase %></label>
       <%- langs = Language.in(locale: locales_sorted) -%>
@@ -83,11 +83,12 @@
       <% end %>
     </div>
 
+  <% if false %>
     <div class="boolean input optional checkbox form-group" id="user_terms_input">
       <div class="checkbox-box" tabindex="0">
         <input name="user[terms]" type="hidden" value="0">
         <input id="user_terms" name="user[terms]" type="checkbox" value="1" <%= resource.terms == true ? 'checked' : '' %>>
         <label class="control-label" for="user_terms"><%= t('app.common.terms').html_safe %><abbr title="required">*</abbr></label>
       </div>
-    </div> 
-
+    </div>
+<% end %>
