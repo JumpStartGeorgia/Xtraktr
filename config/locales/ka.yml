@@ -1357,12 +1357,13 @@ ka:
       jumpto_group: Jump To Group
     language_switcher:
       label: "ხელმისაწვდომი ენები"
-    embed_v1:
-      title_site: გადასვლა %{app_name} -ზე
-      title_datalist: მონაცემთა ყველა ცხილის ნახვა
-    embed_v2:
-      title_site: გადასვლა %{app_name} -ზე
-      title_datalist: მონაცემთა ყველა ცხილის ნახვა
+    embed:
+      v1:
+        title_site: გადასვლა %{app_name} -ზე
+        title_datalist: მონაცემთა ყველა ცხილის ნახვა
+      v2:
+        title_site: გადასვლა %{app_name} -ზე
+        title_datalist: მონაცემთა ყველა ცხილის ნახვა
   export_data:
     dataset: "მონაცემთა ცხრილი: %{title}"
     download_from: "ჩამოტვირთულია აქედან: %{app_name} at %{url}."
