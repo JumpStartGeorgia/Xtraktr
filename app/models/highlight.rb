@@ -11,20 +11,21 @@ class Highlight < CustomTranslation
   #############################
 
   field :embed_id, type: String
-  field :show_home_page, type: Boolean, default: false
+  # field :show_home_page, type: Boolean, default: false
   field :visual_type, type: Integer
   field :description, type: String, localize: true
 
   VISUAL_TYPES = {pie_chart: 1, crosstab_chart: 2, line_chart: 3, map: 4}
 
   #############################
-  attr_accessible :dataset_id, :time_series_id, :embed_id, :show_home_page, :visual_type, :description, :description_translations
+  attr_accessible :dataset_id, :time_series_id, :embed_id, #:show_home_page,
+                  :visual_type, :description, :description_translations
 
   #############################
   # indexes
   index ({ :dataset_id => 1})
   index ({ :time_series_id => 1})
-  index ({ :show_home_page => 1})
+#  index ({ :show_home_page => 1})
 
   #############################
   # Validations
@@ -36,14 +37,14 @@ class Highlight < CustomTranslation
 
   #############################
   # Callbacks
-  after_save :reset_show_home_page
-
-  # if this highlight was just marked for home page, make sure no other records have this flag
-  def reset_show_home_page
-    if self.show_home_page_changed? && self.show_home_page == true
-      Highlight.ne(id: self.id).update_all(show_home_page: false)
-    end
-  end
+  # after_save :reset_show_home_page
+  #
+  # # if this highlight was just marked for home page, make sure no other records have this flag
+  # def reset_show_home_page
+  #   if self.show_home_page_changed? && self.show_home_page == true
+  #     Highlight.ne(id: self.id).update_all(show_home_page: false)
+  #   end
+  # end
 
   #############################
   # Scopes
@@ -65,10 +66,10 @@ class Highlight < CustomTranslation
     where(time_series_id: time_series_id)
   end
 
-  # get all highlights that are not marked for home page
-  def self.with_out_home_page
-    where(show_home_page: false)
-  end
+  # # get all highlights that are not marked for home page
+  # def self.with_out_home_page
+  #   where(show_home_page: false)
+  # end
 
   # get the required home page highlight and random highlights until the limit is reached
   # highlight must be for a record that is public
@@ -88,7 +89,8 @@ class Highlight < CustomTranslation
       index = items.length
       if limit-index != 0 && limit-index <= count
         while index < limit
-          random = public_highlights.with_out_home_page.skip(rand(Highlight.public_highlights.count)).first
+          # random = public_highlights.with_out_home_page.skip(rand(Highlight.public_highlights.count)).first
+          random = public_highlights.skip(rand(Highlight.public_highlights.count)).first
 
           # make sure random is not already in items
           if random.present? && !items.include?(random)

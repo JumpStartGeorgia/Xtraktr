@@ -985,7 +985,7 @@ ka:
 
         გამორჩეულების დასამატებლად, გადადით მონაცემთა გაცნობის გვერდზე, აირჩიეთ სასურველი ინდიკატორი და შემდეგ გამოჩენილ გრაფიკში დააჭირეთ ვარსკვლავის ღილაკს, რომელიც განთავსებულია ზედა მარცხენა კუთხეში.
 
-        თქვენ შეგიძლიათ გამოიყენოთ ეს გვერდი გამორჩეულის მარტივად წასაშლელად ან იმის მისათითებლად თუ რომელი გამორჩეული იყოს მთავარ გვერდზე მუდმივად ნაჩვენები - ყველა ცხრილიდან მხოლოდ ერთი გამორჩეული შეიძლება იყოს არჩეული.
+        You can use this page to edit a highlight description or delete a highlight.
       no_highlights: "ფაილში ამ ცხრილისთვის არ არის გამორჩეული"
       question_code: "კითხვა"
       broken_down_by_code: "ჩაშლილია"
@@ -1133,11 +1133,11 @@ ka:
     highlights:
       title: "პერიოდული შედარება გამორჩეული"
       instructions: |
-        გამორჩეული წარმოადგენს ვიზუალს (გრაფები და რუკები) რომელიც თქვენი მონაცემების საინტერესო ასპექტებს უსვამს ხაზს და ნაჩვენებია მთავარ გვერდზე და dashboard-ზე.
+        Highlights are visuals (charts and maps) that highlight interesting aspects of your dataset and are shown on the dashboard page and the home page.
 
-        გამორჩეულების დასამატებლად, გადადით მონაცემთა გაცნობის გვერდზე, აირჩიეთ სასურველი ინდიკატორი და შემდეგ გამოჩენილ გრაფიკში დააჭირეთ ვარსკვლავის ღილაკს, რომელიც განთავსებულია ზედა მარცხენა კუთხეში.
+        To add a highlight, go to the explore page, select the indicators you want, and then in the charts that appear click the star button in the top left corner.
 
-        თქვენ შეგიძლიათ გამოიყენოთ ეს გვერდი გამორჩეულის მარტივად წასაშლელად ან იმის მისათითებლად თუ რომელი გამორჩეული იყოს მთავარ გვერდზე მუდმივად ნაჩვენები - ყველა ცხრილიდან მხოლოდ ერთი გამორჩეული შეიძლება იყოს არჩეული.
+        You can use this page to edit a highlight description or delete a highlight.
       no_highlights: "ფაილში ამ პერიოდული შედარებისთვის არ არის გამორჩეული"
       question_code: "კითხვა"
       broken_down_by_code: "ჩაშლილია"

@@ -749,25 +749,25 @@ class DatasetsController < ApplicationController
   end
 
 
-  # indicate highlight should show in home page
-  def home_page_highlight
-    dataset = Dataset.by_id_for_user(params[:id], current_user.id)
-    success = false
-
-    if dataset.present?
-      h = dataset.highlights.with_embed_id(params[:embed_id])
-      if h.present?
-        h.show_home_page = true
-        success = h.save
-      end
-    end
-
-    respond_to do |format|
-      format.html { redirect_to highlights_dataset_path(dataset), flash: {success:  t('app.msgs.highlight_show_home_page_success') } }
-      format.json { render json: success }
-    end
-  end
-
+  # # indicate highlight should show in home page
+  # def home_page_highlight
+  #   dataset = Dataset.by_id_for_user(params[:id], current_user.id)
+  #   success = false
+  #
+  #   if dataset.present?
+  #     h = dataset.highlights.with_embed_id(params[:embed_id])
+  #     if h.present?
+  #       h.show_home_page = true
+  #       success = h.save
+  #     end
+  #   end
+  #
+  #   respond_to do |format|
+  #     format.html { redirect_to highlights_dataset_path(dataset), flash: {success:  t('app.msgs.highlight_show_home_page_success') } }
+  #     format.json { render json: success }
+  #   end
+  # end
+  #
 
   # manage all highlights
   def highlights

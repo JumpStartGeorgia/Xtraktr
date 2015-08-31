@@ -412,25 +412,25 @@ end
     end
   end
 
-  # indicate highlight should show in home page
-  def home_page_highlight
-    time_series = TimeSeries.by_id_for_user(params[:id], current_user.id)
-    success = false
-
-    if time_series.present?
-      h = time_series.highlights.with_embed_id(params[:embed_id])
-      if h.present?
-        h.show_home_page = true
-        success = h.save
-      end
-    end
-
-    respond_to do |format|
-      format.html { redirect_to highlights_time_series_path(time_series), flash: {success:  t('app.msgs.highlight_show_home_page_success') } }
-      format.json { render json: success }
-    end
-  end
-
+  # # indicate highlight should show in home page
+  # def home_page_highlight
+  #   time_series = TimeSeries.by_id_for_user(params[:id], current_user.id)
+  #   success = false
+  #
+  #   if time_series.present?
+  #     h = time_series.highlights.with_embed_id(params[:embed_id])
+  #     if h.present?
+  #       h.show_home_page = true
+  #       success = h.save
+  #     end
+  #   end
+  #
+  #   respond_to do |format|
+  #     format.html { redirect_to highlights_time_series_path(time_series), flash: {success:  t('app.msgs.highlight_show_home_page_success') } }
+  #     format.json { render json: success }
+  #   end
+  # end
+  #
 
   # manage all highlights
   def highlights

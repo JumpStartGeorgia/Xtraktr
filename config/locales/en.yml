@@ -985,7 +985,7 @@ en:
 
         To add a highlight, go to the explore page, select the indicators you want, and then in the charts that appear click the star button in the top left corner.
 
-        You can use this page to quickly remove highlights or to indicate which highlight to always show on the home page - only one highlight from all datasets and time series can be selected for this.
+        You can use this page to edit a highlight description or delete a highlight.
       no_highlights: There are no highlights on file for this dataset.
       question_code: Question
       broken_down_by_code: Broken Down By
@@ -1133,11 +1133,11 @@ en:
     highlights:
       title: Time Series Highlights
       instructions: |
-        Highlights are visuals (charts and maps) that highlight interesting aspects of your time series and are shown on the dashboard page and the home page.
+        Highlights are visuals (charts and maps) that highlight interesting aspects of your dataset and are shown on the dashboard page and the home page.
 
         To add a highlight, go to the explore page, select the indicators you want, and then in the charts that appear click the star button in the top left corner.
 
-        You can use this page to quickly remove highlights or to indicate which highlight to always show on the home page - only one highlight from all datasets and time series can be selected for this.
+        You can use this page to edit a highlight description or delete a highlight.
       no_highlights: There are no highlights on file for this time series.
       question_code: Question
       broken_down_by_code: Broken Down By

@@ -60,7 +60,7 @@ BootstrapStarter::Application.routes.draw do
         post 'remove_highlight'
         get 'highlights'
         post 'highlights'
-        post 'home_page_highlight'
+        # post 'home_page_highlight'
         get 'download_data'
         post 'generate_download_files', :defaults => { :format => 'json' }
         post 'generate_download_file_status', :defaults => { :format => 'json' }
@@ -91,7 +91,7 @@ BootstrapStarter::Application.routes.draw do
         post 'remove_highlight'
         get 'highlights'
         post 'highlights'
-        post 'home_page_highlight'
+        # post 'home_page_highlight'
         get 'sort'
         post 'sort'
         get 'mass_changes_answers'

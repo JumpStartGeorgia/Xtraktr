@@ -11,7 +11,6 @@
       <tr>
         <th></th>
         <th><%= t('.questions') %></th>
-        <th><%= t('.show_home_page') %></th>
         <th><%= t('.description') %></th>
         <th><%=t '.actions', :default => t("helpers.actions") %></th>
       </tr>
@@ -48,21 +47,9 @@
             </ul>
           </td>
           <td>
-            <%= format_boolean_flag(highlight.show_home_page) %>
-          </td>
-          <td>
             <%= simple_format(highlight.description, {}, {sanitize: false}) %>
           </td>
           <td>
-            <% if !highlight.show_home_page %>
-              <%= link_to home_page_highlight_dataset_path(id: highlight.dataset_id, embed_id: highlight.embed_id),
-                          :title => t('.btn_show_home_page'),
-                          :method => :post,
-                          :class => 'btn btn-xs btn-default' do %>
-
-                <span class="glyphicon glyphicon-pushpin" aria-hidden="true"></span>
-              <% end %>
-            <% end %>
             <%= link_to '',
                         '#',
                         :title => t('helpers.links.edit_description'),
