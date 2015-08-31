@@ -13,13 +13,13 @@ $(document).ready(function(){
   // catch form submit and pull out all form values from the datatable
   // the post will return will a status message
   $('form#frm-dataset-exclude-questions').submit( function() {
-    $('.data-loader').fadeIn('fast');
-
-    $.ajax({
-        type: "POST",
-        dataType: 'script',
-        data: datatable.$('input').serialize(),
-        url: $(this).attr('action')
+    $('.data-loader').fadeIn('fast', function(){
+      $.ajax({
+          type: "POST",
+          dataType: 'script',
+          data: datatable.$('input').serialize(),
+          url: $(this).attr('action')
+      });
     });
 
     return false;
