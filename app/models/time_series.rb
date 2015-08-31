@@ -80,6 +80,11 @@ class TimeSeries < CustomTranslation
       where(code: code).first
     end
 
+    # get all of the weights except for the one passed in
+    def get_all_but(id)
+      ne(id: id)
+    end
+
     # get the weights for a question
     def for_question(code, ignore_id=nil)
       if ignore_id.present?

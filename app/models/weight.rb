@@ -40,6 +40,7 @@ class Weight < CustomTranslation
   before_save :reset_fields
   before_save :set_question_flags
   before_destroy :reset_question_flags
+  before_save :reset_is_default_flags
 
   # if is default or applies to all is true, codes should be empty
   def reset_fields
@@ -72,6 +73,14 @@ class Weight < CustomTranslation
       q.save
     end
   end
+
+  # if this weight is marked as default, make sure no other records have this flag
+  def reset_is_default_flags
+    if self.is_default == true
+      self.dataset.weights.get_all_but(self.id).update_all(is_default: false)
+    end
+  end
+
 
   #############################
   ## override get methods for fields that are localized

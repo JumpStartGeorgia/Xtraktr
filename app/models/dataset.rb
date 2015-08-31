@@ -99,6 +99,11 @@ class Dataset < CustomTranslation
       where(code: code).first
     end
 
+    # get all of the weights except for the one passed in
+    def get_all_but(id)
+      ne(id: id)
+    end
+
     # get the weights for a question
     def for_question(code, ignore_id=nil)
       if ignore_id.present?
@@ -148,7 +153,7 @@ class Dataset < CustomTranslation
     end
 
     def for_analysis_not_in_codes(codes)
-      nin(:code => codes).where(:exclude => false, :has_code_answers => true)
+      nin(:code => codes).where(:exclude => false, :has_code_answers_for_analysis => true)
     end
 
     def with_original_code(original_code)
@@ -162,17 +167,17 @@ class Dataset < CustomTranslation
 
     # get questions that are not excluded and have code answers
     def for_analysis
-      where(:exclude => false, :has_code_answers => true).to_a
+      where(:exclude => false, :has_code_answers_for_analysis => true).to_a
     end
 
     # get questions that are not excluded and have code answers
     def for_analysis_with_exclude_questions
-      where(:has_code_answers => true).to_a
+      where(:has_code_answers_for_analysis => true).to_a
     end
 
     # get count questions that are not excluded and have code answers
     def for_analysis_count
-      where(:exclude => false, :has_code_answers => true).count
+      where(:exclude => false, :has_code_answers_for_analysis => true).count
     end
 
     # get all of the questions with code answers
@@ -206,7 +211,7 @@ class Dataset < CustomTranslation
 
     # get just the codes that can be analyzed
     def unique_codes_for_analysis
-      where(:exclude => false, :has_code_answers => true).only(:code).map{|x| x.code}
+      where(:exclude => false, :has_code_answers_for_analysis => true).only(:code).map{|x| x.code}
     end
 
     # get all questions that are mappable
@@ -285,12 +290,12 @@ class Dataset < CustomTranslation
 
     # get questions that are mappable
     def mappable
-      where(:is_mappable => true, :has_code_answers => true)
+      where(:is_mappable => true, :has_code_answers_for_analysis => true)
     end
 
     # get questions that are not mappable
     def not_mappable
-      where(:is_mappable => false, :has_code_answers => true)
+      where(:is_mappable => false, :has_code_answers_for_analysis => true)
     end
 
     # get questions that are not assigned to groups
@@ -304,9 +309,9 @@ class Dataset < CustomTranslation
         when 'download'
           where(group_id: group_id, can_download: true).to_a
         when 'analysis'
-          where(group_id: group_id, exclude: false, has_code_answers: true).to_a
+          where(group_id: group_id, exclude: false, has_code_answers_for_analysis: true).to_a
         when 'anlysis_with_exclude_questions'
-          where(group_id: group_id, has_code_answers: true).to_a
+          where(group_id: group_id, has_code_answers_for_analysis: true).to_a
         else
           where(group_id: group_id)
       end
@@ -441,6 +446,7 @@ class Dataset < CustomTranslation
   index ({ :'questions.is_mappable' => 1})
   index ({ :'questions.can_download' => 1})
   index ({ :'questions.has_code_answers' => 1})
+  index ({ :'questions.has_code_answers_for_analysis' => 1})
   index ({ :'questions.exclude' => 1})
   index ({ :'questions.shapeset_id' => 1})
   index ({ :'questions.answers.can_exclude' => 1})
@@ -952,9 +958,9 @@ class Dataset < CustomTranslation
         when 'download'
           self.questions.where(:can_download => true, :group_id => options[:group_id])
         when 'analysis'
-          self.questions.where(:exclude => false, :has_code_answers => true, :group_id => options[:group_id])
+          self.questions.where(:exclude => false, :has_code_answers_for_analysis => true, :group_id => options[:group_id])
         when 'anlysis_with_exclude_questions'
-          self.questions.where(:has_code_answers => true, :group_id => options[:group_id])
+          self.questions.where(:has_code_answers_for_analysis => true, :group_id => options[:group_id])
         else
           self.questions.where(:group_id => options[:group_id])
       end
