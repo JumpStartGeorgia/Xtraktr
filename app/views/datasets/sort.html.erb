@@ -6,7 +6,7 @@
 
 <% if @items.present? %>
 
-  <%= form_tag sort_dataset_path(@dataset), id: 'frm-dataset-sort', class: 'form-data-loader data-loader-container' do %>
+  <%= form_tag sort_dataset_path(@owner, @dataset), id: 'frm-dataset-sort', class: 'form-data-loader data-loader-container' do %>
 
     <div id="items-header">
       <h2>

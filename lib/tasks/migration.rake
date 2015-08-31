@@ -85,6 +85,11 @@ namespace :migration do
     require "./db/migrate/add_sort_order.rb"
   end
 
+  desc "for users that do not have permalinks, create one"
+  task :add_missing_user_permalinks => :environment do
+    require "./db/migrate/add_missing_user_permalinks.rb"
+  end
+
 
 
 end

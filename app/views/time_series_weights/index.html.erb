@@ -56,11 +56,11 @@
         </td>
         <td>
         <%= link_to '',
-                    edit_time_series_weight_path(@time_series, weight),
+                    edit_time_series_weight_path(@owner, @time_series, weight),
                     :title => t('helpers.links.edit'),
                     :class => 'btn btn-xs btn-edit' %>
         <%= link_to '',
-                    time_series_weight_path(@time_series, weight),
+                    time_series_weight_path(@owner, @time_series, weight),
                     :title => t("helpers.links.destroy"),
                     :method => :delete,
                     :data => { :confirm => I18n.t("helpers.links.confirm") },

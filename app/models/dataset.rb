@@ -7,7 +7,6 @@ class Dataset < CustomTranslation
   include Mongoid::Slug
   include ProcessDataFile # script in lib folder that will convert datafile to csv and then load into appropriate fields
 
-
   #############################
 
   belongs_to :user
@@ -914,6 +913,11 @@ class Dataset < CustomTranslation
     x.present? ? x.slug : nil
   end
 
+  def self.get_owner(id)
+    x = only(:user_id).find(id)
+    x.present? ? x.owner : nil
+  end
+
   def self.only_id_title_description
     only(:id, :title, :description)
   end
@@ -1122,6 +1126,25 @@ class Dataset < CustomTranslation
       'SPSS'
     else
       ''
+    end
+  end
+
+  # get the owner id of this record
+  def owner_id
+    if self.user_id.present?
+      self.user_id
+    end
+  end
+
+  # get the owner slug of this record
+  def owner_slug
+    owner.present? ? owner.slug : owner_id
+  end
+
+  # get the owner of this record
+  def owner
+    if self.user_id.present?
+      self.user
     end
   end
 

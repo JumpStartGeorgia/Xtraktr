@@ -15,65 +15,65 @@
                 </a>
                 <ul class="dropdown-menu admin-menu" role="menu">
                   <li role="menuitem">
-                    <%= link_to time_series_path(time_series) do %>
+                    <%= link_to time_series_path(@owner, time_series) do %>
                       <span class="glyphicon glyphicon-search"></span>
                       <%= t('app.menu.admin_time_series.explore_data') %>
                     <% end %>
                   </li>
                   <li class="divider"></li>
                   <li role="menuitem">
-                    <%= link_to edit_time_series_path(time_series) do %>
+                    <%= link_to edit_time_series_path(@owner, time_series) do %>
                       <span class="glyphicon glyphicon-cog"></span>
                       <%= t('app.menu.admin_time_series.settings') %>
                     <% end %>
                   </li>
                   <li role="menuitem">
-                    <%= link_to highlights_time_series_path(time_series) do %>
+                    <%= link_to highlights_time_series_path(@owner, time_series) do %>
                       <span class="glyphicon glyphicon-star"></span>
                       <%= t('app.menu.admin_time_series.highlights') %>
                     <% end %>
                   </li>
                   <li class="divider"></li>
                   <li role="menuitem">
-                    <%= link_to time_series_questions_path(time_series) do %>
+                    <%= link_to time_series_questions_path(@owner, time_series) do %>
                       <span class="glyphicon glyphicon-question-admin"></span>
                       <%= t('app.menu.admin_time_series.qa') %>
                     <% end %>
                   </li>
                   <li role="menuitem">
-                    <%= link_to mass_changes_time_series_questions_path(time_series) do %>
+                    <%= link_to mass_changes_time_series_questions_path(@owner, time_series) do %>
                       <span class="glyphicon glyphicon-list-admin"></span>
                       <%= t('app.menu.admin_time_series.mass_changes') %>
                     <% end %>
                   </li>
                   <li role="menuitem">
-                    <%= link_to mass_changes_answers_time_series_path(time_series) do %>
+                    <%= link_to mass_changes_answers_time_series_path(@owner, time_series) do %>
                       <span class="glyphicon glyphicon-ok"></span>
                       <%= t('app.menu.admin_time_series.mass_changes_answers') %>
                     <% end %>
                   </li>
                   <li class="divider"></li>
                   <li role="menuitem">
-                    <%= link_to time_series_time_series_groups_path(time_series) do %>
+                    <%= link_to time_series_time_series_groups_path(@owner, time_series) do %>
                       <span class="glyphicon glyphicon-th-large"></span>
                       <%= t('app.menu.admin_time_series.groups') %>
                     <% end %>
                   </li>
                   <li role="menuitem">
-                    <%= link_to sort_time_series_path(time_series) do %>
+                    <%= link_to sort_time_series_path(@owner, time_series) do %>
                       <span class="glyphicon glyphicon-sort"></span>
                       <%= t('app.menu.admin_time_series.sort') %>
                     <% end %>
                   </li>
                   <li role="menuitem">
-                    <%= link_to time_series_weights_path(time_series) do %>
+                    <%= link_to time_series_weights_path(@owner, time_series) do %>
                       <span class="glyphicon glyphicon-asterisk"></span>
                       <%= t('app.menu.admin_time_series.weights') %>
                     <% end %>
                   </li>
                   <li class="divider"></li>
                   <li role="menuitem">
-                    <%= link_to time_series_path(time_series),
+                    <%= link_to time_series_path(@owner, time_series),
                         :method => 'delete',
                         :data => { :confirm => t("helpers.links.confirm") } do %>
 

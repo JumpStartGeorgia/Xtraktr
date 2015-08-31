@@ -422,6 +422,11 @@ class TimeSeries < CustomTranslation
     x.present? ? x.slug : nil
   end
 
+  def self.get_owner(id)
+    x = only(:user_id).find(id)
+    x.present? ? x.owner : nil
+  end
+
   def self.search(q)
     full_text_search(q)
   end
@@ -500,6 +505,24 @@ class TimeSeries < CustomTranslation
     self.weights.present?
   end
 
+  # get the owner id of this record
+  def owner_id
+    if self.user_id.present?
+      self.user_id
+    end
+  end
+
+  # get the owner slug of this record
+  def owner_slug
+    owner.present? ? owner.slug : owner_id
+  end
+
+  # get the owner of this record
+  def owner
+    if self.user_id.present?
+      self.user
+    end
+  end
 
   # get the groups and questions in sorted order
   # options:
@@ -633,7 +656,7 @@ class TimeSeries < CustomTranslation
     puts "- found #{matches.length} matches"
 
     # create record for each match
-    matches_with_index.each do |code, index|
+    matches.each_with_index do |code, index|
       answer_values = []
       question_answers = {}
 

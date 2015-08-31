@@ -1,5 +1,5 @@
 <% title t('.title') %>
-<%- 
+<%-
   label_key = "mongoid.attributes.question."
   hint_key = "mongoid.hints.mappable."
 -%>
@@ -8,7 +8,7 @@
 <% if @not_mappable.present? %>
   <% if @shapesets.present? %>
 
-    <%= form_tag mappable_form_dataset_path(@dataset), id: 'frm-mappable-question', class: 'formtastic' do %>
+    <%= form_tag mappable_form_dataset_path(@dataset.owner, @dataset), id: 'frm-mappable-question', class: 'formtastic' do %>
 
       <div id="mappable-select" class="row">
         <div class="col-sm-6">
@@ -63,8 +63,8 @@
         </div>
 
         <div class="form-group">
-          <%= submit_tag nil, :class => 'btn btn-primary' %> 
-          <%= link_to t('helpers.links.cancel'), mappable_dataset_path(@dataset), :class => 'btn btn-warning' %>
+          <%= submit_tag nil, :class => 'btn btn-primary' %>
+          <%= link_to t('helpers.links.cancel'), mappable_dataset_path(@dataset.owner, @dataset), :class => 'btn btn-warning' %>
         </div>
       </div>
 

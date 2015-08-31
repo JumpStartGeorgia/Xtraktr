@@ -150,7 +150,7 @@ class RootController < ApplicationController
     else
       @show_title = false
       @is_admin = false
-      @dataset_url = explore_data_show_path(@dataset)
+      @dataset_url = explore_data_show_path(@dataset.owner, @dataset)
       # gon.embed_chart = "<div class='embed-chart-modal'>
       #                     <div class='header'>#{t('helpers.links.embed_chart')}</div>
       #                     <div class='figure'></div>
@@ -253,7 +253,7 @@ class RootController < ApplicationController
     else
       @show_title = false
       @is_admin = false
-      @time_series_url = explore_time_series_show_path(@time_series)
+      @time_series_url = explore_time_series_show_path(@time_series.owner, @time_series)
       # gon.embed_chart = "<div class='embed-chart-modal'>
       #                     <div class='header'>#{t('helpers.links.embed_chart')}</div>
       #                     <div class='figure'></div>
@@ -282,7 +282,7 @@ class RootController < ApplicationController
     if @dataset.blank?
       redirect_to root_path, :notice => t('app.msgs.does_not_exist')
     elsif @dataset.public?
-      redirect_to explore_data_show_path(@dataset)
+      redirect_to explore_data_show_path(@dataset.owner, @dataset)
     else
       @is_admin = false
       @dataset_url = private_share_path(@dataset.private_share_key)

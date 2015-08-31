@@ -15,32 +15,32 @@
                 </a>
                 <ul class="dropdown-menu admin-menu" role="menu">
                   <li role="menuitem">
-                    <%= link_to dataset_path(dataset) do %>
+                    <%= link_to dataset_path(@owner, dataset) do %>
                       <span class="glyphicon glyphicon-search"></span>
                       <%= t('app.menu.admin_dataset.explore_data') %>
                     <% end %>
                   </li>
                   <li role="menuitem">
-                    <%= link_to download_data_dataset_path(dataset) do %>
+                    <%= link_to download_data_dataset_path(@owner, dataset) do %>
                       <span class="glyphicon glyphicon-download-alt"></span>
                       <%= t('app.menu.admin_dataset.download_data') %>
                     <% end %>
                   </li>
                   <li class="divider"></li>
                   <li role="menuitem">
-                    <%= link_to edit_dataset_path(dataset) do %>
+                    <%= link_to edit_dataset_path(@owner, dataset) do %>
                       <span class="glyphicon glyphicon-cog"></span>
                       <%= t('app.menu.admin_dataset.settings') %>
                     <% end %>
                   </li>
                   <li role="menuitem">
-                    <%= link_to highlights_dataset_path(dataset) do %>
+                    <%= link_to highlights_dataset_path(@owner, dataset) do %>
                       <span class="glyphicon glyphicon-star"></span>
                       <%= t('app.menu.admin_dataset.highlights') %>
                     <% end %>
                   </li>
                   <li role="menuitem">
-                    <%= link_to warnings_dataset_path(dataset) do %>
+                    <%= link_to warnings_dataset_path(@owner, dataset) do %>
                       <span class="glyphicon glyphicon-exclamation-sign-admin"></span>
                       <%= t('app.menu.admin_dataset.warnings') %>
                     <% end %>
@@ -55,57 +55,57 @@
                   <% end %>
                   <li class="divider"></li>
                   <li role="menuitem">
-                    <%= link_to dataset_questions_path(dataset) do %>
+                    <%= link_to dataset_questions_path(@owner, dataset) do %>
                       <span class="glyphicon glyphicon-question-admin"></span>
                       <%= t('app.menu.admin_dataset.qa') %>
                     <% end %>
                   </li>
                   <li role="menuitem">
-                    <%= link_to mass_changes_dataset_questions_path(dataset) do %>
+                    <%= link_to mass_changes_dataset_questions_path(@owner, dataset) do %>
                       <span class="glyphicon glyphicon-list-admin"></span>
                       <%= t('app.menu.admin_dataset.mass_changes') %>
                     <% end %>
                   </li>
                   <li role="menuitem">
-                    <%= link_to mass_changes_questions_dataset_path(dataset) do %>
+                    <%= link_to mass_changes_questions_dataset_path(@owner, dataset) do %>
                       <span class="glyphicon glyphicon-ok"></span>
                       <%= t('app.menu.admin_dataset.mass_changes_questions') %>
                     <% end %>
                   </li>
                   <li role="menuitem">
-                    <%= link_to mass_changes_answers_dataset_path(dataset) do %>
+                    <%= link_to mass_changes_answers_dataset_path(@owner, dataset) do %>
                       <span class="glyphicon glyphicon-ok"></span>
                       <%= t('app.menu.admin_dataset.mass_changes_answers') %>
                     <% end %>
                   </li>
                   <li class="divider"></li>
                   <li role="menuitem">
-                    <%= link_to dataset_groups_path(dataset) do %>
+                    <%= link_to dataset_groups_path(@owner, dataset) do %>
                       <span class="glyphicon glyphicon-th-large"></span>
                       <%= t('app.menu.admin_dataset.groups') %>
                     <% end %>
                   </li>
                   <li role="menuitem">
-                    <%= link_to sort_dataset_path(dataset) do %>
+                    <%= link_to sort_dataset_path(@owner, dataset) do %>
                       <span class="glyphicon glyphicon-sort"></span>
                       <%= t('app.menu.admin_dataset.sort') %>
                     <% end %>
                   </li>
                   <li role="menuitem">
-                    <%= link_to dataset_weights_path(dataset) do %>
+                    <%= link_to dataset_weights_path(@owner, dataset) do %>
                       <span class="glyphicon glyphicon-asterisk"></span>
                       <%= t('app.menu.admin_dataset.weights') %>
                     <% end %>
                   </li>
                   <li role="menuitem">
-                    <%= link_to mappable_dataset_path(dataset) do %>
+                    <%= link_to mappable_dataset_path(@owner, dataset) do %>
                       <span class="glyphicon glyphicon-map-marker"></span>
                       <%= t('app.menu.admin_dataset.mappable') %>
                     <% end %>
                   </li>
                   <li class="divider"></li>
                   <li role="menuitem">
-                    <%= link_to dataset_path(dataset),
+                    <%= link_to dataset_path(@owner, dataset),
                         :method => 'delete',
                         :data => { :confirm => t("helpers.links.confirm") } do %>
 

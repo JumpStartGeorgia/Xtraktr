@@ -1,41 +1,6 @@
 class User
   include Mongoid::Document
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
-  # devise :database_authenticatable, :registerable,
-  #        :recoverable, :rememberable, :trackable, :validatable
-
-  # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :password_confirmation, :remember_me
-
-  ## Database authenticatable
-  field :email,              type: String, default: ""
-  field :encrypted_password, type: String, default: ""
-
-  ## Recoverable
-  field :reset_password_token,   type: String
-  field :reset_password_sent_at, type: Time
-
-  ## Rememberable
-  field :remember_created_at, type: Time
-
-  ## Trackable
-  field :sign_in_count,      type: Integer, default: 0
-  field :current_sign_in_at, type: Time
-  field :last_sign_in_at,    type: Time
-  field :current_sign_in_ip, type: String
-  field :last_sign_in_ip,    type: String
-
-  ## Confirmable
-  # field :confirmation_token,   type: String
-  # field :confirmed_at,         type: Time
-  # field :confirmation_sent_at, type: Time
-  # field :unconfirmed_email,    type: String # Only if using reconfirmable
-
-  ## Lockable
-  # field :failed_attempts, type: Integer, default: 0 # Only if lock strategy is :failed_attempts
-  # field :unlock_token,    type: String # Only if unlock strategy is :email or :both
-  # field :locked_at,       type: Time
+  include Mongoid::Slug
   include Mongoid::Timestamps
 
   #############################
@@ -85,20 +50,6 @@ class User
   field :current_sign_in_ip, :type => String
   field :last_sign_in_ip,    :type => String
 
-  ## user info
-  field :first_name, type: String
-  field :last_name, type: String
-  field :age_group, type: Integer #{ 1 => '17-24', 2 => '25-34', 3 => '35-44', 4 => '45-54', 5 => '55-64', 6 => 'above'}
-  field :residence, type: String
-  field :affiliation, type: String
-  field :status, type: Integer #{ 1 => 'researcher', 2 => 'student', 3 => 'journalist', 4 => 'ngo', 5 => 'government_official', 6 => 'international_organization', 7 => 'private_sector', 8 => 'other' }
-  field :status_other, type: String
-  field :description, type: String
-  field :terms, type: Boolean, default: true
-  field :notifications, type: Boolean, default: true
-  field :notification_locale, type: String, default: I18n.default_locale.to_s
-
-
   ## Encryptable
   # field :password_salt, :type => String
 
@@ -116,6 +67,23 @@ class User
   ## Token authenticatable
   # field :authentication_token, :type => String
 
+
+  ## user info
+  field :is_user, type: Boolean, default: true
+  field :first_name, type: String
+  field :last_name, type: String
+  field :age_group, type: Integer #{ 1 => '17-24', 2 => '25-34', 3 => '35-44', 4 => '45-54', 5 => '55-64', 6 => 'above'}
+  field :residence, type: String
+  field :affiliation, type: String
+  field :status, type: Integer #{ 1 => 'researcher', 2 => 'student', 3 => 'journalist', 4 => 'ngo', 5 => 'government_official', 6 => 'international_organization', 7 => 'private_sector', 8 => 'other' }
+  field :status_other, type: String
+  field :description, type: String
+  field :terms, type: Boolean, default: false
+  field :notifications, type: Boolean, default: true
+  field :notification_locale, type: String, default: I18n.default_locale.to_s
+
+  field :permalink, type: String
+
   ## Roles
   field :role,  :type => Integer, :default => 0
 
@@ -128,22 +96,32 @@ class User
   #############################
 
   # indexes
-  index({ :email => 1}, { background: true})
+  index({ :is_user => 1, :email => 1}, { background: true})
   index({ :role => 1}, {background: true})
   index({ :provider => 1, :role => 1}, {background: true})
   index({ :reset_password_token => 1}, { background: true, unique: true, sparse: true })
 
   #############################
+  # permalink slug
+  # - words that the slug cannot be
+  SLUG_RESERVE = ['admin', 'root', 'omniauth', 'locale', 'api', 'embed', 'highlights', 'contact', 'download', 'download_request', 'instructions', 'about', 'generate_highlights', 'datasets', 'groups', 'weights', 'time_series', 'questions', 'answers', 'settings', 'manage_datasets', 'manage_time_series']
+  slug :permalink, history: true, reserve: SLUG_RESERVE do |user|
+    user.permalink.to_url
+  end
+
+  #############################
   attr_accessor :account, :is_registration
   attr_accessible :email, :password, :password_confirmation, :remember_me,
-                  :role, :provider, :uid, :nickname, :avatar,
+                  :role, :provider, :uid, :nickname, :avatar, :permalink,
                   :first_name, :last_name, :age_group, :residence,
                   :affiliation, :status, :status_other, :description, :terms, :account,
                   :notifications, :notification_locale, :api_keys_attributes, :is_registration
 
+
   #############################
   ## Validations
 
+  validates :permalink, presence: true
   validates :first_name, presence: true
   validates :last_name, presence: true
   validates :age_group, inclusion: { in: AGE_GROUP.keys }
@@ -154,15 +132,18 @@ class User
   validates_presence_of :status_other, :if => lambda { |o| o.status == 8 }
   validates :account, :numericality => { :equal_to => 1 }, :if => lambda { |o| o.is_registration.present? }
   validates :terms, :inclusion => {:in => [true]  }
+
   ####################
   ## Callbacks
 
+  before_validation :set_permalink
   before_create :create_nickname
-  before_validation :test
-  def test
-    logger.debug "@@@@@@@@@@@ reset_password_period_valid = #{self.reset_password_period_valid?}"
+
+  def set_permalink
+    self.permalink = "#{self.name}" if self.permalink.nil?
     return true
   end
+
   def create_nickname
     self.nickname = self.email.split('@')[0] if self.nickname.blank? && self.email.present?
 
@@ -170,40 +151,10 @@ class User
   end
 
   #############################
-
-  def name
-    if self.first_name.present?
-      if self.last_name.present?
-        "#{self.first_name} #{self.last_name}"
-      else
-        self.first_name
-      end
-    else
-      self.nickname
-    end
-  end
-
+  ## Scopes
 
   def self.no_admins
     ne(role: ROLES[:admin])
-  end
-
-  # if no role is supplied, default to the basic user role
-  def check_for_role
-    self.role = ROLES[:user] if self.role.nil?
-  end
-
-  # use role inheritence
-  # - a role with a larger number can do everything that smaller numbers can do
-  def role?(base_role)
-    if base_role && ROLES.values.index(base_role)
-      return base_role <= self.role
-    end
-    return false
-  end
-
-  def role_name
-    ROLES.keys[ROLES.values.index(self.role)].to_s
   end
 
   def self.find_for_facebook_oauth(auth, signed_in_resource=nil)
@@ -232,6 +183,45 @@ class User
     end
   end
 
+
+  # override the login query to make sure it only looks at users and not groups
+  def self.find_for_authentication(warden_conditions)
+    where(:is_user => true, :email => warden_conditions[:email]).first
+  end
+
+  #############################
+
+  def name
+    if self.first_name.present?
+      if self.last_name.present?
+        "#{self.first_name} #{self.last_name}"
+      else
+        self.first_name
+      end
+    else
+      self.nickname
+    end
+  end
+
+
+  # if no role is supplied, default to the basic user role
+  def check_for_role
+    self.role = ROLES[:user] if self.role.nil?
+  end
+
+  # use role inheritence
+  # - a role with a larger number can do everything that smaller numbers can do
+  def role?(base_role)
+    if base_role && ROLES.values.index(base_role)
+      return base_role <= self.role
+    end
+    return false
+  end
+
+  def role_name
+    ROLES.keys[ROLES.values.index(self.role)].to_s
+  end
+
   # if user logged in with omniauth, password is not required
   def password_required?
     super && provider.blank?
@@ -256,8 +246,5 @@ class User
       })
     a.valid?
   end
-  # def to_json(opts={})
-  #   opts.merge!(:only => [:email])
-  #   super(opts)
-  # end
+
 end

@@ -4,7 +4,7 @@
     <% @time_series.each do |time_series| %>
       <li>
         <div class="caption">
-          <div class="title"><%= link_to time_series.title, explore_time_series_dashboard_path(time_series) %></div>
+          <div class="title"><%= link_to time_series.title, explore_time_series_dashboard_path(time_series.owner, time_series) %></div>
         </div>
         <div class="info">
           <div class="timestamps">

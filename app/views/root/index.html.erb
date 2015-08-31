@@ -44,14 +44,14 @@
                 <% if i < @datasets.length %>
                   <% dataset = @datasets[i] %>
                   <div class="c">
-                      <%= link_to dataset.title, explore_data_dashboard_path(dataset) %>
+                      <%= link_to dataset.title, explore_data_dashboard_path(dataset.owner, dataset) %>
                       <%= "<div class='desc'>#{truncate(strip_tags_nbsp(dataset.description), length: 90, separator: ' ')}</div>".html_safe if dataset.description.present? %>
                   </div>
                 <% end %>
                 <% if i+3 < @datasets.length %>
                   <% dataset = @datasets[i+3] %>
                   <div class="c c2">
-                      <%= link_to dataset.title, explore_data_dashboard_path(dataset) %>
+                      <%= link_to dataset.title, explore_data_dashboard_path(dataset.owner, dataset) %>
                       <%= "<div class='desc'>#{truncate(strip_tags_nbsp(dataset.description), length: 90, separator: ' ')}</div>".html_safe if dataset.description.present? %>
                   </div>
                 <% end %>
@@ -78,14 +78,14 @@
                 <% if i < @time_series.length %>
                   <% time_series = @time_series[i] %>
                   <div class="c">
-                      <%= link_to time_series.title, explore_time_series_dashboard_path(time_series) %>
+                      <%= link_to time_series.title, explore_time_series_dashboard_path(time_series.owner, time_series) %>
                       <%= "<div class='desc'>#{truncate(strip_tags_nbsp(time_series.description), length: 90, separator: ' ')}</div>".html_safe if time_series.description.present? %>
                   </div>
                 <% end %>
                 <% if i+3 < @time_series.length %>
                   <% time_series = @time_series[i+3] %>
                   <div class="c c2">
-                      <%= link_to time_series.title, explore_time_series_dashboard_path(time_series) %>
+                      <%= link_to time_series.title, explore_time_series_dashboard_path(time_series.owner, time_series) %>
                       <%= "<div class='desc'>#{truncate(strip_tags_nbsp(time_series.description), length: 90, separator: ' ')}</div>".html_safe if time_series.description.present? %>
                   </div>
                 <% end %>

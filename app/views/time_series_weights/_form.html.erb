@@ -6,7 +6,7 @@
   a_hint_key = "mongoid.hints.time_series_weight_assignment."
 -%>
 
-<%= semantic_form_for([@time_series, @weight], url: @is_new == true ? time_series_weights_path : time_series_weight_path, html: {class: 'tabbed-translation-form'}) do |f| %>
+<%= semantic_form_for([@time_series, @weight], url: @is_new == true ? time_series_weights_path(owner_id: @owner) : time_series_weight_path(owner_id: @owner), html: {class: 'tabbed-translation-form'}) do |f| %>
   <%= f.error_messages %>
 
 

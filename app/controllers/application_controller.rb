@@ -8,7 +8,8 @@ class ApplicationController < ActionController::Base
   DEVISE_CONTROLLERS = ['users/sessions', 'users/registrations', 'devise/passwords']
 
 	before_filter :set_locale
-	before_filter :is_browser_supported?
+  before_filter :set_owner_id
+	# before_filter :is_browser_supported?
 	before_filter :preload_global_variables
 	before_filter :initialize_gon
 	before_filter :store_location
@@ -32,36 +33,88 @@ class ApplicationController < ActionController::Base
 
 	end
 
-	Browser = Struct.new(:browser, :version)
-	SUPPORTED_BROWSERS = [
-		Browser.new("Chrome", "15.0"),
-		Browser.new("Safari", "4.0.2"),
-		Browser.new("Firefox", "10.0.2"),
-		Browser.new("Internet Explorer", "9.0"),
-		Browser.new("Opera", "11.0")
-	]
+# 	Browser = Struct.new(:browser, :version)
+# 	SUPPORTED_BROWSERS = [
+# 		Browser.new("Chrome", "15.0"),
+# 		Browser.new("Safari", "4.0.2"),
+# 		Browser.new("Firefox", "10.0.2"),
+# 		Browser.new("Internet Explorer", "9.0"),
+# 		Browser.new("Opera", "11.0")
+# 	]
+#
+# 	def is_browser_supported?
+# 		@user_agent = UserAgent.parse(request.user_agent)
+# logger.debug "////////////////////////// BROWSER = #{@user_agent}"
+# #		if SUPPORTED_BROWSERS.any? { |browser| @user_agent < browser }
+# #			# browser not supported
+# #logger.debug "////////////////////////// BROWSER NOT SUPPORTED"
+# #			render "layouts/unsupported_browser", :layout => false
+# #		end
+# 	end
 
-	def is_browser_supported?
-		@user_agent = UserAgent.parse(request.user_agent)
-logger.debug "////////////////////////// BROWSER = #{@user_agent}"
-#		if SUPPORTED_BROWSERS.any? { |browser| @user_agent < browser }
-#			# browser not supported
-#logger.debug "////////////////////////// BROWSER NOT SUPPORTED"
-#			render "layouts/unsupported_browser", :layout => false
-#		end
-	end
 
+  ################################################
 
-	def set_locale
-    if params[:locale] and I18n.available_locales.include?(params[:locale].to_sym)
-      I18n.locale = params[:locale]
-    else
-      I18n.locale = I18n.default_locale
+  # get the user record for the current owner_id
+  # - @owner is used to put the owner permalink in the url
+  def set_owner_id
+    if user_signed_in?
+      if params[:owner_id].nil?
+        params[:owner_id] = current_user.slug
+        @owner = current_user
+      else
+        @owner = User.find(params[:owner_id])
+      end
     end
-	end
+  end
 
-  def default_url_options(options={})
-    { :locale => I18n.locale }
+  # get the user record for the current owner_id
+  # - this is set in set_owner_id
+  # - @owner is used to put the owner permalink in the url
+  def load_owner
+    if @owner.nil?
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to root_path(:locale => I18n.locale)
+      return
+    end
+  end
+
+  # get the dataset that belongs to the current owner
+  # - dataaset_id is a param so nested dataset resources (group, weights, questions)
+  #   can pass in the correct params id
+  def load_dataset(dataset_id = params[:id])
+    if @owner.present?
+      @dataset = Dataset.by_id_for_user(dataset_id, @owner.id)
+
+      if @dataset.nil?
+        flash[:info] =  t('app.msgs.does_not_exist')
+        redirect_to datasets_path(:locale => I18n.locale, :owner_id => @owner)
+        return
+      end
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to root_path(:locale => I18n.locale)
+      return
+    end
+  end
+
+  # get the time series that belongs to the current owner
+  # - time_series_id is a param so nested time series resources (group, weights, questions)
+  #   can pass in the correct params id
+  def load_time_series(time_series_id = params[:id])
+    if @owner.present?
+      @time_series = TimeSeries.by_id_for_user(time_series_id, @owner.id)
+
+      if @time_series.nil?
+        flash[:info] =  t('app.msgs.does_not_exist')
+        redirect_to time_series_path(:locale => I18n.locale, :owner_id => @owner)
+        return
+      end
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to root_path(:locale => I18n.locale)
+      return
+    end
   end
 
 	def preload_global_variables
@@ -114,63 +167,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     gon.get_highlight_desc_link = highlights_get_description_path
 	end
 
-  # in order for the downloads to work properly, the user must have entered all required fields (name, age, etc)
-  # - this requirement did not exist when the site was created so some users may not have all fields entered
-  # - if this is the case, send them to the settings page
-  # def check_user_status
-  #   if !@is_xtraktr && user_signed_in? && current_user.terms == false && request.path != settings_path
-  #     redirect_to settings_path, alert: I18n.t('app.msgs.missing_user_info')
-  #   end
-  # end
-
-  def layout_by_resource
-    if !DEVISE_CONTROLLERS.index(params[:controller]).nil? && request.xhr?
-      nil
-    else
-      "application"
-    end
-  end
-
-	def after_sign_in_path_for(resource)
-		session[:previous_urls].last || request.env['omniauth.origin'] || root_path(:locale => I18n.locale)
-	end
-
-  def valid_role?(role)
-    redirect_to root_path, :notice => t('app.msgs.not_authorized') if !current_user || !current_user.role?(role)
-  end
-
-	# store the current path so after login, can go back
-	# only record the path if this is not an ajax call and not a users page (sign in, sign up, etc)
-	def store_location
-		session[:previous_urls] ||= []
-
-    if session[:download_url].present? && !user_signed_in? && !params[:d].present? && !(params[:controller] == 'users/registrations' && params[:action] == 'create' )
-      session[:download_url] = nil
-    end
-
-    if params[:action] == 'download_request' && request.xhr? && !user_signed_in? &&
-      session[:download_url] = request.fullpath
-    end
-
-    if request.fullpath.index("/download/").nil?
-  		if session[:previous_urls].first != request.fullpath &&
-          params[:format] != 'js' && params[:format] != 'json' && !request.xhr? &&
-          request.fullpath.index("/users/").nil? &&
-          request.fullpath.index("/embed/").nil?
-
-  	    session[:previous_urls].unshift request.fullpath
-      elsif session[:previous_urls].first != request.fullpath &&
-         request.xhr? && !request.fullpath.index("/users/").nil?  &&
-          !request.fullpath.index("/embed/").nil?&&
-         params[:return_url].present?
-
-        session[:previous_urls].unshift params[:return_url]
-  		end
-    end
-
-		session[:previous_urls].pop if session[:previous_urls].count > 1
-    #Rails.logger.debug "****************** prev urls session = #{session[:previous_urls]}"
-	end
+  ################################################
 
   # sort a group of objects by sort_order field
   # if object item sort_order is nil, move it to the end of the list of objects
@@ -191,13 +188,15 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     params.except('access_token', 'controller', 'action', 'format', 'locale')
   end
 
+  ################################################
+
   # add options to show the dataset nav bar
   def add_dataset_nav_options(options={})
     show_title = options[:show_title].nil? ? true : options[:show_title]
     set_url = options[:set_url].nil? ? true : options[:set_url]
 
     @css.push("datasets.css")
-    @dataset_url = dataset_path(@dataset) if set_url
+    @dataset_url = dataset_path(@dataset.owner, @dataset) if set_url
     @is_dataset_admin = true
     gon.is_admin = true
 
@@ -210,13 +209,12 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     set_url = options[:set_url].nil? ? true : options[:set_url]
 
     @css.push("time_series.css")
-    @time_series_url = time_series_path(@time_series) if set_url
+    @time_series_url = time_series_path(@time_series.owner, @time_series) if set_url
     @is_time_series_admin = true
     gon.is_admin = true
 
     @show_title = show_title
   end
-
 
   # set variables need for the tabbed translation forms
   def set_tabbed_translation_form_settings(tinymce_template='default')
@@ -229,11 +227,6 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
       @css.push('shCore.css')
       @js.push('shCore.js', 'shBrushJScript.js')
     end
-  end
-
-  # tell active-model-serializers gem to not include root name in json output
-  def default_serializer_options
-    { root: false }
   end
 
   #######################
@@ -365,6 +358,8 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     end
   end
 
+  ########################################
+
   # generate the data needed for the embed_id
   # output: {type, title, dashboard_link, explore_link, error, visual_type, js}
   def get_highlight_data(embed_id, highlight_id=nil, use_admin_link=nil)
@@ -396,11 +391,13 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
           # set permalink to dataset
           permalink = Dataset.get_slug(options['dataset_id'])
           permalink = options['dataset_id'] if permalink.blank?
+          owner = Dataset.get_owner(options['dataset_id'])
 
           # create link to dashboard
-          output[:dashboard_link] = use_admin_link.to_s == 'true' ? dataset_url(permalink) : explore_data_dashboard_url(permalink)
+          output[:dashboard_link] = use_admin_link.to_s == 'true' ? dataset_url(owner, permalink) : explore_data_dashboard_url(owner, permalink)
 
           # create link to this item
+          options['owner_id'] = owner.id if owner.present?
           options['id'] = permalink
           output[:id] = options['id']
           options['from_embed'] = true
@@ -418,11 +415,13 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
           # set permalink to dataset
           permalink = TimeSeries.get_slug(options['time_series_id'])
           permalink = options['time_series_id'] if permalink.blank?
+          owner = TimeSeries.get_owner(options['time_series_id'])
 
           # create link to dashboard
-          output[:dashboard_link] = use_admin_link.to_s == 'true' ? time_series_url(path) : explore_time_series_dashboard_url(permalink)
+          output[:dashboard_link] = use_admin_link.to_s == 'true' ? time_series_url(owner, permalink) : explore_time_series_dashboard_url(owner, permalink)
 
           # create link to this item
+          options['owner_id'] = owner.id if owner.present?
           options['id'] = permalink
           output[:id] = options['id']
           options['from_embed'] = true
@@ -450,7 +449,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
       end
 
     end
-logger.debug "======= output js = #{output[:js]}"
+    # logger.debug "======= output js = #{output[:js]}"
 
     return output
   end
@@ -496,6 +495,8 @@ logger.debug "======= output js = #{output[:js]}"
     set_gon_highcharts
   end
 
+  #########################################
+
   def set_gon_highcharts
     gon.highcharts_context_title = I18n.t('highcharts.context_title')
     gon.highcharts_png = I18n.t('highcharts.png')
@@ -530,6 +531,78 @@ logger.debug "======= output js = #{output[:js]}"
   end
 
 
+  ################################################
+
+  def per_page
+    return PER_PAGE_COUNT
+  end
+
+  # tell active-model-serializers gem to not include root name in json output
+  def default_serializer_options
+    { root: false }
+  end
+
+  def set_locale
+    if params[:locale] and I18n.available_locales.include?(params[:locale].to_sym)
+      I18n.locale = params[:locale]
+    else
+      I18n.locale = I18n.default_locale
+    end
+  end
+
+  def default_url_options(options={})
+    { :locale => I18n.locale }
+  end
+
+  def layout_by_resource
+    if !DEVISE_CONTROLLERS.index(params[:controller]).nil? && request.xhr?
+      nil
+    else
+      "application"
+    end
+  end
+
+	def after_sign_in_path_for(resource)
+		session[:previous_urls].last || request.env['omniauth.origin'] || root_path(:locale => I18n.locale)
+	end
+
+  def valid_role?(role)
+    redirect_to root_path, :notice => t('app.msgs.not_authorized') if !current_user || !current_user.role?(role)
+  end
+
+	# store the current path so after login, can go back
+	# only record the path if this is not an ajax call and not a users page (sign in, sign up, etc)
+	def store_location
+		session[:previous_urls] ||= []
+
+    if session[:download_url].present? && !user_signed_in? && !params[:d].present? && !(params[:controller] == 'users/registrations' && params[:action] == 'create' )
+      session[:download_url] = nil
+    end
+
+    if params[:action] == 'download_request' && request.xhr? && !user_signed_in? &&
+      session[:download_url] = request.fullpath
+    end
+
+    if request.fullpath.index("/download/").nil?
+  		if session[:previous_urls].first != request.fullpath &&
+          params[:format] != 'js' && params[:format] != 'json' && !request.xhr? &&
+          request.fullpath.index("/users/").nil? &&
+          request.fullpath.index("/embed/").nil?
+
+  	    session[:previous_urls].unshift request.fullpath
+      elsif session[:previous_urls].first != request.fullpath &&
+         request.xhr? && !request.fullpath.index("/users/").nil?  &&
+          !request.fullpath.index("/embed/").nil?&&
+         params[:return_url].present?
+
+        session[:previous_urls].unshift params[:return_url]
+  		end
+    end
+
+		session[:previous_urls].pop if session[:previous_urls].count > 1
+    #Rails.logger.debug "****************** prev urls session = #{session[:previous_urls]}"
+	end
+
   #######################
   #######################
 	def render_not_found(exception)
@@ -545,8 +618,5 @@ logger.debug "======= output js = #{output[:js]}"
 		  .deliver
 		render :file => "#{Rails.root}/public/500.html", :status => 500
 	end
-  def per_page
-    return PER_PAGE_COUNT
-  end
 
 end

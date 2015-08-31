@@ -5,7 +5,7 @@
   d_hint_key = "mongoid.hints.time_series_dataset."
 -%>
 
-<%= semantic_form_for @time_series, html: {:multipart => true, class: 'tabbed-translation-form'} do |f| %>
+<%= semantic_form_for @time_series, url: polymorphic_path(owner_id: @owner, id: @time_series), html: {:multipart => true, class: 'tabbed-translation-form'} do |f| %>
   <%= f.error_messages %>
 
   <%= f.inputs do %>

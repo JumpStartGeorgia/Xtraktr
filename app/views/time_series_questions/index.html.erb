@@ -6,8 +6,8 @@
   </p>
 
   <div id="add-links">
-    <%= link_to t('.btn_add_question'), new_time_series_question_path(@time_series), class: 'btn btn-primary', title: t('.btn_add_question_hint') %>
-    <%= link_to t('.btn_automatic'), automatically_assign_questions_time_series_path(@time_series), class: 'btn btn-primary', title: t('.btn_automatic_hint') %>
+    <%= link_to t('.btn_add_question'), new_time_series_question_path(@owner, @time_series), class: 'btn btn-primary', title: t('.btn_add_question_hint') %>
+    <%= link_to t('.btn_automatic'), automatically_assign_questions_time_series_path(@owner, @time_series), class: 'btn btn-primary', title: t('.btn_automatic_hint') %>
   </div>
 
 
@@ -29,7 +29,7 @@
       <% @questions.each do |question| %>
         <tr>
           <td>
-            <%= link_to t('helpers.links.view'), time_series_question_path(@time_series, question), class: 'btn btn-default' %>
+            <%= link_to t('helpers.links.view'), time_series_question_path(@owner, @time_series, question), class: 'btn btn-default' %>
           </td>
           <td>
             <%= question.original_code %>
@@ -49,7 +49,7 @@
           <% end %>
           <td>
             <%= link_to '',
-                      edit_time_series_question_path(@time_series, question), 
+                      edit_time_series_question_path(@owner, @time_series, question),
                       :title => t('helpers.links.edit'),
                       :class => 'btn btn-edit btn-xs' %>
           </td>

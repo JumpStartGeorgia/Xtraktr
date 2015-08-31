@@ -9,7 +9,7 @@
               :class => 'btn btn-primary' %>
 </div>
 
-<%= simple_format t('.explanation', link: link_to(t('.explanation_link_text'), sort_time_series_path(@time_series))) %>
+<%= simple_format t('.explanation', link: link_to(t('.explanation_link_text'), sort_time_series_path(@owner, @time_series))) %>
 
 <hr />
 

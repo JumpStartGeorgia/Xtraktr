@@ -1,5 +1,7 @@
 class QuestionsController < ApplicationController
   before_filter :authenticate_user!
+  before_filter :load_owner # set @owner variable
+  before_filter {load_dataset(params[:dataset_id])} # set @dataset variable using @owner
   before_filter do |controller_instance|
     controller_instance.send(:valid_role?, @data_editor_role)
   end
@@ -9,59 +11,43 @@ class QuestionsController < ApplicationController
   # GET /questions
   # GET /questions.json
   def index
-    @dataset = Dataset.by_id_for_user(params[:dataset_id], current_user.id)
+    @questions = @dataset.questions
 
-    if @dataset.present?
-      @questions = @dataset.questions
+    # create data for datatables (faster to load this way)
+    gon.datatable_json = []
+    @questions.each do |question|
+      gon.datatable_json << {
+        view: view_context.link_to(I18n.t('helpers.links.view'), dataset_question_path(@owner, @dataset, question), class: 'btn btn-default'),
+        code: question.original_code,
+        text: question.text,
+        is_weight: view_context.format_boolean_flag(question.is_weight),
+        has_answers: view_context.format_boolean_flag(question.has_code_answers),
+        exclude: view_context.format_boolean_flag(question.exclude),
+        download: view_context.format_boolean_flag(question.can_download),
+        mappable: view_context.format_boolean_flag(question.is_mappable),
+        action: view_context.link_to('', edit_dataset_question_path(@owner, @dataset, question), :title => t('helpers.links.edit'), :class => 'btn btn-edit btn-xs')
+      }
+    end
 
-      # create data for datatables (faster to load this way)
-      gon.datatable_json = []
-      @questions.each do |question|
-        gon.datatable_json << {
-          view: view_context.link_to(I18n.t('helpers.links.view'), dataset_question_path(@dataset, question), class: 'btn btn-default'),
-          code: question.original_code,
-          text: question.text,
-          is_weight: view_context.format_boolean_flag(question.is_weight),
-          has_answers: view_context.format_boolean_flag(question.has_code_answers),
-          exclude: view_context.format_boolean_flag(question.exclude),
-          download: view_context.format_boolean_flag(question.can_download),
-          mappable: view_context.format_boolean_flag(question.is_mappable),
-          action: view_context.link_to('', edit_dataset_question_path(@dataset, question), :title => t('helpers.links.edit'), :class => 'btn btn-edit btn-xs')
-        }
-      end
+    add_common_options
 
-      add_common_options
-
-      respond_to do |format|
-        format.html
-        format.js { render json: @questions}
-      end
-    else
-      flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to datasets_path(:locale => I18n.locale)
-      return
+    respond_to do |format|
+      format.html
+      format.js { render json: @questions}
     end
   end
 
   # GET /questions/1
   # GET /questions/1.json
   def show
-    @dataset = Dataset.by_id_for_user(params[:dataset_id], current_user.id)
+    @question = @dataset.questions.find(params[:id])
 
-    if @dataset.present?
-      @question = @dataset.questions.find(params[:id])
+    add_common_options
+    #set_tabbed_translation_form_settings
 
-      add_common_options
-      #set_tabbed_translation_form_settings
-
-      respond_to do |format|
-        format.html
-        format.js { render json: @question}
-      end
-    else
-      flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to dataset_questions_path(:locale => I18n.locale)
-      return
+    respond_to do |format|
+      format.html
+      format.js { render json: @question}
     end
   end
 
@@ -78,18 +64,10 @@ class QuestionsController < ApplicationController
 
   # GET /questions/1/edit
   def edit
-    @dataset = Dataset.by_id_for_user(params[:dataset_id], current_user.id)
+    @question = @dataset.questions.find(params[:id])
 
-    if @dataset.present?
-      @question = @dataset.questions.find(params[:id])
-
-      add_common_options
-      #set_tabbed_translation_form_settings
-    else
-      flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to dataset_questions_path(:locale => I18n.locale)
-      return
-    end
+    add_common_options
+    #set_tabbed_translation_form_settings
   end
 
   # # POST /questions
@@ -111,32 +89,24 @@ class QuestionsController < ApplicationController
   # PUT /questions/1
   # PUT /questions/1.json
   def update
-    @dataset = Dataset.by_id_for_user(params[:dataset_id], current_user.id)
+    @question = @dataset.questions.find(params[:id])
 
-    if @dataset.present?
-      @question = @dataset.questions.find(params[:id])
+    if @question.present?
+      respond_to do |format|
+        if @question.update_attributes(params[:question])
+          format.html { redirect_to dataset_question_path(@owner, @dataset, @question), flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.question'))} }
+          format.json { head :no_content }
+        else
+          add_common_options
+          #set_tabbed_translation_form_settings
 
-      if @question.present?
-        respond_to do |format|
-          if @question.update_attributes(params[:question])
-            format.html { redirect_to dataset_question_path(@dataset, @question), flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.question'))} }
-            format.json { head :no_content }
-          else
-            add_common_options
-            #set_tabbed_translation_form_settings
-
-            format.html { render action: "edit" }
-            format.json { render json: @question.errors, status: :unprocessable_entity }
-          end
+          format.html { render action: "edit" }
+          format.json { render json: @question.errors, status: :unprocessable_entity }
         end
-      else
-        flash[:info] =  t('app.msgs.does_not_exist')
-        redirect_to dataset_questions_path(:locale => I18n.locale)
-        return
       end
     else
       flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to datasets_path(:locale => I18n.locale)
+      redirect_to dataset_questions_path(:locale => I18n.locale, :owner => @owner.slug)
       return
     end
   end
@@ -156,93 +126,68 @@ class QuestionsController < ApplicationController
 
   # allow the user to use csv files to update text and settings for questions and answers
   def mass_changes
-    @dataset = Dataset.by_id_for_user(params[:dataset_id], current_user.id)
+    add_common_options
 
-    if @dataset.present?
-
-      add_common_options
-
-      if params[:download].present? && ['questions', 'answers'].include?(params[:download].downcase)
-        csv = nil
-        filename = @dataset.title
-        if params[:download].downcase == 'questions'
-          csv = @dataset.generate_questions_csv
-          filename << "-#{I18n.t('questions.mass_changes.questions.header')}"
-          filename << "-#{I18n.l Time.now, :format => :file}"
-        else #answers
-          csv = @dataset.generate_answers_csv
-          filename << "-#{I18n.t('questions.mass_changes.answers.header')}"
-          filename << "-#{I18n.l Time.now, :format => :file}"
-        end
-        respond_to do |format|
-          format.csv {
-            send_data csv,
-              :type => 'text/csv; header=present',
-              :disposition => "attachment; filename=#{clean_filename(filename)}.csv"
-          }
-        end
-      else
-        respond_to do |format|
-          format.html
-        end
+    if params[:download].present? && ['questions', 'answers'].include?(params[:download].downcase)
+      csv = nil
+      filename = @dataset.title
+      if params[:download].downcase == 'questions'
+        csv = @dataset.generate_questions_csv
+        filename << "-#{I18n.t('questions.mass_changes.questions.header')}"
+        filename << "-#{I18n.l Time.now, :format => :file}"
+      else #answers
+        csv = @dataset.generate_answers_csv
+        filename << "-#{I18n.t('questions.mass_changes.answers.header')}"
+        filename << "-#{I18n.l Time.now, :format => :file}"
+      end
+      respond_to do |format|
+        format.csv {
+          send_data csv,
+            :type => 'text/csv; header=present',
+            :disposition => "attachment; filename=#{clean_filename(filename)}.csv"
+        }
       end
     else
-      flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to datasets_path(:locale => I18n.locale)
-      return
+      respond_to do |format|
+        format.html
+      end
     end
   end
 
   def load_mass_changes_questions
-    @dataset = Dataset.by_id_for_user(params[:dataset_id], current_user.id)
+    if params[:file].present?
+      msg, counts = @dataset.process_questions_csv(params[:file])
 
-    if @dataset.present?
-      if params[:file].present?
-        msg, counts = @dataset.process_questions_csv(params[:file])
-
-        # if no msg than there were no errors
-        if msg.blank?
-          logger.debug "****************** total changes: #{counts.map{|k,v| k + ' - ' + v.to_s}.join(', ')}"
-          flash[:success] =  t('app.msgs.mass_upload_questions_success', count: view_context.number_with_delimiter(counts['overall']))
-        else
-          logger.debug "****************** error = #{msg}"
-          flash[:error] =  t('app.msgs.mass_upload_questions_error', msg: msg)
-        end
+      # if no msg than there were no errors
+      if msg.blank?
+        logger.debug "****************** total changes: #{counts.map{|k,v| k + ' - ' + v.to_s}.join(', ')}"
+        flash[:success] =  t('app.msgs.mass_upload_questions_success', count: view_context.number_with_delimiter(counts['overall']))
+      else
+        logger.debug "****************** error = #{msg}"
+        flash[:error] =  t('app.msgs.mass_upload_questions_error', msg: msg)
       end
-
-      redirect_to mass_changes_dataset_questions_path
-      return
-    else
-      flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to datasets_path(:locale => I18n.locale)
-      return
     end
+
+    redirect_to mass_changes_dataset_questions_path
+    return
   end
 
 
   def load_mass_changes_answers
-    @dataset = Dataset.by_id_for_user(params[:dataset_id], current_user.id)
+    if params[:file].present?
+      msg, counts = @dataset.process_answers_csv(params[:file])
 
-    if @dataset.present?
-      if params[:file].present?
-        msg, counts = @dataset.process_answers_csv(params[:file])
-
-        # if no msg than there were no errors
-        if msg.blank?
-          logger.debug "****************** total changes: #{counts.map{|k,v| k + ' - ' + v.to_s}.join(', ')}"
-          flash[:success] =  t('app.msgs.mass_upload_answers_success', count: view_context.number_with_delimiter(counts['overall']))
-        else
-          flash[:error] =  t('app.msgs.mass_upload_answers_error', msg: msg)
-        end
+      # if no msg than there were no errors
+      if msg.blank?
+        logger.debug "****************** total changes: #{counts.map{|k,v| k + ' - ' + v.to_s}.join(', ')}"
+        flash[:success] =  t('app.msgs.mass_upload_answers_success', count: view_context.number_with_delimiter(counts['overall']))
+      else
+        flash[:error] =  t('app.msgs.mass_upload_answers_error', msg: msg)
       end
-
-      redirect_to mass_changes_dataset_questions_path
-      return
-    else
-      flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to datasets_path(:locale => I18n.locale)
-      return
     end
+
+    redirect_to mass_changes_dataset_questions_path
+    return
   end
 
 private

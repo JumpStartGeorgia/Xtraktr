@@ -1,5 +1,10 @@
-<h1>New question</h1>
+<%- model_class = Question -%>
+<% title t '.title', :default => t('helpers.titles.new', :model => model_class.model_name.human,
+                                 :default => "New #{model_class.model_name.human}") %>
 
-<%= render 'form' %>
+<div class="form-group form-group-admin-buttons">
+  <%= link_to t('helpers.links.list'), dataset_questions_path,
+  :class => 'btn btn-default' %>
+</div>
 
-<%= link_to 'Back', questions_path %>
+<%= render :partial => 'form' %>

@@ -12,7 +12,7 @@
     <% @datasets.each do |dataset| %>
       <li>
         <div class="caption">
-          <div class="title"><%= link_to dataset.title, explore_data_dashboard_path(dataset) %></div>
+          <div class="title"><%= link_to dataset.title, explore_data_dashboard_path(dataset.owner, dataset) %></div>
           <% if dataset.urls.present? && dataset.urls.codebook.present? %>
             <div class="download-wrapper" >
               <div class="download" data-id="<%= dataset.id.to_s %>" data-lang="<%= dataset.current_locale %>" title="<%= t('helpers.links.download_data') %>" data-placement="top" data-class="tooltip-download" data-download-type="public">
@@ -36,7 +36,8 @@
           </div>
           <% if with_time_series_link && dataset.time_series_datasets.present? %>
             <div class="time-series" title="<%= t('app.menu.titles.dataset_to_time_series') %>" data-placement="left"  data-class="tooltip-time-series">
-              <%= link_to  image_tag("svg/timeseries.svg", alt: t('app.menu.titles.dataset_to_time_series')), explore_time_series_dashboard_path(dataset.time_series_datasets.first.time_series_permalink)%>
+              <% ts = dataset.time_series_datasets.first %>
+              <%= link_to  image_tag("svg/timeseries.svg", alt: t('app.menu.titles.dataset_to_time_series')), explore_time_series_dashboard_path(ts.time_series_owner, ts.time_series_permalink)%>
             </div>
           <% end %>
         </div>

@@ -44,6 +44,14 @@ class TimeSeriesDataset
     end
   end
 
+  # get time series owner
+  def time_series_owner
+    x = TimeSeries.only(:user_id).find(self.time_series_id)
+    if x.present?
+      x.owner
+    end
+  end
+
   # get dataset permalink
   def dataset_permalink
     x = Dataset.only(:_slugs).find(self.dataset_id)
@@ -53,6 +61,15 @@ class TimeSeriesDataset
       self.dataset_id
     end
   end
+
+  # get dataset owner
+  def dataset_owner
+    x = Dataset.only(:user_id).find(self.dataset_id)
+    if x.present?
+      x.owner
+    end
+  end
+
 
   def dataset_title
     x = Dataset.only_id_title_languages.find(self.dataset_id)

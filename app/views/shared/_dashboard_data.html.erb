@@ -2,8 +2,7 @@
   model_class = Dataset
   s_model_class = Stats
   r_model_class = Report
-  is_admin_page = request.path == dataset_path(@dataset)
-  is_admin_page = request.path == dataset_path(@dataset)
+  is_admin_page = request.path == dataset_path(@dataset.owner, @dataset)
   show_share = true if show_share.nil?
   show_private_questions = false if show_private_questions.nil?
   show_questions_no_answers = false if show_questions_no_answers.nil?
@@ -54,7 +53,7 @@
         <% end %>
 
         <% if @dataset.time_series_datasets.present? %>
-          <%= link_to url_dataset_to_times_series_dashboard(@dataset.id, @dataset.time_series_datasets.first.time_series_id),  title: t('app.menu.titles.dataset_to_time_series') do %>
+          <%= link_to url_dataset_to_times_series_dashboard(@dataset, @dataset.time_series_datasets.first),  title: t('app.menu.titles.dataset_to_time_series') do %>
             <%= image_tag 'svg/timeseries.svg' %>
             <%= t('app.menu.time_series') %>
           <% end %>

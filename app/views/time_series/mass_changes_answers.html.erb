@@ -2,7 +2,7 @@
 <%- model_class_a = TimeSeriesAnswer -%>
 <% title t('.title') %>
 
-  <%= form_tag mass_changes_answers_time_series_path(@time_series), id: 'frm-exclude-answers', class: 'form-data-loader form-time-series' do %>
+  <%= form_tag mass_changes_answers_time_series_path(@owner, @time_series), id: 'frm-exclude-answers', class: 'form-data-loader form-time-series' do %>
 
     <p>
       <%= t('.explanation') %>

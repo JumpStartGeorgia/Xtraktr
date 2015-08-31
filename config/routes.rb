@@ -27,77 +27,6 @@ BootstrapStarter::Application.routes.draw do
       end
     end
 
-    resources :datasets, path: :manage_datasets do
-      resources :groups, :except => [:show] do
-        member do
-          post 'group_questions', :defaults => { :format => 'json' }
-        end
-      end
-      resources :weights, :except => [:show]
-      resources :questions, :only => [:index, :show, :edit, :update] do
-        collection do
-          get 'mass_changes'
-          post 'mass_changes'
-          post 'load_mass_changes_questions'
-          post 'load_mass_changes_answers'
-        end
-      end
-      member do
-        get 'explore'
-        get 'warnings'
-        get 'mass_changes_questions'
-        post 'mass_changes_questions'
-        get 'mass_changes_answers'
-        post 'mass_changes_answers'
-        get 'mappable'
-        get 'mappable_form'
-        post 'mappable_form'
-        get 'mappable_form_edit'
-        post 'mappable_form_edit'
-        delete 'remove_mapping'
-        post 'question_answers', :defaults => { :format => 'json' }
-        post 'add_highlight'
-        post 'remove_highlight'
-        get 'highlights'
-        post 'highlights'
-        # post 'home_page_highlight'
-        get 'download_data'
-        post 'generate_download_files', :defaults => { :format => 'json' }
-        post 'generate_download_file_status', :defaults => { :format => 'json' }
-        get 'sort'
-        post 'sort'
-      end
-    end
-
-    resources :time_series, path: :manage_time_series do
-      resources :time_series_questions, :only => [:index, :show, :new, :create, :edit, :update], :path => 'questions', :as => 'questions' do
-        collection do
-          get 'mass_changes'
-          post 'mass_changes'
-          post 'load_mass_changes_questions'
-          post 'load_mass_changes_answers'
-        end
-      end
-      resources :time_series_groups, :except => [:show] do
-        member do
-          post 'group_questions', :defaults => { :format => 'json' }
-        end
-      end
-      resources :time_series_weights, :except => [:show], :path => 'weights', :as => 'weights'
-      member do
-        get 'explore'
-        get 'automatically_assign_questions'
-        post 'add_highlight'
-        post 'remove_highlight'
-        get 'highlights'
-        post 'highlights'
-        # post 'home_page_highlight'
-        get 'sort'
-        post 'sort'
-        get 'mass_changes_answers'
-        post 'mass_changes_answers'
-      end
-    end
 
     # api
     match '/api', to: 'api#index', as: :api, via: :get
@@ -144,18 +73,97 @@ BootstrapStarter::Application.routes.draw do
     match '/instructions', :to => 'root#instructions', :as => :instructions, :via => :get
     match '/about', :to => 'root#about', :as => :about, :via => :get
     match '/highlights', :to => 'root#highlights', :as => :highlights, :via => :get
-		match '/datasets', :to => 'root#explore_data', :as => :explore_data, :via => :get
-		match '/datasets/:id', :to => 'root#explore_data_dashboard', :as => :explore_data_dashboard, :via => :get
-    match '/datasets/:id/explore', :to => 'root#explore_data_show', :as => :explore_data_show, :via => :get
-    match '/time_series', :to => 'root#explore_time_series', :as => :explore_time, :via => :get
-    match '/time_series/:id', :to => 'root#explore_time_series_dashboard', :as => :explore_time_series_dashboard, :via => :get
-    match '/time_series/:id/explore', :to => 'root#explore_time_series_show', :as => :explore_time_series_show, :via => :get
-    match '/private_share/:id', :to => 'root#private_share', :as => :private_share, :via => :get
     match '/generate_highlights', :to => 'root#generate_highlights', :as => :generate_highlights, :via => :post, :defaults => { :format => 'json' }
 
-    match '/settings', :to => 'settings#index', :as => :settings, :via => [:get, :put]
-    match '/settings/get_api_token', :to => 'settings#get_api_token', :as => :settings_get_api_token, :via => :post
-    match '/settings/delete_api_token/:id', :to => 'settings#delete_api_token', :as => :settings_delete_api_token, :via => :delete
+
+    match '/datasets', :to => 'root#explore_data', :as => :explore_data, :via => :get
+    match '/time_series', :to => 'root#explore_time_series', :as => :explore_time, :via => :get
+
+    # user managed pages scoped by the user/group id
+    scope :path => ":owner_id" do
+      resources :datasets, path: :manage_datasets do
+        resources :groups, :except => [:show] do
+          member do
+            post 'group_questions', :defaults => { :format => 'json' }
+          end
+        end
+        resources :weights, :except => [:show]
+        resources :questions, :only => [:index, :show, :edit, :update] do
+          collection do
+            get 'mass_changes'
+            post 'mass_changes'
+            post 'load_mass_changes_questions'
+            post 'load_mass_changes_answers'
+          end
+        end
+        member do
+          get 'explore'
+          get 'warnings'
+          get 'mass_changes_questions'
+          post 'mass_changes_questions'
+          get 'mass_changes_answers'
+          post 'mass_changes_answers'
+          get 'mappable'
+          get 'mappable_form'
+          post 'mappable_form'
+          get 'mappable_form_edit'
+          post 'mappable_form_edit'
+          delete 'remove_mapping'
+          post 'question_answers', :defaults => { :format => 'json' }
+          post 'add_highlight'
+          post 'remove_highlight'
+          get 'highlights'
+          post 'highlights'
+          post 'home_page_highlight'
+          get 'download_data'
+          post 'generate_download_files', :defaults => { :format => 'json' }
+          post 'generate_download_file_status', :defaults => { :format => 'json' }
+          get 'sort'
+          post 'sort'
+        end
+      end
+
+      resources :time_series, path: :manage_time_series do
+        resources :time_series_questions, :only => [:index, :show, :new, :create, :edit, :update], :path => 'questions', :as => 'questions' do
+          collection do
+            get 'mass_changes'
+            post 'mass_changes'
+            post 'load_mass_changes_questions'
+            post 'load_mass_changes_answers'
+          end
+        end
+        resources :time_series_groups, :except => [:show] do
+          member do
+            post 'group_questions', :defaults => { :format => 'json' }
+          end
+        end
+        resources :time_series_weights, :except => [:show], :path => 'weights', :as => 'weights'
+        member do
+          get 'explore'
+          get 'automatically_assign_questions'
+          post 'add_highlight'
+          post 'remove_highlight'
+          get 'highlights'
+          post 'highlights'
+          post 'home_page_highlight'
+          get 'sort'
+          post 'sort'
+          get 'mass_changes_answers'
+          post 'mass_changes_answers'
+        end
+      end
+
+      match '/settings', :to => 'settings#index', :as => :settings, :via => [:get, :put]
+      match '/settings/get_api_token', :to => 'settings#get_api_token', :as => :settings_get_api_token, :via => :post
+      match '/settings/delete_api_token/:id', :to => 'settings#delete_api_token', :as => :settings_delete_api_token, :via => :delete
+
+  		match '/datasets/:id', :to => 'root#explore_data_dashboard', :as => :explore_data_dashboard, :via => :get
+      match '/datasets/:id/explore', :to => 'root#explore_data_show', :as => :explore_data_show, :via => :get
+      match '/time_series/:id', :to => 'root#explore_time_series_dashboard', :as => :explore_time_series_dashboard, :via => :get
+      match '/time_series/:id/explore', :to => 'root#explore_time_series_show', :as => :explore_time_series_show, :via => :get
+      match '/private_share/:id', :to => 'root#private_share', :as => :private_share, :via => :get
+
+    end
 
 		root :to => 'root#index'
 	  match "*path", :to => redirect("/#{I18n.default_locale}") # handles /en/fake/path/whatever

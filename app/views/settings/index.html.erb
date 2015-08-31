@@ -1,14 +1,14 @@
 <% title t('.title') %>
 <% model_class = ApiKey %>
 
-<div id="settings-tabs" class="tabs" role="tabpanel">
-  <% 
+<div id="settings-tabs" class="tabs style1" role="tabpanel">
+  <%
     settings_active = {tab: 'active', panel: 'in active'}
     api_active = {tab: '', panel: ''}
     if params[:page] == 'api'
        api_active = {tab: 'active', panel: 'in active'}
       settings_active = {tab: '', panel: ''}
-    end 
+    end
   %>
 
   <ul class="nav nav-tabs" role="tablist">
@@ -22,7 +22,7 @@
 
   <div class="tab-content">
     <div role="tabpanel" class="tab-pane fade <%= settings_active[:panel] %>" id="settings">
-      <%= semantic_form_for(@user, url: settings_path,html: {:"id"=>"signup-form"}) do |f| %>
+      <%= semantic_form_for(@user, url: settings_path(@owner),html: {:"id"=>"signup-form"}) do |f| %>
         <%= f.error_messages %>
 
         <%= f.inputs do %>
@@ -42,9 +42,9 @@
       <p><%= t('.api_explanation2').gsub('[link]', link_to(t('.api_link_text'), api_path)).html_safe %></p>
 
       <p id="btn-add-api-key">
-        <%= link_to t('.get_api'), settings_get_api_token_path, method: :post %>
+        <%= link_to t('.get_api'), settings_get_api_token_path(@owner), method: :post %>
       </p>
-      
+
       <hr />
 
       <% if @user.api_keys.present? %>
@@ -63,14 +63,14 @@
                 <td><%= l(key.created_at.to_date, format: :day_first) %></td>
                 <td>
                   <%= link_to '',
-                              settings_delete_api_token_path(key.id),
+                              settings_delete_api_token_path(@owner, key.id),
                               :'data-placement' => 'right',
                               :title => t('.delete_api'),
                               :method => :delete,
                               :data => { :confirm => I18n.t("helpers.links.confirm") },
                               :class => 'btn btn-xs btn-delete' %>
-                </td>   
-              </tr>           
+                </td>
+              </tr>
             <% end %>
           </tbody>
         </table>

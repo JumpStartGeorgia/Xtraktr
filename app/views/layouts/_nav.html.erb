@@ -65,17 +65,17 @@
               </a>
               <ul class="dropdown-menu" role="menu">
                 <% if current_user.role?(@data_editor_role) %>
-                  <li><%= link_to datasets_path do %>
+                  <li><%= link_to datasets_path(@owner) do %>
                     <i class="menu_datasets"></i>
                     <%= t('app.menu.datasets') %>
                     <% end %>
                   </li>
-                  <li><%= link_to time_series_index_path do %>
+                  <li><%= link_to time_series_index_path(@owner) do %>
                     <i class="menu_time_series"></i>
                     <%= t('app.menu.time_series') %>
                     <% end %></li>
                 <% end %>
-                <li><%= link_to settings_path  do %>
+                <li><%= link_to settings_path(@owner)  do %>
                     <i class="menu_user_settings"></i>
                     <%= t('app.menu.user_settings') %>
                     <% end %></li>

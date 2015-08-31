@@ -4,7 +4,7 @@
 
 <div class="form-group form-group-admin-buttons">
   <%= link_to t('.new', :default => t("helpers.links.new")),
-              new_dataset_path,
+              new_dataset_path(@owner),
               :class => 'btn btn-primary' %>
 </div>
 
@@ -25,7 +25,7 @@
   <tbody>
     <% @datasets.each do |dataset| %>
       <tr>
-        <td><%= link_to dataset.title, dataset_path(dataset) %></td>
+        <td><%= link_to dataset.title, dataset_path(dataset.owner, dataset) %></td>
         <td><%= dataset.source %></td>
         <td><%= format_languages(dataset) %></td>
         <td><%= format_boolean_flag(dataset.is_weighted?) %></td>
@@ -49,7 +49,7 @@
               <%= model_class_s.human_attribute_name(:questions_bad_answers) %>: <%= number_with_delimiter(dataset.stats.questions_bad_answers) %>
               <br />
             <% end %>
-            <%= link_to t('.view_warnings'), warnings_dataset_path(dataset), :class => 'btn btn-xs btn-details' %>
+            <%= link_to t('.view_warnings'), warnings_dataset_path(dataset.owner, dataset), :class => 'btn btn-xs btn-details' %>
           <% end %>
         </td>
         <td><%= l dataset.created_at, format: :date_only %></td>
