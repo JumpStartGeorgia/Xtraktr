@@ -15,6 +15,8 @@ class Question < CustomTranslation
   field :notes, type: String, localize: true
   # whether or not the questions has answers
   field :has_code_answers, type: Boolean, default: false
+  # whether or not the questions has answers that can be analzyed
+  field :has_code_answers_for_analysis, type: Boolean, default: false
   # whether or not the question should not be included in the analysis
   field :exclude, type: Boolean, default: false
   # whether or not the question is tied to a shapeset
@@ -81,7 +83,7 @@ class Question < CustomTranslation
   # index ({ :is_mappable => 1})
 
   #############################
-  attr_accessible :code, :text, :original_code, :has_code_answers, :is_mappable, :has_can_exclude_answers, :has_map_adjustable_max_range,
+  attr_accessible :code, :text, :original_code, :has_code_answers, :has_code_answers_for_analysis, :is_mappable, :has_can_exclude_answers, :has_map_adjustable_max_range,
       :answers_attributes, :exclude, :text_translations, :notes, :notes_translations, :group_id, :sort_order, :is_weight
 
   #############################
@@ -128,7 +130,8 @@ class Question < CustomTranslation
 
   def update_flags
   #  logger.debug "******** updating question flags for #{self.code}"
-    self.has_code_answers = self.answers.present?
+    self.has_code_answers = self.answers.count > 0
+    self.has_code_answers_for_analysis = self.answers.all_for_analysis.count > 0
     self.has_can_exclude_answers = self.answers.has_can_exclude?
 
     return true
@@ -159,7 +162,7 @@ class Question < CustomTranslation
   # if the only change is to the flags, the donwload does not need to be updated
   def check_if_dirty
     puts "======= question changed? #{self.changed?}; changed: #{self.changed}"
-    ignore = [:has_can_exclude_answers, :has_code_answers]
+    ignore = [:has_can_exclude_answers, :has_code_answers, :has_code_answers_for_analysis]
     changed = self.changed
     if changed.present?
       # delete the keys we do not care about

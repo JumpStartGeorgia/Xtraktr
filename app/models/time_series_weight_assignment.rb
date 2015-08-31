@@ -22,6 +22,15 @@ class TimeSeriesWeightAssignment
 
   #############################
   # Callbacks
+  before_save :reset_is_default_flags
+
+
+  # if this weight is marked as default, make sure no other records have this flag
+  def reset_is_default_flags
+    if self.is_default == true
+      self.time_series.weights.get_all_but(self.id).update_all(is_default: false)
+    end
+  end
 
   #############################
 
