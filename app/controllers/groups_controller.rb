@@ -236,8 +236,17 @@ class GroupsController < ApplicationController
           dataset.questions.not_assigned_group_meta_only
         end
 
-        # get questions already assigned to the group
-        assigned_questions = dataset.questions.assigned_to_group_meta_only(params[:id])
+        # get existing group
+        group = dataset.groups.find(params[:id])
+        assigned_questions = []
+        if group.present?
+          # if the group parent id equals the group id param, then get the existing questions for this group
+          # else, the parent group is changing and the existing questions are no longer valid
+          if (group.parent_id.nil? && params[:group_id].empty?) || (group.parent_id == params[:group_id])
+            # get questions already assigned to the group
+            assigned_questions = dataset.questions.assigned_to_group_meta_only(params[:id])
+          end
+        end
 
         # combine the two sets of questions with the selected questions first
         items = sort_objects_with_sort_order(assigned_questions).map{|x| x.json_for_groups(true)} + sort_objects_with_sort_order(questions).map{|x| x.json_for_groups}
