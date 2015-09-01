@@ -734,7 +734,7 @@ ka:
       time_series: "პერიოდული შედარება"
       highlights: Highlights
       about: About
-      user_settings: "მომხმარებლის პარამეტრები"
+      settings: Settings
       about_dataset: "შესახებ"
       about_time_series: "შესახებ"
       all_datasets: "მონაცემების ყველა ცხრილი"
@@ -800,7 +800,7 @@ ka:
   layouts:
     nav:
       toggle: "ნავიგაციის ჩართვა/გამორთვა"
-      back: UNICEF.ge-ზე დაბრუნება
+      switch_to: Switch Accounts
     explore_data:
       private_share_header: "პირადად გაზიარებული '%{title}'"
       private_share_explanation: "თქვენ შეგიძლიათ დააკოპიროთ და გაუზიაროთ შემდეგი URL იმას , ვინც გსურთ რომ იხილოს '%{title}' იმ შემთხვევაშიც კი, თუ თქვენი მონაცემთა ცხრილი არ არის საჯაროდ გაზიარებული. ამ ადამიანებს ექნებათ საშუალება გაეცნონ თქვენს მონაცემებს, მაგრამ ვერ შეძლებენ მის შეცვლას და შესწორებას."
@@ -844,7 +844,7 @@ ka:
         p3: "თქვენი პაროლი იგივე დარჩება, სანამ არ გადახვალთ ზემოთ მითითებულ ბმულზე და შექმნით ახალ პაროლს."
   settings:
     index:
-      title: "მომხმარებლის პარამეტრები"
+      title: Settings for <em>%{owner}</em>
       tabs:
         settings: "პარამეტრები"
         api: API-ს დაშვების გასაღები
@@ -922,6 +922,7 @@ ka:
       no_content: "ამ მეთოდისთვის დოკუმენტაცია ჯერ არ შექმნილა"
   datasets:
     index:
+      title: Datasets for <em>%{owner}</em>
       view_warnings: "დეტალების ნახვა"
     warnings:
       title: "გაფრთხილება"
@@ -1121,6 +1122,8 @@ ka:
     form:
       other_weights: Other Weights this Question Belongs To
   time_series:
+    index:
+      title: Time Series for <em>%{owner}</em>
     form:
       header_datasets: "მონაცემთა ცხრილები"
       header_add_dataset: "პერიოდული შედარებაში ახალი მონაცემთა ცხრილების დამატება"

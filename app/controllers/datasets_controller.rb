@@ -9,7 +9,7 @@ class DatasetsController < ApplicationController
   # GET /datasets
   # GET /datasets.json
   def index
-    @datasets = Dataset.meta_only.by_user(@owner.id).sorted_title
+    @datasets = Dataset.meta_only.by_owner(@owner.id, current_user.id).sorted_title
 
     @css.push("datasets.css")
     @js.push("search.js")
@@ -645,7 +645,7 @@ class DatasetsController < ApplicationController
   # check the status on the download file generation
   def generate_download_file_status
     respond_to do |format|
-      format.json { render json: {finished: Dataset.download_files_up_to_date?(params[:id], @owner.id)} }
+      format.json { render json: {finished: Dataset.download_files_up_to_date?(params[:id], @owner.id, current_user.id)} }
     end
   end
 

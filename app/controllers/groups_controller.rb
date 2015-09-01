@@ -178,7 +178,7 @@ class GroupsController < ApplicationController
   # get the questions that can be assigned to this group and that are currently assigned to this group
   def group_questions
     if params[:dataset_id].present?
-      dataset = Dataset.by_id_for_user(params[:dataset_id], @owner.id)
+      dataset = Dataset.by_id_for_owner(params[:dataset_id], @owner.id, current_user.id)
 
       if dataset.present?
         # if group id was provided, look for questions assigned to the group

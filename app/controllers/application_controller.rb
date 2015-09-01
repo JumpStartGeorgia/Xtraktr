@@ -84,8 +84,8 @@ class ApplicationController < ActionController::Base
   #   can pass in the correct params id
   def load_dataset(dataset_id = params[:id])
     if @owner.present?
-      @dataset = Dataset.by_id_for_user(dataset_id, @owner.id)
-
+      @dataset = Dataset.by_id_for_owner(dataset_id, @owner.id, current_user.id)
+logger.debug "@@@@@@@@@@@@@2 dataset = #{@dataset.inspect}"
       if @dataset.nil?
         flash[:info] =  t('app.msgs.does_not_exist')
         redirect_to datasets_path(:locale => I18n.locale, :owner_id => @owner)
@@ -103,7 +103,7 @@ class ApplicationController < ActionController::Base
   #   can pass in the correct params id
   def load_time_series(time_series_id = params[:id])
     if @owner.present?
-      @time_series = TimeSeries.by_id_for_user(time_series_id, @owner.id)
+      @time_series = TimeSeries.by_id_for_owner(time_series_id, @owner.id, current_user.id)
 
       if @time_series.nil?
         flash[:info] =  t('app.msgs.does_not_exist')

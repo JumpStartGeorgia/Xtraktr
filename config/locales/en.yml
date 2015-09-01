@@ -734,7 +734,7 @@ en:
       time_series: Time Series
       highlights: Highlights
       about: About
-      user_settings: User Settings
+      settings: Settings
       about_dataset: About
       about_time_series: About
       all_datasets: All Datasets
@@ -800,7 +800,7 @@ en:
   layouts:
     nav:
       toggle: Toggle navigation
-      back: Back to UNICEF.ge
+      switch_to: Switch Accounts
     explore_data:
       private_share_header: "Privately Share '%{title}'"
       private_share_explanation: "You can copy and share the following URL with whomever you want to view '%{title}' even though your dataset is not shared with the public. These people will have the ability to explore your data, but not edit it."
@@ -844,7 +844,7 @@ en:
         p3: "Your password won't change until you access the link above and create a new one."
   settings:
     index:
-      title: User Settings
+      title: Settings for <em>%{owner}</em>
       tabs:
         settings: Settings
         api: API Access Tokens
@@ -922,6 +922,7 @@ en:
       no_content: "No documentation for this method has been created yet."
   datasets:
     index:
+      title: Datasets for <em>%{owner}</em>
       view_warnings: View Details
     warnings:
       title: "Warnings"
@@ -1121,6 +1122,8 @@ en:
     form:
       other_weights: Other Weights this Question Belongs To
   time_series:
+    index:
+      title: Time Series for <em>%{owner}</em>
     form:
       header_datasets: Datasets
       header_add_dataset: Add a new dataset to this time series

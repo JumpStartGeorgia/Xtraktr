@@ -1,6 +1,6 @@
 <%- model_class = Dataset -%>
 <%- model_class_s = Stats -%>
-<% title t '.title', :default => model_class.model_name.human.pluralize %>
+<% title t('.title', owner: @owner.name).html_safe %>
 
 <div class="form-group form-group-admin-buttons">
   <%= link_to t('.new', :default => t("helpers.links.new")),

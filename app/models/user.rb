@@ -7,7 +7,19 @@ class User
 
   has_many :datasets
   has_many :api_keys, dependent: :destroy
+  has_many :members, class_name: 'UserMember', inverse_of: :group, dependent: :destroy
+  has_many :groups, class_name: 'UserMember', inverse_of: :member, dependent: :destroy do
+
+    # determine if user is in group
+    def in_group?(group_id)
+      where(group_id: group_id).count > 0
+    end
+
+  end
+
   accepts_nested_attributes_for :api_keys, :reject_if => :all_blank, :allow_destroy => true
+  accepts_nested_attributes_for :members
+  accepts_nested_attributes_for :groups
 
   #############################
 
@@ -115,7 +127,8 @@ class User
                   :role, :provider, :uid, :nickname, :avatar, :permalink,
                   :first_name, :last_name, :age_group, :residence,
                   :affiliation, :status, :status_other, :description, :terms, :account,
-                  :notifications, :notification_locale, :api_keys_attributes, :is_registration
+                  :notifications, :notification_locale, :api_keys_attributes, :is_registration,
+                  :members_attributes, :groups_attributes
 
 
   #############################
@@ -245,6 +258,11 @@ class User
         download_type: download_type
       })
     a.valid?
+  end
+
+  # determine if user belongs to any groups
+  def belongs_to_groups?
+    self.groups.count > 0
   end
 
 end

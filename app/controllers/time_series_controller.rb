@@ -9,7 +9,7 @@ class TimeSeriesController < ApplicationController
   # GET /time_series
   # GET /time_series.json
   def index
-    @time_series = TimeSeries.meta_only.by_user(@owner.id).sorted
+    @time_series = TimeSeries.meta_only.by_owner(@owner.id, current_user.id).sorted
 
     @css.push("time_series.css")
     @js.push("search.js")
@@ -76,7 +76,7 @@ class TimeSeriesController < ApplicationController
   # GET /time_series/new.json
   def new
     @time_series = TimeSeries.new
-    @datasets = Dataset.by_user(current_user.id).only_id_title_languages.sorted
+    @datasets = Dataset.by_owner(@owner.id, current_user.id).only_id_title_languages.sorted
 
     add_time_series_nav_options(set_url: false)
 
@@ -92,7 +92,7 @@ class TimeSeriesController < ApplicationController
 
   # GET /time_series/1/edit
   def edit
-    @datasets = Dataset.by_user(current_user.id).only_id_title_languages.sorted
+    @datasets = Dataset.by_owner(@owner.id, current_user.id).only_id_title_languages.sorted
 
     # add the required assets
     @css.push("time_series.css")
@@ -127,7 +127,7 @@ class TimeSeriesController < ApplicationController
         format.html { redirect_to time_series_questions_path(@owner, @time_series), flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.time_series'))} }
         format.json { render json: @time_series, status: :created, location: @time_series }
       else
-        @datasets = Dataset.by_user(current_user.id).only_id_title_languages.sorted
+        @datasets = Dataset.by_owner(@owner.id, current_user.id).only_id_title_languages.sorted
 
         # add the required assets
         @js.push("time_series.js", 'cocoon.js')
@@ -230,7 +230,7 @@ class TimeSeriesController < ApplicationController
         format.html { redirect_to @time_series, flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.time_series'))} }
         format.json { head :no_content }
       else
-        @datasets = Dataset.by_user(current_user.id).only_id_title_languages.sorted
+        @datasets = Dataset.by_owner(@owner.id, current_user.id).only_id_title_languages.sorted
 
         # add the required assets
         @js.push("time_series.js", 'cocoon.js')

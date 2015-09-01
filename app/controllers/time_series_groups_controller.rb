@@ -177,7 +177,7 @@ class TimeSeriesGroupsController < ApplicationController
   # get the questions that can be assigned to this group and that are currently assigned to this group
   def group_questions
     if params[:time_series_id].present?
-      time_series = TimeSeries.by_id_for_user(params[:time_series_id], @owner.id)
+      time_series = TimeSeries.by_id_for_owner(params[:time_series_id], @owner.id, current_user.id)
 
       if time_series.present?
         # if group id was provided, look for questions assigned to the group

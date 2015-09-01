@@ -1,4 +1,4 @@
-<% title t('.title') %>
+<% title t('.title', owner: @owner.name).html_safe %>
 <% model_class = ApiKey %>
 
 <div id="settings-tabs" class="tabs style1" role="tabpanel">
