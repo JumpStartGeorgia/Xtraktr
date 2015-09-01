@@ -571,7 +571,7 @@ class TimeSeries < CustomTranslation
     puts "- found #{matches.length} matches"
 
     # create record for each match
-    matches_with_index.each do |code, index|
+    matches.each_with_index do |code, index|
       answer_values = []
       question_answers = {}
 
