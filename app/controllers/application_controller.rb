@@ -140,8 +140,8 @@ logger.debug "@@@@@@@@@@@@@2 dataset = #{@dataset.inspect}"
 
     # get the api key for the app user
     user = User.find_by(email: 'application@mail.com')
-    if user.present?
-      @app_api_key = user.api_keys.first
+    if user.present? && user.api_keys.count > 0
+      @app_api_key = user.api_keys.first.key
     end
 
     # show h1 title by default
