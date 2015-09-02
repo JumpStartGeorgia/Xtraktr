@@ -58,13 +58,11 @@ class ApplicationController < ActionController::Base
   # get the user record for the current owner_id
   # - @owner is used to put the owner permalink in the url
   def set_owner_id
-    if user_signed_in?
-      if params[:owner_id].nil?
-        params[:owner_id] = current_user.slug
-        @owner = current_user
-      else
-        @owner = User.find(params[:owner_id])
-      end
+    if user_signed_in? && params[:owner_id].nil?
+      params[:owner_id] = current_user.slug
+      @owner = current_user
+    elsif params[:owner_id].present?
+      @owner = User.find(params[:owner_id])
     end
   end
 
