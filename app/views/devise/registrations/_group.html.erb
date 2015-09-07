@@ -1,0 +1,37 @@
+<% reg = true if reg.nil? %>
+<%- model_class = User -%>
+  <div class="r">
+    <%= f.input :first_name, :as => :string, :input_html => {:autofocus => true}, :label => model_class.human_attribute_name(:org_name) %>
+    <%= f.input :permalink, :as => :string %>
+  </div>
+
+  <div class="r">
+    <%= f.input :email, :as => :email, :input_html => { :class => "login-username" }  %>
+    <%= f.input :residence, :as => :string %>
+  </div>
+
+  <div class="r">
+    <%= f.input :website_url, :as => :url %>
+    <%= f.input :phone, :as => :phone %>
+  </div>
+
+  <div class="r">
+    <%= f.input :avatar, :as => :file %>
+    <div class="form-group">
+      <%= image_tag(resource.avatar.url(:small)) %>
+    </div>
+  </div>
+
+  <div class="radio_buttons input required form-group statuses vertical" id="user_status_input">
+    <label class="control-label" for="user_status"><%= model_class.human_attribute_name(:status).upcase %><abbr title="required">*</abbr></label>
+    <% Hash[User::STATUS.map{|k,v| [t('user.status.' + v), k] }].each do |d| %>
+      <% selected = d[1] == resource.age_group ? 'checked' : '' %>
+      <div class="radio radio-box" tabindex="0">
+          <input id="user_status_<%= d[1] %>" name="user[status]" type="radio" value="<%= d[1] %>" <%= selected %>>
+          <label class="choice" for="user_status_<%= d[1] %>"><%= "#{d[0]}" %></label>
+      </div>
+    <% end %>
+  </div>
+  <%= f.input :status_other  %>
+
+  <%= f.input :description, :as => :text, :input_html => { :class => 'autogrow', :rows => 5  }  %>

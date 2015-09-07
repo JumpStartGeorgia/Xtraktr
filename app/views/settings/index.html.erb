@@ -1,12 +1,21 @@
 <% title t('.title', owner: @owner.name).html_safe %>
-<% model_class = ApiKey %>
+<% u_model_class = User %>
+<% a_model_class = ApiKey %>
 
 <div id="settings-tabs" class="tabs style1" role="tabpanel">
   <%
     settings_active = {tab: 'active', panel: 'in active'}
     api_active = {tab: '', panel: ''}
+    organizations_active = {tab: '', panel: ''}
+    members_active = {tab: '', panel: ''}
     if params[:page] == 'api'
-       api_active = {tab: 'active', panel: 'in active'}
+      api_active = {tab: 'active', panel: 'in active'}
+      settings_active = {tab: '', panel: ''}
+    elsif params[:page] == 'organizations'
+      organizations_active = {tab: 'active', panel: 'in active'}
+      settings_active = {tab: '', panel: ''}
+    elsif params[:page] == 'members'
+      members_active = {tab: 'active', panel: 'in active'}
       settings_active = {tab: '', panel: ''}
     end
   %>
@@ -15,6 +24,15 @@
     <li role="presentation" class="<%= settings_active[:tab] %>">
       <a href="#settings" aria-controls="settings" role="tab" data-toggle="tab"><%= t('.tabs.settings') %></a>
     </li>
+    <% if @user.is_user? %>
+      <li role="presentation" class="<%= organizations_active[:tab] %>">
+        <a href="#organizations" aria-controls="organizations" role="tab" data-toggle="tab"><%= t('.tabs.organizations') %></a>
+      </li>
+    <% else %>
+      <li role="presentation" class="<%= members_active[:tab] %>">
+        <a href="#members" aria-controls="members" role="tab" data-toggle="tab"><%= t('.tabs.members') %></a>
+      </li>
+    <% end %>
     <li role="presentation" class="<%= api_active[:tab] %>">
       <a href="#api" aria-controls="api" role="tab" data-toggle="tab"><%= t('.tabs.api') %></a>
     </li>
@@ -26,7 +44,7 @@
         <%= f.error_messages %>
 
         <%= f.inputs do %>
-          <%= render :partial => 'devise/registrations/new', :locals => { f: f, resource: @user } %>
+          <%= render :partial => 'devise/registrations/edit', :locals => { f: f, resource: @user } %>
 
         <% end %>
 
@@ -35,6 +53,73 @@
         </div>
       <% end %>
     </div>
+
+    <% if @user.is_user? %>
+      <div role="tabpanel" class="tab-pane fade <%= organizations_active[:panel] %>" id="organizations">
+        <% if @user.has_groups? %>
+          <table class="table table-striped table-hover table-nonfluid">
+            <thead>
+              <tr>
+                <th></th>
+                <th><%= u_model_class.human_attribute_name(:org_name) %></th>
+                <th><%= u_model_class.human_attribute_name(:created_at) %></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @user.groups.each do |group| %>
+                <tr>
+                  <td><%= image_tag(group.group.avatar.url(:small)) %></td>
+                  <td><%= group.group.name %></td>
+                  <td><%= l(group.group.created_at.to_date, format: :day_first) %></td>
+                  <td>
+                    <%= link_to '',
+                                settings_edit_organization_path(@owner, group.group),
+                                :'data-placement' => 'right',
+                                :class => 'btn btn-xs btn-edit' %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        <% else %>
+          <p>
+            <%= t('.no_groups') %>
+          </p>
+        <% end %>
+      </div>
+    <% else %>
+      <div role="tabpanel" class="tab-pane fade <%= members_active[:panel] %>" id="members">
+        <% if @user.has_members? %>
+          <table class="table table-striped table-hover table-nonfluid">
+            <thead>
+              <tr>
+                <th></th>
+                <th><%= u_model_class.human_attribute_name(:name) %></th>
+                <th><%= u_model_class.human_attribute_name(:created_at) %></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @user.members.each do |member| %>
+                <tr>
+                  <td><%= image_tag(member.member.avatar.url(:small)) %></td>
+                  <td><%= member.member.name %></td>
+                  <td><%= l(member.created_at.to_date, format: :day_first) %></td>
+                  <td>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        <% else %>
+          <p>
+            <%= t('.no_members') %>
+          </p>
+        <% end %>
+      </div>
+    <% end %>
+
 
     <div role="tabpanel" class="tab-pane fade <%= api_active[:panel] %>" id="api">
 
@@ -51,8 +136,8 @@
         <table class="table table-striped table-hover table-nonfluid">
           <thead>
             <tr>
-              <th><%= model_class.human_attribute_name(:key) %></th>
-              <th><%= model_class.human_attribute_name(:created_at) %></th>
+              <th><%= a_model_class.human_attribute_name(:key) %></th>
+              <th><%= a_model_class.human_attribute_name(:created_at) %></th>
               <th></th>
             </tr>
           </thead>

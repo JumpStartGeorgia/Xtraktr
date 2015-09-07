@@ -3,6 +3,7 @@ en:
   mongoid:
     models:
       user: User
+      group: Organization
       page_content: Text for Pages
       dataset: Dataset
       shapeset: Shapeset
@@ -41,9 +42,15 @@ en:
         affiliation: Affiliation
         status: Status
         status_other: When other (Please specify)
-        description: Short description of research objective (<i>optional</i>)
+        description: Short summary (<i>optional</i>)
         notifications: I want to receive notifications when new datasets are added
         notification_locale: Notification Language
+        phone: Phone Number
+        website_url: Web Address
+        permalink: Name in URL
+        org_name: Organization Name
+        avatar: Avatar
+        created_at: Added On
       message:
         name: Name
         email: Email Address
@@ -58,7 +65,7 @@ en:
         affiliation: Affiliation
         status: Status
         status_other: When other(Please specify)
-        description: Short description of research objective (<i>optional</i>)
+        description: Short summary (<i>optional</i>)
         dataset_id: Dataset
         dataset_type: File Type
         dataset_locale: Language
@@ -686,6 +693,7 @@ en:
     msgs:
       does_not_exist: You tried to access a page that does not exist.
       not_authorized: You are not authorized to view that page.
+      success_saved: "%{obj} was successfully saved."
       success_created: "%{obj} was successfully created."
       success_updated: "%{obj} was successfully updated."
       success_deleted: "%{obj} was successfully deleted."
@@ -847,6 +855,8 @@ en:
       title: Settings for <em>%{owner}</em>
       tabs:
         settings: Settings
+        organizations: Organizations
+        members: Members
         api: API Access Tokens
       api_explanation1: The API allows you to programmatically get information and run analyses on the datasets and time series available on this site. All API calls require an access token - a key that let's us know who is making the request. To get one, simply press the button below.
       api_link_text: API Documentation section
@@ -854,6 +864,10 @@ en:
       no_api_keys: You do not have any API Access Tokens on file.
       get_api: Get API Access Token
       delete_api: Delete API Access Token
+      no_groups: You do not belong to any organizations.
+      no_members: This group does not have any members.
+    edit_organization:
+      title: Edit Organization
   root:
     index:
       header_latest_datasets: Latest Datasets

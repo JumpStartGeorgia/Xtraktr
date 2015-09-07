@@ -21,7 +21,6 @@ class SettingsController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @pages }
     end
   end
 
@@ -48,5 +47,33 @@ class SettingsController < ApplicationController
     flash[:success] = t('app.msgs.api_key_deleted')
 
     redirect_to settings_path(owner_id: @owner.slug, page: 'api')
+  end
+
+
+  def edit_organization
+    @user = @owner
+    @group = User.find(params[:id])
+    if @group.present? && @owner.groups.in_group?(@group.id)
+      if request.put?
+        if @group.update_attributes(params[:user])
+          respond_to do |format|
+            format.html { redirect_to settings_path(@owner, page: 'organizations'), flash: {success:  t('app.msgs.success_saved', :obj => t('mongoid.models.group'))} }
+          end
+        else
+          respond_to do |format|
+            format.html # index.html.erb
+          end
+        end
+      else
+        respond_to do |format|
+          format.html # index.html.erb
+        end
+      end
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to settings_path(:owner_id => @owner.slug, page: 'organizations')
+      return
+    end
+
   end
 end

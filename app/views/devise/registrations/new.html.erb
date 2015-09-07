@@ -1,20 +1,22 @@
 <%- model_class = User -%>
 <% reg = true if reg.nil? %>
-<% title t('helpers.links.sign_up_title', :app_name => t("app.common.#{@app_key_name}.app_name")) %> 
+<% title t('helpers.links.sign_up_title', :app_name => t("app.common.#{@app_key_name}.app_name")) %>
 
 <div id="signup-form">
   <div class="red-box"><%= t('helpers.links.sign_up2') %></div>
   <div class="red-box-neighbor">
   <%- if controller_name != 'sessions' %>
         <%= link_to t('helpers.links.sign_in'), new_session_path(resource_name), :class => 'sign-in-link reattach ' %>
-     <% end -%>    
+     <% end -%>
   </div>
- 
-  <div class="explanation"><%= t('helpers.links.explanation') %></div> 
-  
+
+  <% if !reg %>
+    <div class="explanation"><%= t('helpers.links.explanation') %></div>
+  <% end %>
+
   <% if @enable_omniauth %>
     <div class="providers">
-      <%- if devise_mapping.omniauthable? %>    
+      <%- if devise_mapping.omniauthable? %>
 	      <%- model_class.omniauth_providers.each do |provider| %>
 	        <% if provider == :facebook %>
           	<%= link_to  omniauth_authorize_path(resource_name, provider), :class => 'facebook signup-form' do %>
@@ -30,7 +32,7 @@
 
   <% end %>
 
-  <%= semantic_form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html=>{:"data-form-id"=>"signup-form"}) do |f| %> 
+  <%= semantic_form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html=>{:"data-form-id"=>"signup-form"}) do |f| %>
   	<%= f.error_messages %>
 
 	  <%= f.inputs do %>
@@ -44,4 +46,3 @@
 
 
 </div>
-

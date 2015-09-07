@@ -30,7 +30,9 @@
                   </form>
                   </div>
               </div>
-            </div><%- I18n.available_locales.each do |locale| -%><%- if locale != I18n.locale -%><div class="m-lang">
+            </div>
+            <%- I18n.available_locales.each do |locale| -%><%- if locale != I18n.locale -%>
+                <div class="m-lang">
                   <div class="figure"></div>
                   <div class="under-box">
                     <div class="figure"></div>
@@ -60,31 +62,32 @@
           <li class="user">
             <div class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <%= @owner.name %>
+                <%= @actins_as_user.name %>
                 <span class="caret"></span>
               </a>
               <ul class="dropdown-menu" role="menu">
-                <% if @owner.role?(@data_editor_role) %>
+                <% if @actins_as_user.role?(@data_editor_role) %>
                   <li>
-                    <%= link_to datasets_path(@owner) do %>
+                    <%= link_to datasets_path(@actins_as_user) do %>
                       <i class="menu_datasets"></i>
                       <%= t('app.menu.datasets') %>
                     <% end %>
                   </li>
                   <li>
-                    <%= link_to time_series_index_path(@owner) do %>
+                    <%= link_to time_series_index_path(@actins_as_user) do %>
                       <i class="menu_time_series"></i>
                       <%= t('app.menu.time_series') %>
                     <% end %>
                 </li>
                 <% end %>
                 <li>
-                    <%= link_to settings_path(@owner)  do %>
+                    <%= link_to settings_path(@actins_as_user)  do %>
                       <i class="menu_user_settings"></i>
                       <%= t('app.menu.settings') %>
                     <% end %>
                 </li>
-                <% if @owner.role?(@site_admin_role) %>
+                <% if current_user.role?(@site_admin_role) %>
+                  <li role="separator" class="divider"></li>
                   <li>
                     <%= link_to admin_path  do %>
                       <i class="menu_admin"></i>

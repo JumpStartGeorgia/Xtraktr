@@ -1,0 +1,13 @@
+<% title t('.title') %>
+
+<%= semantic_form_for(@group, :url => settings_edit_organization_path(@owner, @group), :html=>{:id=>"organization-form"}) do |f| %>
+  <%= f.error_messages %>
+
+  <%= f.inputs do %>
+    <%= render :partial => 'devise/registrations/group', :locals => { f: f, resource: @group, reg: true } %>
+  <% end %>
+
+  <div class="control-group submit-row">
+    <%= f.submit t('app.buttons.save'), :class => 'btn btn-primary' %>
+  </div>
+<% end %>

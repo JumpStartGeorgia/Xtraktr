@@ -32,12 +32,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
                 @model_name = @mod.model_name.downcase
          respond_to do |format|
              if @mod.save
-                @mapper = FileMapper.create({ dataset_id: @mod.dataset_id, dataset_type: @mod.dataset_type, dataset_locale: @mod.dataset_locale })         
+                @mapper = FileMapper.create({ dataset_id: @mod.dataset_id, dataset_type: @mod.dataset_type, dataset_locale: @mod.dataset_locale })
                format.json { render json: { url: "/#{I18n.locale}/download/#{@mapper.key}", registration: true }, :success => true }
               else
                format.json { render json: { errors: @mod.errors, registration: true }, :status => :error }
               end
-           end    
+           end
       end
    end
   def sign_up_params

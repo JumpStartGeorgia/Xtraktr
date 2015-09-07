@@ -3,6 +3,7 @@ ka:
   mongoid:
     models:
       user: "მომხმარებელი"
+      group: Organization
       page_content: "ტექსტი გვერდებისთვის"
       dataset: მონაცემები
       shapeset: "ფორმების ცხრილი"
@@ -41,9 +42,15 @@ ka:
         affiliation: "დაწესებულება"
         status: "სტატუსი"
         status_other: "როდესაც სხვა (გთხოვთ მიუთითოთ)"
-        description: "საკვლევი ობიექტის მოკლე აღწერა (<i>არჩევითი</i>)"
+        description: "Short summary (<i>არჩევითი</i>)"
         notifications: "ახალი მონაცემების დამატების დროს მინდა შეტყობინების მიღება"
         notification_locale: "შეტყობინების ენა"
+        phone: Phone Number
+        website_url: Web Address
+        permalink: Name in URL
+        org_name: Organization Name
+        avatar: Avatar
+        created_at: Added On
       message:
         name: "სახელი"
         email: "ელ.ფოსტის მისამართი"
@@ -58,7 +65,7 @@ ka:
         affiliation: "დაწესებულება"
         status: "სტატუსი"
         status_other: "როდესაც სხვა (გთხოვთ მიუთითოთ)"
-        description: "საკვლევი ობიექტის მოკლე აღწერა (<i>არჩევითი</i>)"
+        description: "Short summary (<i>არჩევითი</i>)"
         dataset_id: მონაცემები
         dataset_type: File Type
         dataset_locale: "ენა"
@@ -686,6 +693,7 @@ ka:
     msgs:
       does_not_exist: "თქვენ ცდილობთ ისეთი გვერდის ნახვას, რომელიც არ არსებობს."
       not_authorized: "თქვენ არ გაქვთ ამ გვერდის ნახვის უფლება."
+      success_saved: "%{obj} was successfully saved."
       success_created: "%{obj} შექმნილია."
       success_updated: "%{obj} განახლებულია."
       success_deleted: "%{obj} was successfully deleted."
@@ -847,6 +855,8 @@ ka:
       title: Settings for <em>%{owner}</em>
       tabs:
         settings: "პარამეტრები"
+        organizations: Organizations
+        members: Members
         api: API-ს დაშვების გასაღები
       api_explanation1: API საშუალებას გაძლევთ პროგრამულად მიიღოთ ინფორმაცია და ჩაატაროთ ანალიზი საიტზე არსებულ მონაცემთა ცხრილსა და პერიოდულ შედარებაში. API-ს ყველა გამოძაღება ითხოვს დაშვების გასაღებს, რომელიც გვამცნობს იმას, თუ ვინ აკეთებს მოთხოვნას. გამოძაღებისთვის უბრალოდ დააჭირეთ ქვემოთ მოცემულ ღილაკს.
       api_link_text: API-ს დოკუმენტაციის სექცია
@@ -854,6 +864,10 @@ ka:
       no_api_keys: "თქვენ არ გაქვთ API-ს დაშვების გასაღები ან ფაილი"
       get_api: API-ს დაშვების გასაღების მიღება
       delete_api: API-ს დაშვების გასაღების წაშლა
+      no_groups: You do not belong to any organizations.
+      no_members: This group does not have any members.
+    edit_organization:
+      title: Edit Organization
   root:
     index:
       header_latest_datasets: უახლესი მონაცემები

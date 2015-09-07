@@ -2,6 +2,7 @@ class User
   include Mongoid::Document
   include Mongoid::Slug
   include Mongoid::Timestamps
+  include Mongoid::Paperclip
 
   #############################
 
@@ -90,7 +91,11 @@ class User
   field :status, type: Integer #{ 1 => 'researcher', 2 => 'student', 3 => 'journalist', 4 => 'ngo', 5 => 'government_official', 6 => 'international_organization', 7 => 'private_sector', 8 => 'other' }
   field :status_other, type: String
   field :description, type: String
-  field :terms, type: Boolean, default: false
+  field :phone, type: String
+  field :website_url, type: String
+
+
+  field :terms, type: Boolean, default: true
   field :notifications, type: Boolean, default: true
   field :notification_locale, type: String, default: I18n.default_locale.to_s
 
@@ -104,6 +109,20 @@ class User
   field :uid,  :type => String
   field :nickname,  :type => String
   field :avatar,  :type => String
+
+  #############################
+  # paperclip user icon
+  has_mongoid_attached_file :avatar,
+              :url => "/system/avatars/:id/:style.:extension",
+              :styles => {
+                :'thumb' => {:geometry => "160x160>"},
+                :'small' => {:geometry => "40x40>"}
+              },
+              :convert_options => {
+                :'thumb' => "-quality 75 -strip",
+                :'small' => "-quality 75 -strip"
+              },
+              :default_url => "/assets/missing/avatar/:style_avatar.png"
 
   #############################
 
@@ -127,6 +146,7 @@ class User
                   :role, :provider, :uid, :nickname, :avatar, :permalink,
                   :first_name, :last_name, :age_group, :residence,
                   :affiliation, :status, :status_other, :description, :terms, :account,
+                  :phone, :website_url, :is_user, :avatar,
                   :notifications, :notification_locale, :api_keys_attributes, :is_registration,
                   :members_attributes, :groups_attributes
 
@@ -136,16 +156,18 @@ class User
 
   validates :permalink, presence: true
   validates :first_name, presence: true
-  validates :last_name, presence: true
-  validates :age_group, inclusion: { in: AGE_GROUP.keys }
-  validates :residence, presence: true
+  validates :last_name, presence: true, :if => lambda { |o| o.is_user? }
   validates :email, presence: true
-  validates :affiliation, presence: true
+  validates :residence, presence: true
+  validates :affiliation, presence: true, :if => lambda { |o| o.is_user? }
+  validates :age_group, inclusion: { in: AGE_GROUP.keys }, :if => lambda { |o| o.is_user? }
   validates :status, inclusion: { in: STATUS.keys }
-  validates_presence_of :status_other, :if => lambda { |o| o.status == 8 }
-  validates :account, :numericality => { :equal_to => 1 }, :if => lambda { |o| o.is_registration.present? }
-  validates :terms, :inclusion => {:in => [true]  }
-
+  validates :status_other, presence: true, :if => lambda { |o| o.status == 8 }
+  validates :account, :numericality => { :equal_to => 1 }, :if => lambda { |o| o.is_user? && o.is_registration.present?}
+  validates :terms, :inclusion => {:in => [true]  }, :if => lambda { |o| o.is_user? }
+  validates :website_url, format: { with: URI::regexp(%w(http https)) }, if: Proc.new { |o| o.website_url.present? }
+  validates_attachment_content_type :avatar, content_type: /\Aimage/
+  validates_attachment_file_name :avatar, matches: [/png\Z/, /jpe?g\Z/]
   ####################
   ## Callbacks
 
@@ -159,7 +181,6 @@ class User
 
   def create_nickname
     self.nickname = self.email.split('@')[0] if self.nickname.blank? && self.email.present?
-
     return true
   end
 
@@ -263,6 +284,11 @@ class User
   # determine if user belongs to any groups
   def belongs_to_groups?
     self.groups.count > 0
+  end
+
+  # determine if group has members
+  def has_members?
+    self.members.count > 0
   end
 
 end

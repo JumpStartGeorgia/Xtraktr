@@ -156,6 +156,7 @@ BootstrapStarter::Application.routes.draw do
       match '/settings', :to => 'settings#index', :as => :settings, :via => [:get, :put]
       match '/settings/get_api_token', :to => 'settings#get_api_token', :as => :settings_get_api_token, :via => :post
       match '/settings/delete_api_token/:id', :to => 'settings#delete_api_token', :as => :settings_delete_api_token, :via => :delete
+      match '/settings/organizations/:id', :to => 'settings#edit_organization', :as => :settings_edit_organization, :via => [:get, :put]
 
   		match '/datasets/:id', :to => 'root#explore_data_dashboard', :as => :explore_data_dashboard, :via => :get
       match '/datasets/:id/explore', :to => 'root#explore_data_show', :as => :explore_data_show, :via => :get
