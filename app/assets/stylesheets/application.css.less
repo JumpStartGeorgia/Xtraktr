@@ -716,16 +716,23 @@ div.message {
   transform: translateX(-50%) translateY(-50%);
 }
 
-::-webkit-input-placeholder { font-size:12px; font-family:'sourcesans_pro','sans-serif'; color: @3c4352 !important; }
-:-moz-placeholder { /* Firefox 18- */ font-size:12px; font-family:'sourcesans_pro','sans-serif'; color: @3c4352 !important; }
-::-moz-placeholder {  /* Firefox 19+ */ font-size:12px; font-family:'sourcesans_pro','sans-serif'; color: @3c4352 !important; }
-:-ms-input-placeholder { font-size:12px; font-family:'sourcesans_pro','sans-serif'; color: @3c4352 !important; }
+::-webkit-input-placeholder { font-size:12px; font-family:'sourcesans_pro','sans-serif'; color: #9ea8b7; }
+:-moz-placeholder { /* Firefox 18- */ font-size:12px; font-family:'sourcesans_pro','sans-serif'; color: #9ea8b7; }
+::-moz-placeholder {  /* Firefox 19+ */ font-size:12px; font-family:'sourcesans_pro','sans-serif'; color: #9ea8b7; }
+:-ms-input-placeholder { font-size:12px; font-family:'sourcesans_pro','sans-serif'; color: #9ea8b7; }
 input[type=search]
 {
   &::-webkit-input-placeholder { font-size:13px; font-family:'sourcesans_pro_li', 'sans-serif'; color:#9da1a8; }
   &:-moz-placeholder { font-size:13px; font-family:'sourcesans_pro_li', 'sans-serif'; color:#9da1a8; }
   &::-moz-placeholder { font-size:13px; font-family:'sourcesans_pro_li', 'sans-serif'; color:#9da1a8; }
   &:-ms-input-placeholder { font-size:13px; font-family:'sourcesans_pro_li', 'sans-serif'; color:#9da1a8; }
+}
+input[type=search]:focus
+{
+  &::-webkit-input-placeholder { color:transparent; }
+  &:-moz-placeholder { color:transparent; }
+  &::-moz-placeholder { color:transparent; }
+  &:-ms-input-placeholder { color:transparent; }
 }
 
 *::-webkit-scrollbar-track {
