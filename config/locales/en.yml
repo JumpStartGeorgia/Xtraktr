@@ -640,10 +640,10 @@ en:
       group: Group
       subgroup: Subgroup
       weight: Weight
-      count: Count
+      count: Total Responses
       percent: Percent
-      unweighted_count: Unweighted Count
-      weighted_count: Weighted Count
+      unweighted_count: Unweighted Total Responses
+      weighted_count: Weighted Total Responses
       weighted_percent: Weighted Percent
       dataset_dashboard: Dataset Dashboard
       time_series_dashboard: Time Series Dashboard
@@ -1144,7 +1144,7 @@ en:
     index:
       title: "Edit Time Series Questions and their Answers"
       explanation: "Use this page to add questions to the time series or edit questions already in the time series."
-      no_questions: There are no questions on file for this time series yet.
+      no_questions: There are no questions on file for this time series.
       btn_add_question: Add a Question
       btn_add_question_hint: Match a question from each dataset and add the question to the time series.
       btn_automatic: Automatically Assign Matching Questions
