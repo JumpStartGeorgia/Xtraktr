@@ -1,0 +1,1413 @@
+# encoding: utf-8
+ka:
+  mongoid:
+    models:
+      user: "მომხმარებელი"
+      page_content: "ტექსტი გვერდებისთვის"
+      dataset: მონაცემები
+      shapeset: "ფორმების ცხრილი"
+      question: "კითხვა"
+      time_series: "პერიოდული შედარება"
+      time_series_question: "შეკითხვა"
+      time_series_answer: "პასუხი"
+      api_version: API ვერსია
+      api_method: API მეთოდი
+      api_key: API დაშვების გასაღები
+      category: "კატეგორია"
+      category_mapper: "კატეგორიები"
+      country: Country
+      country_mappery: Countries
+      group: Group
+      weight: Weight
+      time_series_group: Group
+      time_series_weight: Weight
+      time_series_weight_assignment: Weight Assignment
+    attributes:
+      user:
+        email: "ელ.ფოსტა"
+        password: "პაროლი"
+        password_confirmation: "გაიმეორეთ პაროლი"
+        role: "როლი"
+        remember_me: "დამიმახსოვრე"
+        nickname: "მომხმარებლის სახელი"
+        sign_in_count: "შემოსვლის რაოდენობა"
+        created_at: "შექმნის თარიღი"
+        current_sign_in_at: "ბოლო შემოსვლის თარიღი"
+        first_name: "სახელი"
+        last_name: "გვარი"
+        name: "სახელი"
+        age_group: "ასაკობრივი ჯგუფი"
+        residence: "საცხოვრებელი ქვეყანა"
+        affiliation: "დაწესებულება"
+        status: "სტატუსი"
+        status_other: "როდესაც სხვა (გთხოვთ მიუთითოთ)"
+        description: "საკვლევი ობიექტის მოკლე აღწერა (<i>არჩევითი</i>)"
+        notifications: "ახალი მონაცემების დამატების დროს მინდა შეტყობინების მიღება"
+        notification_locale: "შეტყობინების ენა"
+      message:
+        name: "სახელი"
+        email: "ელ.ფოსტის მისამართი"
+        message: "შეტყობინება"
+        subject: "სათაური"
+      agreement:
+        email: "ელ.ფოსტა"
+        first_name: "სახელი"
+        last_name: "გვარი"
+        age_group: "ასაკობრივი ჯგუფი"
+        residence: "საცხოვრებელი ქვეყანა"
+        affiliation: "დაწესებულება"
+        status: "სტატუსი"
+        status_other: "როდესაც სხვა (გთხოვთ მიუთითოთ)"
+        description: "საკვლევი ობიექტის მოკლე აღწერა (<i>არჩევითი</i>)"
+        dataset_id: მონაცემები
+        dataset_type: File Type
+        dataset_locale: "ენა"
+        download_type: Download Type
+        created_at: "თარიღი"
+      page_content:
+        name: "უნიკალური სახელი"
+        title: "სათაური"
+        content: "კონტენტი"
+      dataset:
+        title: "სათაური"
+        description: "აღწერა"
+        methodology: "მეთოდოლოგია"
+        source: "მონაცემთა წყარო"
+        source_url: "წყაროს URL"
+        datafile: "მონაცემების ფაილი"
+        has_warnings: "მონაცემების საკითხები"
+        stats: "მონაცემთა ცხრილის სტატისტიკა"
+        codebook: "კოდირება"
+        released_at: "გამოქვეყნების თარიღი"
+        start_gathered_at: "მონაცემთა შეგროვების დაწყების თარიღი"
+        end_gathered_at: "მონაცემთა შეგროვების დასრულების თარიღი"
+        gathered_at: "მონაცემები შეგროვებულია"
+        public: "გავხადოთ საჯაროდ ხელსმისაწვდომი"
+        languages: "მონაცემთა ცხრილის ენა"
+        default_language: "მთავარი ენა"
+        is_mappable: "აქვს კითხვები რომლებიც არიან ბუნებრივად გეოგრაფიული ტიპის"
+        created_at: "დამატებულია"
+        reports: "რეფორთები"
+        category_ids: "კატეგორიები"
+        country_ids: Country(s) Data Represents
+        permalink: მონაცემთა URL-ი
+        is_weighted: Weighted Data
+        created_at: Date Added to Site
+        updated_at: Date Last Updated
+        donor: Donor
+        license_title: License Title
+        license_description: License Description
+        license_url: License URL
+      stats:
+        questions_analyzable: Analyzable Questions
+        public_questions_analyzable: Public Analyzable Questions
+        questions_good: Questions With Predefined Answers
+        questions_no_text: No Question Text
+        questions_no_answers: No Predefined Answers
+        questions_bad_answers: Bad Answers
+        data_records: Total Responses
+      question:
+        code: "კითხვის კოდი"
+        original_code: "კითხვის კოდი"
+        text: "კითხვა"
+        notes: "შენიშვნა"
+        exclude: "ანალიზიდან კითხვის გამორიცხვა"
+        exclude_download_header: "ანალიზიდან კითხვის გამორიცხვა (დატოვე ადგილი კითხვი გამოსაჩენად)"
+        no_questions: "მონაცემთა ამ ცხრილისთვის კითხვა ან ფაილი ვერ მოიძებნა"
+        is_mappable: "კითხვის პასუხები რუკაზე გამოჩნდება"
+        has_code_answers: "განსაზღვრა პასუხების სია"
+        possible_answers: "შესაძლო პასუხების მნიშვნელობები"
+        data_answers: "პასუხების მნიშვნელობები მონაცემებში"
+        can_download: Include Question in Download for Public
+        has_map_adjustable_max_range: Max Range of Choropleth Map is Adjustable
+        is_weight: This question is a weight
+      answer:
+        value: "მნიშვნელობა"
+        text: "პასუხი"
+        exclude: "ანალიზიდან კითხვის გამორიცხვა"
+        exclude_download_header: "ანალიზიდან კითხვის გამორიცხვა (დატოვე ადგილი პასუხის გამოსაჩენად)"
+        can_exclude: "ანალიზის დროს შეუძლია გამორიცხვა"
+        can_exclude_download_header: "ანალიზის დროს შეუძლია გამორიცხვა (დატოვე ადგილი პასუხის მუდმივად გამოსაჩენად)"
+        no_questions: ამ მონაცემთა ფაილზე არ არის კითხვები
+        sort_order: "დახარისხების წყობა"
+        shape_name: "ფორმის სახელი"
+      group:
+        title: Name
+        description: Description
+        include_in_charts: Include the Description in the Chart Titles?
+        codes: Questions in this Group
+        parent_id: This Group is a Subgroup of
+        sub_group: Subgroup
+      weight:
+        code: Question with Weight
+        text: Weight Name
+        is_default: Is Default Weight?
+        applies_to_all: Applies to All Questions
+        applies_to: Applies To
+        all_questions: All Questions
+        codes: Apply the Weight to the Following Questions
+      report:
+        title: "დასახელება"
+        file: "ფაილი"
+        released_at: "გამოქვეყნების თარიღი"
+        language_id: "ენა"
+        summary: "მოკლე შეჯამება"
+      time_series:
+        title: "დასახელება"
+        description: "აღწერა"
+        source: "მონაცემთა წყარო"
+        source_url: "წყაროს URL"
+        public: "გავხადოთ საჯაროდ ხელსმისაწვდომი"
+        created_at: "დამატებულია"
+        datasets: მონაცემები
+        dates: "მოიცავს თარიღებს"
+        category_ids: "კატეგორიები"
+        country_ids: Country(s) Data Represents
+        permalink: პერიოდული შედარების URL-ი
+        is_weighted: Weighted Data
+        created_at: Date Added to Site
+        updated_at: Date Last Updated
+        license_title: License Title
+        license_description: License Description
+        license_url: License URL
+      time_series_dataset:
+        dataset_id: მონაცემები
+        title: "ეტიკეტი"
+        sort_order: "დახარისხების წყობა"
+      time_series_question:
+        code: "კითხვის კოდი"
+        original_code: "კითხვის კოდი"
+        text: "კითხვა"
+        notes: "შენიშვნა"
+      time_series_group:
+        title: Name
+        description: Description
+        include_in_charts: Include the Description in the Chart Titles?
+        codes: Questions in this Group
+        parent_id: This Group is a Subgroup of
+        sub_group: Subgroup
+      time_series_weight:
+        dataset_id: Dataset with Weight
+        code: Question with Weight
+        text: Weight Name
+        is_default: Is Default Weight?
+        applies_to_all: Applies to All Questions
+        applies_to: Applies To
+        all_questions: All Questions
+        codes: Apply the Weight to the Following Questions
+      time_series_weight_assignment:
+        dataset_id: Dataset
+        code_unique_id: Question with Unique Response IDs
+      time_series_dataset_question:
+        code: "კითხვის კოდი"
+        text: "კითხვა"
+        notes: "შენიშვნა"
+        dataset: მონაცემები
+      time_series_answer:
+        value: "მნიშვნელობა"
+        text: "პასუხი"
+        can_exclude: "შეუძლია ანალიზის დროს გამორიცხვა"
+        sort_order: "დახარისხების წყობა"
+      shapeset:
+        title: "დასახელება"
+        description: "აღწერა"
+        source: "ფორმების ცხრილის წყარო"
+        source_url: "წყაროს URL"
+        shapefile: GeoJSON ფაილი
+        languages: "ფორმების ცხრილის ენა"
+        default_language: "მთავარი ენა"
+        created_at: "დამატებულია"
+      api_version:
+        permalink: "პერმალინკი"
+        title: "დასახელება"
+        public: "გავხადოთ საჯაროდ ხელსმისაწვდომი"
+        public_at: "გამოქვეყნებულია"
+        updated_at: "ბოლო განახლება"
+        methods: "მეთოდი"
+      api_method:
+        permalink: "პერმალინკი"
+        title: "დასახელება"
+        content: "კონტენტი"
+        public: "გავხადოთ საჯაროდ ხელსმისაწვდომი"
+        public_at: "გამოქვეყნებულია"
+        updated_at: "ბოლო განახლება"
+        sort_order: "დახარისხების წყობა"
+      api_request:
+        api_key_id: API-ს გასაღების ID
+        user_id: "მომხმარებლის ID"
+        user_name: "სახელი"
+        dataset_id: მონაცემების ID
+        dataset_title: მონაცემები
+        time_series_id: "პერიოდული შედარების ID"
+        time_series_title: "პერიოდული შედარება"
+        ip_address: IP მისამართი
+        locale: API ადგილი
+        api_version: API ვერსია
+        action: API ქმედება
+        question_code: "კითხვის კოდი"
+        broken_down_by_code: "ჩაშლილია კოდით"
+        filtered_by_code: "გაფილტრულია კოდით"
+        can_exclude: "შეუძლია გამორიცხვა"
+        with_title: "სახელით"
+        with_chart_data: "მონაცემების დიაგრამით"
+        with_map_data: "მონაცემების რუკით"
+        browser: "ბრაუზერი"
+        version: "ბრაუზერის ვერსია"
+        os: OS
+        platform: OS პლატფორმა
+        app: App
+        is_mobile: "მობილური მოწყობილობაა?"
+        created_at: "თარიღი"
+      api_key:
+        key: "დაშვების გასაღები"
+        created_at: "შექმნის თარიღი"
+      category:
+        name: სახელი
+        permalink: ბმული
+        sort_order: დახარისხება
+    hints:
+      dataset:
+        title: თქვენი მონაცემების სახელწოდება
+        description: "აღწერეთ, რაზეა თქვენი მონაცემები"
+        methodology: "აღწერეთ, როგორ იქნა შეგროვებული მონაცემები"
+        source: ვინ შეაგროვა მონაცემები
+        source_url: "წყაროს ვებგვერდის URL. გთხოვთ, გამოიყენით http როგორც url-ის ნაწილი (მაგ. http://source.com)"
+        datafile: "დასაშვებია მხოლოდ sav, dta, csv, xls, xlsx ფორმატები"
+        datafile_read_only: "ამ დროისთვის, არ შეგიძლიათ მონაცემთა ახალი ფაილის ატვირთვა ახლის დასამატებლად ან ძველის ჩანასაცვლებლად"
+        codebook: "დასაშვებია მხოლოდ txt, pdf, doc, docx ფორმატები"
+        released_at: "მონაცემების საჯაროდ გამოქვეყნების თარიღი"
+        start_gathered_at: "მონაცემების შეგროვების დაწყების თარიღი"
+        end_gathered_at: "მონაცემების შეგროვების დასრულების თარიღი"
+        public: "მონიშნეთ 'დიახ', რათა თქვენი მონაცემები საჯაროდ ხელმისაწვდომი გახდეს "
+        languages: "იმ შემთხვევაშიც კი, თუ თქვენი მონაცემები მხოლოდ ერთ ენაზეა, თქვენ შეგიძლიათ ამ ფორმების გამოყენება, რათა თარგმნოთ ყველა კითხვა და პასუხი თქვენთვის სასურველ ნებისმიერ ენაზე"
+        default_language: "მონაცემთა ენა, რომელიც ნაჩვენებია მთავარ ენად, თუ რომელიმე კონკრეტული ენა არ არის მოთხოვნილი მომხმარებლის მიერ"
+        category_ids: მიაკუთვნეთ მონაცემები ერთ ან მეტ კატეგორიას
+        country_ids: Select which country(s) the dataset data represents
+        permalink: "მონაცემების შემოკლებული სახელი, რომელიც გსურთ, რომ გამოჩნდეს URL-ში (მაგალითად, 'wms', რომელიც გულისხმობს 'Welfare Monitoring Survey'). ყველა სპეციალური სიმბოლოების ავტომატურად წაიშლება."
+        donor: Person(s) or organization(s) that funded your data collection
+        license_title: The title of the license
+        license_description: A brief description of the license
+        license_url: A URL to webpage that has more information about the license
+      shapeset:
+        title: სახელწოდება ფორმების კრებულისთვის
+        description: "ფორმების ცხრილის შინაარსის მოკლე აღწერა"
+        source: "ვინ დააყენა ფორმების ცხრილი ერთად"
+        source_url: "წყაროს ვებ გვერდზე URL. გთხოვთ გამოიყენით http როგორც url-ის ნაწილი (მაგ. http://source.com)"
+        shapefile: "დასაშვებია მხოლოდ json და geojson ფორმატები"
+        languages: "იმ შემთხვევაშიც კი, თუ თქვენი მონაცემები მხოლოდ ერთ ენაზეა, თქვენ შეგიძლიათ ამ ფორმების გამოყენება რათა თარგმნოთ ყველა კითხვა და პასუხი თქვენთვის სასურველ ნებისმიერ ენაზე"
+        default_language: "მონაცემთა ცხრილის ენა რომელიც გამოყენებულია როგორც მთავარი ენა, თუ რომელიმე კონკრეტული ენა არ არის მოთხოვნილი"
+      question:
+        text: "კითხვის ტექსტი"
+        notes: "რაიმე სპეციალური შენიშვნა კითხვასთან დაკავშრებით"
+        exclude: "მონიშვნის შემთხვევაში ეს კითხვა არ იქნება ხელმისაწვდომი ანალიზის დროს"
+        is_mappable: "თუ კითხვები ბუნებრივად შეიძლება დატანილი იყვნენ რუკაზე, შეგიძლიათ დაამთხვიოთ კითხვა ფორმები ცხრილს და რუკაზე გაანალიზოთ შეკითხვა"
+        can_download: 'If selected, this question will be included in the data download available to the public'
+        is_weight: "If this question contains weight values, you can apply the weight to the dataset"
+      answer:
+        value: "პასუხის მნიშვნელობა"
+        text: "პასუხის ტექსტი"
+        exclude: "მონიშვნის შემთხვევაში ეს კითხვა არ იქნება ხელმისაწვდომი ანალიზის დროს"
+        can_exclude: "მონიშვნის შემთხვევაში ეს კითხვა იქნება ხელმისაწვდომი ანალიზის დროს, მაგრამ მომხმარებლის სურვილის შემთხვევაში ის შეიძლება გამოირთოს"
+        sort_order: "გამოსაჩენი პასუხების წყობა"
+        default_text: "ეს არის პასუხის ტექსტი მთავარი ენიდან, რომელიც მოწოდებულია რათა თარგმანის გასაადვილებლად"
+      group:
+        title: The group name will appear in the codebook and on the explore page in the question drop-down lists
+        description: "The group description will appear in the codebook, on the explore page in the question drop-down lists and the chart titles, if desired."
+        include_in_charts: "If selected, the group description will appear in the title of the charts. The Description will then be required."
+        codes: Select the questions that belong in this group
+        parent_id: Use this to indicate that this group belongs to another group
+      weight:
+        code: The question that contains the weight values
+        text: 'A label for the weight - this will be visible to the public during analysis (e.g., Individual, Household, etc)'
+        is_default: 'If selected, this will be the weight that is applied to all questions during analysis by default if no weight is indicated'
+        applies_to_all: 'If selected, all questions will be assigned to this weight'
+        codes: Select the questions that you want to have this weight applied to
+      report:
+        title: "რეფორთის დასახელება"
+        file: "რეფორთის ფაილი pdf, doc, odt ან txt დოკუმენტებში"
+        released_at: "რეფორთის საჯაროდ გამოქვეყნების თარიღი"
+        language_id: "ენა რომელშიც რეფორთი არის დაწერილი"
+        summary: "რეფორთის მოკლე აღწერა"
+      mappable:
+        question: "აირჩიეთ კითხვა რომელის პასუხიც გსურთ გამოჩნდეს რუკაზე ანალიზის დროს"
+        shapeset: "არიჩიეთ ამ კითხვის გამოსაყენებელი ფორმების ცხრილი"
+      time_series:
+        title: "პერიოდული შედარების დასახელება"
+        description: "ახსენით რას ეხება თქვენი პერიოდული შედარება"
+        public: "აირჩიეთ 'დიახ' რათა თქვენი პერიოდული შედარება გახდეს მსოფლიოსთვის ხელმისაწვდომი"
+        languages: "თქვენი პერიოდული შედარების ენები ავტომატურად განისაზღვრება მონაცემთა ცხრილის ენების მიერ"
+        default_language: "პერიოდული შედარების ენა რომელიც ნაჩვენებია მთავარ ენად, თუ სხვა ენა არ არის მოთხოვნილი მომხმარებლის მიერ"
+        category_ids: "აირჩიეთ პერიოდული შედარების ერთი ან მეტი კატეგორია"
+        country_ids: Select which country(s) the dataset data represents
+        permalink: "პერიოდული შედარების შემოკლებული სახელი, რომელიც გსურთ, რომ გამოჩნდეს URL-ში (მაგალითად, 'wms', რომელიც გულისხმობს 'Welfare Monitoring Survey'). ყველა სპეციალური სიმბოლოების ავტომატურად წაიშლება."
+        license_title: The title of the license
+        license_description: A brief description of the license
+        license_url: A URL to webpage that has more information about the license
+      time_series_dataset:
+        dataset_id: "აირჩიეთ მონაცემთა ცხრილი რათა დაამატოთ პერიოდულ შედარებაში"
+        title: "პერიოდულ შედარებაში ეს ტექსტი წარმოადგენ მონაცემთა ცხრილს, სავარაუდოდ დროის ინდიკატორს. მაგალითად, თუ თქვენი მონაცემთა ცხრილი არის 2015 წლიდან, თქვენ ჩაწერთ 2015 წელს, ან თუ ის იქნება 2015 წლის იანვრიდან, თქვენ ჩაწერთ 2015 წლის იანვარს."
+        sort_order: "პერიოდული შედარებაში უნდა გამოჩნდეს მონაცემთა ცხრილის თანმიმდევრობა"
+      time_series_question:
+        code: "კითხვის კოდი რომლის გამოჩენაც გსურთ პერიოდული შედარებაში"
+        text: "კითხვის ტექსტი, რომლის გამოჩენაც გსურთ პერიოდული შედარებაში"
+        notes: "რაიმე სპეციალური შენიშვნა კითხვასთან დაკავშრებით"
+      time_series_group:
+        title: The group name will appear in the codebook and on the explore page in the question drop-down lists
+        description: "The group description will appear in the codebook, on the explore page in the question drop-down lists and the chart titles, if desired."
+        include_in_charts: "If selected, the group description will appear in the title of the charts. The Description will then be required."
+        codes: Select the questions that belong in this group
+        parent_id: Use this to indicate that this group belongs to another group
+      time_series_weight:
+        dataset_id: The dataset that contains the question with the weight values
+        code: The question that contains the weight values
+        text: 'A label for the weight - this will be visible to the public during analysis (e.g., Individual, Household, etc)'
+        is_default: 'If selected, this will be the weight that is applied to all questions during analysis by default if no weight is indicated'
+        applies_to_all: 'If selected, all questions will be assigned to this weight'
+        codes: Select the questions that you want to have this weight applied to
+      time_series_weight_assignment:
+        code_unique_id: Select the question from each dataset that contains the unique ID of the responders. This ID will be used to assign the weight to the correct responses in each dataset.
+      time_series_dataset_question:
+        text: "მონაცემთა ცხრილიდან მხოლოდ ის კითხვები იქნება ნაჩვენები, რომლებიც არ არიან ჩანიშნულნი პერიოდულ შედარებაში."
+        notes: "რაიმე სპეციალური შენიშვნა კითხვასთან დაკავშრებით"
+      time_series_answer:
+        value: "პასუხის მნიშვნელობა"
+        text: "ტექსტის მნიშვნელობა"
+        can_exclude: "მონიშვნის შემთხვევაში, ეს პასუხი ხელმისაწვდომი იქნება ანალიზის დროს, მაგრამ შესაძლებელი იქნება მისი გამორთვა მომხმარებლის სურვილის შემთხვევაში."
+        sort_order: "პასუხების გამოჩენის თანმიმდევრობა"
+        default_text: "ეს არის პასუხის ტექსტი მთავარი ენიდან, რომელიც მოწოდებულია რათა თარგმანის გასაადვილებლად"
+        dataset: "მონაცემთა ცხრილიდან არჩეული შეკითხვის სავარაუდო პასუხები"
+      page_content:
+        name: "კონტენტის უნიკალური სახელი (არ შეცვალოთ!)"
+        title: "სათაური, რომელიც გამოჩნდება კონტენტის ზემოთ"
+        content: "გვერდზე გამოსაჩენი კონტენტი"
+      api_version:
+        permalink: URL-ში გამოყენებული აბრევიატურა (მაგ., v1)
+        title: API ვერსიის დასახელება
+        public: "მონიშნეთ 'დიახ' API ვერსიის საქვეყნოდ ხელმისაწვდომობისთვის"
+      api_method:
+        permalink: URL-ში გამოყენებული აბრევიატურა (მაგ., v1)
+        title: API ვერსიის დასახელება
+        content: API მეთოდის გამოყენები ახსნა
+        public: "მონიშნეთ 'დიახ' API მეთოდის დოკუმენტაციის საქვეყნოდ ხელმისაწვდომობისთვის"
+        sort_order: API მეთოდის გამოჩენის თანმიმდევრობა
+      category:
+        name: კატეგორიის სახელი
+        permalink: This text needs to match the name of the icon image file
+        sort_order: The order the categories should appear
+  errors:
+    messages:
+      required_field: "სავალდებულო ველი"
+      already_exists: "უკვე არსებობს მონაცემთა ბაზაში"
+      translation_default_lang: "%{field_name} მთავარი ენისთვის '%{language}' %{msg}"
+      translation_any_lang: "%{field_name} ენისთვის '%{language}' %{msg}"
+      invalid_language: "%{lang_locale}' შეუსაბამო ადგილობრივი ენაა"
+      dataset_length: "პერიოდული შედარების შენახვისთვის სულ მცირე მონაცემთა ორი ცხრილია საჭირო"
+      missing_questions: "At least one questions must be selected for a group to be saved."
+      license_requirements: 'The License Title and License Description fields are both required for Language %{language} if you are providing a license.'
+  mass_uploads_msgs:
+    bad_headers: "ფაილის საწყისი არ ემთხვევა ნიმუშის საწყის, შეუძლებელია მონაცემების თითოეული სვეტის განსაზღვრა. გთხოვთ ჩამოტვირთოთ კითხვის ნიმუშის ფაილი და გამოიყენოთ საწყისი ამ ფაილიდან."
+    missing_code: "რიგი %{n}: ამ კოდით კითხვა არ მოიძებნა '%{code}'"
+    questions:
+      not_save: "რიგი %{n}: კითხვის შენახვა შეუძლებელია: %{msg}"
+    answers:
+      missing_answer: "რიგი %{n}: პასუხის მნიშვნელობის მოძებნა შეუძლებელია '%{value}' კითხვისთვის ამ კოდით '%{code}'"
+      not_save: "რიგი %{n}: პასუხის შენახვა შეუძლებელია: %{msg}"
+  publish_status:
+    public: "საჯარო"
+    private: "კერძო"
+  tabbed_translation_form:
+    default_text: "მთავარი ტექსტი"
+    default_url: "მთავარი URL"
+  explore_time_series:
+    na: "არ არის ხელმისაწვდომი"
+    percent: "პროცენტი (%)"
+    group:
+      html:
+        title: "<span class='group-highlight'>%{text}</span> "
+      text:
+        title: "%{text}"
+    subgroup:
+      html:
+        title: "<span class='subgroup-highlight'>%{text}</span> "
+      text:
+        title: "%{text}"
+    single:
+      html:
+        title: "'<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
+        title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
+        title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable} = <span class='code-highlight'>%{value}</span>'"
+      text:
+        title: "'%{code} - %{group} %{variable}'"
+        title_filter: ", გაფილტრულია: '%{code} - %{group} %{variable}'"
+        title_filter_value: ", გაფილტრულია: '%{code} - %{group} %{variable} = %{value}'"
+    subtitle:
+      html:
+        title: "Total Responses: <br />%{x_of_y}"
+        title_x_of_y: "%{dataset}: <span class='number'>%{num}</span> out of %{total}"
+        title_filter: "Total Responses <br />(out of a possible: %{totals}): <br />%{nums}"
+        title_weighted: "Unweighted Total Responses<span class='footnote-flag'>*</span>: <br />%{x_of_y}"
+        title_filter_weighted: "Unweighted Total Responses<span class='footnote-flag'>*</span> <br />(out of a possible: %{totals}): <br />%{nums}"
+      text:
+        title: "Total Responses: %{x_of_y}"
+        title_x_of_y: "%{dataset}: %{num} out of %{total}"
+        title_filter: "Total Responses: %{nums}"
+        title_weighted: "Unweighted Total Responses*: %{x_of_y}"
+        title_filter_weighted: "Unweighted Total Responses* (out of a possible: %{totals}): %{nums}"
+  explore_data:
+    hover_region: Hover over a Region
+    na: "არ არის ხელმისაწვდომი"
+    percent: "პროცენტი"
+    group:
+      html:
+        title: "<span class='group-highlight'>%{text}</span> "
+      text:
+        title: "%{text}"
+    subgroup:
+      html:
+        title: "<span class='subgroup-highlight'>%{text}</span> "
+      text:
+        title: "%{text}"
+    comparative:
+      html:
+        title: "'<span class='code-highlight'>%{question_code}</span> - %{variable}' <br /> <span class='title-highlight'>ჩაშლილია:</span> <br /> '<span class='code-highlight'>%{broken_down_by_code}</span> - %{broken_down_by}'"
+        title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
+        title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'"
+        map:
+          title: "'<span class='code-highlight'>%{code}</span> - %{variable}' "
+          title_broken_down_by: "<br /> <span class='title-highlight'>ჩაშლილია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{broken_down_by} = <span class=”code-highlight”>%{broken_down_by_answer}</span>' "
+          title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
+          title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'"
+      text:
+        title: "'%{question_code} - %{variable}', ჩაშლილია: '%{broken_down_by_code} - %{broken_down_by}'"
+        title_filter: ", გაფილტრულია: '%{code} - %{variable}'"
+        title_filter_value: ", გაფილტრულია: '%{code} - %{variable} = %{value}'"
+        map:
+          title: "%{code} - %{variable}'"
+          title_broken_down_by: " ჩაშლილია: '%{code} - %{broken_down_by} = %{broken_down_by_answer}'"
+          title_filter: ", გაფილტრულია: '%{code} - %{variable}'"
+          title_filter_value: ", გაფილტრულია: '%{code} - %{variable} = %{value}'"
+    single:
+      html:
+        title: "'<span class='code-highlight'>%{code}</span> - %{variable}'"
+        title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
+        title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'"
+      text:
+        title: "'%{code} - %{variable}'"
+        title_filter: ", გაფილტრულია: '%{code} - %{variable}'"
+        title_filter_value: ", გაფილტრულია: '%{code} - %{variable} = %{value}'"
+    subtitle:
+      html:
+        title: "Total Responses: <span class='number'>%{num}</span> out of %{total}"
+        title_filter: "Total Responses out of %{total}: <br />%{nums}"
+        title_weighted: "Unweighted Total Responses<span class='footnote-flag'>*</span>: <span class='number'>%{num}</span> out of %{total}"
+        title_filter_weighted: "Unweighted Total Responses out of %{total}<span class='footnote-flag'>*</span>: <br />%{nums}"
+      text:
+        title: "Total Responses: %{num} out of %{total}"
+        title_filter: "Total Responses out of %{total}: %{nums}"
+        title_weighted: "Unweighted Total Responses*: %{num} out of %{total}"
+        title_filter_weighted: "Unweighted Total Responses out of %{total}*: %{nums}"
+  datatable:
+    search: ძიება
+    search_footer: 'Search %{name}'
+    copy:
+      title: "კოპირება"
+      tooltip: "კოპირება ბუფერში"
+    csv:
+      title: CSV
+      tooltip: CSV-ში შენახვა
+    xls:
+      title: XLS
+      tooltip: XLS-ში შენახვა
+    pdf:
+      title: PDF
+      tooltip: PDF-ში შენახვა
+    print:
+      title: "ბეჭდვა"
+      tooltip: "ცხრილის ბეჭდვა"
+  highcharts:
+    context_title: "გრაფიკის შენახვა"
+    png: PNG სურათი
+    jpg: JPG სურათი
+    pdf: PDF დოკუმენტი
+    svg: SVG ვექტორული სურათი
+  mailer:
+    closing: "პატივისცემით,"
+    signature: The Xtraktr Team
+    unsubscribe: "დააჭირეთ და შეცვალეთ შეტყობინებების პარამეტრები"
+    notification:
+      new_user:
+        subject: "Welcome to Xtraktr!"
+        message: Thank you for creating an account on Xtraktr's open data portal and sharing some information about yourself. It is our hope that the content and data you find adds value to your work and understanding of trends related to the rights of children in Georgia. If you have any questions, you can contact us via our webform or send us an email.
+      new_data:
+        subject: "A new dataset has been added to Xtraktr!"
+        message: "Xtraktr has just uploaded new data for you to explore, visualize, and share."
+    contact:
+      contact_form:
+        subject: "Xtraktr Contact Form"
+  helpers:
+    actions: "აირჩიეთ"
+    default_language: "ეს არის მთავარი ენა, რომელიც გამოჩნდება"
+    search: "ძებნა"
+    links:
+      admin: "ადმინისტრატორის განყოფილება"
+      edit: "შეცვლა"
+      confirm: "დარწმუნებული ხართ?"
+      destroy: "წაშლა"
+      new: "ახალი"
+      list: "ყველას ნახვა"
+      back: "ყველას ნახვა"
+      cancel: "გაუქმება"
+      reset: "საწყის კონფიგურაციაზე დაბრუნება"
+      view: "ნახვა"
+      save: "შენახვა"
+      sign_in_facebook: Facebook-ით შესვლა
+      forgot_password: "დაგავიწყდათ პაროლი?"
+      change_password: "პაროლის შეცვლა"
+      change_password2: "პაროლის შეცვლა"
+      password_reset: "პაროლის აღდგენა"
+      sign_in2: "შესვლა"
+      sign_in: "უკვე გაქვთ ანგარიში?"
+      sign_up2: "რეგისტრაცია"
+      sign_up_question: "არ გაქვთ ანგარიში?"
+      sign_up: "დარეგისტრირდით"
+      sign_up_title: "შემოგვიერთდი “%{app_name}”"
+      sign_out: "გასვლა"
+      sign_in_provider: "შესვლა %{provider}-ით"
+      sign_up_provider: "დარეგისტრირდით  %{provider}-ით"
+      sign_in_local_or_provider: "ან შეიყვანეთ თქვენი ელ. ფოსტა და პაროლი"
+      reset_or_sign_in: "შედით facebook-ით ან შეცვალეთ პაროლი"
+      explanation: "მოხარულნი ვართ, რომ დაინტერესდით ჩვენი მონაცემებით. ჩვენ გვსურს გავიგოთ მცირე ინფორმაცია თქვენს შესახებ. მონაცემთა ცხრილის ჩამოსატვირთად, გთხოვთ შეავსოთ ჩვენი ფორმა."
+      download_and_sign_up: "ჩამოტვირთვა და ანგარიშის გახსნა"
+      like: "მოწონება"
+      likes: "მოწონება"
+      menu: "მენიუ"
+      close: "დახურვა"
+      select_all: "ყველას მონიშვნა"
+      select_none: "არცერთის მონიშვნა"
+      make_mappable: "დაიტანოს რუკაზე"
+      add_question_text: "კითხვის ტექსტის დამატება"
+      add_answer: "პასუხის დამატება"
+      add_answers: "პასუხების დამატება"
+      edit_answers: "პასუხების შესწორება"
+      download: "ჩამოტვირთვა"
+      view_data: "მონაცემების ჩვენება"
+      add_dataset: "მონაცემთა ცხრილის დამატება"
+      remove_dataset: "მონაცემთა ცხრილის წაშლა"
+      add_report: "რეფორთის დამატება"
+      remove_report: "რეფორთის წაშლა"
+      download_data: "მონაცემების ჩამოტვირთვა"
+      back_dashboard: Dashboard-ზე დაბრუნება
+      api_home: API საწყისი გვერდი
+      agreement: "შეთანხმება"
+      add_highlight: "გამორჩეულში დამატება"
+      delete_highlight: "გამორჩეულიდან წაშლა"
+      description_highlight: Edit the description of the highlight
+      highlight_description_chart: Chart Description
+      embed_chart: ჩასმული გრაფიკი
+      embed_chart_prompt: 'დააკოპირეთ და ჩასვით ეს კოდი თქვენ საიტზე:'
+      embed_chart_wide: px ფართო
+      embed_chart_high: px მაღალი
+      highlight_description: Chart Description
+      edit_description: Edit Description
+      view_group_items: View Items in This Group
+      assign_weight: Assign Weight
+    titles:
+      edit: "შეცვლა %{model}"
+      save: "შენახვა %{model}"
+      new: "ახალი %{model}"
+      delete: "წაშლა %{model}"
+  app:
+    language:
+      en: English
+      ka: "ქართული"
+    buttons:
+      back: "იხილეთ ყველა"
+      list: "იხილეთ ყველა"
+      admin: "ადმინისტრატორის განყოფილება"
+      delete: "წაშლა"
+      edit: "შეცვლა"
+      show: "ჩვენება"
+      cancel: "გაუქმება"
+      update: "განახლება"
+      save: "შენახვა"
+      create: "შექმნა"
+      reset: "საწყის კონფიგურაციაზე დაბრუნება"
+      remove: "ამოშლა"
+      confirm: "დარწმუნებული ხართ?"
+      new: "ახალი"
+      save_settings: "პარამეტრების შენახვა"
+      choose_category: "კატეგორიის არჩევა"
+      change_category: "კატეგორიის შეცვლა"
+      categories: Categories
+      category: Category
+    common:
+      xtraktr:
+        app_name: Xtraktr
+        app_slogan: "Find, Share, Explore & Visualize Your Data"
+        app_description: "Looking for data about an issue? Find it. Have data on an issue? Share it. Xtraktr enables you to put your data on the map so others can find and use it. Analyze, visualize, embed, and share your findings. With Xtraktr, translating your dataset into other languages is easy. Open your data to the world and make it truly accessible. "
+      unicef:
+        app_name: გაეროს ბავშვთა ფონდის მონაცემთა პორტალი
+        app_slogan: ვეხმარებით კვლევით
+        app_description: "გაეროს ბავშვთა ფონდის საქართველოს წარმომადგენლობა პარტნიორებთან ერთად აგროვებს მონაცემებს საქართველოში ბავშვთა მდგომარეობის შესახებ. ამ ცოდნას ის იყენებს ეროვნული და გლობალური გადაწყვეტილებების მიმღებთა ინფორმირებისათვის, რათა, საბოლოო ჯამში, გაუმჯობესდეს ბავშვთა კეთილდღეობა საქართველოში."
+      added_on: "დამატებულია: %{date}"
+      jumpstart: "“ჯამპსტარტ ჯორჯია”"
+      jumpstart_address: "შევჩენკოს ქ. 5, ბინა 2, 0108, თბილისი, საქართველო"
+      powered_by_jumpstart: Powered By <span>ჯამპსტარტ ჯორჯია</span>
+      js_link_title: "“ჯამპსტარტ ჯორჯია” - ჩვენ გაწვდით მონაცემებს უკეთ!"
+      question: "კითხვა"
+      questions: "კითხვები"
+      question_code: "კოდი"
+      question_codes: Codes
+      answers: "პასუხები"
+      notes: "შენიშვნები"
+      group: Group
+      subgroup: Subgroup
+      weight: Weight
+      count: "დათვლა"
+      percent: "პროცენტი"
+      unweighted_count: Unweighted Count
+      weighted_count: Weighted Count
+      weighted_percent: Weighted Percent
+      dataset_dashboard: "მონაცემთა Dashboard"
+      time_series_dashboard: "პერიოდული შედარების Dashboard"
+      terms: "თანახმა ვარ <a href='http://www.unicef.org/about/legal_terms.html' target='_blank'>გამოყენების წესებზე</a>"
+      or: "ან"
+      go: "ძებნა"
+      share: "გაზიარება"
+      codebook_title: კოდირების ჩამოტვირთვა
+      all_categories: All Categories
+      private_question: This quesiton is not available to the public
+      private_answer: This answer is not available to the public
+      mappable_question: This question displays a map
+      question_no_answers: This question does not have answers and cannot be analyzed
+      powered_by_xtraktr: Powered By Xtraktr
+      powered_by_xtraktr_title: This data was built using the Xtraktr platform. Learn more and add your own data on the Xtraktr website.
+      weighted_footnote: 'Applied weight: '
+    msgs:
+      does_not_exist: "თქვენ ცდილობთ ისეთი გვერდის ნახვას, რომელიც არ არსებობს."
+      not_authorized: "თქვენ არ გაქვთ ამ გვერდის ნახვის უფლება."
+      success_created: "%{obj} შექმნილია."
+      success_updated: "%{obj} განახლებულია."
+      success_deleted: "%{obj} was successfully deleted."
+      mass_change_question_saved: "Question settings were saved."
+      mass_change_question_not_saved: "An error occurred while saving the question settings."
+      mass_change_answer_saved: "Answer settings were saved."
+      mass_change_answer_not_saved: "An error occurred while saving the answer settings."
+      sort_saved: "Sort orders were saved."
+      sort_not_saved: "An error occurred while saving the sort orders."
+      mapping_saved: "კითხვა წარმატებით იქნა რუკაზე დასატანი"
+      mapping_not_save: "რუკაზე კითხვის დატანის დროს წარმოიშვა პრობლემა"
+      mapping_deleted: "კითხვა აღარ არის რუკაზე დასატანი"
+      mapping_not_deleted: "კითხვის რუკაზე დატანის წაშლა შეუძლებელია"
+      time_series_automatic_match: "%{count} თქვენს პერიოდული შედარებაში კითხვები დაემატა"
+      mass_upload_questions_error: "კითხვების პროცესირების დროს შემდეგი სახის პრობლემები წარმოიშვა: %{msg}"
+      mass_upload_questions_success: "%{count} კითხვები განახლდა!"
+      mass_upload_answers_error: "პასუხების პროცესირების დროს შემდეგი სახის პრობლემები წარმოიშვა: %{msg}"
+      mass_upload_answers_success: "%{count} პასუხები განახლდა!"
+      highlight_show_home_page_success: "გამორჩეული ყოველთვის გამოჩნდება მთავარ გვერდზე"
+      highlight_deleted: "გამორჩეული წაიშალა"
+      highlight_description_updated: "The highlight description has been updated."
+      explore_error: "თქვენი მოთხოვნის შერსულების დროს წარმოიშვა პრობლემა"
+      explore_no_data: "No data was found for your request."
+      user_settings_updated: "თქვენი პარამეტრები წარამტებით განახლდა"
+      api_key_created: "თქვენი API-ს დაშვების გასაღები წარმატებით შეიქმნა"
+      api_key_deleted: "თქვენი API-ს დაშვების გასაღები წარმატებით წაიშალა"
+      missing_user_info: "საიტზე გარკვეული ცვლილებების გამო გთხოვთ განაახლოთ თქვენი პარამეტრები. ბოდიშს გიხდით გაუგებრობისთვის."
+      message_sent: "მადლობას გიხდით ჩვენთან დაკავშირებისთვის"
+      description_saved: Description was successfully saved
+      error_while_save: An error occurred while saving
+      insert_description_text: "[Please enter description text so you can see it here]"
+      datatable_regex_search: "Search for text that is only in this column. You can use regular expressions like ^ for beginning of string and $ for end of string."
+      datatable_select_search: "Filter the items in the table by selecting an item from the list."
+      jumpto_group: Jump to this group
+      is_group: This is a group of questions
+      is_subgroup: This is a subgroup of questions
+      weights_deleted: All weights have been deleted.
+      must_include_weight: The question is marked as a weight and must be included in the download.
+      cannot_include_weight: The question is marked as a weight and cannot be included as a question in the analsysis.
+      question_no_answers: This question does not have answers and cannot be analyzed.
+      admin_codebook_questions: This administrative view of the codebook shows all questions including those that are excluded and those that have no answers, which can be identified by the icon next to the question name. Please be aware that questions that are excluded or have no answers will not be visible to the public.
+    menu:
+      explore_data: "მონაცემთა გაცნობა"
+      explore_time_series: "პერიოდული შედარების გაცნობა"
+      datasets: მონაცემები
+      time_series: "პერიოდული შედარება"
+      highlights: Highlights
+      about: About
+      user_settings: "მომხმარებლის პარამეტრები"
+      about_dataset: "შესახებ"
+      about_time_series: "შესახებ"
+      all_datasets: "მონაცემების ყველა ცხრილი"
+      all_time_series: "პერიოდული შედარების ყველა ცხრილი"
+      contact: "კონტაქტი"
+      api: API
+      instructions: "ინსტრუქცია"
+      home: "მთავარი გვერდი"
+      disclaimer: შენიშვნა
+      titles:
+        explore_dataset: "მონაცემთა ცხრილში არსებული მონაცემების გაცნობა გრაფიკების, რუკების და ცხრილების საშუალებით"
+        explore_time_series: "პერიოდული შედარებაში არსებული მონაცემების გაცნობა გრაფიკების, რუკების და ცხრილების საშუალებით"
+        dataset_to_time_series: "მონაცემთა ცხრილის გაცნობა როგორც პერიოდული შედარების ნაწილი"
+      admin_dataset:
+        explore_data: "მონაცემთა გაცნობა"
+        heading: "მონაცემთა ცხრილის დეტალები"
+        settings: "პარამეტრები"
+        qa: "კითხვების/პასუხების შესწორება"
+        highlights: მნიშვნელოვანი
+        warnings: "გაფრთხილება"
+        mappable: "რუკაზე დასატანი"
+        delete: "წაშლა"
+        private_share: "პირადი მონაცემთა ცხრილის გაზიარება"
+        mass_changes: Mass Changes Via Spreadsheet
+        mass_changes_questions: Question Mass Changes
+        mass_changes_answers: Answer Mass Changes
+        download_data: Download Data
+        groups: Group Questions
+        sort: Sort Groups/Questions
+        weights: Weight Data
+      admin_time_series:
+        explore_data: "მონაცემების გაცნობა"
+        heading: "პერიოდული შედარების დეტალები"
+        settings: "პარამეტრები"
+        qa: "კითხვების/პასუხების შესწორება"
+        mass_changes: Mass Changes Via Spreadsheet
+        mass_changes_answers: Answer Mass Changes
+        highlights: მნიშვნელოვანი
+        warnings: "გაფრთხილება"
+        delete: "წაშლა"
+        private_share: "პირადი პერიოდული შედარების გაზიარება"
+        groups: Group Questions
+        sort: Sort Groups/Questions
+        weights: Weight Data
+  user:
+    age_group:
+      g1: 17-24
+      g2: 25-34
+      g3: 35-44
+      g4: 45-54
+      g5: 55-64
+      g6: "(>65)-ზე მეტი "
+    status:
+      researcher: "მკვლევარი"
+      student: "სტუდენტი"
+      journalist: "ჟურნალისტი"
+      ngo: "არასამთავრობო ორგანიზაცია"
+      government_official: "სამთავრობო სტრუქტურა"
+      international_organization: "საერთაშორისო ორგანიზაცია"
+      private_sector: "კერძო სექტორი"
+      other: "სხვა"
+    wanna_account: "დაიღალეთ ამ ფორმის შევსებით? მომავალში მისი თავიდან აცილების მიზნის, შექმენით ანგარიში."
+  layouts:
+    nav:
+      toggle: "ნავიგაციის ჩართვა/გამორთვა"
+      back: UNICEF.ge-ზე დაბრუნება
+    explore_data:
+      private_share_header: "პირადად გაზიარებული '%{title}'"
+      private_share_explanation: "თქვენ შეგიძლიათ დააკოპიროთ და გაუზიაროთ შემდეგი URL იმას , ვინც გსურთ რომ იხილოს '%{title}' იმ შემთხვევაშიც კი, თუ თქვენი მონაცემთა ცხრილი არ არის საჯაროდ გაზიარებული. ამ ადამიანებს ექნებათ საშუალება გაეცნონ თქვენს მონაცემებს, მაგრამ ვერ შეძლებენ მის შეცვლას და შესწორებას."
+    unsupported_browser:
+      title: "არასათანადო ბრაუზერი"
+      p1: "სამწუხაროდ თქვენი ინტერნეტ ბრაუზერის მოხმარების ვადა გასულია და ვერ მოხდება ვებ-გვერდთან სრულად დაკავშირება."
+      p2: "არსებობს რამდენიმე უფასო ბრაუზერი რომელის გადმოწერის შემდეგ შეძლებთ ვებ-გვერდით სარგებლობას."
+      chrome: Chrome
+      firefox: Firefox
+      ie: Internet Explorer (მხოლოდ Windows-ზე)
+      opera: Opera
+      Safari: Safari
+  admin:
+    index:
+      title: "ადმინისტრატორის განყოფილება"
+      users: "მომხმარებლები"
+      page_contents: "საიტზე ტექსტის რედაქტირება"
+      datasets: მონაცემები
+      shapesets: "ფორმების ცხრილი"
+      api_documentation: API ვერსიის დოკუმენტაცია
+      download_api_requests: API-ს მოთხოვნილი ისტორიის ჩამოტვირთვა
+      download_download_requests: "მოთხოვნილი ისტორიის ჩამოტვირთვა"
+      categories: კატეგორიები
+    users:
+      edit:
+        title: "ცვლილებების შეტანა მომხმარებლის გვერდზე"
+      index:
+        title: "მომხმარებლები"
+      new:
+        title: "ახალი მომხმარებელი"
+      show:
+        title: "მომხმარებლის დეტალები"
+  devise:
+    mailer:
+      reset_password_instructions:
+        subject: 'Xtraktr - Reset password instructions'
+        title: "მოგესალმებით, %{nickname} - "
+        p1: "მივიღეთ მოთხოვნა '%{app_name}' თქვენი პაროლის შეცვლის შესახებ. პაროლის შესაცვლელად, მიჰყევით შემდეგ ბმულს."
+        link_title: "პაროლის შეცვლა"
+        p2: "თუ თქვენ არ მოგითხოვიათ პაროლის შეცვლა, გთხოვთ, არ მიაქციოთ ყურადღება ამ შეტყობინებას."
+        p3: "თქვენი პაროლი იგივე დარჩება, სანამ არ გადახვალთ ზემოთ მითითებულ ბმულზე და შექმნით ახალ პაროლს."
+  settings:
+    index:
+      title: "მომხმარებლის პარამეტრები"
+      tabs:
+        settings: "პარამეტრები"
+        api: API-ს დაშვების გასაღები
+      api_explanation1: API საშუალებას გაძლევთ პროგრამულად მიიღოთ ინფორმაცია და ჩაატაროთ ანალიზი საიტზე არსებულ მონაცემთა ცხრილსა და პერიოდულ შედარებაში. API-ს ყველა გამოძაღება ითხოვს დაშვების გასაღებს, რომელიც გვამცნობს იმას, თუ ვინ აკეთებს მოთხოვნას. გამოძაღებისთვის უბრალოდ დააჭირეთ ქვემოთ მოცემულ ღილაკს.
+      api_link_text: API-ს დოკუმენტაციის სექცია
+      api_explanation2: "[link]-ზე გადასვლით თქვენ შეგიძლია გაიგოთ მეტი API-ს და დაშვების გასაღების შესახებ. "
+      no_api_keys: "თქვენ არ გაქვთ API-ს დაშვების გასაღები ან ფაილი"
+      get_api: API-ს დაშვების გასაღების მიღება
+      delete_api: API-ს დაშვების გასაღების წაშლა
+  root:
+    index:
+      header_latest_datasets: უახლესი მონაცემები
+      no_datasets: "ამ მომენტისთვის ვებ-გვერდზე არ ჩატვირთულა მონაცემთა ცხრილი"
+      header_latest_time_series: "უახლესი პერიოდული შედარება"
+      no_time_series: "ამ მომენტისთვის ვებ-გვერდზე არ შექმნილა პერიოდული შედარება."
+      wms_title: "კეთილდღეობის <br />მონიტორინგის კვლევა"
+      wms_slogan: "ბავშვთა შინამეურნეობების კეთილდღეობის <br />შედარება <br />2009, 2011 და <br/>2013 წლებში"
+      header_highlights: მნიშვნელოვანი
+      search_datasets: მონაცემთა ძიება
+    contact:
+      title: "კონტაქტი"
+      send: "გაგზავნა"
+      error_title: "პრობლემა წარმოიშვა"
+    instructions:
+      title: "ინსტრუქცია"
+    notes:
+      title: "შენიშვნები"
+    explore_data:
+      title: "მონაცემთა გაცნობა"
+      search_datasets: "მონაცემთა ცხრილის ძებნა"
+      sort_by:
+        this: "დახარისხება"
+        title: "დასახელება"
+        release: "გამოქვეყნების თარიღი"
+        publish: "აქ გამოქვეყნების თარიღი"
+      no_data: "ამ მომენტისთვის ვებ-გვერდზე არ ჩატვირთულა მონაცემთა ცხრილი"
+      no_match: "უკაცრავად, თქვენი არცერთი მოთხოვნა არ ემთხვევა პერიოდული შედარებას"
+    explore_data_datasets:
+      no_match: "უკაცრავად, თქვენი არცერთი მოთხოვნა არ ემთხვევა პერიოდული შედარებას"
+    explore_data_show:
+      title: "პერიოდული შედარების მონაცემების გაცნობა"
+    explore_time_series:
+      title: "პერიოდული შედარების მონაცემების გაცნობა"
+      search_time_series: "პერიოდული შედარების ძებნა"
+      sort_by:
+        this: "დახარისხება"
+        title: "დასახელება"
+        publish: "აქ გამოქვეყნების თარიღი"
+      no_data: "ამ მომენტისთვის ვებ-გვერდზე არ შექმნილა პერიოდული შედარება."
+      no_match: 'უკაცრავად, თქვენს მოთხოვნას არცერთი პერიოდული შედარება არ შეესაბამება'
+    explore_data_time_series:
+      no_match: 'უკაცრავად, თქვენს მოთხოვნას არცერთი პერიოდული შედარება არ შეესაბამება'
+    explore_time_series_show:
+      title: გაეცანით პერიოდული შედარების მონაცემებს
+    highlights:
+      title: Highlights
+      explanation: Below is a collection of data highlights from all datasets and time series. The most recently generated highlights are shown first.
+      no_highlights: Sorry, no highglights have been created yet.
+  api:
+    msgs:
+      no_key: API-ს გამოსაყენებლად თქვენ უნდა წარმაოდგინოთ API-ს დაშვების გასაღები. თქენ მარტივად შეგიძლიათ API-ის დაშვების გასაღების მიღება შემდეგ მისამართზე გადასვლით %{url}.
+      no_dataset: "მონაცემთა ცხრილი ვერ მოიძებნა"
+      no_question: "კითხვა ვერ მოიძებნა"
+      no_broken_down_by: "კითხვებით ჩაშლა ვერ მოიძებნა"
+      no_filtered_by: "კითხვებით გაფილტრვა ვერ მოიძებნა"
+      no_time_series: "პერიოდული შედარება ვერ მოიძებნა"
+      no_time_series_dataset: "პერიოდული შედარებას არ აქვს მასთან დაკავშირებული მონაცემთა ცხრილი."
+      no_time_series_dataset_error: "პერიოდული შედარებაში მონაცემთა ცხრილის მიღების დროს წარმოიშვა პრობლემა."
+      missing_required_params: "Please provide all required parameters."
+    index:
+      title: API
+      no_versions: API-სთვის დოკუმენტაცია ჯერ არ შექმნილა
+      no_methods: "ამ ვერსიისთვის დოკუმენტაცია ჯერ არ შექმნილა"
+    documentation:
+      no_content: "ამ მეთოდისთვის დოკუმენტაცია ჯერ არ შექმნილა"
+  datasets:
+    index:
+      view_warnings: "დეტალების ნახვა"
+    warnings:
+      title: "გაფრთხილება"
+      tab_bad_answers: კითხვები ცუდი პასუხებით
+      tab_no_answers: კითხვები პასუხების გარეშე
+      tab_no_text: კითხვები ტექსტის გარეშე
+      bad_answers: "წინამდებარე კითხვას %{number} გააჩნია ისეთი მნიშვნელობა, რომელიც არ იყო ჩამოთვლილი ერთ-ერთ სავარაუდო პასუხად. ეს მონაცემები, დამატებითი მნიშნელობებით, არ იქნება გამოყენებული ანალიზი დროს."
+      no_answers: "წინამდებარე კითხვას %{number} გააჩნია ისეთი მნიშვნელობა, რომელიც არ იყო ჩამოთვლილი ერთ-ერთ სავარაუდო პასუხად. ეს მონაცემები, დამატებითი მნიშნელობებით, არ იქნება გამოყენებული ანალიზი დროს ვიდრე სავარაუდო პასუხების სია არ იქნება მოწოდებული."
+      no_text: "წინამდებარე კითხვას %{number} გააჩნია ისეთი მნიშვნელობა, რომელიც არ იყო ჩამოთვლილი ერთ-ერთ სავარაუდო პასუხად. ეს მონაცემები, დამატებითი მნიშნელობებით, არ იქნება გამოყენებული ანალიზი დროს ვიდრე ტექსტი არ იქნება მოწოდებული."
+      no_bad_answers: "გილოცავთ! მონაცემების ფაილის ყველა მონაცემი შეიცავს სწორ პასუხს."
+      no_no_answers: "გილოცავთ! მონაცემების ყველა ფაილს აქვს პასუხი."
+      no_no_text: "გილოცავთ! მონაცემების ყველა ფაილს აქვს ტექსტი."
+      no_warnings: "გილოცავთ! თქენი მონაცემები არ შეიცავენ ისეთ საკითხებს რომლებსაც შეუძლიათ ზეგავლენა მოახდინონ მონაცემთა ანალიზზე."
+    mass_changes_questions:
+      title: "Question Mass Changes"
+      explanation: "Use this page to indicate which questions should not be included during analysis and which should be included when the public download's the data."
+      no_questions: "ამ ცხრილისთვის არ არის კითხვები ან ფაილები"
+    mass_changes_answers:
+      title: "Answer Mass Changes"
+      explanation: "Use this page to indicate which answers should not be included during analysis and which answers can be included during analysis, but have the ability to be excluded (e.g., answers like: Don't Know, Refuse to Answer, etc)."
+      no_questions: "ამ ცხრილისთვის არ არის კითხვები ან ფაილები"
+    mappable:
+      title: "გახადოს კითხვა რუკაზე დასატანი"
+      explanation: "გამოყენეთ ეს გვერდი რათა მიუთითოთ როელი კითხვები არიან ბუნებრივად გეოგრაფიული ტიპის, რათა ანალიზის ეკრანს შეეძლოს რუკის გამოყენება."
+      no_shapes: "უკაცრავად, ამ დროისთვის ფაილში არ არის წინასწარ განსაზღვრული რუკები რომლის გამოყენებასაც თქვენ შეძლებდით."
+      add_shapes: "რუკის ფორმის დამატება"
+      add_map_question: "რუკაზე დასატანი კითხვების დამატება"
+    mappable_form:
+      title: "რუკაზე დასატანი კითხვების ფორმა"
+      no_questions: "%{title}'-ში არ არის ისეთი ხელმისაწვდომი კითხვები, რომელიც შეიძლება იყოს რუკაზე დასატანი"
+      no_shapes: "უკაცრავად, ამ დროისთვის ფაილში არ არის წინასწარ განსაზღვრული რუკები რომლის გამოყენებასაც თქვენ შეძლებდით."
+      question_label: "გახადოს კითხვა რუკაზე დასატანი"
+      shapeset_label: "გამოყენებადი რუკა"
+      matching_header: "[question]' დატანა '[shapeset]' რუკაზე "
+      matching_explanation: "[question]'-ის თითოეული პასუხისთვის, აირჩიეთ შესატყვისი რუკის ფორმა '[shapeset]'-დან."
+      adjustable_range_header: Do you want an adjustable scale when mapped?
+      adjustable_range_p1: "Do you want the choropleth map colors to always show results between 0 and 100% or would you prefer that the max range value be adjusted based on the max value of the analysis? Going with an adjustable max value could result in the choropleth map showing more varied colors."
+      adjustable_range_p2: "Let's assume that the following are the resulting percentage values from the analysis: 4, 8, 16, 32, 40. If the question did not use an adjustable max value, the choropleth map colors will vary between 0 and 100%  resulting in 4 and 8 and 16 having very similar, and possibly not discernable, colors. However, if the question did use an adjustable max value, the choropleth map colors will vary between 0 and 40% resulting in 4 and 8 having similar colors, but 16 having a color that is discernable as different."
+    mappable_form_edit:
+      title: "რუკაზე დასატანი კითხვების ფორმა"
+      matching_header: "[question]' დატანა '[shapeset]' რუკაზე "
+      matching_explanation: "[question]'-ის თითოეული პასუხისთვის, აირჩიეთ შესატყვისი რუკის ფორმა '[shapeset]'-დან."
+      adjustable_range_header: Do you want an adjustable scale when mapped?
+      adjustable_range_p1: "Do you want the choropleth map colors to always show results between 0 and 100% or would you prefer that the max range value be adjusted based on the max value of the analysis? Going with an adjustable max value could result in the choropleth map showing more varied colors."
+      adjustable_range_p2: "Let's assume that the following are the resulting percentage values from the analysis: 4, 8, 16, 32, 40. If the question did not use an adjustable max value, the choropleth map colors will vary between 0 and 100%  resulting in 4 and 8 and 16 having very similar, and possibly not discernable, colors. However, if the question did use an adjustable max value, the choropleth map colors will vary between 0 and 40% resulting in 4 and 8 having similar colors, but 16 having a color that is discernable as different."
+    form:
+      reports: "რეფორთები"
+      license: License
+      license_explanation: You may enter a license that lets people know how they can use your data. You can enter your own licensing terms or you can copy a pre-established license like those located at <a class="form-link" href="http://opendatacommons.org/" target="_blank">Open Data Commons</a>. If you provide a license, the Title and Description fields are both required.
+      header_add_report: "მონაცემთა ცხრილში რეფორთის დამატება"
+      saving_text: |
+        Your file is being loaded, the data is being processed and validated, and the download files are being generated - this may take a couple minutes.
+
+        This would be a good time to get some water, go to the bathroom, check your social media updates, or watch that cat video.
+
+        This page will reload when the processing is complete.
+    highlights:
+      title: "მონაცემთა ცხრილის გამორჩეულები"
+      instructions: |
+        გამორჩეული წარმოადგენს ვიზუალს (გრაფები და რუკები) რომელიც თქვენი მონაცემების საინტერესო ასპექტებს უსვამს ხაზს და ნაჩვენებია მთავარ გვერდზე და dashboard-ზე.
+
+        გამორჩეულების დასამატებლად, გადადით მონაცემთა გაცნობის გვერდზე, აირჩიეთ სასურველი ინდიკატორი და შემდეგ გამოჩენილ გრაფიკში დააჭირეთ ვარსკვლავის ღილაკს, რომელიც განთავსებულია ზედა მარცხენა კუთხეში.
+
+        You can use this page to edit a highlight description or delete a highlight.
+      no_highlights: "ფაილში ამ ცხრილისთვის არ არის გამორჩეული"
+      question_code: "კითხვა"
+      broken_down_by_code: "ჩაშლილია"
+      filtered_by_code: "გაფილტრულია"
+      show_home_page: Permanently Shown on Home Page
+      btn_show_home_page: Permanently Show on Home Page
+      questions: Questions
+      description: Description
+    download_data:
+      title: Download Complete Dataset
+      instructions: |
+        You can use this page to download the entire dataset in any format you desire.
+
+        This download is different than what is on the dashboard page in that this download includes the entire dataset, whereas the download from the dashboard page only includes the data that you have indicated can be downloaded by the public.
+      no_files: The download files have not been generated yet. Please check back soon.
+      generating_text: |
+        The download files are being generated.
+
+        This may take a couple minutes if this is a large dataset.
+
+        This page will reload when the processing is complete.
+    sort:
+      title: Sort Groups and Questions
+      explanation: |
+        This page allows you to sort all groups and questions into the order that you desire.
+
+        By defualt, the question sort order is set to be the same as the order of the questions in the data file.
+
+        When groups are added, the group sort order is initially set so the groups appear at the top of the list.
+
+        If you have created groups, you can view and sort the items in that group by clicking on the button in the last column in the table.
+      move_explanation: Move the selected items after this item
+      move_placeholder: Select an Item
+      headers:
+        sort: Sort Order
+        type: Item Type
+        name: Item Name
+      breadcrumb_start: Main Items
+      breadcrumb_title: View all of the main items
+      breadcrumb_title_group: View the items in this group
+      main_items: "Below are the main items - groups that are not subgroups and questions that are not assigned to groups"
+      group_items: "Below are the groups and questions assigned to group '%{name}'"
+      all_types: All Item Types
+      form_header: Instructions
+      form_instructions: |
+        You can sort groups and questions using two methods:
+
+        1) Drag and Drop - Simply drag the row to the desired position.
+        2) Select & Checkboxes - Use the checkboxes to indciate which row(s) you want to move and then use the select box above the table to indicate where to move the row(s) to.
+  questions:
+    index:
+      title: "კითხვების და მათი პასუხების შესწორება"
+      explanation: "გამოიყენეთ ეს გვერდი კითხვის ან/და მისი პასუხის ჩასასწორებლად"
+      mass_changes: "თქვენ ასევე შეგიძლია გამოიყენოთ %{link} რამდენიმე საკითხის ერთხელ შესაცვლელად, ონლაინ ცხრილის ატვირთვით."
+      mass_changes_link: "ფართო ცვლილებების გვერდი"
+      no_questions: "ამ ცხრილისთვის არ არის კითხვები ან ფაილები"
+    show:
+      title: "კითხვა: %{question}"
+      header_answers: "პასუხი"
+      no_answers: "ამ კითხვისთვის არ არის წონასწარ განსაზღვრული პასუხების სია"
+    form:
+      header_answers: "პასუხები"
+      explanation_answers: "პასუხის პარამეტრები (მნიშვნელობა, დახარისხების წყობა, ა.შ.) ნაჩვენებია მხოლოდ '%{lang}' ჩანართში."
+      default_text: "ძირითადი ტექსტი"
+      header_add_answer: "ამ კითხვისთვის ახალი პასუხის დამატება"
+      header_add_missing_answer: "აღნიშნული მნიშვნელობები მონაცემებში არიან, მაგრამ არ არიან მოწოდებულნი როგორც პასუხის ერთ ერთი ვარიანტი. <br/>აირჩიეთ მნიშვნელობა რათა დაამატოთ იგირ როგორც პასუხი და ანალიზმა მოიცვას იგი."
+    mass_changes:
+      title: "კითხვების/პასუხების ფართო ცვლილებები"
+      explanation: "გამოიყენეთ ეს გვერდი კითხვების ან პასუხების ასატვირთად ან მარავალი ჩანაწერის ტექსტისა და პარამეტრების შესაცვლლეად."
+      template: "ნიმუში"
+      upload: "ატვირთეთ თქვენი შესწორებების ონლაინ ცხრილი"
+      questions:
+        header: "კითხვები"
+        template: "ქვემოთ მოცემულ ღილაკზე დაჭერით ჩამოიტვირთება მონაცემთა ცხრილში არსებული ყველა პასუხის ნიმუში. გააკეთეთ თქვენთვის სასურველი ცვლილებები ონლაინ ცხრილში და შემდეგ გამოიყენეთ ქვემოთ მოცემული ფორმა თქვენი ცვლილებების განახლებისთვის."
+        template2: "სვეტები, რომლის შეცვლაც შეუძლებელია: %{code}"
+        template_link: "კითხვების ნიმუშების ჩამოტვირთვა"
+        submit: "კითხვების განახლება"
+      answers:
+        header: "პასუხები"
+        template: "ქვემოთ მოცემულ ღილაკზე დაჭერით ჩამოიტვირთება მონაცემთა ცხრილში არსებული ყველა პასუხის ნიმუში. გააკეთეთ თქვენთვის სასურველი ცვლილებები ონლაინ ცხრილში და შემდეგ გამოიყენეთ ქვემოთ მოცემული ფორმა თქვენი ცვლილებების განახლებისთვის."
+        template2: "სვეტები, რომლის შეცვლაც შეუძლებელია: %{code}, %{value}"
+        template_link: "პასუხების ნიმუშების ჩამოტვირთვა"
+        submit: "პასუხების განახლება"
+  groups:
+    index:
+      title: Group Questions
+      no_groups: There are no groups on file for this dataset.
+      modal:
+        header: "Questions for Group '[group]'"
+      explanation: |
+        This section allows you to put similar questions together in a group. You can also create a subgroup of questions.
+
+        Groups have a name and description. You can use the description to give context to the set of questions in the group.
+
+        Groups will be visible in the codebook and on the explore page. It is up to you on whether or not the group description is included in the chart titles.
+
+        By default, groups are put at the top of the codebook and all ungrouped questions will appear after the groups. You can use the %{link} to further control the order of the groups and questions.
+      explanation_link_text: Sorting page
+    table_row:
+      question_count: '%{num} questions'
+    form:
+      option_top_level: This group is not a subgroup
+      chart_description_explanation: "Below is an example of how your description text will look in the charts. The format is: Question Code - Group Description. Question Text."
+      ex_question: Is the sky blue?
+      questions_explanation_default: "All questions that are not assigned to any other group are avaiable to be assigned to this group."
+      questions_explanation_subgroup: "Only the questions assinged to '%{group}' are available to be assigned to this subgroup."
+  weights:
+    index:
+      title: Dataset Weighting
+      explanation: |
+        This section allows you to identify which question(s) contain a weight value and which questions that weight should be applied to.
+
+        A dataset can have multiple weights, but one must be selected as the default weight. A default weight is automatically applied to all questions. For weights that are not the default weight, you can choose to apply the weight to all of the questions or only specific questions.
+
+        During analysis, if two questions are being compared and they are of different weights, the default weight is used for both.
+      no_weights: There are no weights on file for this dataset.
+      add: Add Weights
+      edit: Edit Weights
+      confirm_delete: Are you sure you want to delete all weights on file?
+      question_count: '%{num} questions'
+      table:
+        headers:
+          name: Weight Name
+          question: Question with Weight
+          default: Is Default Weight?
+          apply_to: Apply Weight To
+      modal:
+        header: "Questions for Weight '[weight]'"
+    new:
+      title: Dataset Weighting Form
+    edit:
+      title: Dataset Weighting Form
+    form:
+      other_weights: Other Weights this Question Belongs To
+  time_series:
+    form:
+      header_datasets: "მონაცემთა ცხრილები"
+      header_add_dataset: "პერიოდული შედარებაში ახალი მონაცემთა ცხრილების დამატება"
+      license: License
+      license_explanation: You may enter a license that lets people know how they can use your data. You can enter your own licensing terms or you can copy a pre-established license like those located at <a class="form-link" href="http://opendatacommons.org/" target="_blank">Open Data Commons</a>. If you provide a license, the Title and Description fields are both required.
+    mass_changes_answers:
+      title: "Answer Mass Changes"
+      explanation: "Use this page to indicate which answers can be included during analysis, but have the ability to be excluded (e.g., answers like: Don't Know, Refuse to Answer, etc)."
+      no_questions: There are no questions on file for this time series.
+    highlights:
+      title: "პერიოდული შედარება გამორჩეული"
+      instructions: |
+        Highlights are visuals (charts and maps) that highlight interesting aspects of your dataset and are shown on the dashboard page and the home page.
+
+        To add a highlight, go to the explore page, select the indicators you want, and then in the charts that appear click the star button in the top left corner.
+
+        You can use this page to edit a highlight description or delete a highlight.
+      no_highlights: "ფაილში ამ პერიოდული შედარებისთვის არ არის გამორჩეული"
+      question_code: "კითხვა"
+      broken_down_by_code: "ჩაშლილია"
+      filtered_by_code: "გაფილტრულია"
+      show_home_page: Permanently Shown on Home Page
+      btn_show_home_page: Permanently Show on Home Page
+      questions: Questions
+      description: Description
+    sort:
+      title: Sort Groups and Questions
+      explanation: |
+        This page allows you to sort all groups and questions into the order that you desire.
+
+        By defualt, the question sort order is set to be the same as the order of the questions in the data file.
+
+        When groups are added, the group sort order is initially set so the groups appear at the top of the list.
+
+        If you have created groups, you can view and sort the items in that group by clicking on the button in the last column in the table.
+      move_explanation: Move the selected items after this item
+      move_placeholder: Select an Item
+      headers:
+        sort: Sort Order
+        type: Item Type
+        name: Item Name
+      breadcrumb_start: Main Items
+      breadcrumb_title: View all of the main items
+      breadcrumb_title_group: View the items in this group
+      main_items: "Below are the main items - groups that are not subgroups and questions that are not assigned to groups"
+      group_items: "Below are the groups and questions assigned to group '%{name}'"
+      all_types: All Item Types
+      form_header: Instructions
+      form_instructions: |
+        You can sort groups and questions using two methods:
+
+        1) Drag and Drop - Simply drag the row to the desired position.
+        2) Select & Checkboxes - Use the checkboxes to indciate which row(s) you want to move and then use the select box above the table to indicate where to move the row(s) to.
+  time_series_questions:
+    index:
+      title: "პერიოდული შედარების კითხვების და პასუხების შესწორება"
+      explanation: "გამოიყენეთ ეს გვერდი პერიოდულ შედარებაში ახალი კითხვების დასამატებლად ან არსებული კითხვების შესასწორებლად"
+      no_questions: "პერიოდული შედარებისთვის კითხვა ან ფაილი ვერ მოიძებნა"
+      btn_add_question: "კითხვის დამატება"
+      btn_add_question_hint: "მოანცემთა თითოეული ცხრილიდან დაამთხვიოს კითხვა და დაამატოს პერიოდულ შედარებაში."
+      btn_automatic: "ავტომატურად დააკავშიროს ერთნაირი კითხვები"
+      btn_automatic_hint: "მონაცემთა თითოეული ცხრილიდან ერთი და იმავე კოდის მქონე კითხვები ავტომატურად დაემატება პერიოდულ შედარებაში. ამის დასრულებას დასჭირდება რამდენიმე წამი."
+      header_dataset_question: "%{title} კითხვა"
+    form:
+      header_answers: "პასუხი"
+      explanation_answers: "პასუხის პარამეტრები (მნიშვნელობა, დახარისხების წყობა, ა.შ.) ნაჩვენებია მხოლოდ '%{lang}' ჩანართში."
+      default_text: "მთავარი ტექსტი"
+      header_add_answer: "ამ კითხვისთვის ახალი პასუხის დამატება"
+      auto_create_answers_link: Auto-Create Answers
+      auto_create_answers_title: For each answer in the questions selected above, add it to the list below
+      delete_all_answers_link: Delete All Answers
+      delete_all_answers_title: Delete all answers below
+    show:
+      title: "კითხვა: %{question}"
+      header_answers: "პასუხი"
+      no_answers: "ამ კითხვისთვის პასუხი ჯერ ვერ მოიძებნა"
+    mass_changes:
+      title: Mass Changes for Questions/Answers
+      explanation: Use this page to upload a spreadsheet of Questions or Answers to quickly change the text or settings for many records at once.
+      template: Template
+      upload: Upload Your Spreadsheet of Changes
+      questions:
+        header: Questions
+        template: Clicking the button below will download a template of all questions in this time series. Make the desired changes in the spreadsheet and then use the form below to update your changes.
+        template2: "The only columns that cannot be changed are: %{code}"
+        template_link: Download Questions Template
+        submit: Update Questions
+      answers:
+        header: Answers
+        template: Clicking the button below will download a template of all answers in this time series. Make the desired changes in the spreadsheet and then use the form below to update your changes.
+        template2: "The only columns that cannot be changed are: %{code}, %{value}"
+        template_link: Download Answers Template
+        submit: Update Answers
+  time_series_groups:
+    index:
+      title: Group Questions
+      no_groups: There are no groups on file for this time series.
+      modal:
+        header: "Questions for Group '[group]'"
+      explanation: |
+        This section allows you to put similar questions together in a group. You can also create a subgroup of questions.
+
+        Groups have a name and description. You can use the description to give context to the set of questions in the group.
+
+        Groups will be visible in the codebook and on the explore page. It is up to you on whether or not the group description is included in the chart titles.
+
+        By default, groups are put at the top of the codebook and all ungrouped questions will appear after the groups. You can use the %{link} to further control the order of the groups and questions.
+      explanation_link_text: Sorting page
+    table_row:
+      question_count: '%{num} questions'
+    form:
+      option_top_level: This group is not a subgroup
+      chart_description_explanation: "Below is an example of how your description text will look in the charts. The format is: Question Code - Group Description. Question Text."
+      ex_question: Is the sky blue?
+      questions_explanation_default: "All questions that are not assigned to any other group are avaiable to be assigned to this group."
+      questions_explanation_subgroup: "Only the questions assinged to '%{group}' are available to be assigned to this subgroup."
+  time_series_weights:
+    index:
+      title: Time Series Weighting
+      explanation: |
+        This section allows you to identify which question(s) contain a weight value and which questions that weight should be applied to.
+
+        A time series can have multiple weights, but one must be selected as the default weight. A default weight is automatically applied to all questions. For weights that are not the default weight, you can choose to apply the weight to all of the questions or only specific questions.
+
+        During analysis, if two questions are being compared and they are of different weights, the default weight is used for both.
+      no_weights: There are no weights on file for this time series.
+      add: Add Weights
+      edit: Edit Weights
+      confirm_delete: Are you sure you want to delete all weights on file?
+      question_count: '%{num} questions'
+      table:
+        headers:
+          name: Weight Name
+          question: Question with Weight
+          default: Is Default Weight?
+          apply_to: Apply Weight To
+      modal:
+        header: "Questions for Weight '[weight]'"
+    new:
+      title: Time Series Weighting Form
+    edit:
+      title: Time SeriesWeighting Form
+    form:
+      other_weights: Other Weights this Question Belongs To
+      weight_question_explanation: Indicate which question to use as the weight by selectig the dataset that has the question and then selecting the question.
+      unique_id_explanation: Select the question from each dataset that contains the unique ID of the responders. This ID will be used to assign the weight to the correct responses in each dataset.
+  shared:
+    explore_data:
+      no_matches: "თქვენი მონიშნული დაბრუნდა მონაცემებში. გთხოვთ სცადოთ თავიდან სხვა მონიშვნით."
+      no_data: "%{title}' არ შეიცავს მონაცემებს, რომლებიც გაანალიზებადია ამ დროისთვის."
+      hover_region: Hover over a Region
+      na: "არ არის ხელმისაწვდომი"
+      percent: "პროცენტი"
+      dataset_title: მონაცემები
+      form:
+        question_code: "გაეცანით პასუხებს"
+        broken_down_by_code: "ჩაშლილია"
+        optional: "არჩევითი"
+        no_comparison: "არ არის შედარება"
+        swap: "კითხვის შეცვლა"
+        submit: "დაანგარიშება"
+        reset: "გადატვირთვა"
+        filtered_by_code: "გაფილტრულია"
+        no_filter: "ფილტრი არ არის"
+        can_exclude: Exclude Answers
+        can_exclude_hint: At least one selected question has answers that can be excluded during analysis. Select this checkbox to remove these answers from the analysis.
+        weighted_by_code: Weighted By
+      jumpto:
+        chart: "გრაფაზე გადასვლა"
+        map: "რუკაზე გადასვლა"
+      tabs:
+        map: "რუკა"
+        chart: "გრაფა"
+        table: "ცხრილი"
+        details: "დეტალები"
+      map:
+        filter: "რუკის გაფილტვრა ამ პასუხის არჩევით '%{text}':"
+    explore_time_series:
+      no_matches: "თქვენი მონიშნული დაბრუნდა მონაცემებში. გთხოვთ სცადოთ თავიდან სხვა მონიშვნით."
+      no_data: "%{title}' არ შეიცავს მონაცემებს, რომლებიც გაანალიზებადია ამ დროისთვის."
+      na: "არ არის ხელმისაწვდომი"
+      percent: "პროცენტი"
+      time_series_title: "პერიოდული შედარება"
+      form:
+        question_code: "გაეცანით პასუხებს"
+        submit: "დაანგარიშება"
+        reset: "გადატვირთვა"
+        filtered_by_code: "გაფილტრულია"
+        no_filter: "ფილტრი არ არის"
+        can_exclude: გამორიცხე "არ ვიცი" & "უარი პასუხზე"
+        can_exclude_hint: ანალიზიდან წაშალე პასუხები "არ ვიცი" & "უარი პასუხზე"
+      jumpto:
+        chart: "გრაფაზე გადასვლა"
+      tabs:
+        chart: "გრაფა"
+        table: "ცხრილი"
+        details: "დეტალები"
+    dashboard_data:
+      tabs:
+        highlights: მნიშვნელოვანი
+        methodology: "მეთოდოლოგია"
+        codebook: "კოდირება"
+        reports: "რეფორთები"
+        licensing: License
+        meta: Metadata
+      no_methodology: "ამ ცხრილისთვის მეთოდოლოგია არ მოიძებნა"
+      no_reports: "ამ ცხრილისთვის რეფორთები არ მოიძებნა"
+      no_highlights: "ამ ცხრილისთვის გამორჩეული არ მოიძებნა"
+      no_license: This dataset currently has no defined license.
+      learn_more: Learn more about this license
+      filter:
+        all: "ყველა ტექსტი"
+        questions: "კითხვის ტექსტი"
+        codes: Question Code
+        answers: "პასუხის ტექსტი"
+      jumpto_group: Jump To Group
+    dashboard_time_series:
+      tabs:
+        highlights: მნიშვნელოვანი
+        methodology: "მეთოდოლოგია"
+        codebook: "კოდირება"
+        reports: "რეფორთები"
+        licensing: License
+        datasets: მონაცემები
+        meta: Meta Data
+      no_highlights: "ამ პერიოდული შედარებისთვის გამორჩეული არ მოიძებნა"
+      no_license: This time series currently has no defined license.
+      learn_more: Learn more about this license
+      filter:
+        all: "ყველა ტექსტი"
+        questions: "კითხვის ტექსტი"
+        codes: Question Code
+        answers: "პასუხის ტექსტი"
+      jumpto_group: Jump To Group
+    language_switcher:
+      label: "ხელმისაწვდომი ენები"
+    embed:
+      v1:
+        title_site: გადასვლა %{app_name} -ზე
+        title_datalist: მონაცემთა ყველა ცხილის ნახვა
+      v2:
+        title_site: გადასვლა %{app_name} -ზე
+        title_datalist: მონაცემთა ყველა ცხილის ნახვა
+  export_data:
+    dataset: "მონაცემთა ცხრილი: %{title}"
+    download_from: "ჩამოტვირთულია აქედან: %{app_name} at %{url}."
+    last_update: "მონაცემები ბოლოს განახლებულია: %{date}"
+    instructions:
+      codebook: "კოდირება არის მონაცემთა ცხრილში არსებული ყველა შესაძლო კითვა და პასუხი. ის წარმოადგენს დამხმარე ცნობარს, რომელიც გეხმარებათ თქვენთვის საინტერესო ინფორმაციის მოძიებაში."
+      csv_main: 'CSV ფაილი არის მონაცემთა ცხრილში არსებული ყველა მონაცემის ონლაინ ცხრილი. თქვენი მისი გახსნა შეგიძლიათ შემდეგი პროგრამების საშუალებით: OpenOffice, Excel, Google Spreadsheets ან სხვა ნებისმიერი ონლაინ ცხრილის პროგრამით.'
+      csv: |
+        CSV-ის ჩამოტვირთვა შეიცავს 2 ფაილს:
+        - კოდირება: %{codebook}
+
+        - CSV: %{csv} CSV ფორმატირებულია სათაურებით (ცვლადი კოდი და სახელი) და პასუხები იყენებენ პასუხის ტექსტს და არა პასუხის მნიშვნელობას.
+      spss: |-
+        SPSS-ის ჩამოტვირთვა შეიცავს 3 ფაილს:
+        - კოდირება: %{codebook}
+
+        - CSV: %{csv} CSV დაფორმატირებულია SPSS-ის ჩატვირთვის ფორმატში, ამიტომ ის არ შეიცავს სათაურს და პასუხები იყენებენ პასუხის მნიშვნელობას და არა პასუხის ტექსტს.
+
+        - SPS: SPS ფაილი არის კოდირებული ფაილი, რომელიც გაიშვება SPSS-ში და ჩატვირთავს მონაცემებს CSV-დან, აგრეთვე ქმნის თითოეულ ცვლად და მის შესაძლო მნიშვნელობას. მნიშვნელოვანია - SPSS-ში კოდირებული ტექსტის გაშვებამდე, თქვენ უნდა განაახლოთ 'DATA LIST FILE' რათა გქონდეთ სრული ხელმისაწვდომობა CSV ფაილამდე.
+      stata: |
+        STATA-ს ჩამოტვირთვა შეიცავს 3 ფაილს:
+        - კოდირება: %{codebook}
+
+        - CSV: %{csv} CSV დაფორმატირებულია STATA-ში ჩასატვირთად, ამიტომ ის არ შეიცავს სათაურებს და პასუხები იყენებენ პასუხის ტექსტს და არა პასუხის მნიშვნელობას.
+
+        - DO: STATA DO ფაილი არის კოდირებული ფაილი, რომელიც გაიშვება STATA-ში და ჩატვირთავს მონაცემებს CSV-დან, აგრეთვე ქმნის თითოეულ ცვლად და მის შესაძლო მნიშვნელობას.
+
+        IMPORTANT - STATA-ში კოდირებული ტექსტის გაშვებამდე, თქვენ უნდა განაახლოთ 'using' ფაილის ბოლოს რათა გქონდეთ სრული ხელმისაწვდომობა CSV ფაილამდე.
+      r: |
+        R ჩამოტვირთვა შეიცავს 3 ფაილს:
+        - კოდირება: %{codebook}
+
+        - CSV: %{csv} CSV დაფორმატებულია R-ში ჩასატვირთად, ამიტომ სათაურები არიან ცვლადები და პასუხები იყენებენ პასუხის მნიშვნელობას და არა პასუხის ტექსტს.
+
+        - R: R არის კოდირებული ფაილი, რომელიც გაიშვება R-ში რომელიც ტვირთავს მონაცემებს CSV-დან და ქმნის თოთიეულ ცვლადს.
+             მნიშვნელოვანია - R-ში კოდირებული ტექსტის გაშვებამდე, თქვენ უნდა განაახლოთ 'setwd' რათა გქონდეთ სრული ხელმისაწვდომობა CSV ფაილამდე.
+  download_data_options:
+    text:
+      csv: CSV
+      spss: SPSS
+      stata: STATA
+      r: R
+    title:
+      csv: "ონლაინ ცხრილისთვის დაფორმატებული მონაცემები"
+      spss: SPSS-სთვის დაფორმატებული მონაცემები
+      stata: STATA-სთვის დაფორმატებული მონაცემები
+      r: R-სთვის დაფორმატებული მონაცემები
