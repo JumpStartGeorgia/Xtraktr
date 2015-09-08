@@ -404,7 +404,7 @@ footer {
       &.user {
         background-color:@3c4352;
         vertical-align:middle;
-        font:16px 'sourcesans_pro_sb', 'sans-serif';
+        font:16px 'sourcesans_pro', 'sans-serif';
         color:@fff;
         float:right;
         z-index:1;
@@ -415,7 +415,7 @@ footer {
         }
       }
       a {
-        font:16px 'sourcesans_pro_sb', 'sans-serif';
+        font:16px 'sourcesans_pro', 'sans-serif';
         color:@fff;
         display:block;
         padding:15px 20px;
@@ -437,7 +437,7 @@ footer {
       {
         .dropdown-toggle
         {
-          padding:15px 26px 15px 20px;
+          padding:15px 30px 15px 20px;
           background:transparent url(/assets/svg/mob/select_arrow.svg) no-repeat center right/21px 6px;
           &:hover { background:transparent url(/assets/svg/mob/select_arrow.svg) no-repeat center right/21px 6px; }
         }
@@ -493,7 +493,7 @@ footer {
 
       &.lang{
         border-left:1px solid @eaeaea;
-        a { padding:15px 9px; }
+        a { padding: 20px 10px 19px 15px; }
 
       }
     }
@@ -537,6 +537,8 @@ footer {
               display:inline-block;
               vertical-align: top;
               padding: 3px 0 0 7px;
+              white-space: normal;
+              max-width: 100px;
             }
             .img
             {
@@ -710,13 +712,20 @@ footer {
           background-color:@f9f9f9;
           float:none;
           white-space:nowrap;
-          font:16px 'sourcesans_pro_sb', 'sans-serif';
+          font:16px 'sourcesans_pro', 'sans-serif';
           color:@3c4352;
-          color:@3c4352;
+          a {
+            &.sign_in {
+              padding:15px 5px 15px 20px;              
+            }
+            &.sign_up {
+              padding:15px 20px 15px 2px;
+            }
+          }
         }
         a
         {
-          font:16px 'sourcesans_pro_sb', 'sans-serif';
+          font:16px 'sourcesans_pro', 'sans-serif';
           color:@3c4352;
 
           padding:15px 20px;
@@ -754,7 +763,16 @@ footer {
         &.open  a.dropdown-toggle { background-color:@f9f9f9; }
         &.sidebar { border-bottom:0px; }
       }
-      .lang { display: table-cell;  height:51px;  }
+      .lang { 
+        display: table-cell;  
+        height:51px;
+        a {
+          font:10px "prime_en";      
+          &:lang(ka) {
+            font:10px 'prime_ka','sans-serif';
+          }  
+        }
+      }
 
       .sidebar {
         position:fixed;
