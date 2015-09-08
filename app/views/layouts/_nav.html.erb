@@ -113,35 +113,37 @@
             <li class="lang"><%= link_to t("app.language.#{locale}"), params.merge(:locale => locale), :lang => locale %></li>
           <% end %>
         <% end %>
-          <li class="sidebaritem sidebar">
-            <div class="box">
-              <ul class="nav in" id="side-menu">
-                <% if !@is_xtraktr %>
-                <li><%= link_to t('.back'), 'http://www.unicef.ge', class: 'unicef', :target => :blank %></li>
-                <% end %>
-                <li><%= link_to_sidebar root_path, 'home' %></li>
-                <li><%= link_to_sidebar explore_data_path, 'datasets' %></li>
-                <% if @is_xtraktr %>
-                  <li><%= link_to_sidebar explore_time_path, 'time_series' %></li>
-                <% end %>
-                <li><%= link_to_sidebar instructions_path, 'instructions' %></li>
-                <li><%= link_to_sidebar api_path, 'api' %></li>
-                <li><%= link_to_sidebar contact_path, 'contact' %></li>
-              </ul>
-              <div class="sidebar-bottom">
-                <div class="share">
-                  <%= link_to '', "https://www.facebook.com/sharer/sharer.php?u=" +  root_url, class: 'facebook', onclick:"javascript:window.open(this.href,
-                              '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;" %>
-                  <% title = content_for?(:title) ? "#{yield(:title)} | #{t("app.common.#{@app_key_name}.app_name")}" : "#{t("app.common.#{@app_key_name}.app_name")} | #{t("app.common.#{@app_key_name}.app_slogan")}".html_safe %>
-                  <%= link_to '',"https://twitter.com/share?text=#{title}" , class: 'twitter', onclick:"javascript:window.open(this.href,
-                              '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;" %>
+        <li class="sidebaritem sidebar">
+          <div class="tbl">
+            <div class="left">
+              <div class="tbl">
+                <div class="top">
+                  <ul class="nav in" id="side-menu">
+                    <li><%= link_to t('.back'), 'http://www.unicef.ge', class: 'unicef', :target => :blank %></li>
+                    <li><%= link_to_sidebar root_path, 'home' %></li>
+                    <li><%= link_to_sidebar explore_data_path, 'datasets' %></li>    
+                    <li><%= link_to_sidebar instructions_path, 'instructions' %></li>
+                    <li><%= link_to_sidebar api_path, 'api' %></li>
+                    <li><%= link_to_sidebar contact_path, 'contact' %></li>
+                  </ul>
                 </div>
-                <%= link_to t('app.menu.disclaimer'), disclaimer_path, class: 'disclaimer' %>
-                <%= link_to t('app.menu.powered_xtraktr').html_safe, @xtraktr_url, class: 'powered_xtratkr', target: :blank, title: t('app.menu.powered_xtraktr_title') %>
+                <div class="bottom">
+                  <div class="sidebar-bottom">
+                    <div class="share">
+                      <%= link_to '', "https://www.facebook.com/sharer/sharer.php?u=" +  root_url, class: 'facebook', onclick:"javascript:window.open(this.href,
+                                  '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;" %>
+                      <% title = content_for?(:title) ? "#{yield(:title)} | #{t("app.common.#{@app_key_name}.app_name")}" : "#{t("app.common.#{@app_key_name}.app_name")} | #{t("app.common.#{@app_key_name}.app_slogan")}".html_safe %>
+                      <%= link_to '',"https://twitter.com/share?text=#{title}" , class: 'twitter', onclick:"javascript:window.open(this.href,
+                                  '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;" %>
+                    </div>
+                    <%= link_to t('app.menu.disclaimer'), disclaimer_path, class: 'disclaimer' %>
+                    <%= link_to t('app.menu.powered_xtraktr').html_safe, @xtraktr_url, class: 'powered_xtratkr', target: :blank, title: t('app.menu.powered_xtraktr_title') %>
+                  </div>
+                </div>
               </div>
             </div>
+            <div class="right"></div>
+          </div>
         </li>
       </ul>
-
-
     </nav>
