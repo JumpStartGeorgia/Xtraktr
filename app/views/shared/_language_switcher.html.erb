@@ -2,21 +2,29 @@
   langs ||= nil
   current_locale ||= I18n.locale.to_s
   share = false if share.nil?
-
-  if langs.present?
 -%>
+
+<% if langs.present? -%>
   <div class="available-language-switcher">
     <label><%= t('.label') %></label>
-    <select>
-      <% langs.each do |lang| %> 
-        <%-
-          select = lang.locale == current_locale ? 'selected' : ''
-        -%>
-        <option <%= select %> value="<%= lang.locale %>"><%= lang.name %></option>
-      <% end %>
-    </select>
+    <div class="dropdown">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        <%= langs.select{|t| t.locale == current_locale }[0].name %>        
+      </a>
+      <ul class="dropdown-menu" role="menu">
+       <% langs.each do |lang| %> 
+          <%-
+            select = lang.locale == current_locale ? 'selected' : ''
+          -%>
+          <li role="menuitem" class="<%= select %>">
+            <%= link_to lang.name, "?language=#{lang.locale}", :lang => lang.locale %>
+          </li>        
+        <% end %>  
+      </ul>
+    </div>
   </div>
 <% end %>
+
 <% if share %>
   <div class="share share-box share-sub"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>
 <% end %>

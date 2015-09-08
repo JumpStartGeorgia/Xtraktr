@@ -178,19 +178,19 @@ $(document).ready(function () {
   });
 
 
-  $('.content > .message').delay(3000).fadeOut(3000);
+  $(".content > .message").delay(3000).fadeOut(3000);
 
   // language switcher for dataset/time series in dashboard/explore pages
   // reload the current page with the language param set
-  $('.available-language-switcher').on('change', 'select', function (e) {
-    e.preventDefault();
+  // $('.available-language-switcher').on('change', 'select', function (e) {
+  //   e.preventDefault();
 
-    var querystring = queryStringToJSON(window.location.href);
-    querystring.language = $(this).val();
+  //   var querystring = queryStringToJSON(window.location.href);
+  //   querystring.language = $(this).val();
 
-    window.location.href = location.protocol + '//' + location.host + location.pathname + '?' + $.param(querystring);
+  //   window.location.href = location.protocol + '//' + location.host + location.pathname + '?' + $.param(querystring);
 
-  });
+  // });
   $('.search .go-submit').click(function () { $(this).closest('form').submit(); });
 
 
