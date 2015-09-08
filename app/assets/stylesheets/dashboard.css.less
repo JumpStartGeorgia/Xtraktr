@@ -227,7 +227,7 @@
           line-height:30px;
           &:hover
           {
-            background-color:#3fceef;
+            background-color:#d1af24;
             color:#fff;
           }
         }
@@ -248,7 +248,7 @@
     clear: both;
     position: relative;
     background-color: @fff;
-    padding: 10px;
+    padding:10px 22px 20px;
     display: inline-block;
     width:49%;
 
@@ -279,17 +279,19 @@
       color:@d67456;
       text-align:center;
       padding:0px;
-      // display:inline-block;
+      position:relative;
       user-select: none;
       vertical-align:top;
       &:before
       {
-        content:"";
         display:inline-block;
+        content:"";
         background:transparent url(/assets/svg/mob/categories.svg) no-repeat center/21px 22px;
         width:21px;
         height:22px;
         margin-right: 10px;
+        position: absolute;
+        left: 0px;
       }
     }
     ul

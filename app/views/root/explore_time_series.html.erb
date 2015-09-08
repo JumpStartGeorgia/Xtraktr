@@ -22,7 +22,7 @@
         <div class="text"><%= t('app.buttons.choose_category').html_safe %>:</div>
       </div>
       <select>
-        <option value="none" <%='selected' if current == 'none' %>><%= t('app.buttons.all_categories') %></option>
+        <option value="none" <%='selected' if current == 'none' %>><%= t('app.common.all_categories') %></option>
         <% @categories.each {|x| %>
           <option value="<%= x.permalink %>" <%='selected' if current == x.permalink %>><%= x.name %></option>
         <% } %>
