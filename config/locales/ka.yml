@@ -636,7 +636,7 @@ ka:
       confirm: "დარწმუნებული ხართ?"
       new: "ახალი"
       save_settings: "პარამეტრების შენახვა"
-      choose_category: "კატეგორიის არჩევა"
+      choose_category: "კატეგორია"
       change_category: "კატეგორიის შეცვლა"
       categories: "კატეგორიები"
       category: "კატეგორია"
@@ -866,7 +866,7 @@ ka:
       search_datasets: "მონაცემთა ძებნა"
     contact:
       title: "კონტაქტი"
-      send: "მონიშნეთ ქვეყანა/ქვეყნები, რომელთაც ეს მონაცემები წარმოადგენენ"
+      send: "გაგზავნა"
       error_title: "წარმოიშვა პრობლემა"
     instructions:
       title: "ინსტრუქცია"
