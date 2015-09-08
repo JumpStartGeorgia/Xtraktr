@@ -42,7 +42,7 @@
     display: inline-block;
     text-align: left;
     max-width: 680px;
-    padding-right: 20px;
+    padding:0 20px 20px 0;
     .slogan{
       font:26px 'sourcesans_pro_l', 'sans-serif';
       color:@3c4352;
@@ -73,23 +73,26 @@
       text-align: left;
       background-color: #fff;
       .dropdown-toggle{
-        font:15px 'sourcesans_pro', 'sans-serif';
-        line-height:16px;
-        color:#d67456;
-        text-align: left;
-        padding: 9px 3px 9px 28px;
         display: block;
+        background: #ffffff url(/assets/svg/select_arrow.svg) no-repeat center right / 21px 7px;
+        font:15px/16px 'sourcesans_pro', 'sans-serif';
+        color:#d67456;
+        padding: 9px 3px 9px 46px;
+        text-align: left;
         &:before
         {
           content:"";
           display:inline-block;
-          background:transparent url(/assets/svg/mob/categories.svg) no-repeat center/21px 22px;
-          width:21px;
-          height:22px;
-          margin-right: 6px;
+          background:transparent url(/assets/svg/mob/categories.svg) no-repeat center/13px 16px;
+          width:13px;
+          height:16px;
           position: absolute;
-          left: 5px;
-          top: 7px;
+          left: 19px;
+          top: 10px;
+        }
+        .after {
+          float: right;
+          margin:6px 10px 0px 2px;
         }
       }
       .dropdown-menu li{
