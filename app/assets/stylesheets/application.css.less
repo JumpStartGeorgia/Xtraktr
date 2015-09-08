@@ -326,6 +326,7 @@ div.message {
           display:inline-block;
           label
           {
+            display:inline-block;
             font:14px 'sourcesans_pro', 'sans-serif';
             font-weight:normal;
             margin:0 12px 0 0;
@@ -333,8 +334,9 @@ div.message {
             color: #4d5563;
             line-height: 30px;
           }
-          select
+          .dropdown
           {
+            display:inline-block;
             font:14px 'sourcesans_pro', 'sans-serif';
             color: @00adee;
             background:rgba(60, 67, 82,0.05) url(/assets/svg/select_arrow.svg) no-repeat center right / 21px 7px;
@@ -343,10 +345,44 @@ div.message {
             min-width:140px;
             height:30px;
             vertical-align:top;
-            outline:none;
-            appearance:none;
-            border-radius: 0px;
-            cursor:pointer;
+ 
+            .dropdown-toggle {
+              display: inline-block;
+              background:rgba(60, 67, 82,0.05) url(/assets/svg/select_arrow.svg) no-repeat center right / 21px 7px;
+              font:14px 'sourcesans_pro', 'sans-serif';
+              color: @d67456;
+
+              text-decoration:none;
+              height:30px;
+              min-width:140px;
+              padding:5px 28px 6px 10px;
+              cursor:pointer;
+            }
+            .dropdown-menu {
+              padding:0;
+              border: 1px solid #f2f2f2;
+              box-shadow:none;
+              border-radius: 0px;
+              outline:none;
+              li 
+              {
+                a {
+                  font: 13px 'sourcesans_pro', 'sans-serif';
+                  line-height: 11px;
+                  color: #636975;
+                  padding:12px 20px;
+                  opacity: 0.8;
+                  &:hover {
+                    opacity:1;
+                  }
+                }
+                &.selected {
+                  a {
+                    opacity:1;
+                  }
+                }
+              }
+            }
           }
         }
 
@@ -411,7 +447,7 @@ div.message {
   }
   @media (min-width: 992px) {
 
-    margin:0px -50px 20px;
+    margin:0px -50px 26px;
     h1
     {
       margin:0px 50px;
@@ -586,7 +622,7 @@ div.message {
       float: left;
     }
     input {
-      font:13px 'opensans_li';
+      font:13px 'sourcesans_pro_li';
       color:@3c4352;
       border-radius: 0px;
       outline:none;
