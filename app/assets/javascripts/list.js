@@ -29,7 +29,7 @@ $(document).ready(function () {
   $(".category[data-filter=category] .dropdown-menu li").click(function () {
     var t = $(this),
       p = t.parent();
-    p.removeClass("selected");
+    p.find("li").removeClass("selected");
     t.addClass("selected");
     p.parent().find(".dropdown-toggle").text(t.text());
     filter();
@@ -46,7 +46,7 @@ $(document).ready(function () {
   $(".sort .dropdown-menu li").click(function () {
     var t = $(this),
       p = t.parent();
-    p.removeClass("selected");
+    p.find("li").removeClass("selected");
     t.addClass("selected");
     p.parent().find(".dropdown-toggle").text(t.text());
     filter();
