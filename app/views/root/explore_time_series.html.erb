@@ -5,29 +5,42 @@
 
   <div class="filters" data-path="<%= explore_time_path %>">
     <div class="search" data-filter='search'><div class="box"><input type="search" placeholder="<%= t('helpers.search') %>"><div class="go"><%= t('app.common.go') %></div></div></div>
+
     <div class="sort"  data-filter='sort'>
       <label><%= t('.sort_by.this') %>:</label>
-      <select>
-        <option value="title"><%= t('.sort_by.title') %></option>
-        <option value="publish"><%= t('.sort_by.publish') %></option>
-      </select>
+      <div class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+          <%= t('.sort_by.title') %>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+          <li role="menuitem" class="selected" data-value="title"><%= t('.sort_by.title') %></li>
+          <li role="menuitem" data-value="publish"><%= t('.sort_by.publish') %></li>
+        </ul>
+      </div>
     </div>
 
-    <div class="category"  data-filter='category'>
-      <%-
-          current = params[:category].present? ? params[:category] : 'none'
-          cat = @categories.select{|x| x.permalink == current}
-      -%>
-      <div class="selector" data-selected="<%= current %>">
-        <div class="text"><%= t('app.buttons.choose_category').html_safe %>:</div>
+    <% if @categories.present? %>
+      <div class="category"  data-filter='category'>
+        <%-
+            current = params[:category].present? ? params[:category] : 'none'
+            cat = @categories.select{|x| x.permalink == current}
+        -%>
+        <label><%= t('app.buttons.choose_category').html_safe %>:</label>
+        <div class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <%= cat.present? ? cat[0].name : t('app.common.all_categories') %>
+          </a>
+          <ul class="dropdown-menu" role="menu">
+            <li role="menuitem" data-value="none" <%= "class=selected" if current == 'none' %>><%= t('app.common.all_categories') %></li>
+            <% @categories.each {|x| %>
+              <li role="menuitem" data-value="<%= x.permalink %>" <%="class=selected" if current == x.permalink %>><%= x.name %></li>
+            <% } %>
+          </ul>
+        </div>
+
       </div>
-      <select>
-        <option value="none" <%='selected' if current == 'none' %>><%= t('app.buttons.all_categories') %></option>
-        <% @categories.each {|x| %>
-          <option value="<%= x.permalink %>" <%='selected' if current == x.permalink %>><%= x.name %></option>
-        <% } %>
-      </select>
-    </div>
+
+    <% end %>
   </div>
 
   <div class="list">

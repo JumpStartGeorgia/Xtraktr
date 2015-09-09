@@ -293,8 +293,16 @@
     }
   }
   #container-table {
+    .dataTables_wrapper
+    {
+      .top {
+        text-align:left;
+      }
+    }
     .dataTables_filter
     {
+      display:inline-block;
+      float:none;
       input {
         font:13px 'sourcesans_pro_li', 'sans-serif';
         color:@3c4352;
@@ -314,8 +322,12 @@
     }
     .dataTables_length
     {
+      display: inline-block;
       font:14px 'sourcesans_pro_l', 'sans-serif';
       color:@3c4352;
+      float:none;
+      padding-left:20px;
+      vertical-align: top;
       /****************************************************/
       /* select box */
       /****************************************************/
@@ -337,9 +349,13 @@
         box-shadow: none;
       }
     }
+    .dataTables_paginate {
+      float:none;
+    }
     .table-data{
       border-collapse: separate;
       border-spacing: 1px 1px;
+      margin:0;
       thead
       {
         .sorting, .sorting_asc, .sorting_desc {
@@ -589,6 +605,7 @@
   /* move the subtitle closer to the title */
   .highcharts-title{
     text-align:center;
+    margin-top: 8px !important;
   }
 
   /* Map Styling */
@@ -1083,4 +1100,8 @@ span.footnote-flag{
   font:14px 'sourcesans_pro_li', 'sans-serif';
   font-style:normal;
   color: #575F6D;
+}
+table.dataTable {
+  margin-top: 6px !important;
+  margin-bottom: 10px !important;
 }
