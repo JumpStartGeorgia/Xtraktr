@@ -435,9 +435,10 @@ footer {
       }
       .dropdown
       {
+        padding-right:20px;
         .dropdown-toggle
         {
-          padding:15px 30px 15px 20px;
+          padding:0 30px 0 0;
           border:0;
           background:transparent url(/assets/svg/mob/select_arrow.svg) no-repeat center right/21px 6px;
           &:hover { background:transparent url(/assets/svg/mob/select_arrow.svg) no-repeat center right/21px 6px; }
@@ -716,12 +717,17 @@ footer {
           white-space:nowrap;
           font:16px 'sourcesans_pro', 'sans-serif';
           color:@3c4352;
+          padding:15px 20px 15px 20px;
           a {
+            padding:0;
             &.sign_in {
-              padding:15px 5px 15px 20px;              
+              padding-right:5px;
             }
             &.sign_up {
-              padding:15px 20px 15px 2px;
+              padding-left:2px;
+            }
+            &:focus {
+              background-color:transparent;
             }
           }
         }

@@ -9,7 +9,7 @@
       </div>
    <% end -%>   
 
-     <% if @enable_omniauth %>
+     <% #if @enable_omniauth %>
        <div class="providers">
          <%- if devise_mapping.omniauthable? %>    	    
    	      <%- resource_class.omniauth_providers.each do |provider| %>
@@ -29,7 +29,7 @@
          <div class="or"><%= t('app.common.or') %></div>
          <div class="midline"></div>
       </div>
-     <% end %>
+     <% #end %>
 
   <%= semantic_form_for(resource, :as => resource_name, :url => session_path(resource_name), :html=>{:"data-form-id"=>"login-form"}) do |f| %>
   	<%= f.error_messages %>

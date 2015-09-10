@@ -354,68 +354,61 @@ class DatasetsController < ApplicationController
 
   # mark which answers to not include in the analysis and which can be excluded during anayalsis
   def mass_changes_answers
-    respond_to do |format|
-      format.html {
-        @js.push("mass_changes_answers.js")
-        @css.push("mass_changes_answers.css")
+    @dataset = Dataset.by_id_for_user(params[:id], current_user.id)
 
-        # create data for datatables (faster to load this way)
-        gon.datatable_json = []
-        @dataset.questions.each_with_index do |question, question_index|
-          question.answers.each_with_index do |answer, answer_index|
-            gon.datatable_json << {
-              code: question.original_code,
-              question: question.text,
-              answer: answer.text,
-              exclude: "<input id='dataset_questions_attributes_#{question_index}_answers_attributes_#{answer_index}_id' name='dataset[questions_attributes][#{question_index}][answers_attributes][#{answer_index}][id]' type='hidden' value='#{answer.id}'><input class='exclude-input' name='dataset[questions_attributes][#{question_index}][answers_attributes][#{answer_index}][exclude]' type='checkbox' value='true' #{answer.exclude? ? 'checked=\'checked\'' : ''}>",
-              can_exclude: "<input class='can-exclude-input' name='dataset[questions_attributes][#{question_index}][answers_attributes][#{answer_index}][can_exclude]' type='checkbox' value='true' #{answer.can_exclude? ? 'checked=\'checked\'' : ''}>"
-            }
+    if @dataset.present?
+
+      respond_to do |format|
+        format.html {
+          @js.push("mass_changes_answers.js")
+          @css.push("mass_changes_answers.css")
+
+          # create data for datatables (faster to load this way)
+          gon.datatable_json = []
+          @dataset.questions.each_with_index do |question, question_index|
+            question.answers.each_with_index do |answer, answer_index|
+              gon.datatable_json << {
+                code: question.original_code,
+                question: question.text,
+                answer: answer.text,
+                exclude: "<input class='exclude-input' type='checkbox' #{answer.exclude? ? 'checked=\'checked\'' : ''} data-id='#{answer.id}' data-orig='#{answer.exclude?}'>",
+                can_exclude: "<input class='can-exclude-input' type='checkbox' #{answer.can_exclude? ? 'checked=\'checked\'' : ''} data-id='#{answer.id}' data-orig='#{answer.can_exclude?}'>"
+              }
+            end
           end
-        end
 
+          add_dataset_nav_options()
+        }
+        format.js {
+          @msg = t('app.msgs.mass_change_answer_saved')
+          @success = true
+          begin
+            @dataset.questions.reflag_answers(:exclude, params[:exclude]) if params[:exclude].present? && params[:exclude].is_a?(Array)
+            @dataset.questions.reflag_answers(:can_exclude, params["can-exclude"]) if params["can-exclude"].present? && params["can-exclude"].is_a?(Array)
 
+            # force question callbacks
+            @dataset.check_questions_for_changes_status = true
 
-        add_dataset_nav_options()
-
-      }
-      format.js {
-        @msg = t('app.msgs.mass_change_answer_saved')
-        @success = true
-        begin
-          # cannot use simple update_attributes for if value was checked but is not now,
-          # no value exists in params and so no changes take place
-          # -> get ids that are true and set them to true
-          # -> set rest to false
-          answers = params[:dataset][:questions_attributes].map{|kq,vq| vq[:answers_attributes]}
-
-          exclude_true_ids = answers.map{|x| x.values}.flatten.select{|x| x[:exclude] == 'true'}.map{|x| x[:id]}
-          exclude_false_ids = answers.map{|x| x.values}.flatten.select{|x| x[:exclude] != 'true'}.map{|x| x[:id]}
-          @dataset.questions.add_answer_exclude(exclude_true_ids)
-          @dataset.questions.remove_answer_exclude(exclude_false_ids)
-
-          can_exclude_true_ids = answers.map{|x| x.values}.flatten.select{|x| x[:can_exclude] == 'true'}.map{|x| x[:id]}
-          can_exclude_false_ids = answers.map{|x| x.values}.flatten.select{|x| x[:can_exclude] != 'true'}.map{|x| x[:id]}
-          @dataset.questions.add_answer_can_exclude(can_exclude_true_ids)
-          @dataset.questions.remove_answer_can_exclude(can_exclude_false_ids)
-
-          # force question callbacks
-          @dataset.check_question_exclude_status = true
-
-          if !@dataset.save
-            @msg = @dataset.errors.full_messages
+            if !@dataset.save
+              @msg = @dataset.errors.full_messages
+              @success = false
+            end
+          rescue Exception => e
+            @msg = t('app.msgs.mass_change_answer_not_saved')
             @success = false
+
+            # send the error notification
+            ExceptionNotifier::Notifier
+              .exception_notification(request.env, e)
+              .deliver
           end
-        rescue Exception => e
-          @msg = t('app.msgs.mass_change_answer_not_saved')
-          @success = false
 
-          # send the error notification
-          ExceptionNotifier::Notifier
-            .exception_notification(request.env, e)
-            .deliver
-        end
-
-      }
+        }
+      end
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to datasets_path(:locale => I18n.locale)
+      return
     end
   end
 

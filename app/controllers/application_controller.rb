@@ -599,7 +599,13 @@ logger.debug "@@@@@@@@@@@@@2 dataset = #{@dataset.inspect}"
   end
 
 	def after_sign_in_path_for(resource)
-		session[:previous_urls].last || request.env['omniauth.origin'] || root_path(:locale => I18n.locale)
+		# session[:previous_urls].last || request.env['omniauth.origin'] || root_path(:locale => I18n.locale)
+    stored_location_for(resource) ||
+    if resource.is_a?(User) && !resource.valid?
+      settings_path
+    else
+      super
+    end
 	end
 
   def valid_role?(role)
