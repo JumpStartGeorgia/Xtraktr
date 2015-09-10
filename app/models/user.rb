@@ -158,11 +158,11 @@ class User
   ## Callbacks
 
   before_create :create_nickname
-  before_validation :test
-  def test
-    logger.debug "@@@@@@@@@@@ reset_password_period_valid = #{self.reset_password_period_valid?}"
-    return true
-  end
+  # before_validation :test
+  # def test
+  #   logger.debug "@@@@@@@@@@@ reset_password_period_valid = #{self.reset_password_period_valid?}"
+  #   return true
+  # end
   def create_nickname
     self.nickname = self.email.split('@')[0] if self.nickname.blank? && self.email.present?
 
@@ -206,19 +206,29 @@ class User
     ROLES.keys[ROLES.values.index(self.role)].to_s
   end
 
-  def self.find_for_facebook_oauth(auth, signed_in_resource=nil)
-    logger.debug "+++++++++++++ #{auth.inspect}"
-    user = User.where(:provider => auth.provider, :uid => auth.uid).first
-    unless user
-      user = User.create(  nickname: auth.info.nickname,
-                           provider: auth.provider,
-                           uid: auth.uid,
-                           email: auth.info.email.present? ? auth.info.email : "<%= Devise.friendly_token[0,10] %>@fake.com",
-                           avatar: auth.info.image,
-                           password: Devise.friendly_token[0,20]
-                           )
+  def self.find_for_facebook_oauth(auth) #, signed_in_resource=nil
+    user = where(provider: auth.provider, uid: auth.uid).first_or_initialize do |user|
+      user.nickname = auth.info.nickname if auth.info.has_key?("nickname")
+      user.first_name = auth.info.first_name if auth.info.has_key?("first_name")
+      user.last_name = auth.info.last_name if auth.info.has_key?("last_name")
+      user.email = auth.info.email.present? ? auth.info.email : "<%= Devise.friendly_token[0,10] %>@fake.com"
+      user.avatar = auth.info.image
+      user.password = Devise.friendly_token[0,20]
     end
+    user.save(validate: false)
     user
+    # logger.debug "+++++++++++++ #{auth.inspect}"
+    # user = User.where(:provider => auth.provider, :uid => auth.uid).first
+    # unless user
+    #   user = User.create(  nickname: auth.info.nickname,
+    #                        provider: auth.provider,
+    #                        uid: auth.uid,
+    #                        email: auth.info.email.present? ? auth.info.email : "<%= Devise.friendly_token[0,10] %>@fake.com",
+    #                        avatar: auth.info.image,
+    #                        password: Devise.friendly_token[0,20]
+    #                        )
+    # end
+    # user
   end
 
   # if login fails with omniauth, sessions values are populated with

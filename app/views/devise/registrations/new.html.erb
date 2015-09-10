@@ -12,7 +12,7 @@
  
   <div class="explanation"><%= t('helpers.links.explanation') %></div> 
   
-  <% if @enable_omniauth %>
+  <% #if @enable_omniauth %>
     <div class="providers">
       <%- if devise_mapping.omniauthable? %>    
 	      <%- model_class.omniauth_providers.each do |provider| %>
@@ -26,9 +26,12 @@
 	      <% end -%>
       <% end -%>
     </div>
-	  <div class="facebook_or_local"><%= t('helpers.links.sign_in_local_or_provider') %></div>
-
-  <% end %>
+    <div class="facebook_or_local">
+       <div class="midline"></div>
+       <div class="or"><%= t('helpers.links.sign_in_local_or_provider') %></div>
+       <div class="midline"></div>
+    </div>
+  <% #end %>
 
   <%= semantic_form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html=>{:"data-form-id"=>"signup-form"}) do |f| %> 
   	<%= f.error_messages %>
