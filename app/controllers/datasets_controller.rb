@@ -290,64 +290,61 @@ class DatasetsController < ApplicationController
 
   # mark which questions to not include in the analysis and which to include in download
   def mass_changes_questions
-    respond_to do |format|
-      format.html {
-        @js.push("mass_changes_questions.js")
-        @css.push("mass_changes_questions.css")
+    @dataset = Dataset.by_id_for_user(params[:id], current_user.id)
 
-        # create data for datatables (faster to load this way)
-        gon.datatable_json = []
-        @dataset.questions.each_with_index do |question, question_index|
-          disabled = question.is_weight? ? 'disabled=\'disabled\'' : ''
-          warning_exclude = question.is_weight? ? "<span class='exclude-warning'>#{view_context.image_tag('svg/exclamation.svg', title: I18n.t('app.msgs.cannot_include_weight'))}</span>" : ''
-          warning_download = question.is_weight? ? "<span class='download-warning'>#{view_context.image_tag('svg/exclamation.svg', title: I18n.t('app.msgs.must_include_weight'))}</span>" : ''
-          gon.datatable_json << {
-            code: question.original_code,
-            text: question.text,
-            exclude: "<input id='dataset_questions_attributes_#{question_index}_id' name='dataset[questions_attributes][#{question_index}][id]' type='hidden' value='#{question.id}'><input class='exclude-input' name='dataset[questions_attributes][#{question_index}][exclude]' type='checkbox' value='true' #{question.exclude? ? 'checked=\'checked\'' : ''} #{disabled}>#{warning_exclude}",
-            download: "<input class='download-input' name='dataset[questions_attributes][#{question_index}][can_download]' type='checkbox' value='true' #{question.can_download? ? 'checked=\'checked\'' : ''} #{disabled}>#{warning_download}"
-          }
-        end
+    if @dataset.present?
 
-        add_dataset_nav_options()
+      respond_to do |format|
+        format.html {
+          @js.push("mass_changes_questions.js")
+          @css.push("mass_changes_questions.css")
 
-      }
-      format.js {
-        begin
-          # cannot use simple update_attributes for if value was checked but is not now,
-          # no value exists in params and so no changes take place
-          # -> get ids that are true and set them to true
-          # -> set rest to false
-          exclude_true_ids = params[:dataset][:questions_attributes].select{|k,v| v[:exclude] == 'true'}.map{|k,v| v[:id]}
-          exclude_false_ids = params[:dataset][:questions_attributes].select{|k,v| v[:exclude] != 'true'}.map{|k,v| v[:id]}
-          @dataset.questions.add_exclude(exclude_true_ids)
-          @dataset.questions.remove_exclude(exclude_false_ids)
-
-          download_true_ids = params[:dataset][:questions_attributes].select{|k,v| v[:can_download] == 'true'}.map{|k,v| v[:id]}
-          download_false_ids = params[:dataset][:questions_attributes].select{|k,v| v[:can_download] != 'true'}.map{|k,v| v[:id]}
-          @dataset.questions.add_can_download(download_true_ids)
-          @dataset.questions.remove_can_download(download_false_ids)
-
-          # force question callbacks
-          @dataset.check_question_exclude_status = true
-
-          @msg = t('app.msgs.mass_change_question_saved')
-          @success = true
-          if !@dataset.save
-            @msg = @dataset.errors.full_messages
-            @success = false
+          # create data for datatables (faster to load this way)
+          gon.datatable_json = []
+          @dataset.questions.each_with_index do |question, question_index|
+            disabled = question.is_weight? ? 'disabled=\'disabled\'' : ''
+            warning_exclude = question.is_weight? ? "<span class='exclude-warning'>#{view_context.image_tag('svg/exclamation.svg', title: I18n.t('app.msgs.cannot_include_weight'))}</span>" : ''
+            warning_download = question.is_weight? ? "<span class='download-warning'>#{view_context.image_tag('svg/exclamation.svg', title: I18n.t('app.msgs.must_include_weight'))}</span>" : ''
+            gon.datatable_json << {
+              code: question.original_code,
+              text: question.text,
+              exclude: "<input class='exclude-input' type='checkbox' #{question.exclude? ? 'checked=\'checked\'' : ''} #{disabled} data-id='#{question.id}' data-orig='#{question.exclude?}'>#{warning_exclude}",
+              download: "<input class='download-input' type='checkbox' #{question.can_download? ? 'checked=\'checked\'' : ''} #{disabled} data-id='#{question.id}' data-orig='#{question.can_download?}'>#{warning_download}"
+            }
           end
-        rescue Exception => e
-          @msg = t('app.msgs.mass_change_question_not_saved')
-          @success = false
 
-          # send the error notification
-          ExceptionNotifier::Notifier
-            .exception_notification(request.env, e)
-            .deliver
-        end
+          add_dataset_nav_options()
+        }
+        format.js {
+          begin
+            @dataset.questions.reflag_questions(:exclude, params[:exclude]) if params[:exclude].present? && params[:exclude].is_a?(Array)
+            @dataset.questions.reflag_questions(:can_download, params[:download]) if params[:download].present? && params[:download].is_a?(Array)
 
-      }
+            # force question callbacks
+            @dataset.check_questions_for_changes_status = true
+
+            @msg = t('app.msgs.mass_change_question_saved')
+            @success = true
+            if !@dataset.save
+              @msg = @dataset.errors.full_messages
+              @success = false
+            end
+          rescue Exception => e
+            @msg = t('app.msgs.mass_change_question_not_saved')
+            @success = false
+
+            # send the error notification
+            ExceptionNotifier::Notifier
+              .exception_notification(request.env, e)
+              .deliver
+          end
+
+        }
+      end
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to datasets_path(:locale => I18n.locale)
+      return
     end
   end
 
@@ -385,9 +382,15 @@ class DatasetsController < ApplicationController
           begin
             @dataset.questions.reflag_answers(:exclude, params[:exclude]) if params[:exclude].present? && params[:exclude].is_a?(Array)
             @dataset.questions.reflag_answers(:can_exclude, params["can-exclude"]) if params["can-exclude"].present? && params["can-exclude"].is_a?(Array)
+<<<<<<< HEAD
 
             # force question callbacks
             @dataset.check_questions_for_changes_status = true
+=======
+
+            # force question callbacks
+            #@dataset.check_question_exclude_status = true
+>>>>>>> mass_change answers and questions was speed up
 
             if !@dataset.save
               @msg = @dataset.errors.full_messages
