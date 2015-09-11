@@ -236,69 +236,20 @@ class Dataset < CustomTranslation
       where(:exlucde => false)
     end
 
-    # mark the question exclude flag as true for the ids provided
-    def add_exclude(ids)
-      where(:_id.in => ids).each do |q|
-        q.exclude = true
+    # questions attribute by flag_name for ids in flags change to opposite
+    def reflag_questions(flag_name, flags)
+      where(:_id.in => flags).each do |q|
+        q[flag_name] = !q[flag_name]
       end
       return nil
     end
-
-    # mark the question exclude flag as false for the ids provided
-    def remove_exclude(ids)
-      where(:_id.in => ids).each do |q|
-        q.exclude = false
+    # answers attribute by flag_name for ids in flags change to opposite
+    def reflag_answers(flag_name, flags)
+      map{|x| x.answers}.flatten.select{|x| flags.index(x.id.to_s).present?}.each do |a|
+        a[flag_name] = !a[flag_name]
       end
       return nil
-    end
-
-    # mark the question can download flag as true for the ids provided
-    def add_can_download(ids)
-      where(:_id.in => ids).each do |q|
-        q.can_download = true
-      end
-      return nil
-    end
-
-    # mark the question can download flag as false for the ids provided
-    def remove_can_download(ids)
-      where(:_id.in => ids).each do |q|
-        q.can_download = false
-      end
-      return nil
-    end
-
-    # mark the answer exclude flag as true for the ids provided
-    def add_answer_exclude(ids)
-      map{|x| x.answers}.flatten.select{|x| ids.index(x.id.to_s).present?}.each do |a|
-        a.exclude = true
-      end
-      return nil
-    end
-
-    # mark the answer exclude flag as false for the ids provided
-    def remove_answer_exclude(ids)
-      map{|x| x.answers}.flatten.select{|x| ids.index(x.id.to_s).present?}.each do |a|
-        a.exclude = false
-      end
-      return nil
-    end
-
-    # mark the answer can_exclude flag as true for the ids provided
-    def add_answer_can_exclude(ids)
-      map{|x| x.answers}.flatten.select{|x| ids.index(x.id.to_s).present?}.each do |a|
-        a.can_exclude = true
-      end
-      return nil
-    end
-
-    # mark the answer can_exclude flag as false for the ids provided
-    def remove_answer_can_exclude(ids)
-      map{|x| x.answers}.flatten.select{|x| ids.index(x.id.to_s).present?}.each do |a|
-        a.can_exclude = false
-      end
-      return nil
-    end
+    end  
 
     # get questions that are mappable
     def mappable

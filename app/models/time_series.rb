@@ -197,7 +197,12 @@ class TimeSeries < CustomTranslation
     def available_to_be_weights(current_code=nil)
       nin(:code => base.weights.weight_codes(current_code)).where(has_code_answers: false)
     end
-
+    def reflag_answers(flag_name, flags)
+      map{|x| x.answers}.flatten.select{|x| flags.index(x.id.to_s).present?}.each do |a|
+        a[flag_name] = !a[flag_name]
+      end
+      return nil
+    end
     # mark the answer can_exclude flag as true for the ids provided
     def add_answer_can_exclude(ids)
       map{|x| x.answers}.flatten.select{|x| ids.index(x.id.to_s).present?}.each do |a|

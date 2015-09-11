@@ -360,32 +360,20 @@ class DatasetsController < ApplicationController
             gon.datatable_json << {
               code: question.original_code,
               text: question.text,
-              exclude: "<input id='dataset_questions_attributes_#{question_index}_id' name='dataset[questions_attributes][#{question_index}][id]' type='hidden' value='#{question.id}'><input class='exclude-input' name='dataset[questions_attributes][#{question_index}][exclude]' type='checkbox' value='true' #{question.exclude? ? 'checked=\'checked\'' : ''} #{disabled}>#{warning_exclude}",
-              download: "<input class='download-input' name='dataset[questions_attributes][#{question_index}][can_download]' type='checkbox' value='true' #{question.can_download? ? 'checked=\'checked\'' : ''} #{disabled}>#{warning_download}"
+              exclude: "<input class='exclude-input' type='checkbox' #{question.exclude? ? 'checked=\'checked\'' : ''} #{disabled} data-id='#{question.id}' data-orig='#{question.exclude?}'>#{warning_exclude}",
+              download: "<input class='download-input' type='checkbox' #{question.can_download? ? 'checked=\'checked\'' : ''} #{disabled} data-id='#{question.id}' data-orig='#{question.can_download?}'>#{warning_download}"
             }
           end
 
           add_dataset_nav_options()
-
         }
         format.js {
           begin
-            # cannot use simple update_attributes for if value was checked but is not now,
-            # no value exists in params and so no changes take place
-            # -> get ids that are true and set them to true
-            # -> set rest to false
-            exclude_true_ids = params[:dataset][:questions_attributes].select{|k,v| v[:exclude] == 'true'}.map{|k,v| v[:id]}
-            exclude_false_ids = params[:dataset][:questions_attributes].select{|k,v| v[:exclude] != 'true'}.map{|k,v| v[:id]}
-            @dataset.questions.add_exclude(exclude_true_ids)
-            @dataset.questions.remove_exclude(exclude_false_ids)
-
-            download_true_ids = params[:dataset][:questions_attributes].select{|k,v| v[:can_download] == 'true'}.map{|k,v| v[:id]}
-            download_false_ids = params[:dataset][:questions_attributes].select{|k,v| v[:can_download] != 'true'}.map{|k,v| v[:id]}
-            @dataset.questions.add_can_download(download_true_ids)
-            @dataset.questions.remove_can_download(download_false_ids)
+            @dataset.questions.reflag_questions(:exclude, params[:exclude]) if params[:exclude].present? && params[:exclude].is_a?(Array)
+            @dataset.questions.reflag_questions(:can_download, params[:download]) if params[:download].present? && params[:download].is_a?(Array)
 
             # force question callbacks
-            @dataset.check_question_exclude_status = true
+            #@dataset.check_question_exclude_status = true
 
             @msg = t('app.msgs.mass_change_question_saved')
             @success = true
@@ -432,45 +420,28 @@ class DatasetsController < ApplicationController
                 code: question.original_code,
                 question: question.text,
                 answer: answer.text,
-                exclude: "<input id='dataset_questions_attributes_#{question_index}_answers_attributes_#{answer_index}_id' name='dataset[questions_attributes][#{question_index}][answers_attributes][#{answer_index}][id]' type='hidden' value='#{answer.id}'><input class='exclude-input' name='dataset[questions_attributes][#{question_index}][answers_attributes][#{answer_index}][exclude]' type='checkbox' value='true' #{answer.exclude? ? 'checked=\'checked\'' : ''} data-id='#{answer.id}' data-orig='#{answer.exclude?}'>",
-                can_exclude: "<input class='can-exclude-input' name='dataset[questions_attributes][#{question_index}][answers_attributes][#{answer_index}][can_exclude]' type='checkbox' value='true' #{answer.can_exclude? ? 'checked=\'checked\'' : ''} data-id='#{answer.id}' data-orig='#{answer.can_exclude?}'>"
+                exclude: "<input class='exclude-input' type='checkbox' #{answer.exclude? ? 'checked=\'checked\'' : ''} data-id='#{answer.id}' data-orig='#{answer.exclude?}'>",
+                can_exclude: "<input class='can-exclude-input' type='checkbox' #{answer.can_exclude? ? 'checked=\'checked\'' : ''} data-id='#{answer.id}' data-orig='#{answer.can_exclude?}'>"
               }
             end
           end
 
-
-
           add_dataset_nav_options()
-
         }
         format.js {
           @msg = t('app.msgs.mass_change_answer_saved')
           @success = true
           begin
-             Rails.logger.debug("--------------------------------------------#{params.inspect}")
-            # cannot use simple update_attributes for if value was checked but is not now,
-            # no value exists in params and so no changes take place
-            # -> get ids that are true and set them to true
-            # -> set rest to false
-            # answers = params[:dataset][:questions_attributes].map{|kq,vq| vq[:answers_attributes]}
+            @dataset.questions.reflag_answers(:exclude, params[:exclude]) if params[:exclude].present? && params[:exclude].is_a?(Array)
+            @dataset.questions.reflag_answers(:can_exclude, params["can-exclude"]) if params["can-exclude"].present? && params["can-exclude"].is_a?(Array)
+   
+            # force question callbacks
+            #@dataset.check_question_exclude_status = true
 
-            # exclude_true_ids = answers.map{|x| x.values}.flatten.select{|x| x[:exclude] == 'true'}.map{|x| x[:id]}
-            # exclude_false_ids = answers.map{|x| x.values}.flatten.select{|x| x[:exclude] != 'true'}.map{|x| x[:id]}
-            # @dataset.questions.add_answer_exclude(exclude_true_ids)
-            # @dataset.questions.remove_answer_exclude(exclude_false_ids)
-
-            # can_exclude_true_ids = answers.map{|x| x.values}.flatten.select{|x| x[:can_exclude] == 'true'}.map{|x| x[:id]}
-            # can_exclude_false_ids = answers.map{|x| x.values}.flatten.select{|x| x[:can_exclude] != 'true'}.map{|x| x[:id]}
-            # @dataset.questions.add_answer_can_exclude(can_exclude_true_ids)
-            # @dataset.questions.remove_answer_can_exclude(can_exclude_false_ids)
-
-            # # force question callbacks
-            # @dataset.check_question_exclude_status = true
-
-            # if !@dataset.save
-            #   @msg = @dataset.errors.full_messages
-            #   @success = false
-            # end
+            if !@dataset.save
+              @msg = @dataset.errors.full_messages
+              @success = false
+            end
           rescue Exception => e
             @msg = t('app.msgs.mass_change_answer_not_saved')
             @success = false
@@ -489,59 +460,6 @@ class DatasetsController < ApplicationController
       return
     end
   end
-
-  # # mark which answers users can select to not include in the analysis
-  # # during analysis
-  # def can_exclude_answers
-  #   @dataset = Dataset.by_id_for_user(params[:id], current_user.id)
-
-  #   if @dataset.present?
-
-  #     respond_to do |format|
-  #       format.html {
-  #         @js.push("exclude_answers.js")
-  #         @css.push("exclude_answers.css")
-
-  #         add_dataset_nav_options()
-
-  #       }
-  #       format.js {
-  #         @msg = t('app.msgs.answer_can_exclude_saved')
-  #         @success = true
-  #         begin
-  #           # cannot use simple update_attributes for if value was checked but is not now,
-  #           # no value exists in params and so no changes take place
-  #           # -> get ids that are true and set them to true
-  #           # -> set rest to false
-  #           answers = params[:dataset][:questions_attributes].map{|kq,vq| vq[:answers_attributes]}
-  #           true_ids = answers.map{|x| x.values}.flatten.select{|x| x[:can_exclude] == 'true'}.map{|x| x[:id]}
-  #           false_ids = answers.map{|x| x.values}.flatten.select{|x| x[:can_exclude] != 'true'}.map{|x| x[:id]}
-
-  #           @dataset.questions.add_answer_can_exclude(true_ids)
-  #           @dataset.questions.remove_answer_can_exclude(false_ids)
-
-  #           if !@dataset.save
-  #             @msg = @dataset.errors.full_messages
-  #             @success = false
-  #           end
-  #         rescue Exception => e
-  #           @msg = t('app.msgs.question_can_exclude_not_saved')
-  #           @success = false
-
-  #           # send the error notification
-  #           ExceptionNotifier::Notifier
-  #             .exception_notification(request.env, e)
-  #             .deliver
-  #         end
-
-  #       }
-  #     end
-  #   else
-  #     flash[:info] =  t('app.msgs.does_not_exist')
-  #     redirect_to datasets_path(:locale => I18n.locale)
-  #     return
-  #   end
-  # end
 
   # show which questions are assign to shape sets
   def mappable
