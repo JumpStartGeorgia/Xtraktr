@@ -13,55 +13,53 @@
       <% end %>
       <h1><%=@owner.name%></h1>
       <div class="info">
-        <div class="timestamps">
-          <div class="country">
-            <span><%= model_class.human_attribute_name(:residence) %>:</span>
-            <%= @owner.residence %>
-          </div>
-          <% if @owner.is_user? %>
-            <div class="affiliation">
-              <span><%= model_class.human_attribute_name(:affiliation) %>:</span>
-              <%= @owner.affiliation %>
-            </div>
-          <% end %>
-          <div class="status">
-            <span><%= model_class.human_attribute_name(:status) %>:</span>
-            <%= @owner.status_name %>
-          </div>
-          <% if @owner.website_url.present? %>
-            <div class="website_url">
-              <span><%= model_class.human_attribute_name(:website_url) %>:</span>
-              <%= link_to @owner.website_url, @owner.website_url, target: :blank %>
-            </div>
-          <% end %>
-          <% if @owner.email.present? && !@owner.is_user? %>
-            <div class="email">
-              <span><%= model_class.human_attribute_name(:email) %>:</span>
-              <%= mail_to @owner.email %>
-            </div>
-          <% end %>
-          <% if @owner.phone.present? && !@owner.is_user? %>
-            <div class="phone">
-              <span><%= model_class.human_attribute_name(:phone) %>:</span>
-              <%= @owner.phone %>
-            </div>
-          <% end %>
-          <% if @owner.is_user? && @owner.belongs_to_groups?%>
-            <div class="organizations">
-              <span><%= model_class.human_attribute_name(:organizations) %>:</span>
-              <ul class="list-unstyled">
-                <% @owner.groups.each do |group| %>
-                  <li><%= link_to group.group.name, owner_dashboard_path(group.group) %></li>
-                <% end %>
-              </ul>
-            </div>
-          <% end %>
+        <div class="country">
+          <span><%= model_class.human_attribute_name(:residence) %>:</span>
+          <%= @owner.residence %>
         </div>
+        <% if @owner.is_user? %>
+          <div class="affiliation">
+            <span><%= model_class.human_attribute_name(:affiliation) %>:</span>
+            <%= @owner.affiliation %>
+          </div>
+        <% end %>
+        <div class="status">
+          <span><%= model_class.human_attribute_name(:status) %>:</span>
+          <%= @owner.status_name %>
+        </div>
+        <% if @owner.website_url.present? %>
+          <div class="website_url">
+            <span><%= model_class.human_attribute_name(:website_url) %>:</span>
+            <%= link_to @owner.website_url, @owner.website_url, target: :blank %>
+          </div>
+        <% end %>
+        <% if @owner.email.present? && !@owner.is_user? %>
+          <div class="email">
+            <span><%= model_class.human_attribute_name(:email) %>:</span>
+            <%= mail_to @owner.email %>
+          </div>
+        <% end %>
+        <% if @owner.phone.present? && !@owner.is_user? %>
+          <div class="phone">
+            <span><%= model_class.human_attribute_name(:phone) %>:</span>
+            <%= @owner.phone %>
+          </div>
+        <% end %>
+        <% if @owner.is_user? && @owner.belongs_to_groups?%>
+          <div class="organizations">
+            <span><%= model_class.human_attribute_name(:organizations) %>:</span>
+            <ul class="list-unstyled">
+              <% @owner.groups.each do |group| %>
+                <li><%= link_to group.group.name, owner_dashboard_path(group.group) %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
       </div>
     </div>
     <div class="col">
       <% if @owner.description.present? %>
-        <%= simple_format(@owner.description) %>
+        <div class="description"><%= simple_format(@owner.description) %></div>
       <% end %>
     </div>
   </div>
