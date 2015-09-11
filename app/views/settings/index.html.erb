@@ -44,8 +44,11 @@
         <%= f.error_messages %>
 
         <%= f.inputs do %>
-          <%= render :partial => 'devise/registrations/edit', :locals => { f: f, resource: @user } %>
-
+          <% if @user.is_user? %>
+            <%= render :partial => 'devise/registrations/edit', :locals => { f: f, resource: @user } %>
+          <% else %>
+          <%= render :partial => 'devise/registrations/group', :locals => { f: f, resource: @user } %>
+          <% end %>
         <% end %>
 
         <div class="form-group">
@@ -56,12 +59,20 @@
 
     <% if @user.is_user? %>
       <div role="tabpanel" class="tab-pane fade <%= organizations_active[:panel] %>" id="organizations">
+        <p>
+          <%= t('.org_explanation') %>
+        </p>
+        <p id="btn-add">
+          <%= link_to t('.org_add'), settings_organization_new_path(@owner) %>
+        </p>
+
         <% if @user.has_groups? %>
           <table class="table table-striped table-hover table-nonfluid">
             <thead>
               <tr>
                 <th></th>
                 <th><%= u_model_class.human_attribute_name(:org_name) %></th>
+                <th><%= u_model_class.human_attribute_name(:dataset_count) %></th>
                 <th><%= u_model_class.human_attribute_name(:created_at) %></th>
                 <th></th>
               </tr>
@@ -69,14 +80,34 @@
             <tbody>
               <% @user.groups.each do |group| %>
                 <tr>
-                  <td><%= image_tag(group.group.avatar.url(:small)) %></td>
-                  <td><%= group.group.name %></td>
+                  <td>
+                    <%= link_to params.merge(owner_id: group.group, page: nil), class: 'btn btn-xs btn-default', title: t('.switch_to_org') do %>
+                      <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                    <% end %>
+                    <%= link_to settings_organization_leave_path(owner_id: group.group, id: group.group_id),
+                          class: 'btn btn-xs btn-default', title: t('.leave_org'),
+                          :method => :delete,
+                          :data => { :confirm => I18n.t("helpers.links.confirm") } do %>
+                      <span class="glyphicon glyphicon-minus-sign" aria-hidden="true"></span>
+                    <% end %>
+                  </td>
+                  <td>
+                      <%#= image_tag(group.group.avatar.url(:small)) %>
+                      <%= group.group.name %>
+                  </td>
+                  <td><%= number_with_delimiter(group.group.dataset_count) %></td>
                   <td><%= l(group.group.created_at.to_date, format: :day_first) %></td>
                   <td>
                     <%= link_to '',
-                                settings_edit_organization_path(@owner, group.group),
-                                :'data-placement' => 'right',
+                                settings_organization_edit_path(@owner, group.group),
+                                :title => t('helpers.links.edit'),
                                 :class => 'btn btn-xs btn-edit' %>
+                    <%= link_to '',
+                                settings_organization_delete_path(@owner, group.group),
+                                :title => t("helpers.links.destroy"),
+                                :method => :delete,
+                                :data => { :confirm => I18n.t("helpers.links.confirm") },
+                                :class => 'btn btn-xs btn-delete' %>
                   </td>
                 </tr>
               <% end %>
@@ -90,12 +121,19 @@
       </div>
     <% else %>
       <div role="tabpanel" class="tab-pane fade <%= members_active[:panel] %>" id="members">
+        <p>
+          <%= t('.member_explanation') %>
+        </p>
+        <p id="btn-add">
+          <%= link_to t('.member_add'), settings_member_new_path(@owner) %>
+        </p>
+
         <% if @user.has_members? %>
           <table class="table table-striped table-hover table-nonfluid">
             <thead>
               <tr>
-                <th></th>
                 <th><%= u_model_class.human_attribute_name(:name) %></th>
+                <th><%= u_model_class.human_attribute_name(:dataset_count) %></th>
                 <th><%= u_model_class.human_attribute_name(:created_at) %></th>
                 <th></th>
               </tr>
@@ -103,10 +141,19 @@
             <tbody>
               <% @user.members.each do |member| %>
                 <tr>
-                  <td><%= image_tag(member.member.avatar.url(:small)) %></td>
-                  <td><%= member.member.name %></td>
+                  <td>
+                    <%#= image_tag(member.member.avatar.url(:small)) %>
+                    <%= member.member.name %>
+                  </td>
+                  <td><%= number_with_delimiter(member.member.dataset_count) %></td>
                   <td><%= l(member.created_at.to_date, format: :day_first) %></td>
                   <td>
+                    <%= link_to '',
+                                settings_member_delete_path(@owner, member.member),
+                                :title => t("helpers.links.destroy"),
+                                :method => :delete,
+                                :data => { :confirm => I18n.t("helpers.links.confirm") },
+                                :class => 'btn btn-xs btn-delete' %>
                   </td>
                 </tr>
               <% end %>
@@ -126,7 +173,7 @@
       <p><%= t('.api_explanation1') %></p>
       <p><%= t('.api_explanation2').gsub('[link]', link_to(t('.api_link_text'), api_path)).html_safe %></p>
 
-      <p id="btn-add-api-key">
+      <p id="btn-add">
         <%= link_to t('.get_api'), settings_get_api_token_path(@owner), method: :post %>
       </p>
 

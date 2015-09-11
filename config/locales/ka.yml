@@ -3,7 +3,8 @@ ka:
   mongoid:
     models:
       user: "მომხმარებელი"
-      group: Organization
+      organization: Organization
+      member: Member
       page_content: "ტექსტი გვერდებისთვის"
       dataset: მონაცემები
       shapeset: "ფორმების ცხრილი"
@@ -38,19 +39,22 @@ ka:
         last_name: "გვარი"
         name: "სახელი"
         age_group: "ასაკობრივი ჯგუფი"
-        residence: "საცხოვრებელი ქვეყანა"
+        residence: "ქვეყანა"
         affiliation: "დაწესებულება"
-        status: "სტატუსი"
+        status: "კატეგორია"
         status_other: "როდესაც სხვა (გთხოვთ მიუთითოთ)"
-        description: "Short summary (<i>არჩევითი</i>)"
+        description: "Brief Description of Yourself (<i>არჩევითი</i>)"
         notifications: "ახალი მონაცემების დამატების დროს მინდა შეტყობინების მიღება"
         notification_locale: "შეტყობინების ენა"
         phone: Phone Number
-        website_url: Web Address
+        website_url: Website
         permalink: Name in URL
         org_name: Organization Name
+        org_description: Organization Description
         avatar: Avatar
         created_at: Added On
+        dataset_count: Number of Datasets
+        organizations: Organizations
       message:
         name: "სახელი"
         email: "ელ.ფოსტის მისამართი"
@@ -105,6 +109,8 @@ ka:
         license_title: License Title
         license_description: License Description
         license_url: License URL
+        user_id: Uploaded By
+        owner_id: Maintain Under Account
       stats:
         questions_analyzable: Analyzable Questions
         public_questions_analyzable: Public Analyzable Questions
@@ -177,6 +183,7 @@ ka:
         license_title: License Title
         license_description: License Description
         license_url: License URL
+        user_id: Uploaded By
       time_series_dataset:
         dataset_id: მონაცემები
         title: "ეტიკეტი"
@@ -295,6 +302,7 @@ ka:
         license_title: The title of the license
         license_description: A brief description of the license
         license_url: A URL to webpage that has more information about the license
+        owner_id: Select the account that you want the dataset to be stored under
       shapeset:
         title: სახელწოდება ფორმების კრებულისთვის
         description: "ფორმების ცხრილის შინაარსის მოკლე აღწერა"
@@ -743,6 +751,7 @@ ka:
       highlights: Highlights
       about: About
       settings: Settings
+      owner_dashboard: Dashboard
       about_dataset: "შესახებ"
       about_time_series: "შესახებ"
       all_datasets: "მონაცემების ყველა ცხრილი"
@@ -858,6 +867,12 @@ ka:
         organizations: Organizations
         members: Members
         api: API-ს დაშვების გასაღები
+      org_explanation: Xtraktr Organization's allow you to load datasets under an organization's name instead of an individual person. You can be the sole administrator of the organization or you can invite other people to join your organization and help administer your datasets.
+      org_add: Create An Organization
+      switch_to_org: Switch to Organization Account
+      leave_org: Stop Being a Member of this Organization
+      member_explanation: Members are the users that have access to manage the datasets in your organization.
+      member_add: Add a Member
       api_explanation1: API საშუალებას გაძლევთ პროგრამულად მიიღოთ ინფორმაცია და ჩაატაროთ ანალიზი საიტზე არსებულ მონაცემთა ცხრილსა და პერიოდულ შედარებაში. API-ს ყველა გამოძაღება ითხოვს დაშვების გასაღებს, რომელიც გვამცნობს იმას, თუ ვინ აკეთებს მოთხოვნას. გამოძაღებისთვის უბრალოდ დააჭირეთ ქვემოთ მოცემულ ღილაკს.
       api_link_text: API-ს დოკუმენტაციის სექცია
       api_explanation2: "[link]-ზე გადასვლით თქვენ შეგიძლია გაიგოთ მეტი API-ს და დაშვების გასაღების შესახებ. "
@@ -866,8 +881,10 @@ ka:
       delete_api: API-ს დაშვების გასაღების წაშლა
       no_groups: You do not belong to any organizations.
       no_members: This group does not have any members.
-    edit_organization:
-      title: Edit Organization
+    organization_new:
+      title: Create An Organization
+    organization_edit:
+      title: Edit An Organization
   root:
     index:
       header_latest_datasets: უახლესი მონაცემები
@@ -1372,6 +1389,12 @@ ka:
         codes: Question Code
         answers: "პასუხის ტექსტი"
       jumpto_group: Jump To Group
+    dashboard_owner:
+      tabs:
+        user_datasets: User Datasets <span class="num">(%{num})</span>
+        user_time_series: User Time Series <span class="num">(%{num})</span>
+      no_datasets: The user has not loaded any datasets.
+      no_time_series: The user has not loaded any time series.
     language_switcher:
       label: "ხელმისაწვდომი ენები"
     embed:

@@ -3,7 +3,8 @@ en:
   mongoid:
     models:
       user: User
-      group: Organization
+      organization: Organization
+      member: Member
       page_content: Text for Pages
       dataset: Dataset
       shapeset: Shapeset
@@ -38,19 +39,22 @@ en:
         last_name: Last Name
         name: Name
         age_group: Age Group
-        residence: Country of Residence
+        residence: Country
         affiliation: Affiliation
-        status: Status
+        status: Category
         status_other: When other (Please specify)
-        description: Short summary (<i>optional</i>)
+        description:  Brief Description of Yourself (<i>optional</i>)
         notifications: I want to receive notifications when new datasets are added
         notification_locale: Notification Language
         phone: Phone Number
-        website_url: Web Address
+        website_url: Website
         permalink: Name in URL
         org_name: Organization Name
+        org_description: Organization Description
         avatar: Avatar
         created_at: Added On
+        dataset_count: Number of Datasets
+        organizations: Organizations
       message:
         name: Name
         email: Email Address
@@ -105,6 +109,8 @@ en:
         license_title: License Title
         license_description: License Description
         license_url: License URL
+        user_id: Uploaded By
+        owner_id: Maintain Under Account
       stats:
         questions_analyzable: Analyzable Questions
         public_questions_analyzable: Public Analyzable Questions
@@ -177,6 +183,7 @@ en:
         license_title: License Title
         license_description: License Description
         license_url: License URL
+        user_id: Uploaded By
       time_series_dataset:
         dataset_id: Dataset
         title: Label
@@ -295,6 +302,7 @@ en:
         license_title: The title of the license
         license_description: A brief description of the license
         license_url: A URL to webpage that has more information about the license
+        owner_id: Select the account that you want the dataset to be stored under
       shapeset:
         title: The title of your shapeset
         description: Short summary of what is in the shapeset
@@ -743,6 +751,7 @@ en:
       highlights: Highlights
       about: About
       settings: Settings
+      owner_dashboard: Dashboard
       about_dataset: About
       about_time_series: About
       all_datasets: All Datasets
@@ -858,6 +867,12 @@ en:
         organizations: Organizations
         members: Members
         api: API Access Tokens
+      org_explanation: Xtraktr Organization's allow you to load datasets under an organization's name instead of an individual person. You can be the sole administrator of the organization or you can invite other people to join your organization and help manage your datasets.
+      org_add: Create An Organization
+      switch_to_org: Switch to Organization Account
+      leave_org: Stop Being a Member of this Organization
+      member_explanation: Members are the users that have access to manage the datasets in your organization.
+      member_add: Add a Member
       api_explanation1: The API allows you to programmatically get information and run analyses on the datasets and time series available on this site. All API calls require an access token - a key that let's us know who is making the request. To get one, simply press the button below.
       api_link_text: API Documentation section
       api_explanation2: You can learn more about the API and how to use the Access Token by going to the [link].
@@ -866,8 +881,10 @@ en:
       delete_api: Delete API Access Token
       no_groups: You do not belong to any organizations.
       no_members: This group does not have any members.
-    edit_organization:
-      title: Edit Organization
+    organization_new:
+      title: Create An Organization
+    organization_edit:
+      title: Edit An Organization
   root:
     index:
       header_latest_datasets: Latest Datasets
@@ -1372,6 +1389,12 @@ en:
         codes: Question Code
         answers: Answer Text
       jumpto_group: Jump To Group
+    dashboard_owner:
+      tabs:
+        user_datasets: User Datasets <span class="num">(%{num})</span>
+        user_time_series: User Time Series <span class="num">(%{num})</span>
+      no_datasets: The user has not loaded any datasets.
+      no_time_series: The user has not loaded any time series.
     language_switcher:
       label: Available Languages
     embed:

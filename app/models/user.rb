@@ -135,7 +135,7 @@ class User
   #############################
   # permalink slug
   # - words that the slug cannot be
-  SLUG_RESERVE = ['admin', 'root', 'omniauth', 'locale', 'api', 'embed', 'highlights', 'contact', 'download', 'download_request', 'instructions', 'about', 'generate_highlights', 'datasets', 'groups', 'weights', 'time_series', 'questions', 'answers', 'settings', 'manage_datasets', 'manage_time_series']
+  SLUG_RESERVE = ['new', 'edit', 'delete', 'update', 'create', 'destroy', 'show', 'index', 'admin', 'root', 'omniauth', 'locale', 'api', 'embed', 'highlights', 'contact', 'download', 'download_request', 'instructions', 'about', 'generate_highlights', 'datasets', 'groups', 'weights', 'time_series', 'questions', 'answers', 'settings', 'manage_datasets', 'manage_time_series']
   slug :permalink, history: true, reserve: SLUG_RESERVE do |user|
     user.permalink.to_url
   end
@@ -168,6 +168,7 @@ class User
   validates :website_url, format: { with: URI::regexp(%w(http https)) }, if: Proc.new { |o| o.website_url.present? }
   validates_attachment_content_type :avatar, content_type: /\Aimage/
   validates_attachment_file_name :avatar, matches: [/png\Z/, /jpe?g\Z/]
+
   ####################
   ## Callbacks
 
@@ -175,7 +176,7 @@ class User
   before_create :create_nickname
 
   def set_permalink
-    self.permalink = "#{self.name}" if self.permalink.nil?
+    self.permalink = self.name if self.permalink.nil? || self.permalink.empty?
     return true
   end
 
@@ -286,9 +287,37 @@ class User
     self.groups.count > 0
   end
 
+  def user_group_list
+    x = [self]
+    x << self.groups.map{|x| x.group}
+    return x.flatten
+  end
+
   # determine if group has members
   def has_members?
     self.members.count > 0
   end
 
+  def group_member_list
+    x = [self]
+    x << self.members.map{|x| x.member}
+    return x.flatten
+  end
+
+
+  # get the number of datasets this user has
+  def dataset_count
+    Dataset.count_by_user(self.id)
+  end
+
+  # override devise method to indicate that password is not needed for group
+  def password_required?
+    is_user? && (!persisted? || !password.nil? || !password_confirmation.nil?)
+  end
+
+  def status_name
+    if self.status.present?
+      I18n.t("user.status.#{STATUS[self.status]}")
+    end
+  end
 end

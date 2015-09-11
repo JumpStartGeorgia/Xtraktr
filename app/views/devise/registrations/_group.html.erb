@@ -2,7 +2,7 @@
 <%- model_class = User -%>
   <div class="r">
     <%= f.input :first_name, :as => :string, :input_html => {:autofocus => true}, :label => model_class.human_attribute_name(:org_name) %>
-    <%= f.input :permalink, :as => :string %>
+    <%= f.input :permalink, :as => :string, required: false %>
   </div>
 
   <div class="r">
@@ -15,12 +15,14 @@
     <%= f.input :phone, :as => :phone %>
   </div>
 
-  <div class="r">
-    <%= f.input :avatar, :as => :file %>
-    <div class="form-group">
-      <%= image_tag(resource.avatar.url(:small)) %>
+  <% if false %>
+    <div class="r">
+      <%= f.input :avatar, :as => :file %>
+      <div class="form-group">
+        <%= image_tag(resource.avatar.url(:small)) %>
+      </div>
     </div>
-  </div>
+  <% end %>
 
   <div class="radio_buttons input required form-group statuses vertical" id="user_status_input">
     <label class="control-label" for="user_status"><%= model_class.human_attribute_name(:status).upcase %><abbr title="required">*</abbr></label>
@@ -34,4 +36,4 @@
   </div>
   <%= f.input :status_other  %>
 
-  <%= f.input :description, :as => :text, :input_html => { :class => 'autogrow', :rows => 5  }  %>
+  <%= f.input :description, :as => :text, :input_html => { :class => 'autogrow', :rows => 5  }, :label => model_class.human_attribute_name(:org_description)  %>

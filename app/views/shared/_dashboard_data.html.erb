@@ -20,6 +20,7 @@
             <%= format_gathered_dates(@dataset.start_gathered_at, @dataset.end_gathered_at) %>
           </div>
           <div class="source"><span><%= "#{model_class.human_attribute_name(:source)}: " %></span><%= "#{@dataset.source}" %></div>
+          <div class="upload"><span><%= "#{model_class.human_attribute_name(:user_id)}: " %></span><%= link_to @dataset.user.name, owner_dashboard_path(@dataset.user) %></div>
         </div>
         <% if !@is_dataset_admin %>
           <div class="share share-box"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>
@@ -233,6 +234,15 @@
               <%= link_to @dataset.source, @dataset.source_url, target: :blank %>
             <% else %>
               <%= @dataset.source %>
+            <% end %>
+          </div>
+        </div>
+
+        <div>
+          <div class="col k"><%= model_class.human_attribute_name(:user_id) %>: </div>
+          <div class="col">
+            <% if @dataset.user_id.present? %>
+              <%= link_to @dataset.user.name, owner_dashboard_path(@dataset.user), class: 'owner-link' %>
             <% end %>
           </div>
         </div>

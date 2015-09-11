@@ -81,6 +81,8 @@ BootstrapStarter::Application.routes.draw do
 
     # user managed pages scoped by the user/group id
     scope :path => ":owner_id" do
+      root :to => 'root#owner_dashboard', :as => :owner_dashboard
+
       resources :datasets, path: :manage_datasets do
         resources :groups, :except => [:show] do
           member do
@@ -156,7 +158,12 @@ BootstrapStarter::Application.routes.draw do
       match '/settings', :to => 'settings#index', :as => :settings, :via => [:get, :put]
       match '/settings/get_api_token', :to => 'settings#get_api_token', :as => :settings_get_api_token, :via => :post
       match '/settings/delete_api_token/:id', :to => 'settings#delete_api_token', :as => :settings_delete_api_token, :via => :delete
-      match '/settings/organizations/:id', :to => 'settings#edit_organization', :as => :settings_edit_organization, :via => [:get, :put]
+      match '/settings/organizations/new', :to => 'settings#organization_new', :as => :settings_organization_new, :via => [:get, :post]
+      match '/settings/organizations/:id', :to => 'settings#organization_edit', :as => :settings_organization_edit, :via => [:get, :put]
+      match '/settings/organizations/:id/delete', :to => 'settings#organization_delete', :as => :settings_organization_delete, :via => [:delete]
+      match '/settings/leave_organization/:id', :to => 'settings#organization_leave', :as => :settings_organization_leave, :via => [:delete]
+      match '/settings/members/new', :to => 'settings#member_new', :as => :settings_member_new, :via => [:get, :post]
+      match '/settings/members/:id/delete', :to => 'settings#member_delete', :as => :settings_member_delete, :via => [:delete]
 
   		match '/datasets/:id', :to => 'root#explore_data_dashboard', :as => :explore_data_dashboard, :via => :get
       match '/datasets/:id/explore', :to => 'root#explore_data_show', :as => :explore_data_show, :via => :get

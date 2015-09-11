@@ -1,6 +1,6 @@
 <% title t('.title') %>
 
-<%= semantic_form_for(@group, :url => settings_edit_organization_path(@owner, @group), :html=>{:id=>"organization-form"}) do |f| %>
+<%= semantic_form_for(@group, :url => settings_organization_edit_path(@owner, @group), :html=>{:id=>"organization-form"}) do |f| %>
   <%= f.error_messages %>
 
   <%= f.inputs do %>

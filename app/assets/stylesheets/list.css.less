@@ -252,6 +252,10 @@
           line-height:18px;
           color:#d1af24;
           display:inline-block;
+          margin-right: 10px;
+          &:last-of-type{
+            margin-right: 0;
+          }
           &:lang(ka) {
             font:16px 'sourcesans_pro_li_ka', 'sans-serif';
           }
@@ -263,6 +267,15 @@
             }
           }
           &:lang(ka) {line-height:26px;}
+          &.upload{
+            a{
+              color:#d1af24;
+              text-decoration: underline;
+              &:hover{
+                text-decoration: none;
+              }
+            }
+          }
         }
         .calendar
         {
@@ -281,7 +294,6 @@
             line-height:18px;
             color:#d1af24;
             display:inline-block;
-            margin-right: 10px;
             &:lang(ka) {
               font:16px 'sourcesans_pro_li_ka', 'sans-serif';
             }

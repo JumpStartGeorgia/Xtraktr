@@ -72,6 +72,26 @@ class RootController < ApplicationController
     end
   end
 
+  def owner_dashboard
+    @klass=' white'
+    @klass_footer=''
+    @datasets = Dataset.meta_only.is_public.sorted_public_at.by_owner(@owner.id)
+    @time_series = TimeSeries.meta_only.is_public.sorted_public_at.by_owner(@owner.id)
+
+    if @owner.blank?
+      redirect_to root_path, :notice => t('app.msgs.does_not_exist')
+    else
+      @show_title = false
+
+      @css.push("list.css", "dashboard.css", 'tabs.css')
+
+
+      respond_to do |format|
+        format.html # index.html.erb
+      end
+    end
+  end
+
 
   def explore_data
     @datasets = Dataset.meta_only.is_public

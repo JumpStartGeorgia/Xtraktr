@@ -1,13 +1,13 @@
 #settings-tabs{
   .tab-content {
     background-color: #f6f7f7;
-  
-    #api{
+
+    #api, #organizations, #members{
       font:16px 'sourcesans_pro_l', 'sans-serif';
       font-weight: normal;
       color: #49505e;
-    
-      #btn-add-api-key{
+
+      #btn-add{
         padding: 20px 0;
         a{
           background-color: #d95d6a;
@@ -24,6 +24,9 @@
         margin: 0;
         tr > td{
           background-color: #fff;
+          img{
+            margin-right: 10px;
+          }
           a.btn-delete-api-key{
             color: #d95d6a;
             background-color: #fff;
@@ -38,6 +41,12 @@
         tr:hover > td{
           background-color: transparent;
         }
+      }
+    }
+    #organizations, #members{
+      table tbody tr td{
+        height: 57px;
+        vertical-align: middle;
       }
     }
   }

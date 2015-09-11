@@ -976,6 +976,12 @@ class Dataset < CustomTranslation
     return url
   end
 
+  # get the number of datasets the user has
+  def self.count_by_user(user_id)
+    where(user_id: user_id).count
+  end
+
+  ##########################################
 
   # get the groups and questions in sorted order
   # options:

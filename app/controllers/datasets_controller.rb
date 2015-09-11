@@ -75,7 +75,7 @@ class DatasetsController < ApplicationController
   # GET /datasets/new
   # GET /datasets/new.json
   def new
-    @dataset = Dataset.new
+    @dataset = Dataset.new(user_id: @owner.id)
 
     # add the required assets
     @css.push("jquery.ui.datepicker.css", 'datasets.css')
@@ -112,9 +112,6 @@ class DatasetsController < ApplicationController
   def create
     @dataset = Dataset.new(params[:dataset])
 
-    # set owner
-    @dataset.user_id = @owner.id
-
     # if there are category_ids, create mapper objects with them
     params[:dataset][:category_ids].delete('')
       # - remove '' from list
@@ -131,7 +128,7 @@ class DatasetsController < ApplicationController
 
     respond_to do |format|
       if @dataset.save
-        format.html { redirect_to dataset_path(@owner, @dataset), flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.dataset'))} }
+        format.html { redirect_to dataset_path(@dataset.owner_slug, @dataset), flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.dataset'))} }
         format.json { render json: @dataset, status: :created, location: @dataset }
       else
         # set the date values for the datepicker
@@ -238,7 +235,7 @@ class DatasetsController < ApplicationController
 
     respond_to do |format|
       if @dataset.save
-        format.html { redirect_to dataset_path(@owner, @dataset), flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.dataset'))} }
+        format.html { redirect_to dataset_path(@dataset.owner_slug, @dataset), flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.dataset'))} }
         format.json { head :no_content }
       else
         # set the date values for the datepicker
