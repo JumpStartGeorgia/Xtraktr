@@ -83,6 +83,7 @@ $(document).ready(function (){
   }
 
   $(datatable).on("change", "input", function () {
+     console.log("here");
     var t = $(this),
       type = null,
       id = t.attr("data-id"),
