@@ -1391,10 +1391,14 @@ ka:
       jumpto_group: Jump To Group
     dashboard_owner:
       tabs:
-        user_datasets: User Datasets <span class="num">(%{num})</span>
-        user_time_series: User Time Series <span class="num">(%{num})</span>
-      no_datasets: The user has not loaded any datasets.
-      no_time_series: The user has not loaded any time series.
+        datasets: Datasets <span class="num">(%{num})</span>
+        time_series: Time Series <span class="num">(%{num})</span>
+      user:
+        no_datasets: The organization has not loaded any datasets.
+        no_time_series: The organization has not loaded any time series.
+      org:
+        no_datasets: The organization has not loaded any datasets.
+        no_time_series: The organization has not loaded any time series.
     language_switcher:
       label: "ხელმისაწვდომი ენები"
     embed:

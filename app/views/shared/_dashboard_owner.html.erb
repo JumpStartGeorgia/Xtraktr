@@ -1,6 +1,7 @@
 <%-
   model_class = User
   show_share = true if show_share.nil?
+  locale_key = @owner.is_user? ? 'user' : 'org'
 -%>
 
 <div class="article owner-dashboard">
@@ -76,10 +77,10 @@
     </div>
     <ul class="nav nav-tabs collapse tab-collapse" role="tablist">
       <li role="presentation" class="active">
-        <a href="#user_datasets" aria-controls="user_datasets" role="tab" data-toggle="tab"><%= t('.tabs.user_datasets', num: @datasets.length).html_safe %></a>
+        <a href="#user_datasets" aria-controls="user_datasets" role="tab" data-toggle="tab"><%= t('.tabs.datasets', num: @datasets.length).html_safe %></a>
       </li>
       <li role="presentation">
-        <a href="#user_time_series" aria-controls="user_time_series" role="tab" data-toggle="tab"><%= t('.tabs.user_time_series', num: @time_series.length).html_safe %></a>
+        <a href="#user_time_series" aria-controls="user_time_series" role="tab" data-toggle="tab"><%= t('.tabs.time_series', num: @time_series.length).html_safe %></a>
       </li>
     </ul>
 
@@ -89,7 +90,7 @@
           <%= render partial: 'root/explore_data_datasets', locals: {with_pagination: false, with_time_series_link: false} %>
         <% else %>
           <p>
-            <%= t('.no_datasets') %>
+            <%= t(".#{locale_key}.no_datasets") %>
           </p>
         <% end %>
       </div>
@@ -99,7 +100,7 @@
         <%= render partial: 'root/explore_data_time_series', locals: {with_pagination: false, with_time_series_link: false} %>
         <% else %>
           <p>
-            <%= t('.no_time_series') %>
+            <%= t(".#{locale_key}.no_time_series") %>
           </p>
         <% end %>
       </div>
