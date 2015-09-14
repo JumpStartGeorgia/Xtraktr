@@ -1,4 +1,9 @@
+require 'robots_generator'
+
 BootstrapStarter::Application.routes.draw do
+
+  # user robots generator to avoid non-production sites from being indexed
+  match '/robots.txt' => RobotsGenerator
 
   devise_for :users, skip: [:sessions, :passwords, :registrations, :confirmations], :path_names => {:sign_in => 'login', :sign_out => 'logout'}, controllers: { omniauth_callbacks: 'omniauth_callbacks' }
 	#--------------------------------

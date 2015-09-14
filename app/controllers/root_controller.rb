@@ -75,12 +75,12 @@ class RootController < ApplicationController
   def owner_dashboard
     @klass=' white'
     @klass_footer=''
-    @datasets = Dataset.meta_only.is_public.sorted_public_at.by_owner(@owner.id)
-    @time_series = TimeSeries.meta_only.is_public.sorted_public_at.by_owner(@owner.id)
 
     if @owner.blank?
       redirect_to root_path, :notice => t('app.msgs.does_not_exist')
     else
+      @datasets = Dataset.meta_only.is_public.sorted_public_at.by_owner(@owner.id)
+      @time_series = TimeSeries.meta_only.is_public.sorted_public_at.by_owner(@owner.id)
       @show_title = false
 
       @css.push("list.css", "dashboard.css", 'tabs.css')
@@ -135,7 +135,7 @@ class RootController < ApplicationController
   def explore_data_dashboard
     @klass=' white'
     @klass_footer=''
-    @dataset = Dataset.is_public.by_id_for_owner(params[:id], @owner.id)
+    @dataset = Dataset.is_public.by_id_for_owner(params[:id], @owner.id) if @owner.present?
 
     if @dataset.blank?
       redirect_to explore_data_path, :notice => t('app.msgs.does_not_exist')
@@ -163,7 +163,7 @@ class RootController < ApplicationController
   end
 
   def explore_data_show
-    @dataset = Dataset.is_public.by_id_for_owner(params[:id], @owner.id)
+    @dataset = Dataset.is_public.by_id_for_owner(params[:id], @owner.id) if @owner.present?
 
     if @dataset.blank?
       redirect_to explore_data_path, :notice => t('app.msgs.does_not_exist')
@@ -234,7 +234,7 @@ class RootController < ApplicationController
   def explore_time_series_dashboard
     @klass=' white'
     @klass_footer=''
-    @time_series = TimeSeries.is_public.by_id_for_owner(params[:id], @owner.id)
+    @time_series = TimeSeries.is_public.by_id_for_owner(params[:id], @owner.id) if @owner.present?
 
     if @time_series.blank?
       redirect_to explore_time_path, :notice => t('app.msgs.does_not_exist')
@@ -266,7 +266,7 @@ class RootController < ApplicationController
 
 
   def explore_time_series_show
-    @time_series = TimeSeries.is_public.by_id_for_owner(params[:id], @owner.id)
+    @time_series = TimeSeries.is_public.by_id_for_owner(params[:id], @owner.id) if @owner.present?
 
     if @time_series.blank?
       redirect_to explore_time_path, :notice => t('app.msgs.does_not_exist')
