@@ -604,7 +604,7 @@ logger.debug "@@@@@@@@@@@@@2 dataset = #{@dataset.inspect}"
     if resource.is_a?(User) && !resource.valid?
       settings_path
     else
-      super
+      session[:previous_urls].last || request.env['omniauth.origin'] || root_path(:locale => I18n.locale)
     end
 	end
 
@@ -614,14 +614,16 @@ logger.debug "@@@@@@@@@@@@@2 dataset = #{@dataset.inspect}"
 
 	# store the current path so after login, can go back
 	# only record the path if this is not an ajax call and not a users page (sign in, sign up, etc)
-	def store_location
+  def store_location
 		session[:previous_urls] ||= []
+    if session[:download_url].present? && !user_signed_in? && !params[:d].present? &&
+     !(params[:controller] == 'users/registrations' && params[:action] == 'create' ) &&
+     !(params[:controller] == 'omniauth_callbacks' && params[:action] == 'facebook')
 
-    if session[:download_url].present? && !user_signed_in? && !params[:d].present? && !(params[:controller] == 'users/registrations' && params[:action] == 'create' )
       session[:download_url] = nil
     end
 
-    if params[:action] == 'download_request' && request.xhr? && !user_signed_in? &&
+    if params[:action] == 'download_request' && request.xhr? && !user_signed_in?
       session[:download_url] = request.fullpath
     end
 
@@ -644,6 +646,7 @@ logger.debug "@@@@@@@@@@@@@2 dataset = #{@dataset.inspect}"
 		session[:previous_urls].pop if session[:previous_urls].count > 1
     #Rails.logger.debug "****************** prev urls session = #{session[:previous_urls]}"
 	end
+
 
   #######################
   #######################

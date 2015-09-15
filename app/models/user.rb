@@ -143,11 +143,11 @@ class User
   end
 
   #############################
-  attr_accessor :account, :is_registration
+  attr_accessor :account, :facebook_account, :is_registration
   attr_accessible :email, :password, :password_confirmation, :remember_me,
                   :role, :provider, :uid, :nickname, :avatar, :permalink,
                   :first_name, :last_name, :age_group, :residence,
-                  :affiliation, :status, :status_other, :description, :terms, :account,
+                  :affiliation, :status, :status_other, :description, :terms, :account, :facebook_account,
                   :phone, :website_url, :is_user, :avatar,
                   :notifications, :notification_locale, :api_keys_attributes, :is_registration,
                   :members_attributes, :groups_attributes, :email_no_domain
@@ -166,6 +166,7 @@ class User
   validates :status, inclusion: { in: STATUS.keys }
   validates :status_other, presence: true, :if => lambda { |o| o.status == 8 }
   validates :account, :numericality => { :equal_to => 1 }, :if => lambda { |o| o.is_user? && o.is_registration.present?}
+  validates :facebook_account, :inclusion => { :in => ["0", "1"] }, :if => lambda { |o| o.is_user? && o.is_registration.present? }
   validates :terms, :inclusion => {:in => [true]  }, :if => lambda { |o| o.is_user? }
   validates :website_url, format: { with: URI::regexp(%w(http https)) }, if: Proc.new { |o| o.website_url.present? }
   validates_attachment_content_type :avatar, content_type: /\Aimage/
@@ -203,15 +204,23 @@ class User
     ne(role: ROLES[:admin])
   end
 
-  def self.find_for_facebook_oauth(auth) #, signed_in_resource=nil
+  def self.find_for_facebook_oauth(auth, params) #, signed_in_resource=nil
+     Rails.logger.debug("-----------------------------------#{params.inspect}---------#{params["first_name"].present?} #{params[:first_name]} #{auth.info.first_name}")
     user = where(provider: auth.provider, uid: auth.uid).first_or_initialize do |user|
       user.nickname = auth.info.nickname if auth.info.has_key?("nickname")
-      user.first_name = auth.info.first_name if auth.info.has_key?("first_name")
-      user.last_name = auth.info.last_name if auth.info.has_key?("last_name")
-      user.email = auth.info.email.present? ? auth.info.email : "<%= Devise.friendly_token[0,10] %>@fake.com"
+      user.first_name = (params["first_name"].present? ? params["first_name"] : auth.info.first_name) if params["first_name"].present? || auth.info["first_name"].present?
+      user.last_name = (params["last_name"].present? ? params["last_name"] : auth.info["last_name"]) if params["last_name"].present? || auth.info["last_name"].present?
+      user.email = (params["email"].present? ? params["email"] : (auth.info["email"].present? ? auth.info["email"] : "<%= Devise.friendly_token[0,10] %>@fake.com"))
+      user.affiliation = params["affiliation"] if params["affiliation"].present?
+      user.age_group = params["age_group"] if params["age_group"].present?
+      user.residence = params["residence"] if params["residence"].present?
+      user.status = params["status"] if params["status"].present?
+      user.status_other = params["status_other"] if params["status_other"].present?
+      user.description = params["description"] if params["description"].present?
       user.avatar = auth.info.image
       user.password = Devise.friendly_token[0,20]
     end
+
     user.save(validate: false)
     user
     # logger.debug "+++++++++++++ #{auth.inspect}"

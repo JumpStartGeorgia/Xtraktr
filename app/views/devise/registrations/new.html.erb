@@ -3,7 +3,7 @@
 <% title t('helpers.links.sign_up_title', :app_name => t("app.common.#{@app_key_name}.app_name")) %>
 
 <div id="signup-form">
-  <div class="red-box"><%= t('helpers.links.sign_up2') %></div>
+  <div class="red-box"><%= (reg ? t('helpers.links.sign_up2') : t('helpers.links.download')) %></div>
   <div class="red-box-neighbor">
   <%- if controller_name != 'sessions' %>
         <%= link_to t('helpers.links.sign_in'), new_session_path(resource_name), :class => 'sign-in-link reattach ' %>
@@ -33,7 +33,7 @@
        <div class="or"><%= t('helpers.links.sign_in_local_or_provider') %></div>
        <div class="midline"></div>
     </div>
-  <% #end %>
+  <% end %>
 
   <%= semantic_form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html=>{:"data-form-id"=>"signup-form"}) do |f| %>
   	<%= f.error_messages %>

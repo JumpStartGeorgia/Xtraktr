@@ -1,7 +1,8 @@
-// This is a manifest file that'll be compiled into including all the files listed below.
-// Add new JavaScript/Coffee code in separate files in this directory and they'll automatically
+/*global  $, gon, modal, js_modal_off*/
+// This is a manifest file that"ll be compiled into including all the files listed below.
+// Add new JavaScript/Coffee code in separate files in this directory and they"ll automatically
 // be included in the compiled file accessible from http://example.com/assets/application.js
-// It's not advisable to add code directly here, but if you do, it'll appear at the bottom of the
+// It"s not advisable to add code directly here, but if you do, it"ll appear at the bottom of the
 // the compiled file.
 //
 //= require i18n
@@ -29,39 +30,39 @@ $(document).ready(function () {
   }
 
    // workaround to get logout link in navbar to work
-  $('body')
-    .off('click.dropdown touchstart.dropdown.data-api', '.dropdown')
-    .on('click.dropdown touchstart.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation(); });
+  $("body")
+    .off("click.dropdown touchstart.dropdown.data-api", ".dropdown")
+    .on("click.dropdown touchstart.dropdown.data-api", ".dropdown form", function (e) { e.stopPropagation(); });
 
-  $('body').tooltip({
-    selector: '[title]',
-    container: 'body'
+  $("body").tooltip({
+    selector: "[title]",
+    container: "body"
   });
 
-  $('#side-menu a').click(function () {
+  $("#side-menu a").click(function () {
     var t = $(this),
-      p = t.closest('ul');
-    p.find('a.active').removeClass('active');
-    t.addClass('active');
+      p = t.closest("ul");
+    p.find("a.active").removeClass("active");
+    t.addClass("active");
   });
-  $(document).on('change', 'form.user #user_account', function () {
-    var t =  $(this),
-      form = t.closest('form'),
+  $(document).on("change.user_account", "form.user #user_account", function () {
+    var t = $(this),
+      form = t.closest("form"),
       checked = t.is(":checked");
-    form.find('.ghost-box').toggleClass('js-hide', !checked);
-    var submit = form.find('input[type=submit]'),
-      tmp = submit.attr('data-text-swap');
-    submit.attr('data-text-swap', submit.val());
+    form.find(".ghost-box").toggleClass("js-hide", !checked);
+    var submit = form.find("input[type=submit]"),
+      tmp = submit.attr("data-text-swap");
+    submit.attr("data-text-swap", submit.val());
     submit.val(tmp);
   });
-  $(document).on('change', 'form.user #user_notifications', function () {
-    var t =  $(this),
-      form = t.closest('form'),
+  $(document).on("change", "form.user #user_notifications", function () {
+    var t = $(this),
+      form = t.closest("form"),
       checked = t.is(":checked");
-    form.find('#user_notification_locale_input').toggleClass('js-hide', !checked);
+    form.find("#user_notification_locale_input").toggleClass("js-hide", !checked);
   });
 
-  $(document).on('click', '.reattach', function (e) {
+  $(document).on("click", ".reattach", function (e) {
     navbarToggle();
     var t = $(this),
       data = {};
@@ -69,26 +70,27 @@ $(document).ready(function () {
       data = { d: 1 };
     }
     $.ajax({
-      url: t.attr('href'),
+      url: t.attr("href"),
       data: data
     }).success(function (d) {
       modal(d);
-    }).error(function (d) { });
+    }).error(function () { });
     e.preventDefault();
     e.stopPropagation();
   });
 
-  $('body').on('submit', '#new_user', function (e) {
+  $("body").on("submit", "#new_user", function (e) {
     var form = $(this),
-      t = $(this).attr('data-form-id');
+      t = $(this).attr("data-form-id");
     if (t.length) {
       t = $("#" + t);
       $.ajax({
         type: "POST",
-        url: $(this).attr('action'),
+        url: $(this).attr("action"),
         data: $(this).serialize(),
-        dataType: 'json',
+        dataType: "json",
         success: function (data) {
+           console.log("form back",data);
           if (data.url) {
             js_modal_off();
             window.location.href = data.url;
@@ -97,25 +99,26 @@ $(document).ready(function () {
           }
         },
         error: function (data) {
+           console.log("form back error",data);
           data = data.responseJSON;
           var errors = data.errors;
           if (data.sessions) {
-            form.parent().find('.notification').remove();
-            form.before(notification('alert', data.errors.alert));
-            form.find(':input:visible:enabled:first').focus();
+            form.parent().find(".notification").remove();
+            form.before(notification("alert", data.errors.alert));
+            form.find(":input:visible:enabled:first").focus();
           } else {  //data.registration
-            form.find('.form-group').removeClass('has-error').find('abbr.exclamation').remove();
+            form.find(".form-group").removeClass("has-error").find("abbr.exclamation").remove();
             $.each(errors, function (k, v) {
               var input = form.find("[name='user[" + k + "]']:not([type=hidden])"),
-                type = input.attr('type');
+                type = input.attr("type");
 
-              if (['text', 'email', 'password'].indexOf(type) !== -1) {
-                input.closest('.form-group').addClass('has-error');
-                input.closest('.form-wrapper').append('<abbr class="exclamation" data-class="tooltip-exclamation" title="' + $.map(v, function (m) { return m.charAt(0).toUpperCase() + m.slice(1); }).join("\r\n") + '"></abbr>');
-              } else if (['checkbox', 'radio'].indexOf(type) !== -1) {
-                //console.log(k,v,type,input,input.closest('.form-group').find('> label'));
-                input.closest('.form-group').addClass('has-error');
-                input.closest('.form-group').find('label').append('<abbr class="exclamation" data-class="tooltip-exclamation" title="' +  $.map(v, function (m) { return m.charAt(0).toUpperCase() + m.slice(1); }).join("\r\n") + '"></abbr>');
+              if (["text", "email", "password"].indexOf(type) !== -1) {
+                input.closest(".form-group").addClass("has-error");
+                input.closest(".form-wrapper").append("<abbr class='exclamation' data-class='tooltip-exclamation' title='" + $.map(v, function (m) { return m.charAt(0).toUpperCase() + m.slice(1); }).join("\r\n") + "'></abbr>");
+              } else if (["checkbox", "radio"].indexOf(type) !== -1) {
+                //console.log(k,v,type,input,input.closest(".form-group").find("> label"));
+                input.closest(".form-group").addClass("has-error");
+                input.closest(".form-group").find("label").append("<abbr class='exclamation' data-class='tooltip-exclamation' title='" + $.map(v, function (m) { return m.charAt(0).toUpperCase() + m.slice(1); }).join("\r\n") + "'></abbr>");
               }
             });
           }
@@ -126,54 +129,54 @@ $(document).ready(function () {
     e.stopPropagation();
   });
 
-  $(document).on('keyup.checkbox-radio-box', '.checkbox-box, .radio-box', function (e) {
-    if (e.keyCode === 32) {  // space      
-      $(this).find('label').trigger('click');
+  $(document).on("keyup.checkbox-radio-box", ".checkbox-box, .radio-box", function (e) {
+    if (e.keyCode === 32) {  // space
+      $(this).find("label").trigger("click");
     }
   });
 
-  $('.download').click(function (e) {
+  $(".download").click(function (e) {
     var t = $(this),
-      open = !t.hasClass('open');
+      open = !t.hasClass("open");
 
-    $('.download.open').each(function () {
-      $(document).off('click.download');
-      $(this).removeClass('open');
+    $(".download.open").each(function () {
+      $(document).off("click.download");
+      $(this).removeClass("open");
     });
 
     if (t.offset().top + 146 > $(document).height()) {
-      t.find('ul').css('top', -132);
+      t.find("ul").css("top", -132);
     }
-    t.toggleClass('open', open);
+    t.toggleClass("open", open);
     if (open) {
-      $(document).on('click.download', function () {
-        t.removeClass('open');
-        $(document).off('click.download');
+      $(document).on("click.download", function () {
+        t.removeClass("open");
+        $(document).off("click.download");
       });
-    } else { $(document).off('click.download'); }
+    } else { $(document).off("click.download"); }
     e.stopPropagation();
   });
 
 
-  $('.download li div.type').click(function (e) {
+  $(".download li div.type").click(function (e) {
     var t = $(this),
-      type = t.attr('data-type'),
-      id = t.closest('.download').attr('data-id'),
-      lang = t.closest('.download').attr('data-lang');
-      download_type = t.closest('.download').attr('data-download-type');
+      type = t.attr("data-type"),
+      id = t.closest(".download").attr("data-id"),
+      lang = t.closest(".download").attr("data-lang"),
+      download_type = t.closest(".download").attr("data-download-type");
     download_request("/" + document.documentElement.lang + "/download_request", { id: id, type: type, lang: lang, download_type: download_type });
 
-    t.closest('.download').removeClass('open');
-    $(document).off('click.download');
+    t.closest(".download").removeClass("open");
+    $(document).off("click.download");
     e.stopPropagation();
   });
 
-  $(document).on('change', '#user_status_input input[type=radio]', function () {
+  $(document).on("change", "#user_status_input input[type=radio]", function () {
     if (this.value === 8) {
-      $('#user_status_other_input').show();
+      $("#user_status_other_input").show();
     } else {
-      var other = $('#user_status_other_input').hide();
-      other.find('input').val('');
+      var other = $("#user_status_other_input").hide();
+      other.find("input").val("");
     }
   });
 
@@ -182,91 +185,92 @@ $(document).ready(function () {
 
   // language switcher for dataset/time series in dashboard/explore pages
   // reload the current page with the language param set
-  // $('.available-language-switcher').on('change', 'select', function (e) {
+  // $(".available-language-switcher").on("change", "select", function (e) {
   //   e.preventDefault();
 
   //   var querystring = queryStringToJSON(window.location.href);
   //   querystring.language = $(this).val();
 
-  //   window.location.href = location.protocol + '//' + location.host + location.pathname + '?' + $.param(querystring);
+  //   window.location.href = location.protocol + "//" + location.host + location.pathname + "?" + $.param(querystring);
 
   // });
-  $('.search .go-submit').click(function () { $(this).closest('form').submit(); });
+  $(".search .go-submit").click(function () { $(this).closest("form").submit(); });
 
 
 
-  $(document).on('click', '.notification .closeup', function () { $(this).parent().remove(); });
+  $(document).on("click", ".notification .closeup", function () { $(this).parent().remove(); });
 
-  $('.m-lang .figure').on('click', function () {
+  $(".m-lang .figure").on("click", function () {
     navbarToggle();
-    var t = $(this).closest('.m-lang').find('.under-box').toggleClass('open');
-    t.animate({"left": (t.hasClass('open') ? '-' : '+') + "=" + (t.width() - 42) }, 500, function () {  });
+    var t = $(this).closest(".m-lang").find(".under-box").toggleClass("open");
+    t.animate({"left": (t.hasClass("open") ? "-" : "+") + "=" + (t.width() - 42) }, 500, function () { });
     t.delay(500).animate({"opacity" : 1}, 100);
   });
-  $('.m-search .figure').on('click', function () {
+  $(".m-search .figure").on("click", function () {
     navbarToggle();
     var t = $(this),
-      b = t.closest('.navbar-header').find('.navbar-brand'),
-      p = t.closest('.under-box').toggleClass('open');
-    p.animate({"left": (p.hasClass('open') ? "-=" + (p.offset().left - b.width() - 42) : 0) }, 500, function () {  });
+      b = t.closest(".navbar-header").find(".navbar-brand"),
+      p = t.closest(".under-box").toggleClass("open");
+    p.animate({"left": (p.hasClass("open") ? "-=" + (p.offset().left - b.width() - 42) : 0) }, 500, function () { });
   });
 
 
-  // Caption for selected tab is changed on tab selection from tab list. Caption is visible only for small devices. 
-  $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    $('.tab-caption').html($(e.target).text());
+  // Caption for selected tab is changed on tab selection from tab list. Caption is visible only for small devices.
+  $("a[data-toggle='tab']").on("shown.bs.tab", function (e) {
+    $(".tab-caption").html($(e.target).text());
     tabToggle();
   });
 
-  $(document).on('click', function (e) {
+  $(document).on("click", function (e) {
     var t = $(e.target);
-    if (!t.is('.navbar-toggle, .navbar-collapse, .tab-collapse') && !t.closest('.navbar-toggle, .navbar-collapse, .tab-collapse').length) {
-      $('.navbar-toggle:not(.collapsed)').trigger('click');
+    if (!t.is(".navbar-toggle, .navbar-collapse, .tab-collapse") && !t.closest(".navbar-toggle, .navbar-collapse, .tab-collapse").length) {
+      $(".navbar-toggle:not(.collapsed)").trigger("click");
     }
   });
 
   // when form with data loader is submitted, show the loading img
-  $('form.form-data-loader').submit(function(){
-    $('.data-loader').fadeIn('fast');
+  $("form.form-data-loader").submit(function (){
+    $(".data-loader").fadeIn("fast");
   });
 
 });
 var downloading = false;
-function download_request(url, data) {
+function download_request (url, data) {
   $.ajax({
     url: url,
     data: data,
-    dataType: 'json'
+    dataType: "json"
   }).done(function (d) {
+     console.log("download request answer", d);
     if (d.agreement) {
       window.location.href = d.url;
     } else {
       modal(d.form);
       downloading = true;
     }
-  }).error(function (d) {
-    //console.log('file downloading error', d);
+  }).error(function () {
+    //console.log("file downloading error", d);
   });
 }
 
 
 ////////////////////////////////////////////////
 // convert the querystring variables into json
-function queryStringToJSON(url) {
-  if (url === '') {
+function queryStringToJSON (url) {
+  if (url === "") {
     return {};
   }
-  var u = url.split('?');
+  var u = url.split("?");
   if (u.length !== 2) {
     return {};
   }
-  var pairs = u[1].split('&'),
+  var pairs = u[1].split("&"),
     result = {},
     idx = null;
   for (idx in pairs) {
-    var pair = pairs[idx].split('=');
+    var pair = pairs[idx].split("=");
     if (!!pair[0]) {
-      result[pair[0].toLowerCase()] = decodeURIComponent(pair[1] || '');
+      result[pair[0].toLowerCase()] = decodeURIComponent(pair[1] || "");
     }
   }
   return result;
@@ -276,7 +280,7 @@ function queryStringToJSON(url) {
 // be triggered. The function will be called after it stops being called for
 // N milliseconds. If `immediate` is passed, trigger the function on the
 // leading edge, instead of the trailing.
-function debounce(func, wait, immediate) {
+function debounce (func, wait, immediate) {
   var timeout;
   return function () {
     var context = this,
@@ -295,22 +299,22 @@ function debounce(func, wait, immediate) {
     }
   };
 }
-function notification(state, text, extra_class) {
-  state = ['success', 'error', 'info'].indexOf(state) !== -1 ? state : 'error';  
+function notification (state, text, extra_class) {
+  state = ["success", "error", "info"].indexOf(state) !== -1 ? state : "error";
   return "<div class='message notification " + state + " " + extra_class + "'><div class='figure'></div><div class='text'>" + text + "</div><div class='closeup'></div></div>";
 }
-function navbarToggle() {
-  if (!$(".navbar-toggle").hasClass('collapsed')) {
-    $(".navbar-toggle").trigger('click');
+function navbarToggle () {
+  if (!$(".navbar-toggle").hasClass("collapsed")) {
+    $(".navbar-toggle").trigger("click");
   }
 }
-function tabToggle() {
-  if (!$(".tab-toggle").hasClass('collapsed')) {
-    $(".tab-toggle").trigger('click');
+function tabToggle () {
+  if (!$(".tab-toggle").hasClass("collapsed")) {
+    $(".tab-toggle").trigger("click");
   }
 }
-function is_touch_device() {
-  return (('ontouchstart' in window)
+function is_touch_device () {
+  return (("ontouchstart" in window)
       || (navigator.MaxTouchPoints > 0)
       || (navigator.msMaxTouchPoints > 0));
 }

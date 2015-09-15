@@ -323,9 +323,14 @@ class RootController < ApplicationController
     @dataset_type = params[:type]
     @dataset_locale = params[:lang]
     @download_type = params[:download_type]
-    if sign_in && current_user.agreement(@dataset_id, @dataset_type, @dataset_locale, @download_type)
-      mapper = FileMapper.create({ dataset_id: @dataset_id, dataset_type: @dataset_type, dataset_locale: @dataset_locale, download_type: @download_type })
-      data[:url] = "/#{I18n.locale}/download/#{mapper.key}"
+    if sign_in 
+      if current_user.valid? 
+        current_user.agreement(@dataset_id, @dataset_type, @dataset_locale, @download_type)
+        mapper = FileMapper.create({ dataset_id: @dataset_id, dataset_type: @dataset_type, dataset_locale: @dataset_locale, download_type: @download_type })
+        data[:url] = "/#{I18n.locale}/download/#{mapper.key}"
+      else 
+        data[:url] =  settings_path # here we need settings form to appear todo
+      end
     else
       @mod = Agreement.new({ dataset_id: @dataset_id, dataset_type: @dataset_type, dataset_locale: @dataset_locale, download_type: @download_type  })
       data[:form] = render_to_string "devise/registrations/new", :layout => false, :locals => { reg: false }

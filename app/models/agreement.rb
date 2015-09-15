@@ -20,9 +20,9 @@ class Agreement
 
   #############################
 
-  attr_accessor :terms
+  # attr_accessor :terms
   attr_accessible :first_name, :last_name, :age_group, :residence,
-                  :email, :affiliation, :status, :status_other, :description, :dataset_id, :dataset_type, :dataset_locale, :terms, :download_type
+                  :email, :affiliation, :status, :status_other, :description, :dataset_id, :dataset_type, :dataset_locale, :download_type #:terms,
 
     STATUS = { 1 => 'researcher',
                2 => 'student',
@@ -36,19 +36,19 @@ class Agreement
   #############################
   ## Validations
 
-  # validates :first_name, presence: true
-  # validates :last_name, presence: true
-  # validates :age_group, inclusion: { in: [1,2,3,4,5,6] }
-  # validates :residence, presence: true
-  # validates :email, presence: true
-  # validates_format_of  :email, with: Devise.email_regexp, allow_blank: false
-  # validates :affiliation, presence: true
-  # validates :status, inclusion: { in: STATUS.keys }
-  # validates_presence_of :status_other, :if => lambda { |o| o.status == 8 }
+  validates :first_name, presence: true
+  validates :last_name, presence: true
+  validates :age_group, inclusion: { in: [1,2,3,4,5,6] }
+  validates :residence, presence: true
+  validates :email, presence: true
+  validates_format_of  :email, with: Devise.email_regexp, allow_blank: false
+  validates :affiliation, presence: true
+  validates :status, inclusion: { in: STATUS.keys }
+  validates_presence_of :status_other, :if => lambda { |o| o.status == 8 }
   validates :dataset_id, presence: true
   validates :dataset_type, presence: true
   validates :dataset_locale, presence: true
-  validates :terms, :inclusion => {:in => [true]  }
+  # validates :terms, :inclusion => {:in => [true]  }
   validates :download_type, :inclusion => {:in => ['public', 'admin']  }
 
 
