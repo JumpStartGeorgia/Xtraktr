@@ -132,8 +132,16 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
   end
 
 	def after_sign_in_path_for(resource)
-		session[:previous_urls].last || request.env['omniauth.origin'] || root_path(:locale => I18n.locale)
+		 Rails.logger.debug("--------------------------------------------#{stored_location_for(resource)}")
+    stored_location_for(resource) ||
+    if resource.is_a?(User) && !resource.valid?
+      settings_path
+    else
+      session[:previous_urls].last || request.env['omniauth.origin'] || root_path(:locale => I18n.locale)
+    end
 	end
+
+
 
   def valid_role?(role)
     redirect_to root_path, :notice => t('app.msgs.not_authorized') if !current_user || !current_user.role?(role)
@@ -143,12 +151,15 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 	# only record the path if this is not an ajax call and not a users page (sign in, sign up, etc)
 	def store_location
 		session[:previous_urls] ||= []
+puts "+++++++++++++++++++++++++++ #{params.inspect}"
+    if session[:download_url].present? && !user_signed_in? && !params[:d].present? &&
+     !(params[:controller] == 'users/registrations' && params[:action] == 'create' ) &&
+     !(params[:controller] == 'omniauth_callbacks' && params[:action] == 'facebook')
 
-    if session[:download_url].present? && !user_signed_in? && !params[:d].present? && !(params[:controller] == 'users/registrations' && params[:action] == 'create' )
       session[:download_url] = nil
     end
 
-    if params[:action] == 'download_request' && request.xhr? && !user_signed_in? &&
+    if params[:action] == 'download_request' && request.xhr? && !user_signed_in?
       session[:download_url] = request.fullpath
     end
 
@@ -547,14 +558,6 @@ logger.debug "======= output js = #{output[:js]}"
 	end
   def per_page
     return PER_PAGE_COUNT
-  end
-  def after_sign_in_path_for(resource)
-    stored_location_for(resource) ||
-    if resource.is_a?(User) && !resource.valid?
-      settings_path
-    else
-      super
-    end
   end
 
 end

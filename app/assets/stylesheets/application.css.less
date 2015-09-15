@@ -465,7 +465,7 @@ div.message {
   width: 100%;
   text-align: left;
   padding:0px;
-  span, a, a:hover
+  span, a, a:hover, a:focus
   {
     font:14px 'sourcesans_pro', 'sans-serif';
     width:18px;
@@ -475,13 +475,19 @@ div.message {
     text-decoration:none;
     border:0 !important;
     padding:0px !important;
+    background-color:transparent;
 
+  }  
+  > .disabled
+  {
+     > a, a:hover, > a:focus, > a:active {
+      background-color:transparent;
+     }
   }
   .first a { background:transparent url(/assets/svg/paginate_first.svg) no-repeat center/18px; }
   .next a { background:transparent url(/assets/svg/paginate_next.svg) no-repeat center/18px; }
   .prev a, .previous a { background:transparent url(/assets/svg/paginate_prev.svg) no-repeat center/18px; }
   .last a { background:transparent url(/assets/svg/paginate_last.svg) no-repeat center/18px; }
-
   .page, li {
     display: inline-block;
     min-width:18px;
@@ -514,6 +520,11 @@ div.message {
       padding: 0px;
       border-radius: 100%;
       margin:0px 3px;
+    }
+    &.first, &.next, &.prev, &.previous, &.last {
+      a:hover {
+        background-color:transparent;
+      }
     }
     &.disabled
     {
