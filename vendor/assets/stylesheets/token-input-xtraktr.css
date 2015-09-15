@@ -1,0 +1,132 @@
+/* Example tokeninput style #2: xtraktr style but overriden for xtraktr */
+ul.token-input-list-xtraktr {
+    overflow: hidden;
+    height: auto !important;
+    height: 1%;
+    width: 72%;
+    border: 1px solid #8496ba;
+    cursor: text;
+    font: 15px 'sourcesans_pro', 'sans-serif';
+    min-height: 1px;
+    z-index: 999;
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+    list-style-type: none;
+    clear: left;
+}
+
+ul.token-input-list-xtraktr li input {
+    border: 0;
+    width: 100px;
+    padding: 3px 8px;
+    background-color: white;
+    margin: 2px 0;
+    -webkit-appearance: caret;
+}
+
+li.token-input-token-xtraktr {
+    overflow: hidden;
+    height: auto !important;
+    height: 15px;
+    margin: 3px;
+    padding: 1px 3px;
+    color: #000;
+    cursor: default;
+    border: 1px solid #d67456;
+    font: 15px 'sourcesans_pro', 'sans-serif';
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    float: left;
+    white-space: nowrap;
+}
+
+li.token-input-token-xtraktr p {
+    display: inline;
+    padding: 0;
+    margin: 0;
+}
+
+li.token-input-token-xtraktr span {
+    color: #d67456;
+    margin-left: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+li.token-input-selected-token-xtraktr {
+    background-color: #d67456;
+    border: 1px solid #d67456;
+    color: #fff;
+}
+
+li.token-input-selected-token-xtraktr span {
+    color: #fff;
+}
+
+li.token-input-input-token-xtraktr {
+    float: left;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+div.token-input-dropdown-xtraktr {
+    position: absolute;
+    width: 400px;
+    background-color: #fff;
+    overflow: hidden;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    cursor: default;
+    z-index: 1;
+    font: 15px 'sourcesans_pro', 'sans-serif';
+}
+
+div.token-input-dropdown-xtraktr p {
+    margin: 0;
+    padding: 5px;
+    /*font-weight: bold;*/
+    color: #d67456;
+}
+
+div.token-input-dropdown-xtraktr p b{
+  text-decoration: underline;
+}
+
+div.token-input-dropdown-xtraktr ul {
+    margin: 0;
+    padding: 0;
+}
+
+div.token-input-dropdown-xtraktr ul li {
+    background-color: #fff;
+    padding: 3px;
+    margin: 0;
+    list-style-type: none;
+}
+
+div.token-input-dropdown-xtraktr ul li.token-input-dropdown-item-xtraktr {
+    background-color: #fff;
+}
+
+div.token-input-dropdown-xtraktr ul li.token-input-dropdown-item2-xtraktr {
+    background-color: #fff;
+}
+
+div.token-input-dropdown-xtraktr ul li em {
+    font-weight: bold;
+    font-style: normal;
+}
+
+div.token-input-dropdown-xtraktr ul li.token-input-selected-dropdown-item-xtraktr {
+    background-color: #d67456;
+    color: #fff;
+    cursor: pointer;
+}
+
+div.token-input-dropdown-xtraktr ul li.token-input-selected-dropdown-item-xtraktr p {
+    color: #fff;
+}

@@ -1,0 +1,18 @@
+<%= @message.message %>
+
+<% @message.message_list.each do |msg| %>
+<%= "#{t('mailer.notification.new_organization_member.from', :locale => @message.locale)}: #{msg[0]}" %>
+<% if msg[2].present? %>
+<%= msg[2] %>
+<% end %>
+
+<%= "#{t('mailer.notification.new_organization_member.accept_link', :locale => @message.locale)}: #{settings_accept_invitation_from_notification_url(:locale => @message.locale, :key => msg[1])}" %>
+
+------------------
+
+<% end %>
+
+
+<% if @user.present? %>
+<%= "#{t('mailer.notification.new_organization_member.all_invitations', :locale => @message.locale)}: #{settings_url(:locale => @message.locale, owner_id: @user.slug, page: 'organizations')}" %>
+<% end %>

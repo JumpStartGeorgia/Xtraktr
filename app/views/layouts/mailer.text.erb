@@ -7,4 +7,4 @@
 
 -------------------------------
 
-<%= "#{t('mailer.unsubscribe', :locale => @message.locale)}: #{settings_url(:locale => @message.locale)}" %>
+<%= "#{t('mailer.unsubscribe', :locale => @message.locale)}: #{settings_from_notification_url(:locale => @message.locale)}" %>

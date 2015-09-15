@@ -83,6 +83,7 @@ class User
 
   ## user info
   field :is_user, type: Boolean, default: true
+  field :email_no_domain, type: String
   field :first_name, type: String
   field :last_name, type: String
   field :age_group, type: Integer #{ 1 => '17-24', 2 => '25-34', 3 => '35-44', 4 => '45-54', 5 => '55-64', 6 => 'above'}
@@ -131,11 +132,12 @@ class User
   index({ :role => 1}, {background: true})
   index({ :provider => 1, :role => 1}, {background: true})
   index({ :reset_password_token => 1}, { background: true, unique: true, sparse: true })
+  index({ :email_no_domain => 1, :role => 1}, {background: true})
 
   #############################
   # permalink slug
   # - words that the slug cannot be
-  SLUG_RESERVE = ['new', 'edit', 'delete', 'update', 'create', 'destroy', 'show', 'index', 'admin', 'root', 'omniauth', 'locale', 'api', 'embed', 'highlights', 'contact', 'download', 'download_request', 'instructions', 'about', 'generate_highlights', 'datasets', 'groups', 'weights', 'time_series', 'questions', 'answers', 'settings', 'manage_datasets', 'manage_time_series']
+  SLUG_RESERVE = ['new', 'edit', 'delete', 'update', 'create', 'destroy', 'show', 'index', 'admin', 'root', 'omniauth', 'locale', 'api', 'embed', 'highlights', 'contact', 'download', 'download_request', 'instructions', 'about', 'generate_highlights', 'datasets', 'groups', 'weights', 'time_series', 'questions', 'answers', 'settings', 'manage_datasets', 'manage_time_series', 'accept_invitation_from_notification']
   slug :permalink, history: true, reserve: SLUG_RESERVE do |user|
     user.permalink.to_url
   end
@@ -148,7 +150,7 @@ class User
                   :affiliation, :status, :status_other, :description, :terms, :account,
                   :phone, :website_url, :is_user, :avatar,
                   :notifications, :notification_locale, :api_keys_attributes, :is_registration,
-                  :members_attributes, :groups_attributes
+                  :members_attributes, :groups_attributes, :email_no_domain
 
 
   #############################
@@ -174,6 +176,7 @@ class User
 
   before_validation :set_permalink
   before_create :create_nickname
+  before_save :create_email_no_domain
 
   def set_permalink
     self.permalink = self.name if self.permalink.nil? || self.permalink.empty?
@@ -184,6 +187,14 @@ class User
     self.nickname = self.email.split('@')[0] if self.nickname.blank? && self.email.present?
     return true
   end
+
+  # email_no_domain is used in the search for collaborators
+  # so people cannot search using domain name to guess their email addresses
+  def create_email_no_domain
+    self.email_no_domain = self.email.split('@').first if self.email.present? && self.email_no_domain.nil?
+    return true
+  end
+
 
   #############################
   ## Scopes
@@ -223,6 +234,13 @@ class User
   def self.find_for_authentication(warden_conditions)
     where(:is_user => true, :email => warden_conditions[:email]).first
   end
+
+  # get the notification language locale for a user
+  def self.get_notification_language_locale(id)
+    x = only(:notification_locale).find(id)
+    return x.present? ? x.notification_locale.to_sym : I18n.default_locale
+  end
+
 
   #############################
 
@@ -320,4 +338,42 @@ class User
       I18n.t("user.status.#{STATUS[self.status]}")
     end
   end
+
+  # get list of users that match the passed in query
+  # - user must not be this user or one of its members
+  # - search in user name and email
+  def invitation_search(q, limit=10)
+    if q.present? and q.length > 1
+      already_exists_ids = []
+      already_exists_emails = []
+      # add owner
+      already_exists_ids << self.id
+      # add colaborators
+      if self.members.present?
+        already_exists_ids << self.members.map{|x| x.member_id}
+      end
+      # add invitations
+      pending = Invitation.pending_from_user(self.id)
+      if pending.present?
+        already_exists_emails << pending.map{|x| x.to_email}
+      end
+
+      already_exists_ids.flatten!
+      already_exists_emails.flatten!
+
+      users = User.any_of({first_name: /#{q}/i}, {last_name: /#{q}/i}, {email_no_domain: /#{q}/i}).limit(limit)
+      if already_exists_ids.present? && already_exists_emails.present?
+        users = users.not_in({id: already_exists_ids.uniq}, {email: already_exists_emails.uniq})
+      elsif already_exists_ids.present?
+        users = users.not_in({id: already_exists_ids.uniq})
+      elsif already_exists_emails.present?
+        users = users.not_in({email: already_exists_emails.uniq})
+      end
+
+      return users
+    end
+  end
+
+
+
 end

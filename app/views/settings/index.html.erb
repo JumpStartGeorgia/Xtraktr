@@ -66,7 +66,7 @@
           <%= link_to t('.org_add'), settings_organization_new_path(@owner) %>
         </p>
 
-        <% if @user.has_groups? %>
+        <% if @user.belongs_to_groups? || @pending_orgs.present? %>
           <table class="table table-striped table-hover table-nonfluid">
             <thead>
               <tr>
@@ -78,6 +78,34 @@
               </tr>
             </thead>
             <tbody>
+              <% if @pending_orgs.present? %>
+                <% @pending_orgs.each do |pending| %>
+                  <tr>
+                    <td>
+                      <%= link_to settings_organization_accept_invitation_path(@owner, pending.id),
+                            class: 'btn btn-xs btn-default', title: t('.join'),
+                            :method => :post do %>
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                      <% end %>
+                    </td>
+                    <td>
+                        <%#= image_tag(group.group.avatar.url(:small)) %>
+                        <%= pending.from_user.name %>
+                    </td>
+                    <td></td>
+                    <td><%= t('.pending') %></td>
+                    <td>
+                      <%= link_to '',
+                                  settings_organization_delete_invitation_path(@owner, pending.id),
+                                  :title => t("helpers.links.destroy"),
+                                  :method => :delete,
+                                  :data => { :confirm => I18n.t("helpers.links.confirm") },
+                                  :class => 'btn btn-xs btn-delete' %>
+                    </td>
+                  </tr>
+                <% end %>
+              <% end %>
+
               <% @user.groups.each do |group| %>
                 <tr>
                   <td>
@@ -128,7 +156,7 @@
           <%= link_to t('.member_add'), settings_member_new_path(@owner) %>
         </p>
 
-        <% if @user.has_members? %>
+        <% if @user.has_members? || @pending_members.present? %>
           <table class="table table-striped table-hover table-nonfluid">
             <thead>
               <tr>
@@ -139,6 +167,26 @@
               </tr>
             </thead>
             <tbody>
+              <% if @pending_members.present? %>
+                <% @pending_members.each do |pending| %>
+                  <tr>
+                    <td>
+                      <%#= image_tag(member.member.avatar.url(:small)) %>
+                      <%= pending.to_user_id.present? ? pending.to_user.name : pending.to_email %>
+                    </td>
+                    <td></td>
+                    <td><%= t('.pending') %></td>
+                    <td>
+                      <%= link_to '',
+                                  settings_member_delete_invitation_path(@owner, pending.id),
+                                  :title => t("helpers.links.destroy"),
+                                  :method => :delete,
+                                  :data => { :confirm => I18n.t("helpers.links.confirm") },
+                                  :class => 'btn btn-xs btn-delete' %>
+                    </td>
+                  </tr>
+                <% end %>
+              <% end %>
               <% @user.members.each do |member| %>
                 <tr>
                   <td>

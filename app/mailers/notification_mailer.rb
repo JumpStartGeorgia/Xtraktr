@@ -31,4 +31,11 @@ class NotificationMailer < ActionMailer::Base
     mail(:bcc => message.bcc, :subject => message.subject)
   end
 
+  def send_new_organization_member(message, user)
+    @message = message
+    @user = user
+    mail(:to => "#{message.email}",
+			:subject => I18n.t("mailer.notification.new_organization_member.subject"))
+  end
+
 end

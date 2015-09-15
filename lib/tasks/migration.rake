@@ -91,5 +91,10 @@ namespace :migration do
   end
 
 
+  desc "for users that do not have email_no_domain, create one"
+  task :add_user_email_no_domain => :environment do
+    require "./db/migrate/add_user_email_no_domain.rb"
+  end
+
 
 end

@@ -8,9 +8,10 @@ class Message
   field :email, type: String
   field :subject, type: String
   field :message, type: String
+  field :message_list, type: Array
 
-  attr_accessible :name, :email, :subject, :message, :bcc, :locale
-  
+  attr_accessible :name, :email, :subject, :message, :bcc, :locale, :message_list
+
   attr_accessor :bcc, :locale
 
   #################################
@@ -29,9 +30,9 @@ class Message
   end
 
   #################################
-  
+
 private
-  def strip_whitespace 
+  def strip_whitespace
     name.strip! if name.present?
     email.strip! if email.present?
     return true

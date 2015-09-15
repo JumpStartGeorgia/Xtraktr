@@ -24,6 +24,7 @@ ka:
       time_series_group: Group
       time_series_weight: Weight
       time_series_weight_assignment: Weight Assignment
+      invitation: Invitation
     attributes:
       user:
         email: "ელ.ფოსტა"
@@ -556,6 +557,13 @@ ka:
       new_data:
         subject: "A new dataset has been added to Xtraktr!"
         message: "Xtraktr has just uploaded new data for you to explore, visualize, and share."
+      new_organization_member:
+        subject: "You have been invited to join an organization on Xtraktr!"
+        message: "You have received the following invitations to join an organization on Xtraktr. If you would like to accept the invitation, simply click the 'Accept the Invitation' link. If you want to decline this invitation, no action is needed on your part."
+        from: From
+        msg: Message
+        accept_link: Accept the Invitation
+        all_invitations: View all of your Xtraktr organization invitations.
     contact:
       contact_form:
         subject: "Xtraktr Contact Form"
@@ -743,6 +751,16 @@ ka:
       cannot_include_weight: The question is marked as a weight and cannot be included as a question in the analsysis.
       question_no_answers: This question does not have answers and cannot be analyzed.
       admin_codebook_questions: This administrative view of the codebook shows all questions including those that are excluded and those that have no answers, which can be identified by the icon next to the question name. Please be aware that questions that are excluded or have no answers will not be visible to the public.
+      collaborators:
+        success_remove: '%{name} was removed as a member'
+        user_not_found: User to remove as a member could not be found
+        success_invitations: მოწვევები გაგზავნილია!
+        error_invitations_all: "მოწვევები ვერ გაიგზავნა შემდეგი ხარვეზის გამო: %{msg}"
+        error_invitations_some: "ზოგიერთი მოწვევა ვერ გაიგზავნა შემდეგი ხარვეზის გამო: %{msg}"
+      invitation:
+        accepted: "თქვენ დათანხმდით თანაავტორობის მოწვევას შემდეგ ამბავზე: '%{org}'"
+        accepted_already: "თქვენ უკვე დათანხმდით თანაავტორობის მოწვევას შემდეგ ამბავზე: '%{org}'"
+        bad: უკაცრავად, თქვენი მოწვევა ვერ მოიძებნა ან ამბავი არის წაშლილი.
     menu:
       explore_data: "მონაცემთა გაცნობა"
       explore_time_series: "პერიოდული შედარების გაცნობა"
@@ -881,10 +899,22 @@ ka:
       delete_api: API-ს დაშვების გასაღების წაშლა
       no_groups: You do not belong to any organizations.
       no_members: This group does not have any members.
+      pending: Membership Pending
+      join: Join Organization
     organization_new:
       title: Create An Organization
     organization_edit:
       title: Edit An Organization
+    member_new:
+      title: Add an Organization Member
+      explanation: |
+        Use the form below to search for users in Xtraktr to add as members to your organization. You can enter multiple users at once.
+
+        If the person is not already in Xtraktr, enter their email address and they will be asked to join Xtraktr.
+
+        Invitations will be sent to these users asking them to become a member of your organization. If you wish, you may also provide an additional message.
+      search_label: Enter names or email addresses of the people you want to invite
+      message: Add Message to Notification (optional)
   root:
     index:
       header_latest_datasets: უახლესი მონაცემები

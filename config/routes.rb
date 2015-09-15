@@ -83,6 +83,8 @@ BootstrapStarter::Application.routes.draw do
 
     match '/datasets', :to => 'root#explore_data', :as => :explore_data, :via => :get
     match '/time_series', :to => 'root#explore_time_series', :as => :explore_time, :via => :get
+    match '/settings_from_notification', :to => 'settings#settings_from_notification', :as => :settings_from_notification, :via => :get
+    match '/accept_invitation_from_notification/:key', :to => 'settings#accept_invitation_from_notification', :as => :settings_accept_invitation_from_notification, :via => :get
 
     # user managed pages scoped by the user/group id
     scope :path => ":owner_id" do
@@ -166,9 +168,13 @@ BootstrapStarter::Application.routes.draw do
       match '/settings/organizations/new', :to => 'settings#organization_new', :as => :settings_organization_new, :via => [:get, :post]
       match '/settings/organizations/:id', :to => 'settings#organization_edit', :as => :settings_organization_edit, :via => [:get, :put]
       match '/settings/organizations/:id/delete', :to => 'settings#organization_delete', :as => :settings_organization_delete, :via => [:delete]
-      match '/settings/leave_organization/:id', :to => 'settings#organization_leave', :as => :settings_organization_leave, :via => [:delete]
+      match '/settings/organizations/:id/leave', :to => 'settings#organization_leave', :as => :settings_organization_leave, :via => [:delete]
+      match '/settings/organizations/:id/delete_invitation', :to => 'settings#organization_delete_invitation', :as => :settings_organization_delete_invitation, :via => [:delete]
+      match '/settings/organizations/:id/accept_invitation', :to => 'settings#organization_accept_invitation', :as => :settings_organization_accept_invitation, :via => [:post]
       match '/settings/members/new', :to => 'settings#member_new', :as => :settings_member_new, :via => [:get, :post]
       match '/settings/members/:id/delete', :to => 'settings#member_delete', :as => :settings_member_delete, :via => [:delete]
+      match '/settings/members/search', :to => 'settings#member_search', :as => :settings_member_search, :via => :post, :defaults => { :format => 'json' }
+      match '/settings/members/:id/delete_invitation', :to => 'settings#member_delete_invitation', :as => :settings_member_delete_invitation, :via => [:delete]
 
   		match '/datasets/:id', :to => 'root#explore_data_dashboard', :as => :explore_data_dashboard, :via => :get
       match '/datasets/:id/explore', :to => 'root#explore_data_show', :as => :explore_data_show, :via => :get
