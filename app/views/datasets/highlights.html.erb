@@ -57,7 +57,7 @@
                         :'data-href' => highlights_edit_description_path,
                         :'data-embed-id' => highlight.embed_id %>
             <%= link_to '',
-                        remove_highlight_dataset_path(id: highlight.dataset_id, embed_id: highlight.embed_id),
+                        remove_highlight_dataset_path(owner_id: @owner, id: @dataset, embed_id: highlight.embed_id),
                         :title => t("helpers.links.destroy"),
                         :method => :post,
                         :data => { :confirm => I18n.t("helpers.links.confirm") },

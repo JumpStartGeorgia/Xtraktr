@@ -1,4 +1,4 @@
-<%- 
+<%-
   label_key = "mongoid.attributes.time_series_question."
   hint_key = "mongoid.hints.time_series_question."
   a_label_key = "mongoid.attributes.time_series_answer."
@@ -7,7 +7,7 @@
   tsq_hint_key = "mongoid.hints.time_series_dataset_question."
 -%>
 
-<%= semantic_form_for [@time_series, @time_series_question], url: @is_new == true ? time_series_questions_path : time_series_question_path, html: {class: 'tabbed-translation-form'} do |f| %>
+<%= semantic_form_for [@time_series, @time_series_question], url: @is_new == true ? time_series_questions_path(@owner) : time_series_question_path(@owner), html: {class: 'tabbed-translation-form'} do |f| %>
   <%= f.error_messages %>
 
   <table id='time-series-dataset-questions' class="table table-striped table-hover">
@@ -20,35 +20,35 @@
     <tbody>
       <% @time_series_question.dataset_questions.each_with_index do |dataset_question, index| %>
         <%= f.semantic_fields_for :dataset_questions, dataset_question do |f_dataset_question| %>
-          <%= render partial: 'dataset_question_fields', :locals => {f: f_dataset_question, 
-              ts_dataset: @datasets.select{|x| x.dataset_id == dataset_question.dataset_id}.first, 
+          <%= render partial: 'dataset_question_fields', :locals => {f: f_dataset_question,
+              ts_dataset: @datasets.select{|x| x.dataset_id == dataset_question.dataset_id}.first,
               questions: @questions[dataset_question.dataset_id.to_s]} %>
         <% end %>
       <% end %>
     </tbody>
-  </table>                  
+  </table>
 
   <hr />
 
   <div role="tabpanel" class="tabbed-translation-fields">
-    <% 
-      locales = [I18n.locale] 
+    <%
+      locales = [I18n.locale]
       locales = @time_series.languages_sorted if @time_series.languages.present?
     %>
 
     <ul class="nav nav-tabs" role="tablist">
       <%
-        default_locale = I18n.locale.to_s 
-        default_lang = '' 
+        default_locale = I18n.locale.to_s
+        default_lang = ''
       %>
       <% locales.each_with_index do |locale, index| %>
         <%
           lang = @languages.select{|x| x.locale == locale.to_s}.first
           cls = ''
           if index == 0
-            cls = 'class=active' 
+            cls = 'class=active'
             default_locale = locale
-            default_lang = lang.present? ? lang.name : locale 
+            default_lang = lang.present? ? lang.name : locale
           end
         %>
         <li role="presentation" <%= cls %> data-locale="<%= locale %>">
@@ -83,7 +83,7 @@
           <% end %>
 
           <%= f.fields_for :text_translations, OpenStruct.new(f.object.text_translations) do |translation| %>
-            <% 
+            <%
               label = t(label_key + 'text')
               hint = t(hint_key + 'text')
               if index > 0
@@ -94,7 +94,7 @@
           <% end %>
 
           <%= f.fields_for :notes_translations, OpenStruct.new(f.object.notes_translations) do |translation| %>
-            <% 
+            <%
               label = t(label_key + 'notes')
               hint = t(hint_key + 'notes')
               if index > 0
@@ -107,19 +107,19 @@
           <h3><%= t('.header_answers') %></h3>
           <p><%= t('.explanation_answers', lang: default_lang) %></p>
 
-          <%- 
+          <%-
             answers = []
             answers = @time_series_question.answers.sorted if @time_series_question.answers.count > 0
           -%>
 
           <% if index == 0 %>
             <div>
-              <%- 
+              <%-
                 create_class = 'hide'
                 delete_class = 'hide'
                 if answers.present?
                   delete_class = ''
-                end 
+                end
               -%>
               <a id="auto-create-answers" class="btn btn-success <%= create_class %>" title="<%= t('.auto_create_answers_title') %>"><%= t('.auto_create_answers_link') %></a>
               <a id="delete-all-answers" class="btn btn-danger <%= delete_class %>" title="<%= t('.delete_all_answers_title') %>" data-confirm-text="<%= t('helpers.links.confirm') %>" ><%= t('.delete_all_answers_link') %></a>
@@ -156,7 +156,7 @@
                 <tr>
                   <td colspan="3"><%= t('.header_add_answer') %></td>
                   <td colspan="<%= 2 + @datasets.length %>">
-                    <%= link_to_add_association t('helpers.links.add_answer'), f, :answers, 
+                    <%= link_to_add_association t('helpers.links.add_answer'), f, :answers,
                         :class => 'btn btn-success',
                         :'data-association-insertion-node' => '.tab-content .tab-pane:first #time-series-dataset-answers tbody',
                         :'data-association-insertion-method' => 'append',
@@ -165,7 +165,7 @@
                 </tr>
               </tfoot>
             <% end %>
-          </table>                  
+          </table>
 
         </div>
       <% end %>

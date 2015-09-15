@@ -1,9 +1,9 @@
 <%- model_class = TimeSeries -%>
-<% title t '.title', :default => model_class.model_name.human.pluralize %>
+<% title t('.title', owner: @owner.name).html_safe %>
 
 <div class="form-group form-group-admin-buttons">
   <%= link_to t('.new', :default => t("helpers.links.new")),
-              new_time_series_path,
+              new_time_series_path(@owner),
               :class => 'btn btn-primary' %>
 </div>
 
@@ -21,7 +21,7 @@
   <tbody>
     <% @time_series.each do |time_series| %>
       <tr>
-        <td><%= link_to time_series.title, time_series_path(time_series) %></td>
+        <td><%= link_to time_series.title, time_series_path(@owner, time_series) %></td>
         <td>
           <ul>
           <% time_series.datasets.sorted.each do |dataset| %>

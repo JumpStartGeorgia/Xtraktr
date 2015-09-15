@@ -422,6 +422,11 @@ class TimeSeries < CustomTranslation
     x.present? ? x.slug : nil
   end
 
+  def self.get_owner(id)
+    x = only(:user_id).find(id)
+    x.present? ? x.owner : nil
+  end
+
   def self.search(q)
     full_text_search(q)
   end
@@ -450,15 +455,31 @@ class TimeSeries < CustomTranslation
     where(private_share_key: key).first
   end
 
-  def self.by_user(user_id)
-    where(user_id: user_id)
-    # all
+  # get if owner id is same as current user id
+  # or if owner id is group and current user belongs to group
+  def self.by_owner(owner_id, current_user_id=nil)
+    has_access = false
+
+    if current_user_id.nil?
+      has_access = true
+    elsif owner_id == current_user_id
+      has_access = true
+    else
+      u = User.find(current_user_id)
+      has_access = u.groups.in_group?(owner_id) if u.present?
+    end
+
+    if has_access
+      where(user_id: owner_id)
+    else
+      # none is a mongoid method that returns an empty mongo criteria object
+      none
+    end
   end
 
   # get the record if the user is the owner
-  def self.by_id_for_user(id, user_id)
-    # where(id: id).by_user(user_id).first
-    by_user(user_id).find(id)
+  def self.by_id_for_owner(id, owner_id, current_user_id=nil)
+    by_owner(owner_id, current_user_id).find(id)
   end
 
   def self.categorize(cat)
@@ -500,6 +521,24 @@ class TimeSeries < CustomTranslation
     self.weights.present?
   end
 
+  # get the owner id of this record
+  def owner_id
+    if self.user_id.present?
+      self.user_id
+    end
+  end
+
+  # get the owner slug of this record
+  def owner_slug
+    owner.present? ? owner.slug : owner_id
+  end
+
+  # get the owner of this record
+  def owner
+    if self.user_id.present?
+      self.user
+    end
+  end
 
   # get the groups and questions in sorted order
   # options:
@@ -633,7 +672,7 @@ class TimeSeries < CustomTranslation
     puts "- found #{matches.length} matches"
 
     # create record for each match
-    matches_with_index.each do |code, index|
+    matches.each_with_index do |code, index|
       answer_values = []
       question_answers = {}
 

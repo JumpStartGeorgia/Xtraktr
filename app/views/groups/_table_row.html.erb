@@ -1,7 +1,7 @@
 <%-
   is_sub_group ||= false
 -%>
-      <tr>  
+      <tr>
         <td>
           <%= is_sub_group ? group.parent_id.present? ? group.parent.title : '' : group.title %>
         </td>
@@ -30,11 +30,11 @@
         </td>
         <td>
           <%= link_to '',
-                      edit_dataset_group_path(@dataset, group), 
+                      edit_dataset_group_path(@owner, @dataset, group),
                       :title => t('helpers.links.edit'),
                       :class => 'btn btn-xs btn-edit' %>
           <%= link_to '',
-                      dataset_group_path(@dataset, group),
+                      dataset_group_path(@owner, @dataset, group),
                       :title => t("helpers.links.destroy"),
                       :method => :delete,
                       :data => { :confirm => I18n.t("helpers.links.confirm") },

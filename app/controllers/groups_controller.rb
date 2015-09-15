@@ -1,5 +1,7 @@
 class GroupsController < ApplicationController
   before_filter :authenticate_user!
+  before_filter :load_owner # set @owner variable
+  before_filter(except: [:group_questions]) {load_dataset(params[:dataset_id])} # set @dataset variable using @owner
   before_filter do |controller_instance|
     controller_instance.send(:valid_role?, @data_editor_role)
   end
@@ -7,21 +9,13 @@ class GroupsController < ApplicationController
   # GET /groups
   # GET /groups.json
   def index
-   @dataset = Dataset.by_id_for_user(params[:dataset_id], current_user.id)
+    @items = @dataset.arranged_items(include_questions: true, include_groups: true, include_subgroups: true)
 
-    if @dataset.present?
-      @items = @dataset.arranged_items(include_questions: true, include_groups: true, include_subgroups: true)
+    add_common_options(false)
 
-      add_common_options(false)
-
-      respond_to do |format|
-        format.html
-        format.js { render json: @items}
-      end
-    else
-      flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to datasets_path(:locale => I18n.locale)
-      return
+    respond_to do |format|
+      format.html
+      format.js { render json: @items}
     end
   end
 
@@ -39,84 +33,54 @@ class GroupsController < ApplicationController
   # GET /groups/new
   # GET /groups/new.json
   def new
-   @dataset = Dataset.by_id_for_user(params[:dataset_id], current_user.id)
+    @group = @dataset.groups.new
 
-    if @dataset.present?
-      @group = @dataset.groups.new
+    add_common_options
 
-      add_common_options
-
-      respond_to do |format|
-        format.html # new.html.erb
-        format.json { render json: @group }
-      end
-    else
-      flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to datasets_path(:locale => I18n.locale)
-      return
+    respond_to do |format|
+      format.html # new.html.erb
+      format.json { render json: @group }
     end
   end
 
   # GET /groups/1/edit
   def edit
-   @dataset = Dataset.by_id_for_user(params[:dataset_id], current_user.id)
+    @group = @dataset.groups.find(params[:id])
 
-    if @dataset.present?
-      @group = @dataset.groups.find(params[:id])
-
-      add_common_options
-
-    else
-      flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to datasets_path(:locale => I18n.locale)
-      return
-    end
+    add_common_options
   end
 
   # POST /groups
   # POST /groups.json
   def create
-   @dataset = Dataset.by_id_for_user(params[:dataset_id], current_user.id)
+    @group = @dataset.groups.new(params[:group])
 
-    if @dataset.present?
-      @group = @dataset.groups.new(params[:group])
+    # check if group is valid
+    # - if not, stop
+    if @group.valid?
+      # assign the group ids to the questions
+      if params[:dataset].present? && params[:dataset][:questions_attributes].present?
+        selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] == 'true'}.map{|k,v| v[:id]}
+        not_selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] != 'true'}.map{|k,v| v[:id]}
+      end
 
-      # check if group is valid
-      # - if not, stop
-      if @group.valid?
-        # assign the group ids to the questions
-        if params[:dataset].present? && params[:dataset][:questions_attributes].present?
-          selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] == 'true'}.map{|k,v| v[:id]}
-          not_selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] != 'true'}.map{|k,v| v[:id]}
+      # have to have subgroups or questions in order to be saved
+      if (selected_ids.present? && selected_ids.length > 0) ||
+          (not_selected_ids.present? && not_selected_ids.length > 0) ||
+          @group.subgroups.length > 0
+        if (selected_ids.present? && selected_ids.length > 0)
+          @dataset.questions.assign_group(selected_ids, @group.id)
+        end
+        if (not_selected_ids.present? && not_selected_ids.length > 0)
+          @dataset.questions.assign_group(not_selected_ids, @group.parent_id.present? ? @group.parent_id : nil)
         end
 
-        # have to have subgroups or questions in order to be saved
-        if (selected_ids.present? && selected_ids.length > 0) ||
-            (not_selected_ids.present? && not_selected_ids.length > 0) ||
-            @group.subgroups.length > 0
-          if (selected_ids.present? && selected_ids.length > 0)
-            @dataset.questions.assign_group(selected_ids, @group.id)
-          end
-          if (not_selected_ids.present? && not_selected_ids.length > 0)
-            @dataset.questions.assign_group(not_selected_ids, @group.parent_id.present? ? @group.parent_id : nil)
-          end
-
-          respond_to do |format|
-            if @dataset.save
-              format.html { redirect_to dataset_groups_path, flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.group'))} }
-              format.json { render json: @group, status: :created, location: @group }
-            else
-              logger.debug "!!!!!!!!!!! error = #{@dataset.errors.messages.inspect}"
-              add_common_options
-
-              format.html { render action: "new" }
-              format.json { render json: @group.errors, status: :unprocessable_entity }
-            end
-          end
-        else
-          @group.add_missing_questions_error
-
-          respond_to do |format|
+        respond_to do |format|
+          if @dataset.save
+            format.html { redirect_to dataset_groups_path(@owner), flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.group'))} }
+            format.json { render json: @group, status: :created, location: @group }
+          else
+            logger.debug "!!!!!!!!!!! error = #{@dataset.errors.messages.inspect}"
             add_common_options
 
             format.html { render action: "new" }
@@ -124,6 +88,8 @@ class GroupsController < ApplicationController
           end
         end
       else
+        @group.add_missing_questions_error
+
         respond_to do |format|
           add_common_options
 
@@ -132,109 +98,92 @@ class GroupsController < ApplicationController
         end
       end
     else
-      flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to datasets_path(:locale => I18n.locale)
-      return
+      respond_to do |format|
+        add_common_options
+
+        format.html { render action: "new" }
+        format.json { render json: @group.errors, status: :unprocessable_entity }
+      end
     end
   end
 
   # PUT /groups/1
   # PUT /groups/1.json
   def update
-   @dataset = Dataset.by_id_for_user(params[:dataset_id], current_user.id)
+    @group = @dataset.groups.find(params[:id])
+    @group.assign_attributes(params[:group])
 
-    if @dataset.present?
-      @group = @dataset.groups.find(params[:id])
-      @group.assign_attributes(params[:group])
+    # check if group is valid
+    # - if not, stop
+    if @group.valid?
+      # assign the group ids to the questions
+      if params[:dataset].present? && params[:dataset][:questions_attributes].present?
+        selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] == 'true'}.map{|k,v| v[:id]}
+        not_selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] != 'true'}.map{|k,v| v[:id]}
+      end
 
-      # check if group is valid
-      # - if not, stop
-      if @group.valid?
-        # assign the group ids to the questions
-        if params[:dataset].present? && params[:dataset][:questions_attributes].present?
-          selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] == 'true'}.map{|k,v| v[:id]}
-          not_selected_ids = params[:dataset][:questions_attributes].select{|k,v| v[:selected] != 'true'}.map{|k,v| v[:id]}
+      # have to have subgroups or questions in order to be saved
+      if (selected_ids.present? && selected_ids.length > 0) ||
+          (not_selected_ids.present? && not_selected_ids.length > 0) ||
+          @group.subgroups.length > 0
+        if (selected_ids.present? && selected_ids.length > 0)
+          @dataset.questions.assign_group(selected_ids, @group.id)
         end
-
-        # have to have subgroups or questions in order to be saved
-        if (selected_ids.present? && selected_ids.length > 0) ||
-            (not_selected_ids.present? && not_selected_ids.length > 0) ||
-            @group.subgroups.length > 0
-          if (selected_ids.present? && selected_ids.length > 0)
-            @dataset.questions.assign_group(selected_ids, @group.id)
-          end
-          if (not_selected_ids.present? && not_selected_ids.length > 0)
-            @dataset.questions.assign_group(not_selected_ids, @group.parent_id.present? ? @group.parent_id : nil)
-          end
-          respond_to do |format|
-            if @dataset.save
-              format.html { redirect_to dataset_groups_path, flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.group'))} }
-              format.json { head :no_content }
-            else
-              add_common_options
-
-              format.html { render action: "edit" }
-              format.json { render json: @group.errors, status: :unprocessable_entity }
-            end
-          end
-        else
-          @group.add_missing_questions_error
-
-          respond_to do |format|
+        if (not_selected_ids.present? && not_selected_ids.length > 0)
+          @dataset.questions.assign_group(not_selected_ids, @group.parent_id.present? ? @group.parent_id : nil)
+        end
+        respond_to do |format|
+          if @dataset.save
+            format.html { redirect_to dataset_groups_path(@owner), flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.group'))} }
+            format.json { head :no_content }
+          else
             add_common_options
 
-            format.html { render action: "new" }
+            format.html { render action: "edit" }
             format.json { render json: @group.errors, status: :unprocessable_entity }
           end
         end
       else
+        @group.add_missing_questions_error
+
         respond_to do |format|
           add_common_options
 
-          format.html { render action: "edit" }
+          format.html { render action: "new" }
           format.json { render json: @group.errors, status: :unprocessable_entity }
         end
       end
     else
-      flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to datasets_path(:locale => I18n.locale)
-      return
+      respond_to do |format|
+        add_common_options
+
+        format.html { render action: "edit" }
+        format.json { render json: @group.errors, status: :unprocessable_entity }
+      end
     end
   end
 
   # DELETE /groups/1
   # DELETE /groups/1.json
   def destroy
-   @dataset = Dataset.by_id_for_user(params[:dataset_id], current_user.id)
+    @group = @dataset.groups.find(params[:id])
+    @group.destroy
 
-    if @dataset.present?
-      @group = @dataset.groups.find(params[:id])
-      @group.destroy
-
-      respond_to do |format|
-        format.html { redirect_to dataset_groups_url, flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.group'))} }
-        format.json { head :no_content }
-      end
-    else
-      flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to datasets_path(:locale => I18n.locale)
-      return
+    respond_to do |format|
+      format.html { redirect_to dataset_groups_url(@owner), flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.group'))} }
+      format.json { head :no_content }
     end
   end
 
   # get the questions that can be assigned to this group and that are currently assigned to this group
   def group_questions
     if params[:dataset_id].present?
-      dataset = Dataset.by_id_for_user(params[:dataset_id], current_user.id)
+      dataset = Dataset.by_id_for_owner(params[:dataset_id], @owner.id, current_user.id)
 
       if dataset.present?
         # if group id was provided, look for questions assigned to the group
         # else get questions that do not have groups assigned yet
-        questions = if params[:group_id].present?
-          dataset.questions.assigned_to_group_meta_only(params[:group_id])
-        else
-          dataset.questions.not_assigned_group_meta_only
-        end
+        questions = params[:group_id].present? ? dataset.questions.assigned_to_group_meta_only(params[:group_id]) : dataset.questions.not_assigned_group_meta_only
 
         # get existing group
         group = dataset.groups.find(params[:id])
@@ -278,7 +227,7 @@ private
       @main_groups = @dataset.groups.main_groups(@group.id)
 
       gon.insert_description_text = t('app.msgs.insert_description_text')
-      gon.group_questions_path = group_questions_dataset_group_path(@dataset.id, @group.id)
+      gon.group_questions_path = group_questions_dataset_group_path(@owner.slug, @dataset.slug, @group.id)
     end
 
     add_dataset_nav_options

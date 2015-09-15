@@ -1,20 +1,38 @@
-<% title t('.title') %>
-<% model_class = ApiKey %>
+<% title t('.title', owner: @owner.name).html_safe %>
+<% u_model_class = User %>
+<% a_model_class = ApiKey %>
 
-<div id="settings-tabs" class="tabs" role="tabpanel">
-  <% 
+<div id="settings-tabs" class="tabs style1" role="tabpanel">
+  <%
     settings_active = {tab: 'active', panel: 'in active'}
     api_active = {tab: '', panel: ''}
+    organizations_active = {tab: '', panel: ''}
+    members_active = {tab: '', panel: ''}
     if params[:page] == 'api'
-       api_active = {tab: 'active', panel: 'in active'}
+      api_active = {tab: 'active', panel: 'in active'}
       settings_active = {tab: '', panel: ''}
-    end 
+    elsif params[:page] == 'organizations'
+      organizations_active = {tab: 'active', panel: 'in active'}
+      settings_active = {tab: '', panel: ''}
+    elsif params[:page] == 'members'
+      members_active = {tab: 'active', panel: 'in active'}
+      settings_active = {tab: '', panel: ''}
+    end
   %>
 
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="<%= settings_active[:tab] %>">
       <a href="#settings" aria-controls="settings" role="tab" data-toggle="tab"><%= t('.tabs.settings') %></a>
     </li>
+    <% if @user.is_user? %>
+      <li role="presentation" class="<%= organizations_active[:tab] %>">
+        <a href="#organizations" aria-controls="organizations" role="tab" data-toggle="tab"><%= t('.tabs.organizations') %></a>
+      </li>
+    <% else %>
+      <li role="presentation" class="<%= members_active[:tab] %>">
+        <a href="#members" aria-controls="members" role="tab" data-toggle="tab"><%= t('.tabs.members') %></a>
+      </li>
+    <% end %>
     <li role="presentation" class="<%= api_active[:tab] %>">
       <a href="#api" aria-controls="api" role="tab" data-toggle="tab"><%= t('.tabs.api') %></a>
     </li>
@@ -22,12 +40,15 @@
 
   <div class="tab-content">
     <div role="tabpanel" class="tab-pane fade <%= settings_active[:panel] %>" id="settings">
-      <%= semantic_form_for(@user, url: settings_path,html: {:"id"=>"signup-form"}) do |f| %>
+      <%= semantic_form_for(@user, url: settings_path(@owner),html: {:"id"=>"signup-form"}) do |f| %>
         <%= f.error_messages %>
 
         <%= f.inputs do %>
-          <%= render :partial => 'devise/registrations/new', :locals => { f: f, resource: @user } %>
-
+          <% if @user.is_user? %>
+            <%= render :partial => 'devise/registrations/edit', :locals => { f: f, resource: @user } %>
+          <% else %>
+          <%= render :partial => 'devise/registrations/group', :locals => { f: f, resource: @user } %>
+          <% end %>
         <% end %>
 
         <div class="form-group">
@@ -36,23 +57,182 @@
       <% end %>
     </div>
 
+    <% if @user.is_user? %>
+      <div role="tabpanel" class="tab-pane fade <%= organizations_active[:panel] %>" id="organizations">
+        <p>
+          <%= t('.org_explanation') %>
+        </p>
+        <p id="btn-add">
+          <%= link_to t('.org_add'), settings_organization_new_path(@owner) %>
+        </p>
+
+        <% if @user.belongs_to_groups? || @pending_orgs.present? %>
+          <table class="table table-striped table-hover table-nonfluid">
+            <thead>
+              <tr>
+                <th></th>
+                <th><%= u_model_class.human_attribute_name(:org_name) %></th>
+                <th><%= u_model_class.human_attribute_name(:dataset_count) %></th>
+                <th><%= u_model_class.human_attribute_name(:created_at) %></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if @pending_orgs.present? %>
+                <% @pending_orgs.each do |pending| %>
+                  <tr>
+                    <td>
+                      <%= link_to settings_organization_accept_invitation_path(@owner, pending.id),
+                            class: 'btn btn-xs btn-default', title: t('.join'),
+                            :method => :post do %>
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                      <% end %>
+                    </td>
+                    <td>
+                        <%#= image_tag(group.group.avatar.url(:small)) %>
+                        <%= pending.from_user.name %>
+                    </td>
+                    <td></td>
+                    <td><%= t('.pending') %></td>
+                    <td>
+                      <%= link_to '',
+                                  settings_organization_delete_invitation_path(@owner, pending.id),
+                                  :title => t("helpers.links.destroy"),
+                                  :method => :delete,
+                                  :data => { :confirm => I18n.t("helpers.links.confirm") },
+                                  :class => 'btn btn-xs btn-delete' %>
+                    </td>
+                  </tr>
+                <% end %>
+              <% end %>
+
+              <% @user.groups.each do |group| %>
+                <tr>
+                  <td>
+                    <%= link_to params.merge(owner_id: group.group, page: nil), class: 'btn btn-xs btn-default', title: t('.switch_to_org') do %>
+                      <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                    <% end %>
+                    <%= link_to settings_organization_leave_path(owner_id: group.group, id: group.group_id),
+                          class: 'btn btn-xs btn-default', title: t('.leave_org'),
+                          :method => :delete,
+                          :data => { :confirm => I18n.t("helpers.links.confirm") } do %>
+                      <span class="glyphicon glyphicon-minus-sign" aria-hidden="true"></span>
+                    <% end %>
+                  </td>
+                  <td>
+                      <%#= image_tag(group.group.avatar.url(:small)) %>
+                      <%= group.group.name %>
+                  </td>
+                  <td><%= number_with_delimiter(group.group.dataset_count) %></td>
+                  <td><%= l(group.group.created_at.to_date, format: :day_first) %></td>
+                  <td>
+                    <%= link_to '',
+                                settings_organization_edit_path(@owner, group.group),
+                                :title => t('helpers.links.edit'),
+                                :class => 'btn btn-xs btn-edit' %>
+                    <%= link_to '',
+                                settings_organization_delete_path(@owner, group.group),
+                                :title => t("helpers.links.destroy"),
+                                :method => :delete,
+                                :data => { :confirm => I18n.t("helpers.links.confirm") },
+                                :class => 'btn btn-xs btn-delete' %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        <% else %>
+          <p>
+            <%= t('.no_groups') %>
+          </p>
+        <% end %>
+      </div>
+    <% else %>
+      <div role="tabpanel" class="tab-pane fade <%= members_active[:panel] %>" id="members">
+        <p>
+          <%= t('.member_explanation') %>
+        </p>
+        <p id="btn-add">
+          <%= link_to t('.member_add'), settings_member_new_path(@owner) %>
+        </p>
+
+        <% if @user.has_members? || @pending_members.present? %>
+          <table class="table table-striped table-hover table-nonfluid">
+            <thead>
+              <tr>
+                <th><%= u_model_class.human_attribute_name(:name) %></th>
+                <th><%= u_model_class.human_attribute_name(:dataset_count) %></th>
+                <th><%= u_model_class.human_attribute_name(:created_at) %></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if @pending_members.present? %>
+                <% @pending_members.each do |pending| %>
+                  <tr>
+                    <td>
+                      <%#= image_tag(member.member.avatar.url(:small)) %>
+                      <%= pending.to_user_id.present? ? pending.to_user.name : pending.to_email %>
+                    </td>
+                    <td></td>
+                    <td><%= t('.pending') %></td>
+                    <td>
+                      <%= link_to '',
+                                  settings_member_delete_invitation_path(@owner, pending.id),
+                                  :title => t("helpers.links.destroy"),
+                                  :method => :delete,
+                                  :data => { :confirm => I18n.t("helpers.links.confirm") },
+                                  :class => 'btn btn-xs btn-delete' %>
+                    </td>
+                  </tr>
+                <% end %>
+              <% end %>
+              <% @user.members.each do |member| %>
+                <tr>
+                  <td>
+                    <%#= image_tag(member.member.avatar.url(:small)) %>
+                    <%= member.member.name %>
+                  </td>
+                  <td><%= number_with_delimiter(member.member.dataset_count) %></td>
+                  <td><%= l(member.created_at.to_date, format: :day_first) %></td>
+                  <td>
+                    <%= link_to '',
+                                settings_member_delete_path(@owner, member.member),
+                                :title => t("helpers.links.destroy"),
+                                :method => :delete,
+                                :data => { :confirm => I18n.t("helpers.links.confirm") },
+                                :class => 'btn btn-xs btn-delete' %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        <% else %>
+          <p>
+            <%= t('.no_members') %>
+          </p>
+        <% end %>
+      </div>
+    <% end %>
+
+
     <div role="tabpanel" class="tab-pane fade <%= api_active[:panel] %>" id="api">
 
       <p><%= t('.api_explanation1') %></p>
       <p><%= t('.api_explanation2').gsub('[link]', link_to(t('.api_link_text'), api_path)).html_safe %></p>
 
-      <p id="btn-add-api-key">
-        <%= link_to t('.get_api'), settings_get_api_token_path, method: :post %>
+      <p id="btn-add">
+        <%= link_to t('.get_api'), settings_get_api_token_path(@owner), method: :post %>
       </p>
-      
+
       <hr />
 
       <% if @user.api_keys.present? %>
         <table class="table table-striped table-hover table-nonfluid">
           <thead>
             <tr>
-              <th><%= model_class.human_attribute_name(:key) %></th>
-              <th><%= model_class.human_attribute_name(:created_at) %></th>
+              <th><%= a_model_class.human_attribute_name(:key) %></th>
+              <th><%= a_model_class.human_attribute_name(:created_at) %></th>
               <th></th>
             </tr>
           </thead>
@@ -63,14 +243,14 @@
                 <td><%= l(key.created_at.to_date, format: :day_first) %></td>
                 <td>
                   <%= link_to '',
-                              settings_delete_api_token_path(key.id),
+                              settings_delete_api_token_path(@owner, key.id),
                               :'data-placement' => 'right',
                               :title => t('.delete_api'),
                               :method => :delete,
                               :data => { :confirm => I18n.t("helpers.links.confirm") },
                               :class => 'btn btn-xs btn-delete' %>
-                </td>   
-              </tr>           
+                </td>
+              </tr>
             <% end %>
           </tbody>
         </table>

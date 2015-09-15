@@ -3,7 +3,7 @@
 
 <% if @dataset.questions.with_code_answers.present? %>
 
-  <%= form_tag mass_changes_questions_dataset_path(@dataset), id: 'frm-dataset-exclude-questions', class: 'form-data-loader' do %>
+  <%= form_tag mass_changes_questions_dataset_path(@dataset.owner, @dataset), id: 'frm-dataset-exclude-questions', class: 'form-data-loader' do %>
 
     <p>
       <%= t('.explanation') %>

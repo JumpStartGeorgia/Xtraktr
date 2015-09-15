@@ -1,5 +1,7 @@
 class TimeSeriesWeightsController < ApplicationController
   before_filter :authenticate_user!
+  before_filter :load_owner # set @owner variable
+  before_filter {load_time_series(params[:time_series_id])} # set @time_series variable using @owner
   before_filter do |controller_instance|
     controller_instance.send(:valid_role?, @data_editor_role)
   end
@@ -7,21 +9,13 @@ class TimeSeriesWeightsController < ApplicationController
   # GET /weights
   # GET /weights.json
   def index
-    @time_series = TimeSeries.by_id_for_user(params[:time_series_id], current_user.id)
+    @weights = @time_series.weights
 
-    if @time_series.present?
-      @weights = @time_series.weights
+    add_common_options(false)
 
-      add_common_options(false)
-
-      respond_to do |format|
-        format.html
-        format.js { render json: @weights}
-      end
-    else
-      flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to time_seriess_path(:locale => I18n.locale)
-      return
+    respond_to do |format|
+      format.html
+      format.js { render json: @weights}
     end
   end
 
@@ -39,109 +33,77 @@ class TimeSeriesWeightsController < ApplicationController
   # GET /weights/new
   # GET /weights/new.json
   def new
-    @time_series = TimeSeries.by_id_for_user(params[:time_series_id], current_user.id)
+    @weight = @time_series.weights.new(is_default: true, applies_to_all: true)
 
-    if @time_series.present?
-      @weight = @time_series.weights.new(is_default: true, applies_to_all: true)
+    add_common_options
 
-      add_common_options
+    @weight.dataset_id = @datasets.last.dataset_id
 
-      @weight.dataset_id = @datasets.last.dataset_id
+    # build the dataset questions
+    @datasets.each do |dataset|
+      @weight.assignments.build(dataset_id: dataset.dataset_id)
+    end
 
-      # build the dataset questions
-      @datasets.each do |dataset|
-        @weight.assignments.build(dataset_id: dataset.dataset_id)
-      end
+    @is_new = true
 
-      @is_new = true
-
-      respond_to do |format|
-        format.html # new.html.erb
-        format.json { render json: @weight }
-      end
-    else
-      flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to time_series_weights_path(:locale => I18n.locale)
-      return
+    respond_to do |format|
+      format.html # new.html.erb
+      format.json { render json: @weight }
     end
   end
 
   # GET /weights/1/edit
   def edit
-    @time_series = TimeSeries.by_id_for_user(params[:time_series_id], current_user.id)
+    @weight = @time_series.weights.find(params[:id])
 
-    if @time_series.present?
-      @weight = @time_series.weights.find(params[:id])
+    add_common_options
+    #set_tabbed_translation_form_settings
 
-      add_common_options
-      #set_tabbed_translation_form_settings
-
-      respond_to do |format|
-        format.html # new.html.erb
-        format.json { render json: @weight }
-      end
-    else
-      flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to time_series_weights_path(:locale => I18n.locale)
-      return
+    respond_to do |format|
+      format.html # new.html.erb
+      format.json { render json: @weight }
     end
   end
 
   # POST /weights
   # POST /weights.json
   def create
-    @time_series = TimeSeries.by_id_for_user(params[:time_series_id], current_user.id)
+    @weight = @time_series.weights.new(params[:time_series_weight])
 
-    if @time_series.present?
-      @weight = @time_series.weights.new(params[:time_series_weight])
+    respond_to do |format|
+      if @weight.save
+        format.html { redirect_to time_series_weights_path(@owner), flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.time_series_weight'))} }
+        format.json { render json: @weight, status: :created, location: @weight }
+      else
+        add_common_options
+        @is_new = true
 
-      respond_to do |format|
-        if @weight.save
-          format.html { redirect_to time_series_weights_path, flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.time_series_weight'))} }
-          format.json { render json: @weight, status: :created, location: @weight }
-        else
-          add_common_options
-          @is_new = true
-
-          format.html { render action: "new" }
-          format.json { render json: @weight.errors, status: :unprocessable_entity }
-        end
+        format.html { render action: "new" }
+        format.json { render json: @weight.errors, status: :unprocessable_entity }
       end
-    else
-      flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to time_seriess_path(:locale => I18n.locale)
-      return
     end
   end
 
   # PUT /weights/1
   # PUT /weights/1.json
   def update
-    @time_series = TimeSeries.by_id_for_user(params[:time_series_id], current_user.id)
+    @weight = @time_series.weights.find(params[:id])
 
-    if @time_series.present?
-      @weight = @time_series.weights.find(params[:id])
+    if @weight.present?
+      respond_to do |format|
+        if @weight.update_attributes(params[:time_series_weight])
+          format.html { redirect_to time_series_weights_path(@owner), flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.time_series_weight'))} }
+          format.json { head :no_content }
+        else
+          add_common_options
 
-      if @weight.present?
-        respond_to do |format|
-          if @weight.update_attributes(params[:time_series_weight])
-            format.html { redirect_to time_series_weights_path, flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.time_series_weight'))} }
-            format.json { head :no_content }
-          else
-            add_common_options
-
-            format.html { render action: "edit" }
-            format.json { render json: @weight.errors, status: :unprocessable_entity }
-          end
+          format.html { render action: "edit" }
+          format.json { render json: @weight.errors, status: :unprocessable_entity }
         end
-      else
-        flash[:info] =  t('app.msgs.does_not_exist')
-        redirect_to time_series_weights_path(:locale => I18n.locale)
-        return
       end
     else
       flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to time_seriess_path(:locale => I18n.locale)
+      redirect_to time_series_weights_path(:locale => I18n.locale, :owner_id => @owner.slug)
       return
     end
   end
@@ -149,20 +111,12 @@ class TimeSeriesWeightsController < ApplicationController
   # DELETE /weights/1
   # DELETE /weights/1.json
   def destroy
-    @time_series = TimeSeries.by_id_for_user(params[:time_series_id], current_user.id)
+    @weight = @time_series.weights.find(params[:id])
+    @weight.destroy
 
-    if @time_series.present?
-      @weight = @time_series.weights.find(params[:id])
-      @weight.destroy
-
-      respond_to do |format|
-        format.html { redirect_to time_series_weights_url, flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.time_series_weight'))} }
-        format.json { head :no_content }
-      end
-    else
-      flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to time_seriess_path(:locale => I18n.locale)
-      return
+    respond_to do |format|
+      format.html { redirect_to time_series_weights_url(@owner), flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.time_series_weight'))} }
+      format.json { head :no_content }
     end
   end
 

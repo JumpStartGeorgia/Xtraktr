@@ -7,7 +7,7 @@
   <%= link_to t('.back', :default => t("helpers.links.back")),
               dataset_questions_path, :class => 'btn btn-default'  %>
   <%= link_to '',
-              edit_dataset_question_path(@dataset, @question),
+              edit_dataset_question_path(@dataset.owner, @dataset, @question),
               :title => t('helpers.links.edit'),
               :class => 'btn btn-edit' %>
 </div>
@@ -22,7 +22,7 @@
     <li class="col-sm-4">
       <strong><%= model_class.human_attribute_name(:is_weight) %>:</strong>
       <br />
-      <%= format_boolean_flag(@question.is_weight) %>  
+      <%= format_boolean_flag(@question.is_weight) %>
     </li>
     <li class="col-sm-4">
       <strong><%= model_class.human_attribute_name(:has_code_answers) %>:</strong>

@@ -46,15 +46,6 @@
             <%= simple_format(highlight.description, {}, {sanitize: false}) %>
           </td>
           <td>
-            <% if !highlight.show_home_page %>
-              <%= link_to home_page_highlight_time_series_path(id: highlight.time_series_id, embed_id: highlight.embed_id),
-                          :title => t('.btn_show_home_page'),
-                          :method => :post,
-                          :class => 'btn btn-xs btn-default' do %>
-
-                <span class="glyphicon glyphicon-pushpin" aria-hidden="true"></span>
-              <% end %>
-            <% end %>
             <%= link_to '',
                         '#',
                         :title => t('helpers.links.edit_description'),
@@ -62,7 +53,7 @@
                         :'data-href' => highlights_edit_description_path,
                         :'data-embed-id' => highlight.embed_id %>
             <%= link_to '',
-                        remove_highlight_time_series_path(id: highlight.time_series_id, embed_id: highlight.embed_id),
+                        remove_highlight_time_series_path(owner_id: @owner, id: @time_series, embed_id: highlight.embed_id),
                         :title => t("helpers.links.destroy"),
                         :method => :post,
                         :data => { :confirm => I18n.t("helpers.links.confirm") },

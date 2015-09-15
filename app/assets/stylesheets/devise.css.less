@@ -181,7 +181,7 @@
   padding: 9px 10px 0 10px;
 }
 
-#signup-form
+#signup-form, #organization-form
 {
   max-width:650px;
   min-width:650px;
@@ -346,7 +346,7 @@ label > abbr {
   }
 
 
- input[type=text],input[type=email],input[type=password], textarea
+  input[type=text],input[type=url],input[type=tel],input[type=email],input[type=file],input[type=password], textarea
   {
     font:12px 'sourcesans_pro', 'sans-serif' !important;
     color:@3c4352;
@@ -361,8 +361,11 @@ label > abbr {
     border-radius:0 !important;
     box-shadow: none !important;
     transition: 0.3s linear;
+    &.full-width{
+      width: 100%;
+    }
   }
-  input[type=text]:focus,input[type=email]:focus,input[type=password]:focus, textarea:focus
+  input[type=text]:focus,input[type=url]:focus,input[type=tel]:focus,input[type=email]:focus,input[type=file]:focus,input[type=password]:focus, textarea:focus
   {
     background-color:@fff !important;
     outline:none;
@@ -430,7 +433,7 @@ label > abbr {
   }
   .has-error
   {
-     input[type=text],input[type=email],input[type=password], textarea
+     input[type=text],input[type=url],input[type=tel],input[type=email],input[type=file],input[type=password], textarea
      {
         background-color:#f7d0d6 !important;
      }

@@ -1,0 +1,53 @@
+<%= simple_format @message.message %>
+
+<table>
+ <thead>
+  <tr>
+    <%
+      style = "border-bottom: 2px solid #666; padding: 10px; vertical-align: bottom;"
+    %>
+    <th style="<%= style %>">
+      <%= t('mailer.notification.new_organization_member.from', :locale => @message.locale) %>
+    </th>
+    <th style="<%= style %>">
+      <%= t('mailer.notification.new_organization_member.msg', :locale => @message.locale) %>
+    </th>
+    <th style="<%= style %>">
+      <%= t('mailer.notification.new_organization_member.accept_link', :locale => @message.locale) %>
+    </th>
+  </tr>
+ </thead>
+ <tbody>
+  <% @message.message_list.each_with_index do |msg, index| %>
+    <%
+      style = "border-top: 1px solid #aaa; padding: 10px; vertical-align: top;"
+      style = "padding: 10px; vertical-align: top;" if index == 0
+    %>
+    <tr>
+      <td style="<%= style %>">
+        <p>
+          <%= msg[0] %>
+        </p>
+      </td>
+      <td style="<%= style %>">
+        <% if msg[2].present? %>
+          <%= simple_format msg[2] %>
+        <% end %>
+      </td>
+      <td style="<%= style %>">
+        <p>
+          <%= link_to t('mailer.notification.new_organization_member.accept_link', :locale => @message.locale),
+                settings_accept_invitation_from_notification_url(:locale => @message.locale, :key => msg[1]) %>
+        </p>
+      </td>
+    </tr>
+  <% end %>
+ </tbody>
+</table>
+
+<% if @user.present? %>
+  <p>
+    <%= link_to t('mailer.notification.new_organization_member.all_invitations', :locale => @message.locale),
+          settings_url(:locale => @message.locale, owner_id: @user.slug, page: 'organizations') %>
+  </p>
+<% end %>

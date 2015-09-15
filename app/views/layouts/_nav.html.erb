@@ -30,7 +30,9 @@
                   </form>
                   </div>
               </div>
-            </div><%- I18n.available_locales.each do |locale| -%><%- if locale != I18n.locale -%><div class="m-lang">
+            </div>
+            <%- I18n.available_locales.each do |locale| -%><%- if locale != I18n.locale -%>
+                <div class="m-lang">
                   <div class="figure"></div>
                   <div class="under-box">
                     <div class="figure"></div>
@@ -60,31 +62,69 @@
           <li class="user">
             <div class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <%= current_user.name %>
+                <%= @acting_as_user.name %>
                 <span class="caret"></span>
               </a>
               <ul class="dropdown-menu" role="menu">
-                <% if current_user.role?(@data_editor_role) %>
-                  <li><%= link_to datasets_path do %>
-                    <i class="menu_datasets"></i>
-                    <%= t('app.menu.datasets') %>
+                <% if @acting_as_user.role?(@data_editor_role) %>
+                  <li>
+                    <%= link_to owner_dashboard_path(@acting_as_user) do %>
+                      <i class="menu_owner_dashboard"></i>
+                      <%= t('app.menu.owner_dashboard') %>
                     <% end %>
                   </li>
-                  <li><%= link_to time_series_index_path do %>
-                    <i class="menu_time_series"></i>
-                    <%= t('app.menu.time_series') %>
-                    <% end %></li>
+                  <li role="separator" class="divider"></li>
+                  <li>
+                    <%= link_to datasets_path(@acting_as_user) do %>
+                      <i class="menu_datasets"></i>
+                      <%= t('app.menu.datasets') %>
+                    <% end %>
+                  </li>
+                  <li>
+                    <%= link_to time_series_index_path(@acting_as_user) do %>
+                      <i class="menu_time_series"></i>
+                      <%= t('app.menu.time_series') %>
+                    <% end %>
+                </li>
                 <% end %>
-                <li><%= link_to settings_path  do %>
-                    <i class="menu_user_settings"></i>
-                    <%= t('app.menu.user_settings') %>
-                    <% end %></li>
+                <li>
+                    <%= link_to settings_path(@acting_as_user)  do %>
+                      <i class="menu_user_settings"></i>
+                      <%= t('app.menu.settings') %>
+                    <% end %>
+                </li>
                 <% if current_user.role?(@site_admin_role) %>
-                  <li><%= link_to admin_path  do %>
-                    <i class="menu_admin"></i>
-                    <%= t('helpers.links.admin') %>
-                    <% end %></li>
+                  <li role="separator" class="divider"></li>
+                  <li>
+                    <%= link_to admin_path  do %>
+                      <i class="menu_admin"></i>
+                      <%= t('helpers.links.admin') %>
+                    <% end %>
+                  </li>
                 <% end %>
+                <% if current_user.belongs_to_groups? && @acting_as_user.present? %>
+                  <li role="separator" class="divider"></li>
+                  <li class="dropdown-header"><%= t('.switch_to') %></li>
+                  <% if current_user.id != @acting_as_user.id %>
+                    <li>
+                      <%= link_to owner_dashboard_path(owner_id: current_user)  do %>
+                        <i class="menu_admin"></i>
+                        <%= current_user.name %>
+                      <% end %>
+                    </li>
+                  <% end %>
+                  <% current_user.groups.each do |group| %>
+                    <% if group.group_id != @acting_as_user.id %>
+                      <li>
+                        <%= link_to owner_dashboard_path(owner_id: group.group)  do %>
+                          <i class="menu_admin"></i>
+                          <%= group.group.name %>
+                        <% end %>
+                      </li>
+                    <% end %>
+                  <% end %>
+                <% end %>
+
               </ul>
             </div>
             <div>

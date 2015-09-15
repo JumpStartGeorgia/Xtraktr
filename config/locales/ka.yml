@@ -3,6 +3,8 @@ ka:
   mongoid:
     models:
       user: "მომხმარებელი"
+      organization: Organization
+      member: Member
       page_content: "ტექსტი გვერდებისთვის"
       dataset: მონაცემები
       shapeset: "ფორმების ცხრილი"
@@ -22,6 +24,7 @@ ka:
       time_series_group: Group
       time_series_weight: Weight
       time_series_weight_assignment: Weight Assignment
+      invitation: Invitation
     attributes:
       user:
         email: "ელ.ფოსტა"
@@ -37,13 +40,22 @@ ka:
         last_name: "გვარი"
         name: "სახელი"
         age_group: "ასაკობრივი ჯგუფი"
-        residence: "საცხოვრებელი ქვეყანა"
+        residence: "ქვეყანა"
         affiliation: "დაწესებულება"
-        status: "სტატუსი"
+        status: "კატეგორია"
         status_other: "როდესაც სხვა (გთხოვთ მიუთითოთ)"
-        description: "საკვლევი ობიექტის მოკლე აღწერა (<i>არჩევითი</i>)"
+        description: "Brief Description of Yourself (<i>არჩევითი</i>)"
         notifications: "ახალი მონაცემების დამატების დროს მინდა შეტყობინების მიღება"
         notification_locale: "შეტყობინების ენა"
+        phone: Phone Number
+        website_url: Website
+        permalink: Name in URL
+        org_name: Organization Name
+        org_description: Organization Description
+        avatar: Avatar
+        created_at: Added On
+        dataset_count: Number of Datasets
+        organizations: Organizations
       message:
         name: "სახელი"
         email: "ელ.ფოსტის მისამართი"
@@ -58,7 +70,7 @@ ka:
         affiliation: "დაწესებულება"
         status: "სტატუსი"
         status_other: "როდესაც სხვა (გთხოვთ მიუთითოთ)"
-        description: "საკვლევი ობიექტის მოკლე აღწერა (<i>არჩევითი</i>)"
+        description: "Short summary (<i>არჩევითი</i>)"
         dataset_id: მონაცემები
         dataset_type: File Type
         dataset_locale: "ენა"
@@ -98,6 +110,8 @@ ka:
         license_title: License Title
         license_description: License Description
         license_url: License URL
+        user_id: Uploaded By
+        owner_id: Maintain Under Account
       stats:
         questions_analyzable: Analyzable Questions
         public_questions_analyzable: Public Analyzable Questions
@@ -170,6 +184,7 @@ ka:
         license_title: License Title
         license_description: License Description
         license_url: License URL
+        user_id: Uploaded By
       time_series_dataset:
         dataset_id: მონაცემები
         title: "ეტიკეტი"
@@ -288,6 +303,7 @@ ka:
         license_title: The title of the license
         license_description: A brief description of the license
         license_url: A URL to webpage that has more information about the license
+        owner_id: Select the account that you want the dataset to be stored under
       shapeset:
         title: სახელწოდება ფორმების კრებულისთვის
         description: "ფორმების ცხრილის შინაარსის მოკლე აღწერა"
@@ -541,6 +557,13 @@ ka:
       new_data:
         subject: "A new dataset has been added to Xtraktr!"
         message: "Xtraktr has just uploaded new data for you to explore, visualize, and share."
+      new_organization_member:
+        subject: "You have been invited to join an organization on Xtraktr!"
+        message: "You have received the following invitations to join an organization on Xtraktr. If you would like to accept the invitation, simply click the 'Accept the Invitation' link. If you want to decline this invitation, no action is needed on your part."
+        from: From
+        msg: Message
+        accept_link: Accept the Invitation
+        all_invitations: View all of your Xtraktr organization invitations.
     contact:
       contact_form:
         subject: "Xtraktr Contact Form"
@@ -686,6 +709,7 @@ ka:
     msgs:
       does_not_exist: "თქვენ ცდილობთ ისეთი გვერდის ნახვას, რომელიც არ არსებობს."
       not_authorized: "თქვენ არ გაქვთ ამ გვერდის ნახვის უფლება."
+      success_saved: "%{obj} was successfully saved."
       success_created: "%{obj} შექმნილია."
       success_updated: "%{obj} განახლებულია."
       success_deleted: "%{obj} was successfully deleted."
@@ -727,6 +751,16 @@ ka:
       cannot_include_weight: The question is marked as a weight and cannot be included as a question in the analsysis.
       question_no_answers: This question does not have answers and cannot be analyzed.
       admin_codebook_questions: This administrative view of the codebook shows all questions including those that are excluded and those that have no answers, which can be identified by the icon next to the question name. Please be aware that questions that are excluded or have no answers will not be visible to the public.
+      collaborators:
+        success_remove: '%{name} was removed as a member'
+        user_not_found: User to remove as a member could not be found
+        success_invitations: მოწვევები გაგზავნილია!
+        error_invitations_all: "მოწვევები ვერ გაიგზავნა შემდეგი ხარვეზის გამო: %{msg}"
+        error_invitations_some: "ზოგიერთი მოწვევა ვერ გაიგზავნა შემდეგი ხარვეზის გამო: %{msg}"
+      invitation:
+        accepted: "თქვენ დათანხმდით თანაავტორობის მოწვევას შემდეგ ამბავზე: '%{org}'"
+        accepted_already: "თქვენ უკვე დათანხმდით თანაავტორობის მოწვევას შემდეგ ამბავზე: '%{org}'"
+        bad: უკაცრავად, თქვენი მოწვევა ვერ მოიძებნა ან ამბავი არის წაშლილი.
     menu:
       explore_data: "მონაცემთა გაცნობა"
       explore_time_series: "პერიოდული შედარების გაცნობა"
@@ -734,7 +768,8 @@ ka:
       time_series: "პერიოდული შედარება"
       highlights: Highlights
       about: About
-      user_settings: "მომხმარებლის პარამეტრები"
+      settings: Settings
+      owner_dashboard: Dashboard
       about_dataset: "შესახებ"
       about_time_series: "შესახებ"
       all_datasets: "მონაცემების ყველა ცხრილი"
@@ -800,7 +835,7 @@ ka:
   layouts:
     nav:
       toggle: "ნავიგაციის ჩართვა/გამორთვა"
-      back: UNICEF.ge-ზე დაბრუნება
+      switch_to: Switch Accounts
     explore_data:
       private_share_header: "პირადად გაზიარებული '%{title}'"
       private_share_explanation: "თქვენ შეგიძლიათ დააკოპიროთ და გაუზიაროთ შემდეგი URL იმას , ვინც გსურთ რომ იხილოს '%{title}' იმ შემთხვევაშიც კი, თუ თქვენი მონაცემთა ცხრილი არ არის საჯაროდ გაზიარებული. ამ ადამიანებს ექნებათ საშუალება გაეცნონ თქვენს მონაცემებს, მაგრამ ვერ შეძლებენ მის შეცვლას და შესწორებას."
@@ -844,16 +879,42 @@ ka:
         p3: "თქვენი პაროლი იგივე დარჩება, სანამ არ გადახვალთ ზემოთ მითითებულ ბმულზე და შექმნით ახალ პაროლს."
   settings:
     index:
-      title: "მომხმარებლის პარამეტრები"
+      title: Settings for <em>%{owner}</em>
       tabs:
         settings: "პარამეტრები"
+        organizations: Organizations
+        members: Members
         api: API-ს დაშვების გასაღები
+      org_explanation: Xtraktr Organization's allow you to load datasets under an organization's name instead of an individual person. You can be the sole administrator of the organization or you can invite other people to join your organization and help administer your datasets.
+      org_add: Create An Organization
+      switch_to_org: Switch to Organization Account
+      leave_org: Stop Being a Member of this Organization
+      member_explanation: Members are the users that have access to manage the datasets in your organization.
+      member_add: Add a Member
       api_explanation1: API საშუალებას გაძლევთ პროგრამულად მიიღოთ ინფორმაცია და ჩაატაროთ ანალიზი საიტზე არსებულ მონაცემთა ცხრილსა და პერიოდულ შედარებაში. API-ს ყველა გამოძაღება ითხოვს დაშვების გასაღებს, რომელიც გვამცნობს იმას, თუ ვინ აკეთებს მოთხოვნას. გამოძაღებისთვის უბრალოდ დააჭირეთ ქვემოთ მოცემულ ღილაკს.
       api_link_text: API-ს დოკუმენტაციის სექცია
       api_explanation2: "[link]-ზე გადასვლით თქვენ შეგიძლია გაიგოთ მეტი API-ს და დაშვების გასაღების შესახებ. "
       no_api_keys: "თქვენ არ გაქვთ API-ს დაშვების გასაღები ან ფაილი"
       get_api: API-ს დაშვების გასაღების მიღება
       delete_api: API-ს დაშვების გასაღების წაშლა
+      no_groups: You do not belong to any organizations.
+      no_members: This group does not have any members.
+      pending: Membership Pending
+      join: Join Organization
+    organization_new:
+      title: Create An Organization
+    organization_edit:
+      title: Edit An Organization
+    member_new:
+      title: Add an Organization Member
+      explanation: |
+        Use the form below to search for users in Xtraktr to add as members to your organization. You can enter multiple users at once.
+
+        If the person is not already in Xtraktr, enter their email address and they will be asked to join Xtraktr.
+
+        Invitations will be sent to these users asking them to become a member of your organization. If you wish, you may also provide an additional message.
+      search_label: Enter names or email addresses of the people you want to invite
+      message: Add Message to Notification (optional)
   root:
     index:
       header_latest_datasets: უახლესი მონაცემები
@@ -922,6 +983,7 @@ ka:
       no_content: "ამ მეთოდისთვის დოკუმენტაცია ჯერ არ შექმნილა"
   datasets:
     index:
+      title: Datasets for <em>%{owner}</em>
       view_warnings: "დეტალების ნახვა"
     warnings:
       title: "გაფრთხილება"
@@ -1121,6 +1183,8 @@ ka:
     form:
       other_weights: Other Weights this Question Belongs To
   time_series:
+    index:
+      title: Time Series for <em>%{owner}</em>
     form:
       header_datasets: "მონაცემთა ცხრილები"
       header_add_dataset: "პერიოდული შედარებაში ახალი მონაცემთა ცხრილების დამატება"
@@ -1355,6 +1419,16 @@ ka:
         codes: Question Code
         answers: "პასუხის ტექსტი"
       jumpto_group: Jump To Group
+    dashboard_owner:
+      tabs:
+        datasets: Datasets <span class="num">(%{num})</span>
+        time_series: Time Series <span class="num">(%{num})</span>
+      user:
+        no_datasets: The organization has not loaded any datasets.
+        no_time_series: The organization has not loaded any time series.
+      org:
+        no_datasets: The organization has not loaded any datasets.
+        no_time_series: The organization has not loaded any time series.
     language_switcher:
       label: "ხელმისაწვდომი ენები"
     embed:

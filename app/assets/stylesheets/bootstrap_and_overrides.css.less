@@ -446,6 +446,14 @@ footer {
           right:auto;
           padding:9px 0px 9px;
           li{
+            &.dropdown-header{
+              font:16px 'sourcesans_pro', 'sans-serif';
+              display: block;
+              padding:5px 20px;
+              width:100%;
+              color:@3c4352;
+              text-decoration: underline;
+            }
             a{
               font:16px 'sourcesans_pro', 'sans-serif';
               display: block;
@@ -464,6 +472,7 @@ footer {
                 vertical-align: bottom;
                 margin-right:10px;
               }
+              i.menu_owner_dashboard { background:transparent url(/assets/svg/user_menu.svg) no-repeat -48px center; }
               i.menu_datasets { background:transparent url(/assets/svg/user_menu.svg) no-repeat left center; }
               i.menu_time_series { background:transparent url(/assets/svg/user_menu.svg) no-repeat -16px center; }
               i.menu_user_settings { background:transparent url(/assets/svg/user_menu.svg) no-repeat -32px center; }

@@ -72,6 +72,26 @@ class RootController < ApplicationController
     end
   end
 
+  def owner_dashboard
+    @klass=' white'
+    @klass_footer=''
+
+    if @owner.blank?
+      redirect_to root_path, :notice => t('app.msgs.does_not_exist')
+    else
+      @datasets = Dataset.meta_only.is_public.sorted_public_at.by_owner(@owner.id)
+      @time_series = TimeSeries.meta_only.is_public.sorted_public_at.by_owner(@owner.id)
+      @show_title = false
+
+      @css.push("list.css", "dashboard.css", 'tabs.css')
+
+
+      respond_to do |format|
+        format.html # index.html.erb
+      end
+    end
+  end
+
 
   def explore_data
     @datasets = Dataset.meta_only.is_public
@@ -115,7 +135,7 @@ class RootController < ApplicationController
   def explore_data_dashboard
     @klass=' white'
     @klass_footer=''
-    @dataset = Dataset.is_public.find(params[:id])
+    @dataset = Dataset.is_public.by_id_for_owner(params[:id], @owner.id) if @owner.present?
 
     if @dataset.blank?
       redirect_to explore_data_path, :notice => t('app.msgs.does_not_exist')
@@ -143,14 +163,14 @@ class RootController < ApplicationController
   end
 
   def explore_data_show
-    @dataset = Dataset.is_public.find(params[:id])
+    @dataset = Dataset.is_public.by_id_for_owner(params[:id], @owner.id) if @owner.present?
 
     if @dataset.blank?
       redirect_to explore_data_path, :notice => t('app.msgs.does_not_exist')
     else
       @show_title = false
       @is_admin = false
-      @dataset_url = explore_data_show_path(@dataset)
+      @dataset_url = explore_data_show_path(@dataset.owner, @dataset)
       # gon.embed_chart = "<div class='embed-chart-modal'>
       #                     <div class='header'>#{t('helpers.links.embed_chart')}</div>
       #                     <div class='figure'></div>
@@ -214,7 +234,7 @@ class RootController < ApplicationController
   def explore_time_series_dashboard
     @klass=' white'
     @klass_footer=''
-    @time_series = TimeSeries.is_public.find(params[:id])
+    @time_series = TimeSeries.is_public.by_id_for_owner(params[:id], @owner.id) if @owner.present?
 
     if @time_series.blank?
       redirect_to explore_time_path, :notice => t('app.msgs.does_not_exist')
@@ -246,14 +266,14 @@ class RootController < ApplicationController
 
 
   def explore_time_series_show
-    @time_series = TimeSeries.is_public.find(params[:id])
+    @time_series = TimeSeries.is_public.by_id_for_owner(params[:id], @owner.id) if @owner.present?
 
     if @time_series.blank?
       redirect_to explore_time_path, :notice => t('app.msgs.does_not_exist')
     else
       @show_title = false
       @is_admin = false
-      @time_series_url = explore_time_series_show_path(@time_series)
+      @time_series_url = explore_time_series_show_path(@time_series.owner, @time_series)
       # gon.embed_chart = "<div class='embed-chart-modal'>
       #                     <div class='header'>#{t('helpers.links.embed_chart')}</div>
       #                     <div class='figure'></div>
@@ -282,7 +302,7 @@ class RootController < ApplicationController
     if @dataset.blank?
       redirect_to root_path, :notice => t('app.msgs.does_not_exist')
     elsif @dataset.public?
-      redirect_to explore_data_show_path(@dataset)
+      redirect_to explore_data_show_path(@dataset.owner, @dataset)
     else
       @is_admin = false
       @dataset_url = private_share_path(@dataset.private_share_key)

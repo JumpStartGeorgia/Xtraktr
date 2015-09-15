@@ -10,7 +10,7 @@ class TimeSeriesSerializer < ActiveModel::Serializer
   has_many :datasets
 
   def url
-    Rails.application.routes.url_helpers.explore_time_series_dashboard_url(locale: I18n.locale, id: object.slug)
+    Rails.application.routes.url_helpers.explore_time_series_dashboard_url(locale: I18n.locale, owner_id: object.owner_slug, id: object.slug)
   end
 
   def datasets

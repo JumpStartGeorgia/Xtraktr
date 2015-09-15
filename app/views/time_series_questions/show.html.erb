@@ -1,4 +1,4 @@
-<%- 
+<%-
   label_key = "mongoid.attributes.time_series_question."
   hint_key = "mongoid.hints.time_series_question."
   a_label_key = "mongoid.attributes.time_series_answer."
@@ -13,7 +13,7 @@
   <%= link_to t('.back', :default => t("helpers.links.back")),
               time_series_questions_path, :class => 'btn btn-default'  %>
   <%= link_to '',
-              edit_time_series_question_path(@time_series, @time_series_question), 
+              edit_time_series_question_path(@owner, @time_series, @time_series_question),
               :title => t('helpers.links.edit'),
               :class => 'btn btn-edit' %>
 </div>
@@ -26,7 +26,7 @@
         <th><%= t(tsq_label_key + 'dataset') %></th>
         <th><%= t(tsq_label_key + 'text') %></th>
       </tr>
-    </thead>    
+    </thead>
     <tbody>
       <% @time_series_question.dataset_questions.each do |dataset_question| %>
         <tr>
@@ -42,11 +42,11 @@
         </tr>
       <% end %>
     </tbody>
-  </table>                  
+  </table>
 
   <div role="tabpanel" class="tabbed-translation-fields">
-    <% 
-      locales = [I18n.locale] 
+    <%
+      locales = [I18n.locale]
       locales = @time_series.languages_sorted if @time_series.languages.present?
     %>
 
@@ -135,7 +135,3 @@
     </div>
   </div>
 </div>
-
-
-
-

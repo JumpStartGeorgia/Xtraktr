@@ -1142,7 +1142,7 @@ private
     # if this is the case, use the current locale
     locale = I18n.available_locales.include?(dataset.current_locale.to_sym) ? dataset.current_locale : I18n.locale
     # if the dataset is public, use the public url, else the admin one
-    url = dataset.public? ? url_helpers.explore_data_dashboard_url(locale: locale, id: dataset.slug) : url_helpers.dataset_url(locale: I18n.locale, id: dataset.slug)
+    url = dataset.public? ? url_helpers.explore_data_dashboard_url(locale: locale, owner_id: dataset.user.slug, id: dataset.slug) : url_helpers.dataset_url(locale: I18n.locale, owner_id: dataset.user.slug, id: dataset.slug)
     # if the urls updated_at does not exist, use the dataset updated_at
     date = dataset.urls.updated_at.present? ? dataset.urls.updated_at : dataset.updated_at
 

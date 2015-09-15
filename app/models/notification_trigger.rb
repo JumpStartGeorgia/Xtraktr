@@ -7,13 +7,14 @@ class NotificationTrigger
   belongs_to :dataset
   belongs_to :time_series
   belongs_to :user
+  belongs_to :invitation
 
   #############################
 
   field :notification_type, :type => Integer
   field :processed, :type => Boolean, default: false
 
-  TYPES = {:new_dataset => 1, :new_time_series => 2, :new_user => 3}
+  TYPES = {:new_dataset => 1, :new_time_series => 2, :new_user => 3, :new_member => 4}
 
   #############################
   ## Indexes
@@ -41,6 +42,7 @@ class NotificationTrigger
     puts "**************************"
     process_new_user
     process_new_data
+    process_new_organization_member
     puts "**************************"
     puts "--> Notification Triggers - process all types end at #{Time.now}"
     puts "**************************"
@@ -125,5 +127,70 @@ class NotificationTrigger
       NotificationTrigger.in(:id => triggers.map{|x| x.id}).update_all(:processed => true)
     end
   end
+
+  #################
+  ## story collaboration
+  #################
+  def self.add_new_organization_member(id)
+    NotificationTrigger.create(:notification_type => TYPES[:new_member], :invitation_id => id)
+  end
+
+  # slightly different format
+  # for invitations that need triggers, get uniq list of emails
+  # and then for each email send an invitation
+  # - this way if user has > 1 invitation they will all be in one email
+  def self.process_new_organization_member
+    puts "========================================="
+    puts "--> Notification Triggers - process org member"
+    triggers = NotificationTrigger.where(:notification_type => TYPES[:new_member]).not_processed
+    puts "======== triggers = #{triggers}"
+    if triggers.present?
+      puts "++++++++++ found #{triggers.length} triggers with ids: #{triggers.map{|x| x.invitation_id}.uniq}"
+      invitations = Invitation.in(:id => triggers.map{|x| x.invitation_id}.uniq)
+      if invitations.present?
+        puts "++++++++++ found #{invitations.length} invitations"
+        emails = invitations.map{|x| x.to_email}.uniq
+        if emails.present?
+          puts "++++++++++ found #{emails.length} emails"
+          orig_locale = I18n.locale
+          emails.each do |email|
+            puts "++++++++++ -- #{email}"
+            invs = invitations.select{|x| x.to_email == email}
+            if invs.present?
+              puts "++++++++++ --- found #{invs.length} invitations"
+              # if invitations have user_id, get language
+              # else, use default language
+              I18n.locale = I18n.default_locale
+              user_ids = invs.map{|x| x.to_user_id}.uniq
+              user = nil
+              if !(user_ids.include?(nil) && user_ids.length == 1)
+                # has user id
+                I18n.locale = User.get_notification_language_locale(user_ids.select{|x| x.present?}.first)
+                user = User.find(user_ids.select{|x| x.present?}.first)
+              end
+
+              message = Message.new
+              message.email  = email
+              message.locale = I18n.locale
+              message.subject = I18n.t("mailer.notification.new_organization_member.subject", :locale => I18n.locale)
+              message.message = I18n.t("mailer.notification.new_organization_member.message", :locale => I18n.locale)
+              message.message_list = []
+
+              invs.each do |inv|
+                message.message_list << [inv.from_user.name, inv.key, inv.message]
+	            end
+              puts " ---> message: #{message.inspect}"
+              NotificationMailer.send_new_organization_member(message, user).deliver if !Rails.env.staging?
+            end
+          end
+
+          # reset the locale
+          I18n.locale = orig_locale
+        end
+      end
+      NotificationTrigger.in(:id => triggers.map{|x| x.id}).update_all(:processed => true)
+    end
+  end
+
 
 end

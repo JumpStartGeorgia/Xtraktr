@@ -1,16 +1,21 @@
-<%- model_class = TimeSeries -%>
+<%-
+  model_class = TimeSeries
+  with_pagination = with_pagination.nil? ? true : with_pagination
+-%>
 <ul>
   <% if @time_series.present? %>
     <% @time_series.each do |time_series| %>
       <li>
         <div class="caption">
-          <div class="title"><%= link_to time_series.title, explore_time_series_dashboard_path(time_series) %></div>
+          <div class="title"><%= link_to time_series.title, explore_time_series_dashboard_path(time_series.owner, time_series) %></div>
         </div>
         <div class="info">
           <div class="timestamps">
-            <div class="timestamp">
+            <div class="timestamp meta">
               <span><%= model_class.human_attribute_name(:dates) %>:</span>
               <%= time_series.datasets.sorted.map{|x| x.title}.join(', ') %>
+            </div>
+            <div class="upload meta"><span><%= "#{model_class.human_attribute_name(:user_id)}: " %></span><%= link_to time_series.user.name, owner_dashboard_path(time_series.user) %>
             </div>
           </div>
         </div>
@@ -26,4 +31,7 @@
     <li><div class="no-data-found"><%= t('.no_match') %></div></li>
   <% end %>
 </ul>
-<%= paginate @time_series %>
+
+<% if with_pagination %>
+  <%= paginate @time_series %>
+<% end %>

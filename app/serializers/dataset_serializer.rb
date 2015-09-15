@@ -10,7 +10,7 @@ class DatasetSerializer < ActiveModel::Serializer
 
 
   def url
-    Rails.application.routes.url_helpers.explore_data_dashboard_url(locale: I18n.locale, id: object.slug)
+    Rails.application.routes.url_helpers.explore_data_dashboard_url(locale: I18n.locale, owner_id: object.owner_slug, id: object.slug)
   end
 
   def total_responses

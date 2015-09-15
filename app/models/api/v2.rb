@@ -119,7 +119,7 @@ class Api::V2
         user_id = Base64.urlsafe_decode64(private_user_id)
       end
       # get the dataset
-      dataset = Dataset.by_id_for_user(dataset_id, user_id) if user_id.present?
+      dataset = Dataset.by_id_for_owner(dataset_id, user_id, user_id) if user_id.present?
     else
       dataset = Dataset.is_public.find(dataset_id)
     end
@@ -356,7 +356,7 @@ class Api::V2
         user_id = Base64.urlsafe_decode64(private_user_id)
       end
       # get time series
-      time_series = TimeSeries.by_id_for_user(time_series_id, user_id) if user_id.present?
+      time_series = TimeSeries.by_id_for_owner(time_series_id, user_id, user_id) if user_id.present?
     else
       time_series = TimeSeries.is_public.find(time_series_id)
     end

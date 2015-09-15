@@ -1,0 +1,111 @@
+<%-
+  model_class = User
+  show_share = true if show_share.nil?
+  locale_key = @owner.is_user? ? 'user' : 'org'
+-%>
+
+<div class="article owner-dashboard">
+  <div class="meta">
+    <div class="col">
+      <% if false && @owner.avatar.exists? %>
+        <div id="owner-avatar">
+          <%= image_tag @owner.avatar.url(:thumb), alt: @owner.name %>
+        </div>
+      <% end %>
+      <h1><%=@owner.name%></h1>
+      <div class="info">
+        <div class="country">
+          <span><%= model_class.human_attribute_name(:residence) %>:</span>
+          <%= @owner.residence %>
+        </div>
+        <% if @owner.is_user? %>
+          <div class="affiliation">
+            <span><%= model_class.human_attribute_name(:affiliation) %>:</span>
+            <%= @owner.affiliation %>
+          </div>
+        <% end %>
+        <div class="status">
+          <span><%= model_class.human_attribute_name(:status) %>:</span>
+          <%= @owner.status_name %>
+        </div>
+        <% if @owner.website_url.present? %>
+          <div class="website_url">
+            <span><%= model_class.human_attribute_name(:website_url) %>:</span>
+            <%= link_to @owner.website_url, @owner.website_url, target: :blank %>
+          </div>
+        <% end %>
+        <% if @owner.email.present? && !@owner.is_user? %>
+          <div class="email">
+            <span><%= model_class.human_attribute_name(:email) %>:</span>
+            <%= mail_to @owner.email %>
+          </div>
+        <% end %>
+        <% if @owner.phone.present? && !@owner.is_user? %>
+          <div class="phone">
+            <span><%= model_class.human_attribute_name(:phone) %>:</span>
+            <%= @owner.phone %>
+          </div>
+        <% end %>
+        <% if @owner.is_user? && @owner.belongs_to_groups?%>
+          <div class="organizations">
+            <span><%= model_class.human_attribute_name(:organizations) %>:</span>
+            <ul class="list-unstyled">
+              <% @owner.groups.each do |group| %>
+                <li><%= link_to group.group.name, owner_dashboard_path(group.group) %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <div class="col">
+      <% if @owner.description.present? %>
+        <div class="description"><%= simple_format(@owner.description) %></div>
+      <% end %>
+    </div>
+  </div>
+
+  <div id="dashboard-tabs" class="tabs style1" role="tabpanel">
+    <div class="tab-header">
+      <div class="tab-caption"><%= t('.tabs.user_datasets', num: @datasets.length).html_safe %></div>
+      <button type="button" class="navbar-toggle tab-toggle collapsed" data-toggle="collapse" data-target=".tab-collapse">
+        <span class="sr-only"><%= t('.toggle') %></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <ul class="nav nav-tabs collapse tab-collapse" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#user_datasets" aria-controls="user_datasets" role="tab" data-toggle="tab"><%= t('.tabs.datasets', num: @datasets.length).html_safe %></a>
+      </li>
+      <li role="presentation">
+        <a href="#user_time_series" aria-controls="user_time_series" role="tab" data-toggle="tab"><%= t('.tabs.time_series', num: @time_series.length).html_safe %></a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active list" id="user_datasets">
+        <% if @datasets.present? %>
+          <%= render partial: 'root/explore_data_datasets', locals: {with_pagination: false, with_time_series_link: false} %>
+        <% else %>
+          <p>
+            <%= t(".#{locale_key}.no_datasets") %>
+          </p>
+        <% end %>
+      </div>
+
+      <div role="tabpanel" class="tab-pane fade list" id="user_time_series">
+        <% if @time_series.present? %>
+        <%= render partial: 'root/explore_data_time_series', locals: {with_pagination: false, with_time_series_link: false} %>
+        <% else %>
+          <p>
+            <%= t(".#{locale_key}.no_time_series") %>
+          </p>
+        <% end %>
+      </div>
+    </div>
+
+  </div>
+
+</div>

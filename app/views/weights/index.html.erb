@@ -56,11 +56,11 @@
         </td>
         <td>
         <%= link_to '',
-                    edit_dataset_weight_path(@dataset, weight),
+                    edit_dataset_weight_path(@owner, @dataset, weight),
                     :title => t('helpers.links.edit'),
                     :class => 'btn btn-xs btn-edit' %>
         <%= link_to '',
-                    dataset_weight_path(@dataset, weight),
+                    dataset_weight_path(@owner, @dataset, weight),
                     :title => t("helpers.links.destroy"),
                     :method => :delete,
                     :data => { :confirm => I18n.t("helpers.links.confirm") },

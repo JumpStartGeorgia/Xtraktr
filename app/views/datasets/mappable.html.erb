@@ -1,5 +1,5 @@
 <% title t('.title') %>
-<%- 
+<%-
   label_key_model = "mongoid.models."
   label_key = "mongoid.attributes.question."
 -%>
@@ -7,7 +7,7 @@
 <% if @shapeset_count > 0 %>
 
   <div>
-    <%= link_to t('.add_map_question'), mappable_form_dataset_path(@dataset), :class => 'btn btn-success' %>
+    <%= link_to t('.add_map_question'), mappable_form_dataset_path(@dataset.owner, @dataset), :class => 'btn btn-success' %>
   </div>
 
   <% if @mappable.present? %>
@@ -29,11 +29,11 @@
             <td><%= format_boolean_flag(question.has_map_adjustable_max_range?) %></td>
             <td>
               <%= link_to '',
-                          mappable_form_edit_dataset_path(:id => @dataset, :question_id => question.id), 
+                          mappable_form_edit_dataset_path(owner_id: @dataset.owner, :id => @dataset, :question_id => question.id),
                           :title => t('helpers.links.edit'),
                           :class => 'btn btn-edit btn-xs' %>
               <%= link_to '',
-                          remove_mapping_dataset_path(:id => @dataset, :question_id => question.id),
+                          remove_mapping_dataset_path(owner_id: @dataset.owner, :id => @dataset, :question_id => question.id),
                           :title => t("helpers.links.destroy"),
                           :method => :delete,
                           :data => { :confirm => I18n.t("helpers.links.confirm") },
