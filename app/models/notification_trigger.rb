@@ -143,21 +143,15 @@ class NotificationTrigger
     puts "========================================="
     puts "--> Notification Triggers - process org member"
     triggers = NotificationTrigger.where(:notification_type => TYPES[:new_member]).not_processed
-    puts "======== triggers = #{triggers}"
     if triggers.present?
-      puts "++++++++++ found #{triggers.length} triggers with ids: #{triggers.map{|x| x.invitation_id}.uniq}"
       invitations = Invitation.in(:id => triggers.map{|x| x.invitation_id}.uniq)
       if invitations.present?
-        puts "++++++++++ found #{invitations.length} invitations"
         emails = invitations.map{|x| x.to_email}.uniq
         if emails.present?
-          puts "++++++++++ found #{emails.length} emails"
           orig_locale = I18n.locale
           emails.each do |email|
-            puts "++++++++++ -- #{email}"
             invs = invitations.select{|x| x.to_email == email}
             if invs.present?
-              puts "++++++++++ --- found #{invs.length} invitations"
               # if invitations have user_id, get language
               # else, use default language
               I18n.locale = I18n.default_locale
