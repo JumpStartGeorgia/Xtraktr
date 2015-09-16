@@ -5,7 +5,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
       pars = sign_up_params
       if create_user? pars
         if create_facebook? pars
-          agreement_data = pars.slice(:email, :first_name, :last_name, :age_group, :residence, :affiliation, :status, :status_other, :description, :terms).merge!(params[:agreement])
+          agreement_data = pars.slice(:email, :first_name, :last_name, :age_group, :residence, :affiliation, :status, :status_other, :description).merge!(params[:agreement])
           @mod = Agreement.new(agreement_data)
           respond_to do |format|
             if @mod.valid?
@@ -13,7 +13,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
             else
               format.json { render json: { errors: @mod.errors, registration: true }, :status => :error }
             end
-          end   
+          end
           # build_resource(sign_up_params)
           # resource_saved = resource.save
           # yield resource if block_given?
@@ -35,7 +35,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
           #   end
           #   respond_with resource
           # end
-        else 
+        else
           build_resource(sign_up_params)
           resource_saved = resource.save
           yield resource if block_given?
@@ -58,10 +58,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
             respond_with resource
           end
         end
-             
+
       else
-         #if terms?
-            @mod = Agreement.new(pars.slice(:email, :first_name, :last_name, :age_group, :residence, :affiliation, :status, :status_other, :description, :terms).merge!( params[:agreement] ))
+            @mod = Agreement.new(pars.slice(:email, :first_name, :last_name, :age_group, :residence, :affiliation, :status, :status_other, :description).merge!( params[:agreement] ))
               @url = Dataset.find(@mod.dataset_id).urls[@mod.dataset_type][@mod.dataset_locale]
                 @model_name = @mod.model_name.downcase
          respond_to do |format|
@@ -77,13 +76,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def sign_up_params
     devise_parameter_sanitizer.sanitize(:sign_up)
   end
-  def create_user? pars    
+  def create_user? pars
     pars[:account].present? && pars[:account].to_i == 1
   end
   def create_facebook? pars
     pars[:facebook_account].present? && pars[:facebook_account].to_i == 1
-  end
-  def terms?
-    params[:user][:terms].present? && params[:user][:terms].to_i == 1
   end
 end

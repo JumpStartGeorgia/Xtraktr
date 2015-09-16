@@ -1,4 +1,5 @@
 <% reg = true if reg.nil? %>
+<% show_password = true if show_password.nil? %>
 <%- model_class = User -%>
   <div class="r">
     <%= f.input :first_name, :as => :string, :placeholder => model_class.human_attribute_name(:first_name).upcase+" *" , :label => false, :input_html => {:autofocus => true} %>
@@ -10,7 +11,7 @@
     <% if reg %>
         <input name="user[is_registration]" type="hidden" value="1">
         <input id="user_account" name="user[account]" type="hidden" value="1">
-        <input id="facebook_account" name="user[facebook_account]" type="hidden" value="0">
+        <!-- <input id="facebook_account" name="user[facebook_account]" type="hidden" value="0"> -->
     <% else %>
       <div class="boolean input optional checkbox form-group wanna_account" id="user_account_input">
         <div class="checkbox-box" tabindex="0">
@@ -19,24 +20,28 @@
           <label class="control-label" for="user_account"><%= t('user.wanna_account').html_safe %></label>
         </div>
       </div>
-        <% if !(current_user.present? && current_user.has_attribute?(:provider) && current_user.provider == "facebook") %>
-
-        <div class="r<%= reg ? '' : ' js-hide' %> ghost-box">
-          <% if !reg %>
-            <div class="boolean input optional checkbox form-group">
-              <div class="checkbox-box" tabindex="0">
-                <input name="user[facebook_account]" type="hidden" value="0">
-                <input id="facebook_account" name="user[facebook_account]" type="checkbox" value="1">
-                <label class="control-label" for="facebook_account"><%= t('user.via_facebook').html_safe %></label>
-              </div>
-            </div>
-          <% end %>
+    <% end %>    
+ <!-- todo check if statement if we need it at all  -->
+    <div class="r<%= reg ? '' : ' js-hide' %> ghost-box">
+      <% if !(current_user.present? && current_user.has_attribute?(:provider) && current_user.provider == "facebook") %>
+        <div id="choose_provider" class="radio_buttons input form-group horizontal">
+          <div class="radio radio-box selected" tabindex="0">
+            <input id="local_account" name="user[facebook_account]" type="radio" value="0" checked>
+            <label class="choice local" for="local_account"><%= t('helpers.links.sign_up_local') %></label>
+          </div>
+          <div class="radio radio-box" tabindex="0">
+            <input id="facebook_account" name="user[facebook_account]" type="radio" value="1">
+            <label class="choice facebook" for="facebook_account"><%= t('helpers.links.sign_up_facebook') %></label>
+          </div>
+        </div>
+      <% end %>
+      <% if show_password %>
+        <div class="password-box">
           <%= f.input :password, :input_html => { :size => 35 , :class => "login-password" }, :placeholder => model_class.human_attribute_name(:password).upcase+" *" , :label => false  %>
           <%= f.input :password_confirmation, :input_html => { :size => 35 , :class => "login-password-confirmation" }, :placeholder => model_class.human_attribute_name(:password_confirmation).upcase+" *" , :label => false  %>
         </div>
       <% end %>
-    <% end %>    
- 
+    </div>
 
     <div class="r">
       <%= f.input :residence, :as => :string, :placeholder => model_class.human_attribute_name(:residence).upcase+" *" , :label => false  %>
@@ -93,13 +98,3 @@
         </div>
       <% end %>
     </div>
-
-  <% if false %>
-    <div class="boolean input optional checkbox form-group" id="user_terms_input">
-      <div class="checkbox-box" tabindex="0">
-        <input name="user[terms]" type="hidden" value="0">
-        <input id="user_terms" name="user[terms]" type="checkbox" value="1" <%= resource.terms == true ? 'checked' : '' %>>
-        <label class="control-label" for="user_terms"><%= t('app.common.terms').html_safe %><abbr title="required">*</abbr></label>
-      </div>
-    </div>
-<% end %>

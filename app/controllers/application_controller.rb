@@ -13,7 +13,6 @@ class ApplicationController < ActionController::Base
 	before_filter :preload_global_variables
 	before_filter :initialize_gon
 	before_filter :store_location
-  # before_filter :check_user_status
 
   layout :layout_by_resource
 

@@ -661,6 +661,8 @@ ka:
       sign_out: "გასვლა"
       sign_in_provider: "შესვლა %{provider}-ით"
       sign_up_provider: "დარეგისტრირდით %{provider}-ით"
+      sign_up_local: Sign up with an email and password
+      sign_up_facebook: Sign up with Facebook
       sign_in_local_or_provider: "ან შეიყვანეთ თქვენი ელ. ფოსტა და პაროლი"
       reset_or_sign_in: "შედით facebook-ით ან შეცვალეთ პაროლი"
       explanation: "მოხარულნი ვართ, რომ დაინტერესდით ჩვენი მონაცემებით. ჩვენ გვსურს გავიგოთ მეტი თქვენ შესახებ. მონაცემთა ჩამოსატვირთად, გთხოვთ შეავსოთ ჩვენი ფორმა."

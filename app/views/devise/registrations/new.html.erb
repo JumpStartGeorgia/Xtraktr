@@ -1,49 +1,27 @@
 <%- model_class = User -%>
-<% reg = true if reg.nil? %>
+<%- explanation = false if explanation.nil? -%>
 <% title t('helpers.links.sign_up_title', :app_name => t("app.common.#{@app_key_name}.app_name")) %>
 
 <div id="signup-form">
-  <div class="red-box"><%= (reg ? t('helpers.links.sign_up2') : t('helpers.links.download')) %></div>
+  <div class="red-box"><%= (!@flags[0] ? t('helpers.links.sign_up2') : t('helpers.links.download')) %></div>
   <div class="red-box-neighbor">
   <%- if controller_name != 'sessions' %>
         <%= link_to t('helpers.links.sign_in'), new_session_path(resource_name), :class => 'sign-in-link reattach ' %>
      <% end -%>
   </div>
-
-  <% if !reg %>
+  <% if explanation %>
     <div class="explanation"><%= t('helpers.links.explanation') %></div>
   <% end %>
 
-  <% if @enable_omniauth %>
-    <div class="providers">
-      <%- if devise_mapping.omniauthable? %>
-	      <%- model_class.omniauth_providers.each do |provider| %>
-	        <% if provider == :facebook %>
-          	<%= link_to  omniauth_authorize_path(resource_name, provider), :class => 'facebook signup-form' do %>
-				    	<i class="s i-facebook-w"></i><span><%= t('helpers.links.sign_up_provider', :provider => provider.to_s.titleize) %></span>
-				    <% end %>
-	        <% else %>
-				    <%= link_to t('helpers.links.sign_up_provider', :provider => provider.to_s.titleize), omniauth_authorize_path(resource_name, provider), :class => 'btn btn-primary' %>
-	        <% end %>
-	      <% end -%>
-      <% end -%>
-    </div>
-    <div class="facebook_or_local">
-       <div class="midline"></div>
-       <div class="or"><%= t('helpers.links.sign_in_local_or_provider') %></div>
-       <div class="midline"></div>
-    </div>
-  <% end %>
 
   <%= semantic_form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html=>{:"data-form-id"=>"signup-form"}) do |f| %>
   	<%= f.error_messages %>
-
 	  <%= f.inputs do %>
-      <%= render :partial => 'devise/registrations/new', :locals => { f: f, resource: resource, reg: reg } %>
+      <%= render :partial => 'devise/registrations/new', :locals => { f: f, resource: resource } %>
     <% end %>
 
 	  <div class="control-group submit-row">
-		  <%= f.submit (reg ? t('helpers.links.sign_up2') : t('helpers.links.download')), :class => 'btn btn-default sign-up', :'data-text-swap' => t('helpers.links.download_and_sign_up') %>
+		  <%= f.submit (!@flags[0] ? t('helpers.links.sign_up2') : t('helpers.links.download')), :class => 'btn btn-default sign-up', :'data-text-swap' => t('helpers.links.download_and_sign_up') %>
 	  </div>
   <% end %>
 

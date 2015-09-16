@@ -94,9 +94,6 @@ class User
   field :description, type: String
   field :phone, type: String
   field :website_url, type: String
-
-
-  field :terms, type: Boolean, default: true
   field :notifications, type: Boolean, default: true
   field :notification_locale, type: String, default: I18n.default_locale.to_s
 
@@ -147,11 +144,10 @@ class User
   attr_accessible :email, :password, :password_confirmation, :remember_me,
                   :role, :provider, :uid, :nickname, :avatar, :permalink,
                   :first_name, :last_name, :age_group, :residence,
-                  :affiliation, :status, :status_other, :description, :terms, :account, :facebook_account,
+                  :affiliation, :status, :status_other, :description, :account, :facebook_account,
                   :phone, :website_url, :is_user, :avatar,
                   :notifications, :notification_locale, :api_keys_attributes, :is_registration,
                   :members_attributes, :groups_attributes, :email_no_domain
-
 
   #############################
   ## Validations
@@ -167,7 +163,6 @@ class User
   validates :status_other, presence: true, :if => lambda { |o| o.status == 8 }
   validates :account, :numericality => { :equal_to => 1 }, :if => lambda { |o| o.is_user? && o.is_registration.present?}
   validates :facebook_account, :inclusion => { :in => ["0", "1"] }, :if => lambda { |o| o.is_user? && o.is_registration.present? }
-  validates :terms, :inclusion => {:in => [true]  }, :if => lambda { |o| o.is_user? }
   validates :website_url, format: { with: URI::regexp(%w(http https)) }, if: Proc.new { |o| o.website_url.present? }
   validates_attachment_content_type :avatar, content_type: /\Aimage/
   validates_attachment_file_name :avatar, matches: [/png\Z/, /jpe?g\Z/]
@@ -313,7 +308,6 @@ class User
         dataset_id: Moped::BSON::ObjectId.from_string(dataset_id),
         dataset_type: dataset_type,
         dataset_locale: dataset_locale,
-        terms: self.terms,
         download_type: download_type
       })
     a.valid?

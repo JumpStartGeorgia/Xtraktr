@@ -4,6 +4,7 @@ class SettingsController < ApplicationController
 
   def index
     @user = @owner
+    @user.valid? # if the user settings are not valid, show errors when the form loads
     @pending_members = Invitation.pending_from_user(@user.id) if !@user.is_user?
     @pending_orgs = Invitation.pending_to_user(@user.id) if @user.is_user?
 
