@@ -438,93 +438,155 @@ ka:
     default_text: "მთავარი ტექსტი"
     default_url: "მთავარი URL"
   explore_time_series:
-    na: "არ არის ხელმისაწვდომი"
-    percent: "პროცენტი (%)"
-    group:
-      html:
-        title: "<span class='group-highlight'>%{text}</span> "
-      text:
-        title: "%{text}"
-    subgroup:
-      html:
-        title: "<span class='subgroup-highlight'>%{text}</span> "
-      text:
-        title: "%{text}"
-    single:
-      html:
-        title: "'<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
-        title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
-        title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable} = <span class='code-highlight'>%{value}</span>'"
-      text:
-        title: "'%{code} - %{group} %{variable}'"
-        title_filter: ", გაფილტრულია: '%{code} - %{group} %{variable}'"
-        title_filter_value: ", გაფილტრულია: '%{code} - %{group} %{variable} = %{value}'"
-    subtitle:
-      html:
-        title: "Total Responses: <br />%{x_of_y}"
-        title_x_of_y: "%{dataset}: <span class='number'>%{num}</span> out of %{total}"
-        title_filter: "Total Responses <br />(out of a possible: %{totals}): <br />%{nums}"
-        title_weighted: "Unweighted Total Responses<span class='footnote-flag'>*</span>: <br />%{x_of_y}"
-        title_filter_weighted: "Unweighted Total Responses<span class='footnote-flag'>*</span> <br />(out of a possible: %{totals}): <br />%{nums}"
-      text:
-        title: "Total Responses: %{x_of_y}"
-        title_x_of_y: "%{dataset}: %{num} out of %{total}"
-        title_filter: "Total Responses: %{nums}"
-        title_weighted: "Unweighted Total Responses*: %{x_of_y}"
-        title_filter_weighted: "Unweighted Total Responses* (out of a possible: %{totals}): %{nums}"
+    v1:
+      na: "არ არის ხელმისაწვდომი"
+      percent: "პროცენტი (%)"
+      single:
+        html:
+          title: "'<span class='code-highlight'>%{code}</span> - %{variable}'"
+          title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
+          title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = %{value}'"
+        text:
+          title: "'%{code} - %{variable}'"
+          title_filter: "გაფილტრულია: '%{code} - %{variable}'"
+          title_filter_value: "გაფილტრულია: '%{code} - %{variable} = %{value}'"
+      subtitle:
+        html:
+          title: "მთლიანი გამოხმაურება: %{num}"
+          title_filter: "პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{code} - %{variable}: %{nums}"
+        text:
+          title: "მთლიანი პასუხები: %{num}"
+          title_filter: "პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{code} - %{variable}: %{nums}"
+    v2:
+      na: "არ არის ხელმისაწვდომი"
+      percent: "პროცენტი (%)"
+      group:
+        html:
+          title: "<span class='group-highlight'>%{text}</span> "
+        text:
+          title: "%{text}"
+      subgroup:
+        html:
+          title: "<span class='subgroup-highlight'>%{text}</span> "
+        text:
+          title: "%{text}"
+      single:
+        html:
+          title: "'<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
+          title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
+          title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable} = <span class='code-highlight'>%{value}</span>'"
+        text:
+          title: "'%{code} - %{group} %{variable}'"
+          title_filter: ", გაფილტრულია: '%{code} - %{group} %{variable}'"
+          title_filter_value: ", გაფილტრულია: '%{code} - %{group} %{variable} = %{value}'"
+      subtitle:
+        html:
+          title: "Total Responses: <br />%{x_of_y}"
+          title_x_of_y: "%{dataset}: <span class='number'>%{num}</span> out of %{total}"
+          title_filter: "Total Responses <br />(out of a possible: %{totals}): <br />%{nums}"
+          title_weighted: "Unweighted Total Responses<span class='footnote-flag'>*</span>: <br />%{x_of_y}"
+          title_filter_weighted: "Unweighted Total Responses<span class='footnote-flag'>*</span> <br />(out of a possible: %{totals}): <br />%{nums}"
+        text:
+          title: "Total Responses: %{x_of_y}"
+          title_x_of_y: "%{dataset}: %{num} out of %{total}"
+          title_filter: "Total Responses: %{nums}"
+          title_weighted: "Unweighted Total Responses*: %{x_of_y}"
+          title_filter_weighted: "Unweighted Total Responses* (out of a possible: %{totals}): %{nums}"
   explore_data:
-    hover_region: Hover over a Region
-    na: "არ არის ხელმისაწვდომი"
-    percent: "პროცენტი"
-    group:
-      html:
-        title: "<span class='group-highlight'>%{text}</span> "
-      text:
-        title: "%{text}"
-    subgroup:
-      html:
-        title: "<span class='subgroup-highlight'>%{text}</span> "
-      text:
-        title: "%{text}"
-    comparative:
-      html:
-        title: "'<span class='code-highlight'>%{question_code}</span> - %{variable}' <br /> <span class='title-highlight'>ჩაშლილია:</span> <br /> '<span class='code-highlight'>%{broken_down_by_code}</span> - %{broken_down_by}'"
-        title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
-        title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'"
-        map:
-          title: "'<span class='code-highlight'>%{code}</span> - %{variable}' "
-          title_broken_down_by: "<br /> <span class='title-highlight'>ჩაშლილია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{broken_down_by} = <span class=”code-highlight”>%{broken_down_by_answer}</span>' "
+    v1:
+      hover_region: Hover over a Region
+      na: "არ არის ხელმისაწვდომი"
+      percent: "პროცენტი"
+      title_group: "<span class='group-highlight'>%{text}</span> "
+      title_subgroup: "<span class='subgroup-highlight'>%{text}</span> "
+      comparative:
+        html:
+          title: "'<span class='code-highlight'>%{question_code}</span> - %{variable}' <br /> <span class='title-highlight'>ჩაშლილია:</span> <br /> '<span class='code-highlight'>%{broken_down_by_code}</span> - %{broken_down_by}'"
           title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
           title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'"
-      text:
-        title: "'%{question_code} - %{variable}', ჩაშლილია: '%{broken_down_by_code} - %{broken_down_by}'"
-        title_filter: ", გაფილტრულია: '%{code} - %{variable}'"
-        title_filter_value: ", გაფილტრულია: '%{code} - %{variable} = %{value}'"
-        map:
-          title: "%{code} - %{variable}'"
-          title_broken_down_by: " ჩაშლილია: '%{code} - %{broken_down_by} = %{broken_down_by_answer}'"
+          map:
+            title: "'<span class='code-highlight'>%{code}</span> - %{variable}' "
+            title_broken_down_by: "<br /> <span class='title-highlight'>ჩაშლილია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{broken_down_by} = <span class=”code-highlight”>%{broken_down_by_answer}</span>' "
+            title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
+            title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'"
+        text:
+          title: "'%{question_code} - %{variable}', ჩაშლილია: '%{broken_down_by_code} - %{broken_down_by}'"
           title_filter: ", გაფილტრულია: '%{code} - %{variable}'"
           title_filter_value: ", გაფილტრულია: '%{code} - %{variable} = %{value}'"
-    single:
-      html:
-        title: "'<span class='code-highlight'>%{code}</span> - %{variable}'"
-        title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
-        title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'"
-      text:
-        title: "'%{code} - %{variable}'"
-        title_filter: ", გაფილტრულია: '%{code} - %{variable}'"
-        title_filter_value: ", გაფილტრულია: '%{code} - %{variable} = %{value}'"
-    subtitle:
-      html:
-        title: "Total Responses: <span class='number'>%{num}</span> out of %{total}"
-        title_filter: "Total Responses out of %{total}: <br />%{nums}"
-        title_weighted: "Unweighted Total Responses<span class='footnote-flag'>*</span>: <span class='number'>%{num}</span> out of %{total}"
-        title_filter_weighted: "Unweighted Total Responses out of %{total}<span class='footnote-flag'>*</span>: <br />%{nums}"
-      text:
-        title: "Total Responses: %{num} out of %{total}"
-        title_filter: "Total Responses out of %{total}: %{nums}"
-        title_weighted: "Unweighted Total Responses*: %{num} out of %{total}"
-        title_filter_weighted: "Unweighted Total Responses out of %{total}*: %{nums}"
+          map:
+            title: "%{code} - %{variable}'"
+            title_broken_down_by: "ჩაშლილია: '%{code} - %{broken_down_by} = %{broken_down_by_answer}'"
+            title_filter: ", გაფილტრულია: '%{code} - %{variable}'"
+            title_filter_value: ", გაფილტრულია: '%{code} - %{variable} = %{value}'"
+      single:
+        html:
+          title: "'<span class='code-highlight'>%{code}</span> - %{variable}'"
+          title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
+          title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'"
+        text:
+          title: "'%{code} - %{variable}'"
+          title_filter: ", გაფილტრულია: '%{code} - %{variable}'"
+          title_filter_value: ", გაფილტრულია: '%{code} - %{variable} = %{value}'"
+      subtitle:
+        html:
+          title: "მთლიანი გამოხმაურება: <span class='number'>%{num}</span>"
+          title_filter: "პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{code} - %{variable}: %{nums}"
+        text:
+          title: "მთლიანი პასუხები: %{num}"
+          title_filter: "პასუხების მიერ გაფილტრული მთლიანი გამოხმაურებები %{code} - %{variable}: %{nums}"
+    v2:
+      hover_region: Hover over a Region
+      na: "არ არის ხელმისაწვდომი"
+      percent: "პროცენტი"
+      group:
+        html:
+          title: "<span class='group-highlight'>%{text}</span> "
+        text:
+          title: "%{text}"
+      subgroup:
+        html:
+          title: "<span class='subgroup-highlight'>%{text}</span> "
+        text:
+          title: "%{text}"
+      comparative:
+        html:
+          title: "'<span class='code-highlight'>%{question_code}</span> - %{variable}' <br /> <span class='title-highlight'>ჩაშლილია:</span> <br /> '<span class='code-highlight'>%{broken_down_by_code}</span> - %{broken_down_by}'"
+          title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
+          title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'"
+          map:
+            title: "'<span class='code-highlight'>%{code}</span> - %{variable}' "
+            title_broken_down_by: "<br /> <span class='title-highlight'>ჩაშლილია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{broken_down_by} = <span class=”code-highlight”>%{broken_down_by_answer}</span>' "
+            title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
+            title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'"
+        text:
+          title: "'%{question_code} - %{variable}', ჩაშლილია: '%{broken_down_by_code} - %{broken_down_by}'"
+          title_filter: ", გაფილტრულია: '%{code} - %{variable}'"
+          title_filter_value: ", გაფილტრულია: '%{code} - %{variable} = %{value}'"
+          map:
+            title: "%{code} - %{variable}'"
+            title_broken_down_by: " ჩაშლილია: '%{code} - %{broken_down_by} = %{broken_down_by_answer}'"
+            title_filter: ", გაფილტრულია: '%{code} - %{variable}'"
+            title_filter_value: ", გაფილტრულია: '%{code} - %{variable} = %{value}'"
+      single:
+        html:
+          title: "'<span class='code-highlight'>%{code}</span> - %{variable}'"
+          title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'"
+          title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'"
+        text:
+          title: "'%{code} - %{variable}'"
+          title_filter: ", გაფილტრულია: '%{code} - %{variable}'"
+          title_filter_value: ", გაფილტრულია: '%{code} - %{variable} = %{value}'"
+      subtitle:
+        html:
+          title: "Total Responses: <span class='number'>%{num}</span> out of %{total}"
+          title_filter: "Total Responses out of %{total}: <br />%{nums}"
+          title_weighted: "Unweighted Total Responses<span class='footnote-flag'>*</span>: <span class='number'>%{num}</span> out of %{total}"
+          title_filter_weighted: "Unweighted Total Responses out of %{total}<span class='footnote-flag'>*</span>: <br />%{nums}"
+        text:
+          title: "Total Responses: %{num} out of %{total}"
+          title_filter: "Total Responses out of %{total}: %{nums}"
+          title_weighted: "Unweighted Total Responses*: %{num} out of %{total}"
+          title_filter_weighted: "Unweighted Total Responses out of %{total}*: %{nums}"
   datatable:
     search: ძიება
     search_footer: 'Search %{name}'
