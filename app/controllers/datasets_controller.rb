@@ -382,15 +382,9 @@ class DatasetsController < ApplicationController
           begin
             @dataset.questions.reflag_answers(:exclude, params[:exclude]) if params[:exclude].present? && params[:exclude].is_a?(Array)
             @dataset.questions.reflag_answers(:can_exclude, params["can-exclude"]) if params["can-exclude"].present? && params["can-exclude"].is_a?(Array)
-<<<<<<< HEAD
 
             # force question callbacks
             @dataset.check_questions_for_changes_status = true
-=======
-
-            # force question callbacks
-            #@dataset.check_question_exclude_status = true
->>>>>>> mass_change answers and questions was speed up
 
             if !@dataset.save
               @msg = @dataset.errors.full_messages
