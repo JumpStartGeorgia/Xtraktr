@@ -71,9 +71,9 @@
             <thead>
               <tr>
                 <th></th>
-                <th><%= u_model_class.human_attribute_name(:org_name) %></th>
-                <th><%= u_model_class.human_attribute_name(:dataset_count) %></th>
-                <th><%= u_model_class.human_attribute_name(:created_at) %></th>
+                <th><%= u_model_class.human_attribute_name(:org_name_alt) %></th>
+                <th><%= u_model_class.human_attribute_name(:org_created_at) %></th>
+                <th><%= u_model_class.human_attribute_name(:joined_at) %></th>
                 <th></th>
               </tr>
             </thead>
@@ -92,7 +92,7 @@
                         <%#= image_tag(group.group.avatar.url(:small)) %>
                         <%= pending.from_user.name %>
                     </td>
-                    <td></td>
+                    <td><%= l pending.from_user.created_at.to_date, format: :day_first %></td>
                     <td><%= t('.pending') %></td>
                     <td>
                       <%= link_to '',
@@ -123,8 +123,8 @@
                       <%#= image_tag(group.group.avatar.url(:small)) %>
                       <%= group.group.name %>
                   </td>
-                  <td><%= number_with_delimiter(group.group.dataset_count) %></td>
                   <td><%= l(group.group.created_at.to_date, format: :day_first) %></td>
+                  <td><%= l(group.created_at.to_date, format: :day_first) %></td>
                   <td>
                     <%= link_to '',
                                 settings_organization_edit_path(@owner, group.group),
@@ -161,8 +161,7 @@
             <thead>
               <tr>
                 <th><%= u_model_class.human_attribute_name(:name) %></th>
-                <th><%= u_model_class.human_attribute_name(:dataset_count) %></th>
-                <th><%= u_model_class.human_attribute_name(:created_at) %></th>
+                <th><%= u_model_class.human_attribute_name(:joined_at) %></th>
                 <th></th>
               </tr>
             </thead>
@@ -174,7 +173,6 @@
                       <%#= image_tag(member.member.avatar.url(:small)) %>
                       <%= pending.to_user_id.present? ? pending.to_user.name : pending.to_email %>
                     </td>
-                    <td></td>
                     <td><%= t('.pending') %></td>
                     <td>
                       <%= link_to '',
@@ -193,7 +191,6 @@
                     <%#= image_tag(member.member.avatar.url(:small)) %>
                     <%= member.member.name %>
                   </td>
-                  <td><%= number_with_delimiter(member.member.dataset_count) %></td>
                   <td><%= l(member.created_at.to_date, format: :day_first) %></td>
                   <td>
                     <%= link_to '',

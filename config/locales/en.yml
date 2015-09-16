@@ -51,9 +51,12 @@ en:
         website_url: Website
         permalink: Name in URL
         org_name: Organization Name
+        org_name_alt: Organization
         org_description: Organization Description
         avatar: Avatar
         created_at: Added On
+        org_created_at: Organization Added On
+        joined_at: Joined Organization On
         dataset_count: Number of Datasets
         organizations: Organizations
       message:
