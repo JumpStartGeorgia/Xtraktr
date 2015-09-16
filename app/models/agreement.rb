@@ -19,10 +19,9 @@ class Agreement
   field :download_type, type: String
 
   #############################
-
-  # attr_accessor :terms
+  
   attr_accessible :first_name, :last_name, :age_group, :residence,
-                  :email, :affiliation, :status, :status_other, :description, :dataset_id, :dataset_type, :dataset_locale, :download_type #:terms,
+                  :email, :affiliation, :status, :status_other, :description, :dataset_id, :dataset_type, :dataset_locale, :download_type
 
     STATUS = { 1 => 'researcher',
                2 => 'student',
@@ -47,8 +46,7 @@ class Agreement
   validates_presence_of :status_other, :if => lambda { |o| o.status == 8 }
   validates :dataset_id, presence: true
   validates :dataset_type, presence: true
-  validates :dataset_locale, presence: true
-  # validates :terms, :inclusion => {:in => [true]  }
+  validates :dataset_locale, presence: true  
   validates :download_type, :inclusion => {:in => ['public', 'admin']  }
 
 

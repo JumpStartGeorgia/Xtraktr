@@ -61,6 +61,14 @@ $(document).ready(function () {
       checked = t.is(":checked");
     form.find("#user_notification_locale_input").toggleClass("js-hide", !checked);
   });
+  $(document).on("change", "#choose_provider input", function () {     
+    var t = $(this),
+      form = t.closest("form");
+    t.closest(".radio_buttons").find(".radio").removeClass("selected");
+    t.parent().toggleClass("selected");
+
+    form.find(".password-box").toggleClass("js-hide", t.val() == "1");
+  });
 
   $(document).on("click", ".reattach", function (e) {
     navbarToggle();

@@ -12,7 +12,6 @@ class ApplicationController < ActionController::Base
 	before_filter :preload_global_variables
 	before_filter :initialize_gon
 	before_filter :store_location
-  # before_filter :check_user_status
 
   layout :layout_by_resource
 
@@ -113,15 +112,6 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 
     gon.get_highlight_desc_link = highlights_get_description_path
 	end
-
-  # in order for the downloads to work properly, the user must have entered all required fields (name, age, etc)
-  # - this requirement did not exist when the site was created so some users may not have all fields entered
-  # - if this is the case, send them to the settings page
-  # def check_user_status
-  #   if !@is_xtraktr && user_signed_in? && current_user.terms == false && request.path != settings_path
-  #     redirect_to settings_path, alert: I18n.t('app.msgs.missing_user_info')
-  #   end
-  # end
 
   def layout_by_resource
     if !DEVISE_CONTROLLERS.index(params[:controller]).nil? && request.xhr?

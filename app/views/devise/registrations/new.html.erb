@@ -9,10 +9,9 @@
         <%= link_to t('helpers.links.sign_in'), new_session_path(resource_name), :class => 'sign-in-link reattach ' %>
      <% end -%>    
   </div>
- 
   <div class="explanation"><%= t('helpers.links.explanation') %></div> 
   
-  <% if reg %>
+  <% if false # reg%> 
     <div class="providers">
       <%- if devise_mapping.omniauthable? %>    
 	      <%- model_class.omniauth_providers.each do |provider| %>

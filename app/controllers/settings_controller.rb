@@ -3,7 +3,7 @@ class SettingsController < ApplicationController
 
   def index
     @user = current_user
-
+    @user.valid?
     if request.put? && 
       success = if params[:user][:password].present? || params[:user][:password_confirmation].present?
         @user.update_attributes(params[:user])

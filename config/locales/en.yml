@@ -574,9 +574,11 @@ en:
       sign_out: Sign Out
       sign_in_provider: "Sign in with %{provider}"
       sign_up_provider: "Sign up with %{provider}"
+      sign_up_local: Sign up with an email and password
+      sign_up_facebook: Sign up with Facebook
       sign_in_local_or_provider: or log in with your email and password
       reset_or_sign_in: sign in with facebook or reset your password
-      explanation: We are excited you are interested in our data. We would like to know a bit about who you are. Please complete our form to continue downloading this dataset.
+      explanation: "We are excited you are interested in our data. To help us understand who is using our data, we would like to know a bit about you. Please complete the form to continue downloading the dataset."
       download_and_sign_up: "Download & Create Account"
       like: Like
       likes: Likes
@@ -797,7 +799,7 @@ en:
       international_organization: International Organization
       private_sector: Private Sector
       other: Other
-    wanna_account: Tired of filling out this form? To avoid this form in the future, create an account.
+    wanna_account: Tired of filling out this form? To avoid this form in the future you can create an account.
   layouts:
     nav:
       toggle: Toggle navigation

@@ -94,7 +94,6 @@ class User
   field :status, type: Integer #{ 1 => 'researcher', 2 => 'student', 3 => 'journalist', 4 => 'ngo', 5 => 'government_official', 6 => 'international_organization', 7 => 'private_sector', 8 => 'other' }
   field :status_other, type: String
   field :description, type: String
-  field :terms, type: Boolean, default: true
   field :notifications, type: Boolean, default: true
   field :notification_locale, type: String, default: I18n.default_locale.to_s
 
@@ -138,7 +137,7 @@ class User
   attr_accessible :email, :password, :password_confirmation, :remember_me,
                   :role, :provider, :uid, :nickname, :avatar,
                   :first_name, :last_name, :age_group, :residence,
-                  :affiliation, :status, :status_other, :description, :terms, :account, :facebook_account,
+                  :affiliation, :status, :status_other, :description, :account, :facebook_account,
                   :notifications, :notification_locale, :api_keys_attributes, :is_registration
 
   #############################
@@ -153,8 +152,7 @@ class User
   validates :status, inclusion: { in: STATUS.keys }
   validates_presence_of :status_other, :if => lambda { |o| o.status == 8 }
   validates :account, :numericality => { :equal_to => 1 }, :if => lambda { |o| o.is_registration.present? }
-  validates :facebook_account, :inclusion => { :in => ["0", "1"] }, :if => lambda { |o| o.is_registration.present? }
-  validates :terms, :inclusion => {:in => [true]  }
+  validates :facebook_account, :inclusion => { :in => ["0", "1"] }, :if => lambda { |o| o.is_registration.present? }  
   ####################
   ## Callbacks
 
@@ -269,8 +267,7 @@ class User
         description: self.description,
         dataset_id: Moped::BSON::ObjectId.from_string(dataset_id),
         dataset_type: dataset_type,
-        dataset_locale: dataset_locale,
-        terms: self.terms,
+        dataset_locale: dataset_locale,        
         download_type: download_type
       })
     a.valid?

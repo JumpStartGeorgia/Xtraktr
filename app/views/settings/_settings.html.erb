@@ -7,7 +7,7 @@
     <%# f.error_messages %>
 
     <%= f.inputs do %>
-       <%= render :partial => 'devise/registrations/new', :locals => { f: f, resource: @user, reg: true } %>
+       <%= render :partial => 'devise/registrations/new', :locals => { f: f, resource: @user, reg: true, show_password: false } %>
     <% end %>
 
     <div class="control-group submit-row">

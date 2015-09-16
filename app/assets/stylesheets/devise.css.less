@@ -261,7 +261,7 @@
   {
     .radio
     {
-        margin:0px 0px 0px 20px !important;
+        margin:0px 0px 0px 20px;
       padding:0px !important;
     }
     .radio:first-of-type {
@@ -439,4 +439,43 @@ label > abbr {
         color:@d95d6a !important;
      }
   }
+}
+
+#choose_provider {
+  width: 100%;
+  label {
+    display: inline-block;
+    font: 12px/32px 'sourcesans_pro_sb', 'sans-serif';
+    color: #ffffff;
+    background-color:#4a5e93;
+    text-decoration: none;
+    text-transform: uppercase;
+    text-align: center;
+    height: 31px;
+    // width: 100%;
+    min-width: 226px;
+    padding: 4px 24px 4px 24px;
+    margin:0;
+    opacity: 0.4;
+    box-sizing: content-box;
+    &.local {
+      background-color:#656565;
+    }
+    &:hover {
+      opacity:1;
+    }
+    &:before {
+    content:none;
+    }
+  }
+  .radio {
+    margin:0 !important;
+    &:nth-of-type(2) {
+      float:right;
+    }
+    &.selected {
+      label { opacity:1; } 
+    }
+  }
+ 
 }
