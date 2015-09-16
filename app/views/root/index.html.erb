@@ -101,15 +101,15 @@
     </div>
   </div>
 
-  <div class="jsrow">
-    <div class="highlights-header">
-      <h2><%= t('.header_highlights') %></h2>
-      <div class="cell"><div class="line"></div></div>
-    </div>
-    <% if @highlights.present? %>
+  <% if @highlights.present? %>
+    <div class="jsrow">
+      <div class="highlights-header">
+        <h2><%= t('.header_highlights') %></h2>
+        <div class="cell"><div class="line"></div></div>
+      </div>
       <div id="highlights" class="highlights">
 
       </div>
-    <% end %>
-  </div>
+    </div>
+  <% end %>
 </div>
