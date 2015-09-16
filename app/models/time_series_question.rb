@@ -77,6 +77,10 @@ class TimeSeriesQuestion < CustomTranslation
 
   before_save :update_flags
 
+  def trigger_all_callbacks
+    self.update_flags
+  end
+
   def update_flags
     self.has_can_exclude_answers = self.answers.has_can_exclude?
 

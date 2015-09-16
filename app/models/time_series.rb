@@ -239,7 +239,7 @@ class TimeSeries < CustomTranslation
       :license_title, :license_description, :license_url,
       :license_title_translations, :license_description_translations, :license_url_translations
 
-  attr_accessor :category_ids, :country_ids, :var_arranged_items
+  attr_accessor :category_ids, :country_ids, :var_arranged_items, :check_questions_for_changes_status
 
   #############################
   # indexes
@@ -374,6 +374,23 @@ class TimeSeries < CustomTranslation
   after_initialize :set_country_ids
   before_create :create_private_share_key
   before_save :set_public_at
+  before_save :check_questions_for_changes
+
+  # when saving the time series, question callbacks might not be triggered
+  # so this will check for questions that chnaged and then call the callbacks
+  def check_questions_for_changes
+    if self.check_questions_for_changes_status == true
+      logger.debug ">>>>> time series check_questions_for_changes callback"
+      self.questions.each do |q|
+        if q.changed?
+          logger.debug ">>>>> ---- #{q.text} changed!"
+          q.trigger_all_callbacks
+        end
+      end
+    end
+    return true
+  end
+
 
   # this is used in the form to set the categories
   def set_category_ids

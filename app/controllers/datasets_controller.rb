@@ -373,7 +373,7 @@ class DatasetsController < ApplicationController
             @dataset.questions.reflag_questions(:can_download, params[:download]) if params[:download].present? && params[:download].is_a?(Array)
 
             # force question callbacks
-            #@dataset.check_question_exclude_status = true
+            @dataset.check_questions_for_changes_status = true
 
             @msg = t('app.msgs.mass_change_question_saved')
             @success = true
@@ -434,9 +434,9 @@ class DatasetsController < ApplicationController
           begin
             @dataset.questions.reflag_answers(:exclude, params[:exclude]) if params[:exclude].present? && params[:exclude].is_a?(Array)
             @dataset.questions.reflag_answers(:can_exclude, params["can-exclude"]) if params["can-exclude"].present? && params["can-exclude"].is_a?(Array)
-   
+
             # force question callbacks
-            #@dataset.check_question_exclude_status = true
+            @dataset.check_questions_for_changes_status = true
 
             if !@dataset.save
               @msg = @dataset.errors.full_messages

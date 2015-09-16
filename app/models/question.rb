@@ -36,7 +36,7 @@ class Question < CustomTranslation
 
   embedded_in :dataset
 
-  embeds_many :answers do
+  embeds_many :answers, cascade_callbacks: true do
     # these are functions that will query the answers documents
 
     # see if answers have can exclude
@@ -128,8 +128,15 @@ class Question < CustomTranslation
   after_save :update_stats
   before_save :check_if_dirty
 
+  def trigger_all_callbacks
+    self.update_flags
+    self.check_mappable
+    self.check_if_dirty(false)
+    self.update_stats
+  end
+
   def update_flags
-  #  logger.debug "******** updating question flags for #{self.code}"
+   logger.debug "******** updating question flags for #{self.code}"
     self.has_code_answers = self.answers.count > 0
     self.has_code_answers_for_analysis = self.answers.all_for_analysis.count > 0
     self.has_can_exclude_answers = self.answers.has_can_exclude?
@@ -160,7 +167,7 @@ class Question < CustomTranslation
 
   # if the question changed, make sure the dataset.reset_download_files flag is set to true
   # if the only change is to the flags, the donwload does not need to be updated
-  def check_if_dirty
+  def check_if_dirty(save_dataset=true)
     puts "======= question changed? #{self.changed?}; changed: #{self.changed}"
     ignore = [:has_can_exclude_answers, :has_code_answers, :has_code_answers_for_analysis]
     changed = self.changed
@@ -171,7 +178,7 @@ class Question < CustomTranslation
     if self.changed? && changed.present?
       puts "========== question changed!, setting reset_download_files = true"
       self.dataset.reset_download_files = true
-      self.dataset.save
+      self.dataset.save if save_dataset
     end
     return true
   end
