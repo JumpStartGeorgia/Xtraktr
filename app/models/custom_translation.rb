@@ -109,7 +109,8 @@ class CustomTranslation
   # reference: https://msdn.microsoft.com/en-us/library/cc195054.aspx
   def clean_string(str)
     if str.class == String && str.present?
-      str
+      clean_text(str)
+      # str
       # clean_str = clean_text(str)
       # if clean_str.present?
       #   clean_str.gsub(/\\x../) {|s| [s[2..-1].hex].pack("C")}.force_encoding("UTF-8").strip.chomp
