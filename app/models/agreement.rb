@@ -20,9 +20,9 @@ class Agreement
 
   #############################
 
-  attr_accessor :terms
+  # attr_accessor :terms
   attr_accessible :first_name, :last_name, :age_group, :residence,
-                  :email, :affiliation, :status, :status_other, :description, :dataset_id, :dataset_type, :dataset_locale, :terms, :download_type
+                  :email, :affiliation, :status, :status_other, :description, :dataset_id, :dataset_type, :dataset_locale, :download_type #:terms,
 
     STATUS = { 1 => 'researcher',
                2 => 'student',
@@ -48,7 +48,7 @@ class Agreement
   validates :dataset_id, presence: true
   validates :dataset_type, presence: true
   validates :dataset_locale, presence: true
-  validates :terms, :inclusion => {:in => [true]  }
+  # validates :terms, :inclusion => {:in => [true]  }
   validates :download_type, :inclusion => {:in => ['public', 'admin']  }
 
 

@@ -7,9 +7,10 @@
   <div class="r">
     <%= f.input :email, :as => :email, :input_html => { :size => 35 , :class => "login-username" }, :placeholder => model_class.human_attribute_name(:email).upcase+" *" , :label => false  %>
   </div>
-    <input id="user_account" name="user[is_registration]" type="hidden" value="1">
     <% if reg %>
+        <input name="user[is_registration]" type="hidden" value="1">
         <input id="user_account" name="user[account]" type="hidden" value="1">
+        <input id="facebook_account" name="user[facebook_account]" type="hidden" value="0">
     <% else %>
       <div class="boolean input optional checkbox form-group wanna_account" id="user_account_input">
         <div class="checkbox-box" tabindex="0">
@@ -18,14 +19,24 @@
           <label class="control-label" for="user_account"><%= t('user.wanna_account').html_safe %></label>
         </div>
       </div>
-    <% end %>
+        <% if !(current_user.present? && current_user.has_attribute?(:provider) && current_user.provider == "facebook") %>
 
-    <div class="r<%= reg ? '' : ' js-hide' %> ghost-box">
-
-        <%= f.input :password, :input_html => { :size => 35 , :class => "login-password" }, :placeholder => model_class.human_attribute_name(:password).upcase+" *" , :label => false  %>
-        <%= f.input :password_confirmation, :input_html => { :size => 35 , :class => "login-password-confirmation" }, :placeholder => model_class.human_attribute_name(:password_confirmation).upcase+" *" , :label => false  %>
-
-    </div>
+        <div class="r<%= reg ? '' : ' js-hide' %> ghost-box">
+          <% if !reg %>
+            <div class="boolean input optional checkbox form-group">
+              <div class="checkbox-box" tabindex="0">
+                <input name="user[facebook_account]" type="hidden" value="0">
+                <input id="facebook_account" name="user[facebook_account]" type="checkbox" value="1">
+                <label class="control-label" for="facebook_account"><%= t('user.via_facebook').html_safe %></label>
+              </div>
+            </div>
+          <% end %>
+          <%= f.input :password, :input_html => { :size => 35 , :class => "login-password" }, :placeholder => model_class.human_attribute_name(:password).upcase+" *" , :label => false  %>
+          <%= f.input :password_confirmation, :input_html => { :size => 35 , :class => "login-password-confirmation" }, :placeholder => model_class.human_attribute_name(:password_confirmation).upcase+" *" , :label => false  %>
+        </div>
+      <% end %>
+    <% end %>    
+ 
 
     <div class="r">
       <%= f.input :residence, :as => :string, :placeholder => model_class.human_attribute_name(:residence).upcase+" *" , :label => false  %>

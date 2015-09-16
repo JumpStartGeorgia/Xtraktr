@@ -14,6 +14,7 @@ class Answer < CustomTranslation
 
   embedded_in :question
 
+  before_save :check_flags
   #############################
   # indexes
   # index ({ :can_exclude => 1})
@@ -51,7 +52,11 @@ class Answer < CustomTranslation
   def shape_name
     get_translation(self.shape_name_translations, self.question.dataset.current_locale, self.question.dataset.default_language)
   end
-
+  def check_flags
+    if exclude_changed? || can_exclude_changed?
+      self.question.update_flags
+    end
+  end
   #############################
   ## used when editing time series questions
   def to_json

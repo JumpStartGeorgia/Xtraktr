@@ -132,8 +132,15 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
   end
 
 	def after_sign_in_path_for(resource)
-		session[:previous_urls].last || request.env['omniauth.origin'] || root_path(:locale => I18n.locale)
+    stored_location_for(resource) ||
+    if resource.is_a?(User) && !resource.valid?
+      settings_path
+    else
+      session[:previous_urls].last || request.env['omniauth.origin'] || root_path(:locale => I18n.locale)
+    end
 	end
+
+
 
   def valid_role?(role)
     redirect_to root_path, :notice => t('app.msgs.not_authorized') if !current_user || !current_user.role?(role)
@@ -144,11 +151,15 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 	def store_location
 		session[:previous_urls] ||= []
 
-    if session[:download_url].present? && !user_signed_in? && !params[:d].present? && !(params[:controller] == 'users/registrations' && params[:action] == 'create' )
+    if session[:download_url].present? && !user_signed_in? && !params[:d].present? &&
+     !(params[:controller] == 'users/registrations' && params[:action] == 'create' ) &&
+     !(params[:controller] == 'omniauth_callbacks' && params[:action] == 'facebook') &&
+      !(params[:controller] == 'settigns' && params[:action] == 'refill')
+
       session[:download_url] = nil
     end
 
-    if params[:action] == 'download_request' && request.xhr? && !user_signed_in? &&
+    if params[:action] == 'download_request' && request.xhr? && (!user_signed_in? || !current_user.valid?)
       session[:download_url] = request.fullpath
     end
 
