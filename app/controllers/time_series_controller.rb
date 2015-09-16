@@ -349,6 +349,9 @@ end
           begin
             @time_series.questions.reflag_answers(:can_exclude, params["can-exclude"]) if params["can-exclude"].present? && params["can-exclude"].is_a?(Array)
 
+            # force question callbacks
+            @time_series.check_questions_for_changes_status = true
+
             if !@time_series.save
               @msg = @time_series.errors.full_messages
               @success = false

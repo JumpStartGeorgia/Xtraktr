@@ -14,7 +14,6 @@ class Answer < CustomTranslation
 
   embedded_in :question
 
-  before_save :check_flags
   #############################
   # indexes
   # index ({ :can_exclude => 1})
@@ -36,13 +35,27 @@ class Answer < CustomTranslation
 #      logger.debug "***** - default is present; locale = #{self.question.dataset.default_language}; trans = #{self.text_translations}; text = #{self.text_translations[self.question.dataset.default_language]}"
       if self.text_translations[self.question.dataset.default_language].blank?
 #        logger.debug "***** -- text not present!"
-        errors.add(:base, I18n.t('errors.messages.translation_default_lang', 
+        errors.add(:base, I18n.t('errors.messages.translation_default_lang',
             field_name: self.class.human_attribute_name('text'),
             language: Language.get_name(self.question.dataset.default_language),
             msg: I18n.t('errors.messages.blank')) )
       end
     end
-  end 
+  end
+
+  #############################
+  # Callbacks
+  # before_save :check_flags
+  def check_flags
+    logger.debug "----------------- answer check flags before save"
+    if exclude_changed? || can_exclude_changed?
+      logger.debug "------ answer #{self.text} exclude changed, calling question flag/stats"
+      self.question.update_flags
+      self.question.update_stats
+    end
+    return true
+  end
+
 
   #############################
   ## override get methods for fields that are localized
@@ -51,11 +64,6 @@ class Answer < CustomTranslation
   end
   def shape_name
     get_translation(self.shape_name_translations, self.question.dataset.current_locale, self.question.dataset.default_language)
-  end
-  def check_flags
-    if exclude_changed? || can_exclude_changed?
-      self.question.update_flags
-    end
   end
   #############################
   ## used when editing time series questions

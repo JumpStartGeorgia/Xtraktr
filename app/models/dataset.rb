@@ -249,7 +249,7 @@ class Dataset < CustomTranslation
         a[flag_name] = !a[flag_name]
       end
       return nil
-    end  
+    end
 
     # get questions that are mappable
     def mappable
@@ -388,7 +388,7 @@ class Dataset < CustomTranslation
       :donor_translations, :license_title_translations, :license_description_translations, :license_url_translations
 
 
-  attr_accessor :category_ids, :country_ids, :var_arranged_items, :check_question_exclude_status
+  attr_accessor :category_ids, :country_ids, :var_arranged_items, :check_questions_for_changes_status
 
   TYPE = {:onevar => 'onevar', :crosstab => 'crosstab'}
 
@@ -589,15 +589,19 @@ class Dataset < CustomTranslation
   after_save :update_stats
   before_save :set_public_at
   before_save :check_if_dirty
-  before_save :check_question_excludes
+  before_save :check_questions_for_changes
 
 
-  # when saving mass changes, callbacks in question model not being called so forcing the call here
-  def check_question_excludes
-    if self.check_question_exclude_status.present? && self.check_question_exclude_status == true
+  # when saving the dataset, question callbacks might not be triggered
+  # so this will check for questions that chnaged and then call the callbacks
+  def check_questions_for_changes
+    if self.check_questions_for_changes_status == true
+      logger.debug ">>>>> dataset check_questions_for_changes callback"
       self.questions.each do |q|
-        q.update_flags
-        q.update_stats
+        if q.changed?
+          logger.debug ">>>>> ---- #{q.text} changed!"
+          q.trigger_all_callbacks
+        end
       end
     end
     return true
@@ -655,7 +659,7 @@ class Dataset < CustomTranslation
   end
 
   def update_flags
-    logger.debug "==== update_flags"
+    logger.debug "==== update dataset flags"
     logger.debug "==== - bad answers = #{self.questions_with_bad_answers.present?}; no answers = #{self.questions.with_no_code_answers.present?}; no question text = #{self.no_question_text_count}"
     logger.debug "==== - has_warnings was = #{self.has_warnings}"
     self.has_warnings = self.questions_with_bad_answers.present? ||
@@ -668,7 +672,7 @@ class Dataset < CustomTranslation
   end
 
   def update_stats
-    logger.debug "==== update stats"
+    logger.debug "==== update dataset stats"
 
     self.build_stats if self.stats.nil?
 
