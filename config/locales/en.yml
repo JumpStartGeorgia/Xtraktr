@@ -718,6 +718,7 @@ en:
       cancel: Cancel
       update: Update
       save: Save
+      save_and_download: "Save & Download"
       create: Create
       reset: Reset
       remove: Remove

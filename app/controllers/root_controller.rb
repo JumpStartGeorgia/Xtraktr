@@ -329,7 +329,11 @@ class RootController < ApplicationController
         mapper = FileMapper.create({ dataset_id: @dataset_id, dataset_type: @dataset_type, dataset_locale: @dataset_locale, download_type: @download_type })
         data[:url] = "/#{I18n.locale}/download/#{mapper.key}"
       else 
-        data[:url] =  settings_path # here we need settings form to appear todo
+        @mod = Agreement.new({ dataset_id: @dataset_id, dataset_type: @dataset_type, dataset_locale: @dataset_locale, download_type: @download_type  })
+        data[:agreement] = false
+        @user = current_user
+        data[:form] = render_to_string "settings/_settings", :layout => false
+#        data[:url] =  settings_path # here we need settings form to appear todo
       end
     else
       @mod = Agreement.new({ dataset_id: @dataset_id, dataset_type: @dataset_type, dataset_locale: @dataset_locale, download_type: @download_type  })

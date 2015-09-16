@@ -165,6 +165,7 @@ BootstrapStarter::Application.routes.draw do
       match '/settings', :to => 'settings#index', :as => :settings, :via => [:get, :put]
       match '/settings/get_api_token', :to => 'settings#get_api_token', :as => :settings_get_api_token, :via => :post
       match '/settings/delete_api_token/:id', :to => 'settings#delete_api_token', :as => :settings_delete_api_token, :via => :delete
+      match '/settings/refill', :to => 'settings#refill', :as => :settings_refill, :via => [:get, :put]
       match '/settings/organizations/new', :to => 'settings#organization_new', :as => :settings_organization_new, :via => [:get, :post]
       match '/settings/organizations/:id', :to => 'settings#organization_edit', :as => :settings_organization_edit, :via => [:get, :put]
       match '/settings/organizations/:id/delete', :to => 'settings#organization_delete', :as => :settings_organization_delete, :via => [:delete]
