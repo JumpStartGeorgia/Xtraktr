@@ -223,107 +223,20 @@ class Dataset < CustomTranslation
       where(:exlucde => false)
     end
 
-    # mark the question exclude flag as true for the ids provided
-    def add_exclude(ids)
-      where(:_id.in => ids).each do |q|
-        q.exclude = true
+    # questions attribute by flag_name for ids in flags change to opposite
+    def reflag_questions(flag_name, flags)
+      where(:_id.in => flags).each do |q|
+        q[flag_name] = !q[flag_name]
       end
       return nil
     end
-
-    # mark the question exclude flag as false for the ids provided
-    def remove_exclude(ids)
-      where(:_id.in => ids).each do |q|
-        q.exclude = false
+    # answers attribute by flag_name for ids in flags change to opposite
+    def reflag_answers(flag_name, flags)
+      map{|x| x.answers}.flatten.select{|x| flags.index(x.id.to_s).present?}.each do |a|
+        a[flag_name] = !a[flag_name]
       end
       return nil
-    end
-
-    # mark the question can download flag as true for the ids provided
-    def add_can_download(ids)
-      where(:_id.in => ids).each do |q|
-        q.can_download = true
-      end
-      return nil
-    end
-
-    # mark the question can download flag as false for the ids provided
-    def remove_can_download(ids)
-      where(:_id.in => ids).each do |q|
-        q.can_download = false
-      end
-      return nil
-    end
-
-    # mark the answer exclude flag as true for the ids provided
-    def add_answer_exclude(ids)
-      map{|x| x.answers}.flatten.select{|x| ids.index(x.id.to_s).present?}.each do |a|
-        a.exclude = true
-      end
-      return nil
-    end
-
-    # mark the answer exclude flag as false for the ids provided
-    def remove_answer_exclude(ids)
-      map{|x| x.answers}.flatten.select{|x| ids.index(x.id.to_s).present?}.each do |a|
-        a.exclude = false
-      end
-      return nil
-    end
-
-    # mark the answer can_exclude flag as true for the ids provided
-    def add_answer_can_exclude(ids)
-      map{|x| x.answers}.flatten.select{|x| ids.index(x.id.to_s).present?}.each do |a|
-        a.can_exclude = true
-      end
-      return nil
-    end
-
-    # mark the answer can_exclude flag as false for the ids provided
-    def remove_answer_can_exclude(ids)
-      map{|x| x.answers}.flatten.select{|x| ids.index(x.id.to_s).present?}.each do |a|
-        a.can_exclude = false
-      end
-      return nil
-    end
-    # questions types
-    # def reflag_questions_type(data)      
-    #   codes = []
-    #   if data.keys.length
-    #     data.keys.each {|t| 
-    #       codes.push(t.downcase)
-    #     }
-    #     where(:code.in => codes).each do |q|
-    #       code = q[:code]
-    #       dt = data[code]["data"]
-          
-    #       q["data_type"] = dt[0] = dt[0].to_i
-    #       if dt[0] == 0
-    #         q["numerical"] = nil
-    #       elsif dt[0] == 1
-    #         q["numerical"] = nil
-    #       elsif dt[0] == 2
-    #         num = { 
-    #           type: dt[1].to_i,
-    #           width: dt[2].to_f,
-    #           min: dt[3].to_f,
-    #           max: dt[4].to_f,
-    #           title_translations: data[code]["titles"] }
-
-    #         num[:min_range] = (num[:min] / num[:width]).floor * num[:width]      
-    #         num[:max_range] = (num[:max] / num[:width]).ceil * num[:width]     
-    #         num[:size] = (num[:max_range] - num[:min_range]) / num[:width]      
-
-    #         if q.numerical.nil?
-    #           q.build_numerical(num)
-    #         else
-    #           q.numerical.update_attributes(num)
-    #         end
-    #       end
-    #     end
-    #   end       
-    #   return nil      
-    # end
+    end  
 
     # get questions that are mappable
     def mappable
@@ -489,7 +402,7 @@ class Dataset < CustomTranslation
       :title_translations, :description_translations, :methodology_translations, :source_translations, :source_url_translations,
       :reset_download_files, :force_reset_download_files, :category_mappers_attributes, :category_ids, :permalink, :groups_attributes
 
-  attr_accessor :category_ids, :var_arranged_items, :check_question_exclude_status
+  attr_accessor :category_ids, :var_arranged_items, :check_questions_for_changes_status
 
   TYPE = {:onevar => 'onevar', :crosstab => 'crosstab'}
 
@@ -651,15 +564,19 @@ class Dataset < CustomTranslation
   after_save :update_stats
   before_save :set_public_at
   before_save :check_if_dirty
-  before_save :check_question_excludes
+  before_save :check_questions_for_changes
 
 
-  # when saving mass changes, callbacks in question model not being called so forcing the call here
-  def check_question_excludes
-    if self.check_question_exclude_status.present? && self.check_question_exclude_status == true
+  # when saving the dataset, question callbacks might not be triggered
+  # so this will check for questions that chnaged and then call the callbacks
+  def check_questions_for_changes
+    if self.check_questions_for_changes_status == true
+      logger.debug ">>>>> dataset check_questions_for_changes callback"
       self.questions.each do |q|
-        q.update_flags
-        q.update_stats
+        if q.changed?
+          logger.debug ">>>>> ---- #{q.text} changed!"
+          q.trigger_all_callbacks
+        end
       end
     end
   end
@@ -714,7 +631,7 @@ class Dataset < CustomTranslation
   end
 
   def update_flags
-    logger.debug "==== update_flags"
+    logger.debug "==== update dataset flags"
     logger.debug "==== - bad answers = #{self.questions_with_bad_answers.present?}; no answers = #{self.questions.with_no_code_answers.present?}; no question text = #{self.no_question_text_count}"
     logger.debug "==== - has_warnings was = #{self.has_warnings}"
     self.has_warnings = self.questions_with_bad_answers.present? ||
@@ -727,7 +644,7 @@ class Dataset < CustomTranslation
   end
 
   def update_stats
-    logger.debug "==== update stats"
+    logger.debug "==== update dataset stats"
 
     self.build_stats if self.stats.nil?
 

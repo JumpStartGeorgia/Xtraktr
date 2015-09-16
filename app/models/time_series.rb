@@ -195,23 +195,12 @@ class TimeSeries < CustomTranslation
     def available_to_be_weights(current_code=nil)
       nin(:code => base.weights.weight_codes(current_code)).where(has_code_answers: false)
     end
-
-    # mark the answer can_exclude flag as true for the ids provided
-    def add_answer_can_exclude(ids)
-      map{|x| x.answers}.flatten.select{|x| ids.index(x.id.to_s).present?}.each do |a|
-        a.can_exclude = true
+    def reflag_answers(flag_name, flags)
+      map{|x| x.answers}.flatten.select{|x| flags.index(x.id.to_s).present?}.each do |a|
+        a[flag_name] = !a[flag_name]
       end
       return nil
     end
-
-    # mark the answer can_exclude flag as false for the ids provided
-    def remove_answer_can_exclude(ids)
-      map{|x| x.answers}.flatten.select{|x| ids.index(x.id.to_s).present?}.each do |a|
-        a.can_exclude = false
-      end
-      return nil
-    end
-
 
   end
 
@@ -229,7 +218,7 @@ class TimeSeries < CustomTranslation
       :category_mappers_attributes, :category_ids, :permalink,
       :weights_attributes, :groups_attributes
 
-  attr_accessor :category_ids, :var_arranged_items
+  attr_accessor :category_ids, :var_arranged_items, :check_questions_for_changes_status
 
   #############################
   # indexes
@@ -334,6 +323,23 @@ class TimeSeries < CustomTranslation
   after_initialize :set_category_ids
   before_create :create_private_share_key
   before_save :set_public_at
+  before_save :check_questions_for_changes
+
+  # when saving the time series, question callbacks might not be triggered
+  # so this will check for questions that chnaged and then call the callbacks
+  def check_questions_for_changes
+    if self.check_questions_for_changes_status == true
+      logger.debug ">>>>> time series check_questions_for_changes callback"
+      self.questions.each do |q|
+        if q.changed?
+          logger.debug ">>>>> ---- #{q.text} changed!"
+          q.trigger_all_callbacks
+        end
+      end
+    end
+    return true
+  end
+
 
   # this is used in the form to set the categories
   def set_category_ids

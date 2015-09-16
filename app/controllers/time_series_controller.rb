@@ -277,7 +277,6 @@ end
     @time_series = TimeSeries.by_id_for_user(params[:id], current_user.id)
 
     if @time_series.present?
-
       respond_to do |format|
         format.html {
           @js.push("mass_changes_answers.js")
@@ -291,7 +290,7 @@ end
                 code: question.original_code,
                 question: question.text,
                 answer: answer.text,
-                can_exclude: "<input id='time_series_questions_attributes_#{question_index}_answers_attributes_#{answer_index}_id' name='time_series[questions_attributes][#{question_index}][answers_attributes][#{answer_index}][id]' type='hidden' value='#{answer.id}'><input class='can-exclude-input' name='time_series[questions_attributes][#{question_index}][answers_attributes][#{answer_index}][can_exclude]' type='checkbox' value='true' #{answer.can_exclude? ? 'checked=\'checked\'' : ''}>"
+                can_exclude: "<input class='can-exclude-input' type='checkbox' #{answer.can_exclude? ? 'checked=\'checked\'' : ''} data-id='#{answer.id}' data-orig='#{answer.can_exclude?}'>",
               }
             end
           end
@@ -302,16 +301,10 @@ end
           @msg = t('app.msgs.mass_change_answer_saved')
           @success = true
           begin
-            # cannot use simple update_attributes for if value was checked but is not now,
-            # no value exists in params and so no changes take place
-            # -> get ids that are true and set them to true
-            # -> set rest to false
-            answers = params[:time_series][:questions_attributes].map{|kq,vq| vq[:answers_attributes]}
-            can_exclude_true_ids = answers.map{|x| x.values}.flatten.select{|x| x[:can_exclude] == 'true'}.map{|x| x[:id]}
-            can_exclude_false_ids = answers.map{|x| x.values}.flatten.select{|x| x[:can_exclude] != 'true'}.map{|x| x[:id]}
+            @time_series.questions.reflag_answers(:can_exclude, params["can-exclude"]) if params["can-exclude"].present? && params["can-exclude"].is_a?(Array)
 
-            @time_series.questions.add_answer_can_exclude(can_exclude_true_ids)
-            @time_series.questions.remove_answer_can_exclude(can_exclude_false_ids)
+            # force question callbacks
+            @time_series.check_questions_for_changes_status = true
 
             if !@time_series.save
               @msg = @time_series.errors.full_messages
