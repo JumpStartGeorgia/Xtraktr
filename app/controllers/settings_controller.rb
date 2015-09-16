@@ -20,10 +20,28 @@ class SettingsController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @pages }
+      # format.json { render json: @pages }
     end
   end
+  def refill
+    @user = current_user
 
+    if request.put? &&       
+      success = if params[:user][:password].present? || params[:user][:password_confirmation].present?
+                  @user.update_attributes(params[:user])
+                else
+                  @user.update_without_password(params[:user])
+                end      
+    end
+
+    respond_to do |format|
+      if success
+        format.json { render json: { }, :success => true }
+      else
+        format.json { render json: { errors: @user.errors }, :status => :error }
+      end
+    end    
+  end
 
   def get_api_token
     @user = current_user

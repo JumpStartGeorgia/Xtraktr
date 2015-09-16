@@ -3,26 +3,17 @@ class Users::RegistrationsController < Devise::RegistrationsController
    respond_to :json
    def create
       pars = sign_up_params
-      puts "--------------------------create user-#{session.inspect}"
-     Rails.logger.debug("--------------------------------------------#{pars} #{params}")
       if create_user? pars
         if create_facebook? pars
-          
-          
           agreement_data = pars.slice(:email, :first_name, :last_name, :age_group, :residence, :affiliation, :status, :status_other, :description, :terms).merge!(params[:agreement])
-Rails.logger.debug("--------------------------------------------facebook#{agreement_data}")
           @mod = Agreement.new(agreement_data)
-Rails.logger.debug("--------------------------------------------facebook#{@mod.errors.inspect}")           
           respond_to do |format|
             if @mod.valid?
-               Rails.logger.debug("--------------------------------------------valid")
               format.json { render json: { url: omniauth_authorize_path(resource_name, :facebook, agreement_data), registration: true }, :success => true }
             else
-              Rails.logger.debug("--------------------------------------------not valid #{@mod.errors.inspect}")
               format.json { render json: { errors: @mod.errors, registration: true }, :status => :error }
             end
           end   
-
           # build_resource(sign_up_params)
           # resource_saved = resource.save
           # yield resource if block_given?

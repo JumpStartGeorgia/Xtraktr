@@ -132,7 +132,6 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
   end
 
 	def after_sign_in_path_for(resource)
-		 Rails.logger.debug("--------------------------------------------#{stored_location_for(resource)}")
     stored_location_for(resource) ||
     if resource.is_a?(User) && !resource.valid?
       settings_path
@@ -151,15 +150,16 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 	# only record the path if this is not an ajax call and not a users page (sign in, sign up, etc)
 	def store_location
 		session[:previous_urls] ||= []
-puts "+++++++++++++++++++++++++++ #{params.inspect}"
+
     if session[:download_url].present? && !user_signed_in? && !params[:d].present? &&
      !(params[:controller] == 'users/registrations' && params[:action] == 'create' ) &&
-     !(params[:controller] == 'omniauth_callbacks' && params[:action] == 'facebook')
+     !(params[:controller] == 'omniauth_callbacks' && params[:action] == 'facebook') &&
+      !(params[:controller] == 'settigns' && params[:action] == 'refill')
 
       session[:download_url] = nil
     end
 
-    if params[:action] == 'download_request' && request.xhr? && !user_signed_in?
+    if params[:action] == 'download_request' && request.xhr? && (!user_signed_in? || !current_user.valid?)
       session[:download_url] = request.fullpath
     end
 

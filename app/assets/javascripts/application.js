@@ -79,15 +79,13 @@ $(document).ready(function () {
     e.stopPropagation();
   });
 
-  $("body").on("submit", "#new_user", function (e) {
-    var form = $(this),
-      t = $(this).attr("data-form-id");
-    if (t.length) {
-      t = $("#" + t);
+  $("body").on("submit", "#new_user, #refill-form-sender", function (e) {
+    var form = $(this);
+    if(form.attr("data-form-id").length) {
       $.ajax({
         type: "POST",
-        url: $(this).attr("action"),
-        data: $(this).serialize(),
+        url: form.attr("action"),
+        data: form.serialize(),
         dataType: "json",
         success: function (data) {
            console.log("form back",data);

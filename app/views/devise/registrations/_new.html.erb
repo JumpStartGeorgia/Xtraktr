@@ -1,6 +1,5 @@
 <% reg = true if reg.nil? %>
 <%- model_class = User -%>
-<% puts "====================================== #{session.inspect}" %>
   <div class="r">
     <%= f.input :first_name, :as => :string, :placeholder => model_class.human_attribute_name(:first_name).upcase+" *" , :label => false, :input_html => {:autofocus => true} %>
     <%= f.input :last_name, :as => :string, :placeholder => model_class.human_attribute_name(:last_name).upcase+" *" , :label => false %>
@@ -20,23 +19,24 @@
           <label class="control-label" for="user_account"><%= t('user.wanna_account').html_safe %></label>
         </div>
       </div>
-    <% end %>    
-    <% if !(current_user.present? && current_user.has_attribute?(:provider) && current_user.provider == "facebook") %>
+        <% if !(current_user.present? && current_user.has_attribute?(:provider) && current_user.provider == "facebook") %>
 
-      <div class="r<%= reg ? '' : ' js-hide' %> ghost-box">
-        <% if !reg %>
-          <div class="boolean input optional checkbox form-group">
-            <div class="checkbox-box" tabindex="0">
-              <input name="user[facebook_account]" type="hidden" value="0">
-              <input id="facebook_account" name="user[facebook_account]" type="checkbox" value="1">
-              <label class="control-label" for="facebook_account"><%= t('user.via_facebook').html_safe %></label>
+        <div class="r<%= reg ? '' : ' js-hide' %> ghost-box">
+          <% if !reg %>
+            <div class="boolean input optional checkbox form-group">
+              <div class="checkbox-box" tabindex="0">
+                <input name="user[facebook_account]" type="hidden" value="0">
+                <input id="facebook_account" name="user[facebook_account]" type="checkbox" value="1">
+                <label class="control-label" for="facebook_account"><%= t('user.via_facebook').html_safe %></label>
+              </div>
             </div>
-          </div>
-        <% end %>
-        <%= f.input :password, :input_html => { :size => 35 , :class => "login-password" }, :placeholder => model_class.human_attribute_name(:password).upcase+" *" , :label => false  %>
-        <%= f.input :password_confirmation, :input_html => { :size => 35 , :class => "login-password-confirmation" }, :placeholder => model_class.human_attribute_name(:password_confirmation).upcase+" *" , :label => false  %>
-      </div>
-    <% end %>
+          <% end %>
+          <%= f.input :password, :input_html => { :size => 35 , :class => "login-password" }, :placeholder => model_class.human_attribute_name(:password).upcase+" *" , :label => false  %>
+          <%= f.input :password_confirmation, :input_html => { :size => 35 , :class => "login-password-confirmation" }, :placeholder => model_class.human_attribute_name(:password_confirmation).upcase+" *" , :label => false  %>
+        </div>
+      <% end %>
+    <% end %>    
+ 
 
     <div class="r">
       <%= f.input :residence, :as => :string, :placeholder => model_class.human_attribute_name(:residence).upcase+" *" , :label => false  %>

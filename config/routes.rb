@@ -156,6 +156,7 @@ BootstrapStarter::Application.routes.draw do
     match '/settings', :to => 'settings#index', :as => :settings, :via => [:get, :put]
     match '/settings/get_api_token', :to => 'settings#get_api_token', :as => :settings_get_api_token, :via => :post
     match '/settings/delete_api_token/:id', :to => 'settings#delete_api_token', :as => :settings_delete_api_token, :via => :delete
+    match '/settings/refill', :to => 'settings#refill', :as => :settings_refill, :via => [:get, :put]
 
 		root :to => 'root#index'
 	  match "*path", :to => redirect("/#{I18n.default_locale}") # handles /en/fake/path/whatever
