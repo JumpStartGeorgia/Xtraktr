@@ -312,7 +312,7 @@ class RootController < ApplicationController
         @mod = Agreement.new({ dataset_id: @dataset_id, dataset_type: @dataset_type, dataset_locale: @dataset_locale, download_type: @download_type  })
         data[:agreement] = false
         @user = current_user
-        @flags = [false, false, current_user.password_required?, true, false]
+        @flags = [false, false, current_user.provider.blank?, true, false]
         data[:form] = render_to_string "settings/_settings", :layout => false
       end
     else

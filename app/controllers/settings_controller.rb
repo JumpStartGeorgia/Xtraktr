@@ -2,7 +2,7 @@ class SettingsController < ApplicationController
   before_filter :authenticate_user!
 
   def index
-    @flags = [false, false, current_user.password_required?, false, true]
+    @flags = [false, false, current_user.provider.blank?, false, true]
     @user = current_user
     # @user.valid?
     
