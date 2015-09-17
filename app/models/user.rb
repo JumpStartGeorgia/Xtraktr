@@ -133,12 +133,12 @@ class User
   index({ :reset_password_token => 1}, { background: true, unique: true, sparse: true })
 
   #############################
-  attr_accessor :account, :facebook_account, :is_registration
+  attr_accessor #:account, :facebook_account, :direct
   attr_accessible :email, :password, :password_confirmation, :remember_me,
                   :role, :provider, :uid, :nickname, :avatar,
                   :first_name, :last_name, :age_group, :residence,
-                  :affiliation, :status, :status_other, :description, :account, :facebook_account,
-                  :notifications, :notification_locale, :api_keys_attributes, :is_registration
+                  :affiliation, :status, :status_other, :description, #:account, :facebook_account,
+                  :notifications, :notification_locale, :api_keys_attributes#, :direct
 
   #############################
   ## Validations
@@ -151,8 +151,9 @@ class User
   validates :affiliation, presence: true
   validates :status, inclusion: { in: STATUS.keys }
   validates_presence_of :status_other, :if => lambda { |o| o.status == 8 }
-  validates :account, :numericality => { :equal_to => 1 }, :if => lambda { |o| o.is_registration.present? }
-  validates :facebook_account, :inclusion => { :in => ["0", "1"] }, :if => lambda { |o| o.is_registration.present? }  
+ # validates :account, :numericality => { :equal_to => 1 } #, :if => lambda { |o| o.account.present? }
+  #validates :facebook_account, :inclusion => { :in => ["0", "1"] } #, :if => lambda { |o| o.is_registration.present? }  
+  #validates :direct, :inclusion => { :in => ["0", "1"] }
   ####################
   ## Callbacks
 
@@ -206,7 +207,6 @@ class User
   end
 
   def self.find_for_facebook_oauth(auth, params) #, signed_in_resource=nil
-     Rails.logger.debug("-----------------------------------#{params.inspect}---------#{params["first_name"].present?} #{params[:first_name]} #{auth.info.first_name}")
     user = where(provider: auth.provider, uid: auth.uid).first_or_initialize do |user|
       user.nickname = auth.info.nickname if auth.info.has_key?("nickname")
       user.first_name = (params["first_name"].present? ? params["first_name"] : auth.info.first_name) if params["first_name"].present? || auth.info["first_name"].present?
@@ -220,6 +220,8 @@ class User
       user.description = params["description"] if params["description"].present?
       user.avatar = auth.info.image
       user.password = Devise.friendly_token[0,20]
+      user.notifications = params["notifications"] == "1" if params["notifications"].present?
+      user.notification_locale = params["notification_locale"] if params["notification_locale"].present?
     end
 
     user.save(validate: false)
@@ -251,7 +253,7 @@ class User
 
   # if user logged in with omniauth, password is not required
   def password_required?
-    super && provider.blank?
+    super && provider.blank? # provider.blank?
   end
 
   def agreement(dataset_id, dataset_type, dataset_locale, download_type)

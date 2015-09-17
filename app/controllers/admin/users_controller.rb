@@ -32,7 +32,7 @@ class Admin::UsersController < ApplicationController
   # GET /admin/users/new.json
   def new
     @user = User.new
-
+    @flags = [false, true, true, false, true]
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @user }

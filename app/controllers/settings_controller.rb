@@ -2,8 +2,10 @@ class SettingsController < ApplicationController
   before_filter :authenticate_user!
 
   def index
+    @flags = [false, false, current_user.password_required?, false, true]
     @user = current_user
-    @user.valid?
+    # @user.valid?
+    
     if request.put? && 
       success = if params[:user][:password].present? || params[:user][:password_confirmation].present?
         @user.update_attributes(params[:user])

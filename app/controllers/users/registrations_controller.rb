@@ -1,85 +1,76 @@
 class Users::RegistrationsController < Devise::RegistrationsController
    # POST /resource
    respond_to :json
+
    def create
-      pars = sign_up_params
-      if create_user? pars
-        if create_facebook? pars
-          agreement_data = pars.slice(:email, :first_name, :last_name, :age_group, :residence, :affiliation, :status, :status_other, :description).merge!(params[:agreement])
-          @mod = Agreement.new(agreement_data)
-          respond_to do |format|
-            if @mod.valid?
-              format.json { render json: { url: omniauth_authorize_path(resource_name, :facebook, agreement_data), registration: true }, :success => true }
-            else
-              format.json { render json: { errors: @mod.errors, registration: true }, :status => :error }
-            end
-          end   
-          # build_resource(sign_up_params)
-          # resource_saved = resource.save
-          # yield resource if block_given?
-          # if resource_saved
-          #   if resource.active_for_authentication?
-          #     set_flash_message :notice, :signed_up if is_flashing_format?
-          #     sign_up(resource_name, resource)
-          #     respond_with resource, location: after_sign_up_path_for(resource)
-          #   else
-          #     set_flash_message :notice, :"signed_up_but_#{resource.inactive_message}" if is_flashing_format?
-          #     expire_data_after_sign_in!
-          #     respond_with resource, location: after_inactive_sign_up_path_for(resource)
-          #   end
-          # else
-          #   clean_up_passwords resource
-          #   @validatable = devise_mapping.validatable?
-          #   if @validatable
-          #     @minimum_password_length = resource_class.password_length.min
-          #   end
-          #   respond_with resource
-          # end
-        else 
-          build_resource(sign_up_params)
-          resource_saved = resource.save
-          yield resource if block_given?
+    @pars = sign_up_params
+
+    if create_user? # user should be created
+      if !create_facebook? # local user
+        build_resource(sign_up_params)
+        resource_saved = resource.save
+        yield resource if block_given?
+
+        respond_to do |format|
           if resource_saved
-            if resource.active_for_authentication?
-              set_flash_message :notice, :signed_up if is_flashing_format?
-              sign_up(resource_name, resource)
-              respond_with resource, location: after_sign_up_path_for(resource)
-            else
-              set_flash_message :notice, :"signed_up_but_#{resource.inactive_message}" if is_flashing_format?
-              expire_data_after_sign_in!
-              respond_with resource, location: after_inactive_sign_up_path_for(resource)
-            end
+            sign_up(resource_name, resource)
+            format.json { render json: { url: after_sign_up_path_for(resource) }, :success => true }
           else
             clean_up_passwords resource
-            @validatable = devise_mapping.validatable?
-            if @validatable
-              @minimum_password_length = resource_class.password_length.min
-            end
-            respond_with resource
+            format.json { render json: { errors: resource.errors }, :status => :error }
           end
-        end
-             
-      else
-            @mod = Agreement.new(pars.slice(:email, :first_name, :last_name, :age_group, :residence, :affiliation, :status, :status_other, :description).merge!( params[:agreement] ))
-              @url = Dataset.find(@mod.dataset_id).urls[@mod.dataset_type][@mod.dataset_locale]
-                @model_name = @mod.model_name.downcase
-         respond_to do |format|
-             if @mod.save
-                @mapper = FileMapper.create({ dataset_id: @mod.dataset_id, dataset_type: @mod.dataset_type, dataset_locale: @mod.dataset_locale })         
-               format.json { render json: { url: "/#{I18n.locale}/download/#{@mapper.key}", registration: true }, :success => true }
-              else
-               format.json { render json: { errors: @mod.errors, registration: true }, :status => :error }
-              end
-           end    
-      end
-   end
+        end 
+      else # facebook user
+        build_resource(@pars.merge!({ provider: :facebook }))
+        respond_to do |format|
+          if resource.valid?
+            tmp = @pars.slice(:email, :first_name, :last_name, :age_group, :residence, :affiliation, :status, :status_other, :description, :notifications, :notification_locale)              
+            format.json { render json: { url: omniauth_authorize_path(resource_name, :facebook, tmp) }, :success => true }
+          else
+            format.json { render json: { errors: resource.errors }, :status => :error }
+          end
+        end 
+      end        
+    else # downloading data without creating user   
+      if user_signed_in? # user has missing required fields
+        agreement_data = @pars.slice(:email, :first_name, :last_name, :age_group, :residence, :affiliation, :status, :status_other, :description).merge!(params[:agreement])
+        @mod = Agreement.new(agreement_data)
+        respond_to do |format|
+          if @mod.valid?
+            format.json { render json: { url: omniauth_authorize_path(resource_name, :facebook, agreement_data), registration: true }, :success => true }
+          else
+            format.json { render json: { errors: @mod.errors, registration: true }, :status => :error }
+          end
+        end 
+      else # just download data with agreement
+        @mod = Agreement.new(@pars.slice(:email, :first_name, :last_name, :age_group, :residence, :affiliation, :status, :status_other, :description).merge!(params[:agreement]))
+        @url = Dataset.find(@mod.dataset_id).urls[@mod.dataset_type][@mod.dataset_locale]
+        @model_name = @mod.model_name.downcase
+        respond_to do |format|
+          if @mod.save
+            @mapper = FileMapper.create({ dataset_id: @mod.dataset_id, dataset_type: @mod.dataset_type, dataset_locale: @mod.dataset_locale })         
+            format.json { render json: { url: "/#{I18n.locale}/download/#{@mapper.key}", registration: true }, :success => true }
+          else
+            format.json { render json: { errors: @mod.errors, registration: true }, :status => :error }
+          end
+        end          
+      end       
+    end
+  end
+  def new 
+    @flags = [false, true, true, false, true]
+    super
+  end
   def sign_up_params
     devise_parameter_sanitizer.sanitize(:sign_up)
   end
-  def create_user? pars    
-    pars[:account].present? && pars[:account].to_i == 1
+  def create_user?
+    user_signed_in? ? false : (params[:account].present? && params[:account].to_i == 1)     
   end
-  def create_facebook? pars
-    pars[:facebook_account].present? && pars[:facebook_account].to_i == 1
+  def create_facebook?
+    params[:facebook_account].present? && params[:facebook_account].to_i == 1
+  end
+  def direct?
+    params[:direct].present? && params[:direct].to_i == 1
   end
 end

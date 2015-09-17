@@ -33,8 +33,8 @@
       <% end %>
     </div>
     <div class="col">
-      <div class="category">
         <% if @dataset.categories.present? %>
+          <div class="category">
             <div class="text"><%= t('app.buttons.categories') %>:</div>
             <ul>
               <% @dataset.categories.each {|x| %>
@@ -45,8 +45,8 @@
                 </li>
               <% } %>
             </ul>
+          </div>
         <% end %>
-      </div>
       <div class="links">
         <%= link_to url_dataset_explore(@dataset, language: params[:language]), title: t('app.menu.titles.explore_dataset') do %>
             <%= image_tag 'svg/chart.svg' %>

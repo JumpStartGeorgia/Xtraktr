@@ -96,7 +96,7 @@ $(document).ready(function () {
         data: form.serialize(),
         dataType: "json",
         success: function (data) {
-           console.log("form back",data);
+           //console.log("form back",data);
           if (data.url) {
             js_modal_off();
             window.location.href = data.url;
@@ -105,9 +105,10 @@ $(document).ready(function () {
           }
         },
         error: function (data) {
-           console.log("form back error",data);
+           //console.log("form back error",data);
           data = data.responseJSON;
           var errors = data.errors;
+
           if (data.sessions) {
             form.parent().find(".notification").remove();
             form.before(notification("alert", data.errors.alert));
@@ -120,11 +121,16 @@ $(document).ready(function () {
 
               if (["text", "email", "password"].indexOf(type) !== -1) {
                 input.closest(".form-group").addClass("has-error");
-                input.closest(".form-wrapper").append("<abbr class='exclamation' data-class='tooltip-exclamation' title='" + $.map(v, function (m) { return m.charAt(0).toUpperCase() + m.slice(1); }).join("\r\n") + "'></abbr>");
+                input.closest(".form-wrapper").append("<abbr class='exclamation' data-class='tooltip-exclamation' title='" + $.map(v, function (m) { return m.charAt(0).toUpperCase() + m.slice(1); }).join("\r\n").replace("'", "&#39") + "'></abbr>");
+                if(type === "password") {
+                  var input2 = input.closest(".password-box").find("#user_password_confirmation");
+                  input2.closest(".form-group").addClass("has-error");
+                  input2.closest(".form-wrapper").append("<abbr class='exclamation' data-class='tooltip-exclamation' title='" + $.map(v, function (m) { return m.charAt(0).toUpperCase() + m.slice(1); }).join("\r\n").replace("'", "&#39") + "'></abbr>");
+                }
               } else if (["checkbox", "radio"].indexOf(type) !== -1) {
                 //console.log(k,v,type,input,input.closest(".form-group").find("> label"));
                 input.closest(".form-group").addClass("has-error");
-                input.closest(".form-group").find("label").append("<abbr class='exclamation' data-class='tooltip-exclamation' title='" + $.map(v, function (m) { return m.charAt(0).toUpperCase() + m.slice(1); }).join("\r\n") + "'></abbr>");
+                input.closest(".form-group").find("label").append("<abbr class='exclamation' data-class='tooltip-exclamation' title='" + $.map(v, function (m) { return m.charAt(0).toUpperCase() + m.slice(1); }).join("\r\n").replace("'", "&#39") + "'></abbr>");
               }
             });
           }
@@ -247,7 +253,6 @@ function download_request (url, data) {
     data: data,
     dataType: "json"
   }).done(function (d) {
-     console.log("download request answer", d);
     if (d.agreement) {
       window.location.href = d.url;
     } else {
