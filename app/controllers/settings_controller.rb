@@ -4,7 +4,7 @@ class SettingsController < ApplicationController
 
   def index
     @user = @owner
-    @flags = [false, false, @user.password_required?, false, true]
+    @flags = [false, false, @user.provider.blank?, false, true]
     @pending_members = Invitation.pending_from_user(@user.id) if !@user.is_user?
     @pending_orgs = Invitation.pending_to_user(@user.id) if @user.is_user?
 
