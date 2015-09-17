@@ -621,7 +621,6 @@ logger.debug "@@@@@@@@@@@@@2 dataset = #{@dataset.inspect}"
      !(params[:controller] == 'users/registrations' && params[:action] == 'create' ) &&
      !(params[:controller] == 'omniauth_callbacks' && params[:action] == 'facebook') &&
       !(params[:controller] == 'settigns' && params[:action] == 'refill')
-
       session[:download_url] = nil
     end
 

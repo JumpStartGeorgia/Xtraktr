@@ -332,12 +332,13 @@ class RootController < ApplicationController
         @mod = Agreement.new({ dataset_id: @dataset_id, dataset_type: @dataset_type, dataset_locale: @dataset_locale, download_type: @download_type  })
         data[:agreement] = false
         @user = current_user
+        @flags = [false, false, current_user.password_required?, true, false]
         data[:form] = render_to_string "settings/_settings", :layout => false
-#        data[:url] =  settings_path # here we need settings form to appear todo
       end
     else
+      @flags = [true, true, true, true, true]
       @mod = Agreement.new({ dataset_id: @dataset_id, dataset_type: @dataset_type, dataset_locale: @dataset_locale, download_type: @download_type  })
-      data[:form] = render_to_string "devise/registrations/new", :layout => false, :locals => { reg: false }
+      data[:form] = render_to_string "devise/registrations/new", :layout => false
     end
     respond_to do |format|
       format.json { render json: data }

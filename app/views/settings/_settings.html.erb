@@ -1,13 +1,11 @@
 <div id="refill-form">
   <div class="red-box"><%= t('helpers.links.download') %></div>
-
   <div class="explanation"><%= t('helpers.links.explanation') %></div>
 
- <%= semantic_form_for(@user, url: settings_refill_path(@user), html: {:id=>"refill-form-sender",:"data-form-id"=>"refill-form"}) do |f| %>
+  <%= semantic_form_for(@user, url: settings_refill_path(@user), html: {:id=>"refill-form-sender",:"data-form-id"=>"refill-form"}) do |f| %>
     <%# f.error_messages %>
-
     <%= f.inputs do %>
-       <%= render :partial => 'devise/registrations/new', :locals => { f: f, resource: @user, reg: true, show_password: false } %>
+      <%= render :partial => 'devise/registrations/new', :locals => { f: f, resource: @user } %>
     <% end %>
 
     <div class="control-group submit-row">

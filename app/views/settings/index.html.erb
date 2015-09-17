@@ -47,7 +47,7 @@
           <% if @user.is_user? %>
             <%= render :partial => 'devise/registrations/edit', :locals => { f: f, resource: @user } %>
           <% else %>
-          <%= render :partial => 'devise/registrations/group', :locals => { f: f, resource: @user } %>
+            <%= render :partial => 'devise/registrations/group', :locals => { f: f, resource: @user } %>
           <% end %>
         <% end %>
 

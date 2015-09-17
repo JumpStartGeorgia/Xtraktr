@@ -40,7 +40,6 @@
 <% if session[:download_url].present? %>
   <script>download_request("<%= session[:download_url] %>",{});</script>
   <% session[:download_url] = nil %>
-  <% puts("-------------------- nil download url") %>
 <% end %>
 
 <% if @addthis_id %>

@@ -47,9 +47,9 @@ class Answer < CustomTranslation
   # Callbacks
   # before_save :check_flags
   def check_flags
-    logger.debug "----------------- answer check flags before save"
+    #logger.debug "----------------- answer check flags before save"
     if exclude_changed? || can_exclude_changed?
-      logger.debug "------ answer #{self.text} exclude changed, calling question flag/stats"
+      #logger.debug "------ answer #{self.text} exclude changed, calling question flag/stats"
       self.question.update_flags
       self.question.update_stats
     end
