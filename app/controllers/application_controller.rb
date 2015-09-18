@@ -622,10 +622,12 @@ logger.debug "@@@@@@@@@@@@@2 dataset = #{@dataset.inspect}"
      !(params[:controller] == 'omniauth_callbacks' && params[:action] == 'facebook') &&
       !(params[:controller] == 'settigns' && params[:action] == 'refill')
       session[:download_url] = nil
+         # Rails.logger.info "--------------------------- remove"
     end
 
     if params[:action] == 'download_request' && request.xhr? && (!user_signed_in? || !current_user.valid?)
       session[:download_url] = request.fullpath
+      # Rails.logger.info "--------------------------- added"
     end
 
     if request.fullpath.index("/download/").nil?
