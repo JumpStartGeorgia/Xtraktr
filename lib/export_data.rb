@@ -1199,10 +1199,11 @@ private
       puts "- creating zip"
       # zip the files and move to the main folder
       ZipRuby::Archive.open(zip_file_path, ZipRuby::CREATE) do |zipfile|
-        zipfile.add_dir(dataset.title)
+        title = dataset.title.to_ascii.gsub(/[\\ \/ \: \* \? \" \< \> \| \, \. ]/,'')
+        zipfile.add_dir(title)
         files.each do |file|
           # args: file name (with directory), source
-          zipfile.add_file("#{dataset.title}/#{file[:file_name]}", file[:file_path])
+          zipfile.add_file("#{title}/#{file[:file_name]}", file[:file_path])
         end
       end
     end
