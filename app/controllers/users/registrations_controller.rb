@@ -34,6 +34,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     else # downloading data without creating user   
       if user_signed_in? # user has missing required fields
         agreement_data = @pars.slice(:email, :first_name, :last_name, :age_group, :residence, :affiliation, :status, :status_other, :description).merge!(params[:agreement])
+        agreement_data[:residence] = Country.find(agreement_data[:residence]).name
         @mod = Agreement.new(agreement_data)
         respond_to do |format|
           if @mod.valid?
@@ -43,7 +44,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
           end
         end 
       else # just download data with agreement
-        @mod = Agreement.new(@pars.slice(:email, :first_name, :last_name, :age_group, :residence, :affiliation, :status, :status_other, :description).merge!(params[:agreement]))
+        agreement_data = @pars.slice(:email, :first_name, :last_name, :age_group, :residence, :affiliation, :status, :status_other, :description).merge!(params[:agreement])
+
+        agreement_data[:residence] = Country.find(agreement_data[:residence]).name
+        @mod = Agreement.new(agreement_data)
+
         @url = Dataset.find(@mod.dataset_id).urls[@mod.dataset_type][@mod.dataset_locale]
         @model_name = @mod.model_name.downcase
         respond_to do |format|

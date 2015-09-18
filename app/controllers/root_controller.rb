@@ -92,7 +92,7 @@ class RootController < ApplicationController
       end
     else
       @datasets = @datasets.sorted_title
-    end
+    end    
     # add category
     if params[:category].present?
       @datasets = @datasets.categorize(params[:category])
@@ -318,7 +318,7 @@ class RootController < ApplicationController
     else
       @flags = [true, true, true, true, true]
       @mod = Agreement.new({ dataset_id: @dataset_id, dataset_type: @dataset_type, dataset_locale: @dataset_locale, download_type: @download_type  })
-      data[:form] = render_to_string "devise/registrations/new", :layout => false
+      data[:form] = render_to_string "devise/registrations/new", :layout => false, :locals => { explanation: true }
     end
     respond_to do |format|
       format.json { render json: data }
