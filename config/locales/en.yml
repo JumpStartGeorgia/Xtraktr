@@ -1545,8 +1545,10 @@ en:
       spss: SPSS
       stata: STATA
       r: R
+      original: Original
     title:
       csv: Data formatted for spreadsheets
       spss: Data formatted for SPSS
       stata: Data formatted for STATA
       r: Data formatted for R
+      original: The original data file

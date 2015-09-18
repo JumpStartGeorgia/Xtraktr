@@ -1545,8 +1545,10 @@ ka:
       spss: SPSS
       stata: STATA
       r: R
+      original: Original
     title:
       csv: "ონლაინ ცხრილისთვის დაფორმატებული მონაცემები"
       spss: SPSS-სთვის დაფორმატებული მონაცემები
       stata: STATA-სთვის დაფორმატებული მონაცემები
       r: R-სთვის დაფორმატებული მონაცემები
+      original: The original data file
