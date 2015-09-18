@@ -274,6 +274,17 @@ function build_highmap(shape_question_code, adjustable_max, json_map_set, chart_
     max = Math.ceil(Math.max.apply(Math, $.map(json_map_set.data, function(obj, i){return obj.value})) / 10)*10;
   }
 
+  // if shape do not have value, remove them from the data
+  var map_data_length = json_map_set.data.length;
+  var i=0;
+  for (i;i<map_data_length;i++){
+    if (json_map_set.data[i].value == null || json_map_set.data[i].count == null){
+      json_map_set.data.splice(i,1);
+      i--;
+      map_data_length--;
+    }
+  }
+
   $(selector_path + ' #' + map_id).highcharts('Map', {
       credits: { enabled: false },
       chart:{
