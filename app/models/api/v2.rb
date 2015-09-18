@@ -1211,7 +1211,7 @@ private
 
             # have to transpose the counts for highcharts (and re-calculate percents)
             counts = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[count_key]}}.transpose
-            for_total_resp = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:count]}}.transpose
+            for_total_resp = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[count_key]}}.transpose
             percents = []
             counts.each do |count_row|
               total = count_row.inject(:+)
@@ -1266,7 +1266,7 @@ private
 
             counts = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[count_key]}}
             percents = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[percent_key]}}
-            for_total_resp = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:count]}}.transpose
+            for_total_resp = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[count_key]}}.transpose
 
             map_item[:filter_results][:map_sets] = []
             if counts.present?
@@ -1317,7 +1317,7 @@ private
 
           # have to transpose the counts for highcharts (and re-calculate percents)
           counts = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[count_key]}}.transpose
-          for_total_resp = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:count]}}.transpose
+          for_total_resp = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[count_key]}}.transpose
           percents = []
           counts.each do |count_row|
             total = count_row.inject(:+)
@@ -1368,7 +1368,7 @@ private
 
           counts = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[count_key]}}
           percents = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[percent_key]}}
-          for_total_resp = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[:count]}}.transpose
+          for_total_resp = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[count_key]}}.transpose
 
           question_answers.each_with_index do |q_answer, q_index|
             item = {broken_down_answer_value: q_answer.value, broken_down_answer_text: q_answer.text}
