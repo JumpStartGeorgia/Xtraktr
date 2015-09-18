@@ -285,7 +285,11 @@
         <div>
           <div class="col k"><%= s_model_class.human_attribute_name(:questions_analyzable) %>: </div>
           <div class="col">
+            <% if is_admin_page %>
+              <%= number_with_delimiter(@dataset.stats.questions_analyzable) %>
+            <% else %>
             <%= number_with_delimiter(@dataset.stats.public_questions_analyzable) %>
+            <% end %>
           </div>
         </div>
 
