@@ -326,6 +326,7 @@ div.message {
           display:inline-block;
           label
           {
+            display:inline-block;
             font:14px 'sourcesans_pro', 'sans-serif';
             font-weight:normal;
             margin:0 12px 0 0;
@@ -333,20 +334,48 @@ div.message {
             color: #4d5563;
             line-height: 30px;
           }
-          select
+          .dropdown
           {
-            font:14px 'sourcesans_pro', 'sans-serif';
-            color: @00adee;
-            background:rgba(60, 67, 82,0.05) url(/assets/svg/select_arrow.svg) no-repeat center right / 21px 7px;
-            padding:5px 28px 6px 10px;
-            border:0px solid #ddd;
-            min-width:140px;
-            height:30px;
+            display:inline-block;
             vertical-align:top;
-            outline:none;
-            appearance:none;
-            border-radius: 0px;
-            cursor:pointer;
+            height:30px;
+ 
+            .dropdown-toggle {
+              display: inline-block;
+              background:rgba(60, 67, 82,0.05) url(/assets/svg/select_arrow.svg) no-repeat center right / 21px 7px;
+              font:14px 'sourcesans_pro', 'sans-serif';
+              color: @00adee;
+              text-decoration:none;
+              height:30px;
+              min-width:140px;
+              padding:5px 28px 6px 10px;
+              cursor:pointer;
+            }
+            .dropdown-menu {
+              padding:0;
+              border: 1px solid #f2f2f2;
+              box-shadow:none;
+              border-radius: 0px;
+              outline:none;
+              li 
+              {
+                a {
+                  font: 13px 'sourcesans_pro', 'sans-serif';
+                  line-height: 11px;
+                  color: #636975;
+                  padding:12px 20px;
+                  opacity: 0.8;
+                  &:hover {
+                    opacity:1;
+                  }
+                }
+                &.selected {
+                  a {
+                    opacity:1;
+                  }
+                }
+              }
+            }
           }
         }
 
@@ -411,7 +440,7 @@ div.message {
   }
   @media (min-width: 992px) {
 
-    margin:0px -50px 20px;
+    margin:0px -50px 26px;
     h1
     {
       margin:0px 50px;
@@ -586,7 +615,7 @@ div.message {
       float: left;
     }
     input {
-      font:13px 'opensans_li';
+      font:13px 'sourcesans_pro_li';
       color:@3c4352;
       border-radius: 0px;
       outline:none;
@@ -716,16 +745,23 @@ div.message {
   transform: translateX(-50%) translateY(-50%);
 }
 
-::-webkit-input-placeholder { font-size:12px; font-family:'sourcesans_pro','sans-serif'; color: @3c4352 !important; }
-:-moz-placeholder { /* Firefox 18- */ font-size:12px; font-family:'sourcesans_pro','sans-serif'; color: @3c4352 !important; }
-::-moz-placeholder {  /* Firefox 19+ */ font-size:12px; font-family:'sourcesans_pro','sans-serif'; color: @3c4352 !important; }
-:-ms-input-placeholder { font-size:12px; font-family:'sourcesans_pro','sans-serif'; color: @3c4352 !important; }
+::-webkit-input-placeholder { font-size:12px; font-family:'sourcesans_pro','sans-serif'; color: #9ea8b7; }
+:-moz-placeholder { /* Firefox 18- */ font-size:12px; font-family:'sourcesans_pro','sans-serif'; color: #9ea8b7; }
+::-moz-placeholder {  /* Firefox 19+ */ font-size:12px; font-family:'sourcesans_pro','sans-serif'; color: #9ea8b7; }
+:-ms-input-placeholder { font-size:12px; font-family:'sourcesans_pro','sans-serif'; color: #9ea8b7; }
 input[type=search]
 {
   &::-webkit-input-placeholder { font-size:13px; font-family:'sourcesans_pro_li', 'sans-serif'; color:#9da1a8; }
   &:-moz-placeholder { font-size:13px; font-family:'sourcesans_pro_li', 'sans-serif'; color:#9da1a8; }
   &::-moz-placeholder { font-size:13px; font-family:'sourcesans_pro_li', 'sans-serif'; color:#9da1a8; }
   &:-ms-input-placeholder { font-size:13px; font-family:'sourcesans_pro_li', 'sans-serif'; color:#9da1a8; }
+}
+input[type=search]:focus
+{
+  &::-webkit-input-placeholder { color:transparent; }
+  &:-moz-placeholder { color:transparent; }
+  &::-moz-placeholder { color:transparent; }
+  &:-ms-input-placeholder { color:transparent; }
 }
 
 *::-webkit-scrollbar-track {
