@@ -344,9 +344,18 @@ label > abbr {
     padding:0px;
 
   }
-
-
-  input[type=text],input[type=url],input[type=tel],input[type=email],input[type=file],input[type=password], textarea
+  #user_residence_input {
+    max-width:1px;
+    select {
+      padding: 4px 34px 4px 14px;
+      box-sizing: content-box;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background: #ffffff url(/assets/svg/select_arrow.svg) no-repeat center right / 21px 7px;
+    }
+  }
+ input[type=text],input[type=url],input[type=tel],input[type=email],input[type=file],input[type=password], textarea, select
   {
     font:12px 'sourcesans_pro', 'sans-serif' !important;
     color:@3c4352;
@@ -365,7 +374,7 @@ label > abbr {
       width: 100%;
     }
   }
-  input[type=text]:focus,input[type=url]:focus,input[type=tel]:focus,input[type=email]:focus,input[type=file]:focus,input[type=password]:focus, textarea:focus
+  input[type=text]:focus,input[type=url]:focus,input[type=tel]:focus,input[type=email]:focus,input[type=file]:focus,input[type=password]:focus, textarea:focus, select:focus
   {
     background-color:@fff !important;
     outline:none;
@@ -477,8 +486,8 @@ label > abbr {
       float:right;
     }
     &.selected {
-      label { opacity:1; } 
+      label { opacity:1; }
     }
   }
- 
+
 }

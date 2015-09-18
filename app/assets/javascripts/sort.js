@@ -105,18 +105,14 @@ $(document).ready(function(){
   // when checkbox state changes, update the drop down to make sure the correct items are showing
   // - have to adjust table index to account for pagination so select correct item in drop down
   table_id.on('change', ':checkbox', function(){
-    console.log("---------");
     var row_index = $(this).closest('tr').index();
     var select_index = datatable.page.info().start + row_index;
 
 
-    console.log("index = " + select_index);
     if($(this).is(':checked')){
-      console.log("- hiding");
       $('li:eq(' + select_index + ')', list_id).hide();
       $(this).closest('tr').addClass('to-move');
     }else{
-      console.log("- showing");
       $('li:eq(' + select_index + ')', list_id).show();
       $(this).closest('tr').removeClass('to-move');
     }
@@ -178,7 +174,6 @@ $(document).ready(function(){
     datatable.rows.add(gon.datatable_json);
     datatable.draw(false);
 
-    console.log('selected value was ' + value);
     // if the selected value is showing the table, highlight it
     var tr = $('tbody tr > td > input[value="' + value + '"]').closest('tr');
     if (tr.length == 1){
@@ -242,12 +237,10 @@ $(document).ready(function(){
   // make rows drag/drop
   $('tbody', table_id).sortable({
     cursor: "move",
+    containment: "parent",
     // record the start index
     start: function(e, ui){
-      console.log('-----------');
-      console.log('start!');
       move_start_index = $(ui.item).index();
-      console.log('start at ' + move_start_index);
       $(ui.item).addClass('to-move');
     },
     // if the sorting stops, turn off the highlight
@@ -256,10 +249,7 @@ $(document).ready(function(){
     },
     // record the end index and then update all of the other items to match
     update: function(e,ui){
-      console.log('update');
       move_end_index = $(ui.item).index();
-      console.log('end at ' + move_end_index);
-      console.log('-----------');
 
       // adjust indexes based on pagination values
       var page = datatable.page.info();
@@ -267,9 +257,6 @@ $(document).ready(function(){
         move_start_index += page.start;
         move_end_index += page.start;
       }
-      console.log('start index after adjustment ' + move_start_index);
-      console.log('end index after adjustment ' + move_end_index);
-
       // -- drop down
       if (move_end_index == 0){
         $('option:eq(' + (move_start_index + 1) + ')', select_id).insertBefore($('option:eq(1)', select_id));

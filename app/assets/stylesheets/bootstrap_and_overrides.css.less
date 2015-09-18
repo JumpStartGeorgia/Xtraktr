@@ -974,3 +974,22 @@ footer {
     }
   }
 }
+.table-hover > tbody > tr:hover > td, .table-hover > tbody > tr:hover > th {
+    background-color: #EFEFEF;
+}
+#sort {
+  tbody > tr:hover td:first-of-type{
+    position:relative;
+    &:before {
+      display:inline-block;
+      content:"";
+      background:transparent url(/assets/svg/move.png) no-repeat left center;
+      width:5px;
+      height:30px;
+      position:absolute;
+      left:0px;
+      top:50%;
+      transform:translateY(-50%);
+    }
+  }
+}

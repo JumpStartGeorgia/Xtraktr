@@ -128,7 +128,7 @@
               </ul>
             </div>
             <div>
-              <%= link_to destroy_user_session_path, :method => :delete, title: t('helpers.links.sign_out'), class:"signout" do %>
+              <%= link_to destroy_user_session_path, :method => :delete, title: t('helpers.links.sign_out'), :"data-placement"=> "bottom",  class:"signout" do %>
                 <div class="img" alt="<%= t('helpers.links.sign_out') %>"></div>
               <% end %>
             </div>

@@ -302,7 +302,7 @@ class User
         first_name: self.first_name,
         last_name: self.last_name,
         age_group: self.age_group,
-        residence: self.residence,
+        residence: Country.find(self.residence).name,
         affiliation: self.affiliation,
         status: self.status,
         status_other: self.status_other,
