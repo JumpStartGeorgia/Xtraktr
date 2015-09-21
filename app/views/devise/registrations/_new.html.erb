@@ -53,7 +53,7 @@
     <% end %>
 
     <div class="r">
-      <%= f.input :residence, as: :select, :include_blank => false, placeholder: "sdfsdf", :label => false,
+      <%= f.input :residence, as: :select, :include_blank => true, :label => false,  :input_html => { :"data-live-search"=> true, :"data-size"=> 7, :"class"=> "select2picker", placeholder: name(:residence) },
         :collection => Country.not_excluded.sorted.map{|x| [x.name, x.id]}
       %>      
       <%= f.input :affiliation, :as => :string, :placeholder => name(:affiliation), :label => false  %>

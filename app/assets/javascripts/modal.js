@@ -22,6 +22,10 @@ function modal(html, options) {
   if (typeof opt.before === 'function') {
     opt.before(popup);
   }
+  if(popup.find(".select2picker").length) {
+    var tmp = popup.find(".select2picker");
+    tmp.select2({ width:"auto", allowClear:true, placeholder: tmp.attr("placeholder"), dropdownCssClass: "select2picker-dropdown" });
+  }
   js_modal_on();
 }
 function js_modal_on() {

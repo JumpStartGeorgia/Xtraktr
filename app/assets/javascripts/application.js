@@ -22,7 +22,7 @@
 //= require dataTables/extras/dataTables.tableTools
 //= require modal
 //= require vendor
-
+var globalCallback = globalCallback || function () {};
 $(document).ready(function () {
    // set focus to first text box on page
   if (gon.highlight_first_form_field) {
@@ -81,7 +81,7 @@ $(document).ready(function () {
       url: t.attr("href"),
       data: data
     }).success(function (d) {
-      modal(d);
+      modal(d);      
     }).error(function () { });
     e.preventDefault();
     e.stopPropagation();
@@ -244,6 +244,8 @@ $(document).ready(function () {
   $("form.form-data-loader").submit(function (){
     $(".data-loader").fadeIn("fast");
   });
+
+   console.log(globalCallback());
 
 });
 var downloading = false;
