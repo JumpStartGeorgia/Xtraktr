@@ -13,8 +13,8 @@ en:
       api_version: API Version
       api_method: API Method
       api_key: API Access Token
-      categories: Category
-      category_mappers: Categories
+      category: Category
+      category_mapper: Categories
       group: Group
       weight: Weight
       time_series_group: Group
@@ -922,6 +922,8 @@ en:
         publish: Date Published Here
       no_data: 'At this time, no datasets have been loaded into the site.'
       no_match: 'Sorry, no datasets match your search request.'
+    explore_data_datasets:
+      no_match: 'Sorry, no datasets match your search request.'
     explore_data_show:
       title: Explore the Data
     explore_time_series:
@@ -932,6 +934,8 @@ en:
         title: Title
         publish: Date Published Here
       no_data: 'At this time, no time series have been created in the site.'
+      no_match: 'Sorry, no time series match your search request.'
+    explore_data_time_series:
       no_match: 'Sorry, no time series match your search request.'
     explore_time_series_show:
       title: Explore Time Series Data

@@ -13,8 +13,8 @@ ka:
       api_version: API ვერსია
       api_method: API მეთოდი
       api_key: API დაშვების გასაღები
-      categories: "კატეგორია"
-      category_mappers: "კატეგორიები"
+      category: "კატეგორია"
+      category_mapper: "კატეგორიები"
       group: Group
       weight: Weight
       time_series_group: Group
@@ -922,6 +922,8 @@ ka:
         publish: "აქ გამოქვეყნების თარიღი"
       no_data: "ამ მომენტისთვის ვებ-გვერდზე არ ჩატვირთულა მონაცემთა ცხრილი"
       no_match: "უკაცრავად, თქვენი არცერთი მოთხოვნა არ ემთხვევა პერიოდული შედარებას"
+    explore_data_datasets:
+      no_match: "უკაცრავად, თქვენი არცერთი მოთხოვნა არ ემთხვევა პერიოდული შედარებას"
     explore_data_show:
       title: "პერიოდული შედარების მონაცემების გაცნობა"
     explore_time_series:
@@ -932,6 +934,8 @@ ka:
         title: "დასახელება"
         publish: "აქ გამოქვეყნების თარიღი"
       no_data: "ამ მომენტისთვის ვებ-გვერდზე არ შექმნილა პერიოდული შედარება."
+      no_match: 'უკაცრავად, თქვენს მოთხოვნას არცერთი პერიოდული შედარება არ შეესაბამება'
+    explore_data_time_series:
       no_match: 'უკაცრავად, თქვენს მოთხოვნას არცერთი პერიოდული შედარება არ შეესაბამება'
     explore_time_series_show:
       title: გაეცანით პერიოდული შედარების მონაცემებს
