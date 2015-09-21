@@ -69,7 +69,7 @@ $(document).ready(function(){
 
 
     // datatable for exclude answers page
-    datatable = $('#dataset-weight-questions').dataTable({
+    datatable = $('#dataset-weight-questions').DataTable({
       "dom": '<"top"fli>t<"bottom"p><"clear">',
       "data": gon.datatable_json,
       // "deferRender": true,
@@ -86,6 +86,11 @@ $(document).ready(function(){
       },
       "pagingType": "full_numbers",
       "orderClasses": false
+    });
+
+    // search boxes in footer
+    $('#dataset-weight-questions tfoot input').on('keyup click', function(){
+        datatable.column($(this).closest('td').index()).search(this.value, true, false).draw();
     });
 
     // if data-state = all, select all questions that match the current filter
@@ -107,6 +112,24 @@ $(document).ready(function(){
 
       return false;
     });
+
+    // when form submits, get all checkboxes from datatable and then submit
+    // - have to do this because loading data via js and so dom does not know about all inputs
+    $('form.weight').submit(function(){
+      // show data loader
+      $(this).find('> .data-loader').fadeIn('fast');
+
+      // empty out what was there
+      $('#hidden-table-inputs', this).empty();
+
+      // get all inputs from table and add to form
+      datatable.$('input').each(function(){
+        $(this).clone().appendTo('#hidden-table-inputs', this);
+      });
+
+    });
+
+
   }
 
 
