@@ -4,7 +4,7 @@
   hint_key = "mongoid.hints.weight."
 -%>
 
-<%= semantic_form_for([@dataset, @weight], url: polymorphic_path([@dataset, @weight], :owner_id => @owner), html: {class: 'tabbed-translation-form'}) do |f| %>
+<%= semantic_form_for([@dataset, @weight], url: polymorphic_path([@dataset, @weight], :owner_id => @owner), html: {class: 'tabbed-translation-form data-loader-container'}) do |f| %>
   <%= f.error_messages %>
 
 
@@ -122,9 +122,33 @@
             <th><%= t('.other_weights') %></th>
           </tr>
         </thead>
+        <tfoot>
+          <tr>
+            <td>
+            </td>
+            <td>
+              <label class="control-label">
+                <input type="text" placeholder="<%= t('datatable.search_footer', name: t('app.common.question_codes')) %>" class="form-control"/>
+                <div class="help-inline" title="<%= t('app.msgs.datatable_regex_search') %>"><div>?</div></div>
+              </label>
+            </td>
+            <td>
+              <label class="control-label">
+                <input type="text" placeholder="<%= t('datatable.search_footer', name: t('app.common.questions')) %>" class="form-control"/>
+                <div class="help-inline" title="<%= t('app.msgs.datatable_regex_search') %>"><div>?</div></div>
+              </label>
+            </td>
+            <td>
+            </td>
+          </tr>
+        </tfoot>
         <tbody>
         </tbody>
       </table>
+
+      <div id="hidden-table-inputs" style="display:none;">
+      </div>
+
     </div>
 
 
@@ -136,4 +160,6 @@
     <%= f.submit t('helpers.links.reset'), :class => 'btn btn-warning', :type => :reset, :name => :reset %>
     <%= link_to t('helpers.links.cancel'), dataset_weights_path, :class => 'btn btn-warning' %>
   </div>
+
+  <div class="data-loader"></div>
 <% end %>

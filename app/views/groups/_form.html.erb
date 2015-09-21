@@ -4,7 +4,7 @@
   hint_key = "mongoid.hints.group."
 -%>
 
-<%= semantic_form_for([@dataset, @group], url: polymorphic_path([@dataset, @group], :owner_id => @owner), html: {class: 'tabbed-translation-form'}) do |f| %>
+<%= semantic_form_for([@dataset, @group], url: polymorphic_path([@dataset, @group], :owner_id => @owner), html: {class: 'tabbed-translation-form data-loader-container'}) do |f| %>
   <%= f.error_messages %>
 
 
