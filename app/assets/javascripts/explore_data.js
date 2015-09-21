@@ -279,7 +279,7 @@ function build_pie_charts(json){
       // filters
       for(i=0; i<json.chart.length; i++){
         // create chart
-        build_pie_chart(json.chart[i].filter_results, chart_height, weight_name);
+        build_bar_chart(json.chart[i].filter_results, chart_height, weight_name);
 
         // add jumpto link
         jumpto_text += '<option data-href="#chart-' + (i+1) + '">' + json.filtered_by.text + ' = ' + json.chart[i].filter_answer_text + '</option>';
@@ -295,7 +295,7 @@ function build_pie_charts(json){
 
     }else{
       // no filters
-      build_pie_chart(json.chart, chart_height, weight_name);
+      build_bar_chart(json.chart, chart_height, weight_name);
 
       // hide jumpto
       $('#jumpto #jumpto-chart').hide();
