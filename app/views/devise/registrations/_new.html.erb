@@ -1,5 +1,5 @@
 <%- model_class = User -%>
-<% 
+<%
   def name(attribute, star = true, up = true)
     t = User.human_attribute_name(attribute)
     t = t.upcase if up
@@ -17,7 +17,7 @@
       </div>
     </div>
   <% else %>
-    <input id="user_account" name="account" type="hidden" value="1">       
+    <input id="user_account" name="account" type="hidden" value="1">
   <% end %>
 
   <% if @flags[1] %>
@@ -32,7 +32,7 @@
           <label class="choice facebook" for="facebook_account"><%= t('helpers.links.sign_up_facebook') %></label>
         </div>
       </div>
-    </div>             
+    </div>
   <% end %>
 
   <div class="r">
@@ -42,7 +42,7 @@
   <div class="r">
     <%= f.input :email, :as => :email, :input_html => { :size => 35 , :class => "login-username" }, :placeholder => name(:email), :label => false  %>
   </div>
-   
+
     <% if @flags[2] %>
       <div class="r<%= @flags[0] ? ' js-hide' : '' %> ghost-box">
         <div class="password-box">
@@ -55,7 +55,7 @@
     <div class="r">
       <%= f.input :residence, as: :select, :include_blank => true, :label => false,  :input_html => { :"data-live-search"=> true, :"data-size"=> 7, :"class"=> "select2picker", placeholder: name(:residence) },
         :collection => Country.not_excluded.sorted.map{|x| [x.name, x.id]}
-      %>      
+      %>
       <%= f.input :affiliation, :as => :string, :placeholder => name(:affiliation), :label => false  %>
     </div>
 
@@ -73,7 +73,7 @@
     <div class="radio_buttons input required form-group statuses vertical" id="user_status_input">
       <label class="control-label" for="user_status"><%= name(:status, false) %><abbr title="required">*</abbr></label>
       <% Hash[User::STATUS.map{|k,v| [t('user.status.' + v), k] }].each do |d| %>
-        <% selected = d[1] == resource.age_group ? 'checked' : '' %>
+        <% selected = d[1] == resource.status ? 'checked' : '' %>
         <div class="radio radio-box" tabindex="0">
             <input id="user_status_<%= d[1] %>" name="user[status]" type="radio" value="<%= d[1] %>" <%= selected %>>
             <label class="choice" for="user_status_<%= d[1] %>"><%= "#{d[0]}" %></label>
