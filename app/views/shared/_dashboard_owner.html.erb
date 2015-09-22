@@ -15,8 +15,8 @@
       <h1><%=@owner.name%></h1>
       <div class="info">
         <div class="country">
-          <span><%= model_class.human_attribute_name(:residence) %>:</span>
-          <%= @owner.residence %>
+          <span><%= model_class.human_attribute_name(:country_id) %>:</span>
+          <%= @owner.country_name %>
         </div>
         <% if @owner.is_user? %>
           <div class="affiliation">

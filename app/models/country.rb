@@ -6,6 +6,7 @@ class Country
   #############################
 
   has_many :category_mappers
+  has_many :users
 
   #############################
 

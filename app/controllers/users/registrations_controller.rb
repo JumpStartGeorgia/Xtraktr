@@ -24,7 +24,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
         build_resource(@pars.merge!({ provider: :facebook }))
         respond_to do |format|
           if resource.valid?
-            tmp = @pars.slice(:email, :first_name, :last_name, :age_group, :residence, :affiliation, :status, :status_other, :description, :notifications, :notification_locale)
+            tmp = @pars.slice(:email, :first_name, :last_name, :age_group, :country_id, :affiliation, :status, :status_other, :description, :notifications, :notification_locale)
             format.json { render json: { url: omniauth_authorize_path(resource_name, :facebook, tmp) }, :success => true }
           else
             format.json { render json: { errors: resource.errors }, :status => :error }
@@ -33,8 +33,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
       end
     else # downloading data without creating user
       if user_signed_in? # user has missing required fields
-        agreement_data = @pars.slice(:email, :first_name, :last_name, :age_group, :residence, :affiliation, :status, :status_other, :description).merge!(params[:agreement])
-        agreement_data[:residence] = Country.find(agreement_data[:residence]).name
+        agreement_data = @pars.slice(:email, :first_name, :last_name, :age_group, :affiliation, :status, :status_other, :description).merge!(params[:agreement])
+        country = Country.find(@pars[:country_id])
+        agreement_data[:country] = country.present? ? country.name : 'unknown'
         @mod = Agreement.new(agreement_data)
         respond_to do |format|
           if @mod.valid?
@@ -44,9 +45,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
           end
         end
       else # just download data with agreement
-        agreement_data = @pars.slice(:email, :first_name, :last_name, :age_group, :residence, :affiliation, :status, :status_other, :description).merge!(params[:agreement])
-
-        agreement_data[:residence] = Country.find(agreement_data[:residence]).name
+        agreement_data = @pars.slice(:email, :first_name, :last_name, :age_group, :affiliation, :status, :status_other, :description).merge!(params[:agreement])
+        country = Country.find(@pars[:country_id])
+        agreement_data[:country] = country.present? ? country.name : 'unknown'
         @mod = Agreement.new(agreement_data)
 
         @url = Dataset.find(@mod.dataset_id).urls[@mod.dataset_type][@mod.dataset_locale]

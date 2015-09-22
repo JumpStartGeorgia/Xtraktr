@@ -224,8 +224,8 @@ class TimeSeriesQuestionsController < ApplicationController
 
 private
   def add_common_options
-    @css.push('tabbed_translation_form.css', 'select2.css', "time_series_questions.css")
-    @js.push('cocoon.js', 'select2/select2.min.js', "time_series_questions.js")
+    @css.push('tabbed_translation_form.css', "time_series_questions.css")
+    @js.push('cocoon.js', "time_series_questions.js")
 
     add_time_series_nav_options()
 

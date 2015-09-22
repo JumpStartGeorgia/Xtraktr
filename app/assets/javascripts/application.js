@@ -61,7 +61,7 @@ $(document).ready(function () {
       checked = t.is(":checked");
     form.find("#user_notification_locale_input").toggleClass("js-hide", !checked);
   });
-  $(document).on("change", "#choose_provider input", function () {     
+  $(document).on("change", "#choose_provider input", function () {
     var t = $(this),
       form = t.closest("form");
     t.closest(".radio_buttons").find(".radio").removeClass("selected");
@@ -81,7 +81,7 @@ $(document).ready(function () {
       url: t.attr("href"),
       data: data
     }).success(function (d) {
-      modal(d);      
+      modal(d);
     }).error(function () { });
     e.preventDefault();
     e.stopPropagation();
@@ -184,7 +184,7 @@ $(document).ready(function () {
   });
 
   $(document).on("change", "#user_status_input input[type=radio]", function () {
-    if (this.value === 8) {
+    if (this.value === '8') {
       $("#user_status_other_input").show();
     } else {
       var other = $("#user_status_other_input").hide();

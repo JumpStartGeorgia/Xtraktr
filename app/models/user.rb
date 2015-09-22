@@ -6,6 +6,7 @@ class User
 
   #############################
 
+  belongs_to :country
   has_many :datasets
   has_many :api_keys, dependent: :destroy
   has_many :members, class_name: 'UserMember', inverse_of: :group, dependent: :destroy
@@ -87,7 +88,7 @@ class User
   field :first_name, type: String
   field :last_name, type: String
   field :age_group, type: Integer #{ 1 => '17-24', 2 => '25-34', 3 => '35-44', 4 => '45-54', 5 => '55-64', 6 => 'above'}
-  field :residence, type: String
+#  field :residence, type: String
   field :affiliation, type: String
   field :status, type: Integer #{ 1 => 'researcher', 2 => 'student', 3 => 'journalist', 4 => 'ngo', 5 => 'government_official', 6 => 'international_organization', 7 => 'private_sector', 8 => 'other' }
   field :status_other, type: String
@@ -136,17 +137,21 @@ class User
   # - words that the slug cannot be
   SLUG_RESERVE = ['new', 'edit', 'delete', 'update', 'create', 'destroy', 'show', 'index', 'admin', 'root', 'omniauth', 'locale', 'api', 'embed', 'highlights', 'contact', 'download', 'download_request', 'instructions', 'about', 'generate_highlights', 'datasets', 'groups', 'weights', 'time_series', 'questions', 'answers', 'settings', 'manage_datasets', 'manage_time_series', 'accept_invitation_from_notification']
   slug :permalink, history: true, reserve: SLUG_RESERVE do |user|
-    user.permalink.to_url
+    if user.permalink.present?
+      user.permalink.to_url
+    else
+      user.id.to_s
+    end
   end
 
   #############################
   attr_accessor #:account, :facebook_account, :direct
   attr_accessible :email, :password, :password_confirmation, :remember_me,
                   :role, :provider, :uid, :nickname, :avatar, :permalink,
-                  :first_name, :last_name, :age_group, :residence,
+                  :first_name, :last_name, :age_group, :country_id, #:residence,
                   :affiliation, :status, :status_other, :description, #:account, :facebook_account,
                   :phone, :website_url, :is_user, :avatar,
-                  :notifications, :notification_locale, :api_keys_attributes#, :direct,
+                  :notifications, :notification_locale, :api_keys_attributes,# :direct,
                   :members_attributes, :groups_attributes, :email_no_domain
 
   #############################
@@ -156,7 +161,8 @@ class User
   validates :first_name, presence: true
   validates :last_name, presence: true, :if => lambda { |o| o.is_user? }
   validates :email, presence: true
-  validates :residence, presence: true
+#  validates :residence, presence: true
+  validates :country_id, presence: true
   validates :affiliation, presence: true, :if => lambda { |o| o.is_user? }
   validates :age_group, inclusion: { in: AGE_GROUP.keys }, :if => lambda { |o| o.is_user? }
   validates :status, inclusion: { in: STATUS.keys }
@@ -208,7 +214,8 @@ class User
       user.email = (params["email"].present? ? params["email"] : (auth.info["email"].present? ? auth.info["email"] : "<%= Devise.friendly_token[0,10] %>@fake.com"))
       user.affiliation = params["affiliation"] if params["affiliation"].present?
       user.age_group = params["age_group"] if params["age_group"].present?
-      user.residence = params["residence"] if params["residence"].present?
+      # user.residence = params["residence"] if params["residence"].present?
+      user.country_id = params["country_id"] if params["country_id"].present?
       user.status = params["status"] if params["status"].present?
       user.status_other = params["status_other"] if params["status_other"].present?
       user.description = params["description"] if params["description"].present?
@@ -302,7 +309,8 @@ class User
         first_name: self.first_name,
         last_name: self.last_name,
         age_group: self.age_group,
-        residence: Country.find(self.residence).name,
+#        residence: Country.find(self.residence).name,
+        country: self.country_name,
         affiliation: self.affiliation,
         status: self.status,
         status_other: self.status_other,
@@ -351,6 +359,12 @@ class User
   def status_name
     if self.status.present?
       I18n.t("user.status.#{STATUS[self.status]}")
+    end
+  end
+
+  def country_name
+    if self.country_id.present? && self.country.present?
+      self.country.name
     end
   end
 

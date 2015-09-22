@@ -1,86 +1,83 @@
-<% reg = true if reg.nil? %>
-<%- model_class = User -%>
-  <div class="r">
+<%
+  def name(attribute, star = true, up = true)
+    t = User.human_attribute_name(attribute)
+    t = t.upcase if up
+    t += " *" if star
+    t
+  end
+%>
+
+  <input id="user_account" name="account" type="hidden" value="1">
+
+  <div class="r clear">
     <%= f.input :first_name, :as => :string, :input_html => {:autofocus => true} %>
     <%= f.input :last_name, :as => :string %>
   </div>
-  <div class="r">
+  <div class="r clear">
     <%= f.input :email, :as => :email, :input_html => { :size => 35 , :class => "login-username" }  %>
   </div>
 
-  <input id="user_account" name="user[is_registration]" type="hidden" value="1">
-  <% if reg %>
-      <input id="user_account" name="user[account]" type="hidden" value="1">
-  <% else %>
-    <div class="boolean input optional checkbox form-group wanna_account" id="user_account_input">
-      <div class="checkbox-box" tabindex="0">
-        <input name="user[account]" type="hidden" value="0">
-        <input id="user_account" name="user[account]" type="checkbox" value="1">
-        <label class="control-label" for="user_account"><%= t('user.wanna_account').html_safe %></label>
-      </div>
-    </div>
-  <% end %>
-
-  <div class="r<%= reg ? '' : ' js-hide' %> ghost-box">
-      <%= f.input :password, :input_html => { :size => 35 , :class => "login-password" } %>
-      <%= f.input :password_confirmation, :input_html => { :size => 35 , :class => "login-password-confirmation" } %>
-  </div>
-
-  <div class="r">
-    <%= f.input :residence, :as => :string %>
-    <%= f.input :affiliation, :as => :string %>
-  </div>
-
-  <div class="radio_buttons input required form-group horizontal" id="user_age_group_input">
-    <label class="  control-label" for="user_age_group"><%= model_class.human_attribute_name(:age_group).upcase %><abbr title="required">*</abbr></label>
-    <% Hash[[1,2,3,4,5,6].map{|k| [t('user.age_group.g' + k.to_s), k] }].each do |d| %>
-      <% selected = d[1] == resource.age_group ? 'checked' : '' %>
-      <div class="radio radio-box" tabindex="0">
-        <input id="user_age_group_<%= d[1] %>" name="user[age_group]" type="radio" value="<%= d[1] %>" <%= selected %>>
-        <label class="choice" for="user_age_group_<%= d[1] %>"><%= "#{d[0]}" %></label>
+    <% if @flags[2] %>
+      <div class="r clear<%= @flags[0] ? ' js-hide' : '' %> ghost-box">
+        <div class="password-box">
+          <%= f.input :password, :input_html => { :size => 35 , :class => "login-password" }  %>
+          <%= f.input :password_confirmation, :input_html => { :size => 35 , :class => "login-password-confirmation" }  %>
+        </div>
       </div>
     <% end %>
-  </div>
 
-  <div class="radio_buttons input required form-group statuses vertical" id="user_status_input">
-    <label class="control-label" for="user_status"><%= model_class.human_attribute_name(:status).upcase %><abbr title="required">*</abbr></label>
-    <% Hash[User::STATUS.map{|k,v| [t('user.status.' + v), k] }].each do |d| %>
-      <% selected = d[1] == resource.age_group ? 'checked' : '' %>
-      <div class="radio radio-box" tabindex="0">
-          <input id="user_status_<%= d[1] %>" name="user[status]" type="radio" value="<%= d[1] %>" <%= selected %>>
-          <label class="choice" for="user_status_<%= d[1] %>"><%= "#{d[0]}" %></label>
+    <div class="r clear">
+      <%= f.input :country_id, as: :select, required: true, :include_blank => true,  :input_html => { :"data-live-search"=> true, :"data-size"=> 7, :"class"=> "select2picker" },
+        :collection => Country.not_excluded.sorted.map{|x| [x.name, x.id]}
+      %>
+      <%= f.input :affiliation, :as => :string  %>
+    </div>
+
+    <div class="radio_buttons input required form-group horizontal" id="user_age_group_input">
+      <label class="  control-label" for="user_age_group"><%= name(:age_group, false) %><abbr title="required">*</abbr></label>
+      <% Hash[[1,2,3,4,5,6].map{|k| [t('user.age_group.g' + k.to_s), k] }].each do |d| %>
+        <% selected = d[1] == resource.age_group ? 'checked' : '' %>
+        <div class="radio radio-box" tabindex="0">
+          <input id="user_age_group_<%= d[1] %>" name="user[age_group]" type="radio" value="<%= d[1] %>" <%= selected %>>
+          <label class="choice" for="user_age_group_<%= d[1] %>"><%= "#{d[0]}" %></label>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="radio_buttons input required form-group statuses vertical" id="user_status_input">
+      <label class="control-label" for="user_status"><%= name(:status, false) %><abbr title="required">*</abbr></label>
+      <% Hash[User::STATUS.map{|k,v| [t('user.status.' + v), k] }].each do |d| %>
+        <% selected = d[1] == resource.status ? 'checked' : '' %>
+        <div class="radio radio-box" tabindex="0">
+            <input id="user_status_<%= d[1] %>" name="user[status]" type="radio" value="<%= d[1] %>" <%= selected %>>
+            <label class="choice" for="user_status_<%= d[1] %>"><%= "#{d[0]}" %></label>
+        </div>
+      <% end %>
+    </div>
+
+    <%= f.input :status_other, :wrapper_html => { :style => (resource.status == 8 ? '' : 'display:none;') }  %>
+
+    <%= f.input :description, :as => :text, :input_html => { :class => 'autogrow', :rows => 5  }  %>
+
+    <% if @flags[4] %>
+      <div class="<%= @flags[0] ? ' js-hide' : '' %> ghost-box">
+        <div class="boolean input optional checkbox form-group ghost-box" id="user_notifications_input">
+          <div class="checkbox-box" tabindex="0">
+            <input name="user[notifications]" type="hidden" value="0">
+            <input id="user_notifications" name="user[notifications]" type="checkbox" value="1" <%= resource.notifications == true ? 'checked' : '' %>>
+            <label class="control-label" for="user_notifications"><%= name(:notifications, false, false) %></label>
+          </div>
+        </div>
+        <div class="radio_buttons input required form-group horizontal <%= resource.notifications == true ? '' : ' js-hide' %> ghost-box" id="user_notification_locale_input">
+          <label class="  control-label" for="user_notification_locale"><%= name(:notification_locale, false) %></label>
+          <%- langs = Language.in(locale: locales_sorted) -%>
+          <% langs.each do |lang| %>
+            <% selected = lang.locale == resource.notification_locale ? 'checked' : '' %>
+            <div class="radio radio-box" tabindex="0">
+              <input id="user_notification_locale_<%= lang.locale %>" name="user[notification_locale]" type="radio" value="<%= lang.locale %>" <%= selected %>>
+              <label class="choice" for="user_notification_locale_<%= lang.locale %>"><%= lang.name %></label>
+            </div>
+          <% end %>
+        </div>
       </div>
     <% end %>
-  </div>
-  <%= f.input :status_other  %>
-
-  <%= f.input :description, :as => :text, :input_html => { :class => 'autogrow', :rows => 5  }  %>
-
-  <div class="boolean input optional checkbox form-group <%= reg ? '' : ' js-hide' %> ghost-box" id="user_notifications_input">
-    <div class="checkbox-box" tabindex="0">
-      <input name="user[notifications]" type="hidden" value="0">
-      <input id="user_notifications" name="user[notifications]" type="checkbox" value="1" <%= resource.notifications == true ? 'checked' : '' %>>
-      <label class="control-label" for="user_notifications"><%= model_class.human_attribute_name(:notifications) %></label>
-    </div>
-  </div>
-  <div class="radio_buttons input required form-group horizontal <%= reg && resource.notifications == true ? '' : ' js-hide' %> ghost-box" id="user_notification_locale_input">
-    <label class="  control-label" for="user_notification_locale"><%= model_class.human_attribute_name(:notification_locale).upcase %></label>
-    <%- langs = Language.in(locale: locales_sorted) -%>
-    <% langs.each do |lang| %>
-      <% selected = lang.locale == resource.notification_locale ? 'checked' : '' %>
-      <div class="radio radio-box" tabindex="0">
-        <input id="user_notification_locale_<%= lang.locale %>" name="user[notification_locale]" type="radio" value="<%= lang.locale %>" <%= selected %>>
-        <label class="choice" for="user_notification_locale_<%= lang.locale %>"><%= lang.name %></label>
-      </div>
-    <% end %>
-  </div>
-
-  <% if false %>
-    <div class="boolean input optional checkbox form-group" id="user_terms_input">
-      <div class="checkbox-box" tabindex="0">
-        <input name="user[terms]" type="hidden" value="0">
-        <input id="user_terms" name="user[terms]" type="checkbox" value="1" <%= resource.terms == true ? 'checked' : '' %>>
-        <label class="control-label" for="user_terms"><%= t('app.common.terms').html_safe %><abbr title="required">*</abbr></label>
-      </div>
-    </div>
-  <% end %>

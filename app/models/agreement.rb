@@ -8,7 +8,7 @@ class Agreement
   field :first_name, type: String
   field :last_name, type: String
   field :age_group, type: Integer
-  field :residence, type: String
+  field :country, type: String
   field :email, type: String
   field :affiliation, type: String
   field :status, type: Integer
@@ -19,8 +19,8 @@ class Agreement
   field :download_type, type: String
 
   #############################
-  
-  attr_accessible :first_name, :last_name, :age_group, :residence,
+
+  attr_accessible :first_name, :last_name, :age_group, :country,
                   :email, :affiliation, :status, :status_other, :description, :dataset_id, :dataset_type, :dataset_locale, :download_type
 
     STATUS = { 1 => 'researcher',
@@ -38,7 +38,7 @@ class Agreement
   validates :first_name, presence: true
   validates :last_name, presence: true
   validates :age_group, inclusion: { in: [1,2,3,4,5,6] }
-  validates :residence, presence: true
+  validates :country, presence: true
   validates :email, presence: true
   validates_format_of  :email, with: Devise.email_regexp, allow_blank: false
   validates :affiliation, presence: true
@@ -46,7 +46,7 @@ class Agreement
   validates_presence_of :status_other, :if => lambda { |o| o.status == 8 }
   validates :dataset_id, presence: true
   validates :dataset_type, presence: true
-  validates :dataset_locale, presence: true  
+  validates :dataset_locale, presence: true
   validates :download_type, :inclusion => {:in => ['public', 'admin']  }
 
 
@@ -68,7 +68,7 @@ class Agreement
 
       # get the dataset titles for all records
       datasets = Dataset.only_id_title_languages.in(id: pluck(:dataset_id).uniq)
-      
+
       sorted.each do |record|
         # add row
         csv_row << record.csv_data(datasets)
@@ -79,11 +79,11 @@ class Agreement
 
   def self.csv_header
     model = Agreement
-    return [  
-      model.human_attribute_name("created_at"), model.human_attribute_name("first_name"), model.human_attribute_name("last_name"), 
-      model.human_attribute_name("age_group"), model.human_attribute_name("residence"), model.human_attribute_name("email"), 
-      model.human_attribute_name("affiliation"), model.human_attribute_name("status"), model.human_attribute_name("description"), 
-      model.human_attribute_name("dataset_id"), model.human_attribute_name("dataset_type"), model.human_attribute_name("dataset_locale"), 
+    return [
+      model.human_attribute_name("created_at"), model.human_attribute_name("first_name"), model.human_attribute_name("last_name"),
+      model.human_attribute_name("age_group"), model.human_attribute_name("country"), model.human_attribute_name("email"),
+      model.human_attribute_name("affiliation"), model.human_attribute_name("status"), model.human_attribute_name("description"),
+      model.human_attribute_name("dataset_id"), model.human_attribute_name("dataset_type"), model.human_attribute_name("dataset_locale"),
       model.human_attribute_name("download_type")
     ]
   end
@@ -99,9 +99,9 @@ class Agreement
       I18n.t("user.status.#{STATUS[self.status]}")
     end
 
-    return [  
-      self.created_at, self.first_name, self.last_name, age_group, self.residence, 
-      self.email, self.affiliation, status, self.description, 
+    return [
+      self.created_at, self.first_name, self.last_name, age_group, self.country, 
+      self.email, self.affiliation, status, self.description,
       title, self.dataset_type, self.dataset_locale, self.download_type
     ]
   end

@@ -96,5 +96,10 @@ namespace :migration do
     require "./db/migrate/add_user_email_no_domain.rb"
   end
 
+  desc "switch to using country_id for user instead of text"
+  task :add_country_id_existing_users => :environment do
+    require "./db/migrate/add_country_id_existing_users.rb"
+  end
+
 
 end
