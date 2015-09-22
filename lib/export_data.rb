@@ -226,7 +226,7 @@ private
     download_path = is_admin ? @admin_dataset_download_path : @dataset_download_path
     staging_path = is_admin ? @admin_dataset_download_staging_path : @dataset_download_staging_path
     zip_name = "codebook.zip"
-    readme_name = "readme_codebook.txt"
+    readme_name = "readme_codebook.doc"
     zip_file_path = "#{download_path}/#{dataset.current_locale}/#{zip_name}"
     readme_file_path = "#{staging_path}/#{dataset.current_locale}/#{readme_name}"
 
@@ -428,7 +428,7 @@ private
 
     csv_file = "csv.csv"
     zip_name = "csv.zip"
-    readme_name = "readme_csv.txt"
+    readme_name = "readme_csv.doc"
     csv_file_path = "#{staging_path}/#{dataset.current_locale}/#{csv_file}"
     readme_file_path = "#{staging_path}/#{dataset.current_locale}/#{readme_name}"
     zip_file_path = "#{download_path}/#{dataset.current_locale}/#{zip_name}"
@@ -512,7 +512,7 @@ private
     csv_file = "spss.csv"
     spss_file = 'spss.sps'
     zip_name = "spss.zip"
-    readme_name = "readme_spss.txt"
+    readme_name = "readme_spss.doc"
     spss_file_path = "#{staging_path}/#{dataset.current_locale}/#{spss_file}"
     csv_file_path = "#{staging_path}/#{dataset.current_locale}/#{csv_file}"
     readme_file_path = "#{staging_path}/#{dataset.current_locale}/#{readme_name}"
@@ -669,7 +669,7 @@ private
     csv_file = "stata.csv"
     stata_file = "stata.do"
     zip_name = "stata.zip"
-    readme_name = "readme_stata.txt"
+    readme_name = "readme_stata.doc"
     stata_file_path = "#{staging_path}/#{dataset.current_locale}/#{stata_file}"
     csv_file_path = "#{staging_path}/#{dataset.current_locale}/#{csv_file}"
     readme_file_path = "#{staging_path}/#{dataset.current_locale}/#{readme_name}"
@@ -773,7 +773,7 @@ private
     csv_file = "r.csv"
     r_file = 'r.r'
     zip_name = "r.zip"
-    readme_name = "readme_r.txt"
+    readme_name = "readme_r.doc"
     r_file_path = "#{staging_path}/#{dataset.current_locale}/#{r_file}"
     csv_file_path = "#{staging_path}/#{dataset.current_locale}/#{csv_file}"
     readme_file_path = "#{staging_path}/#{dataset.current_locale}/#{readme_name}"
@@ -1306,8 +1306,8 @@ private
     @app_key_name = 'unicef'
 
     # set file name to appear in zip file
-    @readme_file = 'README.txt'
-    @codebook_file = 'codebook.txt'
+    @readme_file = 'README.doc'
+    @codebook_file = 'codebook.doc'
     @csv_raw_data_file = 'csv_raw_data.csv'
     @csv_text_data_file = 'csv_text_data.csv'
 

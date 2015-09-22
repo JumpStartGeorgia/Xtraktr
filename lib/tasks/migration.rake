@@ -86,5 +86,10 @@ namespace :migration do
   end
 
 
+  desc "switch download files from txt to doc"
+  task :update_download_file_extensions => :environment do
+    require "./db/migrate/update_download_file_extensions.rb"
+  end
+
 
 end
