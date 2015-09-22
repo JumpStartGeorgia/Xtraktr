@@ -1083,3 +1083,29 @@ span.footnote-flag{
   font-style:normal;
   color: #575F6D;
 }
+
+#chart-type-toggle {
+  width:64px;
+  height:32px;
+  display: inline-block;
+  position: absolute;
+  left: 13px;  
+  top: 44px;
+  z-index: 323;
+  .toggle {
+    display:inline-block;
+    width:32px;
+    height:32px;
+    opacity:0.7;
+    &[data-type='bar'] {
+      background:transparent url(/assets/svg/bar_chart.svg) no-repeat center;
+    }
+    &[data-type='pie'] {
+      background:transparent url(/assets/svg/pie_chart.svg) no-repeat center; 
+    }
+    &:hover, &.selected {
+      opacity:1;
+      cursor:pointer;
+    }
+  }
+}

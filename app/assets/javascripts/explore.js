@@ -8,51 +8,54 @@ String.prototype.upcase = function () {
   return this[0].toUpperCase() + this.substring(1);
 };
 var buttons_options = {
-  contextButton: {
-    symbol: "url(/assets/svg/download.svg)",
-    theme: {
-      "stroke-width": 1,
-      stroke: "white",
-      r: 0,
-      states: {
-        hover: {
-          stroke: "white",
-          fill: "white"
+    contextButton: {
+      symbol: "url(/assets/svg/download.svg)",
+      theme: {
+        "stroke-width": 1,
+        stroke: "white",
+        r: 0,
+        states: {
+          hover: {
+            stroke: "white",
+            fill: "white"
+          },
+          select: {
+            stroke: "white",
+            fill: "white"
+          }
+        }
+      },
+      menuItems: [
+        {
+          text: gon.highcharts_png,
+          onclick: function () {
+            this.exportChart({type: "image/png"});
+          }
         },
-        select: {
-          stroke: "white",
-          fill: "white"
+        {
+          text: gon.highcharts_jpg,
+          onclick: function () {
+            this.exportChart({type: "image/jpeg"});
+          }
+        },
+        {
+          text: gon.highcharts_pdf,
+          onclick: function () {
+            this.exportChart({type: "application/pdf"});
+          }
+        },
+        {
+          text: gon.highcharts_svg,
+          onclick: function () {
+            this.exportChart({type: "image/svg+xml"});
+          }
         }
-      }
-    },
-    menuItems: [
-      {
-        text: gon.highcharts_png,
-        onclick: function () {
-          this.exportChart({type: "image/png"});
-        }
-      },
-      {
-        text: gon.highcharts_jpg,
-        onclick: function () {
-          this.exportChart({type: "image/jpeg"});
-        }
-      },
-      {
-        text: gon.highcharts_pdf,
-        onclick: function () {
-          this.exportChart({type: "application/pdf"});
-        }
-      },
-      {
-        text: gon.highcharts_svg,
-        onclick: function () {
-          this.exportChart({type: "image/svg+xml"});
-        }
-      }
-    ]
-  }
-};
+      ]
+    }
+  },
+  style1 = {"text-align": "center", "font-family":"sourcesans_pro_l, sans-serif", "font-size": "18px", "color": "#3c4352" },
+  style2 = { "cursor": "pointer", "font-family":"sourcesans_pro_l, sans-serif", "font-size": "12px", "color": "#3C4352", "fontWeight": "normal" };
+
 
 function map_chart_height (json) { // determine heights of chart based on number of answers and group text
   var chart_height = 501; // need the 1 for the border bottom line
@@ -221,29 +224,19 @@ function add_highlight_description_button (visual_element, embed_id) { // add hi
 }
 
 function build_visual_title (highlight_path, text) { // build title/sub title for chart/map // if gon.visual_link is present, turn the title into a link
-  var t = "";
-  if ($(highlight_path).data("explore-link") != undefined){
-    t = "<a class='visual-title-link' target='_parent' href='" + $(highlight_path).data("explore-link") + "'>" + text + "</a>";
-  }else{
-    t = text;
-  }
-  return t;
+  return $(highlight_path).data("explore-link") !== undefined
+          ? ("<a class='visual-title-link' target='_parent' href='" + $(highlight_path).data("explore-link") + "'>" + text + "</a>")
+          : text;
 }
 
 function build_highmap (shape_question_code, adjustable_max, json_map_set, chart_height, weight_name) { // build highmap
-  if (chart_height == undefined){
-    chart_height = 501; // need the 1 for the border bottom line
-  }
 
-  // create a div tag for this map
-  // if gon.highlight_id exist, add it to the jquery selector path
-  var selector_path = "#container-map";
-  var highlight_path = ".highlight-data[data-id='" + gon.highlight_id + "'] ";
-  if (gon.highlight_id){
-    selector_path = highlight_path + selector_path;
-  }
-  var map_id = "map-" + ($("#container-map .map").length+1);
-  $(selector_path).append("<div id='" + map_id + "' class='map' style='height: " + chart_height + "px;'></div>");
+  var opt = prepareChart(chart_height, "map"),
+    selector_path = opt[1],
+    highlight_path = opt[2],
+    map_id = opt[3];
+
+  chart_height = opt[0];
 
   var max = 100;
   if (adjustable_max == true){
@@ -280,7 +273,7 @@ function build_highmap (shape_question_code, adjustable_max, json_map_set, chart
     title: {
       text: build_visual_title(highlight_path, json_map_set.title.html),
       useHTML: true,
-      style: {"text-align": "center", "font-family":"sourcesans_pro_l, sans-serif", "font-size": "18px", "color": "#3c4352"}
+      style: style1
     },
     subtitle: {
       text: json_map_set.subtitle.html,
@@ -379,7 +372,7 @@ function build_highmap (shape_question_code, adjustable_max, json_map_set, chart
     }],
     exporting: {
       sourceWidth: 1280,
-      sourceHeight: 720,
+      sourceHeight: chart_height,
       filename: json_map_set.title.text.replace(/[\|&;\$%@"\'<>\(\)\+,]/g, ""),
       chartOptions:{
         title: {
@@ -393,73 +386,30 @@ function build_highmap (shape_question_code, adjustable_max, json_map_set, chart
     }
   });
 
-  // now add button to add as highlight
-  determine_highlight_button($(selector_path + " #" + map_id), json_map_set.embed_id, gon.visual_types.map);
 
-  // add embed chart button
-  add_embed_button($(selector_path + " #" + map_id), json_map_set.embed_id);
-
-  // add highlight description button
-  add_highlight_description_button($(selector_path + " #" + map_id), json_map_set.embed_id);
-
-  // add disclaimer link
-  add_disclaimer_link($(selector_path + " #" + map_id));
-
-  // add powered by link
-  add_powered_by_link($(selector_path + " #" + map_id));
-
-  // add weighted footnote
-  add_weighted_footnote($(selector_path + " #" + map_id), weight_name);
+  finalizeChart($(selector_path + " #" + map_id), json_map_set.embed_id, weight_name, gon.visual_types.map);
 }
 
 function build_bar_chart (json_chart, chart_height, weight_name) { // build pie chart
-  if (chart_height == undefined){
-    chart_height = 501; // need the 1 for the border bottom line
-  }
 
-  // create a div tag for this chart
-  // if gon.highlight_id exist, add it to the jquery selector path
-  var selector_path = "#container-chart";
-  var highlight_path = ".highlight-data[data-id='" + gon.highlight_id + "'] ";
-  if (gon.highlight_id){
-    selector_path = highlight_path + selector_path;
-  }
-  var chart_id = "chart-" + ($("#container-chart .chart").length+1);
-  $(selector_path).append("<div id='" + chart_id + "' class='chart' style='height: " + chart_height + "px;'></div>");
- console.log(json_chart);
+  var opt = prepareChart(chart_height, "chart"),
+    selector_path = opt[1],
+    highlight_path = opt[2],
+    chart_id = opt[3];
+
+  chart_height = opt[0];
+
   // create chart
   $(selector_path + " #" + chart_id).highcharts({
     credits: { enabled: false },
     chart: {
-      type: "column"
-      // plotBackgroundColor: null,
-      // plotBorderWidth: null,
-      // plotShadow: false,
-      // events: {
-      //   load: function () {
-      //     if (this.options.chart.forExport) {
-      //       Highcharts.each(this.series, function (series) {
-      //         // only show data labels for shapes that have data
-      //         if (series.name != "baseLayer"){
-      //           series.update({
-      //             dataLabels: {
-      //               enabled: true,
-      //               formatter: function () {
-      //                 return this.key + "<br/>" + Highcharts.numberFormat(this.point.options.count, 0) + "   (" + this.y + "%)";
-      //               }
-      //             }
-      //           }, false);
-      //         }
-      //       });
-      //       this.redraw();
-      //     }
-      //   }
-      // }
+      type: "column",
+      inverted: true
     },
     title: {
       text: build_visual_title(highlight_path, json_chart.title.html),
       useHTML: true,
-      style: {"text-align": "center", "font-family":"sourcesans_pro_l, sans-serif", "font-size": "18px", "color": "#3c4352"}
+      style: style1
     },
     subtitle: {
       text: json_chart.subtitle.html,
@@ -467,124 +417,85 @@ function build_bar_chart (json_chart, chart_height, weight_name) { // build pie 
       style: {"text-align": "center"}
     },
     xAxis: {
-      categories: json_chart.data.map(function(d) { return d.name.upcase(); }),
+      categories: json_chart.data.map(function (d) { return d.name.upcase(); }),
       title: {
-        text: "<span class='code-highlight'>Do we need title</span>",
-        useHTML: true,
-        style: { "fontSize": "14px", "fontWeight": "bold" }
+        text:null
       },
       labels:
       {
         style: { "color": "#3c4352", "fontSize": "14px", "fontFamily":"'sourcesans_pro', 'sans-serif'", "fontWeight": "normal", "textAlign": "right" },
         useHTML: true,
         step: 1,
-        formatter: function() { return (this.value+"").upcase(); }
+        formatter: function () { return (this.value+"").upcase(); }
       }
     },
-    //  xAxis: {
-    //   // categories: json_chart.labels,
- 
-    // },
-    // tooltip: {
-    //   formatter: function () {
-    //     return "<b>" + this.key + ":</b> " + Highcharts.numberFormat(this.point.options.count, 0) + " (" + this.y + "%)";
-    //   }
-    // },
-    // plotOptions: {
-    //   bar: {
-    //     stacking: "percent"
-    //   }
-    //   // pie: {
-    //   //   cursor: "pointer",
-    //   //   dataLabels: {
-    //   //     enabled: false
-    //   //   },
-    //   //   showInLegend: true
-    //   // }
-    // },
+    yAxis: {
+      floor: 0,
+      ceiling: 100,
+      title: {
+        text: gon.percent
+      }
+    },
+    tooltip: {
+      formatter: function () {
+        return "<b>" + this.key + ":</b> " + Highcharts.numberFormat(this.point.options.count, 0) + " (" + this.y + "%)";
+      }
+    },
     legend: {
-      align: "center",
-      layout: "vertical",
-      symbolHeight: 14,
-      symbolWidth: 14,
-      itemMarginBottom: 5,
-      itemStyle: { "cursor": "pointer", "font-family":"sourcesans_pro_l, sans-serif", "font-size": "12px", "color": "#3C4352", "fontWeight": "normal" },
-      symbolRadius: 100
+      enabled: false
     },
     series: [{ data: json_chart.data }],
-    // exporting: {
-    //   sourceWidth: 1280,
-    //   sourceHeight: 720,
-    //   filename: json_chart.title.text.replace(/[\|&;\$%@"\'<>\(\)\+,]/g, ""),
-    //   chartOptions:{
-    //     title: {
-    //       text: json_chart.title.text
-    //     },
-    //     subtitle: {
-    //       text: json_chart.subtitle.text
-    //     },
-    //     legend: {
-    //       enabled: false
-    //     }
-    //   },
-    //   buttons: buttons_options
-    // },
-    // navigation: {
-    //   buttonOptions: {
-    //     theme: {
-    //       "stroke-width": 0,
-    //       r: 0,
-    //       states: {
-    //         hover: {
-    //           fill: "#fff",
-    //           stroke: "#eaeaea",
-    //           "stroke-width": 1
-    //         },
-    //         select: {
-    //           fill: "#fff",
-    //           stroke: "#eaeaea",
-    //           "stroke-width": 1
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
+    exporting: {
+      sourceWidth: 1280,
+      sourceHeight: chart_height,
+      filename: json_chart.title.text.replace(/[\|&;\$%@"\'<>\(\)\+,]/g, ""),
+      chartOptions:{
+        title: {
+          text: json_chart.title.text
+        },
+        subtitle: {
+          text: json_chart.subtitle.text
+        },
+        legend: {
+          enabled: false
+        }
+      },
+      buttons: buttons_options
+    },
+    navigation: {
+      buttonOptions: {
+        theme: {
+          "stroke-width": 0,
+          r: 0,
+          states: {
+            hover: {
+              fill: "#fff",
+              stroke: "#eaeaea",
+              "stroke-width": 1
+            },
+            select: {
+              fill: "#fff",
+              stroke: "#eaeaea",
+              "stroke-width": 1
+            }
+          }
+        }
+      }
+    }
 
   });
 
-  // // now add button to add as highlight
-  // determine_highlight_button($(selector_path + " #" + chart_id), json_chart.embed_id, gon.visual_types.pie_chart);
-
-  // // add embed chart button
-  // add_embed_button($(selector_path + " #" + chart_id), json_chart.embed_id);
-
-  // // add highlight description button
-  // add_highlight_description_button($(selector_path + " #" + chart_id), json_chart.embed_id);
-
-  // // add disclaimer link
-  // add_disclaimer_link($(selector_path + " #" + chart_id));
-
-  // // add powered by link
-  // add_powered_by_link($(selector_path + " #" + chart_id));
-
-  // // add weighted footnote
-  // add_weighted_footnote($(selector_path + " #" + chart_id), weight_name);
+  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id, weight_name, gon.visual_types.pie_chart);
 }
 
 function build_crosstab_chart (question_text, broken_down_by_code, broken_down_by_text, json_chart, chart_height, weight_name){ // build crosstab chart
-  if (chart_height == undefined){
-    chart_height = 501; // need the 1 for the border bottom line
-  }
 
-  // create a div tag for this chart
-  // if gon.highlight_id exist, add it to the jquery selector path
-  var selector_path = "#container-chart";
-  var highlight_path = ".highlight-data[data-id='" + gon.highlight_id + "'] ";
-  if (gon.highlight_id){
-    selector_path = highlight_path + selector_path;
-  }
-  var chart_id = "chart-" + ($("#container-chart .chart").length+1);
-  $(selector_path).append("<div id='" + chart_id + "' class='chart' style='height: " + chart_height + "px;'></div>");
+  var opt = prepareChart(chart_height, "chart"),
+    selector_path = opt[1],
+    highlight_path = opt[2],
+    chart_id = opt[3];
+
+  chart_height = opt[0];
 
   // create chart
   $(selector_path + " #" + chart_id).highcharts({
@@ -595,7 +506,7 @@ function build_crosstab_chart (question_text, broken_down_by_code, broken_down_b
     title: {
       text: build_visual_title(highlight_path, json_chart.title.html),
       useHTML: true,
-      style: {"text-align": "center", "font-family":"sourcesans_pro_l, sans-serif", "font-size": "18px", "color": "#3c4352"}
+      style: style1
     },
     subtitle: {
       text: json_chart.subtitle.html,
@@ -639,7 +550,7 @@ function build_crosstab_chart (question_text, broken_down_by_code, broken_down_b
       symbolWidth: 14,
       symbolHeight: 14,
       itemMarginBottom: 5,
-      itemStyle: { "cursor": "pointer", "font-family":"sourcesans_pro_l, sans-serif", "font-size": "12px", "color": "#3C4352", "fontWeight": "normal" },
+      itemStyle: style2,
       symbolRadius: 100
     },
     tooltip: {
@@ -670,39 +581,18 @@ function build_crosstab_chart (question_text, broken_down_by_code, broken_down_b
     }
   });
 
-  // now add button to add as highlight
-  determine_highlight_button($(selector_path + " #" + chart_id), json_chart.embed_id, gon.visual_types.crosstab_chart);
 
-  // add embed chart button
-  add_embed_button($(selector_path + " #" + chart_id), json_chart.embed_id);
-
-  // add highlight description button
-  add_highlight_description_button($(selector_path + " #" + chart_id), json_chart.embed_id);
-
-  // add disclaimer link
-  add_disclaimer_link($(selector_path + " #" + chart_id));
-
-  // add powered by link
-  add_powered_by_link($(selector_path + " #" + chart_id));
-
-  // add weighted footnote
-  add_weighted_footnote($(selector_path + " #" + chart_id), weight_name);
+  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id, weight_name, gon.visual_types.crosstab_chart);
 }
 
 function build_pie_chart (json_chart, chart_height, weight_name) { // build pie chart
-  if (chart_height == undefined){
-    chart_height = 501; // need the 1 for the border bottom line
-  }
 
-  // create a div tag for this chart
-  // if gon.highlight_id exist, add it to the jquery selector path
-  var selector_path = "#container-chart";
-  var highlight_path = ".highlight-data[data-id='" + gon.highlight_id + "'] ";
-  if (gon.highlight_id){
-    selector_path = highlight_path + selector_path;
-  }
-  var chart_id = "chart-" + ($("#container-chart .chart").length+1);
-  $(selector_path).append("<div id='" + chart_id + "' class='chart' style='height: " + chart_height + "px;'></div>");
+  var opt = prepareChart(chart_height, "chart"),
+    selector_path = opt[1],
+    highlight_path = opt[2],
+    chart_id = opt[3];
+
+  chart_height = opt[0];
 
   // create chart
   $(selector_path + " #" + chart_id).highcharts({
@@ -715,17 +605,14 @@ function build_pie_chart (json_chart, chart_height, weight_name) { // build pie 
         load: function () {
           if (this.options.chart.forExport) {
             Highcharts.each(this.series, function (series) {
-              // only show data labels for shapes that have data
-              if (series.name != "baseLayer"){
-                series.update({
-                  dataLabels: {
-                    enabled: true,
-                    formatter: function () {
-                      return this.key + "<br/>" + Highcharts.numberFormat(this.point.options.count, 0) + "   (" + this.y + "%)";
-                    }
+              series.update({
+                dataLabels: {
+                  enabled: true,
+                  formatter: function () {
+                    return this.key + "<br/>" + Highcharts.numberFormat(this.point.options.count, 0) + "   (" + this.y + "%)";
                   }
-                }, false);
-              }
+                }
+              }, false);
             });
             this.redraw();
           }
@@ -735,7 +622,7 @@ function build_pie_chart (json_chart, chart_height, weight_name) { // build pie 
     title: {
       text: build_visual_title(highlight_path, json_chart.title.html),
       useHTML: true,
-      style: {"text-align": "center", "font-family":"sourcesans_pro_l, sans-serif", "font-size": "18px", "color": "#3c4352"}
+      style: style1
     },
     subtitle: {
       text: json_chart.subtitle.html,
@@ -762,7 +649,7 @@ function build_pie_chart (json_chart, chart_height, weight_name) { // build pie 
       symbolHeight: 14,
       symbolWidth: 14,
       itemMarginBottom: 5,
-      itemStyle: { "cursor": "pointer", "font-family":"sourcesans_pro_l, sans-serif", "font-size": "12px", "color": "#3C4352", "fontWeight": "normal" },
+      itemStyle: style2,
       symbolRadius: 100
     },
     series: [{
@@ -771,7 +658,7 @@ function build_pie_chart (json_chart, chart_height, weight_name) { // build pie 
     }],
     exporting: {
       sourceWidth: 1280,
-      sourceHeight: 720,
+      sourceHeight: chart_height,
       filename: json_chart.title.text.replace(/[\|&;\$%@"\'<>\(\)\+,]/g, ""),
       chartOptions:{
         title: {
@@ -809,39 +696,17 @@ function build_pie_chart (json_chart, chart_height, weight_name) { // build pie 
 
   });
 
-  // now add button to add as highlight
-  determine_highlight_button($(selector_path + " #" + chart_id), json_chart.embed_id, gon.visual_types.pie_chart);
-
-  // add embed chart button
-  add_embed_button($(selector_path + " #" + chart_id), json_chart.embed_id);
-
-  // add highlight description button
-  add_highlight_description_button($(selector_path + " #" + chart_id), json_chart.embed_id);
-
-  // add disclaimer link
-  add_disclaimer_link($(selector_path + " #" + chart_id));
-
-  // add powered by link
-  add_powered_by_link($(selector_path + " #" + chart_id));
-
-  // add weighted footnote
-  add_weighted_footnote($(selector_path + " #" + chart_id), weight_name);
+  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id, weight_name, gon.visual_types.pie_chart);
 }
 
 function build_time_series_chart (json_chart, chart_height, weight_name) { // build time series line chart
-  if (chart_height == undefined){
-    chart_height = 501; // need the 1 for the border bottom line
-  }
 
-  // create a div tag for this chart
-  // if gon.highlight_id exist, add it to the jquery selector path
-  var selector_path = "#container-chart";
-  var highlight_path = ".highlight-data[data-id='" + gon.highlight_id + "'] ";
-  if (gon.highlight_id){
-    selector_path = highlight_path + selector_path;
-  }
-  var chart_id = "chart-" + ($("#container-chart .chart").length+1);
-  $(selector_path).append("<div id='" + chart_id + "' class='chart' style='height: " + chart_height + "px;'></div>");
+  var opt = prepareChart(chart_height, "chart"),
+    selector_path = opt[1],
+    highlight_path = opt[2],
+    chart_id = opt[3];
+
+  chart_height = opt[0];
 
   // create chart
   $(selector_path + " #" + chart_id).highcharts({
@@ -854,7 +719,7 @@ function build_time_series_chart (json_chart, chart_height, weight_name) { // bu
     title: {
       text: build_visual_title(highlight_path, json_chart.title.html),
       useHTML: true,
-      style: {"text-align": "center", "font-family":"sourcesans_pro_l, sans-serif", "font-size": "18px", "color": "#3c4352" }
+      style: style1
     },
     subtitle: {
       text: json_chart.subtitle.html,
@@ -885,7 +750,7 @@ function build_time_series_chart (json_chart, chart_height, weight_name) { // bu
       symbolWidth: 14,
       symbolHeight: 14,
       itemMarginBottom: 5,
-      itemStyle: { "cursor": "pointer", "font-family":"sourcesans_pro_l, sans-serif", "font-size": "12px", "color": "#3C4352", "fontWeight": "normal" },
+      itemStyle: style2,
       symbolRadius: 100
     },
     series: json_chart.data,
@@ -905,26 +770,45 @@ function build_time_series_chart (json_chart, chart_height, weight_name) { // bu
     }
   });
 
-  // now add button to add as highlight
-  determine_highlight_button($(selector_path + " #" + chart_id), json_chart.embed_id, gon.visual_types.line_chart);
+  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id, weight_name, gon.visual_types.line_chart);
+}
 
-  // add embed chart button
-  add_embed_button($(selector_path + " #" + chart_id), json_chart.embed_id);
+function prepareChart (chart_height, type) {
+  var opt = [
+    (typeof chart_height === "undefined" ? 501 : chart_height), // need the 1 for the border bottom line
+    "#container-" + type,
+    ".highlight-data[data-id='" + gon.highlight_id + "'] ",
+    type + "-" + ($("#container-" + type + " ." + type).length+1)
+  ];
 
-  // add highlight description button
-  add_highlight_description_button($(selector_path + " #" + chart_id), json_chart.embed_id);
+  if(gon.highlight_id){ opt[1] = opt[2] + opt[1]; } // if gon.highlight_id exist, add it to the jquery selector path
 
-  // add disclaimer link
-  add_disclaimer_link($(selector_path + " #" + chart_id));
+  $(opt[1]).append("<div id='" + opt[3] + "' class='" + type + "' style='height: " + opt[0] + "px;'></div>"); // create a div tag for this chart
 
-  // add powered by link
-  add_powered_by_link($(selector_path + " #" + chart_id));
-
-  // add weighted footnote
-  add_weighted_footnote($(selector_path + " #" + chart_id), weight_name);
+  return opt;
 }
 
 
+function finalizeChart (selector, embed_id, weight_name, visual_types) {
+
+  // now add button to add as highlight
+  determine_highlight_button(selector, embed_id, visual_types);
+
+  // add embed chart button
+  add_embed_button(selector, embed_id);
+
+  // add highlight description button
+  add_highlight_description_button(selector, embed_id);
+
+  // add disclaimer link
+  add_disclaimer_link(selector);
+
+  // add powered by link
+  add_powered_by_link(selector);
+
+  // add weighted footnote
+  add_weighted_footnote(selector, weight_name);
+}
 
 function build_page_title (json) { // update the page title to include the title of the analysis
   // get current page title
@@ -935,7 +819,6 @@ function build_page_title (json) { // update the page title to include the title
   $("head title").html(title_parts[0] + " | " +
     (json.results.title.text ? json.results.title.text + " | " + title_parts[title_parts.length-1]
                               : title_parts[title_parts.length-1]));
-
 }
 
 function resizeExploreData (){
