@@ -210,14 +210,19 @@ function build_highmaps (json) { // build highmap
 
 function build_crosstab_charts (json) { // build crosstab charts for each chart item in json
   var i;
-  if (json.chart){
+  var flag = false;
+
+  if (json.chart) {
+    flag = true;
     // determine chart height
     var chart_height = crosstab_chart_height(json);
 
     // remove all existing charts
     $("#container-chart").empty();
     // remove all existing chart links
-    $("#jumpto #jumpto-chart select").empty();
+    var select_selector = $("#jumpto #jumpto-chart select");
+    select_selector.empty();
+
     var jumpto_text = "";
     var weight_name = json.weighted_by ? json.weighted_by.weight_name : undefined;
 
@@ -233,26 +238,26 @@ function build_crosstab_charts (json) { // build crosstab charts for each chart 
       }
 
       // show jumpto links
-      $("#jumpto #jumpto-chart select").append(jumpto_text);
-      $("#jumpto #jumpto-chart select").val($("#jumpto #jumpto-chart select option:first").attr("value"));
-      $("#jumpto #jumpto-chart select").selectpicker("refresh");
-      $("#jumpto #jumpto-chart select").selectpicker("render");
-      $("#jumpto #jumpto-chart").show();
-      $("#jumpto").show();
+      select_selector.append(jumpto_text);
+      select_selector.val($("#jumpto #jumpto-chart select option:first").attr("value"));
+      select_selector.selectpicker("refresh");
+      select_selector.selectpicker("render");
 
-    }else{
-      // no filters
-      build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart, chart_height, weight_name);
-
-      // hide jumpto
-      $("#jumpto #jumpt-chart").hide();
-      $("#jumpto").hide();
     }
+    else{       // no filters
+      build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart, chart_height, weight_name);
+    }
+    $("#jumpto #jumpto-chart").toggle(flag);
+    $("#jumpto").toggle(flag);
   }
 }
 
 function build_pie_charts (json) { // build pie chart for each chart item in json
+  var flag = false;
+
   if (json.chart){
+    flag = true;
+
     // determine chart height
     var chart_height = pie_chart_height(json);
 
@@ -260,10 +265,13 @@ function build_pie_charts (json) { // build pie chart for each chart item in jso
     var container = $("#container-chart");
     container.empty();
     container.append("<div id='chart-type-toggle'><div class='toggle' data-type='bar'></div><div class='toggle selected' data-type='pie'></div>");
+
     // remove all existing chart links
-    $("#jumpto #jumpto-chart select").empty();
-    var jumpto_text = "";
-    var weight_name = json.weighted_by ? json.weighted_by.weight_name : undefined;
+    var select_selector = $("#jumpto #jumpto-chart select");
+    select_selector.empty();
+
+    var jumpto_text = "",
+      weight_name = json.weighted_by ? json.weighted_by.weight_name : undefined;
 
     // test if the filter is being used and build the chart(s) accordingly
     if (json.chart.constructor === Array){
@@ -277,21 +285,16 @@ function build_pie_charts (json) { // build pie chart for each chart item in jso
       }
 
       // show jumpto links
-      $("#jumpto #jumpto-chart select").append(jumpto_text);
-      $("#jumpto #jumpto-chart select").val($("#jumpto #jumpto-chart select option:first").attr("value"));
-      $("#jumpto #jumpto-chart select").selectpicker("refresh");
-      $("#jumpto #jumpto-chart select").selectpicker("render");
-      $("#jumpto #jumpto-chart").show();
-      $("#jumpto").show();
-
-    }else{
-      // no filters
-      build_pie_chart(json.chart, chart_height, weight_name);
-
-      // hide jumpto
-      $("#jumpto #jumpto-chart").hide();
-      $("#jumpto").hide();
+      select_selector.append(jumpto_text);
+      select_selector.val($("#jumpto #jumpto-chart select option:first").attr("value"));
+      select_selector.selectpicker("refresh");
+      select_selector.selectpicker("render");
     }
+    else {  // no filters
+      build_pie_chart(json.chart, chart_height, weight_name);
+    }
+    $("#jumpto #jumpto-chart").toggle(flag);
+    $("#jumpto").toggle(flag);
   }
 }
 
