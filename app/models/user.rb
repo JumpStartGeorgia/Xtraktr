@@ -211,7 +211,7 @@ class User
       user.nickname = auth.info.nickname if auth.info.has_key?("nickname")
       user.first_name = (params["first_name"].present? ? params["first_name"] : auth.info.first_name) if params["first_name"].present? || auth.info["first_name"].present?
       user.last_name = (params["last_name"].present? ? params["last_name"] : auth.info["last_name"]) if params["last_name"].present? || auth.info["last_name"].present?
-      user.email = (params["email"].present? ? params["email"] : (auth.info["email"].present? ? auth.info["email"] : "<%= Devise.friendly_token[0,10] %>@fake.com"))
+      user.email = (params["email"].present? ? params["email"] : (auth.info["email"].present? ? auth.info["email"] : "#{Devise.friendly_token[0,10]}@fake.com"))
       user.affiliation = params["affiliation"] if params["affiliation"].present?
       user.age_group = params["age_group"] if params["age_group"].present?
       # user.residence = params["residence"] if params["residence"].present?
@@ -279,6 +279,12 @@ class User
     end
   end
 
+  # if the email is fake, do not show it
+  def email
+    if email.present?
+      email.ends_with?('fake.com') ? nil : email
+    end
+  end
 
   # if no role is supplied, default to the basic user role
   def check_for_role
