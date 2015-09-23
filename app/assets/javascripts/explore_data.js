@@ -265,7 +265,6 @@ function build_pie_charts (json) { // build pie chart for each chart item in jso
     var container = $("#container-chart");
     container.empty();
     container.append("<div id='chart-type-toggle'><div class='toggle' data-type='bar'></div><div class='toggle selected' data-type='pie'></div>");
-
     // remove all existing chart links
     var select_selector = $("#jumpto #jumpto-chart select");
     select_selector.empty();
