@@ -127,6 +127,14 @@ class TimeSeries < CustomTranslation
       where(:original_code => original_code).first
     end
 
+    def with_codes(codes)
+      any_in(code: codes)
+    end
+
+    def not_in_codes(codes)
+      nin(:code => codes)
+    end
+
     # get the dataset question records for the provided code
     def dataset_questions_in_code(code)
       with_code(code).dataset_questions
