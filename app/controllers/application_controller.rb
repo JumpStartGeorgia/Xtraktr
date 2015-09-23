@@ -602,7 +602,7 @@ logger.debug "@@@@@@@@@@@@@2 dataset = #{@dataset.inspect}"
 	def after_sign_in_path_for(resource)
     stored_location_for(resource) ||
     if resource.is_a?(User) && !resource.valid?
-      settings_path
+      settings_path(resource)
     else
       session[:previous_urls].last || request.env['omniauth.origin'] || root_path(:locale => I18n.locale)
     end
