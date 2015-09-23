@@ -292,9 +292,9 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
         gon.embed_button_link = embed_v2_url('replace') if dataset.public?
 
         # record javascript variables
-        gon.hover_region = I18n.t('explore_data.hover_region')
-        gon.na = I18n.t('explore_data.na')
-        gon.percent = I18n.t('explore_data.percent')
+        gon.hover_region = I18n.t('explore_data.v2.hover_region')
+        gon.na = I18n.t('explore_data.v2.na')
+        gon.percent = I18n.t('explore_data.v2.percent')
         gon.table_questions_header = I18n.t('app.common.questions')
 
         set_gon_highcharts

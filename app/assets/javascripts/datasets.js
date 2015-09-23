@@ -93,7 +93,7 @@ $(function() {
 
   // when settings form is submitted, show loading screen
   $('form.dataset').submit(function(e){
-    $('#saving-form-loader').fadeIn('fast');
+    $('.data-loader-message-container').fadeIn('fast');
   });
 
 
