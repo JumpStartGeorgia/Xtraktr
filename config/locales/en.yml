@@ -453,8 +453,8 @@ en:
           title_weighted: "Unweighted Total Responses*: %{x_of_y}"
           title_filter_weighted: "Unweighted Total Responses* (out of a possible: %{totals}): %{nums}"
   explore_data:
-    bar_chart_toggle_tooltip: View data using a bar chart
-    pie_chart_toggle_tooltip: View data using a pie chart
+    chart_type_bar: View data using a bar chart
+    chart_type_pie: View data using a pie chart
     v1:
       hover_region: Hover over a Region
       na: N/A

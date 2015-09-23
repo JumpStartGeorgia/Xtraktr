@@ -124,6 +124,31 @@ function build_pie_charts(json){
   }
 }
 
+////////////////////////////////////////////////
+// build pie chart for each chart item in json
+function build_bar_charts(json){
+  if (json.chart){
+    // determine chart height
+    var chart_height = pie_chart_height(json);
+    var weight_name = json.weighted_by ? json.weighted_by.weight_name : undefined;
+
+    // test if the filter is being used and build the chart(s) accordingly
+    if (json.chart.constructor === Array){
+      // filters
+      for(var i=0; i<json.chart.length; i++){
+        // create chart for filter that matches gon.filtered_by_value
+        if (json.chart[i].filter_answer_value == gon.filtered_by_value){
+          build_bar_chart(json.chart[i].filter_results, chart_height, weight_name);
+          break;
+        }
+      }
+
+    }else{
+      // no filters
+      build_bar_chart(json.chart, chart_height, weight_name);
+    }
+  }
+}
 
 ////////////////////////////////////////////////
 // build time series line chart for each chart item in json
@@ -180,7 +205,7 @@ function load_highlights(highlight_data){
           if (data.json_data.analysis_type == 'comparative'){
             build_crosstab_charts(data.json_data);
           }else{
-            build_pie_charts(data.json_data);
+            data.chart_type == "pie" ? build_pie_charts(data.json_data) : build_bar_charts(data.json_data);             
           }
         }else if (data.visual_type == 'map') {
           build_highmaps(data.json_data);
