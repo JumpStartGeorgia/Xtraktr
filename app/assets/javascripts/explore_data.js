@@ -1208,6 +1208,7 @@ $(document).ready(function () {
       if (new_url != window.location.href){ // !is_back_button && 
         window.history.pushState({path:new_url}, $("title").html(), new_url);
       }
+      $(this).tooltip('hide');
       build_explore_data_page(js.cache[cacheId]);
     });
   }
