@@ -63,7 +63,7 @@ class ApplicationController < ActionController::Base
     # else, the user is the owner
     if user_signed_in?
       logger.debug "======== user is logged in"
-      if params[:owner_id].present? && (['settings', 'datasets', 'time_series'].include?(params[:controller]) || 'owner_dashboard' == params[:action])
+      if params[:owner_id].present? && ['settings', 'datasets', 'time_series'].include?(params[:controller])
         logger.debug "======== is admin page"
         owner = User.find(params[:owner_id])
         if owner.present?
