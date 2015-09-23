@@ -167,17 +167,23 @@ class Api::V2
     # if dataset is weighted, determine which weight to use
     # if weight is unweighted, do not use weighted
     default_weight = dataset.weights.default
+    puts "===> default weight = #{default_weight}"
+    puts "===> weight = #{weight}"
     if weight.present? && weight.downcase.strip != WEIGHT_TYPE[:time_series]
+      puts "===> dataset weighted? = #{dataset.is_weighted?}; weight includes #{weight} = #{dataset.weights.weight_codes.include?(weight)}"
+
       if weight.downcase.strip == WEIGHT_TYPE[:unweighted]
+        puts "===> - is 'unweighted'"
         weight = nil
 
       # if dataset is weighted but weight is not found use the default weight
-      elsif dataset.is_weighted? || (weight.present? && !dataset.weights.weight_codes.include?(weight))
+      elsif dataset.is_weighted? && !dataset.weights.weight_codes.include?(weight)
+        puts "===> - weight is not valid, using default"
         weight = default_weight.present? ? default_weight.code : nil
       end
 
       # check if questions are assigned to same weight
-      # if not, choose default weight
+      # if not, choose default weight, else no weight
       if weight.present?
         q_weights = question.weights
         brb_weights = broken_down_by.present? ? broken_down_by.weights : nil
@@ -195,6 +201,7 @@ class Api::V2
         end
 
         if !all_have_weight
+          puts "===> - not all questions have this weight, using default"
           weight = default_weight.present? ? default_weight.code : nil
         end
       end
@@ -203,6 +210,7 @@ class Api::V2
       weight_question = nil
       weight_item = nil
       if weight.present?
+        puts "===> weight is present; getting record from database"
         weight_item = dataset.weights.with_code(weight)
         weight_question =  dataset.questions.with_code(weight)
         # reset the weight option in case a bad one was sent in or questions do not share weight
@@ -210,7 +218,7 @@ class Api::V2
       end
     end
 
-    puts "==- dataset weight = #{weight}"
+    puts "===> dataset weight = #{weight}"
 
     ########################
     # start populating the output
@@ -405,7 +413,7 @@ class Api::V2
       weight = nil
 
     # if time series is weighted but weight is not found use the default weight
-    elsif time_series.is_weighted? || (weight.present? && !time_series.weights.weight_codes.include?(weight))
+    elsif time_series.is_weighted? && !time_series.weights.weight_codes.include?(weight)
       weight = default_weight.present? ? default_weight.code : nil
     end
 
