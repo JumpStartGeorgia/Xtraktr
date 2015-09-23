@@ -27,6 +27,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
             tmp = @pars.slice(:email, :first_name, :last_name, :age_group, :country_id, :affiliation, :status, :status_other, :description, :notifications, :notification_locale)
             format.json { render json: { url: omniauth_authorize_path(resource_name, :facebook, tmp) }, :success => true }
           else
+                    puts resource.errors.inspect
+        puts "-----------------------------"
             format.json { render json: { errors: resource.errors }, :status => :error }
           end
         end

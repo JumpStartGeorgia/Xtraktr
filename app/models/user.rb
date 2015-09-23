@@ -107,7 +107,7 @@ class User
   field :provider,  :type => String
   field :uid,  :type => String
   field :nickname,  :type => String
-  field :avatar,  :type => String
+  field :provider_avatar,  :type => String
 
   #############################
   # paperclip user icon
@@ -147,7 +147,7 @@ class User
   #############################
   attr_accessor #:account, :facebook_account, :direct
   attr_accessible :email, :password, :password_confirmation, :remember_me,
-                  :role, :provider, :uid, :nickname, :avatar, :permalink,
+                  :role, :provider, :uid, :nickname, :provider_avatar, :permalink,
                   :first_name, :last_name, :age_group, :country_id, #:residence,
                   :affiliation, :status, :status_other, :description, #:account, :facebook_account,
                   :phone, :website_url, :is_user, :avatar,
@@ -219,7 +219,7 @@ class User
       user.status = params["status"] if params["status"].present?
       user.status_other = params["status_other"] if params["status_other"].present?
       user.description = params["description"] if params["description"].present?
-      user.avatar = auth.info.image
+      user.provider_avatar = auth.info.image
       user.password = Devise.friendly_token[0,20]
       user.notifications = params["notifications"] == "1" if params["notifications"].present?
       user.notification_locale = params["notification_locale"] if params["notification_locale"].present?
@@ -300,7 +300,7 @@ class User
 
   # if user logged in with omniauth, password is not required
   def password_required?
-    super && provider.blank? # provider.blank?
+    is_user? && super && provider.blank? # provider.blank?
   end
 
   def agreement(dataset_id, dataset_type, dataset_locale, download_type)
@@ -352,9 +352,9 @@ class User
   end
 
   # override devise method to indicate that password is not needed for group
-  def password_required?
-    is_user? && (!persisted? || !password.nil? || !password_confirmation.nil?)
-  end
+  # def password_required?
+  #   is_user? && (!persisted? || !password.nil? || !password_confirmation.nil?)
+  # end
 
   def status_name
     if self.status.present?
