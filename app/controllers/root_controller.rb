@@ -171,6 +171,9 @@ class RootController < ApplicationController
       @show_title = false
       @is_admin = false
       @dataset_url = explore_data_show_path(@dataset.owner, @dataset)
+      gon.chart_type_bar = t('explore_data.chart_type_bar')
+      gon.chart_type_pie = t('explore_data.chart_type_pie')
+      
       # gon.embed_chart = "<div class='embed-chart-modal'>
       #                     <div class='header'>#{t('helpers.links.embed_chart')}</div>
       #                     <div class='figure'></div>
