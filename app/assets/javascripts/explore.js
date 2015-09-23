@@ -485,7 +485,7 @@ function build_bar_chart (json_chart, chart_height, weight_name) { // build pie 
 
   });
 
-  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id, weight_name, gon.visual_types.pie_chart);
+  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id.bar_chart, weight_name, gon.visual_types.pie_chart);
 }
 
 function build_crosstab_chart (question_text, broken_down_by_code, broken_down_by_text, json_chart, chart_height, weight_name){ // build crosstab chart
@@ -694,9 +694,8 @@ function build_pie_chart (json_chart, chart_height, weight_name) { // build pie 
       }
     }
 
-  });
-
-  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id, weight_name, gon.visual_types.pie_chart);
+  });  
+  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id.pie_chart, weight_name, gon.visual_types.pie_chart);
 }
 
 function build_time_series_chart (json_chart, chart_height, weight_name) { // build time series line chart

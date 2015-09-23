@@ -258,7 +258,8 @@ function build_pie_charts (json) { // build pie chart for each chart item in jso
     // remove all existing charts
     var container = $("#container-chart");
     container.empty();
-    container.append("<div id='chart-type-toggle'><div class='toggle' data-type='bar'></div><div class='toggle selected' data-type='pie'></div>");
+    container.append("<div id='chart-type-toggle'><div class='toggle' data-type='bar' title='" + gon.chart_type_bar + "'></div><div class='toggle selected' data-type='pie' title='" + gon.chart_type_pie + "'></div>");
+
     // remove all existing chart links
     var select_selector = $("#jumpto #jumpto-chart select");
     select_selector.empty();
@@ -301,7 +302,7 @@ function build_bar_charts (json) { // build pie chart for each chart item in jso
       container = $("#container-chart");
 
     container.empty();
-    container.append("<div id='chart-type-toggle'><div class='toggle selected' data-type='bar'></div><div class='toggle' data-type='pie'></div>");
+    container.append("<div id='chart-type-toggle'><div class='toggle selected' data-type='bar' title='" + gon.chart_type_bar + "'></div><div class='toggle' data-type='pie' title='" + gon.chart_type_pie + "'></div>");
     // remove all existing chart links
     var select_selector = $("#jumpto #jumpto-chart select");
     select_selector.empty();
