@@ -1492,8 +1492,8 @@ en:
         datasets: Datasets <span class="num">(%{num})</span>
         time_series: Time Series <span class="num">(%{num})</span>
       user:
-        no_datasets: The organization has not loaded any datasets.
-        no_time_series: The organization has not loaded any time series.
+        no_datasets: The user has not loaded any datasets.
+        no_time_series: The user has not loaded any time series.
       org:
         no_datasets: The organization has not loaded any datasets.
         no_time_series: The organization has not loaded any time series.
