@@ -120,7 +120,6 @@ class ApplicationController < ActionController::Base
   def load_dataset(dataset_id = params[:id])
     if @owner.present?
       @dataset = Dataset.by_id_for_owner(dataset_id, @owner.id, current_user.id)
-logger.debug "@@@@@@@@@@@@@2 dataset = #{@dataset.inspect}"
       if @dataset.nil?
         flash[:info] =  t('app.msgs.does_not_exist')
         redirect_to datasets_path(:locale => I18n.locale, :owner_id => @owner)
