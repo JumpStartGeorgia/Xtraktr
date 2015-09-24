@@ -14,7 +14,14 @@
     <%= f.input :last_name, :as => :string %>
   </div>
   <div class="r clear">
-    <%= f.input :email, :as => :email, :input_html => { :size => 35 , :class => "login-username" }  %>
+    <%
+      # if the email is fake, do not show it
+      email = nil
+      if resource.email.present? && !resource.email.ends_with?('fake.com')
+        email = resource.email
+      end
+    %>
+    <%= f.input :email, :as => :email, :input_html => { :size => 35 , :class => "login-username", value: email }  %>
   </div>
 
     <% if @flags[2] %>

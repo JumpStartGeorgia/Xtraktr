@@ -279,13 +279,6 @@ class User
     end
   end
 
-  # if the email is fake, do not show it
-  def email
-    if email.present?
-      email.ends_with?('fake.com') ? nil : email
-    end
-  end
-
   # if no role is supplied, default to the basic user role
   def check_for_role
     self.role = ROLES[:user] if self.role.nil?

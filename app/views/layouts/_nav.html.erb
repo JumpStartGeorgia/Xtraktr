@@ -107,7 +107,7 @@
                   <li class="dropdown-header"><%= t('.switch_to') %></li>
                   <% if current_user.id != @acting_as_user.id %>
                     <li>
-                      <%= link_to owner_dashboard_path(owner_id: current_user)  do %>
+                      <%= link_to datasets_path(owner_id: current_user)  do %>
                         <i class="menu_admin"></i>
                         <%= current_user.name %>
                       <% end %>
@@ -116,7 +116,7 @@
                   <% current_user.groups.each do |group| %>
                     <% if group.group_id != @acting_as_user.id %>
                       <li>
-                        <%= link_to owner_dashboard_path(owner_id: group.group)  do %>
+                        <%= link_to datasets_path(owner_id: group.group)  do %>
                           <i class="menu_admin"></i>
                           <%= group.group.name %>
                         <% end %>
