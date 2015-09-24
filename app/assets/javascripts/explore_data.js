@@ -12,7 +12,7 @@ function update_available_weights () { // update the list of avilable weights ba
       $("select#question_code option:selected").data("weights"),
       $("select#broken_down_by_code option:selected").data("weights"),
       $("select#filtered_by_code option:selected").data("weights")
-    ];
+    ];     
     // remove undefined (undefined exists if a select does not have a value)
     var und_ind = items.indexOf(undefined);
     while(und_ind != -1){
