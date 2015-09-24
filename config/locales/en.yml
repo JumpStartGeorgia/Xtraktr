@@ -59,6 +59,7 @@ en:
         joined_at: Joined Organization On
         dataset_count: Number of Datasets
         organizations: Organizations
+        is_user: User or Org
       message:
         name: Name
         email: Email Address

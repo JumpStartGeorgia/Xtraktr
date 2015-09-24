@@ -24,6 +24,7 @@ ka:
       time_series_group: "ჯგუფი"
       time_series_weight: "შეწონვა"
       time_series_weight_assignment: "შეწონვის მინიჭება"
+      invitation: Invitation
     attributes:
       user:
         email: "ელ. ფოსტა"
@@ -58,6 +59,7 @@ ka:
         joined_at: Joined Organization On
         dataset_count: Number of Datasets
         organizations: Organizations
+        is_user: User or Org
       message:
         name: "სახელი"
         email: "ელ. ფოსტა"

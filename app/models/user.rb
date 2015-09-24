@@ -355,6 +355,10 @@ class User
   #   is_user? && (!persisted? || !password.nil? || !password_confirmation.nil?)
   # end
 
+  def user_or_org
+    self.is_user? ? 'user' : 'organization'
+  end
+
   def status_name
     if self.status.present?
       I18n.t("user.status.#{STATUS[self.status]}")
