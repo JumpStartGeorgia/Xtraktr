@@ -245,7 +245,7 @@ $(document).ready(function () {
     $(".data-loader").fadeIn("fast");
   });
 
-   console.log(globalCallback());
+   globalCallback();
 
 });
 var downloading = false;

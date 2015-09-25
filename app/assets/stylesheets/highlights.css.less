@@ -10,15 +10,27 @@
   }
 }
 
-.highlights-loader.data-loader-container{
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  .data-loader {
-    display: block;
-  }
+@keyframes spin {
+    0%   { transform: rotate(0deg) }
+    100% { transform: rotate(360deg) }
 }
 
+.highlights-loader {
+  width: 100%;
+  min-height:200px;
+  text-align:center;
+  background-color:rgba(0,0,0,0.4);
+  path { 
+    fill:none;
+    stroke-width: 3px;
+    stroke-miterlimit: 10;
+    transform-origin:center; 
+  }
+  .circle1 { stroke: #F6B72D; animation: spin 4s infinite linear;}
+  .circle2 { stroke: #EB5D30; animation: spin 2s infinite linear; }
+  .circle3 { stroke: #C32E30; animation: spin 1s infinite linear; }
+  .circle4 { stroke: #893E42; animation: spin 0.5s infinite linear; }
+}
 
 @media (min-width: 992px)
 {
@@ -31,3 +43,4 @@
     }
   }
 }
+

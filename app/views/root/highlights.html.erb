@@ -1,17 +1,25 @@
 <% title t('.title') %>
 
 <% if @highlights.present? %>
-  <p>
-    <%= t('.explanation') %>
-  </p>
-  <div id="highlights" class="highlights masonry">
+  <p><%= t('.explanation') %></p>
+  <div id="highlights" class="highlights masonry"></div>
+  <div class="highlights-loader">
+    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+      width="200px" height="200px" viewBox="0 0 200 200" enable-background="new 0 0 200 200" xml:space="preserve">
+    <g>
+       <path class="circle1" d="M138.768,100c0,21.411-17.356,38.768-38.768,38.768
+          c-21.411,0-38.768-17.356-38.768-38.768c0-21.411,17.357-38.768,38.768-38.768"/>
+       <path class="circle2" d="M132.605,100c0,18.008-14.598,32.605-32.605,32.605
+          c-18.007,0-32.605-14.598-32.605-32.605c0-18.007,14.598-32.605,32.605-32.605"/>
+       <path class="circle3" d="M126.502,100c0,14.638-11.864,26.502-26.502,26.502
+          c-14.636,0-26.501-11.864-26.501-26.502c0-14.636,11.865-26.501,26.501-26.501"/>
+       <path  class="circle4" d="M120.494,100c0,11.32-9.174,20.494-20.494,20.494
+          c-11.319,0-20.495-9.174-20.495-20.494c0-11.319,9.176-20.495,20.495-20.495"/>
+    </g>
+  </svg>
   </div>
 
-  <div class="highlights-loader data-loader-container">
-    <div class="data-loader"></div>
-  </div>
+  <%= render :partial => 'shared/explore_popups' %>
 <% else %>
-  <p>
-    <%= t('.no_highlights') %>
-  </p>
+  <p><%= t('.no_highlights') %></p>
 <% end %>
