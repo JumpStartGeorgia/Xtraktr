@@ -15,7 +15,7 @@ $(document).ready(function(){
 
     },
     "columnDefs": [
-      { orderable: false, targets: [-1] }
+      { orderable: false, targets: [2,-1] }
     ],
     "pagingType": "full_numbers"
   });

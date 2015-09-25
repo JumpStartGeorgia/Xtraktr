@@ -5,13 +5,14 @@ var js = {
 };
 var datatables, h, i, j, k, cacheId;
 
-function update_available_weights () { // update the list of avilable weights based on questions that are selected
+function update_available_weights(){
   // update weight list if weights exist
-  if ($("select#weighted_by_code").length > 0){
+  if ($('select#weighted_by_code').length > 0){
+    var old_value = $('select#weighted_by_code').val();
     var items = [
-      $("select#question_code option:selected").data("weights"),
-      $("select#broken_down_by_code option:selected").data("weights"),
-      $("select#filtered_by_code option:selected").data("weights")
+      $('select#question_code option:selected').data('weights'),
+      $('select#broken_down_by_code option:selected').data('weights'),
+      $('select#filtered_by_code option:selected').data('weights')
     ];
     // remove undefined (undefined exists if a select does not have a value)
     var und_ind = items.indexOf(undefined);
@@ -21,8 +22,8 @@ function update_available_weights () { // update the list of avilable weights ba
       }
       und_ind = items.indexOf(undefined);
     }
-    var matches = items.shift().filter(function (v) {
-      return items.every(function (a) {
+    var matches = items.shift().filter(function(v) {
+      return items.every(function(a) {
         return a.indexOf(v) !== -1;
       });
     });
@@ -33,25 +34,30 @@ function update_available_weights () { // update the list of avilable weights ba
       // show matches, hide rest
 
       // hide all items
-      $(".form-explore-weight-by .bootstrap-select ul.dropdown-menu li").hide();
+      $('.form-explore-weight-by .bootstrap-select ul.dropdown-menu li').hide();
 
       // show matched weights
       var match_length = matches.length;
       var i=0;
       var index;
       for (i;i<match_length;i++){
-        index = $("select#weighted_by_code option[value='" + matches[i] + "']").index();
+        index = $('select#weighted_by_code option[value="' + matches[i] + '"]').index();
         if (index != -1){
-          $(".form-explore-weight-by .bootstrap-select ul.dropdown-menu li:eq(" + index + ")").show();
+          $('.form-explore-weight-by .bootstrap-select ul.dropdown-menu li:eq(' + index + ')').show();
         }
       }
       // show unweighted
-      $(".form-explore-weight-by .bootstrap-select ul.dropdown-menu li:last").show();
+      $('.form-explore-weight-by .bootstrap-select ul.dropdown-menu li:last').show();
 
-      $(".form-weight-by").show();
+      // if the old value is no longer an option, select the first one
+      if (matches.indexOf(old_value) == -1){
+        $('select#weighted_by_code').selectpicker('val', $('select#weighted_by_code option:first').attr('value'));
+      }
+
+      $('.form-weight-by').show();
     }else{
-      $(".form-weight-by").hide();
-      $("select#weighted_by_code").selectpicker("val", "unweighted");
+      $('.form-weight-by').hide();
+      $('select#weighted_by_code').selectpicker('val', 'unweighted');
     }
   }
 }
@@ -321,7 +327,7 @@ function build_bar_charts (json) { // build pie chart for each chart item in jso
         jumpto_text += "<option data-href='#chart-" + (i+1) + "'>" + json.filtered_by.text + " = " + json.chart[i].filter_answer_text + "</option>";
       }
 
-      // show jumpto links    
+      // show jumpto links
       select_selector.append(jumpto_text);
       select_selector.val(select_selector.find("option:first").attr("value"));
       select_selector.selectpicker("refresh");
@@ -1199,7 +1205,7 @@ $(document).ready(function () {
 
       var new_url = [location.protocol, "//", location.host, location.pathname, "?", paramsA.join("&")].join("");
       // // change the browser URL to the given link location
-      if (new_url != window.location.href){ // !is_back_button && 
+      if (new_url != window.location.href){ // !is_back_button &&
         window.history.pushState({path:new_url}, $("title").html(), new_url);
       }
       $(this).tooltip('hide');

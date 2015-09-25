@@ -290,122 +290,104 @@ class DatasetsController < ApplicationController
 
   # mark which questions to not include in the analysis and which to include in download
   def mass_changes_questions
-    @dataset = Dataset.by_id_for_user(params[:id], current_user.id)
+    respond_to do |format|
+      format.html {
+        @js.push("mass_changes_questions.js")
+        @css.push("mass_changes_questions.css")
 
-    if @dataset.present?
+        # create data for datatables (faster to load this way)
+        gon.datatable_json = []
+        @dataset.questions.each_with_index do |question, question_index|
+          disabled = question.is_weight? ? 'disabled=\'disabled\'' : ''
+          warning_exclude = question.is_weight? ? "<span class='exclude-warning'>#{view_context.image_tag('svg/exclamation.svg', title: I18n.t('app.msgs.cannot_include_weight'))}</span>" : ''
+          warning_download = question.is_weight? ? "<span class='download-warning'>#{view_context.image_tag('svg/exclamation.svg', title: I18n.t('app.msgs.must_include_weight'))}</span>" : ''
+          gon.datatable_json << {
+            code: question.original_code,
+            text: question.text,
+            exclude: "<input class='exclude-input' type='checkbox' #{question.exclude? ? 'checked=\'checked\'' : ''} #{disabled} data-id='#{question.id}' data-orig='#{question.exclude?}'>#{warning_exclude}",
+            download: "<input class='download-input' type='checkbox' #{question.can_download? ? 'checked=\'checked\'' : ''} #{disabled} data-id='#{question.id}' data-orig='#{question.can_download?}'>#{warning_download}"
+          }
+        end
 
-      respond_to do |format|
-        format.html {
-          @js.push("mass_changes_questions.js")
-          @css.push("mass_changes_questions.css")
+        add_dataset_nav_options()
+      }
+      format.js {
+        begin
+          @dataset.questions.reflag_questions(:exclude, params[:exclude]) if params[:exclude].present? && params[:exclude].is_a?(Array)
+          @dataset.questions.reflag_questions(:can_download, params[:download]) if params[:download].present? && params[:download].is_a?(Array)
 
-          # create data for datatables (faster to load this way)
-          gon.datatable_json = []
-          @dataset.questions.each_with_index do |question, question_index|
-            disabled = question.is_weight? ? 'disabled=\'disabled\'' : ''
-            warning_exclude = question.is_weight? ? "<span class='exclude-warning'>#{view_context.image_tag('svg/exclamation.svg', title: I18n.t('app.msgs.cannot_include_weight'))}</span>" : ''
-            warning_download = question.is_weight? ? "<span class='download-warning'>#{view_context.image_tag('svg/exclamation.svg', title: I18n.t('app.msgs.must_include_weight'))}</span>" : ''
-            gon.datatable_json << {
-              code: question.original_code,
-              text: question.text,
-              exclude: "<input class='exclude-input' type='checkbox' #{question.exclude? ? 'checked=\'checked\'' : ''} #{disabled} data-id='#{question.id}' data-orig='#{question.exclude?}'>#{warning_exclude}",
-              download: "<input class='download-input' type='checkbox' #{question.can_download? ? 'checked=\'checked\'' : ''} #{disabled} data-id='#{question.id}' data-orig='#{question.can_download?}'>#{warning_download}"
-            }
-          end
+          # force question callbacks
+          @dataset.check_questions_for_changes_status = true
 
-          add_dataset_nav_options()
-        }
-        format.js {
-          begin
-            @dataset.questions.reflag_questions(:exclude, params[:exclude]) if params[:exclude].present? && params[:exclude].is_a?(Array)
-            @dataset.questions.reflag_questions(:can_download, params[:download]) if params[:download].present? && params[:download].is_a?(Array)
-
-            # force question callbacks
-            @dataset.check_questions_for_changes_status = true
-
-            @msg = t('app.msgs.mass_change_question_saved')
-            @success = true
-            if !@dataset.save
-              @msg = @dataset.errors.full_messages
-              @success = false
-            end
-          rescue Exception => e
-            @msg = t('app.msgs.mass_change_question_not_saved')
+          @msg = t('app.msgs.mass_change_question_saved')
+          @success = true
+          if !@dataset.save
+            @msg = @dataset.errors.full_messages
             @success = false
-
-            # send the error notification
-            ExceptionNotifier::Notifier
-              .exception_notification(request.env, e)
-              .deliver
           end
+        rescue Exception => e
+          @msg = t('app.msgs.mass_change_question_not_saved')
+          @success = false
 
-        }
-      end
-    else
-      flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to datasets_path(:locale => I18n.locale)
-      return
+          # send the error notification
+          ExceptionNotifier::Notifier
+            .exception_notification(request.env, e)
+            .deliver
+        end
+
+      }
     end
   end
 
 
   # mark which answers to not include in the analysis and which can be excluded during anayalsis
   def mass_changes_answers
-    @dataset = Dataset.by_id_for_user(params[:id], current_user.id)
+    respond_to do |format|
+      format.html {
+        @js.push("mass_changes_answers.js")
+        @css.push("mass_changes_answers.css")
 
-    if @dataset.present?
-
-      respond_to do |format|
-        format.html {
-          @js.push("mass_changes_answers.js")
-          @css.push("mass_changes_answers.css")
-
-          # create data for datatables (faster to load this way)
-          gon.datatable_json = []
-          @dataset.questions.each_with_index do |question, question_index|
-            question.answers.each_with_index do |answer, answer_index|
-              gon.datatable_json << {
-                code: question.original_code,
-                question: question.text,
-                answer: answer.text,
-                exclude: "<input class='exclude-input' type='checkbox' #{answer.exclude? ? 'checked=\'checked\'' : ''} data-id='#{answer.id}' data-orig='#{answer.exclude?}'>",
-                can_exclude: "<input class='can-exclude-input' type='checkbox' #{answer.can_exclude? ? 'checked=\'checked\'' : ''} data-id='#{answer.id}' data-orig='#{answer.can_exclude?}'>"
-              }
-            end
+        # create data for datatables (faster to load this way)
+        gon.datatable_json = []
+        @dataset.questions.each_with_index do |question, question_index|
+          question.answers.each_with_index do |answer, answer_index|
+            gon.datatable_json << {
+              code: question.original_code,
+              question: question.text,
+              answer: answer.text,
+              exclude: "<input class='exclude-input' type='checkbox' #{answer.exclude? ? 'checked=\'checked\'' : ''} data-id='#{answer.id}' data-orig='#{answer.exclude?}'>",
+              can_exclude: "<input class='can-exclude-input' type='checkbox' #{answer.can_exclude? ? 'checked=\'checked\'' : ''} data-id='#{answer.id}' data-orig='#{answer.can_exclude?}'>"
+            }
           end
+        end
 
-          add_dataset_nav_options()
-        }
-        format.js {
-          @msg = t('app.msgs.mass_change_answer_saved')
-          @success = true
-          begin
-            @dataset.questions.reflag_answers(:exclude, params[:exclude]) if params[:exclude].present? && params[:exclude].is_a?(Array)
-            @dataset.questions.reflag_answers(:can_exclude, params["can-exclude"]) if params["can-exclude"].present? && params["can-exclude"].is_a?(Array)
+        add_dataset_nav_options()
+      }
+      format.js {
+        @msg = t('app.msgs.mass_change_answer_saved')
+        @success = true
+        begin
+          @dataset.questions.reflag_answers(:exclude, params[:exclude]) if params[:exclude].present? && params[:exclude].is_a?(Array)
+          @dataset.questions.reflag_answers(:can_exclude, params["can-exclude"]) if params["can-exclude"].present? && params["can-exclude"].is_a?(Array)
 
-            # force question callbacks
-            @dataset.check_questions_for_changes_status = true
+          # force question callbacks
+          @dataset.check_questions_for_changes_status = true
 
-            if !@dataset.save
-              @msg = @dataset.errors.full_messages
-              @success = false
-            end
-          rescue Exception => e
-            @msg = t('app.msgs.mass_change_answer_not_saved')
+          if !@dataset.save
+            @msg = @dataset.errors.full_messages
             @success = false
-
-            # send the error notification
-            ExceptionNotifier::Notifier
-              .exception_notification(request.env, e)
-              .deliver
           end
+        rescue Exception => e
+          @msg = t('app.msgs.mass_change_answer_not_saved')
+          @success = false
 
-        }
-      end
-    else
-      flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to datasets_path(:locale => I18n.locale)
-      return
+          # send the error notification
+          ExceptionNotifier::Notifier
+            .exception_notification(request.env, e)
+            .deliver
+        end
+
+      }
     end
   end
 

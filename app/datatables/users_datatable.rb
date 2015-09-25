@@ -23,6 +23,8 @@ private
     users.map do |user|
       [
         user.name,
+        user.user_or_org,
+        user.dataset_count,
         user.role_name.humanize,
         I18n.l(user.created_at, :format => :file),
         user.current_sign_in_at.present? ? I18n.l(user.current_sign_in_at, :format => :file) : nil,
@@ -78,7 +80,7 @@ private
   end
 
   def sort_column
-    columns = %w[last_name role created_at current_sign_in_at sign_in_count]
+    columns = %w[last_name is_user last_name role created_at current_sign_in_at sign_in_count]
     columns[params[:order]['0'][:column].to_i]
   end
 

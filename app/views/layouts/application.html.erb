@@ -22,11 +22,11 @@
                 <%= yield(:subnav_left) %>
                   <% if !content_for?(:subnav_left) && @is_dataset_admin && @dataset.present? && @dataset.created_at.present? %>
                     <div class="back"><%= link_to @dataset.title, url_dataset_dashboard(@dataset) %></div>
-                  <% elsif @dataset.present? && @dataset.created_at.present? && !((request.path == explore_data_dashboard_path(@dataset) || request.path == dataset_path(@dataset))) %>
+                  <% elsif @dataset.present? && @dataset.created_at.present? && !((request.path == explore_data_dashboard_path(@dataset.owner, @dataset) || request.path == dataset_path(@dataset.owner, @dataset))) %>
                     <div class="back"><%= link_to t('helpers.links.back_dashboard'), url_dataset_dashboard(@dataset) %></div>
                   <% elsif !content_for?(:subnav_left) && @is_time_series_admin && @time_series.present? && @time_series.created_at.present? %>
                     <div class="back"><%= link_to @time_series.title, url_time_series_dashboard(@time_series) %></div>
-                  <% elsif @time_series.class == TimeSeries && @time_series.present? && @time_series.created_at.present? && !(request.path == explore_time_series_dashboard_path(@time_series) || request.path == time_series_path(@time_series))%>
+                  <% elsif @time_series.class == TimeSeries && @time_series.present? && @time_series.created_at.present? && !(request.path == explore_time_series_dashboard_path(@time_series.owner, @time_series) || request.path == time_series_path(@time_series.owner, @time_series))%>
                     <div class="back"><%= link_to t('helpers.links.back_dashboard'), url_time_series_dashboard(@time_series) %></div>
                   <% end %>
               </div>

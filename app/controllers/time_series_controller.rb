@@ -274,59 +274,50 @@ class TimeSeriesController < ApplicationController
 
   # mark which answers to not include in the analysis and which can be excluded during anayalsis
   def mass_changes_answers
-    @time_series = TimeSeries.by_id_for_user(params[:id], current_user.id)
+    respond_to do |format|
+      format.html {
+        @js.push("mass_changes_answers.js")
+        @css.push("mass_changes_answers.css")
 
-    if @time_series.present?
-
-      respond_to do |format|
-        format.html {
-          @js.push("mass_changes_answers.js")
-          @css.push("mass_changes_answers.css")
-
-          # create data for datatables (faster to load this way)
-          gon.datatable_json = []
-          @time_series.questions.each_with_index do |question, question_index|
-            question.answers.each_with_index do |answer, answer_index|
-              gon.datatable_json << {
-                code: question.original_code,
-                question: question.text,
-                answer: answer.text,
-                can_exclude: "<input class='can-exclude-input' type='checkbox' #{answer.can_exclude? ? 'checked=\'checked\'' : ''} data-id='#{answer.id}' data-orig='#{answer.can_exclude?}'>",
-              }
-            end
+        # create data for datatables (faster to load this way)
+        gon.datatable_json = []
+        @time_series.questions.each_with_index do |question, question_index|
+          question.answers.each_with_index do |answer, answer_index|
+            gon.datatable_json << {
+              code: question.original_code,
+              question: question.text,
+              answer: answer.text,
+              can_exclude: "<input class='can-exclude-input' type='checkbox' #{answer.can_exclude? ? 'checked=\'checked\'' : ''} data-id='#{answer.id}' data-orig='#{answer.can_exclude?}'>",
+            }
           end
+        end
 
-          add_time_series_nav_options
-        }
-        format.js {
-          @msg = t('app.msgs.mass_change_answer_saved')
-          @success = true
-          begin
-            @time_series.questions.reflag_answers(:can_exclude, params["can-exclude"]) if params["can-exclude"].present? && params["can-exclude"].is_a?(Array)
+        add_time_series_nav_options
+      }
+      format.js {
+        @msg = t('app.msgs.mass_change_answer_saved')
+        @success = true
+        begin
+          @time_series.questions.reflag_answers(:can_exclude, params["can-exclude"]) if params["can-exclude"].present? && params["can-exclude"].is_a?(Array)
 
-            # force question callbacks
-            @time_series.check_questions_for_changes_status = true
+          # force question callbacks
+          @time_series.check_questions_for_changes_status = true
 
-            if !@time_series.save
-              @msg = @time_series.errors.full_messages
-              @success = false
-            end
-          rescue Exception => e
-            @msg = t('app.msgs.mass_change_answer_not_saved')
+          if !@time_series.save
+            @msg = @time_series.errors.full_messages
             @success = false
-
-            # send the error notification
-            ExceptionNotifier::Notifier
-              .exception_notification(request.env, e)
-              .deliver
           end
+        rescue Exception => e
+          @msg = t('app.msgs.mass_change_answer_not_saved')
+          @success = false
 
-        }
-      end
-    else
-      flash[:info] =  t('app.msgs.does_not_exist')
-      redirect_to time_series_path(:locale => I18n.locale)
-      return
+          # send the error notification
+          ExceptionNotifier::Notifier
+            .exception_notification(request.env, e)
+            .deliver
+        end
+
+      }
     end
   end
 
