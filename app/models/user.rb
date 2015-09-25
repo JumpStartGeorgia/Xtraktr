@@ -9,7 +9,14 @@ class User
   belongs_to :country
   has_many :datasets
   has_many :api_keys, dependent: :destroy
-  has_many :members, class_name: 'UserMember', inverse_of: :group, dependent: :destroy
+  has_many :members, class_name: 'UserMember', inverse_of: :group, dependent: :destroy do
+
+    # determine if user is a member
+    def is_member?(user_id)
+      where(member_id: user_id).count > 0
+    end
+    
+  end
   has_many :groups, class_name: 'UserMember', inverse_of: :member, dependent: :destroy do
 
     # determine if user is in group
