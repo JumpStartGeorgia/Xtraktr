@@ -18,15 +18,14 @@ $(document).ready(function (){
     if(gon.highlight_admin_link) { data.use_admin_link = true; }
 
     for(i = 0, j = -1; i < gon.highlight_ids.length; ++i) {
-      if(i % 5 == 0) {
+      if(i % 3 == 0) {
         group_of_highlight_ids.push([]);
         ++j;
       }
       group_of_highlight_ids[j].push(gon.highlight_ids[i]);
     }
-    var group_of_highlight_ids_length = group_of_highlight_ids.length;
-    highlights_serial_addition();
-    var highlights = $("#highlights");
+
+
     function highlights_serial_addition () {
       data["ids"] = group_of_highlight_ids[index].join(",");
       $.ajax({
@@ -63,5 +62,10 @@ $(document).ready(function (){
         }
       });
     }
+
+
+    var group_of_highlight_ids_length = group_of_highlight_ids.length;
+    highlights_serial_addition();
+    var highlights = $("#highlights");
   }
 });
