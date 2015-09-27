@@ -869,7 +869,7 @@ class Dataset < CustomTranslation
     d = Dataset.find(id)
 
     if d.present?
-      if d.user_id == user_id
+      if d.user_id.to_s == user_id.to_s
         dataset = d
       else
         u = d.user
