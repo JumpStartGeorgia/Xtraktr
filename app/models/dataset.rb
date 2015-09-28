@@ -861,6 +861,27 @@ class Dataset < CustomTranslation
     by_owner(owner_id, current_user_id).find(id)
   end
 
+  # determine if user has access to this dataset
+  # - user is owner
+  # - or owner is org and user is member
+  def self.by_id_for_user(id, user_id)
+    dataset = nil
+    d = Dataset.find(id)
+
+    if d.present?
+      if d.user_id.to_s == user_id.to_s
+        dataset = d
+      else
+        u = d.user
+        if u.present? && !u.is_user? && u.members.is_member?(user_id)
+          dataset = d
+        end
+      end
+    end
+
+    return dataset
+  end
+
   # get the status of the download files
   def self.download_files_up_to_date?(id, owner_id, current_user_id=nil)
     x = by_owner(owner_id, current_user_id).only(:reset_download_files).find(id)

@@ -521,6 +521,28 @@ class TimeSeries < CustomTranslation
     end
   end
 
+  # determine if user has access to this time series
+  # - user is owner
+  # - or owner is org and user is member
+  def self.by_id_for_user(id, user_id)
+    time_series = nil
+    ts = TimeSeries.find(id)
+
+    if ts.present?
+      if ts.user_id == user_id
+        time_series = ts
+      else
+        u = ts.user
+        if u.present? && !u.is_user? && u.members.is_member?(user_id)
+          time_series = ts
+        end
+      end
+    end
+
+    return time_series 
+  end
+
+
   def self.with_country(country_id)
     country = Country.find(country_id)
     if country.present?

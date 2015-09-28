@@ -2,7 +2,6 @@ module ExploreDatasetHelper
 
   # generate the options for the explore data drop down list
   def generate_explore_dataset_options(items, dataset, options={})
-    logger.debug "$$$$$ generate_explore_dataset_options"
     skip_content = options[:skip_content].nil? ? false : options[:skip_content]
     selected_code = options[:selected_code].nil? ? nil : options[:selected_code]
     disabled_code = options[:disabled_code].nil? ? nil : options[:disabled_code]
@@ -24,7 +23,6 @@ module ExploreDatasetHelper
       elsif item.class == Question
         # add question
         if item.has_code_answers_for_analysis?
-          logger.debug "$$$$$- #{item.text} has answers"
           html << generate_explore_question_option(item, dataset, skip_content, selected_code, disabled_code, disabled_code2, group_type)
         end
       end
