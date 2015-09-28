@@ -11,3 +11,13 @@
     <%= f.submit t('app.buttons.save'), :class => 'btn btn-primary' %>
   </div>
 <% end %>
+
+<script>
+  var globalCallback = function(){
+    var tmp = $("form .select2picker");
+    tmp.each(function (i, d){
+      d = $(d);
+      d.select2({ width:"auto", allowClear:true, placeholder: d.attr("placeholder"), dropdownCssClass: "select2picker-dropdown" });
+    });
+  };
+</script>
