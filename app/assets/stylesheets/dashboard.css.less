@@ -522,14 +522,27 @@
         padding: 0 0 0 30px;
       }
     }
-    h1 {
-      font:16px 'prime_en','sans-serif';
-      color:@d67456;
-      text-transform:uppercase;
-      margin:0;
+    .header {
       padding-bottom:20px;
-      &:lang(ka) {
-        font:16px 'prime_ka','sans-serif';
+      > div {
+        display:inline-block;
+      }
+      .avatar img{
+        border:1px solid #eaeaea;
+        background-color:#fff;
+        width:60px;
+        height:60px;
+      }
+      .name {
+        font:16px 'prime_en','sans-serif';
+        color:@d67456;
+        text-transform:uppercase;
+        margin:0;
+        max-width:220px;
+        padding-left: 12px;
+        &:lang(ka) {
+          font:16px 'prime_ka','sans-serif';
+        }
       }
     }
     .info {

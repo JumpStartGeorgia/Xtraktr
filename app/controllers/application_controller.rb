@@ -57,48 +57,38 @@ class ApplicationController < ActionController::Base
   # get the user record for the current owner_id
   # - @owner is used to put the owner permalink in the url
   # - @acting_as_user is used to know which user to show in the admin menu (could be current user or owner)
-  def set_owner_id
-    logger.debug "=============== set owner id"
+  def set_owner_id 
     # if the user is signed in and this is an admin section, the user must be the owner or in a group of the owner
     # else, the user is the owner
-    if user_signed_in?
-      logger.debug "======== user is logged in"
-      if params[:owner_id].present? && ['settings', 'datasets', 'time_series'].include?(params[:controller])
-        logger.debug "======== is admin page"
+    if user_signed_in? # user is logged in
+      if params[:owner_id].present? && ['settings', 'datasets', 'time_series'].include?(params[:controller]) #  is admin page
         owner = User.find(params[:owner_id])
         if owner.present?
-          if current_user.id == owner.id
-            logger.debug "======== current user is owner"
+          if current_user.id == owner.id # "current user is owner"
             @owner = current_user
             @acting_as_user = current_user
-          elsif !owner.is_user? && current_user.groups.in_group?(owner.id)
-            logger.debug "======== current user belongs to group, owner is group"
+          elsif !owner.is_user? && current_user.groups.in_group?(owner.id) # current user belongs to group, owner is group
             @owner = owner
             @acting_as_user = owner
-          else
-            logger.debug "======== user is logged in, is not owner and owner is not a group that the user belongs to"
+          else # user is logged in, is not owner and owner is not a group that the user belongs to
             flash[:info] =  t('app.msgs.does_not_exist')
             redirect_to root_path(:locale => I18n.locale)
             return
           end
-        else
-          logger.debug "======== user is logged in, is admin section but owner is not found"
+        else # user is logged in, is admin section but owner is not found
           flash[:info] =  t('app.msgs.does_not_exist')
           redirect_to root_path(:locale => I18n.locale)
           return
         end
-      elsif params[:owner_id].nil?
-        logger.debug "======== owner is current user cause params owner_id is nil"
+      elsif params[:owner_id].nil? # owner is current user cause params owner_id is nil
         params[:owner_id] = current_user.slug
         @owner = current_user
         @acting_as_user = current_user
-      else
-        logger.debug "======== user is logged in but not in admin section"
+      else # user is logged in but not in admin section"
         @owner = User.find(params[:owner_id])
         @acting_as_user = current_user
       end
-    elsif params[:owner_id].present?
-      logger.debug "======== owner = params owner_id"
+    elsif params[:owner_id].present? # owner = params owner_id
       @owner = User.find(params[:owner_id])
     end
   end
