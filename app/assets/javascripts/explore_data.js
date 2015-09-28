@@ -213,7 +213,6 @@ function build_crosstab_charts (json) { // build crosstab charts for each chart 
   var flag = false;
 
   if (json.chart) {
-    flag = true;
     // determine chart height
     var chart_height = crosstab_chart_height(json);
 
@@ -242,6 +241,7 @@ function build_crosstab_charts (json) { // build crosstab charts for each chart 
       select_selector.val($("#jumpto #jumpto-chart select option:first").attr("value"));
       select_selector.selectpicker("refresh");
       select_selector.selectpicker("render");
+      flag = true;
 
     }
     else{       // no filters
@@ -256,7 +256,6 @@ function build_pie_charts (json) { // build pie chart for each chart item in jso
   var flag = false;
 
   if (json.chart){
-    flag = true;
 
     // determine chart height
     var chart_height = pie_chart_height(json);
@@ -289,6 +288,7 @@ function build_pie_charts (json) { // build pie chart for each chart item in jso
       select_selector.val($("#jumpto #jumpto-chart select option:first").attr("value"));
       select_selector.selectpicker("refresh");
       select_selector.selectpicker("render");
+      flag = true;
     }
     else {  // no filters
       build_pie_chart(json.chart, chart_height, weight_name);
@@ -302,7 +302,6 @@ function build_bar_charts (json) { // build pie chart for each chart item in jso
   var flag = false;
 
   if (json.chart){
-    flag = true;
 
     var chart_height = pie_chart_height(json), // determine chart height
       container = $("#container-chart");
@@ -332,6 +331,7 @@ function build_bar_charts (json) { // build pie chart for each chart item in jso
       select_selector.val(select_selector.find("option:first").attr("value"));
       select_selector.selectpicker("refresh");
       select_selector.selectpicker("render");
+      flag = true;
     }
     else {
       build_bar_chart(json.chart, chart_height, weight_name);       // no filters
