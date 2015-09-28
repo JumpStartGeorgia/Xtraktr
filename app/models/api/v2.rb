@@ -483,7 +483,7 @@ private
   def self.clean_options(options)
     if options.class == Hash
       # list of keys to keep
-      to_keep = %w(dataset_id time_series_id question_code broken_down_by_code filtered_by_code can_exclude with_title with_chart_data with_map_data language filtered_by_value visual_type broken_down_value filtered_by_value weighted_by_code)
+      to_keep = %w(dataset_id time_series_id question_code broken_down_by_code filtered_by_code can_exclude with_title with_chart_data with_map_data language filtered_by_value visual_type broken_down_value filtered_by_value weighted_by_code chart_type)
 
       # remove any keys that are not in the list
       options = options.dup.delete_if{|k,v| !to_keep.include?(k.to_s)}
@@ -729,7 +729,12 @@ private
           # add filter value
           options['filtered_by_value'] = filter[:filter_answer_value]
           options['visual_type'] = 'chart'
-          chart_item[:filter_results][:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
+          # chart_item[:filter_results][:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
+          chart_item[:filter_results][:embed_id] = {
+            pie_chart: Base64.urlsafe_encode64(clean_options(options.merge({ :chart_type => "pie"})).to_query),
+            bar_chart: Base64.urlsafe_encode64(clean_options(options.merge({ :chart_type => "bar"})).to_query)
+          } 
+
 
           # create data for chart
           chart_item[:filter_results][:data] = []
@@ -755,7 +760,10 @@ private
 
         # create embed id
         options['visual_type'] = 'chart'
-        chart[:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
+        chart[:embed_id] = {
+            pie_chart: Base64.urlsafe_encode64(clean_options(options.merge({ :chart_type => "pie"})).to_query),
+            bar_chart: Base64.urlsafe_encode64(clean_options(options.merge({ :chart_type => "bar"})).to_query)
+          } 
 
         # create data for chart
         chart[:data] = []

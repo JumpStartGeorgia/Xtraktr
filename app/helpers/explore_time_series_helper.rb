@@ -68,7 +68,7 @@ private
 
   def generate_explore_question_option(question, time_series, skip_content, selected_code, disabled_code, disabled_code2, group_type=nil)
     html = ''
-    q_text = question.code_with_text
+    q_text = h question.code_with_text
     selected = selected_code.present? && selected_code == question.code ? 'selected=selected ' : ''
     disabled = (disabled_code.present? && disabled_code == question.code) || (disabled_code2.present? && disabled_code2 == question.code) ? 'data-disabled=disabled ' : ''
     can_exclude = question.has_can_exclude_answers? ? 'data-can-exclude=true ' : ''

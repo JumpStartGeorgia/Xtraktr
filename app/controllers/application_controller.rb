@@ -369,7 +369,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
   # output: {type, title, dashboard_link, explore_link, error, visual_type, js}
   def get_highlight_data(embed_id, highlight_id=nil, use_admin_link=nil)
     highlight_id ||= SecureRandom.urlsafe_base64
-    output = {highlight_id:highlight_id, id:nil, type:nil, title:nil, dashboard_link:nil, explore_link:nil, error:false, visual_type:nil, js:{}, has_data:false}
+    output = {highlight_id:highlight_id, id:nil, type:nil, title:nil, dashboard_link:nil, explore_link:nil, error:false, visual_type:nil, js:{}, has_data:false, chart_type: "bar"}
     options = nil
 
     begin
@@ -383,6 +383,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
       options = clean_filtered_params(options)
 
       output[:visual_type] = options['visual_type']
+      output[:chart_type] = options['chart_type']
 
       if options['dataset_id'].present?
         output[:type] = 'dataset'
@@ -444,6 +445,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 
         output[:js][:json_data] = data
         output[:js][:visual_type] = output[:visual_type]
+        output[:js][:chart_type] = output[:chart_type]
         # save values of filters so can choose correct chart/map to show
         output[:js][:broken_down_by_value] = options['broken_down_by_value'] if options['broken_down_by_value'].present? # only present if doing maps
         output[:js][:filtered_by_value] = options['filtered_by_value'] if options['filtered_by_value'].present?

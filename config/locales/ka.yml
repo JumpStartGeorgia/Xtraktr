@@ -453,6 +453,8 @@ ka:
           title_weighted: "შეუწონელი პასუხების ჯამური რაოდენობა*: %{x_of_y}"
           title_filter_weighted: "შეუწონელი პასუხების ჯამური რაოდენობა* (%{totals} შესაძლებლიდან): %{nums}"
   explore_data:
+    chart_type_bar: View data using a bar chart
+    chart_type_pie: View data using a pie chart
     v1:
       hover_region: Hover over a Region
       na: "არ არის ხელმისაწვდომი"
