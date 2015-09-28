@@ -81,7 +81,7 @@ sink(args[4])
 # for each question
 for (i in 1:length(names(data))){
   # write to file as code || text || var code
-  print(paste(c(names(data)[i], var[i], val[i]), collapse=" || "))
+  print(paste(c(names(data)[i], gsub("\x85", '...', gsub("\x91", "'", gsub("\x92", "'", gsub("\x93", '"', gsub("\x94", '"', var[i]))))), val[i]), collapse=" || "))
 }
 sink()
 
