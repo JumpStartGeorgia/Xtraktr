@@ -15,8 +15,10 @@
 <script>
   var globalCallback = function(){
     var tmp = $("form .select2picker");
+     console.log(tmp);
     tmp.each(function (i, d){
       d = $(d);
+       console.log(d);
       d.select2({ width:"auto", allowClear:true, placeholder: d.attr("placeholder"), dropdownCssClass: "select2picker-dropdown" });
     });
   };

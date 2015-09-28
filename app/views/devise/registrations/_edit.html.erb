@@ -34,7 +34,7 @@
     <% end %>
 
     <div class="r clear">
-      <%= f.input :country_id, as: :select, required: true, :include_blank => true,  :input_html => { :"data-live-search"=> true, :"data-size"=> 7, :"class"=> "select2picker" },
+      <%= f.input :country_id, as: :select, required: true, :include_blank => true,  :input_html => { :"data-live-search"=> true, :"data-size"=> 7, :"class"=> "select2picker",  placeholder: name(:country_id) },
         :collection => Country.not_excluded.sorted.map{|x| [x.name, x.id]}
       %>
       <%= f.input :affiliation, :as => :string  %>
