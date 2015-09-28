@@ -1097,9 +1097,11 @@ $(document).ready(function () {
 
     // jumpto scrolling
     $("#jumpto").on("change", "select", function () {
-      var href = $(this).find("option:selected").data("href");
+      var href = $(this).find("option:selected").data("href"),
+        container = $(".tab-pane.active > div");
+      
       $(".tab-pane.active").animate({
-        scrollTop: Math.abs($(".tab-pane.active > div > div:first").offset().top - $(".tab-pane.active " + href).offset().top)
+        scrollTop: container.find(href).prop("offsetTop") - container.find("> div:first").prop("offsetTop") // Math.abs($(".tab-pane.active > div > div:first").offset().top - $(".tab-pane.active " + href).offset().top)
       }, 1500);
 
       // if this is a map item and there are > 1 map items, make sure the other items are set to nil
