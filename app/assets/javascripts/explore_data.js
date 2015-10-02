@@ -80,6 +80,8 @@ function build_highmaps (json) { // build highmap
 
     // remove all existing maps
     $("#container-map").empty();
+    $("#tab-map").addClass("behind_the_scenes");
+
     // remove all existing map links
     $("#jumpto #jumpto-map select").empty();
     $("#jumpto #jumpto-map h4").empty().hide();
@@ -206,6 +208,7 @@ function build_highmaps (json) { // build highmap
     // make sure these are not active
     $("#explore-tabs #nav-map, #explore-content #tab-map").removeClass("active");
   }
+  $("#tab-map").removeClass("behind_the_scenes");
 }
 
 function build_crosstab_charts (json) { // build crosstab charts for each chart item in json
