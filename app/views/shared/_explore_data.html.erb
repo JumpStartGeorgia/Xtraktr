@@ -105,6 +105,7 @@
         <li id="nav-map" style="display:none;"><a href="#tab-map" role="tab" data-toggle="tab"><%= t('.tabs.map') %></a></li>
         <li id="nav-table"><a href="#tab-table" role="tab" data-toggle="tab"><%= t('.tabs.table') %></a></li>
         <li id="nav-details"><a href="#tab-details" role="tab" data-toggle="tab"><%= t('.tabs.details') %></a></li>
+        <li id="nav-download"><a href="#tab-download" role="tab" data-toggle="tab"><%= t('.tabs.download') %></a></li>
       </ul>
       <% if !@is_dataset_admin %>
         <div class="share share-box"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>
@@ -165,7 +166,22 @@
             <span id="detail-icon-subgroup" class="icon-item"><%= subgroup_icon.html_safe %></span>
           </div>
         </div>
-
+        <div class="tab-pane" id="tab-download">
+            <div class="download-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cupiditate, ex!</div>
+            <% if @dataset.urls.present? && @dataset.urls.codebook.present? %>
+              <div class="download-wrapper" >
+                <div class="download" data-id="<%= @dataset.id.to_s %>" data-lang="<%= @dataset.current_locale %>" data-download-type="public">                  
+                  <div class="label"><%= t('helpers.links.download_options') %>:</div>
+                  <ul>
+                    <li><div class="type" data-type='csv' title="<%= t('download_data_options.title.csv') %>" data-placement="bottom"><%= t('download_data_options.text.csv') %></div></li>
+                    <li><div class="type" data-type='r' title="<%= t('download_data_options.title.r') %>" data-placement="bottom"><%= t('download_data_options.text.r') %></div></li>
+                    <li><div class="type" data-type='spss' title="<%= t('download_data_options.title.spss') %>" data-placement="bottom"><%= t('download_data_options.text.spss') %></div></li>
+                    <li><div class="type" data-type='stata' title="<%= t('download_data_options.title.stata') %>" data-placement="bottom"><%= t('download_data_options.text.stata') %></div></li>
+                  </ul>
+                </div>
+              </div>
+            <% end %>
+        </div>
       </div>
 
       <div id="explore-data-loader"></div>

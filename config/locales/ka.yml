@@ -639,6 +639,7 @@ ka:
       add_report: "ანგარიშის დამატება"
       remove_report: "ანგარიშის წაშლა"
       download_data: "მონაცემების ჩამოტვირთვა"
+      download_options: Download Options
       back_dashboard: "მონაცემების მთავარ გვერდზე დაბრუნება"
       api_home: API-ის საწყისი გვერდი
       agreement: "შეთანხმება"
@@ -1330,6 +1331,7 @@ ka:
         chart: "დიაგრამა"
         table: "ცხრილი"
         details: "დეტალები"
+        download: "მონაცემთა გაცნობა"
       map:
         filter: "რუკის გაფილტვრა ამ პასუხის არჩევით '%{text}':"
     explore_time_series:
@@ -1360,6 +1362,7 @@ ka:
         reports: "ანგარიშები"
         licensing: "ლიცენზია"
         meta: "დამატებითი ინფორმაცია"
+        download: Download Data
       no_methodology: "ამ მონაცემებისთვის არ არის მეთოდოლოგია"
       no_reports: "ამ მონაცემებისთვის არ არის ანგარიში"
       no_highlights: "ამ მონაცემებისთვის არ არის შექმნილი რჩეული ფაქტები"
@@ -1378,6 +1381,7 @@ ka:
         licensing: "ლიცენზია"
         datasets: "მონაცემები"
         meta: "დამატებითი ინფორმაცია"
+        download: Download Data
       no_highlights: "ამ პერიოდული შედარებისთვის არ არის შექმნილი რჩეული ფაქტები"
       filter:
         all: "ყველა ტექსტი"

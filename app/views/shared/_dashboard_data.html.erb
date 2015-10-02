@@ -67,20 +67,6 @@
             <%= t('app.menu.time_series') %>
           <% end %>
         <% end %>
-        <% if @dataset.urls.present? && @dataset.urls.codebook.present? %>
-            <div class="download-wrapper" >
-              <div class="download" data-id="<%= @dataset.id.to_s %>" data-lang="<%= @dataset.current_locale %>" data-download-type="public">
-              <%= image_tag 'svg/download_big.svg', alt: t('helpers.links.download_data') %>
-              <%= t('helpers.links.download_data') %>
-              <ul>
-                <li><div class="type" data-type='csv' title="<%= t('download_data_options.title.csv') %>" data-placement="left"><%= t('download_data_options.text.csv') %></div></li>
-                <li><div class="type" data-type='r' title="<%= t('download_data_options.title.r') %>" data-placement="left"><%= t('download_data_options.text.r') %></div></li>
-                <li><div class="type" data-type='spss' title="<%= t('download_data_options.title.spss') %>" data-placement="left"><%= t('download_data_options.text.spss') %></div></li>
-                <li><div class="type" data-type='stata' title="<%= t('download_data_options.title.stata') %>" data-placement="left"><%= t('download_data_options.text.stata') %></div></li>
-              </ul>
-            </div>
-          </div>
-        <% end %>
 
       </div>
     </div>
@@ -130,6 +116,9 @@
     <li role="presentation">
       <a href="#licensing" aria-controls="licensing" role="tab" data-toggle="tab"><%= t('.tabs.licensing') %></a>
     </li>
+    <li role="presentation">
+      <a href="#download" aria-controls="download" role="tab" data-toggle="tab"><%= t('.tabs.download') %></a>
+    </li>    
   </ul>
 
   <div class="tab-content">
@@ -294,6 +283,23 @@
       <div class="tinymce_format">
         <%= simple_format_no_tags(@license.content, {}, {sanitize: false}) %>
       </div>
+    </div>
+
+    <div role="tabpanel" class="tab-pane fade" id="download">
+      <div class="download-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cupiditate, ex!</div>
+      <% if @dataset.urls.present? && @dataset.urls.codebook.present? %>
+        <div class="download-wrapper" >
+          <div class="download" data-id="<%= @dataset.id.to_s %>" data-lang="<%= @dataset.current_locale %>" data-download-type="public">                  
+            <div class="label"><%= t('helpers.links.download_options') %>:</div>
+            <ul>
+              <li><div class="type" data-type='csv' title="<%= t('download_data_options.title.csv') %>" data-placement="bottom"><%= t('download_data_options.text.csv') %></div></li>
+              <li><div class="type" data-type='r' title="<%= t('download_data_options.title.r') %>" data-placement="bottom"><%= t('download_data_options.text.r') %></div></li>
+              <li><div class="type" data-type='spss' title="<%= t('download_data_options.title.spss') %>" data-placement="bottom"><%= t('download_data_options.text.spss') %></div></li>
+              <li><div class="type" data-type='stata' title="<%= t('download_data_options.title.stata') %>" data-placement="bottom"><%= t('download_data_options.text.stata') %></div></li>
+            </ul>
+          </div>
+        </div>
+      <% end %>
     </div>
   </div>
 
