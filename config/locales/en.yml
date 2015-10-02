@@ -689,6 +689,7 @@ en:
       add_report: Add Report
       remove_report: Remove Report
       download_data: Download Data
+      download_options: Download Options
       back_dashboard: Back to Dashboard
       api_home: API Home
       agreement: Agreement
@@ -1431,6 +1432,7 @@ en:
         chart: Chart
         table: Table
         details: Details
+        download: Download Data
       map:
         filter: "Filter map by selecting an answer to '%{text}':"
     explore_time_series:
@@ -1461,6 +1463,7 @@ en:
         reports: Reports
         licensing: License
         meta: Metadata
+        download: Download Data
       no_methodology: There is no methodology on file for this dataset.
       no_reports: There are no reports on file for this dataset.
       no_highlights: There are no highlights on file for this dataset.
@@ -1481,6 +1484,7 @@ en:
         licensing: License
         datasets: Datasets
         meta: Meta Data
+        download: Download Data
       no_highlights: There are no highlights on file for this time series.
       no_license: This time series currently has no defined license.
       learn_more: Learn more about this license

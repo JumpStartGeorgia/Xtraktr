@@ -1140,6 +1140,64 @@ table.dataTable {
   }
 }
 
+
+#tab-download {
+  padding: 20px 50px;
+}
+.download-text {
+  font:16px 'sourcesans_pro_l', 'sans-serif';
+  color:#3C4352;
+  margin-bottom:22px;
+}
+.download-wrapper
+{
+  position:relative;
+  cursor:pointer;
+  .download
+  {  
+    .label {
+      padding-right:15px;
+      font:16px 'sourcesans_pro', 'sans-serif';
+      color:#3C4352;
+    }
+    &.open ul
+    {
+      display:block;
+    }
+  }
+  ul
+  {    
+    display:inline-block;
+    list-style:none;
+    padding:0px 0px 0px;    
+
+    
+    color: #d1af24;
+    background-color:#fff;
+    text-transform:uppercase;
+    outline:none;
+    z-index:1029;
+    text-align: left;
+    li
+    {
+      display: inline-block;
+      div {
+        font:16px 'sourcesans_pro_l', 'sans-serif';
+        color:#fff;
+        background-color:#E5CC63;
+        padding:8px 12px;
+        min-width:50px;
+        text-align:center;
+        &:hover
+        {
+          background-color:#D8BC48;
+          color:#fff;
+        }
+      }
+    }
+  }
+}
+
 .behind_the_scenes {
   position: fixed !important;
   left: 9999px !important;
