@@ -363,6 +363,7 @@ en:
         license_title: The title of the license
         license_description: A brief description of the license
         license_url: A URL to webpage that has more information about the license
+        owner_id: Select the account that you want the time series to be stored under
       time_series_dataset:
         dataset_id: Select the dataset to add to this time series
         title: "The text that will represent this data set in the time series, most likely a time indicator. For example, if your dataset is from 2015, you could enter 2015; or if it is from January 2015, you can enter January 2015."
