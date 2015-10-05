@@ -39,6 +39,45 @@ class Api::V2
     return dataset
   end
 
+
+  # get details about a dataset's question data
+  # parameters:
+  #  - dataset_id - id of dataset to get info on (required)
+  #  - question_code - question code of dataset to get info on (required)
+  #  - language - locale of language to get data in (optional)
+  def self.dataset_question_data(dataset_id, question_code,  options={})
+    if dataset_id.nil? || question_code.nil?
+      return {errors: [{status: '404', detail: I18n.t('api.msgs.missing_required_params') }]}
+    end
+
+    # get options
+    language = options['language'].present? ? options['language'].downcase : nil
+
+    # get dataset
+    dataset = Dataset.is_public.find(dataset_id)
+
+    if dataset.nil?
+      return {errors: [{status: '404', detail: I18n.t('api.msgs.no_dataset') }]}    
+    end
+    question = dataset.questions.with_code(question_code)
+
+    if question.nil? 
+      return {errors: [{status: '404', detail: I18n.t('api.msgs.no_question') }]}    
+    end
+
+    # if language provided, set it
+    if language.present? && dataset.languages.include?(language)
+      dataset.current_locale = language
+    end
+
+
+    return {
+      dataset: { id: dataset.id, title: dataset.title },
+      question: create_dataset_question_hash(question),
+      data: dataset.data_items.code_data(question_code) 
+    }
+  end
+
   # get codebook for a dataset
   # parameters:
   #  - dataset_id - id of dataset to get codebook for (required)
