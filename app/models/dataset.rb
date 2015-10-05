@@ -579,6 +579,7 @@ class Dataset < CustomTranslation
 
   after_initialize :set_category_ids
   after_initialize :set_country_ids
+  after_initialize :set_stats_if_missing
   before_create :process_file
   after_create :create_quick_data_downloads
   before_save :create_urls_object
@@ -617,6 +618,11 @@ class Dataset < CustomTranslation
   def set_country_ids
     self.country_ids = self.country_mappers.country_ids
     return true
+  end
+
+  # if the stats are missing, add them
+  def set_stats_if_missing
+    update_stats if self.stats.nil?
   end
 
   # process the datafile and save all of the information from it
