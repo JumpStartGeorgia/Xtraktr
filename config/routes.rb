@@ -51,6 +51,7 @@ BootstrapStarter::Application.routes.draw do
       match '/v2/documentation(/:method)', to: 'v2#documentation', as: :v2_documentation, via: :get
       match '/v2/dataset_catalog', to: 'v2#dataset_catalog', as: :v2_dataset_catalog, via: :get, :defaults => { :format => 'json' }
       match '/v2/dataset', to: 'v2#dataset', as: :v2_dataset, via: :get, :defaults => { :format => 'json' }
+      match '/v2/dataset_question_data', to: 'v2#dataset_question_data', as: :v2_dataset_question_data, via: :get, :defaults => { :format => 'json' }
       match '/v2/dataset_codebook', to: 'v2#dataset_codebook', as: :v2_dataset_codebook, via: :get, :defaults => { :format => 'json' }
       match '/v2/dataset_analysis', to: 'v2#dataset_analysis', as: :v2_dataset_analysis, via: :get, :defaults => { :format => 'json' }
       match '/v2/time_series_catalog', to: 'v2#time_series_catalog', as: :v2_time_series_catalog, via: :get, :defaults => { :format => 'json' }
