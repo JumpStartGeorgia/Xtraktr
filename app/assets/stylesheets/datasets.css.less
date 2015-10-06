@@ -39,12 +39,23 @@ a.btn-details{
 
 /* style for data download page */
 .download.data-download{
-  ul li{
-    padding-left: 10px;
-    padding-right: 10px;
-    margin-right: 10px !important;
-    &:last-of-type{
-      margin-right: 0;
+  ul li
+  {
+    display: inline-block;
+    padding:0px;
+    div,> a {
+      font:16px 'sourcesans_pro', 'sans-serif';
+      color:#fff;
+      background-color:#E5CC63;
+      padding:8px 12px;
+      min-width:50px;
+      text-align:center;
+      &:hover
+      {
+        background-color:#D8BC48;
+        color:#fff;
+        cursor:pointer;
+      }
     }
   }
 }
