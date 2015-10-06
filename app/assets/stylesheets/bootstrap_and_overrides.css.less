@@ -476,17 +476,18 @@ footer {
               }
               i {
                 width: 16px;
-                height: 17px;
+                height: 20px;
                 display:inline-block;
                 vertical-align: bottom;
                 margin-right:10px;
               }
-              i.menu_owner_dashboard { background:transparent url(/assets/svg/user_menu.svg) no-repeat left center; }
-              i.menu_datasets { background:transparent url(/assets/svg/user_menu.svg) no-repeat -16px center; }
-              i.menu_time_series { background:transparent url(/assets/svg/user_menu.svg) no-repeat -33px center; }
-              i.menu_user_settings { background:transparent url(/assets/svg/user_menu.svg) no-repeat -49px center; }
-              i.menu_admin { background:transparent url(/assets/svg/user_menu.svg) no-repeat -65px center; }              
-              i.menu_organization { background:transparent url(/assets/svg/user_menu.svg) no-repeat -81px center; }                            
+              i.menu_owner_dashboard { background:transparent url(/assets/svg/user_menu.svg) no-repeat -1px center; }
+              i.menu_datasets { background:transparent url(/assets/svg/user_menu.svg) no-repeat -17px center; }
+              i.menu_new_dataset { width:18px; background:transparent url(/assets/svg/user_menu.svg) no-repeat -33px center; }
+              i.menu_time_series { background:transparent url(/assets/svg/user_menu.svg) no-repeat -52px center; }
+              i.menu_user_settings { background:transparent url(/assets/svg/user_menu.svg) no-repeat -68px center; }
+              i.menu_admin { background:transparent url(/assets/svg/user_menu.svg) no-repeat -84px center; }              
+              i.menu_organization { background:transparent url(/assets/svg/user_menu.svg) no-repeat -100px center; }                            
             }
           }
         }
@@ -954,6 +955,9 @@ footer {
     li {
       padding:0;
       margin:0;
+      &.divider {
+        margin: 4px 0px;
+      }
     }
     li a {
       font:13px 'sourcesans_pro', 'sans-serif';
