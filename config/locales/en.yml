@@ -689,7 +689,6 @@ en:
       add_report: Add Report
       remove_report: Remove Report
       download_data: Download Data
-      download_options: Download Options
       back_dashboard: Back to Dashboard
       api_home: API Home
       agreement: Agreement
@@ -778,6 +777,7 @@ en:
       powered_by_xtraktr: Powered By Xtraktr
       powered_by_xtraktr_title: This data was built using the Xtraktr platform. Learn more and add your own data on the Xtraktr website.
       weighted_footnote: 'Applied weight: '
+      download_data_explanation: 'For more in-depth analysis, you can download this dataset in one of the following formats.'
     msgs:
       does_not_exist: You tried to access a page that does not exist.
       not_authorized: You are not authorized to view that page.
@@ -1474,8 +1474,7 @@ en:
         questions: Question Text
         codes: Question Code
         answers: Answer Text
-      jumpto_group: Jump To Group
-      download_data_explanation: 'For more in-depth analysis, you can download this dataset in one of the following formats.'
+      jumpto_group: Jump To Group      
     dashboard_time_series:
       tabs:
         highlights: Highlights

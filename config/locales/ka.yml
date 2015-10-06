@@ -689,7 +689,6 @@ ka:
       add_report: "ანგარიშის დამატება"
       remove_report: "ანგარიშის წაშლა"
       download_data: "მონაცემების ჩამოტვირთვა"
-      download_options: Download Options
       back_dashboard: "მონაცემების მთავარ გვერდზე დაბრუნება"
       api_home: API-ის საწყისი გვერდი
       agreement: "შეთანხმება"
@@ -778,6 +777,7 @@ ka:
       powered_by_xtraktr: "შექმნილია Xtraktr-ით"
       powered_by_xtraktr_title: "მონაცემები შექმნილია Xtraktr-ის პლატფორმის გამოყენებით. გაიგეთ მეტი და დაამატეთ თქვენი მონაცემები Xtraktr-ს. "
       weighted_footnote: "მიკუთვნებული შეწოვნა: "
+      download_data_explanation: 'For more in-depth analysis, you can download this dataset in one of the following formats.'      
     msgs:
       does_not_exist: "თქვენ ცდილობთ ისეთი გვერდის ნახვას, რომელიც არ არსებობს."
       not_authorized: "თქვენ არ გაქვთ ამ გვერდის ნახვის უფლება."
@@ -1475,7 +1475,6 @@ ka:
         codes: "შეკითხვის კოდი"
         answers: "პასუხის ტექსტი"
       jumpto_group: "ჯგუფზე გადასვლა"
-      download_data_explanation: 'For more in-depth analysis, you can download this dataset in one of the following formats.'
     dashboard_time_series:
       tabs:
         highlights: "რჩეული ფაქტები"
