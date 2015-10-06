@@ -10,10 +10,10 @@ String.prototype.upcase = function () {
 var buttons_options = {
     contextButton: {
       symbol: "url(/assets/svg/download.svg)",
+      x: 20,
       theme: {
         "stroke-width": 1,
         stroke: "white",
-        r: 0,
         states: {
           hover: {
             stroke: "white",
