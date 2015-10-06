@@ -548,70 +548,72 @@ private
 
     # get the data for this code
     data = dataset.data_items.code_data(question[:code])
-    # get the data for the weight
-    # - if the weight is from time series, use the provided weight values,
-    #   otherwise get the weight values from the dataset
-    weight_values = []
-    if weight.present?
-      if weight == WEIGHT_TYPE[:time_series] && provided_weight_values.present?
-        puts "==-- using time series weights"
-        weight_values = provided_weight_values
-      elsif weight != WEIGHT_TYPE[:time_series] && weight.class == Hash
-        puts "==-- using dataset weights"
-        weight_values = dataset.data_items.code_data(weight[:code])
+
+    if data.present?
+      # get the data for the weight
+      # - if the weight is from time series, use the provided weight values,
+      #   otherwise get the weight values from the dataset
+      weight_values = []
+      if weight.present?
+        if weight == WEIGHT_TYPE[:time_series] && provided_weight_values.present?
+          puts "==-- using time series weights"
+          weight_values = provided_weight_values
+        elsif weight != WEIGHT_TYPE[:time_series] && weight.class == Hash
+          puts "==-- using dataset weights"
+          weight_values = dataset.data_items.code_data(weight[:code])
+        end
       end
-    end
 
-    # if filter provided, then get data for filter
-    # and then only pull out the code data that matches
-    if filtered_by.present?
-      filter_data = dataset.data_items.code_data(filtered_by[:code]) if filtered_by.present?
-      if filter_data.present?
-        # merge the data and filter
-        # and then pull out the data that has the corresponding filter value
-        merged_data = filter_data.zip(data)
-        merged_weight_values = weight_values.present? ? filter_data.zip(weight_values) : []
+      # if filter provided, then get data for filter
+      # and then only pull out the code data that matches
+      if filtered_by.present?
+        filter_data = dataset.data_items.code_data(filtered_by[:code]) if filtered_by.present?
+        if filter_data.present?
+          # merge the data and filter
+          # and then pull out the data that has the corresponding filter value
+          merged_data = filter_data.zip(data)
+          merged_weight_values = weight_values.present? ? filter_data.zip(weight_values) : []
 
+          # only keep the data that is in the list of question answers
+          # - this is where can_exclude removes the unwanted answers
+          answer_values = question[:answers].map{|x| x[:value]}
+          merged_data.delete_if{|x| !answer_values.include?(x[1])}
+
+          filter_results = nil
+          if with_title
+            filter_results = {title: {html: nil, text: nil}, subtitle: {html: nil, text: nil}, filter_analysis: []}
+
+            filter_results[:title][:html] = dataset_single_analysis_title('html', question, filtered_by)
+            filter_results[:title][:text] = dataset_single_analysis_title('text', question, filtered_by)
+          else
+            filter_results = {filter_analysis: []}
+          end
+
+          filtered_by[:answers].each do |filter_answer|
+            filter_item = {filter_answer_value: filter_answer[:value], filter_answer_text: filter_answer[:text]}
+
+            filter_item[:filter_results] = dataset_single_analysis_processing(question, data.length, merged_data.select{|x| x[0].to_s == filter_answer[:value].to_s}.map{|x| x[1]}, weight_values: merged_weight_values.select{|x| x[0].to_s == filter_answer[:value].to_s}.map{|x| x[1]}, with_title: with_title, filtered_by: filtered_by, filtered_by_answer: filter_answer[:text])
+
+            filter_results[:filter_analysis] << filter_item
+          end
+
+          if with_title
+            # needed to run all anaylsis in order to have all total responses for subtitle
+            filter_results[:subtitle][:html] = dataset_analysis_subtitle_filtered('html', filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis], data.length, weight.present?)
+            filter_results[:subtitle][:text] = dataset_analysis_subtitle_filtered('text', filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis], data.length, weight.present?)
+          end
+
+          return filter_results
+        end
+      else
         # only keep the data that is in the list of question answers
         # - this is where can_exclude removes the unwanted answers
         answer_values = question[:answers].map{|x| x[:value]}
-        merged_data.delete_if{|x| !answer_values.include?(x[1])}
+        data.delete_if{|x| !answer_values.include?(x)}
 
-        filter_results = nil
-        if with_title
-          filter_results = {title: {html: nil, text: nil}, subtitle: {html: nil, text: nil}, filter_analysis: []}
-
-          filter_results[:title][:html] = dataset_single_analysis_title('html', question, filtered_by)
-          filter_results[:title][:text] = dataset_single_analysis_title('text', question, filtered_by)
-        else
-          filter_results = {filter_analysis: []}
-        end
-
-        filtered_by[:answers].each do |filter_answer|
-          filter_item = {filter_answer_value: filter_answer[:value], filter_answer_text: filter_answer[:text]}
-
-          filter_item[:filter_results] = dataset_single_analysis_processing(question, data.length, merged_data.select{|x| x[0].to_s == filter_answer[:value].to_s}.map{|x| x[1]}, weight_values: merged_weight_values.select{|x| x[0].to_s == filter_answer[:value].to_s}.map{|x| x[1]}, with_title: with_title, filtered_by: filtered_by, filtered_by_answer: filter_answer[:text])
-
-          filter_results[:filter_analysis] << filter_item
-        end
-
-        if with_title
-          # needed to run all anaylsis in order to have all total responses for subtitle
-          filter_results[:subtitle][:html] = dataset_analysis_subtitle_filtered('html', filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis], data.length, weight.present?)
-          filter_results[:subtitle][:text] = dataset_analysis_subtitle_filtered('text', filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis], data.length, weight.present?)
-        end
-
-        return filter_results
+        return dataset_single_analysis_processing(question, data.length, data, with_title: with_title, weight_values: weight_values)
       end
-    else
-      # only keep the data that is in the list of question answers
-      # - this is where can_exclude removes the unwanted answers
-      answer_values = question[:answers].map{|x| x[:value]}
-      data.delete_if{|x| !answer_values.include?(x)}
-
-      return dataset_single_analysis_processing(question, data.length, data, with_title: with_title, weight_values: weight_values)
     end
-
   end
 
 
