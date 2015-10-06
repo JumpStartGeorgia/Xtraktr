@@ -80,6 +80,8 @@ function build_highmaps (json) { // build highmap
 
     // remove all existing maps
     $("#container-map").empty();
+    $("#tab-map").addClass("behind_the_scenes");
+
     // remove all existing map links
     $("#jumpto #jumpto-map select").empty();
     $("#jumpto #jumpto-map h4").empty().hide();
@@ -206,6 +208,7 @@ function build_highmaps (json) { // build highmap
     // make sure these are not active
     $("#explore-tabs #nav-map, #explore-content #tab-map").removeClass("active");
   }
+  $("#tab-map").removeClass("behind_the_scenes");
 }
 
 function build_crosstab_charts (json) { // build crosstab charts for each chart item in json
@@ -1100,9 +1103,11 @@ $(document).ready(function () {
 
     // jumpto scrolling
     $("#jumpto").on("change", "select", function () {
-      var href = $(this).find("option:selected").data("href");
+      var href = $(this).find("option:selected").data("href"),
+        container = $(".tab-pane.active > div");
+
       $(".tab-pane.active").animate({
-        scrollTop: Math.abs($(".tab-pane.active > div > div:first").offset().top - $(".tab-pane.active " + href).offset().top)
+        scrollTop: container.find(href).prop("offsetTop") - container.find("> div:first").prop("offsetTop") 
       }, 1500);
 
       // if this is a map item and there are > 1 map items, make sure the other items are set to nil

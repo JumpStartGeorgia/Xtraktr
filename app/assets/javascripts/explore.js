@@ -53,7 +53,7 @@ var buttons_options = {
       ]
     }
   },
-  style1 = {"text-align": "center", "font-family":"sourcesans_pro_l, sans-serif", "font-size": "18px", "color": "#3c4352" },
+  style1 = {"text-align": "center", "font-family":"sourcesans_pro_l, sans-serif", "font-size": "18px", "color": "#3c4352", "padding": "0px 86px"},
   style2 = { "cursor": "pointer", "font-family":"sourcesans_pro_l, sans-serif", "font-size": "12px", "color": "#3C4352", "fontWeight": "normal" };
 
 
