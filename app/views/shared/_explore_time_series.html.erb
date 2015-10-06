@@ -131,11 +131,10 @@
           </div>
         </div>
         <div class="tab-pane" id="tab-download">
-            <div class="download-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cupiditate, ex!</div>
+            <div class="download-text"><%= t('app.common.download_data_explanation') %></div>
             <% if @dataset.urls.present? && @dataset.urls.codebook.present? %>
               <div class="download-wrapper" >
-                <div class="download" data-id="<%= @dataset.id.to_s %>" data-lang="<%= @dataset.current_locale %>" data-download-type="public">                  
-                  <div class="label"><%= t('helpers.links.download_options') %>:</div>
+                <div class="download" data-id="<%= @dataset.id.to_s %>" data-lang="<%= @dataset.current_locale %>" data-download-type="public">                                    
                   <ul>
                     <li><div class="type" data-type='csv' title="<%= t('download_data_options.title.csv') %>" data-placement="bottom"><%= t('download_data_options.text.csv') %></div></li>
                     <li><div class="type" data-type='r' title="<%= t('download_data_options.title.r') %>" data-placement="bottom"><%= t('download_data_options.text.r') %></div></li>
