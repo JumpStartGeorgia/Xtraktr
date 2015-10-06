@@ -141,7 +141,7 @@ class ApplicationController < ActionController::Base
 
       if @time_series.nil?
         flash[:info] =  t('app.msgs.does_not_exist')
-        redirect_to time_series_path(:locale => I18n.locale, :owner_id => @owner)
+        redirect_to time_series_index_path(:locale => I18n.locale, :owner_id => @owner)
         return
       end
     else
