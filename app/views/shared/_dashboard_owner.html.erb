@@ -7,12 +7,14 @@
 <div class="article owner-dashboard">
   <div class="meta">
     <div class="col">
-      <% if false && @owner.avatar.exists? %>
-        <div id="owner-avatar">
-          <%= image_tag @owner.avatar.url(:thumb), alt: @owner.name %>
-        </div>
-      <% end %>
-      <h1><%=@owner.name%></h1>
+      <div class="header">
+        <% if @owner.avatar.exists? %>
+          <div class="avatar">
+            <%= image_tag @owner.avatar.url(:medium), alt: @owner.name, size: "60x60" %>
+          </div>
+        <% end %>
+        <div class="name"><%=@owner.name%></div>
+      </div>
       <div class="info">
         <div class="country">
           <span><%= model_class.human_attribute_name(:country_id) %>:</span>
@@ -46,6 +48,12 @@
             <%= @owner.phone %>
           </div>
         <% end %>
+        <% if @owner.address.present? && !@owner.is_user? %>
+          <div class="address">
+            <span><%= model_class.human_attribute_name(:address) %>:</span>
+            <%= @owner.address %>
+          </div>
+        <% end %>        
         <% if @owner.is_user? && @owner.belongs_to_groups?%>
           <div class="organizations">
             <span><%= model_class.human_attribute_name(:organizations) %>:</span>

@@ -522,14 +522,27 @@
         padding: 0 0 0 30px;
       }
     }
-    h1 {
-      font:16px 'prime_en','sans-serif';
-      color:@d67456;
-      text-transform:uppercase;
-      margin:0;
+    .header {
       padding-bottom:20px;
-      &:lang(ka) {
-        font:16px 'prime_ka','sans-serif';
+      > div {
+        display:inline-block;
+      }
+      .avatar img{
+        border:1px solid #eaeaea;
+        background-color:#fff;
+        width:60px;
+        height:60px;
+      }
+      .name {
+        font:16px 'prime_en','sans-serif';
+        color:@d67456;
+        text-transform:uppercase;
+        margin:0;
+        max-width:220px;
+        padding-left: 12px;
+        &:lang(ka) {
+          font:16px 'prime_ka','sans-serif';
+        }
       }
     }
     .info {
@@ -547,6 +560,7 @@
       &.affiliation { background:transparent url(/assets/icons/affiliation.svg) left 1px no-repeat; }
       &.status { background:transparent url(/assets/icons/status.svg) left 1px no-repeat; }
       &.website_url { background:transparent url(/assets/icons/website_org.svg) left 1px no-repeat; }
+      &.address { background:transparent url(/assets/icons/address.svg) left 1px no-repeat; }
       &.email { background:transparent url(/assets/icons/email.svg) left 1px no-repeat; }
       &.phone { background:transparent url(/assets/icons/phone.svg) left 1px no-repeat; }
       &.organizations { 

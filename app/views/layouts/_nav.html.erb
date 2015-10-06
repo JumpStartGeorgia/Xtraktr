@@ -117,7 +117,7 @@
                     <% if group.group_id != @acting_as_user.id %>
                       <li>
                         <%= link_to datasets_path(owner_id: group.group)  do %>
-                          <i class="menu_admin"></i>
+                          <i class="menu_organization"></i>
                           <%= group.group.name %>
                         <% end %>
                       </li>

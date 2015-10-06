@@ -975,9 +975,7 @@ class Dataset < CustomTranslation
   # - include_questions - flag indicating if should get questions (default = false)
   # - include_group_with_no_items - flag indicating if should include groups even if it has no items, possibly due to other flags (default = false)
   def arranged_items(options={})
-    Rails.logger.debug "@@@@@@@@@@@@@@ dataset arranged_items"
     if self.var_arranged_items.nil? || self.var_arranged_items.empty? || options[:reload_items]
-      Rails.logger.debug "@@@@@@@@@@@@@@ - building, options = #{options}"
       self.var_arranged_items = build_arranged_items(options)
     end
 
@@ -993,14 +991,10 @@ class Dataset < CustomTranslation
   # - include_questions - flag indicating if should get questions (default = false)
   # - include_group_with_no_items - flag indicating if should include groups even if it has no items, possibly due to other flags (default = false)
   def build_arranged_items(options={})
-    Rails.logger.debug "=============== build start; options = #{options}"
     indent = options[:group_id].present? ? '    ' : ''
-    Rails.logger.debug "#{indent}^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-    Rails.logger.debug "#{indent}=============== build start; options = #{options}"
     items = []
 
     if options[:include_groups] == true
-      Rails.logger.debug "#{indent}=============== -- include groups"
       # get the groups
       # - if group id provided, get subgroups in that group
       # - else get main groups
@@ -1016,23 +1010,18 @@ class Dataset < CustomTranslation
       group_options = options.dup
       group_options[:include_groups] = options[:include_subgroups] == true
       groups.each do |group|
-        Rails.logger.debug "#{indent}>>>>>>>>>>>>>>> #{group.title}"
-        Rails.logger.debug "#{indent}=============== checking #{group.title} for subgroups"
-
         # get all items for this group (subgroup/questions)
         group_options[:group_id] = group.id
         group.var_arranged_items = build_arranged_items(group_options)
         # only add the group if it has content
         if group.var_arranged_items.present? || options[:include_group_with_no_items] == true
           items << group
-          Rails.logger.debug "#{indent}>>>>>>>>>>>>>> ----- added #{group.var_arranged_items.length} items for #{group.title}"
         end
 
       end
     end
 
     if options[:include_questions] == true
-      Rails.logger.debug "#{indent}=============== -- include questions"
       # get questions that are assigned to groups
       # - if group_id not provided, then getting questions that are not assigned to group
       items << case options[:question_type]
@@ -1048,9 +1037,6 @@ class Dataset < CustomTranslation
     end
 
     items.flatten!
-
-    Rails.logger.debug "#{indent}=============== there are a total of #{items.length} items added"
-
 
     # sort these items
     # way to sort: sort only items that have sort_order, then add groups with no sort_order, then add questions with no sort_order
@@ -1163,26 +1149,20 @@ class Dataset < CustomTranslation
   # - has_map_adjustable_max_range - flag indicating if question map has adjustable range
   #   - [ [id, name], [id, name], ... ]
   def map_question_to_shape(question_id, shapeset_id, mappings, has_map_adjustable_max_range=false)
-    logger.debug "====== map_question_to_shape start"
     success = false
     # get the question
     q = self.questions.find_by(id: question_id)
 
     if q.present?
-      logger.debug "====== found question"
       # set the shapeset
       q.shapeset_id = shapeset_id
       # set the max range flag
       q.has_map_adjustable_max_range = has_map_adjustable_max_range
 
       # set the shape name for each answer
-      logger.debug "====== #{mappings.length} mappings"
       mappings.each do |mapping|
-        logger.debug "====== mapping = #{mapping}"
         # find answer
         a = q.answers.find_by(id: mapping[0])
-
-        logger.debug "====== found answer = #{a.present?}"
 
         # assign name
         a.shape_name = mapping[1] if a.present?
@@ -1191,8 +1171,6 @@ class Dataset < CustomTranslation
       # save
       success = q.save
     end
-
-    logger.debug "====== success = #{success}"
 
     return success
   end
@@ -1425,7 +1403,6 @@ class Dataset < CustomTranslation
       startRow = Time.now
       # translation_changed = false
       n += 1
-      puts "@@@@@@@@@@@@@@@@@@ processing row #{n}"
 
       if n == 1
         foundAllHeaders = false
@@ -1464,8 +1441,6 @@ class Dataset < CustomTranslation
             msg = I18n.t('mass_uploads_msgs.bad_headers')
           return msg
         end
-
-        puts "%%%%%%%%%% col indexes = #{indexes}"
 
       else
         ########################

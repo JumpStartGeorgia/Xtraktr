@@ -5,14 +5,14 @@ var js = {
 };
 var datatables, h, i, j, k, cacheId;
 
-function update_available_weights(){
+function update_available_weights () { // update the list of avilable weights based on questions that are selected
   // update weight list if weights exist
   if ($('select#weighted_by_code').length > 0){
     var old_value = $('select#weighted_by_code').val();
     var items = [
-      $('select#question_code option:selected').data('weights'),
-      $('select#broken_down_by_code option:selected').data('weights'),
-      $('select#filtered_by_code option:selected').data('weights')
+      $("select#question_code option:selected").data("weights"),
+      $("select#broken_down_by_code option:selected").data("weights"),
+      $("select#filtered_by_code option:selected").data("weights")
     ];
     // remove undefined (undefined exists if a select does not have a value)
     var und_ind = items.indexOf(undefined);
@@ -22,8 +22,8 @@ function update_available_weights(){
       }
       und_ind = items.indexOf(undefined);
     }
-    var matches = items.shift().filter(function(v) {
-      return items.every(function(a) {
+    var matches = items.shift().filter(function (v) {
+      return items.every(function (a) {
         return a.indexOf(v) !== -1;
       });
     });
@@ -34,20 +34,20 @@ function update_available_weights(){
       // show matches, hide rest
 
       // hide all items
-      $('.form-explore-weight-by .bootstrap-select ul.dropdown-menu li').hide();
+      $(".form-explore-weight-by .bootstrap-select ul.dropdown-menu li").hide();
 
       // show matched weights
       var match_length = matches.length;
       var i=0;
       var index;
       for (i;i<match_length;i++){
-        index = $('select#weighted_by_code option[value="' + matches[i] + '"]').index();
+        index = $("select#weighted_by_code option[value='" + matches[i] + "']").index();
         if (index != -1){
-          $('.form-explore-weight-by .bootstrap-select ul.dropdown-menu li:eq(' + index + ')').show();
+          $(".form-explore-weight-by .bootstrap-select ul.dropdown-menu li:eq(" + index + ")").show();
         }
       }
       // show unweighted
-      $('.form-explore-weight-by .bootstrap-select ul.dropdown-menu li:last').show();
+      $(".form-explore-weight-by .bootstrap-select ul.dropdown-menu li:last").show();
 
       // if the old value is no longer an option, select the first one
       if (matches.indexOf(old_value) == -1){
@@ -56,8 +56,8 @@ function update_available_weights(){
 
       $('.form-weight-by').show();
     }else{
-      $('.form-weight-by').hide();
-      $('select#weighted_by_code').selectpicker('val', 'unweighted');
+      $(".form-weight-by").hide();
+      $("select#weighted_by_code").selectpicker("val", "unweighted");
     }
   }
 }
@@ -80,6 +80,8 @@ function build_highmaps (json) { // build highmap
 
     // remove all existing maps
     $("#container-map").empty();
+    $("#tab-map").addClass("behind_the_scenes");
+
     // remove all existing map links
     $("#jumpto #jumpto-map select").empty();
     $("#jumpto #jumpto-map h4").empty().hide();
@@ -206,6 +208,7 @@ function build_highmaps (json) { // build highmap
     // make sure these are not active
     $("#explore-tabs #nav-map, #explore-content #tab-map").removeClass("active");
   }
+  $("#tab-map").removeClass("behind_the_scenes");
 }
 
 function build_crosstab_charts (json) { // build crosstab charts for each chart item in json
@@ -242,8 +245,9 @@ function build_crosstab_charts (json) { // build crosstab charts for each chart 
       select_selector.selectpicker("refresh");
       select_selector.selectpicker("render");
       flag = true;
+
     }
-    else {       // no filters
+    else{       // no filters
       build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart, chart_height, weight_name);
     }
     $("#jumpto #jumpto-chart").toggle(flag);
@@ -255,6 +259,7 @@ function build_pie_charts (json) { // build pie chart for each chart item in jso
   var flag = false;
 
   if (json.chart){
+
     // determine chart height
     var chart_height = pie_chart_height(json);
 
@@ -324,7 +329,7 @@ function build_bar_charts (json) { // build pie chart for each chart item in jso
         jumpto_text += "<option data-href='#chart-" + (i+1) + "'>" + json.filtered_by.text + " = " + json.chart[i].filter_answer_text + "</option>";
       }
 
-      // show jumpto links
+      // show jumpto links    
       select_selector.append(jumpto_text);
       select_selector.val(select_selector.find("option:first").attr("value"));
       select_selector.selectpicker("refresh");
@@ -334,6 +339,7 @@ function build_bar_charts (json) { // build pie chart for each chart item in jso
     else {
       build_bar_chart(json.chart, chart_height, weight_name);       // no filters
     }
+
     // show/hide jumpto
     $("#jumpto #jumpto-chart").toggle(flag);
     $("#jumpto").toggle(flag);
@@ -889,7 +895,7 @@ $(document).ready(function () {
     lang: {
       contextButtonTitle: gon.highcharts_context_title
     },
-    colors: ["#C6CA53", "#7DAA92", "#725752", "#E29A27", "#998746", "#A6D3A0", "#808782", "#B4656F", "#294739", "#1B998B", "#7DAA92", "#BE6E46", "#565264"]
+    colors: ['#00adee', '#e88d42', '#9674a9', '#f3d952', '#6fa187', '#b2a440', '#d95d6a', '#737d91', '#d694e0', '#80b5bc', '#a6c449', '#1b74cc', '#4eccae']
   });
 
 
@@ -1202,7 +1208,7 @@ $(document).ready(function () {
 
       var new_url = [location.protocol, "//", location.host, location.pathname, "?", paramsA.join("&")].join("");
       // // change the browser URL to the given link location
-      if (new_url != window.location.href){ // !is_back_button &&
+      if (new_url != window.location.href){ // !is_back_button && 
         window.history.pushState({path:new_url}, $("title").html(), new_url);
       }
       $(this).tooltip('hide');

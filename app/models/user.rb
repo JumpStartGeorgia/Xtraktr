@@ -102,6 +102,7 @@ class User
   field :description, type: String
   field :phone, type: String
   field :website_url, type: String
+  field :address, type: String
   field :notifications, type: Boolean, default: true
   field :notification_locale, type: String, default: I18n.default_locale.to_s
 
@@ -122,10 +123,12 @@ class User
               :url => "/system/avatars/:id/:style.:extension",
               :styles => {
                 :'thumb' => {:geometry => "160x160>"},
+                :'medium' => {:geometry => "60x60>"},
                 :'small' => {:geometry => "40x40>"}
               },
               :convert_options => {
                 :'thumb' => "-quality 75 -strip",
+                :'medium' => "-quality 75 -strip",
                 :'small' => "-quality 75 -strip"
               },
               :default_url => "/assets/missing/avatar/:style_avatar.png"
@@ -157,7 +160,7 @@ class User
                   :role, :provider, :uid, :nickname, :provider_avatar, :permalink,
                   :first_name, :last_name, :age_group, :country_id, #:residence,
                   :affiliation, :status, :status_other, :description, #:account, :facebook_account,
-                  :phone, :website_url, :is_user, :avatar,
+                  :phone, :website_url, :address, :is_user, :avatar,
                   :notifications, :notification_locale, :api_keys_attributes,# :direct,
                   :members_attributes, :groups_attributes, :email_no_domain
 
