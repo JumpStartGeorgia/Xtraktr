@@ -280,12 +280,12 @@ function build_highmap (shape_question_code, adjustable_max, json_map_set, chart
       useHTML: true,
       style: {"text-align": "center"}
     },
-
     mapNavigation: {
       enabled: true,
       enableMouseWheelZoom: false,
       buttonOptions: {
         verticalAlign: "top",
+        alignTo: "plotBox",
         theme: {
           states: {
             hover: {
