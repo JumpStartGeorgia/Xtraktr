@@ -145,30 +145,3 @@
 </div>
 
 <%= render :partial => 'shared/explore_popups' %>
-      <div class="download" data-id="<%= @dataset.id.to_s %>" data-lang="<%= @dataset.current_locale %>" data-download-type="public">                                    
-                  <ul>
-                    <li><div class="type" data-type='csv' title="<%= t('download_data_options.title.csv') %>" data-placement="bottom"><%= t('download_data_options.text.csv') %></div></li>
-                    <li><div class="type" data-type='r' title="<%= t('download_data_options.title.r') %>" data-placement="bottom"><%= t('download_data_options.text.r') %></div></li>
-                    <li><div class="type" data-type='spss' title="<%= t('download_data_options.title.spss') %>" data-placement="bottom"><%= t('download_data_options.text.spss') %></div></li>
-                    <li><div class="type" data-type='stata' title="<%= t('download_data_options.title.stata') %>" data-placement="bottom"><%= t('download_data_options.text.stata') %></div></li>
-                  </ul>
-                </div>
-              </div>
-            <% end %>
-        </div>        
-      </div>
-
-      <div id="explore-data-loader"></div>
-      <div id="explore-error">
-        <p><%= t('app.msgs.explore_error') %></p>
-      </div>
-      <div id="explore-no-results">
-        <p><%= t('app.msgs.explore_no_data') %></p>
-      </div>
-    </div>
-  <% else %>
-    <p><%= t('.no_data', title: @time_series.title) %></p>
-  <% end %>
-</div>
-
-<%= render :partial => 'shared/explore_popups' %>
