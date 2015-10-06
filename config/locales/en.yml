@@ -724,6 +724,7 @@ en:
       powered_by_xtraktr: Powered By Xtraktr
       powered_by_xtraktr_title: This data was built using the Xtraktr platform. Learn more and add your own data on the Xtraktr website.
       weighted_footnote: 'Applied weight: '
+      download_data_explanation: 'For more in-depth analysis, you can download this dataset in one of the following formats.'
     msgs:
       does_not_exist: You tried to access a page that does not exist.
       not_authorized: You are not authorized to view that page.
@@ -1330,6 +1331,7 @@ en:
         chart: Chart
         table: Table
         details: Details
+        download: Download Data
       map:
         filter: "Filter map by selecting an answer to '%{text}':"
     explore_time_series:
@@ -1360,6 +1362,7 @@ en:
         reports: Reports
         licensing: Legal
         meta: Metadata
+        download: Download Data
       no_methodology: There is no methodology on file for this dataset.
       no_reports: There are no reports on file for this dataset.
       no_highlights: There are no highlights on file for this dataset.
@@ -1368,7 +1371,7 @@ en:
         questions: Question Text
         codes: Question Code
         answers: Answer Text
-      jumpto_group: Jump To Group
+      jumpto_group: Jump To Group      
     dashboard_time_series:
       tabs:
         highlights: Highlights
@@ -1378,6 +1381,7 @@ en:
         licensing: Legal
         datasets: Datasets
         meta: Meta Data
+        download: Download Data
       no_highlights: There are no highlights on file for this time series.
       filter:
         all: All Text
