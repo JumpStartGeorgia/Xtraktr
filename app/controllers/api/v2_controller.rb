@@ -52,7 +52,6 @@ class Api::V2Controller < ApplicationController
 
   # get details about a dataset
   def dataset
-    Rails.logger.debug "================= dataset"
     respond_to do |format|
       format.json {
         render json: Api::V2.dataset(params[:dataset_id], clean_filtered_params(request.filtered_parameters)), serializer: DatasetSerializer, callback: params[:callback]
@@ -60,9 +59,17 @@ class Api::V2Controller < ApplicationController
     end
   end
 
+  # get data for datasets question
+  def dataset_question_data
+    respond_to do |format|
+      format.json {
+        render json: Api::V2.dataset_question_data(params[:dataset_id], params[:question_code], clean_filtered_params(request.filtered_parameters)), callback: params[:callback]
+      }
+    end
+  end
+
   # get codebook for a dataset
   def dataset_codebook
-    Rails.logger.debug "================= dataset codebook"
     respond_to do |format|
       format.json {
         render json: Api::V2.dataset_codebook(params[:dataset_id], clean_filtered_params(request.filtered_parameters)), serializer: DatasetCodebookSerializer, callback: params[:callback]
