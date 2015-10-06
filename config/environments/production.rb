@@ -52,6 +52,7 @@ BootstrapStarter::Application.configure do
   # need this so can use url_helpers in modules
   Rails.application.routes.default_url_options = config.action_mailer.default_url_options
 
+
   # Enable threaded mode
   # config.threadsafe!
 
