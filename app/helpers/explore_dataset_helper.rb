@@ -20,7 +20,7 @@ module ExploreDatasetHelper
         options[:group_type] = group_type.present? ? 'subgroup' : 'group'
         html << generate_explore_dataset_options(item.arranged_items, dataset, options)
 
-      elsif item.class == Question
+      elsif item.class == Question && item.has_code_answers_for_analysis?
         # add question
         html << generate_explore_question_option(item, dataset, skip_content, selected_code, disabled_code, disabled_code2, group_type)
       end

@@ -180,7 +180,13 @@ class Question < CustomTranslation
 
   # create a list of values that are in the data but not an answer value
   def missing_answers
-    (self.dataset.data_items.unique_code_data(self.code) - self.answers.unique_values).delete_if{|x| x.nil?}
+    unique_code_data = self.dataset.data_items.unique_code_data(self.code)
+    unique_values = self.answers.unique_values
+    if unique_code_data.present?
+      return (unique_code_data - unique_values).delete_if{|x| x.nil?}
+    else
+      return nil
+    end
   end
 
 
