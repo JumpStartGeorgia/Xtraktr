@@ -131,6 +131,7 @@ class CustomTranslation
   # - <96> = —
   # - <97> = —
   # - \xa0 = space
+  # - \x85 = ...
   # if string = '' or '\\N' return nil
   def clean_text(str, options={})
     options[:format_code] = false if options[:format_code].nil?
@@ -138,6 +139,7 @@ class CustomTranslation
     double_quote = '"'
     dash = "-"
     space = " "
+    ellipsis = "..."
 
     if !str.nil? && str.length > 0
       x = str.dup.encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
@@ -147,12 +149,13 @@ class CustomTranslation
         x.downcase!
       end
 
-      y = x.gsub("<91>", single_quote).gsub("\\x91", single_quote)
-            .gsub("<92>", single_quote).gsub("\\x92", single_quote)
-            .gsub("<93>", double_quote).gsub("\\x93", double_quote)
-            .gsub("<94>", double_quote).gsub("\\x94", double_quote)
+      y = x.gsub("<91>", single_quote).gsub("\\x91", single_quote).gsub("‘", single_quote)
+            .gsub("<92>", single_quote).gsub("\\x92", single_quote).gsub("’", single_quote)
+            .gsub("<93>", double_quote).gsub("\\x93", double_quote).gsub("“", double_quote)
+            .gsub("<94>", double_quote).gsub("\\x94", double_quote).gsub("”", double_quote)
             .gsub("<96>", dash).gsub("\\x96", dash)
             .gsub("<97>", dash).gsub("\\x97", dash)
+            .gsub("\\x85", ellipsis)
             .gsub("\\xa0", space).chomp.strip
 
       y = nil if y.empty? || y == "\\N"

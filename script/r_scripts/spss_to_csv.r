@@ -62,11 +62,16 @@ data <- read.spss(args[1], use.value.labels=F, to.data.frame=F)
 foreign:::writeForeignSPSS(data, args[2], gsub('.sps$','_bad.sps',args[3]), varnames=names(data))
 #foreign:::writeForeignSPSS(data, args[2], args[3], varnames=attr(data, 'variable.labels'))
 
+table <- attr(data, 'label.table')
+
 # write out the question labels
+# - remove bad characters from questions
+for (i in 1:length(table)){
+  attr(data, 'variable.labels')[i] <- gsub("\x85", '...', gsub("\x91", "'", gsub("\x92", "'", gsub("\x93", '"', gsub("\x94", '"', attr(data, 'variable.labels')[i])))))
+}
 write.csv(attr(data, 'variable.labels'), args[4])
 
 # write out the full list of questions that have answers
-table <- attr(data, 'label.table')
 sink(args[5])
 # for each question
 for (i in 1:length(table)){
