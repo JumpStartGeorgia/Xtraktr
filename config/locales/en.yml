@@ -1372,6 +1372,7 @@ en:
         codes: Question Code
         answers: Answer Text
       jumpto_group: Jump To Group
+      download_data_explanation: 'For more in-depth analysis, you can download this dataset in one of the following formats.'
     dashboard_time_series:
       tabs:
         highlights: Highlights

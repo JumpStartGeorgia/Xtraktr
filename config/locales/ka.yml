@@ -1372,6 +1372,7 @@ ka:
         codes: "შეკითხვის კოდი"
         answers: "პასუხის ტექსტი"
       jumpto_group: "ჯგუფზე გადასვლა"
+      download_data_explanation: 'For more in-depth analysis, you can download this dataset in one of the following formats.'
     dashboard_time_series:
       tabs:
         highlights: "რჩეული ფაქტები"

@@ -286,7 +286,7 @@
     </div>
 
     <div role="tabpanel" class="tab-pane fade" id="download">
-      <div class="download-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cupiditate, ex!</div>
+      <div class="download-text"><%= t('.download_data_explanation') %></div>
       <% if @dataset.urls.present? && @dataset.urls.codebook.present? %>
         <div class="download-wrapper" >
           <div class="download" data-id="<%= @dataset.id.to_s %>" data-lang="<%= @dataset.current_locale %>" data-download-type="public">                  
