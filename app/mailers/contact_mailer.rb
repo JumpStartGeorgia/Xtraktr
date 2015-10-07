@@ -8,8 +8,7 @@ class ContactMailer < ActionMailer::Base
     if @message.subject.present?
       subject << " - #{@message.subject}"
     end
-    mail(:from => "#{message.name} <#{message.email}>",
-      :cc => "#{message.name} <#{message.email}>",
+    mail(:cc => "#{message.name} <#{message.email}>",
       :subject => subject)
   end
 
