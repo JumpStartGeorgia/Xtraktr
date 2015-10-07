@@ -28,6 +28,14 @@ $(document).ready(function (){
 
     function highlights_serial_addition () {
       data["ids"] = group_of_highlight_ids[index].join(",");
+
+      if(typeof gon.language !== "undefined") {
+        data["language"] = gon.language;
+      }
+      else {
+        delete data["language"];
+      }
+
       $.ajax({
         type: "POST",
         url: gon.generate_highlights_url,
