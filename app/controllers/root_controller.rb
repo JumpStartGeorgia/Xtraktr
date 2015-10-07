@@ -371,14 +371,12 @@ class RootController < ApplicationController
     data = {}
 
     if highlights.present?
-      logger.debug "------- #{highlights.length} highlights"
       @highlight_data = []
       highlights.each do |highlight|
         @highlight_data << {visual_type_name: highlight.visual_type_name, data: get_highlight_data(highlight.embed_id, highlight.id, params[:use_admin_link])}
       end
 
       if @highlight_data.map{|x| x[:data]}.flatten.map{|x| x[:error]}.index{|x| x == true}.nil?
-        logger.debug "-------- no errors!"
 
         # save the html data
         data[:html] = render_to_string "root/generate_highlights", formats: [:html], layout: false
@@ -386,7 +384,6 @@ class RootController < ApplicationController
         # save the js data
         data[:js] = {}
         @highlight_data.each do |highlight|
-          logger.debug "------ adding js highlight #{highlight[:data][:highlight_id].to_s}"
           data[:js][highlight[:data][:highlight_id].to_s] = highlight[:data][:js]
         end
 
