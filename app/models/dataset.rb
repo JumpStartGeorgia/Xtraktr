@@ -963,6 +963,13 @@ class Dataset < CustomTranslation
     where(user_id: user_id).count
   end
 
+  # get unique, sorted list of donors
+  # do not get nil or '' donors
+  def self.donors
+    only(:donor).nin(donor: nil).map{|x| x.donor}.select{|x| x.present?}.uniq.sort
+  end
+
+
   ##########################################
 
   # get the groups and questions in sorted order

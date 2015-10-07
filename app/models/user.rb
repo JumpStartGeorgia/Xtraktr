@@ -274,6 +274,17 @@ class User
     return x.present? ? x.notification_locale.to_sym : I18n.default_locale
   end
 
+  # get a list of users that have datasets
+  def self.in_datasets
+    where(:id.in => Dataset.nin(user_id: nil).pluck(:user_id).uniq)
+  end
+
+  # get a list of users time series
+  def self.in_time_series
+    where(:id.in => TimeSeries.nin(user_id: nil).pluck(:user_id).uniq)
+  end
+
+
 
   #############################
 

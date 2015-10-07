@@ -121,7 +121,10 @@ class RootController < ApplicationController
     @datasets = Kaminari.paginate_array(@datasets).page(params[:page]).per(per_page)
 
     @show_title = false
-    @categories = Category.sorted
+    @categories = Category.sorted.in_datasets
+    @countires = Country.not_excluded.sorted.in_datasets
+    @owners = User.in_datasets
+    @donors = Dataset.donors
 
     @css.push('list.css')
     @js.push('list.js')
@@ -221,7 +224,9 @@ class RootController < ApplicationController
     end
 
     @time_series = Kaminari.paginate_array(@time_series).page(params[:page]).per(per_page)
-    @categories = Category.sorted
+    @categories = Category.sorted.in_time_series
+    @countires = Country.not_excluded.sorted.in_time_series
+    @owners = User.in_time_series
 
     @show_title = false
 

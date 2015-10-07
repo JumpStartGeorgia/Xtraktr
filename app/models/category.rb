@@ -60,4 +60,16 @@ class Category
   def self.by_permalink(permalink)
     find_by(permalink: permalink)
   end
+
+
+  # get a list of countries that are used in datasets
+  def self.in_datasets
+    where(:id.in => CategoryMapper.nin(dataset_id: nil).pluck(:category_id).uniq)
+  end
+
+  # get a list of countries that are used in time series
+  def self.in_time_series
+    where(:id.in => CategoryMapper.nin(time_series_id: nil).pluck(:category_id).uniq)
+  end
+
 end

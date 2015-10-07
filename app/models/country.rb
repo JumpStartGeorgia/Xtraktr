@@ -5,7 +5,7 @@ class Country
 
   #############################
 
-  has_many :category_mappers
+  has_many :country_mappers
   has_many :users
 
   #############################
@@ -65,6 +65,16 @@ class Country
 
   def self.not_excluded
     where(exclude: false)
+  end
+
+  # get a list of countries that are used in datasets
+  def self.in_datasets
+    where(:id.in => CountryMapper.nin(dataset_id: nil).pluck(:country_id).uniq)
+  end
+
+  # get a list of countries that are used in time series
+  def self.in_time_series
+    where(:id.in => CountryMapper.nin(time_series_id: nil).pluck(:country_id).uniq)
   end
 
 end
