@@ -268,8 +268,8 @@ footer {
           background-color: @d8bc48;
           .figure { display:table-cell; top:0px; background:@d8bc48 url(/assets/svg/mob/search.svg) no-repeat center / 15px;}
           .search-box { display:table-cell; width: 100%; }
-          input {
 
+          input {
             font:13px 'sourcesans_pro_li', 'sans-serif';
             color:@3c4352;
             border-radius: 0px;
@@ -280,6 +280,15 @@ footer {
             height:100%;
             padding-left:12px;
             margin-left:1px;
+            background-color:#fff;
+          }
+          input.transparent {
+            background-color:transparent;
+          }
+          @media (min-width: 992px) {
+            input.transparent {
+              background-color:#fff;
+            }
           }
         }
       }
