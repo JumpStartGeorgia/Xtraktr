@@ -114,17 +114,20 @@ class RootController < ApplicationController
       @datasets = @datasets.sorted_title
     end    
     # add category
-    if params[:category].present?
-      @datasets = @datasets.categorize(params[:category])
-    end
+    @datasets = @datasets.categorize(params[:category]) if params[:category].present? 
+    @datasets = @datasets.with_country(params[:country]) if params[:country].present?
+    @datasets = @datasets.with_donor(params[:donor]) if params[:donor].present?
+    @datasets = @datasets.with_owner(params[:owner]) if params[:owner].present?
 
     @datasets = Kaminari.paginate_array(@datasets).page(params[:page]).per(per_page)
 
     @show_title = false
-    @categories = Category.sorted.in_datasets
-    @countires = Country.not_excluded.sorted.in_datasets
-    @owners = User.in_datasets
-    @donors = Dataset.donors
+    if !request.xhr?
+      @categories = Category.sorted.in_datasets
+      @countries = Country.not_excluded.sorted.in_datasets
+      @owners = User.in_datasets
+      @donors = Dataset.donors
+    end 
 
     @css.push('list.css')
     @js.push('list.js')
@@ -218,17 +221,19 @@ class RootController < ApplicationController
     else
       @time_series = @time_series.sorted_title
     end
-    # add category
-    if params[:category].present?
-      @time_series = @time_series.categorize(params[:category])
-    end
+    
+    @time_series = @time_series.categorize(params[:category]) if params[:category].present?
+    @time_series = @time_series.with_country(params[:country]) if params[:country].present?
+    @time_series = @time_series.with_owner(params[:owner]) if params[:owner].present?
 
     @time_series = Kaminari.paginate_array(@time_series).page(params[:page]).per(per_page)
-    @categories = Category.sorted.in_time_series
-    @countires = Country.not_excluded.sorted.in_time_series
-    @owners = User.in_time_series
 
     @show_title = false
+    if !request.xhr?
+      @categories = Category.sorted.in_time_series
+      @countries = Country.not_excluded.sorted.in_time_series
+      @owners = User.in_time_series
+    end
 
     @css.push('list.css')
     @js.push('list.js')

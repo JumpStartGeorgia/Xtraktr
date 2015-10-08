@@ -551,7 +551,13 @@ class TimeSeries < CustomTranslation
       all
     end
   end
-
+  def self.with_owner(owner)
+    if User.where(id: owner).present?
+      where(user_id: owner)
+    else
+      all
+    end
+  end
 
 
   #############################

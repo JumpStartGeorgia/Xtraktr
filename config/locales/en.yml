@@ -771,6 +771,9 @@ en:
       share: Share
       codebook_title: Download the Codebook
       all_categories: All Categories
+      all_countries: All Countries
+      all_donors: All Donors
+      all_owners: All Loaders
       private_question: This quesiton is not available to the public
       private_answer: This answer is not available to the public
       mappable_question: This question displays a map
@@ -1016,6 +1019,9 @@ en:
         publish: Date Published Here
       no_data: 'At this time, no datasets have been loaded into the site.'
       no_match: 'Sorry, no datasets match your search request.'
+      filter_by_country: Country
+      filter_by_donor: Donor
+      filter_by_owner: Uploaded By
     explore_data_datasets:
       no_match: 'Sorry, no datasets match your search request.'
     explore_data_show:

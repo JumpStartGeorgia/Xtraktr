@@ -771,6 +771,9 @@ ka:
       share: "გაზიარება"
       codebook_title: "კოდირების დოკუმენტის ჩამოტვირთვა"
       all_categories: "ყველა კატეგორია"
+      all_countries: All Countries
+      all_donors: All Donors
+      all_owners: All Loaders
       private_question: "ეს შეკითხვა არ არის საჯარო"
       private_answer: "პასუხი არ არის საჯაროდ ხელმისაწვდომი"
       mappable_question: "ეს შეკითხვა გამოსახულია რუკაზე"
@@ -1016,6 +1019,9 @@ ka:
         publish: "აქ გამოქვეყნების თარიღი"
       no_data: "ამ მომენტისთვის ვებგვერდზე არ ჩატვირთულა მონაცემთა ცხრილი"
       no_match: "ბოდიში, თქვენი მოთხოვნის შესაბამისი მონაცემები ვერ მოიძებნა"
+      filter_by_country: Country
+      filter_by_donor: Donor
+      filter_by_owner: Uploaded By
     explore_data_datasets:
       no_match: "ბოდიში, თქვენი მოთხოვნის შესაბამისი მონაცემები ვერ მოიძებნა"
     explore_data_show:
