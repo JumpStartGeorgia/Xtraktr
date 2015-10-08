@@ -223,7 +223,14 @@ $(document).ready(function () {
     var t = $(this),
       b = t.closest(".navbar-header").find(".navbar-brand"),
       p = t.closest(".under-box").toggleClass("open");
-    p.animate({"left": (p.hasClass("open") ? "-=" + (p.offset().left - b.width() - 42) : 0) }, 500, function () { });
+    if(p.hasClass("open")) {
+      p.find("input").toggleClass("transparent");
+    }
+    p.animate({"left": (p.hasClass("open") ? "-=" + (p.offset().left - b.width() - 42) : 0) }, 500, function () {
+      if(!p.hasClass("open")) {
+        p.find("input").toggleClass("transparent");
+      }
+    });
   });
 
 

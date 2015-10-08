@@ -821,11 +821,24 @@ class Dataset < CustomTranslation
       all
     end
   end
-
   def self.with_country(country_id)
     country = Country.find(country_id)
     if country.present?
       self.in(id: CountryMapper.where(country_id: country.id).pluck(:dataset_id))
+    else
+      all
+    end
+  end
+  def self.with_donor(donor)
+    if donor.present?
+      where(donor: donor)
+    else
+      all
+    end
+  end
+  def self.with_owner(owner)
+    if User.where(id: owner).present?
+      where(user_id: owner)
     else
       all
     end
