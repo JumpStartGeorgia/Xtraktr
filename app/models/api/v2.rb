@@ -1594,12 +1594,12 @@ private
       datasets.each do |dataset|
         dataset_item = {dataset_label: dataset[:label], dataset_title: dataset[:title]}
         if is_weighted == true
-          dataset_item[:unweighted_count] = 0
-          dataset_item[:weighted_count] = 0
-          dataset_item[:weighted_percent] = 0
+          dataset_item[:unweighted_count] = nil
+          dataset_item[:weighted_count] = nil
+          dataset_item[:weighted_percent] = nil
         else
-          dataset_item[:count] = 0
-          dataset_item[:percent] = 0
+          dataset_item[:count] = nil
+          dataset_item[:percent] = nil
         end
 
         # see if this dataset had results

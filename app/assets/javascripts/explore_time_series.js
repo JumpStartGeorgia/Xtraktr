@@ -258,14 +258,14 @@ function build_datatable(json){
             // percent is the last item and all items before are percent
             if (k < col_header_count-1){
               table += "<td data-order='" + json.results.filter_analysis[h].filter_results.analysis[i].dataset_results[j][key_text] + "'>";
-              table += Highcharts.numberFormat(json.results.filter_analysis[h].filter_results.analysis[i].dataset_results[j][key_text],0);
+              if (json.results.filter_analysis[h].filter_results.analysis[h].dataset_results[i][key_text]){
+                table += Highcharts.numberFormat(json.results.filter_analysis[h].filter_results.analysis[i].dataset_results[j][key_text],0);
+              }
               table += "</td>";
             }else{
               table += "<td>";
               if (json.results.filter_analysis[h].filter_results.analysis[i].dataset_results[j][key_text]){
                 table += json.results.filter_analysis[h].filter_results.analysis[i].dataset_results[j][key_text].toFixed(2);
-              }else{
-                table += '0';
               }
               table += "%"
               table += "</td>";
