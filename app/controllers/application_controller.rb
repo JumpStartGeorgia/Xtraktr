@@ -189,6 +189,7 @@ class ApplicationController < ActionController::Base
     gon.visual_types = Highlight::VISUAL_TYPES
 
     gon.get_highlight_desc_link = highlights_get_description_path
+    gon.language = params[:language] if params[:language].present?
 	end
 
   ################################################
@@ -403,6 +404,7 @@ class ApplicationController < ActionController::Base
 
       output[:visual_type] = options['visual_type']
       output[:chart_type] = options['chart_type']
+      options["language"] = params["language"] if params["language"].present?
 
       if options['dataset_id'].present?
         output[:type] = 'dataset'
