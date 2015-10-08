@@ -1035,6 +1035,8 @@ ka:
         publish: "აქ გამოქვეყნების თარიღი"
       no_data: "ამ მომენტისთვის ვებგვერდზე არ შექმნილა პერიოდული შედარება."
       no_match: "ბოდიში, თქვენი მოთხოვნის შესაბამისი პერიოდული შედარება ვერ მოიძებნა"
+      filter_by_country: Country
+      filter_by_owner: Uploaded By
     explore_data_time_series:
       no_match: "ბოდიში, თქვენი მოთხოვნის შესაბამისი პერიოდული შედარება ვერ მოიძებნა"
     explore_time_series_show:
