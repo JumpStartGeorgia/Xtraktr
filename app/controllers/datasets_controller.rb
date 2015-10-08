@@ -36,7 +36,7 @@ class DatasetsController < ApplicationController
       if params[:language].present? && @dataset.languages.include?(params[:language])
         @dataset.current_locale = params[:language]
       end
-
+      
       @license = PageContent.by_name('license')
 
       @highlights = Highlight.by_dataset(@dataset.id)
@@ -44,7 +44,7 @@ class DatasetsController < ApplicationController
       gon.highlight_show_title = false
       gon.highlight_show_links = false
       gon.highlight_admin_link = true
-      load_highlight_assets(@highlights.map{|x| x.embed_id}) if @highlights.present?
+      load_highlight_assets(@highlights.map{|x| x.embed_id}, @dataset.current_locale) if @highlights.present?
 
       @show_title = false
 

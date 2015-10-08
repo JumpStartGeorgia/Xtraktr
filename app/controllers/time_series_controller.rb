@@ -38,7 +38,7 @@ class TimeSeriesController < ApplicationController
       end
 
       @datasets = Dataset.in(id: @time_series.datasets.dataset_ids)
-
+      
       @license = PageContent.by_name('license')
 
       @highlights = Highlight.by_time_series(@time_series.id)
@@ -46,7 +46,7 @@ class TimeSeriesController < ApplicationController
       gon.highlight_show_title = false
       gon.highlight_show_links = false
       gon.highlight_admin_link = true
-      load_highlight_assets(@highlights.map{|x| x.embed_id}) if @highlights.present?
+      load_highlight_assets(@highlights.map{|x| x.embed_id}, @dataset.current_locale) if @highlights.present?
 
       @show_title = false
 

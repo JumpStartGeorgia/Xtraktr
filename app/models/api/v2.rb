@@ -393,7 +393,7 @@ class Api::V2
     can_exclude = options['can_exclude'].present? && options['can_exclude'].to_s.to_bool == true
     with_title = options['with_title'].present? && options['with_title'].to_s.to_bool == true
     with_chart_data = options['with_chart_data'].present? && options['with_chart_data'].to_s.to_bool == true
-    language = options['language']
+    language = options['language'] if options['language'].present?
     weight = options['weighted_by_code']
 
     time_series = nil
@@ -414,9 +414,11 @@ class Api::V2
     end
 
     # if language provided, set it
-    if language.present? && time_series.languages.include?(language)
+    if language.present? && dataset.languages.include?(language)
       time_series.current_locale = language
     end
+    @language = (I18n.available_locales.include? time_series.current_locale.to_sym) ? time_series.current_locale : I18n.locale.to_s
+
 
     question = time_series.questions.with_code(question_code)
 
