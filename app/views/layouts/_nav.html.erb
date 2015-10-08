@@ -66,14 +66,13 @@
                 <span class="caret"></span>
               </a>
               <ul class="dropdown-menu" role="menu">
-                <% if @acting_as_user.role?(@data_editor_role) %>
+                <% if @acting_as_user.role?(@data_editor_role) %>         
                   <li>
-                    <%= link_to owner_dashboard_path(@acting_as_user) do %>
-                      <i class="menu_owner_dashboard"></i>
-                      <%= t('app.menu.owner_dashboard') %>
+                    <%= link_to new_dataset_path(@acting_as_user) do %>
+                      <i class="menu_new_dataset"></i>
+                      <%= t('app.menu.new_dataset') %>
                     <% end %>
                   </li>
-                  <li role="separator" class="divider"></li>
                   <li>
                     <%= link_to datasets_path(@acting_as_user) do %>
                       <i class="menu_datasets"></i>
@@ -85,14 +84,23 @@
                       <i class="menu_time_series"></i>
                       <%= t('app.menu.time_series') %>
                     <% end %>
-                </li>
+                  </li>  
                 <% end %>
+                <li role="separator" class="divider"></li>
                 <li>
                     <%= link_to settings_path(@acting_as_user)  do %>
                       <i class="menu_user_settings"></i>
                       <%= t('app.menu.settings') %>
                     <% end %>
                 </li>
+                <% if @acting_as_user.role?(@data_editor_role) %>    
+                  <li>
+                    <%= link_to owner_dashboard_path(@acting_as_user) do %>
+                      <i class="menu_owner_dashboard"></i>
+                      <%= t('app.menu.owner_dashboard') %>
+                    <% end %>
+                  </li>
+                <% end %>
                 <% if current_user.role?(@site_admin_role) %>
                   <li role="separator" class="divider"></li>
                   <li>

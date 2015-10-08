@@ -10,10 +10,10 @@ String.prototype.upcase = function () {
 var buttons_options = {
     contextButton: {
       symbol: "url(/assets/svg/download.svg)",
+      x: 20,
       theme: {
         "stroke-width": 1,
         stroke: "white",
-        r: 0,
         states: {
           hover: {
             stroke: "white",
@@ -280,12 +280,12 @@ function build_highmap (shape_question_code, adjustable_max, json_map_set, chart
       useHTML: true,
       style: {"text-align": "center"}
     },
-
     mapNavigation: {
       enabled: true,
       enableMouseWheelZoom: false,
       buttonOptions: {
         verticalAlign: "top",
+        alignTo: "plotBox",
         theme: {
           states: {
             hover: {

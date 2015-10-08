@@ -852,6 +852,7 @@ ka:
       instructions: "ინსტრუქცია"
       home: "მთავარი"
       disclaimer: "შენიშვნა"
+      new_dataset: Add Dataset      
       titles:
         explore_dataset: "მონაცემთა გაცნობა დიაგრამების, რუკებისა და ცხრილების საშუალებით"
         explore_time_series: "პერიოდული შედარებების გაცნობა დიაგრამებისა და ცხრილების საშუალებით"
