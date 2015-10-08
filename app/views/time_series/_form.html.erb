@@ -45,22 +45,6 @@
 
     <div class="row">
       <div class="col-sm-6">
-        <% if @owner.is_user? && @owner.belongs_to_groups?%>
-          <%= f.input :user_id, as: :select, label: t(label_key + 'owner_id'), hint: t(hint_key + 'owner_id'),
-              :collection => @owner.user_group_list.map{|x| [x.name, x.id]}, required: true, include_blank: false,
-              :input_html => {class: 'selectpicker',
-                :'data-live-search' => "true", :'data-size' => "7",:'data-width' => "72%"} %>
-        <% elsif !@owner.is_user? && current_user.groups.in_group?(@owner.id) %>
-          <%= f.input :user_id, as: :select, label: t(label_key + 'owner_id'), hint: t(hint_key + 'owner_id'),
-                :collection => @owner.group_member_list.map{|x| [x.name, x.id]}, required: true, include_blank: false,
-                :input_html => {class: 'selectpicker',
-                  :'data-live-search' => "true", :'data-size' => "7",:'data-width' => "72%"} %>
-        <% end %>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-sm-6">
         <%= f.input :languages, as: :select, hint: t(hint_key + 'languages'),
               :collection => @languages.map{|x| [x.name, x.locale]}, multiple: true, required: true,
               :input_html => {class: 'selectpicker-language-disabled languages', 
