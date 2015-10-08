@@ -452,6 +452,11 @@ class TimeSeries < CustomTranslation
     x.present? ? x.slug : nil
   end
 
+  def self.get_default_language(id)
+    x = only(:default_language).find(id)
+    x.present? ? x.default_language : nil
+  end
+
   def self.get_owner(id)
     x = only(:user_id).find(id)
     x.present? ? x.owner : nil
