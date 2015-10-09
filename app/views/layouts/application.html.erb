@@ -5,8 +5,15 @@
   </head>
   <body>
     <%= render :partial => 'layouts/nav' %>
+
     <div id="page-wrapper" class='wrappers<%=@klass%>'>
       <div class="content">
+          <% if Rails.env.staging? %>
+            <div class="alert alert-warning">
+            The live site is now operational. Please stop using this test site and use the live site from now own.
+            <a href="http://unicef-data.jumpstart.ge/">Click here to go to the live site</a>.
+            </div>
+          <% end %>
 
           <% flash.each do |key, msg| %>
             <div class='message notification <%= notification_translation(key) %>'>
