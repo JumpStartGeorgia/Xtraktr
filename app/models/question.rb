@@ -1,4 +1,13 @@
 class Question < CustomTranslation
+
+  #############################  Constants
+  
+  NUMERIC_DEFAULT_NUMBER_GROUP = 8
+
+  DATA_TYPE_VALUES = { :unknown => 0, :categorical => 1, :numerical => 2 }
+
+  #############################
+
   include Mongoid::Document
 
   #############################
@@ -33,6 +42,10 @@ class Question < CustomTranslation
   field :sort_order, type: Integer
   # indicate that this question is a weight
   field :is_weight, type: Boolean, default: false
+  # question type, possible values = [nil, categorical, numerical]
+  field :data_type, type: Integer, default: 0
+
+  # default value for group size in case data_type is numerical
 
   embedded_in :dataset
 

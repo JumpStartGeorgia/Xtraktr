@@ -252,6 +252,7 @@ module ProcessDataFile
                     # update question to indciate it has answers
                     question.has_code_answers = true
                     question.has_code_answers_for_analysis = true
+                    question.data_type = Question::DATA_TYPE_VALUES[:categorical]
                     # include question in public download
                     question.can_download = true
                   else

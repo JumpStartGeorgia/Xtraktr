@@ -106,5 +106,9 @@ namespace :migration do
     require "./db/migrate/update_download_file_extensions.rb"
   end
 
+  desc "populate the new data_type for all questions"
+  task :update_dataset_questions_data_type => :environment do
+    require "./db/migrate/update_dataset_questions_data_type.rb"
+  end
 
 end
