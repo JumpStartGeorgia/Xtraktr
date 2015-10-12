@@ -1,0 +1,33 @@
+<%- model_class = Question -%>
+<% title t('.title') %>
+
+<% if @dataset.questions.with_code_answers.present? %>
+  <%= form_tag mass_changes_questions_type_dataset_path(@dataset.owner, @dataset), id: 'frm-dataset-exclude-questions', class: 'form-data-loader' do %>
+    <p><%= t('.explanation') %></p>
+    <div class="data-loader-container">
+      <div class="mass-change-submit"><%= submit_tag t('app.buttons.save_settings'), class: 'btn btn-success' %></div>
+      <table id='mass_change' class="table table-striped table-hover table-nonfluid">
+        <thead>
+          <tr>
+            <th><%= model_class.human_attribute_name(:code) %></th>
+            <th><%= model_class.human_attribute_name(:text) %></th>
+            <th class="center"><%= model_class.human_attribute_name(:data_type_categorical) %></th>
+            <th class="center"><%= model_class.human_attribute_name(:data_type_numerical) %></th>
+            <th><%= Numerical.human_attribute_name(:type) %></th>
+            <th><%= Numerical.human_attribute_name(:size) %></th>
+            <th><%= Numerical.human_attribute_name(:min) %></th>
+            <th><%= Numerical.human_attribute_name(:max) %></th>
+            <th><%= t("helpers.links.view") %></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div class="mass-change-submit"><%= submit_tag t('app.buttons.save_settings'), class: 'btn btn-success' %></div>
+      <div class="data-loader"></div>
+    </div>
+  <% end %>
+<% else %>
+  <p>
+    <%= t('.no_questions') %>
+  </p>
+<% end %>

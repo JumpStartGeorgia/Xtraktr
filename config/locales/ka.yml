@@ -872,6 +872,7 @@ ka:
         private_share: "არასაჯარო მონაცემების გაზიარება"
         mass_changes: "მასობრივი ცვლილებები ცხრილის საშუალებით"
         mass_changes_questions: "შეკითხვის მასობრივი ცვლილებები"
+        mass_changes_questions_type: Question Type Mass Changes
         mass_changes_answers: "პასუხების მასობრივი ცვლილებები"
         download_data: "მონაცემების ჩამოტვირთვა"
         groups: "შეკითხვების დაჯგუფება"

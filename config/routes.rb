@@ -113,6 +113,8 @@ BootstrapStarter::Application.routes.draw do
           post 'mass_changes_questions'
           get 'mass_changes_answers'
           post 'mass_changes_answers'
+          get 'mass_changes_questions_type'
+          post 'mass_changes_questions_type'
           get 'mappable'
           get 'mappable_form'
           post 'mappable_form'

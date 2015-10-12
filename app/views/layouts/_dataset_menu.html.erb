@@ -71,6 +71,12 @@
                     <% end %>
                   </li>
                   <li role="menuitem">
+                    <%= link_to mass_changes_questions_type_dataset_path(@owner, dataset) do %>
+                      <span class="glyphicon glyphicon-ok"></span>
+                      <%= t('app.menu.admin_dataset.mass_changes_questions_type') %>
+                    <% end %>
+                  </li>
+                  <li role="menuitem">
                     <%= link_to mass_changes_answers_dataset_path(@owner, dataset) do %>
                       <span class="glyphicon glyphicon-ok"></span>
                       <%= t('app.menu.admin_dataset.mass_changes_answers') %>

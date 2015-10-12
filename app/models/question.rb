@@ -2,8 +2,6 @@ class Question < CustomTranslation
 
   #############################  Constants
   
-  NUMERIC_DEFAULT_NUMBER_GROUP = 8
-
   DATA_TYPE_VALUES = { :unknown => 0, :categorical => 1, :numerical => 2 }
 
   #############################
@@ -84,6 +82,7 @@ class Question < CustomTranslation
     end
 
   end
+  embeds_one :numerical
   accepts_nested_attributes_for :answers, :reject_if => lambda { |x|
     (x[:text_translations].blank? || x[:text_translations].keys.length == 0 || x[:text_translations][x[:text_translations].keys.first].blank?) && x[:value].blank?
     }, :allow_destroy => true

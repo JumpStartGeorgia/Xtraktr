@@ -391,6 +391,62 @@ class DatasetsController < ApplicationController
     end
   end
 
+  # set questions data types [:categorical, :numerical or :unknown]
+  def mass_changes_questions_type
+    respond_to do |format|
+      format.html {
+        @js.push("mass_changes_questions_type.js")
+        @css.push("mass_changes_questions_type.css")
+
+        # create data for datatables (faster to load this way)
+        gon.datatable_json = []
+        @dataset.questions.each_with_index do |question, question_index|
+            data = {
+              code: question.original_code,
+              question: question.text,
+              data_type: question.data_type,
+              nm_type: 0,
+              nm_size: 0,
+              nm_min: 0,
+              nm_max: 0
+            }
+            if question.numerical?
+              data[:type] = question.numerical.type;
+              data[:size] = question.numerical.size;
+              data[:min] = question.numerical.min;
+              data[:max] = question.numerical.max;
+            end
+            gon.datatable_json << data
+        end
+
+        add_dataset_nav_options()
+      }
+      format.js {
+        begin
+          # @dataset.questions.set_data_type(:exclude, { nm_type, nm_size, nm_min, nm_max})          
+
+          # force question callbacks
+          #@dataset.check_questions_for_changes_status = true
+
+          @msg = t('app.msgs.mass_change_question_type_saved')
+          @success = true
+          if !@dataset.save
+            @msg = @dataset.errors.full_messages
+            @success = false
+          end
+        rescue Exception => e
+          @msg = t('app.msgs.mass_change_question_not_saved')
+          @success = false
+
+          # send the error notification
+          ExceptionNotifier::Notifier
+            .exception_notification(request.env, e)
+            .deliver
+        end
+      }
+    end
+  end
+
   # show which questions are assign to shape sets
   def mappable
     @shapeset_count = Shapeset.count

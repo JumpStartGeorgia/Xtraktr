@@ -139,6 +139,9 @@ en:
         can_download: Include Question in Download for Public
         has_map_adjustable_max_range: Max Range of Choropleth Map is Adjustable
         is_weight: This question is a weight
+        data_type: Data Type
+        data_type_categorical: Categorical Data Type
+        data_type_numerical: Numerical Data Type
       answer:
         value: Value
         text: Answer
@@ -149,6 +152,11 @@ en:
         no_questions: There are no questions on file for this dataset.
         sort_order: Sort Order
         shape_name: Name of Shape
+      numerical:
+        type: Number type Integer/Float
+        size: Group size
+        min: Min Value
+        max: Max Value
       group:
         title: Name
         description: Description
@@ -790,7 +798,9 @@ en:
       success_updated: "%{obj} was successfully updated."
       success_deleted: "%{obj} was successfully deleted."
       mass_change_question_saved: "Question settings were saved."
+      mass_change_question_type_saved: "Question data type settings were saved."
       mass_change_question_not_saved: "An error occurred while saving the question settings."
+      mass_change_question_type_not_saved: "An error occurred while saving the question type settings."
       mass_change_answer_saved: "Answer settings were saved."
       mass_change_answer_not_saved: "An error occurred while saving the answer settings."
       sort_saved: "Sort orders were saved."
@@ -872,6 +882,7 @@ en:
         private_share: Share Private Dataset
         mass_changes: Mass Changes Via Spreadsheet
         mass_changes_questions: Question Mass Changes
+        mass_changes_questions_type: Question Type Mass Changes
         mass_changes_answers: Answer Mass Changes
         download_data: Download Data
         groups: Group Questions
@@ -1083,6 +1094,10 @@ en:
       title: "Question Mass Changes"
       explanation: "Use this page to indicate which questions should not be included during analysis and which should be included when the public download's the data."
       no_questions: There are no questions on file for this dataset.
+    mass_changes_questions_type:
+      title: "Question Mass Changes"
+      explanation: "Use this page to indicate which questions should not be included during analysis and which should be included when the public download's the data."
+      no_questions: There are no questions on file for this dataset.      
     mass_changes_answers:
       title: "Answer Mass Changes"
       explanation: "Use this page to indicate which answers should not be included during analysis and which answers can be included during analysis, but have the ability to be excluded (e.g., answers like: Don't Know, Refuse to Answer, etc)."
