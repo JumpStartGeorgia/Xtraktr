@@ -6,10 +6,10 @@ class Numerical
 
   #############################
 
-  field :type, type: Integer, default: 0 # [0: Integer, 1: Decimal]
-  field :size, type: Integer, default: NUMERIC_DEFAULT_NUMBER_GROUP
-  field :min, type: Integer
-  field :max, type: Integer
+  field :type, type: Integer #, default: 0 # [0: Integer, 1: Decimal]
+  field :size, type: Integer #, default: NUMERIC_DEFAULT_NUMBER_GROUP
+  field :min, type: Float
+  field :max, type: Float
 
   embedded_in :question
 
@@ -18,7 +18,7 @@ class Numerical
 
   #############################
   # Validations
-  validates_presence_of :min, :max
+#  validates_presence_of :min, :max
 
   #############################
   ## used when editing time series questions

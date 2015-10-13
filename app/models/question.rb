@@ -82,11 +82,15 @@ class Question < CustomTranslation
     end
 
   end
-  embeds_one :numerical
   accepts_nested_attributes_for :answers, :reject_if => lambda { |x|
     (x[:text_translations].blank? || x[:text_translations].keys.length == 0 || x[:text_translations][x[:text_translations].keys.first].blank?) && x[:value].blank?
     }, :allow_destroy => true
 
+  embeds_one :numerical, class_name: "Numerical", cascade_callbacks: true
+  accepts_nested_attributes_for :numerical, :allow_destroy => true
+  # , :reject_if => lambda { |x|
+  #   (x[:data_type].blank? || x[:data_type] != 2)
+  #   }, :allow_destroy => true
   #############################
   # indexes
   # index ({ :code => 1})
@@ -96,7 +100,7 @@ class Question < CustomTranslation
 
   #############################
   attr_accessible :code, :text, :original_code, :has_code_answers, :has_code_answers_for_analysis, :is_mappable, :has_can_exclude_answers, :has_map_adjustable_max_range,
-      :answers_attributes, :exclude, :text_translations, :notes, :notes_translations, :group_id, :sort_order, :is_weight
+      :answers_attributes, :exclude, :text_translations, :notes, :notes_translations, :group_id, :sort_order, :is_weight, :numerical_attributes
 
   #############################
   # Validations

@@ -249,6 +249,31 @@ class Dataset < CustomTranslation
       end
       return nil
     end
+    # questions types
+    def reflag_questions_type(data)      
+      codes = []
+      if data.keys.length
+        data.keys.each {|t| 
+          codes.push(t.downcase)
+        }
+        where(:code.in => codes).each do |q|
+          code = q[:code]
+          dt = data[code]
+          
+          q["data_type"] = dt[0] = dt[0].to_i
+          if dt[0] == 1
+             q["numerical"] = nil
+          elsif dt[0] == 2
+            if q.numerical.nil?
+              q.build_numerical({ type: dt[1].to_i, size: dt[2].to_i, min: dt[3].to_f, max: dt[4].to_f })
+            else
+              q.numerical.update_attributes({ type: dt[1].to_i, size: dt[2].to_i, min: dt[3].to_f, max: dt[4].to_f })
+            end
+          end
+        end
+      end       
+      return nil      
+    end
 
     # get questions that are mappable
     def mappable
@@ -335,6 +360,26 @@ class Dataset < CustomTranslation
       x = where(:code => code.downcase).first if code.present?
       if x.present?
         return x.data
+      else
+        return nil
+      end
+    end
+
+    # get the formatted_data array for the provided code
+    def code_formatted_data(code)
+      x = where(:code => code.downcase).first if code.present?
+      if x.present?
+        return x.formatted_data
+      else
+        return nil
+      end
+    end
+
+    # get the formatted_data array for the provided code
+    def code_grouped_data(code)
+      x = where(:code => code.downcase).first if code.present?
+      if x.present?
+        return x.grouped_data
       else
         return nil
       end
@@ -781,7 +826,7 @@ class Dataset < CustomTranslation
     if self.changed? && !(self.changed.include?('reset_download_files') && self.reset_download_files == false)
       logger.debug "========== dataset changed!, setting reset_download_files = true"
       self.reset_download_files = true
-    end
+    end     
     return true
   end
 
@@ -982,6 +1027,64 @@ class Dataset < CustomTranslation
     only(:donor).nin(donor: nil).map{|x| x.donor}.select{|x| x.present?}.uniq.sort
   end
 
+
+  def questions_data_recalculate(data)
+     Rails.logger.debug("------------------------------------------questions_data_recalculate--")
+      if data.keys.length
+        data.keys.each {|t| 
+          code = t.downcase
+          dt = data[code]
+          dt[0] = dt[0].to_i
+          items = data_items.with_code(code)
+
+
+           Rails.logger.debug("--------------------------------------------#{items.id} #{dt[0] == 1}")
+          if dt[0] == 1 
+
+            Rails.logger.debug("--------------------------------------------1")
+            items.formatted_data = nil
+            items.grouped_data = nil
+          elsif dt[0] == 2
+            Rails.logger.debug("--------------------------------------------2")
+            num = questions.with_code(code).numerical
+            items.formatted_data = []
+            items.grouped_data = Array.new(num.size, 0)
+            items.data.each {|d|
+              if num.type == 0 
+                tmpD = d.to_i
+              elsif num.type == 1
+                tmpD = d.to_f
+              end
+               Rails.logger.debug("--------------------------------------------#{tmpD}")
+
+              if tmpD >= 0 && !tmpD.nil?
+                items.formatted_data.push(tmpD);
+                index = ((tmpD-num.min)/num.size).floor
+                ++items.grouped_data[index]
+              end
+            }
+          end
+          items.save
+        }
+        
+      #   questions.with_code  
+      #   where(:code.in => codes).each do |q|
+      #     code = q[:code]
+      #     dt = data[code]
+          
+      #     q["data_type"] = dt[0] = dt[0].to_i
+      #     if dt[0] == 1
+      #        q["numerical"] = nil
+      #     elsif dt[0] == 2
+      #       if q.numerical.nil?
+      #         q.build_numerical({ type: dt[1].to_i, size: dt[2].to_i, min: dt[3].to_f, max: dt[4].to_f })
+      #       else
+      #         q.numerical.update_attributes({ type: dt[1].to_i, size: dt[2].to_i, min: dt[3].to_f, max: dt[4].to_f })
+      #       end
+      #     end
+      #   end
+      end       
+  end
 
   ##########################################
 

@@ -9,7 +9,10 @@ $(document).ready(function (){
     }
    });
   var datatable = null,
-    data = {};
+    data = {},
+    form = $("#mass_change_form"),
+    view_chart_path = form.attr("data-view-chart-path"),
+    dataset_id = form.attr("data-id");
 
   // /* Create an array with the values of all the checkboxes in a column */
   // // take from: http://www.datatables.net/examples/plug-ins/dom_sort.html
@@ -22,30 +25,47 @@ $(document).ready(function (){
 
   // catch form submit and pull out all form values from the datatable
   // the post will return will a status message
-  $("form#frm-dataset-exclude-questions").submit( function () {
-    var tmpData = Object.keys(data);
-    if(!tmpData.length) { return; }
-     console.log(tmpData);
-     // get all values and put to tmpData array for question
+  form.submit( function () {
+    var tmpDataKeys = Object.keys(data),
+      tmpData = {};
+
+    if(!tmpDataKeys.length) { return; }
+    var table = $("#mass_change"), tr;
+    tmpDataKeys.forEach(function (d) {
+      tr = table.find("tr#" + d);
+      tmpData[d.toLowerCase()] = [
+        tr.find("[name='question["+d+"][data_type]']:checked").val(),
+        tr.find("[name='question["+d+"][numerical][type]']").val(),
+        tr.find("[name='question["+d+"][numerical][size]']").val(),
+        tr.find("[name='question["+d+"][numerical][min]']").val(),
+        tr.find("[name='question["+d+"][numerical][max]']").val()
+      ];
+    });
+     //console.log(tmpData);
+    //  // get all values and put to tmpData array for question
     $(".data-loader").fadeIn("fast", function (){
       $.ajax({
         type: "POST",
         dataType: "script",
-        data: tmpData,
+        data: { mass_data: tmpData },
         url: $(this).attr("action"),
-        success: function () {
-          //console.log("data", d);
-          // checkboxs.forEach(function (checkbox) {
-          //   tmpData[checkbox].forEach(function (d){
-          //     datatable.find("input." + checkbox + "-input[data-id="+d+"]").attr("data-orig", data[checkbox][d]);
-          //   });
-          //   data[checkbox] = {};
-          }      
+        success: function (d) {
+          tmpDataKeys.forEach(function (d) {
+            tr = table.find("tr#" + d);
+            d = d.toLowerCase();             
+            tr.find("[name='question["+d+"][data_type]']").attr("data-o", tmpData[d][0]);
+            tr.find("[name='question["+d+"][numerical][type]']").attr("data-o", tmpData[d][1]);
+            tr.find("[name='question["+d+"][numerical][size]']").attr("data-o", tmpData[d][2]).attr("value", tmpData[d][2]);
+            tr.find("[name='question["+d+"][numerical][min]']").attr("data-o", tmpData[d][3]).attr("value", tmpData[d][3]);
+            tr.find("[name='question["+d+"][numerical][max]']").attr("data-o", tmpData[d][4]).attr("value", tmpData[d][4]);            
+          });
+          data = {};
+        }
       });
     });
     return false;
   });
-
+ // console.log(gon.datatable_json);
   // datatable
   datatable = $("#mass_change").dataTable({
     "dom": "<'top'fli>t<'bottom'p><'clear'>",
@@ -70,29 +90,29 @@ $(document).ready(function (){
         class: "c"
       },
       {"data":"nm_type",
-        render: function (data, type, full, meta) {
-            return "<select class='conditional' name='question["+full.code +"][numerical][type]' data-o='"+data+"'" + (full.data_type !== 2 ? " disabled" : "") + "><option value='0'" + (data == 0 ? "checked": "") + ">Integer</option>" + 
-            "<option value='1'" + (data == 1 ? "checked": "") + ">Float</option></select>";
+        render: function (data, type, full, meta) {           
+            return "<select class='conditional' name='question["+full.code +"][numerical][type]' data-o='"+data+"'" + (full.data_type !== 2 ? " disabled" : "") + "><option value='0'" + (data == 0 ? "selected": "") + ">Integer</option>" + 
+            "<option value='1'" + (data == "1" ? "selected": "") + ">Float</option></select>";
         },
         class: "c"
       },
       {"data":"nm_size",
-        render: function (data, type, full, meta){
-          return "<input class='conditional r' type='number' value='0' name='numerical_size' data-o='"+data+"'" + (full.data_type !== 2 ? " disabled" : "") + ">";
+        render: function (data, type, full, meta){           
+          return "<input class='conditional r' type='number' value='"+data+"' name='question["+full.code +"][numerical][size]' data-o='"+data+"'" + (full.data_type !== 2 ? " disabled" : "") + ">";
         }
       },
       {"data":"nm_min",
         render: function (data, type, full, meta){
-          return "<input class='conditional r' type='number' value='0' name='numerical_min' data-o='"+data+"'" + (full.data_type !== 2 ? " disabled" : "") + ">";
+          return "<input class='conditional r' type='number' value='"+data+"' name='question["+full.code +"][numerical][min]' data-o='"+data+"'" + (full.data_type !== 2 ? " disabled" : "") + ">";
         }        
       },
       {"data":"nm_max",
         render: function (data, type, full, meta){
-          return "<input class='conditional r' type='number' value='0' name='numerical_max' data-o='"+data+"'" + (full.data_type !== 2 ? " disabled" : "") + ">";
+          return "<input class='conditional r' type='number' value='"+data+"' name='question["+full.code +"][numerical][max]' data-o='"+data+"'" + (full.data_type !== 2 ? " disabled" : "") + ">";
         }
         
       },
-      {"data":null, "defaultContent": "<div class='btn btn-default'>View</div>"}
+      {"data":null, "defaultContent": "<div class='btn btn-default view-chart'>View</div>"}
     ],
     "sorting": [],
     // "order": [[0, "asc"]],
@@ -143,6 +163,20 @@ $(document).ready(function (){
       else
       delete data[id];
     }
+  });
+
+  $(datatable).on("click", ".view-chart", function() {
+     console.log("Viewing some chart");
+      $.ajax({
+        type: "GET",
+        dataType: "json",
+        data: { dataset_id: dataset_id, question_code: $(this).closest("tr").attr("id") },
+        url: view_chart_path,
+        success: function (d) {
+           console.log(d);
+        }
+      });
+     // def self.dataset_question_data(dataset_id, question_code,  options={})
   });
 
   // if data-state = all, select all questions that match the current filter

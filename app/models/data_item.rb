@@ -10,6 +10,8 @@ class DataItem
   field :code, type: String
   field :original_code, type: String
   field :data, type: Array
+  field :formatted_data, type: Array
+  field :grouped_data, type: Array
 
   #############################
 

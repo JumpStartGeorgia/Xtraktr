@@ -400,21 +400,21 @@ class DatasetsController < ApplicationController
 
         # create data for datatables (faster to load this way)
         gon.datatable_json = []
-        @dataset.questions.each_with_index do |question, question_index|
+        @dataset.questions.each do |q|
             data = {
-              code: question.original_code,
-              question: question.text,
-              data_type: question.data_type,
+              code: q.original_code,
+              question: q.text,
+              data_type: q.data_type,
               nm_type: 0,
               nm_size: 0,
               nm_min: 0,
               nm_max: 0
             }
-            if question.numerical?
-              data[:type] = question.numerical.type;
-              data[:size] = question.numerical.size;
-              data[:min] = question.numerical.min;
-              data[:max] = question.numerical.max;
+            if q.numerical?
+              data[:nm_type] = q.numerical.type;
+              data[:nm_size] = q.numerical.size;
+              data[:nm_min] = q.numerical.min;
+              data[:nm_max] = q.numerical.max;
             end
             gon.datatable_json << data
         end
@@ -423,17 +423,19 @@ class DatasetsController < ApplicationController
       }
       format.js {
         begin
-          # @dataset.questions.set_data_type(:exclude, { nm_type, nm_size, nm_min, nm_max})          
-
-          # force question callbacks
-          #@dataset.check_questions_for_changes_status = true
-
           @msg = t('app.msgs.mass_change_question_type_saved')
           @success = true
-          if !@dataset.save
-            @msg = @dataset.errors.full_messages
-            @success = false
-          end
+          if params[:mass_data].present? && params[:mass_data].keys.length > 0
+            @dataset.questions.reflag_questions_type(params[:mass_data])  
+            @dataset.questions_data_recalculate(params[:mass_data])
+            # force question callbacks
+            @dataset.check_questions_for_changes_status = true
+
+            if !@dataset.save
+              @msg = @dataset.errors.full_messages
+              @success = false
+            end
+          end        
         rescue Exception => e
           @msg = t('app.msgs.mass_change_question_not_saved')
           @success = false

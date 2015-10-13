@@ -2,7 +2,7 @@
 <% title t('.title') %>
 
 <% if @dataset.questions.with_code_answers.present? %>
-  <%= form_tag mass_changes_questions_type_dataset_path(@dataset.owner, @dataset), id: 'frm-dataset-exclude-questions', class: 'form-data-loader' do %>
+  <%= form_tag mass_changes_questions_type_dataset_path(@dataset.owner, @dataset), id: 'mass_change_form', class: 'form-data-loader', :"data-view-chart-path" => api_v2_dataset_question_data_path, :"data-id" => @dataset.id do %>
     <p><%= t('.explanation') %></p>
     <div class="data-loader-container">
       <div class="mass-change-submit"><%= submit_tag t('app.buttons.save_settings'), class: 'btn btn-success' %></div>
