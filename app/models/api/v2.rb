@@ -70,11 +70,15 @@ class Api::V2
       dataset.current_locale = language
     end
 
-
+    data_items = dataset.data_items.with_code(question_code)
+    num = question.numerical
     return {
       dataset: { id: dataset.id, title: dataset.title },
       question: create_dataset_question_hash(question),
-      data: dataset.data_items.code_data(question_code) 
+      data: data_items.data,
+      formatted_data: (data_items.formatted_data if question.data_type == 2),
+      grouped_meta_data: ({ type: num.type, size: num.size, min: num.min, max: num.max, step: (num.max - num.min)/num.size } if question.data_type == 2),
+      grouped_data: (data_items.grouped_data if question.data_type == 2)
     }
   end
 

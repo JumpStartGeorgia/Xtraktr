@@ -363,7 +363,7 @@ class Dataset < CustomTranslation
       else
         return nil
       end
-    end
+    end      
 
     # get the formatted_data array for the provided code
     def code_formatted_data(code)
@@ -1027,7 +1027,7 @@ class Dataset < CustomTranslation
     only(:donor).nin(donor: nil).map{|x| x.donor}.select{|x| x.present?}.uniq.sort
   end
 
-
+# TODOHERE
   def questions_data_recalculate(data)
      Rails.logger.debug("------------------------------------------questions_data_recalculate--")
       if data.keys.length
@@ -1045,25 +1045,38 @@ class Dataset < CustomTranslation
             items.formatted_data = nil
             items.grouped_data = nil
           elsif dt[0] == 2
-            Rails.logger.debug("--------------------------------------------2")
-            num = questions.with_code(code).numerical
+            
+            num = questions.with_code(code).numerical            
+            step = (num.max - num.min)/num.size
             items.formatted_data = []
             items.grouped_data = Array.new(num.size, 0)
-            items.data.each {|d|
-              if num.type == 0 
-                tmpD = d.to_i
-              elsif num.type == 1
-                tmpD = d.to_f
-              end
-               Rails.logger.debug("--------------------------------------------#{tmpD}")
+            Rails.logger.debug("--------------------------------------------2-#{num.type}-#{num.size}-#{num.min}-#{num.max}-#{items.data.length}")
 
-              if tmpD >= 0 && !tmpD.nil?
+            items.data.each {|d|
+              if is_numeric?(d)
+                if num.type == 0 
+                  tmpD = d.to_i
+                elsif num.type == 1
+                  tmpD = d.to_f
+                end
+              else 
+                 Rails.logger.debug("--------------------------------------------[error][value is not a number for numerical]")
+              end 
+               # Rails.logger.debug("--------------------------------------------#{tmpD}")
+
+              if tmpD >= num.min && tmpD <= num.max
                 items.formatted_data.push(tmpD);
-                index = ((tmpD-num.min)/num.size).floor
-                ++items.grouped_data[index]
+                index = ((tmpD-num.min)/step).floor
+                #Rails.logger.debug("-------------------------------------------[ok][#{tmpD}][#{index}]")
+                items.grouped_data[index] += 1
+                 #Rails.logger.debug("--------------------------------------------#{items.grouped_data[index]}")
+              else 
+                #Rails.logger.debug("-------------------------------------------[error][is out of range [min][max]][#{tmpD}]")
               end
+              
             }
           end
+          Rails.logger.debug("--------------------------------------------#{items.grouped_data.inspect}")
           items.save
         }
         
@@ -1085,7 +1098,9 @@ class Dataset < CustomTranslation
       #   end
       end       
   end
-
+  def is_numeric?(obj) 
+     obj.to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? false : true
+  end
   ##########################################
 
   # get the groups and questions in sorted order

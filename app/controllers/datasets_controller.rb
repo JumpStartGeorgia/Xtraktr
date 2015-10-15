@@ -395,7 +395,7 @@ class DatasetsController < ApplicationController
   def mass_changes_questions_type
     respond_to do |format|
       format.html {
-        @js.push("mass_changes_questions_type.js")
+        @js.push("mass_changes_questions_type.js", "highcharts.js")
         @css.push("mass_changes_questions_type.css")
 
         # create data for datatables (faster to load this way)

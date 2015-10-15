@@ -11,3 +11,18 @@ td .r {
 .conditional[disabled] {
   opacity:0.5;
 }
+
+.preview {
+  display:none;
+  position:fixed;
+  bottom:10px;
+  left:10px;
+  min-width:400px;
+  min-height:400px;
+  background-color:rgba(140, 140, 140, 0.45);
+  z-index:9999;
+  border:1px solid #cecece;
+}
+.preview.visible {
+  display:block;
+}

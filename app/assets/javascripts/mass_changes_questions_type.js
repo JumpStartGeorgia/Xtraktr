@@ -173,12 +173,122 @@ $(document).ready(function (){
         data: { dataset_id: dataset_id, question_code: $(this).closest("tr").attr("id") },
         url: view_chart_path,
         success: function (d) {
-           console.log(d);
+          preview(d.grouped_meta_data, d.grouped_data);
+          
+  //           $("body").tooltip({
+  //   selector: "[chart]",
+  //   container: "body"
+  // });
+           // console.log(d);
         }
       });
      // def self.dataset_question_data(dataset_id, question_code,  options={})
   });
+  $("body").append("<div id='preview' class='preview'></div>");
+  var preview = function(meta, data) {
+    // data.push(0);
+     console.log(meta,data);
+    var t = $("#preview");
+    t.show();
 
+    var chart = new Highcharts.Chart({
+
+        chart: {
+            renderTo: 'preview',
+            type: 'column',
+            spacingRight: 40,
+            events: {
+              redraw: function(e) {
+                 console.log("sdfsdf");
+                 console.log(e, this);
+              }
+            }
+        },
+
+        xAxis: {
+          // min:1,
+          // max:100,
+          // step:12,
+          labels: {
+            align: "right",
+            x:-10
+          },   
+          startOnTick: true,
+          endOnTick: true,
+          tickAmount: meta.size+2,
+          categories: formatLabel(meta.size, meta.step, meta.min),
+          // tickmarkPlacement: 'between '   
+        },
+        //    labels: {
+        //     items: [{
+        //         html: "My custom label",
+        //         style: {
+        //             top: "100%",
+        //             left: "100%"
+        //         }
+
+        //     }]
+        // },
+        plotOptions: {
+            // series: {
+            //   compare: 'value',
+        
+            // },
+            column: {
+                groupPadding: 0,
+                pointPadding: 0,
+                borderWidth: 0
+            }
+        },
+
+        series: [{
+            data: data
+            // pointStart: meta.start
+        }]
+
+    }, function(e) { 
+                   var label = this.renderer.label('1000000000',
+                    (this.plotBox.x+this.plotBox.width) - 7 , (this.plotBox.y + this.plotBox.height) + 5)
+                        // .attr({
+                        //     // fill: "red",
+                        //     // padding: 10,
+                        //     // r: 5,
+                        //     // zIndex: 8
+                        // })
+                        .css({
+                            color:"#606060",
+                            cursor:"default",
+                            "font-size":"11px",
+                            "fill":"#606060"
+                        })
+                        .add();
+                        this.spacing[1] = 100;
+                        
+                        // console.log(label.width + 10 > 40);
+                        // this.options.chart.spacingRight = label.width + 10 > 40 ? label.width + 10 : 40;
+                        this.isDirtyBox = true;
+                        this.redraw();
+       console.log(this,e,label,this.options.chart.spacingRight);
+
+    });
+// chart.spacing = []
+//    chart.options.chart.spacing = 100;
+//                       // chart.isDirtyBox = true;
+//     chart.redraw();
+    // chart.highcharts().redraw();
+    // chart.xAxis[0].update();
+    function formatLabel(size, step, start) {
+       console.log(size,step,start);
+      var v = [];
+      for(var i = 0; i < size; ++i) {
+         console.log(i);
+          // + (i == size-1 ? (" - " + meta.max) : "")
+        v.push(Math.round(start+i*step));
+      }
+       console.log(v);
+      return v;
+    }
+  }
   // if data-state = all, select all questions that match the current filter
   // - if not filter -> then all questions are selected
   // else, desfelect all questions that match the current filter
