@@ -11,18 +11,55 @@ td .r {
 .conditional[disabled] {
   opacity:0.5;
 }
+#mass_change {
+  tbody tr td {
+    background-color:transparent;
+  }
+  tbody tr:hover {
+    background-color:#efefef;
+  }
+  tbody tr.selected, tbody tr.selected:hover {
+    background-color:rgba(206, 206, 206, 0.35);
+  }
+}
 
 .preview {
   display:none;
-  position:fixed;
-  bottom:10px;
+  position:fixed;  
   left:10px;
   min-width:400px;
   min-height:400px;
-  background-color:rgba(140, 140, 140, 0.45);
+  // background-color:rgba(140, 140, 140, 0.45);
   z-index:9999;
   border:1px solid #cecece;
 }
 .preview.visible {
   display:block;
+}
+.preview .move, .preview .close
+{
+  position:absolute;
+  top:10px;
+  width:15px;
+  height:15px;
+  z-index: 1;
+  opacity:0.6;
+  &:hover {
+    opacity:1;
+  }
+
+}
+.preview .move {
+  right:35px;
+  background:transparent url(svg/move.svg) no-repeat center;
+  &:hover {
+    cursor:move;
+  }
+}
+.preview .close {
+  right:10px;
+  background:transparent url(svg/close.svg) no-repeat -45px center;
+  &:hover {
+    cursor:pointer;
+  }
 }

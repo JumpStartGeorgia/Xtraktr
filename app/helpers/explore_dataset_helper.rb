@@ -23,6 +23,7 @@ module ExploreDatasetHelper
       elsif item.class == Question
         # add question
         if item.has_code_answers_for_analysis?
+          Rails.logger.debug("--------------------------------------------here3")
           html << generate_explore_question_option(item, dataset, skip_content, selected_code, disabled_code, disabled_code2, group_type)
         end
       end
@@ -69,6 +70,7 @@ private
   end
 
   def generate_explore_question_option(question, dataset, skip_content, selected_code, disabled_code, disabled_code2, group_type=nil)
+    puts "--------------------------------------------here5"
     html = ''
     q_text = h question.code_with_text
     selected = selected_code.present? && selected_code == question.code ? 'selected=selected ' : ''
@@ -85,11 +87,15 @@ private
         weights << '"]\''
       end
     end
-
+     Rails.logger.debug("--------------------------------------------here2")
     # if the question is mappable or is excluded, show the icons for this
     content = ''
-    if !skip_content #&& (question.is_mappable? || question.exclude?)
+    if !skip_content || question.has_type? #&& (question.is_mappable? || question.exclude?)
       content << 'data-content=\'<span class="outer-layer"><span class="inner-layer"><span>' + q_text + '</span><span class="pull-right">'
+       Rails.logger.debug("--------------------------------------------here")
+      if question.has_type?
+        content << question_data_type_icon(question.data_type)
+      end
 
       if question.is_mappable?
         content << mappable_question_icon

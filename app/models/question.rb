@@ -220,7 +220,7 @@ class Question < CustomTranslation
   def group
     self.dataset.groups.find(self.group_id) if self.group_id.present?
   end
-
+  
   # create json for groups
   def json_for_groups(selected=false)
     {
@@ -240,6 +240,19 @@ class Question < CustomTranslation
   # get the weight titles for this question
   def weight_titles(ignore_id=nil)
     return weights(ignore_id).map{|x| x.text}
+  end
+  def has_type?
+    return data_type != Question.DATA_TYPE_VALUES[:unknown]
+  end
+  def self.type(t)
+    if t.is_a? Integer 
+      DATA_TYPE_VALUES.keys.each {|x|
+        return x if DATA_TYPE_VALUES[x] == t 
+      }
+    elsif t.is_a? Symbol
+      return DATA_TYPE_VALUES[t] if DATA_TYPE_VALUES.has_key?(t) 
+    end
+    nil
   end
 
 end

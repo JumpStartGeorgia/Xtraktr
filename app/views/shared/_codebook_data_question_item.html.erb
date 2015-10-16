@@ -66,6 +66,25 @@
                   <%= question.original_code %>
                 </div>
               </div>
+              <div>
+                <div class="col k"><%= t('app.common.data_type') %>: </div>
+                <div class="col data-type default-search">
+                  <% if question.data_type == Question::DATA_TYPE_VALUES[:categorical] %>
+                    <img src="/assets/svg/categorical.svg" alt="<%= t('app.common.categorical') %>" title="<%= t('app.common.categorical') %>"/>
+                  <% elsif question.data_type == Question::DATA_TYPE_VALUES[:numerical] %>
+                    <img src="/assets/svg/numerical.svg" alt="<%= t('app.common.numerical') %>" title="<%= t('app.common.numerical') %>"/>
+                    <div class="stats">
+                      <ul>
+                        <li>min</li>
+                        <li>25%</li>
+                        <li>50%</li>
+                        <li>75%</li>
+                        <li>max</li>
+                      </ul>
+                    </div>
+                  <% end %>                  
+                </div>
+              </div>
               <% if question.notes.present? %>
                 <div>
                   <div class="col k"><%= t('app.common.notes') %>: </div>

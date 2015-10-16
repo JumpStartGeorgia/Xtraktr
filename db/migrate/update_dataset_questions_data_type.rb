@@ -6,7 +6,7 @@ puts "DATASETS - updating datasets questions data_type field"
 Dataset.each do |d|
   puts "updating #{d.title}"
   d.questions.each do |q|
-    if q.has_code_answers_for_analysis
+    if q.has_code_answers
       q.data_type = Question::DATA_TYPE_VALUES[:categorical]
     else 
       q.data_type = Question::DATA_TYPE_VALUES[:unknown]

@@ -782,6 +782,9 @@ ka:
       powered_by_xtraktr_title: "მონაცემები შექმნილია Xtraktr-ის პლატფორმის გამოყენებით. გაიგეთ მეტი და დაამატეთ თქვენი მონაცემები Xtraktr-ს. "
       weighted_footnote: "მიკუთვნებული შეწოვნა: "
       download_data_explanation: 'For more in-depth analysis, you can download this dataset in one of the following formats.'      
+      data_type: Data Type
+      categorical: Categorical
+      numerical: Numerical
     msgs:
       does_not_exist: "თქვენ ცდილობთ ისეთი გვერდის ნახვას, რომელიც არ არსებობს."
       not_authorized: "თქვენ არ გაქვთ ამ გვერდის ნახვის უფლება."

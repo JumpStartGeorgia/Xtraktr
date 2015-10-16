@@ -1079,7 +1079,7 @@ class Dataset < CustomTranslation
           Rails.logger.debug("--------------------------------------------#{items.grouped_data.inspect}")
           items.save
         }
-        
+
       #   questions.with_code  
       #   where(:code.in => codes).each do |q|
       #     code = q[:code]
@@ -1098,6 +1098,13 @@ class Dataset < CustomTranslation
       #   end
       end       
   end
+          def self.calculate_percentile(array=[],percentile=0.0)
+  # multiply items in the array by the required percentile 
+  # (e.g. 0.75 for 75th percentile)
+  # round the result up to the next whole number
+  # then subtract one to get the array item we need to return
+  array ? array.sort[((array.length * percentile).ceil)-1] : nil
+end
   def is_numeric?(obj) 
      obj.to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? false : true
   end
