@@ -92,4 +92,11 @@ namespace :migration do
   end
 
 
+  desc "make question can_download true for all questions"
+  task :set_questions_download_true => :environment do
+    require "./db/migrate/set_questions_download_true.rb"
+  end
+
+
+
 end
