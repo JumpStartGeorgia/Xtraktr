@@ -211,7 +211,7 @@ module ProcessDataFile
                   question.has_code_answers = true
                   question.has_code_answers_for_analysis = true
                   # include question in public download
-                  question.can_download = true
+                  # question.can_download = true
                 else
                   puts "******************************"
                   puts "Line #{line_number} of #{file_answers_complete} has a question code #{key} that could not be found in the list of questions."
@@ -253,7 +253,7 @@ module ProcessDataFile
                     question.has_code_answers = true
                     question.has_code_answers_for_analysis = true
                     # include question in public download
-                    question.can_download = true
+                    # question.can_download = true
                   else
                     puts "******************************"
                     puts "Line #{line_number} of #{file_answers_complete} has a question code #{key} that could not be found in the list of questions."

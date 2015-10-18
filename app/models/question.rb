@@ -24,7 +24,7 @@ class Question < CustomTranslation
   # whether or not the range for the map is fixed at 100 or adjusts to max percent
   field :has_map_adjustable_max_range, type: Boolean, default: false
   # whether or not the question should be included in public download
-  field :can_download, type: Boolean, default: false
+  field :can_download, type: Boolean, default: true
   # whether or not the answers has a can exclude
   field :has_can_exclude_answers, type: Boolean, default: false
   # which group this question belongs
