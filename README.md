@@ -12,13 +12,16 @@ Look at the Gemfile for a complete list.
 * Devise 2.0.4
 * Paperclip 3.4.0
 * Unicorn 4.8.3
+* Mongoid 3.1.6
 
 
 ## Requirements
 * git
-* Ruby 2.1.x
-* [rvm](http://rvm.io/) - share gems between applications
+* rbenv - to install and manage Ruby versions
+* Ruby 2.1.2 - only tested on 2.1.2
 * nginx - for staging/production server
+* mongo db - for document database (install instructions [here](https://www.digitalocean.com/community/tutorials/how-to-install-mongodb-on-ubuntu-14-04))
+* R - for processing data files (sudo apt-get install r-base)
 
 Environment variables
 You will need the following [Environment Variables](https://help.ubuntu.com/community/EnvironmentVariables) set. 
@@ -29,9 +32,7 @@ You will need the following [Environment Variables](https://help.ubuntu.com/comm
 * DEV_FACEBOOK_APP_SECRET - This key stores the facebook application secret for development/testing sites. (optional)
 * FACEBOOK_APP_ID - Facebook is one of the options for logging in to the system and you must have an app account created under facebook developers. This key is for use on production sites. This key stores the application id. (optional)
 * FACEBOOK_APP_SECRET - This key stores the facebook application secret for production sites. (optional)
-* UNICEF_ADDTHIS_PROFILE_ID - ID of addthis profile for UNICEF app
 * XTRAKTR_ADDTHIS_PROFILE_ID - ID of addthis profile for Xtraktr app
-* UNICEF_ADDTHIS_PROFILE_ID_DEV - ID of addthis profile for UNICEF staging app
 * XTRAKTR_ADDTHIS_PROFILE_ID_DEV - ID of addthis profile for Xtraktr staging app
 
 After you add environment variables, do the following in order for your application to be able to see the values:
@@ -48,74 +49,7 @@ The application comes ready to work with two language site translations: Georgia
 In order for the application to know which language to use for the site translations, the [/config/routes.rb](/config/routes.rb) file has been updated to force a the locale of the language to be at the beginning of the URL. For instance, /en/admin/users instead of /admin/users. If the URL does not include a language locale, the default locale that is set in [/config/application.rb](/config/application.rb) will be used.  In the routes file, there is a 'scope ":locale"' statement. All routes statements that you enter by hand or that are created when you run rails g scaffold must be contained within this scope statement (all scaffold statements add routes to the top of the file so you will have to move them by hand). 
 
 
-In addition to site translations, you may also need user provided content to be saved in multiple translations. This is where the [gem globalize](https://github.com/globalize/globalize/tree/3-1-stable) comes into play. In essence, this gem uses an additional table to record the translations. For example, if you have a pages table/Page model, then a page_translations table/PageTranslation model will contain all of the translated objects.
 
-This application includes a Page/PageTranslations model as an example of how this gem works. This is a simple model to allow the admin to enter content for an about page that is rendered on the home page. Below is a brief example of all the components:
-
-### Migration File
-If you look at the second migration file at [/db/migration](/db/migration) you will see the migration file for creating the pages and page_translations tables. Also, the [/db/seeds.rb](/db/seeds.rb) file creates a record in these tables. To generate the table and populate it with inital data, run:
-
-````ruby
-rake db:migrate
-rake db:seed
-````
-
-
-### Controllers
-For any controller that is allowing a user to add/edit translated content, please change the controller in the following ways (refer to [/app/controllers/admin/page_controller.rb](/app/controllers/admin/page_controller.rb) for an exmaple):
-
-#### new method
-In order for the user to be able to enter translated content for your model object, you must first build translation objects for each locale that your application is using. So in the new method, after creating the new object, insert the following lines (chaging page to the name of your model):
-
-````ruby
-# create the translation object for however many locales there are
-# so the form will properly create all of the nested form fields
-I18n.available_locales.each do |locale|
-  @page.page_translations.build(:locale => locale.to_s)
-end
-````
-
-#### create method
-As described in the model section above, there is custom code to check if all required translated content is provided for each locale, and if not, it adds the content from another language if it exists. This is where those model methods get called. In the create method, after creating a new model object with the params, insert the following line (changing page to the name of your model):
-
-````ruby
-add_missing_translation_content(@page.page_translations)
-````
-
-This 'add_missing_translation_content' method is located in the application_controller.rb and discussed more below.
-
-#### update method
-Similarly to the create method, the update method also checks for required translated content. But to do this in an update statement requires a few steps.
-* after the find statement, add the following (changing page to the name of your model): 
-
-    ````ruby
-    @page.assign_attributes(params[:page])
-    add_missing_translation_content(@page.page_translations)
-    ````
-* now change the model.update_attributes statement to just a simple save statement (changing page to the name of your model): @page.save
-
-#### application_controller.rb
-In the [application_controller](/app/controllers/application_controller.rb), there is a method called 'add_missing_translation_content' which is called before a model with translations is saved and calls the above model methods to add missing translated content if necessary. This method gets the default locale translations and compares that against all other locales. If the other locales are missing required content, that content is pulled from the default locale translation object.
-
-### Views
-You can look at [/app/views/admin/pages/_form.html.erb](/app/views/admin/pages/_form.html.erb) for an example of how to update the form to work with translations.
-* create_sorted_translation_objects - this method is located in [/app/helpers/application_helper.rb](/app/helpers/application_helper.rb) and simply orders the locales so that the default locale is first and the rest are in alphabetical order.
-* field_for - this is standard Rails syntax for adding form fields in nested objects
-* multilanguage_nested div - there is a div that is wrapped around each language. It will show a header with the language the form fields apply to followed by the form fields. The file [/app/assets/stylesheets/application.css.less](/app/assets/stylesheets/application.css.less) has styles attached to #form-xx, where xx is the abbreviation for the locale so you can style each language to look differently and be easily recognizable. 
-* you must include a hidden field for the local field so Rails knows which language the content applies to
-
-When you are rendering the text on a page, you use the attribute names listed in the translates line at the top of the [/app/models/page.rb](/app/models/page.rb) file. So for example, if we have an @page object, we can get the translated content field by calling @page.content. The globalize gem will look at which locale is currently being used (from the locale in the URL) and then get the content for that locale.
-
-### Final Note
-It is quite possible that you will not need to use the Page model. In that case, feel free to delete the following files:
-* [/app/controllers/admin/pages_controller.rb](/app/controllers/admin/pages_controller.rb)
-* [/app/models/page.rb](/app/models/page.rb)
-* [/app/models/page_translation.rb](/app/models/page_translation.rb)
-* [/app/views/admin/pages](/app/views/admin/pages)
-* [/db/migration/(create_pages.rb)](/db/migration/)
-
-You will also want to remove the link to the admin pages section at [/app/views/admin/index.html](/app/views/admin/index.html).
- 
 ## Authentication
 The application uses [Devise](https://github.com/plataformatec/devise/tree/v2.0) to manage authentication for the system. In [/db/migrate](/db/migrate) is a file that will create the users table that you will need to use Devise authentication. Simply run rake db:migrate to create the table.
 
