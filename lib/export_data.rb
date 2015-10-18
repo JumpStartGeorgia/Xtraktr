@@ -524,6 +524,9 @@ private
       ## create spss file
       puts "- creating spss file"
 
+      # make sure in utf8 mode
+      output << "SET UNICODE ON.\n\n\n\n"
+
       # add title
       output << "TITLE \"#{shorten_text(dataset.title)}\".\n\n"
 
