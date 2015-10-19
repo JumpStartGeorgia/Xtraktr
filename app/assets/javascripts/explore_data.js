@@ -1,9 +1,6 @@
 /*global  $, gon, Highcharts, params */
 /*eslint camelcase: 0, no-underscore-dangle: 0, no-unused-vars: 0, no-undef: 0*/
-var js = {
-  cache: {}
-};
-var datatables, h, i, j, k, cacheId;
+var js = { cache: {} }, datatables, h, i, j, k, cacheId;
 
 function update_available_weights () { // update the list of avilable weights based on questions that are selected
   var select_weight = $("select#weighted_by_code"),
@@ -22,7 +19,6 @@ function update_available_weights () { // update the list of avilable weights ba
         return a.indexOf(v) !== -1;
       });
     });
-
   dropdown_weight.find("li:not(:last)").hide();   // hide all items except unweighted
 
   if (matches.length) { // if there are matches, show the weights that match, and unweighted else hide weight option and set value to unweighted
