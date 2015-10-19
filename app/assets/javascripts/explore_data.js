@@ -6,59 +6,40 @@ var js = {
 var datatables, h, i, j, k, cacheId;
 
 function update_available_weights () { // update the list of avilable weights based on questions that are selected
-  // update weight list if weights exist
-  if ($('select#weighted_by_code').length > 0){
-    var old_value = $('select#weighted_by_code').val();
-    var items = [
+  var select_weight = $("select#weighted_by_code"),
+    dropdown_weight = $(".form-explore-weight-by .bootstrap-select ul.dropdown-menu");
+
+  if (!select_weight.length) { return; }
+
+  var old_value = select_weight.val(),
+    items = [
       $("select#question_code option:selected").data("weights"),
       $("select#broken_down_by_code option:selected").data("weights"),
       $("select#filtered_by_code option:selected").data("weights")
-    ];
-    // remove undefined (undefined exists if a select does not have a value)
-    var und_ind = items.indexOf(undefined);
-    while(und_ind != -1){
-      if (und_ind != -1){
-        items.splice(und_ind, 1);
-      }
-      und_ind = items.indexOf(undefined);
-    }
-    var matches = items.shift().filter(function (v) {
+    ].filter(function (d) { return typeof d !== "undefined"; }),
+    matches = items.shift().filter(function (v) {
       return items.every(function (a) {
         return a.indexOf(v) !== -1;
       });
     });
 
-    // if there are matches, show the weights that match, and unweighted
-    // else hide weight option and set value to unweighted
-    if (matches.length > 0){
-      // show matches, hide rest
+  dropdown_weight.find("li:not(:last)").hide();   // hide all items except unweighted
 
-      // hide all items
-      $(".form-explore-weight-by .bootstrap-select ul.dropdown-menu li").hide();
-
-      // show matched weights
-      var match_length = matches.length;
-      var i=0;
-      var index;
-      for (i;i<match_length;i++){
-        index = $("select#weighted_by_code option[value='" + matches[i] + "']").index();
-        if (index != -1){
-          $(".form-explore-weight-by .bootstrap-select ul.dropdown-menu li:eq(" + index + ")").show();
-        }
+  if (matches.length) { // if there are matches, show the weights that match, and unweighted else hide weight option and set value to unweighted
+    var index;
+    matches.forEach(function (d, i) {
+      index = select_weight.find("option[value='" + d + "']").index();
+      if (index != -1){
+        dropdown_weight.find("li:eq(" + index + ")").show();
       }
-      // show unweighted
-      $(".form-explore-weight-by .bootstrap-select ul.dropdown-menu li:last").show();
+    });
 
-      // if the old value is no longer an option, select the first one
-      if (matches.indexOf(old_value) == -1){
-        $('select#weighted_by_code').selectpicker('val', $('select#weighted_by_code option:first').attr('value'));
-      }
-
-      $('.form-weight-by').show();
-    }else{
-      $(".form-weight-by").hide();
-      $("select#weighted_by_code").selectpicker("val", "unweighted");
+    if (matches.indexOf(old_value) === -1) { // if the old value is no longer an option, select the first one
+      select_weight.selectpicker("val", select_weight.find("option:first").attr("value"));
     }
+  }
+  else{
+    select_weight.selectpicker("val", "unweighted");
   }
 }
 
