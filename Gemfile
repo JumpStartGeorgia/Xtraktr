@@ -46,6 +46,7 @@ gem "zipruby-compat", :require => 'zipruby', :git => "git@github.com:jawspeak/zi
 gem 'roadie', '~> 2.4.3' # apply easy styling to html emails
 gem 'mongoid-slug', '~> 4.0.0' # permalink urls with mongoid
 gem "autoprefixer-rails" # no need to prefix css, it will automatically do it
+gem "rubyXL"
 
 # Gems used only for assets and not required
 # in production environments by default.

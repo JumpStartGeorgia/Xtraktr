@@ -159,33 +159,40 @@ class QuestionsController < ApplicationController
     @dataset = Dataset.by_id_for_user(params[:dataset_id], current_user.id)
 
     if @dataset.present?
-
       add_common_options
 
       if params[:download].present? && ['questions', 'answers'].include?(params[:download].downcase)
-        csv = nil
+        data = nil
         filename = @dataset.title
         if params[:download].downcase == 'questions'
-          csv = @dataset.generate_questions_csv
+          if request.format.csv?
+            data = @dataset.generate_questions_csv
+          elsif request.format.xlsx?
+            data = @dataset.generate_questions_xlsx
+          end
           filename << "-#{I18n.t('questions.mass_changes.questions.header')}"
           filename << "-#{I18n.l Time.now, :format => :file}"
         else #answers
-          csv = @dataset.generate_answers_csv
+          if request.format.csv?
+            data = @dataset.generate_answers_csv
+          elsif request.format.xlsx?
+            data = @dataset.generate_answers_xlsx
+          end
+          
           filename << "-#{I18n.t('questions.mass_changes.answers.header')}"
           filename << "-#{I18n.l Time.now, :format => :file}"
         end
+   
         respond_to do |format|
-          format.csv {
-            send_data csv,
-              :type => 'text/csv; header=present',
-              :disposition => "attachment; filename=#{clean_filename(filename)}.csv"
-          }
+          format.xlsx { send_data data, :filename=> "#{clean_filename(filename)}.xlsx" }
+          format.csv { send_data data, :filename=> "#{clean_filename(filename)}.csv" }
         end
       else
         respond_to do |format|
           format.html
         end
       end
+      
     else
       flash[:info] =  t('app.msgs.does_not_exist')
       redirect_to datasets_path(:locale => I18n.locale)
@@ -197,16 +204,20 @@ class QuestionsController < ApplicationController
     @dataset = Dataset.by_id_for_user(params[:dataset_id], current_user.id)
 
     if @dataset.present?
-      if params[:file].present?
-        msg, counts = @dataset.process_questions_csv(params[:file])
+      file = params[:file]
+      if file.present?
+        content_type = file.content_type
+        if content_type.present? && ["text/csv", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"].include?(content_type)
+          msg, counts = @dataset.process_questions_by_type(params[:file], (content_type == "text/csv" ? :csv : :xlsx))
 
-        # if no msg than there were no errors
-        if msg.blank?
-          logger.debug "****************** total changes: #{counts.map{|k,v| k + ' - ' + v.to_s}.join(', ')}"
-          flash[:success] =  t('app.msgs.mass_upload_questions_success', count: view_context.number_with_delimiter(counts['overall']))
-        else
-          logger.debug "****************** error = #{msg}"
-          flash[:error] =  t('app.msgs.mass_upload_questions_error', msg: msg)
+          # if no msg than there were no errors
+          if msg.blank?
+            #logger.debug "****************** total changes: #{counts.map{|k,v| k + ' - ' + v.to_s}.join(', ')}"
+            flash[:success] =  t('app.msgs.mass_upload_questions_success', count: view_context.number_with_delimiter(counts['overall']))
+          else
+            #logger.debug "****************** error = #{msg}"
+            flash[:error] =  t('app.msgs.mass_upload_questions_error', msg: msg)
+          end
         end
       end
 
@@ -224,15 +235,19 @@ class QuestionsController < ApplicationController
     @dataset = Dataset.by_id_for_user(params[:dataset_id], current_user.id)
 
     if @dataset.present?
-      if params[:file].present?
-        msg, counts = @dataset.process_answers_csv(params[:file])
+      file = params[:file]
+      if file.present?
+        content_type = file.content_type
+        if content_type.present? && ["text/csv", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"].include?(content_type)
+          msg, counts = @dataset.process_answers_by_type(params[:file], (content_type == "text/csv" ? :csv : :xlsx))
 
-        # if no msg than there were no errors
-        if msg.blank?
-          logger.debug "****************** total changes: #{counts.map{|k,v| k + ' - ' + v.to_s}.join(', ')}"
-          flash[:success] =  t('app.msgs.mass_upload_answers_success', count: view_context.number_with_delimiter(counts['overall']))
-        else
-          flash[:error] =  t('app.msgs.mass_upload_answers_error', msg: msg)
+          # if no msg than there were no errors
+          if msg.blank?
+            #logger.debug "****************** total changes: #{counts.map{|k,v| k + ' - ' + v.to_s}.join(', ')}"
+            flash[:success] =  t('app.msgs.mass_upload_answers_success', count: view_context.number_with_delimiter(counts['overall']))
+          else
+            flash[:error] =  t('app.msgs.mass_upload_answers_error', msg: msg)
+          end
         end
       end
 
