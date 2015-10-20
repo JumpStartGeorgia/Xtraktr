@@ -166,7 +166,7 @@ class QuestionsController < ApplicationController
     if file.present?
       content_type = file.content_type
       if content_type.present? && ["text/csv", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"].include?(content_type)
-        msg, counts = @dataset.process_questions_by_type(params[:file], (content_type == "text/csv" ? :csv : :xlsx))
+        msg, counts = @dataset.process_questions_by_type(file, (content_type == "text/csv" ? :csv : :xlsx))
 
         # if no msg than there were no errors
         if msg.blank?
@@ -189,7 +189,7 @@ class QuestionsController < ApplicationController
     if file.present?
       content_type = file.content_type
       if content_type.present? && ["text/csv", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"].include?(content_type)
-        msg, counts = @dataset.process_answers_by_type(params[:file], (content_type == "text/csv" ? :csv : :xlsx))
+        msg, counts = @dataset.process_answers_by_type(file, (content_type == "text/csv" ? :csv : :xlsx))
 
         # if no msg than there were no errors
         if msg.blank?

@@ -16,8 +16,11 @@
       <%= t('.questions.template2', code: t('mongoid.attributes.question.code')) %>
     </p>
     <p style="text-align: center;">
-      <%= link_to t('.questions.template_link'), mass_changes_time_series_questions_path(download: 'questions', format: 'csv'),
+      <label><%= t('.questions.template_link') %></label>
+      <%= link_to "CSV", mass_changes_time_series_questions_path(download: 'questions', format: 'csv'), 
           class: 'btn btn-primary' %>
+      <%= link_to "XLSX", mass_changes_time_series_questions_path(download: 'questions', format: 'xlsx'), 
+          class: 'btn btn-primary' %>          
     </p>
 
     <hr />
@@ -25,7 +28,7 @@
     <h3><%= t('.upload') %></h3>
     <%= form_tag load_mass_changes_questions_time_series_questions_path, multipart: true, class: 'form-data-loader' do %>
       <div class="file input optional form-group">
-        <%= file_field_tag :file, accept: '.csv' %>
+        <%= file_field_tag :file, accept: '.csv, .xlsx' %>
       </div>
 
       <div class="form-group">
@@ -48,8 +51,11 @@
       <%= t('.answers.template2', code: t('mongoid.attributes.question.code'), value: t('mongoid.attributes.answer.value')) %>
     </p>
     <p style="text-align: center;">
-      <%= link_to t('.answers.template_link'), mass_changes_time_series_questions_path(download: 'answers', format: 'csv'),
+      <label><%= t('.answers.template_link') %></label>
+      <%= link_to "CSV", mass_changes_time_series_questions_path(download: 'answers', format: 'csv'), 
           class: 'btn btn-primary' %>
+      <%= link_to "XLSX", mass_changes_time_series_questions_path(download: 'answers', format: 'xlsx'), 
+          class: 'btn btn-primary' %>          
     </p>
 
     <hr />
@@ -57,7 +63,7 @@
     <h3><%= t('.upload') %></h3>
     <%= form_tag load_mass_changes_answers_time_series_questions_path, multipart: true, class: 'form-data-loader' do %>
       <div class="file input optional form-group">
-        <%= file_field_tag :file, accept: '.csv' %>
+        <%= file_field_tag :file, accept: '.csv, .xlsx' %>
       </div>
 
       <div class="form-group">
