@@ -35,7 +35,7 @@
                       </li>
                     <% end %>
                   </ul>
-                <% end %>
+                <% end %>              
               </div>
 
               <div class="col details">
@@ -73,18 +73,24 @@
                     <img src="/assets/svg/categorical.svg" alt="<%= t('app.common.categorical') %>" title="<%= t('app.common.categorical') %>"/>
                   <% elsif question.data_type == Question::DATA_TYPE_VALUES[:numerical] %>
                     <img src="/assets/svg/numerical.svg" alt="<%= t('app.common.numerical') %>" title="<%= t('app.common.numerical') %>"/>
-                    <div class="stats">
-                      <ul>
-                        <li>min</li>
-                        <li>25%</li>
-                        <li>50%</li>
-                        <li>75%</li>
-                        <li>max</li>
-                      </ul>
-                    </div>
                   <% end %>                  
                 </div>
               </div>
+              <% if question.descriptive_statistics.present? %>
+                <div>
+                  <div class="col k"><%= t("app.common.descriptive_statistics.title") %>:</div>
+                  <div class="col descriptive-statistics default-search">
+                    <ul class="list-unstyled">
+                      <% question.descriptive_statistics.keys.each {|st| %>
+                      <li>
+                        <span><%= t("app.common.descriptive_statistics." + st) %>:</span>
+                        <%= question.descriptive_statistics[st].round(2) %>
+                      </li>
+                      <% } %>                    
+                    </ul>         
+                  </div>
+                </div>
+              <% end %>
               <% if question.notes.present? %>
                 <div>
                   <div class="col k"><%= t('app.common.notes') %>: </div>

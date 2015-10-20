@@ -785,6 +785,19 @@ ka:
       data_type: Data Type
       categorical: Categorical
       numerical: Numerical
+      descriptive_statistics:
+        title: Descriptive Statistics
+        number: Total Responses
+        min: Min
+        max: Max
+        mean: Mean
+        median: Median
+        mode: Mode
+        q1: Percentile 25%
+        q2: Percentile 50%
+        q3: Percentile 75%
+        standart_deviation: Standart Deviation
+        variance: Variance      
     msgs:
       does_not_exist: "თქვენ ცდილობთ ისეთი გვერდის ნახვას, რომელიც არ არსებობს."
       not_authorized: "თქვენ არ გაქვთ ამ გვერდის ნახვის უფლება."

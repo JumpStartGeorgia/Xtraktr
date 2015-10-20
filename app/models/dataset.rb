@@ -1029,7 +1029,7 @@ class Dataset < CustomTranslation
 
 # TODOHERE
   def questions_data_recalculate(data)
-     Rails.logger.debug("------------------------------------------questions_data_recalculate--")
+      require 'descriptive_statistics/safe'
       if data.keys.length
         data.keys.each {|t| 
           code = t.downcase
@@ -1037,65 +1037,54 @@ class Dataset < CustomTranslation
           dt[0] = dt[0].to_i
           items = data_items.with_code(code)
 
-
-           Rails.logger.debug("--------------------------------------------#{items.id} #{dt[0] == 1}")
           if dt[0] == 1 
-
-            Rails.logger.debug("--------------------------------------------1")
             items.formatted_data = nil
             items.grouped_data = nil
           elsif dt[0] == 2
-            
-            num = questions.with_code(code).numerical            
+            question = questions.with_code(code)
+            predefined_answers = question.answers.map { |f| f.value }
+            num = question.numerical            
             step = (num.max - num.min)/num.size
             items.formatted_data = []
             items.grouped_data = Array.new(num.size, 0)
-            Rails.logger.debug("--------------------------------------------2-#{num.type}-#{num.size}-#{num.min}-#{num.max}-#{items.data.length}")
 
+            #formatted and grouped data calculation
             items.data.each {|d|
-              if is_numeric?(d)
+              if is_numeric?(d) && !predefined_answers.include?(d)
                 if num.type == 0 
                   tmpD = d.to_i
                 elsif num.type == 1
                   tmpD = d.to_f
                 end
-              else 
-                 Rails.logger.debug("--------------------------------------------[error][value is not a number for numerical]")
-              end 
-               # Rails.logger.debug("--------------------------------------------#{tmpD}")
 
-              if tmpD >= num.min && tmpD <= num.max
-                items.formatted_data.push(tmpD);
-                index = ((tmpD-num.min)/step).floor
-                #Rails.logger.debug("-------------------------------------------[ok][#{tmpD}][#{index}]")
-                items.grouped_data[index] += 1
-                 #Rails.logger.debug("--------------------------------------------#{items.grouped_data[index]}")
-              else 
-                #Rails.logger.debug("-------------------------------------------[error][is out of range [min][max]][#{tmpD}]")
-              end
+                if tmpD >= num.min && tmpD <= num.max
+                  items.formatted_data.push(tmpD);
+                  index = ((tmpD-num.min)/step).floor
+                  items.grouped_data[index] += 1
+                else 
+                end
+             end 
               
+              # descriptive statistics
+              dt = items.formatted_data
+              dt.extend(DescriptiveStatistics)
+              question.descriptive_statistics = {
+                :number => dt.number,
+                :min => dt.min,
+                :max => dt.max,
+                :mean => dt.mean,
+                :median => dt.median,
+                :mode => dt.mode,
+                :q1 => dt.percentile(25),
+                :q2 => dt.percentile(50),
+                :q3 => dt.percentile(75),
+                :variance => dt.variance,
+                :standard_deviation => dt.standard_deviation
+              }
             }
           end
-          Rails.logger.debug("--------------------------------------------#{items.grouped_data.inspect}")
           items.save
         }
-
-      #   questions.with_code  
-      #   where(:code.in => codes).each do |q|
-      #     code = q[:code]
-      #     dt = data[code]
-          
-      #     q["data_type"] = dt[0] = dt[0].to_i
-      #     if dt[0] == 1
-      #        q["numerical"] = nil
-      #     elsif dt[0] == 2
-      #       if q.numerical.nil?
-      #         q.build_numerical({ type: dt[1].to_i, size: dt[2].to_i, min: dt[3].to_f, max: dt[4].to_f })
-      #       else
-      #         q.numerical.update_attributes({ type: dt[1].to_i, size: dt[2].to_i, min: dt[3].to_f, max: dt[4].to_f })
-      #       end
-      #     end
-      #   end
       end       
   end
           def self.calculate_percentile(array=[],percentile=0.0)

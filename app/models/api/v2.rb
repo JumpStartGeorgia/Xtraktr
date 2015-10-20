@@ -49,7 +49,7 @@ class Api::V2
     if dataset_id.nil? || question_code.nil?
       return {errors: [{status: '404', detail: I18n.t('api.msgs.missing_required_params') }]}
     end
-
+    
     # get options
     language = options['language'].present? ? options['language'].downcase : nil
 

@@ -42,8 +42,8 @@ class Question < CustomTranslation
   field :is_weight, type: Boolean, default: false
   # question type, possible values = [nil, categorical, numerical]
   field :data_type, type: Integer, default: 0
-
-  # default value for group size in case data_type is numerical
+  # statistics on numerical data_type
+  field :descriptive_statistics, type: Object  
 
   embedded_in :dataset
 

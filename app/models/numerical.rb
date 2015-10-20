@@ -5,7 +5,7 @@ class Numerical
   include Mongoid::Document
 
   #############################
-
+  field :title, type: String, localize: true
   field :type, type: Integer #, default: 0 # [0: Integer, 1: Decimal]
   field :size, type: Integer #, default: NUMERIC_DEFAULT_NUMBER_GROUP
   field :min, type: Float
@@ -18,7 +18,7 @@ class Numerical
 
   #############################
   # Validations
-#  validates_presence_of :min, :max
+  validates_presence_of :type, :size, :min, :max
 
   #############################
   ## used when editing time series questions

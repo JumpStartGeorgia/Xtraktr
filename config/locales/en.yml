@@ -793,6 +793,19 @@ en:
       data_type: Data Type
       categorical: Categorical
       numerical: Numerical
+      descriptive_statistics:
+        title: Descriptive Statistics
+        number: Total Responses
+        min: Min
+        max: Max
+        mean: Mean
+        median: Median
+        mode: Mode
+        q1: Percentile 25%
+        q2: Percentile 50%
+        q3: Percentile 75%
+        standart_deviation: Standart Deviation
+        variance: Variance
     msgs:
       does_not_exist: You tried to access a page that does not exist.
       not_authorized: You are not authorized to view that page.

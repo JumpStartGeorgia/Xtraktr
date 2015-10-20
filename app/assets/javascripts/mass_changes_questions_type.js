@@ -167,7 +167,6 @@ $(document).ready(function (){
       code_meta.push((code_meta[4] - code_meta[3])/code_meta[2]);
 
     if(data_type === 2) {
-       console.log("here");
       if(cache.hasOwnProperty(code)) {
         var cached_code = cache[code];
         if(cached_code.grouped_data.hasOwnProperty(sub_id))
@@ -189,15 +188,16 @@ $(document).ready(function (){
           url: view_chart_path,
           success: function (d) {
             cache[code] = d;
-            var tmpA = [];
-            if(cache[code].grouped_data !== null) {
-              tmpA = cache[code].grouped_data.slice();
+            var tmpA = [],
+              gr = cache[code].grouped_data;
+            if(typeof gr !== "undefined" && gr !== null) {
+              tmpA = gr.slice();
             }
             else {
               tmpA = get_grouped_data(code_meta, cache[code].data);
             }
-            cache[code].grouped_data = {};
-            cache[code].grouped_data[sub_id] = tmpA;
+            gr = {};
+            gr[sub_id] = tmpA;
             _d = { meta: code_meta, data: tmpA };
             render_chart();
           }
@@ -215,6 +215,7 @@ $(document).ready(function (){
         newCode = true;
         preview_code = code;
       }
+       console.log(_d);
       preview(_d.meta, _d.data, newCode);
     }
   });
