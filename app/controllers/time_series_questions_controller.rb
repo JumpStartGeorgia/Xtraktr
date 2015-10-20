@@ -217,9 +217,7 @@ class TimeSeriesQuestionsController < ApplicationController
     @time_series = TimeSeries.by_id_for_user(params[:time_series_id], current_user.id)
 
     if @time_series.present?
-
       add_common_options
-
       if params[:download].present? && ['questions', 'answers'].include?(params[:download].downcase)
         csv = nil
         filename = @time_series.title
@@ -276,7 +274,6 @@ class TimeSeriesQuestionsController < ApplicationController
       return
     end
   end
-
 
   def load_mass_changes_answers
     @time_series = TimeSeries.by_id_for_user(params[:time_series_id], current_user.id)
