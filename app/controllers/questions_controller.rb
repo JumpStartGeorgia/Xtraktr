@@ -167,6 +167,7 @@ class QuestionsController < ApplicationController
       content_type = file.content_type
       if content_type.present? && ["text/csv", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"].include?(content_type)
         msg, counts = @dataset.process_questions_by_type(file, (content_type == "text/csv" ? :csv : :xlsx))
+         Rails.logger.debug("--------------------------------------------here8")
 
         # if no msg than there were no errors
         if msg.blank?
@@ -182,7 +183,17 @@ class QuestionsController < ApplicationController
     redirect_to mass_changes_dataset_questions_path
     return
   end
+# "- download works great
+# - upload has problem in that the Georgian language is lost even though it is in the spreadsheet.
+# Check code and if all looks good, check the clean_string method in the custom_translations method. This might be stripping out the Georgian text. See if when parsing the file if it is possible to add encoding attribute and set it to utf8. If nothing else seems to fix it, create a new clean_string method (clean_string_for_spreadsheets) and only use it in the upload methods. In this method, for now, do nothing. Just return the string that was passed in. If that works, go with it for now. Dealing with dataset and spreadsheet files is a pain when it comes to encoding and I am still trying to get it working nicely.
 
+# Small changes:
+# - make Download Question/Answer Template line left aligned
+# - add the following text as a new paragraph to the template explanation text:
+#  ???????? If you are using Excel, please use the XLSX format for Excel cannot read non-latin characters in CSV files.
+
+# Time series:
+# - time series questions only have code answers, so just get all answers"
 
   def load_mass_changes_answers
     file = params[:file]

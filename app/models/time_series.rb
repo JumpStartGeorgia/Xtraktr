@@ -949,7 +949,7 @@ class TimeSeries < CustomTranslation
   # read in the csv and update the question text as necessary
   def process_questions_by_type(file, type)
     start = Time.now
-    infile = file.read
+    infile = file.read.force_encoding('utf-8')
     n, msg = 0, ""
     locales = self.languages_sorted
     orig_locale = I18n.locale
@@ -1020,7 +1020,7 @@ class TimeSeries < CustomTranslation
           I18n.locale = locale.to_sym
           if cells[indexes[locale]].present? && question.text != cells[indexes[locale]].strip
             #puts "- setting text for #{locale}"
-            question.text = clean_string(cells[indexes[locale]].strip)
+            question.text = clean_string_for_uploads(cells[indexes[locale]].strip)
             counts[locale] += 1
             locale_found = true
           end
@@ -1051,7 +1051,7 @@ class TimeSeries < CustomTranslation
   # read in the csv and update the answer text as necessary
   def process_answers_by_type(file, type)
     start = Time.now
-    infile = file.read
+    infile = file.read.force_encoding('utf-8')
     n, msg = 0, ""
     locales = self.languages_sorted
     last_question_code = nil
@@ -1071,7 +1071,7 @@ class TimeSeries < CustomTranslation
 
     rows = []
     if type == :csv
-      rows = CSV.parse(infile.force_encoding('utf-8'))
+      rows = CSV.parse(infile)
     elsif type == :xlsx
       workbook = RubyXL::Parser.parse_buffer(infile)
       rows = workbook[0]
@@ -1155,7 +1155,7 @@ class TimeSeries < CustomTranslation
           if cells[indexes[locale]].present? && answer.text != cells[indexes[locale]].strip
             puts "- setting text for #{locale}"
             # question.text_will_change!
-            answer.text = clean_string(cells[indexes[locale]].strip)
+            answer.text = clean_string_for_uploads(cells[indexes[locale]].strip)
             counts[locale] += 1
             locale_found = true
           end

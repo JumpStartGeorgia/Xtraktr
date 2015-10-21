@@ -165,4 +165,30 @@ class CustomTranslation
       return str
     end
   end
+  def clean_string_for_uploads(str)
+    if str.class == String && str.present?
+
+       Rails.logger.debug("-------------------------------------------567675-#{str}")
+      x = str.dup.chomp.strip
+      replacements = [
+        [ "'", ["<91>", "\\x91", "‘", "<92>", "\\x92", "’" ] ],
+        [ '"', ["<93>", "\\x93", "“", "<94>", "\\x94", "”" ] ],
+        [ '-', ["<96>", "\\x96", "<97>", "\\x97"] ],
+        [ "...", ["\\x85"] ],
+        [ " ", ["\\xa0"] ]
+      ]
+      replacements.each {|r| 
+        with = r[0]
+        r[1].each{|what|          
+          x.gsub!(what, with)
+        }
+      }
+      
+     
+      x = nil if x.empty? || x == "\\N"
+      return x
+    else
+      return str
+    end
+  end
 end
