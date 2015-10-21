@@ -978,68 +978,62 @@ $(document).ready(function () {
 
     // if option changes, make sure the select option is not available in the other lists
     $("select.selectpicker").change(function (){
-      var val = $(this).val(),
-        index = $(this).find("option[value='" + val + "']").index();
+      var t = $(this),
+        id = t.attr("id"),
+        val = t.val(),
+        option = t.find("option[value='" + val + "']"),
+        index = option.index(),
+        type = +option.attr("data-type"),
+        select_question_code = $("select#question_code"),
+        q = select_question_code.val(),
+        q_index = select_question_code.find("option[value='" + q + "']").index(),
+        select_broken_down = $("select#broken_down_by_code"),
+        bdb = select_broken_down.val(),
+        bdb_index = select_broken_down.find("option[value='" + bdb + "']").index(),
+        select_filter_by = $("select#filtered_by_code");
 
-      // if this is question, update broken down by
-      // else, vice-versa
-      if ($(this).attr("id") == "question_code"){
-        // update broken down by list
+      // if this is question, update broken down by else vice-versa
+      if(id == "question_code") { // update broken down by list
+        var broken_by_menu = $(".form-explore-broken-by .bootstrap-select ul.dropdown-menu");
+        broken_by_menu.find("li").hide();
 
-        // turn on all hidden items
-        $(".form-explore-broken-by .bootstrap-select ul.dropdown-menu li[style*='display: none']").show();
+        //broken_by_menu.find("li[style*='display: none']").show(); // turn on all hidden items
+        
+        
+        $(".form-explore-filter-by").toggle(type==1);
+        // turn on all items of same data_type
+        select_broken_down.find("option[data-type='"+type+"']").each(function (i, d) {
+          broken_by_menu.find("li[data-original-index='" + ($(d).index()) + "']").show();
+        });
+        broken_by_menu.find("li:eq(" + (index+1) + ")").hide(); // turn on off this item
 
-        // turn on off this item
-        $(".form-explore-broken-by .bootstrap-select ul.dropdown-menu li:eq(" + (index+1) + ")").hide();
-
-      }else if ($(this).attr("id") == "broken_down_by_code"){
-        // update question list
-
-        // turn on all hidden items
-        $(".form-explore-question-code .bootstrap-select ul.dropdown-menu li[style*='display: none']").show();
-
-        // turn on off this item
-        $(".form-explore-question-code .bootstrap-select ul.dropdown-menu li:eq(" + (index-1) + ")").hide();
-
-        // if val != "" then turn on swap button
-        if (val == ""){
-          $("button#btn-swap-vars").fadeOut();
-        }else{
-          $("button#btn-swap-vars").fadeIn();
-        }
+      }
+      else if (id == "broken_down_by_code"){ // update question list
+        var question_code_menu = $(".form-explore-question-code .bootstrap-select ul.dropdown-menu");
+        question_code_menu.find("li[style*='display: none']").show(); // turn on all hidden items
+        question_code_menu.find("li:eq(" + (index-1) + ")").hide(); // turn on off this item
+        $("button#btn-swap-vars").fadeToggle(val !== ""); // if val != "" then turn on swap button
       }
 
       // update filter list
-      var q = $("select#question_code").val();
-      var q_index = $("select#question_code option[value='" + q + "']").index();
-      var bdb = $("select#broken_down_by_code").val();
-      var bdb_index = $("select#broken_down_by_code option[value='" + bdb + "']").index();
-      // if filter is one of these values, reset filter to no filter
-      if (($("select#filtered_by_code").val() == q && q != "") || ($("select#filtered_by_code").val() == bdb && bdb != "")){
-        // reset value and hide filter answers
-        $("select#filtered_by_code").selectpicker("val", "");
+      if ((select_filter_by.val() == q && q != "") || (select_filter_by.val() == bdb && bdb != "")){ // if filter is one of these values, reset filter to no filter
+        select_filter_by.selectpicker("val", ""); // reset value and hide filter answers
       }
 
       // turn on all hidden items
-      $(".form-explore-filter-by .bootstrap-select ul.dropdown-menu li[style*='display: none']").show();
+      var filter_by_menu = $(".form-explore-filter-by .bootstrap-select ul.dropdown-menu");
+
+      filter_by_menu.find("li[style*='display: none']").show();
 
       // turn off this item
-      if (q_index != -1){
-        $(".form-explore-filter-by .bootstrap-select ul.dropdown-menu li:eq(" + (q_index + 1) + ")").hide();
-      }
-      if (bdb_index != -1){
-        $(".form-explore-filter-by .bootstrap-select ul.dropdown-menu li:eq(" + bdb_index + ")").hide();
-      }
+      if (q_index != -1){ filter_by_menu.find("li:eq(" + (q_index + 1) + ")").hide(); }
+      if (bdb_index != -1){ filter_by_menu.find("li:eq(" + bdb_index + ")").hide(); }
+      
+      update_available_weights(); // update the list of weights
 
-
-      // update the list of weights
-      update_available_weights();
-
-      // update tooltip for selects
-      $("form button.dropdown-toggle").tooltip("fixTitle");
-
-      // if selected options have can_exclude, show the checkbox, else hide it
-      set_can_exclude_visibility();
+      $("form button.dropdown-toggle").tooltip("fixTitle"); // update tooltip for selects
+      
+      set_can_exclude_visibility(); // if selected options have can_exclude, show the checkbox, else hide it
     });
 
     // update tooltip when filter tooltip changes

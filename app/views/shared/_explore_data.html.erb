@@ -5,7 +5,6 @@
 <%-
   subnav_left render(partial: 'shared/language_switcher', locals: {langs: @dataset.language_objects, current_locale: @dataset.current_locale})
 -%>
-
 <div class="article explore-data">
   <% if @questions.present? %>
     <div id="explore-form" class="c">
@@ -38,7 +37,7 @@
             <%= label_tag 'filtered_by_code', t('.form.filtered_by_code') %>
             <select data-live-search="true" data-width="100%" class="selectpicker-filter" id="filtered_by_code" name="filtered_by_code">
               <option value=""><%= t('.form.no_filter') %></option>
-              <%= generate_explore_dataset_options(@items, @dataset, selected_code: @filtered_by_code, disabled_code: @question_code, disabled_code2: @broken_down_by_code) %>
+              <%= generate_explore_dataset_options(@items, @dataset, selected_code: @filtered_by_code, disabled_code: @question_code, disabled_code2: @broken_down_by_code, only_categorical: true) %>
             </select>
           </div>
 

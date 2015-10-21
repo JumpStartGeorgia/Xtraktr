@@ -2,11 +2,13 @@ module ExploreDatasetHelper
 
   # generate the options for the explore data drop down list
   def generate_explore_dataset_options(items, dataset, options={})
+     Rails.logger.debug("-------------sdfd-------------------------------#{items[0]}")
     skip_content = options[:skip_content].nil? ? false : options[:skip_content]
     selected_code = options[:selected_code].nil? ? nil : options[:selected_code]
     disabled_code = options[:disabled_code].nil? ? nil : options[:disabled_code]
     disabled_code2 = options[:disabled_code2].nil? ? nil : options[:disabled_code2]
     group_type = options[:group_type].nil? ? nil : options[:group_type]
+    only_categorical = options[:only_categorical].nil? ? false : options[:only_categorical]
 
     html = ''
 
@@ -14,7 +16,7 @@ module ExploreDatasetHelper
 
       if item.class == Group
         # add group
-        html << generate_explore_group_option(item)
+        html << generate_explore_dataset_group_option(item)
 
         # if have items, add them
         options[:group_type] = group_type.present? ? 'subgroup' : 'group'
@@ -22,9 +24,8 @@ module ExploreDatasetHelper
 
       elsif item.class == Question
         # add question
-        if item.has_code_answers_for_analysis?
-          Rails.logger.debug("--------------------------------------------here3")
-          html << generate_explore_question_option(item, dataset, skip_content, selected_code, disabled_code, disabled_code2, group_type)
+        if item.has_code_answers_for_analysis? && !(only_categorical && item.data_type != Question::DATA_TYPE_VALUES[:categorical])
+          html << generate_explore_dataset_question_option(item, dataset, skip_content, selected_code, disabled_code, disabled_code2, group_type)
         end
       end
     end
@@ -46,8 +47,7 @@ module ExploreDatasetHelper
   end
 
 private
-
-  def generate_explore_group_option(group)
+  def generate_explore_dataset_group_option(group)
     html = ''
     content = ''
     cls = group.parent_id.present? ? 'subgroup' : 'group'
@@ -69,8 +69,7 @@ private
     return html
   end
 
-  def generate_explore_question_option(question, dataset, skip_content, selected_code, disabled_code, disabled_code2, group_type=nil)
-    puts "--------------------------------------------here5"
+  def generate_explore_dataset_question_option(question, dataset, skip_content, selected_code, disabled_code, disabled_code2, group_type=nil)
     html = ''
     q_text = h question.code_with_text
     selected = selected_code.present? && selected_code == question.code ? 'selected=selected ' : ''
@@ -87,12 +86,10 @@ private
         weights << '"]\''
       end
     end
-     Rails.logger.debug("--------------------------------------------here2")
     # if the question is mappable or is excluded, show the icons for this
     content = ''
     if !skip_content || question.has_type? #&& (question.is_mappable? || question.exclude?)
       content << 'data-content=\'<span class="outer-layer"><span class="inner-layer"><span>' + q_text + '</span><span class="pull-right">'
-       Rails.logger.debug("--------------------------------------------here")
       if question.has_type?
         content << question_data_type_icon(question.data_type)
       end
@@ -108,7 +105,7 @@ private
       content << '</span></span></span>\''
 
     end
-    html << "<option class='#{cls}' value='#{question.code}' title='#{q_text}' #{selected} #{disabled} #{content.html_safe} #{can_exclude} #{weights}>#{q_text}</option>"
+    html << "<option class='#{cls}' value='#{question.code}' title='#{q_text}' #{selected} #{disabled} #{content.html_safe} #{can_exclude} #{weights} data-type='#{question.data_type}'>#{q_text}</option>"
 
     return html
   end

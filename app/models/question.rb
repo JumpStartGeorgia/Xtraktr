@@ -242,15 +242,25 @@ class Question < CustomTranslation
     return weights(ignore_id).map{|x| x.text}
   end
   def has_type?
-    return data_type != Question.DATA_TYPE_VALUES[:unknown]
+    return data_type != DATA_TYPE_VALUES[:unknown]
+  end
+  def data_type_s
+    vals = DATA_TYPE_VALUES
+    if data_type.is_a? Integer 
+      vals.keys.each {|x|
+        return x.to_s if vals[x] == data_type
+      }
+    end
+    nil
   end
   def self.type(t)
+    vals = Question::DATA_TYPE_VALUES
     if t.is_a? Integer 
-      DATA_TYPE_VALUES.keys.each {|x|
-        return x if DATA_TYPE_VALUES[x] == t 
+      vals.keys.each {|x|
+        return x if vals[x] == t 
       }
     elsif t.is_a? Symbol
-      return DATA_TYPE_VALUES[t] if DATA_TYPE_VALUES.has_key?(t) 
+      return vals[t] if vals.has_key?(t) 
     end
     nil
   end
