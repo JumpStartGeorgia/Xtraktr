@@ -10,7 +10,7 @@
               <div class="col question-link" data-group="<%= current_group.present? ? current_group.id : '' %>" data-subgroup="<%= current_subgroup.present? ? current_subgroup.id : '' %>">
                 <%
                   cls = question.exclude? ? 'exclude-question' : ''
-                  disable_link = !question.has_code_answers?
+                  disable_link = !question.has_code_answers? || !question.has_type?
                 %>
                 <% if disable_link %>
                   <div class="no-answers">
@@ -72,7 +72,7 @@
                   <% if question.data_type == Question::DATA_TYPE_VALUES[:categorical] %>
                     <img src="/assets/svg/categorical.svg" alt="<%= t('app.common.categorical') %>" title="<%= t('app.common.categorical') %>"/>
                   <% elsif question.data_type == Question::DATA_TYPE_VALUES[:numerical] %>
-                    <img src="/assets/svg/numerical.svg" alt="<%= t('app.common.numerical') %>" title="<%= t('app.common.numerical') %>"/>
+                    <img src="/assets/svg/numerical.svg" alt="<%= t('app.common.numerical') %>" title="<%= t('app.common.numerical') %>"/>                  
                   <% end %>                  
                 </div>
               </div>
@@ -97,27 +97,29 @@
                   <div class="col default-search"><%= question.notes %></div>
                 </div>
               <% end %>
-              <div>
-                <div class="col k"><%= t('app.common.answers') %>: </div>
-                <div class="col answers default-search">
-                  <%- answers = show_private_questions == true ? question.answers.sorted : question.answers.all_for_analysis
-                    if answers.present?
-                  -%>
-                    <ul>
-                      <%- answers.each do |answer| -%>
-                        <li>
-                          <% if answer.exclude? %>
-                            <span class="item-icons">
-                              <%= exclude_answer_icon.html_safe %>
-                            </span>
-                          <% end %>
-                          <%= answer.text %>
-                        </li>
-                      <%- end -%>
-                    </ul>
-                  <% end %>
+              <% if question.data_type == Question::DATA_TYPE_VALUES[:categorical] %> 
+                <div>
+                  <div class="col k"><%= t('app.common.answers') %>: </div>
+                  <div class="col answers default-search">
+                    <%- answers = show_private_questions == true ? question.answers.sorted : question.answers.all_for_analysis
+                      if answers.present?
+                    -%>
+                      <ul>
+                        <%- answers.each do |answer| -%>
+                          <li>
+                            <% if answer.exclude? %>
+                              <span class="item-icons">
+                                <%= exclude_answer_icon.html_safe %>
+                              </span>
+                            <% end %>
+                            <%= answer.text %>
+                          </li>
+                        <%- end -%>
+                      </ul>
+                    <% end %>
+                  </div>
                 </div>
-              </div>
+              <% end %>
             </li>
 
 <% end %>

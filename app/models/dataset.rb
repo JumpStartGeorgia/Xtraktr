@@ -1069,15 +1069,15 @@ class Dataset < CustomTranslation
               dt = items.formatted_data
               dt.extend(DescriptiveStatistics)
               question.descriptive_statistics = {
-                :number => dt.number,
-                :min => dt.min,
-                :max => dt.max,
+                :number => dt.number.to_i,
+                :min => num.type == 0 ? dt.min.to_i : dt.min,
+                :max => num.type == 0 ? dt.max.to_i : dt.max,
                 :mean => dt.mean,
-                :median => dt.median,
-                :mode => dt.mode,
-                :q1 => dt.percentile(25),
-                :q2 => dt.percentile(50),
-                :q3 => dt.percentile(75),
+                :median => num.type == 0 ? dt.median.to_i : dt.median,
+                :mode => num.type == 0 ? dt.mode.to_i : dt.mode,
+                :q1 => num.type == 0 ? dt.percentile(25).to_i : dt.percentile(25),
+                :q2 => num.type == 0 ? dt.percentile(50).to_i : dt.percentile(50),
+                :q3 => num.type == 0 ? dt.percentile(75).to_i : dt.percentile(75),
                 :variance => dt.variance,
                 :standard_deviation => dt.standard_deviation
               }
@@ -1158,7 +1158,8 @@ end
     if options[:include_questions] == true
       # get questions that are assigned to groups
       # - if group_id not provided, then getting questions that are not assigned to group
-      items << case options[:question_type]
+ 
+      tmp_items = case options[:question_type]
         when 'download'
           self.questions.where(:can_download => true, :group_id => options[:group_id])
         when 'analysis'
@@ -1168,8 +1169,12 @@ end
         else
           self.questions.where(:group_id => options[:group_id])
       end
-    end
 
+      if options[:exclude_unknown_data_type]
+        tmp_items = tmp_items.where(:data_type.ne => Question::DATA_TYPE_VALUES[:unknown])
+      end
+      items << tmp_items
+    end
     items.flatten!
 
     # sort these items
