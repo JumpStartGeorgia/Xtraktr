@@ -167,7 +167,6 @@ class CustomTranslation
   def clean_string_for_uploads(str)
     if str.class == String && str.present?
 
-       Rails.logger.debug("-------------------------------------------567675-#{str}")
       x = str.dup.chomp.strip
       replacements = [
         [ "'", ["<91>", "\\x91", "‘", "<92>", "\\x92", "’" ] ],

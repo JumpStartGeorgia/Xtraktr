@@ -1352,9 +1352,9 @@ class Dataset < CustomTranslation
         locales.each do |locale|
           # if question text is provided and not the same, update it
           I18n.locale = locale.to_sym
-          if cells[indexes[locale]].present? && question.text != cells[indexes[locale]].strip
+          if cells[indexes[locale]].present? && question.text != clean_string_for_uploads(cells[indexes[locale]])
             #puts "- setting text for #{locale}"
-            question.text = clean_string_for_uploads(cells[indexes[locale]].strip)
+            question.text = clean_string_for_uploads(cells[indexes[locale]])
             counts[locale] += 1
             locale_found = true
           end
@@ -1495,10 +1495,10 @@ class Dataset < CustomTranslation
         locales.each do |locale|
           I18n.locale = locale.to_sym
           # if answer text is provided and not the same, update it
-          if cells[indexes[locale]].present? && answer.text != cells[indexes[locale]].strip
+          if cells[indexes[locale]].present? && answer.text != clean_string_for_uploads(cells[indexes[locale]])
             puts "- setting text for #{locale}"
             # question.text_will_change!
-            answer.text = clean_string_for_uploads(cells[indexes[locale]].strip)
+            answer.text = clean_string_for_uploads(cells[indexes[locale]])
             counts[locale] += 1
             locale_found = true
           end
