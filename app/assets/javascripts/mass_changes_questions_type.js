@@ -50,7 +50,7 @@ $(document).ready(function (){
     });
     return false;
   });
-
+   console.log(gon.datatable_json);
   // datatable
   datatable = $("#mass_change").dataTable({
     "dom": "<'top'fli>t<'bottom'p><'clear'>",
@@ -71,6 +71,19 @@ $(document).ready(function (){
       {"data":"data_type",
         render: function (data, type, full) {
           return "<input class='numerical' type='radio' value='2' name='question["+full.code +"][data_type]'" + (data == 2 ? " checked": "") + " data-o='"+data+"'>";
+        },
+        class: "c"
+      },
+      {"data":"nm_title",
+        render: function (data, type, full) {
+           //console.log(data);
+           //data = [["en", "SDFSDFSD"],["ka", "badbab"],["ka", "badbab"],["ka", "badbab"],["ka", "badbab"],["ka", "badbab"],["ka", "badbab"]]
+          return "<div class='conditional locale-box' name='question["+full.code +"][numerical][title]' data-o='' "+(full.data_type !== 2 ? " disabled" : "")+">"+
+          "<div class='locale-picker' "+(full.data_type !== 2 ? " disabled" : "")+"><div class='locale-toggle'>"+data[0][0]+"</div><ul>" + 
+          data.map(function(d,i) {  return "<li class='"+[(i+1>6 ? "btop" : ""), (data.length > 5 && i+1 > data.length-data.length%6 ? "bbottom" : "")].join(" ") +"' data-key='"+d[0]+"' data-value='"+d[1]+"' data-orig-value='"+d[1]+"'>" + d[0] + "</li>"; }).join("") + 
+          "<li class='reset'></li></ul></div>" + 
+          "<input type='text' value='"+data[0][1]+
+          "' data-locale='"+ data[0][0] +"'" + (full.data_type !== 2 ? " disabled" : "") + "></div>";
         },
         class: "c"
       },
@@ -127,10 +140,10 @@ $(document).ready(function (){
       newValue = +t.val();
     if(t.hasClass("numerical")) {
       if(newValue === 2) {
-        p.find(".conditional").removeAttr("disabled");
+        p.find(".conditional, .conditional input").removeAttr("disabled");
       }
       else {
-        p.find(".conditional").attr("disabled", "disabled");
+        p.find(".conditional, .conditional input").attr("disabled", "disabled");
       }
     }
 
@@ -219,6 +232,63 @@ $(document).ready(function (){
       preview(_d.meta, _d.data, newCode);
     }
   });
+
+  $(document).on("click", ".locale-picker:not([disabled]) .locale-toggle", function (){
+    var t = $(this),
+      key = t.text(),
+      p = t.parent(),
+      ul = p.find("ul"),
+      box = p.parent(),
+      input = box.find("input");
+
+      ul.find("li").show();
+      ul.find("li[data-key='" + key + "']").hide(),
+      ul.toggleClass("active");
+      input.toggleClass("blur");
+  });
+  $(document).on("click", ".locale-picker ul li:not(.reset)", function(){
+    var t = $(this),
+      key = t.attr("data-key"),
+      value = t.attr("data-value"),
+      ul = t.parent(),
+      p = ul.parent(),
+      toggle = p.find(".locale-toggle"),
+      box = p.parent(),
+      input = box.find("input"),
+      prev_locale = input.attr("data-locale"),
+      prev_value = input.val();
+
+      if(key !== prev_locale) 
+      {
+        ul.find("li[data-key='"+prev_locale+"']").attr("data-value",prev_value);
+        input.val(value);
+        input.attr("data-locale", key)
+        toggle.text(key);
+      }
+
+      ul.toggleClass("active");
+      input.toggleClass("blur");
+
+  });
+  $(document).on("click", ".locale-picker ul li.reset", function(){
+    var t = $(this),
+    ul = t.parent(),
+    p = ul.parent(),
+    toggle = p.find(".locale-toggle"),
+    toggle_key = toggle.text(),
+    box = p.parent(),
+    li = ul.find("li[data-key='"+toggle_key+"']"),
+    input = box.find("input"),
+    prev_locale = input.attr("data-locale"),
+    prev_value = input.val();
+
+    li.attr("data-value", li.attr("data-orig-value"));
+    input.val(li.attr("data-orig-value"));
+
+    ul.toggleClass("active");
+    input.toggleClass("blur");
+  });
+
 
   $("body").append("<div id='preview' class='preview'><div class='header'><div class='move'></div><div class='close'></div></div><div class='chart'></div></div>");
   $("#preview").draggable({ handle: ".header > .move", cursor: "move" });

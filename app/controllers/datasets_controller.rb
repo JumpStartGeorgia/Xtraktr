@@ -408,14 +408,48 @@ class DatasetsController < ApplicationController
               nm_type: 0,
               nm_size: 0,
               nm_min: 0,
-              nm_max: 0
+              nm_max: 0,
+              nm_title: nil
             }
             if q.numerical?
-              data[:nm_type] = q.numerical.type;
-              data[:nm_size] = q.numerical.size;
-              data[:nm_min] = q.numerical.min;
-              data[:nm_max] = q.numerical.max;
+              orig_locale = I18n.locale.to_s
+              orig_title = []
+              titles = []
+
+              @dataset.languages_sorted.each do |locale|
+                value = q.numerical.title_translations[locale].blank? ? "" : q.numerical.title_translations[locale]
+                if locale == orig_locale
+                  orig_title = [locale, value]
+                else
+                  titles.push([locale, value])
+                end
+              end
+              titles.unshift(orig_title)
+
+              data[:nm_type] = q.numerical.type
+              data[:nm_size] = q.numerical.size
+              data[:nm_min] = q.numerical.min
+              data[:nm_max] = q.numerical.max
+              data[:nm_title] = titles
+              #Rails.logger.debug("----------------------------------4----------#{titles.inspect} #{data[:nm_title].to_json}")
+            else
+              orig_locale = I18n.locale.to_s
+              orig_title = []
+              titles = []
+
+              @dataset.languages_sorted.each do |locale|
+                if locale == orig_locale
+                  orig_title = [locale, ""]
+                else
+                  titles.push([locale, ""])
+                end
+              end
+              titles.unshift(orig_title)
+              data[:nm_title] = titles
             end
+
+
+
             gon.datatable_json << data
         end
 
