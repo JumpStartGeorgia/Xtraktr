@@ -284,7 +284,8 @@ function build_highmap (shape_question_code, adjustable_max, json_map_set, chart
       enabled: true,
       enableMouseWheelZoom: false,
       buttonOptions: {
-        verticalAlign: "top",
+        align: "right",
+        verticalAlign: "bottom",
         alignTo: "plotBox",
         theme: {
           states: {
