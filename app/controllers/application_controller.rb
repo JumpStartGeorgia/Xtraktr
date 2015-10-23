@@ -420,7 +420,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
           # set permalink to dataset
           permalink = TimeSeries.get_slug(options['time_series_id'])
           permalink = options['time_series_id'] if permalink.blank?
-          language = options["language"].present? ? options["language"] : TimeSeries.get_default_language(options['dataset_id'])
+          language = options["language"].present? ? options["language"] : TimeSeries.get_default_language(options['time_series_id'])
           # create link to dashboard
           output[:dashboard_link] = use_admin_link.to_s == 'true' ? time_series_url(path) : explore_time_series_dashboard_url(permalink)
 
