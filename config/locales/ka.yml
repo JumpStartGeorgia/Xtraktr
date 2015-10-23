@@ -1197,14 +1197,14 @@ ka:
         header: "შეკითხვები"
         template: "ღილაკზე დაჭერით თქვენ ჩამოტვირთავთ ნიმუშს ამ მონაცემების ყველა შეკითხვისთვის. გააკეთეთ ცვლილებები ცხრილში და გამოიყენეთ ქვემოთ მოცემული ფორმა განხორციელებული ცვლილებების შესანახად."
         template2: "სვეტები, რომლის შეცვლაც შეუძლებელია: %{code}"
-        template3: "If you are using Excel, please use the XLSX format for Excel may not properly load CSV files with."
+        template3: "If you are using Excel, please use the XLSX format for Excel may not properly load CSV files."
         template_link: "შეკითხვების ნიმუშების ჩამოტვირთვა"
         submit: "შეკითხვების განახლება"
       answers:
         header: "პასუხები"
         template: "ქვემოთ მოცემულ ღილაკზე დაჭერით ჩამოიტვირთება მონაცემთა ცხრილში არსებული ყველა პასუხის ნიმუში. გააკეთეთ ცვლილებები ცხრილში და გამოიყენეთ ქვემოთ მოცემული ფორმა განხორციელებული ცვლილებების შესანახად."
         template2: "სვეტები, რომლის შეცვლაც შეუძლებელია: %{code}"
-        template3: "If you are using Excel, please use the XLSX format for Excel may not properly load CSV files with."
+        template3: "If you are using Excel, please use the XLSX format for Excel may not properly load CSV files."
         template_link: "პასუხების ნიმუშების ჩამოტვირთვა"
         submit: "პასუხების განახლება"
   groups:
@@ -1346,14 +1346,14 @@ ka:
         header: "შეკითხვები"
         template: "ღილაკზე დაჭერით თქვენ ჩამოტვირთავთ ნიმუშს ამ პერიოდული შედარების ყველა შეკითხვისთვის. გააკეთეთ ცვლილებები ცხრილში და გამოიყენეთ ქვემოთ მოცემული ფორმა განხორციელებული ცვლილებების შესანახად."
         template2: "სვეტები, რომლის შეცვლაც შეუძლებელია: %{code}"
-        template3: "If you are using Excel, please use the XLSX format for Excel may not properly load CSV files with."
+        template3: "If you are using Excel, please use the XLSX format for Excel may not properly load CSV files."
         template_link: "შეკითხვების ნიმუშების ჩამოტვირთვა"
         submit: "შეკითხვების განახლება"
       answers:
         header: "პასუხები"
         template: "ღილაკზე დაჭერით თქვენ ჩამოტვირთავთ ნიმუშს პერიოდული შედარებების ყველა პასუხისთვის. გააკეთეთ ცვლილებები ცხრილში და გამოიყენეთ ქვემოთ მოცემული ფორმა განხორციელებული ცვლილებების შესანახად."
         template2: "სვეტები, რომლის შეცვლაც შეუძლებელია: %{code}"
-        template3: "If you are using Excel, please use the XLSX format for Excel may not properly load CSV files with."
+        template3: "If you are using Excel, please use the XLSX format for Excel may not properly load CSV files."
         template_link: "პასუხების ნიმუშების ჩამოტვირთვა"
         submit: "პასუხების განახლება"
   time_series_groups:

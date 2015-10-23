@@ -682,7 +682,8 @@ private
       puts "- creating stata file"
       output << '* IMPORTANT: you must update the path to the file at the end of the next line to include the full path (e.g., C:\Desktop\...)'
       output << "\n\n"
-      output << 'infile '
+      # output << 'infile '
+      output << 'insheet '
       questions.each do |question|
         output << question.original_code
         if question.has_code_answers
@@ -690,7 +691,8 @@ private
         end
         output << ' '
       end
-      output << " using  #{csv_file} , automatic "
+      output << " using  #{csv_file} "
+      # output << " using  #{csv_file} , automatic "
 
       # write out stata file
       File.open(stata_file_path, 'w') {|f| f.write(output) }

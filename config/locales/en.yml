@@ -1197,14 +1197,14 @@ en:
         header: Questions
         template: Clicking the button below will download a template of all questions in this dataset. Make the desired changes in the spreadsheet and then use the form below to update your changes.
         template2: "The only columns that cannot be changed are: %{code}"
-        template3: "If you are using Excel, please use the XLSX format for Excel may not properly load CSV files with."
+        template3: "If you are using Excel, please use the XLSX format for Excel may not properly load CSV files."
         template_link: Download Questions Template
         submit: Update Questions
       answers:
         header: Answers
         template: Clicking the button below will download a template of all answers in this dataset. Make the desired changes in the spreadsheet and then use the form below to update your changes.
         template2: "The only columns that cannot be changed are: %{code}, %{value}"
-        template3: "If you are using Excel, please use the XLSX format for Excel may not properly load CSV files with."
+        template3: "If you are using Excel, please use the XLSX format for Excel may not properly load CSV files."
         template_link: Download Answers Template
         submit: Update Answers
   groups:
@@ -1346,14 +1346,14 @@ en:
         header: Questions
         template: Clicking the button below will download a template of all questions in this time series. Make the desired changes in the spreadsheet and then use the form below to update your changes.
         template2: "The only columns that cannot be changed are: %{code}"
-        template3: "If you are using Excel, please use the XLSX format for Excel may not properly load CSV files with."
+        template3: "If you are using Excel, please use the XLSX format for Excel may not properly load CSV files."
         template_link: Download Questions Template
         submit: Update Questions
       answers:
         header: Answers
         template: Clicking the button below will download a template of all answers in this time series. Make the desired changes in the spreadsheet and then use the form below to update your changes.
         template2: "The only columns that cannot be changed are: %{code}, %{value}"
-        template3: "If you are using Excel, please use the XLSX format for Excel may not properly load CSV files with."
+        template3: "If you are using Excel, please use the XLSX format for Excel may not properly load CSV files."
         template_link: Download Answers Template
         submit: Update Answers
   time_series_groups:
