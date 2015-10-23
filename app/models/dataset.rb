@@ -1569,7 +1569,7 @@ class Dataset < CustomTranslation
           I18n.locale = locale.to_sym
           # if answer text is provided and not the same, update it
           if cells[indexes[locale]].present? && answer.text != clean_string_for_uploads(cells[indexes[locale]])
-            puts "- setting text for #{locale}"
+            #puts "- setting text for #{locale}"
             # question.text_will_change!
             answer.text = clean_string_for_uploads(cells[indexes[locale]])
             counts[locale] += 1

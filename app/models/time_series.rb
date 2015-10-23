@@ -1138,7 +1138,7 @@ class TimeSeries < CustomTranslation
         # get answer for this cells
         answer = question.answers.with_value(cells[indexes['value']])
         if answer.nil?
-          msg = I18n.t('mass_uploads.answers.missing_answer', n: n, code: cells[indexes['code']], value: cells[indexes['value']])
+          msg = I18n.t('mass_uploads_msgs.answers.missing_answer', n: n, code: cells[indexes['code']], value: cells[indexes['value']])
           return msg
         end
 
@@ -1153,7 +1153,7 @@ class TimeSeries < CustomTranslation
           I18n.locale = locale.to_sym
           # if answer text is provided and not the same, update it
           if cells[indexes[locale]].present? && answer.text !=  clean_string_for_uploads(cells[indexes[locale]])
-            puts "- setting text for #{locale}"
+            #puts "- setting text for #{locale}"
             # question.text_will_change!
             answer.text = clean_string_for_uploads(cells[indexes[locale]])
             counts[locale] += 1
