@@ -1,79 +1,42 @@
 <% title t('.title') %>
-
-<p>
-  <%= t('.explanation') %>
-</p>
-
+<p><%= t('.explanation') %></p>
 <div class="row data-loader-container">
   <div class="col-sm-6">
     <h2><%= t('.questions.header') %></h2>
-
     <h3><%= t('.template') %></h3>
-    <p>
-      <%= t('.questions.template') %>
-    </p>
-    <p>
-      <%= t('.questions.template2', code: t('mongoid.attributes.question.code')) %>
-    </p>
+    <p><%= t('.questions.template') %></p>
+    <p><%= t('.questions.template2', code: t('mongoid.attributes.question.code')) %></p>
+    <p><%= t('.questions.template3') %></p> 
     <p style="text-align: center;">
       <label><%= t('.questions.template_link') %></label>
-      <%= link_to "CSV", mass_changes_time_series_questions_path(download: 'questions', format: 'csv'), 
-          class: 'btn btn-primary' %>
-      <%= link_to "XLSX", mass_changes_time_series_questions_path(download: 'questions', format: 'xlsx'), 
-          class: 'btn btn-primary' %>          
+      <%= link_to "CSV", mass_changes_time_series_questions_path(download: 'questions', format: 'csv'), class: 'btn btn-primary' %>
+      <%= link_to "XLSX", mass_changes_time_series_questions_path(download: 'questions', format: 'xlsx'), class: 'btn btn-primary' %>          
     </p>
-
     <hr />
-
     <h3><%= t('.upload') %></h3>
     <%= form_tag load_mass_changes_questions_time_series_questions_path, multipart: true, class: 'form-data-loader' do %>
-      <div class="file input optional form-group">
-        <%= file_field_tag :file, accept: '.csv, .xlsx' %>
-      </div>
-
-      <div class="form-group">
-        <%= submit_tag t('.questions.submit'), class: 'btn btn-primary submit-data-loader' %>
-      </div>
-
+      <div class="file input optional form-group"><%= file_field_tag :file, accept: '.csv, .xlsx' %></div>
+      <div class="form-group"><%= submit_tag t('.questions.submit'), class: 'btn btn-primary submit-data-loader' %></div>
     <% end %>
-
   </div>
-
-
   <div class="col-sm-6">
     <h2><%= t('.answers.header') %></h2>
 
     <h3><%= t('.template') %></h3>
-    <p>
-      <%= t('.answers.template') %>
-    </p>
-    <p>
-      <%= t('.answers.template2', code: t('mongoid.attributes.question.code'), value: t('mongoid.attributes.answer.value')) %>
-    </p>
+    <p><%= t('.answers.template') %></p>
+    <p><%= t('.answers.template2', code: t('mongoid.attributes.question.code'), value: t('mongoid.attributes.answer.value')) %></p>
+    <p><%= t('.answers.template3') %></p>
     <p style="text-align: center;">
       <label><%= t('.answers.template_link') %></label>
-      <%= link_to "CSV", mass_changes_time_series_questions_path(download: 'answers', format: 'csv'), 
-          class: 'btn btn-primary' %>
-      <%= link_to "XLSX", mass_changes_time_series_questions_path(download: 'answers', format: 'xlsx'), 
-          class: 'btn btn-primary' %>          
+      <%= link_to "CSV", mass_changes_time_series_questions_path(download: 'answers', format: 'csv'), class: 'btn btn-primary' %>
+      <%= link_to "XLSX", mass_changes_time_series_questions_path(download: 'answers', format: 'xlsx'), class: 'btn btn-primary' %>          
     </p>
-
     <hr />
-
     <h3><%= t('.upload') %></h3>
     <%= form_tag load_mass_changes_answers_time_series_questions_path, multipart: true, class: 'form-data-loader' do %>
-      <div class="file input optional form-group">
-        <%= file_field_tag :file, accept: '.csv, .xlsx' %>
-      </div>
-
-      <div class="form-group">
-        <%= submit_tag t('.answers.submit'), class: 'btn btn-primary' %>
-      </div>
-
+      <div class="file input optional form-group"><%= file_field_tag :file, accept: '.csv, .xlsx' %></div>
+      <div class="form-group"><%= submit_tag t('.answers.submit'), class: 'btn btn-primary' %></div>
     <% end %>
-
-
   </div>
-
   <div class="data-loader"></div>
 </div>
