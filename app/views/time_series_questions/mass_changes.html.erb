@@ -7,7 +7,7 @@
     <p><%= t('.questions.template') %></p>
     <p><%= t('.questions.template2', code: t('mongoid.attributes.question.code')) %></p>
     <p><%= t('.questions.template3') %></p> 
-    <p style="text-align: center;">
+    <p>
       <label><%= t('.questions.template_link') %></label>
       <%= link_to "CSV", mass_changes_time_series_questions_path(download: 'questions', format: 'csv'), class: 'btn btn-primary' %>
       <%= link_to "XLSX", mass_changes_time_series_questions_path(download: 'questions', format: 'xlsx'), class: 'btn btn-primary' %>          
@@ -26,7 +26,7 @@
     <p><%= t('.answers.template') %></p>
     <p><%= t('.answers.template2', code: t('mongoid.attributes.question.code'), value: t('mongoid.attributes.answer.value')) %></p>
     <p><%= t('.answers.template3') %></p>
-    <p style="text-align: center;">
+    <p>
       <label><%= t('.answers.template_link') %></label>
       <%= link_to "CSV", mass_changes_time_series_questions_path(download: 'answers', format: 'csv'), class: 'btn btn-primary' %>
       <%= link_to "XLSX", mass_changes_time_series_questions_path(download: 'answers', format: 'xlsx'), class: 'btn btn-primary' %>          
