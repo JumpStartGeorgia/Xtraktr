@@ -442,7 +442,7 @@ class ApplicationController < ActionController::Base
           permalink = TimeSeries.get_slug(options['time_series_id'])
           permalink = options['time_series_id'] if permalink.blank?
           owner = TimeSeries.get_owner(options['time_series_id'])
-          language = options["language"].present? ? options["language"] : TimeSeries.get_default_language(options['dataset_id'])
+          language = options["language"].present? ? options["language"] : TimeSeries.get_default_language(options['time_series_id'])
           # create link to dashboard
           output[:dashboard_link] = use_admin_link.to_s == 'true' ? time_series_url(owner, permalink) : explore_time_series_dashboard_url(owner, permalink)
 
