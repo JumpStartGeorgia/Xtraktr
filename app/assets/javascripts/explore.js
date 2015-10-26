@@ -284,9 +284,9 @@ function build_highmap (shape_question_code, adjustable_max, json_map_set, chart
       enabled: true,
       enableMouseWheelZoom: false,
       buttonOptions: {
-        align: "right",
+        align: "left",
         verticalAlign: "bottom",
-        alignTo: "plotBox",
+        alignTo: "plotBox",        
         theme: {
           states: {
             hover: {
@@ -298,6 +298,14 @@ function build_highmap (shape_question_code, adjustable_max, json_map_set, chart
               fill: "#eeeeee"
             }
           }
+        }
+      },
+      buttons: {
+        zoomIn: {
+          y: -38
+        },
+        zoomOut: {
+          y: -10
         }
       }
     },
