@@ -1329,7 +1329,7 @@ class Dataset < CustomTranslation
         end
 
         if !foundAllHeaders
-            msg = I18n.t('mass_uploads_msgs.bad_headers')
+            msg = I18n.t('mass_uploads_msgs.bad_headers', locale: orig_locale)
             #puts "@@@@@@@@@@> #{msg}"
           return msg
         end
@@ -1339,7 +1339,7 @@ class Dataset < CustomTranslation
         # get question for this row
         question = self.questions.with_original_code(cells[indexes['code']])
         if question.nil?
-          msg = I18n.t('mass_uploads_msgs.missing_code', n: n, code: cells[indexes['code']])
+          msg = I18n.t('mass_uploads_msgs.missing_code', n: n, code: cells[indexes['code']], locale: orig_locale)
           #puts "@@@@@@@@@@> #{msg}"
           return msg
         end
@@ -1455,7 +1455,7 @@ class Dataset < CustomTranslation
         end
 
         if !foundAllHeaders
-            msg = I18n.t('mass_uploads_msgs.bad_headers')
+            msg = I18n.t('mass_uploads_msgs.bad_headers', locale: orig_locale)
           return msg
         end
 
@@ -1472,7 +1472,7 @@ class Dataset < CustomTranslation
           # get question for this cells
           question = self.questions.with_original_code(cells[indexes['code']])
           if question.nil?
-            msg = I18n.t('mass_uploads_msgs.missing_code', n: n, code: cells[indexes['code']])
+            msg = I18n.t('mass_uploads_msgs.missing_code', n: n, code: cells[indexes['code']], locale: orig_locale)
             return msg
           end
         end
@@ -1480,7 +1480,7 @@ class Dataset < CustomTranslation
         # get answer for this cells
         answer = question.answers.with_value(cells[indexes['value']])
         if answer.nil?
-          msg = I18n.t('mass_uploads.answers.missing_answer', n: n, code: cells[indexes['code']], value: cells[indexes['value']])
+          msg = I18n.t('mass_uploads.answers.missing_answer', n: n, code: cells[indexes['code']], value: cells[indexes['value']], , locale: orig_locale)
           return msg
         end
 
