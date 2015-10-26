@@ -404,7 +404,7 @@ class DatasetsController < ApplicationController
 
         gon.locale_picker_data = { reset: I18n.t("app.buttons.reset") }
         @dataset.languages_sorted.each do |locale|
-          gon.locale_picker_data[I18n.t("app.language." + locale)[0..1].downcase] = I18n.t("app.language." + locale)
+          gon.locale_picker_data[locale] = [I18n.t("app.language." + locale),I18n.t("app.language." + locale)[0..1].downcase]
         end
 
         @dataset.questions.each do |q|
@@ -426,9 +426,9 @@ class DatasetsController < ApplicationController
               @dataset.languages_sorted.each do |locale|
                 value = q.numerical.title_translations[locale].blank? ? "" : q.numerical.title_translations[locale]
                 if locale == orig_locale
-                  orig_title = [I18n.t("app.language." + locale)[0..1].downcase, value]
+                  orig_title = [locale, value]
                 else
-                  titles.push([I18n.t("app.language." + locale)[0..1].downcase, value])
+                  titles.push([locale, value])
                 end
               end
               titles.unshift(orig_title)
@@ -446,9 +446,9 @@ class DatasetsController < ApplicationController
 
               @dataset.languages_sorted.each do |locale|
                 if locale == orig_locale
-                  orig_title = [I18n.t("app.language." + locale)[0..1].downcase, ""]
+                  orig_title = [locale, ""]
                 else
-                  titles.push([I18n.t("app.language." + locale)[0..1].downcase, ""])
+                  titles.push([locale, ""])
                 end
               end
               titles.unshift(orig_title)
@@ -463,8 +463,9 @@ class DatasetsController < ApplicationController
         add_dataset_nav_options()
       }
       format.js {
+        Rails.logger.debug("--------------------------------------------before here")
         begin
-           Rails.logger.debug("--------------------------------------------before here")
+           
           @msg = t('app.msgs.mass_change_question_type_saved')
           @success = true
           if params[:mass_data].present? && params[:mass_data].keys.length > 0
@@ -479,6 +480,7 @@ class DatasetsController < ApplicationController
             end
           end        
         rescue Exception => e
+          Rails.logger.debug("--------------------------------------------before her2e")
           @msg = t('app.msgs.mass_change_question_not_saved')
           @success = false
 

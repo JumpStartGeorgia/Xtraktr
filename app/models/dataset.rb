@@ -258,16 +258,16 @@ class Dataset < CustomTranslation
         }
         where(:code.in => codes).each do |q|
           code = q[:code]
-          dt = data[code]
+          dt = data[code]["data"]
           
           q["data_type"] = dt[0] = dt[0].to_i
           if dt[0] == 1
              q["numerical"] = nil
           elsif dt[0] == 2
             if q.numerical.nil?
-              q.build_numerical({ type: dt[1].to_i, size: dt[2].to_i, min: dt[3].to_f, max: dt[4].to_f })
+              q.build_numerical({ type: dt[1].to_i, size: dt[2].to_i, min: dt[3].to_f, max: dt[4].to_f, title_translations: data[code]["titles"] })
             else
-              q.numerical.update_attributes({ type: dt[1].to_i, size: dt[2].to_i, min: dt[3].to_f, max: dt[4].to_f })
+              q.numerical.update_attributes({ type: dt[1].to_i, size: dt[2].to_i, min: dt[3].to_f, max: dt[4].to_f, title_translations: data[code]["titles"] })
             end
           end
         end
@@ -1028,12 +1028,12 @@ class Dataset < CustomTranslation
   end
 
 # TODOHERE
-  def questions_data_recalculate(data)
+  def questions_data_recalculate(data)      
       require 'descriptive_statistics/safe'
       if data.keys.length
         data.keys.each {|t| 
           code = t.downcase
-          dt = data[code]
+          dt = data[code]["data"]
           dt[0] = dt[0].to_i
           items = data_items.with_code(code)
 

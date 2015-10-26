@@ -25,7 +25,7 @@ $(document).ready(function (){
     tmpDataKeys.forEach(function (d) {
       tmpData[d.toLowerCase()] = get_code_meta(d);
     });
-     console.log("here",tmpData);
+     // console.log("here",tmpData);
     //  // get all values and put to tmpData array for question
     $(".data-loader").fadeIn("fast", function (){
       $.ajax({
@@ -441,15 +441,15 @@ $(document).ready(function (){
   function get_code_meta (code) {
     var tr = mass_change.find("tr#" + code),
       tmp = "[name='question["+code+"][numerical]",
-      titles = [], out;
+      titles = {}, out;
 
     var input = tr.find(".locale-box input"),
     input_key = input.attr("data-locale");
-    titles.push([input_key, input.val()]);
+    titles[input_key] = input.val();
     tr.find(".locale-picker ul li:not(.reset)").each(function (i, d) {
       var dd = $(d);
       if(dd.attr("data-key") !== input_key && dd.attr("data-orig-value") !== dd.attr("data-value")) {
-        titles.push([dd.attr("data-key"), dd.attr("data-value")]);      
+        titles[dd.attr("data-key")] = dd.attr("data-value");      
       }
     });
 
@@ -458,8 +458,8 @@ $(document).ready(function (){
       tr.find(tmp + "[size]']").val(),
       tr.find(tmp + "[min]']").val(),
       tr.find(tmp + "[max]']").val() ].map(function (d){ return d=+d; });
-    //out.unshift(titles);
-    return out;
+    // out.unshift(titles);
+    return { data: out, titles: titles };
   }
   function is_numerical (code) {
     return $("#mass_change tr [name='question["+code+"][data_type]']:checked").val() === 2;

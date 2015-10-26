@@ -14,7 +14,7 @@ class Numerical
   embedded_in :question
 
   #############################
-  attr_accessible :type, :size, :min, :max
+  attr_accessible :type, :size, :min, :max, :title, :title_translations
 
   #############################
   # Validations
