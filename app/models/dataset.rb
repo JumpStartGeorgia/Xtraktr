@@ -1553,7 +1553,7 @@ class Dataset < CustomTranslation
         # get answer for this cells
         answer = question.answers.with_value(cells[indexes['value']])
         if answer.nil?
-          msg = I18n.t('mass_uploads.answers.missing_answer', n: n, code: cells[indexes['code']], value: cells[indexes['value']], , locale: orig_locale)
+          msg = I18n.t('mass_uploads.answers.missing_answer', n: n, code: cells[indexes['code']], value: cells[indexes['value']], locale: orig_locale)
           return msg
         end
 
