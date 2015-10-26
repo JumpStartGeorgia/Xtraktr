@@ -12,8 +12,7 @@ class Embed::V2Controller < ApplicationController
       # save the js data into gon
       gon.highlight_data = {}
       gon.highlight_data[@highlight_data[:highlight_id].to_s] = @highlight_data[:js]
-
-      set_gon_highcharts
+      set_gon_highcharts(@highlight_data[:language])
 
       gon.update_page_title = true
 

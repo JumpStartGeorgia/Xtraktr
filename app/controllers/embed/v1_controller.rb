@@ -13,8 +13,7 @@ class Embed::V1Controller < ApplicationController
       gon.highlight_data = {}
       gon.highlight_data[@highlight_data[:highlight_id].to_s] = @highlight_data[:js]
 
-      set_gon_highcharts
-
+      set_gon_highcharts(@highlight_data[:language])
       gon.update_page_title = true
 
       gon.get_highlight_desc_link = highlights_get_description_path

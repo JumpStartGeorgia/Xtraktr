@@ -452,6 +452,11 @@ class TimeSeries < CustomTranslation
     x.present? ? x.slug : nil
   end
 
+  def self.get_default_language(id)
+    x = only(:default_language).find(id)
+    x.present? ? x.default_language : nil
+  end
+
   def self.get_owner(id)
     x = only(:user_id).find(id)
     x.present? ? x.owner : nil
@@ -843,6 +848,36 @@ class TimeSeries < CustomTranslation
     return csv_data
   end
 
+  def generate_questions_xlsx
+    workbook = RubyXL::Workbook.new
+    worksheet = workbook[0]
+
+    # create header for csv
+    worksheet.add_cell(0, 0, QUESTION_HEADERS[:code])
+    locales = self.languages_sorted
+    index = 1
+    locales.each do |locale|
+      worksheet.add_cell(0, index, "#{QUESTION_HEADERS[:question]} (#{locale})")
+      index += 1
+    end
+
+    # add questions 
+    r_index = 1
+    self.questions.each do |question|
+      
+      worksheet.add_cell(r_index, 0, question.original_code)
+      c_index = 1
+      locales.each do |locale|
+        worksheet.add_cell(r_index, c_index, question.text_translations[locale]) if question.text_translations[locale].present?
+        c_index += 1
+      end
+
+      r_index += 1
+    end
+
+    return workbook.stream.string
+  end
+
 
   # create csv to download answers
   # columns: code, value, text (for each translation), exclude, can exclude
@@ -879,11 +914,48 @@ class TimeSeries < CustomTranslation
 
     return csv_data
   end
+  def generate_answers_xlsx
+    workbook = RubyXL::Workbook.new
+    worksheet = workbook[0]
+
+    # create header for csv
+    worksheet.add_cell(0, 0, ANSWER_HEADERS[:code])
+    worksheet.add_cell(0, 1, ANSWER_HEADERS[:value])
+    worksheet.add_cell(0, 2, ANSWER_HEADERS[:sort])
+
+    locales = self.languages_sorted
+    index = 3
+    locales.each do |locale|
+      worksheet.add_cell(0, index, "#{ANSWER_HEADERS[:answer]} (#{locale})")
+      index += 1
+    end
+    worksheet.add_cell(0, index, ANSWER_HEADERS[:can_exclude])    
+    index += 1
+
+    # add questions 
+    r_index = 1
+    self.questions.each do |question|
+      question.answers.sorted.each do |answer|
+        worksheet.add_cell(r_index, 0, question.original_code)
+        worksheet.add_cell(r_index, 1, answer.value)
+        worksheet.add_cell(r_index, 2, answer.sort_order)
+        c_index = 3
+        locales.each do |locale|
+          worksheet.add_cell(r_index, c_index, answer.text_translations[locale]) if answer.text_translations[locale].present?
+          c_index += 1
+        end
+        worksheet.add_cell(r_index, c_index, (answer.can_exclude == true ? 'Y' : nil))         
+        r_index += 1
+      end
+    end
+
+    return workbook.stream.string
+  end
 
   # read in the csv and update the question text as necessary
-  def process_questions_csv(file)
+  def process_questions_by_type(file, type)
     start = Time.now
-    infile = file.read
+    infile = file.read.force_encoding('utf-8')
     n, msg = 0, ""
     locales = self.languages_sorted
     orig_locale = I18n.locale
@@ -896,11 +968,21 @@ class TimeSeries < CustomTranslation
     counts = Hash[locales.map{|x| [x,0]}]
     counts['overall'] = 0
 
-    CSV.parse(infile) do |row|
+    rows = []
+    if type == :csv
+      rows = CSV.parse(infile)
+    elsif type == :xlsx
+      workbook = RubyXL::Parser.parse_buffer(infile)
+      rows = workbook[0]
+    end
+    
+
+    rows.each do |row|
       startRow = Time.now
       n += 1
-      puts "@@@@@@@@@@@@@@@@@@ processing row #{n}"
+      #puts "@@@@@@@@@@@@@@@@@@ processing row #{n}"
 
+      cells = type == :csv ? row : row.cells.map{|x| x && x.value }
       if n == 1
         foundAllHeaders = false
         # look at headers and set indexes
@@ -908,12 +990,12 @@ class TimeSeries < CustomTranslation
         # if header in csv is not known, throw error
 
         # code
-        idx = row.index(QUESTION_HEADERS[:code])
+        idx = cells.index(QUESTION_HEADERS[:code])
         indexes['code'] = idx if idx.present?
 
         # text translations
         locales.each do |locale|
-          idx = row.index("#{QUESTION_HEADERS[:question]} (#{locale})")
+          idx = cells.index("#{QUESTION_HEADERS[:question]} (#{locale})")
           indexes[locale] = idx if idx.present?
         end
 
@@ -923,19 +1005,18 @@ class TimeSeries < CustomTranslation
         end
 
         if !foundAllHeaders
-            msg = I18n.t('mass_uploads_msgs.bad_headers')
-            puts "@@@@@@@@@@> #{msg}"
+            msg = I18n.t('mass_uploads_msgs.bad_headers', locale: orig_locale)
+            #puts "@@@@@@@@@@> #{msg}"
           return msg
         end
 
-        puts "%%%%%%%%%% col indexes = #{indexes}"
-
+        #puts "%%%%%%%%%% col indexes = #{indexes}"
       else
         # get question for this row
-        question = self.questions.with_original_code(row[indexes['code']])
+        question = self.questions.with_original_code(cells[indexes['code']])
         if question.nil?
-          msg = I18n.t('mass_uploads_msgs.missing_code', n: n, code: row[indexes['code']])
-          puts "@@@@@@@@@@> #{msg}"
+          msg = I18n.t('mass_uploads_msgs.missing_code', n: n, code: cells[indexes['code']], locale: orig_locale)
+          #puts "@@@@@@@@@@> #{msg}"
           return msg
         end
 
@@ -943,43 +1024,40 @@ class TimeSeries < CustomTranslation
         locales.each do |locale|
           # if question text is provided and not the same, update it
           I18n.locale = locale.to_sym
-          puts "-> question.text = #{question.text}; row[indexes[locale]] = #{row[indexes[locale]]}"
-          if row[indexes[locale]].present? && question.text != row[indexes[locale]].strip
-            puts "- setting text for #{locale}"
-            question.text = clean_string(row[indexes[locale]].strip)
+          if cells[indexes[locale]].present? && question.text != clean_string_for_uploads(cells[indexes[locale]])
+            #puts "- setting text for #{locale}"
+            question.text = clean_string_for_uploads(cells[indexes[locale]])
             counts[locale] += 1
             locale_found = true
           end
         end
         counts['overall'] += 1 if locale_found
 
-        puts "---> question.valid = #{question.valid?}"
+        #puts "---> question.valid = #{question.valid?}"
 
-        puts "******** time to process row: #{Time.now-startRow} seconds"
-        puts "************************ total time so far : #{Time.now-start} seconds"
+        #puts "******** time to process row: #{Time.now-startRow} seconds"
+        #puts "************************ total time so far : #{Time.now-start} seconds"
       end
     end
 
-    puts "=========== valid = #{self.valid?}; errors = #{self.errors.full_messages}"
+    #puts "=========== valid = #{self.valid?}; errors = #{self.errors.full_messages}"
 
     success = self.save
 
-    puts "=========== success save = #{success}"
+    #puts "=========== success save = #{success}"
 
-    puts "****************** total changes: #{counts.map{|k,v| k + ' - ' + v.to_s}.join(', ')}"
-    puts "****************** time to process question csv: #{Time.now-start} seconds for #{n} rows"
+    #puts "****************** total changes: #{counts.map{|k,v| k + ' - ' + v.to_s}.join(', ')}"
+    #puts "****************** time to process question csv: #{Time.now-start} seconds for #{n} rows"
 
     I18n.locale = orig_locale
 
     return msg, counts
   end
 
-
-
   # read in the csv and update the answer text as necessary
-  def process_answers_csv(file)
+  def process_answers_by_type(file, type)
     start = Time.now
-    infile = file.read
+    infile = file.read.force_encoding('utf-8')
     n, msg = 0, ""
     locales = self.languages_sorted
     last_question_code = nil
@@ -997,11 +1075,20 @@ class TimeSeries < CustomTranslation
     counts = Hash[locales.map{|x| [x,0]}]
     counts['overall'] = 0
 
-    CSV.parse(infile.force_encoding('utf-8')) do |row|
+    rows = []
+    if type == :csv
+      rows = CSV.parse(infile)
+    elsif type == :xlsx
+      workbook = RubyXL::Parser.parse_buffer(infile)
+      rows = workbook[0]
+    end
+    
+
+    rows.each do |row|
       startRow = Time.now
       # translation_changed = false
       n += 1
-      puts "@@@@@@@@@@@@@@@@@@ processing row #{n}"
+      cells = type == :csv ? row : row.cells.map{|x| x && x.value }
 
       if n == 1
         foundAllHeaders = false
@@ -1010,21 +1097,21 @@ class TimeSeries < CustomTranslation
         # if header in csv is not known, throw error
 
         # code
-        idx = row.index(ANSWER_HEADERS[:code])
+        idx = cells.index(ANSWER_HEADERS[:code])
         indexes['code'] = idx if idx.present?
         # value
-        idx = row.index(ANSWER_HEADERS[:value])
+        idx = cells.index(ANSWER_HEADERS[:value])
         indexes['value'] = idx if idx.present?
         # sort_order
-        idx = row.index(ANSWER_HEADERS[:sort])
+        idx = cells.index(ANSWER_HEADERS[:sort])
         indexes['sort_order'] = idx if idx.present?
         # can exclude
-        idx = row.index(ANSWER_HEADERS[:can_exclude])
+        idx = cells.index(ANSWER_HEADERS[:can_exclude])
         indexes['can_exclude'] = idx if idx.present?
 
         # text translations
         locales.each do |locale|
-          idx = row.index("#{ANSWER_HEADERS[:answer]} (#{locale})")
+          idx = cells.index("#{ANSWER_HEADERS[:answer]} (#{locale})")
           indexes[locale] = idx if idx.present?
         end
 
@@ -1034,11 +1121,9 @@ class TimeSeries < CustomTranslation
         end
 
         if !foundAllHeaders
-            msg = I18n.t('mass_uploads_msgs.bad_headers')
+            msg = I18n.t('mass_uploads_msgs.bad_headers', locale: orig_locale)
           return msg
         end
-
-        puts "%%%%%%%%%% col indexes = #{indexes}"
 
       else
         ########################
@@ -1047,51 +1132,53 @@ class TimeSeries < CustomTranslation
         ########################
 
         # if the question is different, save the previous question before moving on to the new question
-        if last_question_code != row[indexes['code']]
-          # get question for this row
-          question = self.questions.with_original_code(row[indexes['code']])
+        if last_question_code != cells[indexes['code']]
+          # get question for this cells
+          question = self.questions.with_original_code(cells[indexes['code']])
           if question.nil?
-            msg = I18n.t('mass_uploads_msgs.missing_code', n: n, code: row[indexes['code']])
+            msg = I18n.t('mass_uploads_msgs.missing_code', n: n, code: cells[indexes['code']], locale: orig_locale)
             return msg
           end
         end
 
-        # get answer for this row
-        answer = question.answers.with_value(row[indexes['value']])
+        # get answer for this cells
+        answer = question.answers.with_value(cells[indexes['value']])
         if answer.nil?
-          msg = I18n.t('mass_uploads.answers.missing_answer', n: n, code: row[indexes['code']], value: row[indexes['value']])
+          msg = I18n.t('mass_uploads_msgs.answers.missing_answer', n: n, code: cells[indexes['code']], value: cells[indexes['value']], locale: orig_locale)
           return msg
         end
 
-        answer.sort_order = row[indexes['sort_order']]
-        answer.can_exclude = row[indexes['can_exclude']].present?
+
+        # if value exist for exclude, assume it means true
+        answer.sort_order = cells[indexes['sort_order']]
+        answer.can_exclude = cells[indexes['can_exclude']].present?
 
         # temp_text = answer.text_translations.dup
         locale_found = false
         locales.each do |locale|
           I18n.locale = locale.to_sym
           # if answer text is provided and not the same, update it
-          if row[indexes[locale]].present? && answer.text != row[indexes[locale]].strip
-            puts "- setting text for #{locale}"
+          if cells[indexes[locale]].present? && answer.text !=  clean_string_for_uploads(cells[indexes[locale]])
+            #puts "- setting text for #{locale}"
             # question.text_will_change!
-            answer.text = clean_string(row[indexes[locale]].strip)
+            answer.text = clean_string_for_uploads(cells[indexes[locale]])
             counts[locale] += 1
             locale_found = true
           end
         end
         counts['overall'] += 1 if locale_found
 
-        puts "******** time to process row: #{Time.now-startRow} seconds"
-        puts "************************ total time so far : #{Time.now-start} seconds"
+        #puts "******** time to process row: #{Time.now-startRow} seconds"
+        #puts "************************ total time so far : #{Time.now-start} seconds"
       end
     end
 
-    puts "=========== valid = #{self.valid?}; errors = #{self.errors.full_messages}"
+    #puts "=========== valid = #{self.valid?}; errors = #{self.errors.full_messages}"
 
     self.save
 
-    puts "****************** total changes: #{counts.map{|k,v| k + ' - ' + v.to_s}.join(', ')}"
-    puts "****************** time to process answer csv: #{Time.now-start} seconds for #{n} rows"
+    #puts "****************** total changes: #{counts.map{|k,v| k + ' - ' + v.to_s}.join(', ')}"
+    #puts "****************** time to process answer csv: #{Time.now-start} seconds for #{n} rows"
 
     I18n.locale = orig_locale
 

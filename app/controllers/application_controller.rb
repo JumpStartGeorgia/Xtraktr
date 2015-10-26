@@ -295,7 +295,6 @@ class ApplicationController < ActionController::Base
       end
     end
 
-
     respond_to do |format|
       format.html{
         # load the shapes if needed
@@ -314,8 +313,7 @@ class ApplicationController < ActionController::Base
         gon.na = I18n.t('explore_data.v2.na')
         gon.percent = I18n.t('explore_data.v2.percent')
         gon.table_questions_header = I18n.t('app.common.questions')
-
-        set_gon_highcharts
+        set_gon_highcharts(dataset.current_locale)
         set_gon_datatables
 
         gon.explore_data = true
@@ -371,8 +369,7 @@ class ApplicationController < ActionController::Base
         gon.na = I18n.t('explore_time_series.na')
         gon.percent = I18n.t('explore_time_series.percent')
         gon.table_questions_header = I18n.t('app.common.questions')
-
-        set_gon_highcharts
+        set_gon_highcharts(dataset.current_locale)
         set_gon_datatables
 
         gon.explore_time_series = true
@@ -419,6 +416,7 @@ class ApplicationController < ActionController::Base
           permalink = Dataset.get_slug(options['dataset_id'])
           permalink = options['dataset_id'] if permalink.blank?
           owner = Dataset.get_owner(options['dataset_id'])
+          language = options["language"].present? ? options["language"] : Dataset.get_default_language(options['dataset_id'])
 
           # create link to dashboard
           output[:dashboard_link] = use_admin_link.to_s == 'true' ? dataset_url(owner, permalink) : explore_data_dashboard_url(owner, permalink)
@@ -429,6 +427,7 @@ class ApplicationController < ActionController::Base
           output[:id] = options['id']
           options['from_embed'] = true
           output[:explore_link] = use_admin_link.to_s == 'true' ? explore_dataset_url(options) : explore_data_show_url(options)
+          output[:language] = language
         end
       elsif options['time_series_id'].present?
         output[:type] = 'time_series'
@@ -443,7 +442,7 @@ class ApplicationController < ActionController::Base
           permalink = TimeSeries.get_slug(options['time_series_id'])
           permalink = options['time_series_id'] if permalink.blank?
           owner = TimeSeries.get_owner(options['time_series_id'])
-
+          language = options["language"].present? ? options["language"] : TimeSeries.get_default_language(options['time_series_id'])
           # create link to dashboard
           output[:dashboard_link] = use_admin_link.to_s == 'true' ? time_series_url(owner, permalink) : explore_time_series_dashboard_url(owner, permalink)
 
@@ -453,6 +452,7 @@ class ApplicationController < ActionController::Base
           output[:id] = options['id']
           options['from_embed'] = true
           output[:explore_link] = use_admin_link.to_s == 'true' ? explore_time_series_url(options) : explore_time_series_show_url(options)
+          output[:language] = language
         end
       end
 
@@ -483,7 +483,7 @@ class ApplicationController < ActionController::Base
   end
 
   # based on the highlight visual types, load the correct js files
-  def load_highlight_assets(embed_ids)
+  def load_highlight_assets(embed_ids, language = I18n.locale)
     embed_ids = [embed_ids] if embed_ids.class != Array
     visual_types = []
     dataset_ids = []
@@ -520,28 +520,28 @@ class ApplicationController < ActionController::Base
     @js.push('embed.js', 'explore.js')
 
     gon.generate_highlights_url = generate_highlights_path
-    set_gon_highcharts
+    set_gon_highcharts(language)
   end
 
   #########################################
 
-  def set_gon_highcharts
-    gon.highcharts_context_title = I18n.t('highcharts.context_title')
-    gon.highcharts_png = I18n.t('highcharts.png')
-    gon.highcharts_jpg = I18n.t('highcharts.jpg')
-    gon.highcharts_pdf = I18n.t('highcharts.pdf')
-    gon.highcharts_svg = I18n.t('highcharts.svg')
+  def set_gon_highcharts(language = I18n.locale)
+    gon.highcharts_context_title = I18n.t('highcharts.context_title', locale: language)
+    gon.highcharts_png = I18n.t('highcharts.png', locale: language)
+    gon.highcharts_jpg = I18n.t('highcharts.jpg', locale: language)
+    gon.highcharts_pdf = I18n.t('highcharts.pdf', locale: language)
+    gon.highcharts_svg = I18n.t('highcharts.svg', locale: language)
 
-    gon.add_highlight_text = I18n.t('helpers.links.add_highlight')
-    gon.highlight_description_chart_text = I18n.t('helpers.links.highlight_description_chart')
-    gon.embed_chart_text = I18n.t('helpers.links.embed_chart')
-    gon.delete_highlight_text = I18n.t('helpers.links.delete_highlight')
-    gon.description_highlight_text = I18n.t('helpers.links.description_highlight')
-    gon.confirm_text = I18n.t('helpers.links.confirm')
+    gon.add_highlight_text = I18n.t('helpers.links.add_highlight', locale: language)
+    gon.highlight_description_chart_text = I18n.t('helpers.links.highlight_description_chart', locale: language)
+    gon.embed_chart_text = I18n.t('helpers.links.embed_chart', locale: language)
+    gon.delete_highlight_text = I18n.t('helpers.links.delete_highlight', locale: language)
+    gon.description_highlight_text = I18n.t('helpers.links.description_highlight', locale: language)
+    gon.confirm_text = I18n.t('helpers.links.confirm', locale: language)
 
     # gon.disclaimer_text = I18n.t('app.menu.disclaimer')
     # gon.disclaimer_link = disclaimer_url
-    gon.weighted_footnote = I18n.t('app.common.weighted_footnote')
+    gon.weighted_footnote = I18n.t('app.common.weighted_footnote', locale: language)
   end
 
   def set_gon_datatables

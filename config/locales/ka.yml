@@ -573,18 +573,18 @@ ka:
             title_filter_value: ", გაფილტრულია: '%{code} - %{variable} = %{value}'-ის მიხედვით"
       single:
         html:
-          title: "<span class='code-highlight'>%{code}</span> - %{variable}'"
+          title: "'<span class='code-highlight'>%{code}</span> - %{variable}'"
           title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'-ის მიხედვით"
           title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'-ის მიხედვით"
         text:
-          title: "%{code} - %{variable}'"
+          title: "'%{code} - %{variable}'"
           title_filter: ", გაფილტრულია: '%{code} - %{variable}'-ის მიხედვით"
           title_filter_value: ", გაფილტრულია: '%{code} - %{variable} = %{value}'-ის მიხედვით"
       subtitle:
         html:
           title: "პასუხების ჯამური რაოდენობა: <span class='number'>%{num}</span>  %{total}-იდან"
           title_filter: "პასუხების ჯამური რაოდენობა %{total}-იდან: <br />%{nums}"
-          title_weighted: "შესწორებების ცხრილი"
+          title_weighted: "შეუწონელი პასუხების ჯამური რაოდენობა<span class='footnote-flag'>*</span>: <span class='number'>%{num}</span> %{total}-იდან"
           title_filter_weighted: "შეუწონელი პასუხების ჯამური რაოდენობა %{total}-იდან<span class='footnote-flag'>*</span>: <br />%{nums}"
         text:
           title: "პასუხების ჯამური რაოდენობა: %{num} %{total}-იდან"
@@ -1205,12 +1205,14 @@ ka:
         header: "შეკითხვები"
         template: "ღილაკზე დაჭერით თქვენ ჩამოტვირთავთ ნიმუშს ამ მონაცემების ყველა შეკითხვისთვის. გააკეთეთ ცვლილებები ცხრილში და გამოიყენეთ ქვემოთ მოცემული ფორმა განხორციელებული ცვლილებების შესანახად."
         template2: "სვეტები, რომლის შეცვლაც შეუძლებელია: %{code}"
+        template3: "If you are using Excel, please use the XLSX format for Excel may not properly load CSV files."
         template_link: "შეკითხვების ნიმუშების ჩამოტვირთვა"
         submit: "შეკითხვების განახლება"
       answers:
         header: "პასუხები"
         template: "ქვემოთ მოცემულ ღილაკზე დაჭერით ჩამოიტვირთება მონაცემთა ცხრილში არსებული ყველა პასუხის ნიმუში. გააკეთეთ ცვლილებები ცხრილში და გამოიყენეთ ქვემოთ მოცემული ფორმა განხორციელებული ცვლილებების შესანახად."
         template2: "სვეტები, რომლის შეცვლაც შეუძლებელია: %{code}"
+        template3: "If you are using Excel, please use the XLSX format for Excel may not properly load CSV files."
         template_link: "პასუხების ნიმუშების ჩამოტვირთვა"
         submit: "პასუხების განახლება"
   groups:
@@ -1352,12 +1354,14 @@ ka:
         header: "შეკითხვები"
         template: "ღილაკზე დაჭერით თქვენ ჩამოტვირთავთ ნიმუშს ამ პერიოდული შედარების ყველა შეკითხვისთვის. გააკეთეთ ცვლილებები ცხრილში და გამოიყენეთ ქვემოთ მოცემული ფორმა განხორციელებული ცვლილებების შესანახად."
         template2: "სვეტები, რომლის შეცვლაც შეუძლებელია: %{code}"
+        template3: "If you are using Excel, please use the XLSX format for Excel may not properly load CSV files."
         template_link: "შეკითხვების ნიმუშების ჩამოტვირთვა"
         submit: "შეკითხვების განახლება"
       answers:
         header: "პასუხები"
         template: "ღილაკზე დაჭერით თქვენ ჩამოტვირთავთ ნიმუშს პერიოდული შედარებების ყველა პასუხისთვის. გააკეთეთ ცვლილებები ცხრილში და გამოიყენეთ ქვემოთ მოცემული ფორმა განხორციელებული ცვლილებების შესანახად."
         template2: "სვეტები, რომლის შეცვლაც შეუძლებელია: %{code}"
+        template3: "If you are using Excel, please use the XLSX format for Excel may not properly load CSV files."
         template_link: "პასუხების ნიმუშების ჩამოტვირთვა"
         submit: "პასუხების განახლება"
   time_series_groups:

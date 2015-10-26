@@ -155,7 +155,7 @@ class RootController < ApplicationController
       gon.highlight_ids = @highlights.map{|x| x.id}.shuffle if @highlights.present?
       gon.highlight_show_title = false
       gon.highlight_show_links = false
-      load_highlight_assets(@highlights.map{|x| x.embed_id}) if @highlights.present?
+      load_highlight_assets(@highlights.map{|x| x.embed_id}, @dataset.current_locale) if @highlights.present?
 
       @show_title = false
 
@@ -264,7 +264,7 @@ class RootController < ApplicationController
       gon.highlight_ids = @highlights.map{|x| x.id}.shuffle if @highlights.present?
       gon.highlight_show_title = false
       gon.highlight_show_links = false
-      load_highlight_assets(@highlights.map{|x| x.embed_id}) if @highlights.present?
+      load_highlight_assets(@highlights.map{|x| x.embed_id}, @time_series.current_locale) if @highlights.present?
 
       @show_title = false
 

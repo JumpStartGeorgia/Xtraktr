@@ -146,7 +146,7 @@ class Api::V2
     with_title = options['with_title'].present? && options['with_title'].to_s.to_bool == true
     with_chart_data = options['with_chart_data'].present? && options['with_chart_data'].to_s.to_bool == true
     with_map_data = options['with_map_data'].present? && options['with_map_data'].to_s.to_bool == true
-    language = options['language']
+    language = options['language'] if options['language'].present?
     weight = options['weighted_by_code']
     weight_values = options['weight_values'] # only present for weighted time series analysis that class this method
 
@@ -171,6 +171,7 @@ class Api::V2
     if language.present? && dataset.languages.include?(language)
       dataset.current_locale = language
     end
+    @language = (I18n.available_locales.include? dataset.current_locale.to_sym) ? dataset.current_locale : I18n.locale.to_s
 
     # get the questions
     question = dataset.questions.with_code(question_code)
@@ -392,7 +393,7 @@ class Api::V2
     can_exclude = options['can_exclude'].present? && options['can_exclude'].to_s.to_bool == true
     with_title = options['with_title'].present? && options['with_title'].to_s.to_bool == true
     with_chart_data = options['with_chart_data'].present? && options['with_chart_data'].to_s.to_bool == true
-    language = options['language']
+    language = options['language'] if options['language'].present?
     weight = options['weighted_by_code']
 
     time_series = nil
@@ -413,9 +414,11 @@ class Api::V2
     end
 
     # if language provided, set it
-    if language.present? && time_series.languages.include?(language)
+    if language.present? && dataset.languages.include?(language)
       time_series.current_locale = language
     end
+    @language = (I18n.available_locales.include? time_series.current_locale.to_sym) ? time_series.current_locale : I18n.locale.to_s
+
 
     question = time_series.questions.with_code(question_code)
 
@@ -1783,24 +1786,24 @@ private
   def self.dataset_single_analysis_title(locale_key, question, filtered_by=nil, filtered_by_answer=nil)
     group = ''
     if question[:group].present? && question[:group][:include_in_charts]
-      group << I18n.t("explore_data.v2.group.#{locale_key}.title", text: question[:group][:description])
+      group << I18n.t("explore_data.v2.group.#{locale_key}.title", text: question[:group][:description], locale: @language)
       if question[:subgroup].present? && question[:subgroup][:include_in_charts]
-        group << I18n.t("explore_data.v2.subgroup.#{locale_key}.title", text: question[:subgroup][:description])
+        group << I18n.t("explore_data.v2.subgroup.#{locale_key}.title", text: question[:subgroup][:description], locale: @language)
       end
     end
-    title = I18n.t("explore_data.v2.single.#{locale_key}.title", :code => question[:original_code], :variable => question[:text], :group => group)
+    title = I18n.t("explore_data.v2.single.#{locale_key}.title", :code => question[:original_code], :variable => question[:text], :group => group, locale: @language)
     if filtered_by.present?
       group = ''
       if filtered_by[:group].present? && filtered_by[:group][:include_in_charts]
-        group << I18n.t("explore_data.v2.group.#{locale_key}.title", text: filtered_by[:group][:description])
+        group << I18n.t("explore_data.v2.group.#{locale_key}.title", text: filtered_by[:group][:description], locale: @language)
         if filtered_by[:subgroup].present? && filtered_by[:subgroup][:include_in_charts]
-          group << I18n.t("explore_data.v2.subgroup.#{locale_key}.title", text: filtered_by[:subgroup][:description])
+          group << I18n.t("explore_data.v2.subgroup.#{locale_key}.title", text: filtered_by[:subgroup][:description], locale: @language)
         end
       end
       if filtered_by_answer.present?
-        title << I18n.t("explore_data.v2.single.#{locale_key}.title_filter_value", :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer, :group => group )
+        title << I18n.t("explore_data.v2.single.#{locale_key}.title_filter_value", :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer, :group => group, locale: @language)
       else
-        title << I18n.t("explore_data.v2.single.#{locale_key}.title_filter", :code => filtered_by[:original_code], :variable => filtered_by[:text], :group => group)
+        title << I18n.t("explore_data.v2.single.#{locale_key}.title_filter", :code => filtered_by[:original_code], :variable => filtered_by[:text], :group => group, locale: @language)
       end
     end
     return title.html_safe
@@ -1809,32 +1812,32 @@ private
   def self.dataset_comparative_analysis_title(locale_key, question, broken_down_by, filtered_by=nil, filtered_by_answer=nil)
     group = ''
     if question[:group].present? && question[:group][:include_in_charts]
-      group << I18n.t("explore_data.v2.group.#{locale_key}.title", text: question[:group][:description])
+      group << I18n.t("explore_data.v2.group.#{locale_key}.title", text: question[:group][:description], locale: @language)
       if question[:subgroup].present? && question[:subgroup][:include_in_charts]
-        group << I18n.t("explore_data.v2.subgroup.#{locale_key}.title", text: question[:subgroup][:description])
+        group << I18n.t("explore_data.v2.subgroup.#{locale_key}.title", text: question[:subgroup][:description], locale: @language)
       end
     end
     group2 = ''
     if broken_down_by[:group].present? && broken_down_by[:group][:include_in_charts]
-      group2 << I18n.t("explore_data.v2.group.#{locale_key}.title", text: broken_down_by[:group][:description])
+      group2 << I18n.t("explore_data.v2.group.#{locale_key}.title", text: broken_down_by[:group][:description], locale: @language)
       if broken_down_by[:subgroup].present? && broken_down_by[:subgroup][:include_in_charts]
-        group2 << I18n.t("explore_data.v2.subgroup.#{locale_key}.title", text: broken_down_by[:subgroup][:description])
+        group2 << I18n.t("explore_data.v2.subgroup.#{locale_key}.title", text: broken_down_by[:subgroup][:description], locale: @language)
       end
     end
     title = I18n.t("explore_data.v2.comparative.#{locale_key}.title", :question_code => question[:original_code], :variable => question[:text],
-              :broken_down_by_code => broken_down_by[:original_code], :broken_down_by => broken_down_by[:text], :group => group, :group2 => group2)
+              :broken_down_by_code => broken_down_by[:original_code], :broken_down_by => broken_down_by[:text], :group => group, :group2 => group2, locale: @language)
     if filtered_by.present?
       group = ''
       if filtered_by[:group].present? && filtered_by[:group][:include_in_charts]
-        group << I18n.t("explore_data.v2.group.#{locale_key}.title", text: filtered_by[:group][:description])
+        group << I18n.t("explore_data.v2.group.#{locale_key}.title", text: filtered_by[:group][:description], locale: @language)
         if filtered_by[:subgroup].present? && filtered_by[:subgroup][:include_in_charts]
-          group << I18n.t("explore_data.v2.subgroup.#{locale_key}.title", text: filtered_by[:subgroup][:description])
+          group << I18n.t("explore_data.v2.subgroup.#{locale_key}.title", text: filtered_by[:subgroup][:description], locale: @language)
         end
       end
       if filtered_by_answer.present?
-        title << I18n.t("explore_data.v2.comparative.#{locale_key}.title_filter_value", :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer, :group => group )
+        title << I18n.t("explore_data.v2.comparative.#{locale_key}.title_filter_value", :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer, :group => group, locale: @language)
       else
-        title << I18n.t("explore_data.v2.comparative.#{locale_key}.title_filter", :code => filtered_by[:original_code], :variable => filtered_by[:text], :group => group )
+        title << I18n.t("explore_data.v2.comparative.#{locale_key}.title_filter", :code => filtered_by[:original_code], :variable => filtered_by[:text], :group => group, locale: @language)
       end
     end
     return title.html_safe
@@ -1843,32 +1846,32 @@ private
   def self.dataset_comparative_analysis_map_title(locale_key, question, broken_down_by, broken_down_by_answer, filtered_by=nil, filtered_by_answer=nil)
     group = ''
     if question[:group].present? && question[:group][:include_in_charts]
-      group << I18n.t("explore_data.v2.group.#{locale_key}.title", text: question[:group][:description])
+      group << I18n.t("explore_data.v2.group.#{locale_key}.title", text: question[:group][:description], locale: @language)
       if question[:subgroup].present? && question[:subgroup][:include_in_charts]
-        group << I18n.t("explore_data.v2.subgroup.#{locale_key}.title", text: question[:subgroup][:description])
+        group << I18n.t("explore_data.v2.subgroup.#{locale_key}.title", text: question[:subgroup][:description], locale: @language)
       end
     end
     group2 = ''
     if broken_down_by[:group].present? && broken_down_by[:group][:include_in_charts]
-      group2 << I18n.t("explore_data.v2.group.#{locale_key}.title", text: broken_down_by[:group][:description])
+      group2 << I18n.t("explore_data.v2.group.#{locale_key}.title", text: broken_down_by[:group][:description], locale: @language)
       if broken_down_by[:subgroup].present? && broken_down_by[:subgroup][:include_in_charts]
-        group2 << I18n.t("explore_data.v2.subgroup.#{locale_key}.title", text: broken_down_by[:subgroup][:description])
+        group2 << I18n.t("explore_data.v2.subgroup.#{locale_key}.title", text: broken_down_by[:subgroup][:description], locale: @language)
       end
     end
-    title = I18n.t("explore_data.v2.comparative.#{locale_key}.map.title", :code => question[:original_code], :variable => question[:text], :group => group)
-    title << I18n.t("explore_data.v2.comparative.#{locale_key}.map.title_broken_down_by", :code => broken_down_by[:original_code], :broken_down_by => broken_down_by[:text], :broken_down_by_answer => broken_down_by_answer, :group => group2)
+    title = I18n.t("explore_data.v2.comparative.#{locale_key}.map.title", :code => question[:original_code], :variable => question[:text], :group => group, locale: @language)
+    title << I18n.t("explore_data.v2.comparative.#{locale_key}.map.title_broken_down_by", :code => broken_down_by[:original_code], :broken_down_by => broken_down_by[:text], :broken_down_by_answer => broken_down_by_answer, :group => group2, locale: @language)
     if filtered_by.present?
       group = ''
       if filtered_by[:group].present? && filtered_by[:group][:include_in_charts]
-        group << I18n.t("explore_data.v2.group.#{locale_key}.title", text: filtered_by[:group][:description])
+        group << I18n.t("explore_data.v2.group.#{locale_key}.title", text: filtered_by[:group][:description], locale: @language)
         if filtered_by[:subgroup].present? && filtered_by[:subgroup][:include_in_charts]
-          group << I18n.t("explore_data.v2.subgroup.#{locale_key}.title", text: filtered_by[:subgroup][:description])
+          group << I18n.t("explore_data.v2.subgroup.#{locale_key}.title", text: filtered_by[:subgroup][:description], locale: @language)
         end
       end
       if filtered_by_answer.present?
-        title << I18n.t("explore_data.v2.comparative.#{locale_key}.map.title_filter_value", :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer, :group => group )
+        title << I18n.t("explore_data.v2.comparative.#{locale_key}.map.title_filter_value", :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer, :group => group, locale: @language)
       else
-        title << I18n.t("explore_data.v2.comparative.#{locale_key}.map.title_filter", :code => filtered_by[:original_code], :variable => filtered_by[:text], :group => group )
+        title << I18n.t("explore_data.v2.comparative.#{locale_key}.map.title_filter", :code => filtered_by[:original_code], :variable => filtered_by[:text], :group => group, locale: @language)
       end
     end
     return title.html_safe
@@ -1881,7 +1884,7 @@ private
       if locale_key == 'html'
         title << "<br /> <span class='total_responses'>"
       end
-      title << I18n.t("explore_data.v2.subtitle.#{locale_key}.#{title_key}", :num => number_with_delimiter(num), total: number_with_delimiter(total))
+      title << I18n.t("explore_data.v2.subtitle.#{locale_key}.#{title_key}", :num => number_with_delimiter(num), total: number_with_delimiter(total), locale: @language)
       if locale_key == 'html'
         title << "</span>"
       end
@@ -1903,7 +1906,7 @@ private
         filter_responses << " #{result[:filter_answer_text]}: #{number_with_delimiter(result[:filter_results][:total_responses])}"
       end
     end
-    title << I18n.t("explore_data.v2.subtitle.#{locale_key}.#{title_key}", :code => filtered_by_code, :variable => filtered_by_text, :nums => filter_responses.join(join_text), :total => number_with_delimiter(total))
+    title << I18n.t("explore_data.v2.subtitle.#{locale_key}.#{title_key}", :code => filtered_by_code, :variable => filtered_by_text, :nums => filter_responses.join(join_text), :total => number_with_delimiter(total), locale: @language)
     if locale_key == 'html'
       title << "</span>"
     end
@@ -1917,24 +1920,24 @@ private
   def self.time_series_single_analysis_title(locale_key, question, filtered_by=nil, filtered_by_answer=nil)
     group = ''
     if question[:group].present? && question[:group][:include_in_charts]
-      group << I18n.t("explore_time_series.v2.group.#{locale_key}.title", text: question[:group][:description])
+      group << I18n.t("explore_time_series.v2.group.#{locale_key}.title", text: question[:group][:description], locale: @language)
       if question[:subgroup].present? && question[:subgroup][:include_in_charts]
-        group << I18n.t("explore_time_series.v2.subgroup.#{locale_key}.title", text: question[:subgroup][:description])
+        group << I18n.t("explore_time_series.v2.subgroup.#{locale_key}.title", text: question[:subgroup][:description], locale: @language)
       end
     end
-    title = I18n.t("explore_time_series.v2.single.#{locale_key}.title", :code => question[:original_code], :variable => question[:text], :group => group)
+    title = I18n.t("explore_time_series.v2.single.#{locale_key}.title", :code => question[:original_code], :variable => question[:text], :group => group, locale: @language)
     if filtered_by.present?
       group = ''
       if filtered_by[:group].present? && filtered_by[:group][:include_in_charts]
-        group << I18n.t("explore_time_series.v2.group.#{locale_key}.title", text: filtered_by[:group][:description])
+        group << I18n.t("explore_time_series.v2.group.#{locale_key}.title", text: filtered_by[:group][:description], locale: @language)
         if filtered_by[:subgroup].present? && filtered_by[:subgroup][:include_in_charts]
-          group << I18n.t("explore_time_series.v2.subgroup.#{locale_key}.title", text: filtered_by[:subgroup][:description])
+          group << I18n.t("explore_time_series.v2.subgroup.#{locale_key}.title", text: filtered_by[:subgroup][:description], locale: @language)
         end
       end
       if filtered_by_answer.present?
-        title << I18n.t("explore_time_series.v2.single.#{locale_key}.title_filter_value", :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer, :group => group )
+        title << I18n.t("explore_time_series.v2.single.#{locale_key}.title_filter_value", :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer, :group => group, locale: @language)
       else
-        title << I18n.t("explore_time_series.v2.single.#{locale_key}.title_filter", :code => filtered_by[:original_code], :variable => filtered_by[:text], :group => group )
+        title << I18n.t("explore_time_series.v2.single.#{locale_key}.title_filter", :code => filtered_by[:original_code], :variable => filtered_by[:text], :group => group, locale: @language)
       end
     end
     return title.html_safe
@@ -1949,9 +1952,9 @@ private
     end
     num = []
     totals.each do |total|
-      num << I18n.t("explore_time_series.v2.subtitle.#{locale_key}.title_x_of_y", dataset: total[:dataset_label], num: number_with_delimiter(total[:total_responses]), total: number_with_delimiter(total[:total_possible_responses]))
+      num << I18n.t("explore_time_series.v2.subtitle.#{locale_key}.title_x_of_y", dataset: total[:dataset_label], num: number_with_delimiter(total[:total_responses]), total: number_with_delimiter(total[:total_possible_responses]), locale: @language)
     end
-    title << I18n.t("explore_time_series.v2.subtitle.#{locale_key}.#{title_key}", :x_of_y => num.join(join_key))
+    title << I18n.t("explore_time_series.v2.subtitle.#{locale_key}.#{title_key}", :x_of_y => num.join(join_key), locale: @language)
     if locale_key == 'html'
       title << "</span>"
     end
@@ -1996,11 +1999,10 @@ private
       totals << "#{response[:dataset_label]}: #{number_with_delimiter(response[:total_possible_responses])}"
     end
 
-    title << I18n.t("explore_time_series.v2.subtitle.#{locale_key}.#{title_key}", :code => filtered_by_code, :variable => filtered_by_text, :nums => filter_responses.join, totals: totals.join('; '))
+    title << I18n.t("explore_time_series.v2.subtitle.#{locale_key}.#{title_key}", :code => filtered_by_code, :variable => filtered_by_text, :nums => filter_responses.join, totals: totals.join('; '), locale: @language)
     if locale_key == 'html'
       title << "</span>"
     end
     return title.html_safe
   end
-
 end
