@@ -153,6 +153,7 @@ en:
         sort_order: Sort Order
         shape_name: Name of Shape
       numerical:
+        title: X-axis Title
         type: Number type Integer/Float
         size: Group size
         min: Min Value
@@ -338,6 +339,8 @@ en:
         can_exclude: "If selected, this answer will be available during analysis, but can be turned off if desired by the user."
         sort_order: "The order the answers should appear"
         default_text: "This is the answer text from the default language which is provided to make it easier to complete the translation"
+      numerical:
+        title: "Click the language abbreviation to switch to the language you want to enter the x-axis title for. If you leave this field blank, no x-axis title will be shown."
       group:
         title: The group name will appear in the codebook and on the explore page in the question drop-down lists
         description: "The group description will appear in the codebook, on the explore page in the question drop-down lists and the chart titles, if desired."
@@ -805,7 +808,7 @@ en:
         q2: Percentile 50%
         q3: Percentile 75%
         standart_deviation: Standart Deviation
-        variance: Variance
+        variance: Variance      
     msgs:
       does_not_exist: You tried to access a page that does not exist.
       not_authorized: You are not authorized to view that page.

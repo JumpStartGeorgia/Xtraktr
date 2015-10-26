@@ -50,7 +50,7 @@ $(document).ready(function (){
     });
     return false;
   });
-   console.log(gon.datatable_json);
+   // console.log(gon.datatable_json);
   // datatable
   datatable = $("#mass_change").dataTable({
     "dom": "<'top'fli>t<'bottom'p><'clear'>",
@@ -59,7 +59,8 @@ $(document).ready(function (){
         row.id = data.code;
         // $(row).attr("data-orig", data.data_type + ";" + data.nm_type + ";" + data.nm_size + ";" + data.nm_min + ";" + data.nm_max);
     },
-    "columns": [
+    "columns": [    
+      {"data":null, "defaultContent": "<div class='btn btn-default view-chart'>View</div>"},
       {"data":"code"},
       {"data":"question"},
       {"data":"data_type",
@@ -79,9 +80,9 @@ $(document).ready(function (){
            //console.log(data);
            //data = [["en", "SDFSDFSD"],["ka", "badbab"],["ka", "badbab"],["ka", "badbab"],["ka", "badbab"],["ka", "badbab"],["ka", "badbab"]]
           return "<div class='conditional locale-box' name='question["+full.code +"][numerical][title]' data-o='' "+(full.data_type !== 2 ? " disabled" : "")+">"+
-          "<div class='locale-picker' "+(full.data_type !== 2 ? " disabled" : "")+"><div class='locale-toggle'>"+data[0][0]+"</div><ul>" + 
-          data.map(function(d,i) {  return "<li class='"+[(i+1>6 ? "btop" : ""), (data.length > 5 && i+1 > data.length-data.length%6 ? "bbottom" : "")].join(" ") +"' data-key='"+d[0]+"' data-value='"+d[1]+"' data-orig-value='"+d[1]+"'>" + d[0] + "</li>"; }).join("") + 
-          "<li class='reset'></li></ul></div>" + 
+          "<div class='locale-picker' "+(full.data_type !== 2 ? " disabled" : "")+"><div class='locale-toggle' title='"+gon.locale_picker_data[data[0][0]]+"'>"+data[0][0]+"</div><ul>" + 
+          data.map(function(d,i) {  return "<li class='"+[(i+1>6 ? "btop" : ""), (data.length > 5 && i+1 > data.length-data.length%6 ? "bbottom" : "")].join(" ") +"' data-key='"+d[0]+"' data-value='"+d[1]+"' data-orig-value='"+d[1]+"' title='"+gon.locale_picker_data[d[0]]+"'>" + d[0] + "</li>"; }).join("") + 
+          "<li class='reset' title='"+gon.locale_picker_data.reset+"'></li></ul></div>" + 
           "<input type='text' value='"+data[0][1]+
           "' data-locale='"+ data[0][0] +"'" + (full.data_type !== 2 ? " disabled" : "") + "></div>";
         },
@@ -109,8 +110,7 @@ $(document).ready(function (){
           return "<input class='conditional r' type='number' value='"+data+"' name='question["+full.code +"][numerical][max]' data-o='"+data+"'" + (full.data_type !== 2 ? " disabled" : "") + ">";
         }
         
-      },
-      {"data":null, "defaultContent": "<div class='btn btn-default view-chart'>View</div>"}
+      }
     ],
     "sorting": [],
     // "order": [[0, "asc"]],
@@ -234,15 +234,23 @@ $(document).ready(function (){
   });
 
   $(document).on("click", ".locale-picker:not([disabled]) .locale-toggle", function (){
-    var t = $(this),
+    var to_deactivate = $(".locale-box.active"),
+      t = $(this),
       key = t.text(),
       p = t.parent(),
       ul = p.find("ul"),
       box = p.parent(),
       input = box.find("input");
 
+      if(to_deactivate.length) {
+        to_deactivate.removeClass("active");
+        to_deactivate.find("ul").removeClass("active");
+        to_deactivate.find("input").addClass("blur");
+      }
+
       ul.find("li").show();
       ul.find("li[data-key='" + key + "']").hide(),
+      box.toggleClass("active");
       ul.toggleClass("active");
       input.toggleClass("blur");
   });
@@ -257,15 +265,15 @@ $(document).ready(function (){
       input = box.find("input"),
       prev_locale = input.attr("data-locale"),
       prev_value = input.val();
-
       if(key !== prev_locale) 
       {
         ul.find("li[data-key='"+prev_locale+"']").attr("data-value",prev_value);
         input.val(value);
         input.attr("data-locale", key)
         toggle.text(key);
+        toggle.attr("data-original-title", t.attr("data-original-title"));
       }
-
+      box.toggleClass("active");
       ul.toggleClass("active");
       input.toggleClass("blur");
 
@@ -284,11 +292,19 @@ $(document).ready(function (){
 
     li.attr("data-value", li.attr("data-orig-value"));
     input.val(li.attr("data-orig-value"));
-
+    box.toggleClass("active");
     ul.toggleClass("active");
     input.toggleClass("blur");
   });
-
+  $(document).on("click", function(e) {
+    if($(e.target).closest(".locale-box").length === 0 && $(".locale-box.active").length) {
+      var to_deactivate = $(".locale-box.active");
+      to_deactivate.length
+      to_deactivate.removeClass("active");
+      to_deactivate.find("ul").removeClass("active");
+      to_deactivate.find("input").addClass("blur");
+    }
+  });
 
   $("body").append("<div id='preview' class='preview'><div class='header'><div class='move'></div><div class='close'></div></div><div class='chart'></div></div>");
   $("#preview").draggable({ handle: ".header > .move", cursor: "move" });

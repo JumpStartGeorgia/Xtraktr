@@ -139,6 +139,9 @@ ka:
         can_download: "შეიყვანე შეკითხვა საჯარო ჩამოტვირთვაში"
         has_map_adjustable_max_range: "რუკაზე დატანილი მონაცემების მაქსიმალური მნიშვნელობის შეცვლა შესაძლებელია "
         is_weight: "ეს შეკითხვა შეიცავს შეწონვებს"
+        data_type: Data Type
+        data_type_categorical: Categorical Data Type
+        data_type_numerical: Numerical Data Type        
       answer:
         value: "მნიშვნელობა"
         text: "პასუხი"
@@ -149,6 +152,12 @@ ka:
         no_questions: "ამ მონაცემებისთვის არ არის შეკითხვები "
         sort_order: "დახარისხების წყობა"
         shape_name: "რუკის კონტურული ფორმის სახელი"
+      numerical:
+        title: X-axis Title
+        type: Number type Integer/Float
+        size: Group size
+        min: Min Value
+        max: Max Value        
       group:
         title: "სახელი"
         description: "აღწერა"
@@ -330,6 +339,8 @@ ka:
         can_exclude: "მონიშვნის შემთხვევაში ეს შეკითხვა იქნება ხელმისაწვდომი ანალიზის დროს, მაგრამ მომხმარებლის სურვილის შემთხვევაში ის შეიძლება გამოირთოს"
         sort_order: "პასუხების გამოჩენის თანმიმდევრობა"
         default_text: "ეს არის პასუხის ტექსტი მთავარი ენიდან, რომელიც მოწოდებულია რათა თარგმანის გასაადვილებლად"
+      numerical:
+        title: "Click the language abbreviation to switch to the language you want to enter the x-axis title for. If you leave this field blank, no x-axis title will be shown."        
       group:
         title: "ჯგუფის სახელწოდება გამოჩნდება კოდირების დოკუმენტში, მონაცემების გვერდზე და შეკითხვების ჩამოსაშლელ ჩამონათვალში "
         description: "ჯგუფის აღწერა გამოჩნდება კოდირების დოკუმენტში, მონაცემების გვერდზე, შეკითხვების ჩამოსაშლელ ჩამონათვალში და დიაგრამების სათაურებში, სურვილის შემთხვევაში. "

@@ -9,7 +9,8 @@ td .r {
   text-align:right;
 }
 .conditional[disabled] {
-  opacity:0.5;
+  // opacity:0.5;
+  display:none;
 }
 #mass_change {
   tbody tr td {
@@ -65,12 +66,13 @@ td .r {
 }
 .locale-box {
   position:relative;  
+  text-align:left;
   .locale-picker {
     position:absolute;
     display:inline-block;
     text-align:left;
     top:1px;
-    left:3px;    
+    left:1px;    
     z-index:308;
     .locale-toggle {
       display:inline-block;
@@ -135,4 +137,12 @@ td .r {
       background-color:#ebebe4;
     }
   }
+}
+.hint-tooltip {
+    display: inline-block;
+    width: 21px;
+    height: 21px;
+    background: rgba(16, 0, 0, 0) url(svg/question.svg) no-repeat center;
+    margin-left: 6px;
+    vertical-align: bottom;
 }

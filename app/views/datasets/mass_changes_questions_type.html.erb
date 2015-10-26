@@ -9,16 +9,16 @@
       <table id='mass_change' class="table table-striped table-hover table-nonfluid">
         <thead>
           <tr>
+            <th><%= t("helpers.links.view") %></th>
             <th><%= model_class.human_attribute_name(:code) %></th>
             <th><%= model_class.human_attribute_name(:text) %></th>
             <th class="center"><%= model_class.human_attribute_name(:data_type_categorical) %></th>
             <th class="center"><%= model_class.human_attribute_name(:data_type_numerical) %></th>
-            <th><%= Numerical.human_attribute_name(:title) %></th>
+            <th><%= Numerical.human_attribute_name(:title) %><span class="hint-tooltip" title="<%= t('mongoid.hints.numerical.title') %>"></span></th>
             <th><%= Numerical.human_attribute_name(:type) %></th>
             <th><%= Numerical.human_attribute_name(:size) %></th>
             <th><%= Numerical.human_attribute_name(:min) %></th>
             <th><%= Numerical.human_attribute_name(:max) %></th>
-            <th><%= t("helpers.links.view") %></th>
           </tr>
         </thead>
         <tbody></tbody>

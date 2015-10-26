@@ -400,6 +400,12 @@ class DatasetsController < ApplicationController
 
         # create data for datatables (faster to load this way)
         gon.datatable_json = []
+
+        gon.locale_picker_data = { reset: I18n.t("app.buttons.reset") }
+        @dataset.languages_sorted.each do |locale|
+          gon.locale_picker_data[I18n.t("app.language." + locale)[0..1].downcase] = I18n.t("app.language." + locale)
+        end
+
         @dataset.questions.each do |q|
             data = {
               code: q.original_code,
@@ -419,9 +425,9 @@ class DatasetsController < ApplicationController
               @dataset.languages_sorted.each do |locale|
                 value = q.numerical.title_translations[locale].blank? ? "" : q.numerical.title_translations[locale]
                 if locale == orig_locale
-                  orig_title = [locale, value]
+                  orig_title = [I18n.t("app.language." + locale)[0..1].downcase, value]
                 else
-                  titles.push([locale, value])
+                  titles.push([I18n.t("app.language." + locale)[0..1].downcase, value])
                 end
               end
               titles.unshift(orig_title)
@@ -439,9 +445,9 @@ class DatasetsController < ApplicationController
 
               @dataset.languages_sorted.each do |locale|
                 if locale == orig_locale
-                  orig_title = [locale, ""]
+                  orig_title = [I18n.t("app.language." + locale)[0..1].downcase, ""]
                 else
-                  titles.push([locale, ""])
+                  titles.push([I18n.t("app.language." + locale)[0..1].downcase, ""])
                 end
               end
               titles.unshift(orig_title)
