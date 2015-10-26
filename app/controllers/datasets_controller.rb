@@ -393,6 +393,7 @@ class DatasetsController < ApplicationController
 
   # set questions data types [:categorical, :numerical or :unknown]
   def mass_changes_questions_type
+     Rails.logger.debug("-----------------------------------------here---#{params.inspect}")
     respond_to do |format|
       format.html {
         @js.push("mass_changes_questions_type.js", "highcharts.js")
@@ -463,6 +464,7 @@ class DatasetsController < ApplicationController
       }
       format.js {
         begin
+           Rails.logger.debug("--------------------------------------------before here")
           @msg = t('app.msgs.mass_change_question_type_saved')
           @success = true
           if params[:mass_data].present? && params[:mass_data].keys.length > 0

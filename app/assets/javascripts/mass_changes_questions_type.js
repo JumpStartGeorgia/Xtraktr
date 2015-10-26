@@ -25,7 +25,7 @@ $(document).ready(function (){
     tmpDataKeys.forEach(function (d) {
       tmpData[d.toLowerCase()] = get_code_meta(d);
     });
-     //console.log(tmpData);
+     console.log("here",tmpData);
     //  // get all values and put to tmpData array for question
     $(".data-loader").fadeIn("fast", function (){
       $.ajax({
@@ -59,7 +59,7 @@ $(document).ready(function (){
         row.id = data.code;
         // $(row).attr("data-orig", data.data_type + ";" + data.nm_type + ";" + data.nm_size + ";" + data.nm_min + ";" + data.nm_max);
     },
-    "columns": [    
+    "columns": [   
       {"data":null, "defaultContent": "<div class='btn btn-default view-chart'>View</div>"},
       {"data":"code"},
       {"data":"question"},
@@ -83,7 +83,7 @@ $(document).ready(function (){
           "<div class='locale-picker' "+(full.data_type !== 2 ? " disabled" : "")+"><div class='locale-toggle' title='"+gon.locale_picker_data[data[0][0]]+"'>"+data[0][0]+"</div><ul>" + 
           data.map(function(d,i) {  return "<li class='"+[(i+1>6 ? "btop" : ""), (data.length > 5 && i+1 > data.length-data.length%6 ? "bbottom" : "")].join(" ") +"' data-key='"+d[0]+"' data-value='"+d[1]+"' data-orig-value='"+d[1]+"' title='"+gon.locale_picker_data[d[0]]+"'>" + d[0] + "</li>"; }).join("") + 
           "<li class='reset' title='"+gon.locale_picker_data.reset+"'></li></ul></div>" + 
-          "<input type='text' value='"+data[0][1]+
+          "<input type='text' class='title' value='"+data[0][1]+
           "' data-locale='"+ data[0][0] +"'" + (full.data_type !== 2 ? " disabled" : "") + "></div>";
         },
         class: "c"
@@ -132,12 +132,21 @@ $(document).ready(function (){
     }
   });
 
-  $(datatable).on("change", "input, select", debounce(function () {
+  $(datatable).on("change", "input, select", function () {
+    console.log("here");
     var t = $(this),
       p = t.closest("tr"),
-      id = p.attr("id"),
+      id = p.attr("id"), orig, newValue;
+    
+    if(t.hasClass("title")) {
+      orig = t.closest(".locale-box").find(".locale-picker ul li[data-key='"+t.attr("data-locale")+"']").attr("data-orig-value") ;
+      newValue = t.val();
+    }
+    else {
       orig = t.attr("data-o"),
       newValue = +t.val();
+    }
+      
     if(t.hasClass("numerical")) {
       if(newValue === 2) {
         p.find(".conditional, .conditional input").removeAttr("disabled");
@@ -162,14 +171,14 @@ $(document).ready(function (){
       }
       else
       delete data[id];
-    }
-   
-      if(!preview_closed) {
-        p.find(".view-chart").trigger("click");
-      }
-  
-  }, 500));
+    }    
 
+    if(!preview_closed) {
+      p.find(".view-chart").trigger("click");
+    }
+  
+  });
+//debounce(, 500)
   $(datatable).on("click", ".view-chart", function () {
     var p = $(this).closest("tr"),
       code = p.attr("id"),
@@ -317,7 +326,7 @@ $(document).ready(function (){
   });
 
   var preview = function (meta, data, newCode) {
-     console.log(meta);
+    console.log(meta);
 
     var t = $("#preview"), chart, sum = data.reduce(function(a, b){return a+b;});
     t.show();
@@ -431,12 +440,26 @@ $(document).ready(function (){
   }
   function get_code_meta (code) {
     var tr = mass_change.find("tr#" + code),
-      tmp = "[name='question["+code+"][numerical]";
-    return [ tr.find("[name='question["+code+"][data_type]']:checked").val(),
-        tr.find(tmp + "[type]']").val(),
-        tr.find(tmp + "[size]']").val(),
-        tr.find(tmp + "[min]']").val(),
-        tr.find(tmp + "[max]']").val() ].map(function (d){ return d=+d; });
+      tmp = "[name='question["+code+"][numerical]",
+      titles = [], out;
+
+    var input = tr.find(".locale-box input"),
+    input_key = input.attr("data-locale");
+    titles.push([input_key, input.val()]);
+    tr.find(".locale-picker ul li:not(.reset)").each(function (i, d) {
+      var dd = $(d);
+      if(dd.attr("data-key") !== input_key && dd.attr("data-orig-value") !== dd.attr("data-value")) {
+        titles.push([dd.attr("data-key"), dd.attr("data-value")]);      
+      }
+    });
+
+    out = [ tr.find("[name='question["+code+"][data_type]']:checked").val(),
+      tr.find(tmp + "[type]']").val(),
+      tr.find(tmp + "[size]']").val(),
+      tr.find(tmp + "[min]']").val(),
+      tr.find(tmp + "[max]']").val() ].map(function (d){ return d=+d; });
+    //out.unshift(titles);
+    return out;
   }
   function is_numerical (code) {
     return $("#mass_change tr [name='question["+code+"][data_type]']:checked").val() === 2;
