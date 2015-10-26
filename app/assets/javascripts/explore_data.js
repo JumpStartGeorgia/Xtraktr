@@ -1191,5 +1191,9 @@ $(document).ready(function () {
       $(this).tooltip('hide');
       build_explore_data_page(js.cache[cacheId]);
     });
+    $(document).on("click", ".available-language-switcher.redirect .dropdown-menu a", function (e){ 
+      e.preventDefault();
+       window.location.href = window.location.href + "&" +  $(this).attr("href").substr(1);
+     });
   }
 });
