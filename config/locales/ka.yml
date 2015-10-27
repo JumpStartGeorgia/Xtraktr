@@ -827,7 +827,7 @@ ka:
       cannot_include_weight: "შეკითხვა მონიშნულია, როგორც შეწონვა და ვერ გაანალიზდება, როგორც შეკითხვა. "
       question_no_answers: "ამ შეკითხვას არ აქვს პასუხები და ვერ გაანალიზდება"
       admin_codebook_questions: "კოდირების დოკუმენტის ადმინისტრატორის პანელიდან ნახვისას ხელმისაწვდომია ყველა შეკითხვა, მათ შორის ანალიზიდან გამორიცხული და უპასუხო შეკითხვებიც, რომელთა გარჩევაც შეკითხვის სახელის გასწვრივ არსებული ხატულით არის შესაძლებელი. გთხოვთ, გაითვალისწინოთ, რომ ასეთი შეკითხვები არ არის ხელმისაწვდომი და ხილული საჯაროდ. "
-      collaborators:
+      members:
         success_remove: '%{name} was removed as a member'
         user_not_found: User to remove as a member could not be found
         success_invitations: მოწვევები გაგზავნილია!
@@ -844,7 +844,7 @@ ka:
       time_series: "პერიოდული შედარება"
       highlights: "რჩეული ფაქტები"
       about: "შესახებ"
-      user_settings: "მომხმარებლის პარამეტრები"
+      settings: "მომხმარებლის პარამეტრები"
       owner_dashboard: Dashboard
       about_dataset: "შესახებ"
       about_time_series: "შესახებ"
