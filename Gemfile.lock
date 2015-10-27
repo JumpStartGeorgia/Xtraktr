@@ -378,7 +378,7 @@ DEPENDENCIES
   twitter-bootstrap-rails!
   uglifier (>= 1.0.3)
   unicorn (~> 4.8.3)
-  unidecoder (~> 1.1.2)
+  unidecoder
   useragent!
   whenever
   zipruby-compat!
