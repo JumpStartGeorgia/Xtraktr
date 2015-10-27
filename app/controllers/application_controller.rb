@@ -369,7 +369,7 @@ class ApplicationController < ActionController::Base
         gon.na = I18n.t('explore_time_series.na')
         gon.percent = I18n.t('explore_time_series.percent')
         gon.table_questions_header = I18n.t('app.common.questions')
-        set_gon_highcharts(dataset.current_locale)
+        set_gon_highcharts(time_series.current_locale)
         set_gon_datatables
 
         gon.explore_time_series = true
