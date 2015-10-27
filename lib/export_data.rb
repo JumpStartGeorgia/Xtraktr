@@ -69,6 +69,7 @@ module ExportData
 
   # create all files for a dataset that do not exist yet
   def self.create_all_files(dataset, use_processed_csv=false)
+    puts "------------------sdf------------------------create_all_files}"
     start = Time.now
 
     # only contine if the dataset is valid
@@ -91,7 +92,7 @@ module ExportData
         # save the dataset now so if another cron job is started, this dataset will not be processed again
         dataset.save
       end
-
+      puts "------------------sdf------------------------#{use_processed_csv}"
       # create files for each locale in the dataset
       dataset.languages.each do |locale|
         puts "@@@@@@@@@@@@@@@@ creating files for locale #{locale}"
@@ -102,6 +103,7 @@ module ExportData
         set_dataset_file_paths(dataset)
 
         # make the csv files
+        puts "------------------------------------------#{use_processed_csv}"
         if !use_processed_csv
           build_csv_headers(dataset)
           build_csv_files(dataset)
@@ -134,9 +136,9 @@ module ExportData
   def self.create_all_dataset_files(use_processed_csv=false)
     start = Time.now
     puts "*** use_processed_csv = #{use_processed_csv}"
-
-    count = Dataset.needs_download_files.count
-    Dataset.needs_download_files.each_with_index do |dataset, index|
+    d = Dataset.needs_download_files
+    count = d.count
+    d.each_with_index do |dataset, index|
       puts "=========================================="
       puts "=========================================="
       puts "============ dataset #{index+1} out of #{count}"
@@ -874,7 +876,13 @@ private
 
   #########################################
   #########################################
-
+  def self.test 
+    puts "here"
+     d = Dataset.where({id:"551934b92c17430657000001"}).first
+     d.reset_download_files = true
+     d.save
+     create_all_dataset_files(false)
+  end
   # build csv headers for both public and admin downloads
   # for both code and code-text
   # values are stored in @headers hash
@@ -908,63 +916,120 @@ private
     puts ">>>> build_csv_files"
     start = Time.now
 
-    csv_data = {raw: {admin: [], public: []}, text: {admin: [], public: []}}
-
-    # get the index to the questions that can be downloaded (public)
-    public_indexes = dataset.questions.each_index.select{|i| dataset.questions[i].can_download?}
+    csv_data = {raw: {admin: [], public: []}, text: {admin: [], public: []}, text_ascii: {admin: [], public: []}}
 
     dataset.questions.each_with_index do |question, index|
-      # raw data
-      csv_data[:raw][:admin] << dataset.data_items.code_data(question.code)
-      if public_indexes.include?(index)
-        csv_data[:raw][:public] << csv_data[:raw][:admin].last
-      end
 
-      # text data
-      csv_data[:text][:admin] << dataset.data_items.code_data(question.code)
+      tmp = dataset.data_items.code_data(question.code)
+      raw = tmp # raw data
+      text = tmp.dup # text data
       # now replace data values with answer text
-      question.answers.sorted.each do |answer|
-        csv_data[:text][:admin].last.select{ |x| x == answer.value }.each{ |x| x.replace( answer.text ) }
-      end
-      # clean the text
-      csv_data[:text][:admin].last.each do |x|
-        x.replace(clean_text(x)) if x.present?
-      end
+      answers = question.answers.only(:value,:text).map{|x| [x.value, x.text]}
 
-      # now add to public if needed
-      if public_indexes.include?(index)
-        csv_data[:text][:public] << csv_data[:text][:admin].last
+      answers_values = answers.map{|x| x[0] }
+      answers_text = {}
+      answers.each{|x| answers_text[x[0]] = x[1] }
+      #.each do |answer|
+        text.map!{|x| answers_values.index(x).present? ? answers_text[x] : x } #select{ |x| x == answer.value }.each{ |x| x.replace( answer.text ) }
+      #end
+      text_ascii = text.dup #.select{ |x| x == answer.value }.each{ |x| x.replace(answer.text) }
+      # # clean the text
+      text.each_with_index do |x,i|
+        if x.present?
+          s = clean_text(x)
+          x.replace(s)
+          text_ascii[i].replace(Unidecoder.decode(s,LANG_MAP_TO_ENG3))
+        end
+        
+      end
+      csv_data[:raw][:admin]  << raw
+      csv_data[:text][:admin] << text # text data
+      csv_data[:text_ascii][:admin] << text_ascii # text ascii data
+
+      if question.can_download? # now add to public if needed
+        csv_data[:raw][:public] << raw
+        csv_data[:text][:public] << text
+        csv_data[:text_ascii][:public] << text_ascii
       end
 
     end
 
+    puts "--- build_csv_files-1: #{(Time.now-start).round(3)}"
+    start = Time.now
     #######
-    # now create csv files
-    CSV.open(@csv_raw_data_file_path, 'w') do |csv|
-      csv_data[:raw][:public].transpose.each do |row|
-        csv << row
-      end
-    end
-    CSV.open(@admin_csv_raw_data_file_path, 'w') do |csv|
-      csv_data[:raw][:admin].transpose.each do |row|
-        csv << row
-      end
-    end
-    CSV.open(@csv_text_data_file_path, 'w') do |csv|
-      csv_data[:text][:public].transpose.each do |row|
-        csv << row
-      end
-    end
-    CSV.open(@admin_csv_text_data_file_path, 'w') do |csv|
-      csv_data[:text][:admin].transpose.each do |row|
-        csv << row
-      end
-    end
+    # now create csv files admins
+    admins = [
+      csv_data[:raw][:admin].transpose,
+      csv_data[:text][:admin].transpose,
+      csv_data[:text_ascii][:admin].transpose
+    ]
+    admin_files = [
+      CSV.open(@admin_csv_raw_data_file_path, 'w'),
+      CSV.open(@admin_csv_text_data_file_path, 'w'),
+      CSV.open(@admin_csv_text_ascii_data_file_path, 'w')
+    ]
+    admins[0].each_with_index {|row, row_index|
+      admin_files[0] << row
+      admin_files[1] << admins[1][row_index]
+      admin_files[2] << admins[2][row_index]
+    }
+    admin_files.each {|d| d.close }
+    # for public
+    publics = [
+      csv_data[:raw][:public].transpose,
+      csv_data[:text][:public].transpose,
+      csv_data[:text_ascii][:public].transpose
+    ]
+    public_files = [
+      CSV.open(@csv_raw_data_file_path, 'w'),
+      CSV.open(@csv_text_data_file_path, 'w'),
+      CSV.open(@csv_text_ascii_data_file_path, 'w')
+    ]
+    publics[0].each_with_index {|row, row_index|
+      public_files[0] << row
+      public_files[1] << publics[1][row_index]
+      public_files[2] << publics[2][row_index]
+    }
+    public_files.each {|d| d.close }
+
+    # CSV.open(@admin_csv_raw_data_file_path, 'w') do |csv|
+    #   csv_data[:raw][:admin].transpose.each do |row|
+    #     csv << row
+    #   end
+    # end
+    # CSV.open(@admin_csv_text_data_file_path, 'w') do |csv|
+    #   csv_data[:text][:admin].transpose.each do |row|
+    #     csv << row
+    #   end
+    # end
+    # CSV.open(@admin_csv_text_ascii_data_file_path, 'w') do |csv|
+    #   csv_data[:text_ascii][:admin].transpose.each do |row|
+    #     csv << row
+    #   end
+    # end
+
+    # CSV.open(@csv_raw_data_file_path, 'w') do |csv|
+    #   csv_data[:raw][:public].transpose.each do |row|
+    #     csv << row
+    #   end
+    # end
+    # CSV.open(@csv_text_data_file_path, 'w') do |csv|
+    #   csv_data[:text][:public].transpose.each do |row|
+    #     csv << row
+    #   end
+    # end
+
+    # CSV.open(@csv_text_ascii_data_file_path, 'w') do |csv|
+    #   csv_data[:text_ascii][:public].transpose.each do |row|
+    #     csv << row
+    #   end
+    # end
+
 
 
     csv_data = nil
 
-    puts "--- it took #{(Time.now-start).round(3)} seconds to build the csv files"
+    puts "--- build_csv_files-2: #{(Time.now-start).round(3)}"
     return nil
   end
 
@@ -1315,6 +1380,7 @@ private
     @codebook_file = 'codebook.doc'
     @csv_raw_data_file = 'csv_raw_data.csv'
     @csv_text_data_file = 'csv_text_data.csv'
+    @csv_text_ascii_data_file = 'csv_text_ascii_data.csv'
 
   end
 
@@ -1340,9 +1406,45 @@ private
     @admin_codebook_file_path = "#{@admin_dataset_download_staging_path}/#{dataset.current_locale}/#{@codebook_file}"
     @csv_raw_data_file_path = "#{@dataset_download_staging_path}/#{dataset.current_locale}/#{@csv_raw_data_file}"
     @csv_text_data_file_path = "#{@dataset_download_staging_path}/#{dataset.current_locale}/#{@csv_text_data_file}"
+    @csv_text_ascii_data_file_path = "#{@dataset_download_staging_path}/#{dataset.current_locale}/#{@csv_text_ascii_data_file}"
     @admin_csv_raw_data_file_path = "#{@admin_dataset_download_staging_path}/#{dataset.current_locale}/#{@csv_raw_data_file}"
     @admin_csv_text_data_file_path = "#{@admin_dataset_download_staging_path}/#{dataset.current_locale}/#{@csv_text_data_file}"
+    @admin_csv_text_ascii_data_file_path = "#{@admin_dataset_download_staging_path}/#{dataset.current_locale}/#{@csv_text_ascii_data_file}"
   end
-
+  LANG_MAP_TO_ENG3 = { 
+    'ა' => 'a',  
+    'ბ' => 'b',  
+    'გ' => 'g',  
+    'დ' => 'd',  
+    'ე' => 'e',  
+    'ვ' => 'v',  
+    'ზ' => 'z',  
+    'თ' => 'T',  
+    'ი' => 'i',  
+    'კ' => 'k',  
+    'ლ' => 'l',  
+    'მ' => 'm',  
+    'ნ' => 'n',  
+    'ო' => 'o',  
+    'პ' => 'P',  
+    'ჟ' => 'J',  
+    'რ' => 'r',  
+    'ს' => 's',  
+    'ტ' => 't',  
+    'უ' => 'u',  
+    'ფ' => 'f',  
+    'ქ' => 'q',  
+    'ღ' => 'R',  
+    'ყ' => 'y',  
+    'შ' => 'S',  
+    'ჩ' => 'C',  
+    'ც' => 'c',  
+    'ძ' => 'Z',  
+    'წ' => 'w',  
+    'ჭ' => 'W',  
+    'ხ' => 'x',  
+    'ჯ' => 'j',  
+    'ჰ' => 'h' 
+  }   
 
 end

@@ -49,6 +49,17 @@ class String
     new_string
   end
 
+  # Converts Georgian script to latin;
+  # converts to acadnusx style, თ - T .. one to one letter
+  def latinize_ascii(map = LANG_MAP_TO_ENG3)
+    nstr = String.new(self)
+    for i in 0..(nstr.size-1) do
+      c = nstr[i]
+      nstr[i] = map[c] if map.has_key? c
+    end
+    nstr
+  end
+
 
   def latinize_to_code(map = LANG_MAP_CODE)
     new_string = String.new(self)
@@ -320,6 +331,42 @@ class String
                       'W'  => 'ჭ',
                       'j'   => 'ჯ',
                       'h'   => 'ჰ'  }
+
+  LANG_MAP_TO_ENG3 = { 
+                      'ა' => 'a',  
+                      'ბ' => 'b',  
+                      'გ' => 'g',  
+                      'დ' => 'd',  
+                      'ე' => 'e',  
+                      'ვ' => 'v',  
+                      'ზ' => 'z',  
+                      'თ' => 'T',  
+                      'ი' => 'i',  
+                      'კ' => 'k',  
+                      'ლ' => 'l',  
+                      'მ' => 'm',  
+                      'ნ' => 'n',  
+                      'ო' => 'o',  
+                      'პ' => 'P',  
+                      'ჟ' => 'J',  
+                      'რ' => 'r',  
+                      'ს' => 's',  
+                      'ტ' => 't',  
+                      'უ' => 'u',  
+                      'ფ' => 'f',  
+                      'ქ' => 'q',  
+                      'ღ' => 'R',  
+                      'ყ' => 'y',  
+                      'შ' => 'S',  
+                      'ჩ' => 'C',  
+                      'ც' => 'c',  
+                      'ძ' => 'Z',  
+                      'წ' => 'w',  
+                      'ჭ' => 'W',  
+                      'ხ' => 'x',  
+                      'ჯ' => 'j',  
+                      'ჰ' => 'h' 
+                    }   
 
 
 end
