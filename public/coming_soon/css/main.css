@@ -1,0 +1,22 @@
+#text{
+    display:none;
+}
+@media screen and (min-width : 992px) {
+
+body {
+	background: url('../images/coming_soon1.png') no-repeat 0 0;
+}
+}
+
+@media screen and (max-width : 992px) {
+
+body {
+	background: url('../images/coming_soon2.png') no-repeat 0 0;
+}
+}
+
+@media screen and (max-width : 480px) {
+body {
+	background: url('../images/coming_soon3.png') no-repeat 0 0;
+}
+}
