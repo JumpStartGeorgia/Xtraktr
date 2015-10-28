@@ -1514,7 +1514,17 @@ private
           end
         end
       end
-      hash[:answers] = (can_exclude == true ? question.answers.must_include_for_analysis : question.answers.sorted).map{|x| {value: x.value, text: x.text, can_exclude: x.can_exclude, sort_order: x.sort_order}}
+      
+      # for each answer, record the answer attributes and the dataset_answer attributes
+      answers = can_exclude == true ? question.answers.must_include_for_analysis : question.answers.sorted
+      hash[:answers] = []
+      answers.each do |answer|
+        h = {value: answer.value, text: answer.text, can_exclude: answer.can_exclude, sort_order: answer.sort_order, dataset_values: []}
+        answer.dataset_answers.each do |d_answer|
+          h[:dataset_values] << {dataset_id: d_answer.dataset_id, value: d_answer.value, text: d_answer.text}
+        end
+        hash[:answers] << h
+      end
     end
 
     return hash
@@ -1595,6 +1605,8 @@ private
 
       datasets.each do |dataset|
         dataset_item = {dataset_label: dataset[:label], dataset_title: dataset[:title]}
+        dataset_answer = answer[:dataset_values].select{|x| x[:dataset_id] == dataset[:dataset_id]}.first
+
         if is_weighted == true
           dataset_item[:unweighted_count] = nil
           dataset_item[:weighted_count] = nil
@@ -1604,26 +1616,28 @@ private
           dataset_item[:percent] = nil
         end
 
-        # see if this dataset had results
-        individual_result = individual_results.select{|x| x[:dataset_id].to_s == dataset[:dataset_id].to_s}.first
-        if individual_result.present? && !individual_result[:dataset_results].has_key?(:errors)
-          # get results from dataset
-          dataset_answer_results = nil
-          if filter_answer_value.present?
-            filter_results = individual_result[:dataset_results][:results][:filter_analysis].select{|x| x[:filter_answer_value] == filter_answer_value}.first
-            dataset_answer_results = filter_results[:filter_results][:analysis].select{|x| x[:answer_value] == answer[:value]}.first if filter_results.present?
-          else
-            dataset_answer_results = individual_result[:dataset_results][:results][:analysis].select{|x| x[:answer_value] == answer[:value]}.first
-          end
-
-          if dataset_answer_results.present?
-            if is_weighted == true
-              dataset_item[:unweighted_count] = dataset_answer_results[:unweighted_count]
-              dataset_item[:weighted_count] = dataset_answer_results[:weighted_count]
-              dataset_item[:weighted_percent] = dataset_answer_results[:weighted_percent]
+        if dataset_answer.present?
+          # see if this dataset had results
+          individual_result = individual_results.select{|x| x[:dataset_id].to_s == dataset[:dataset_id].to_s}.first
+          if individual_result.present? && !individual_result[:dataset_results].has_key?(:errors)
+            # get results from dataset
+            dataset_answer_results = nil
+            if filter_answer_value.present?
+              filter_results = individual_result[:dataset_results][:results][:filter_analysis].select{|x| x[:filter_answer_value] == filter_answer_value}.first
+              dataset_answer_results = filter_results[:filter_results][:analysis].select{|x| x[:answer_value] == dataset_answer[:value]}.first if filter_results.present?
             else
-              dataset_item[:count] = dataset_answer_results[:count]
-              dataset_item[:percent] = dataset_answer_results[:percent]
+              dataset_answer_results = individual_result[:dataset_results][:results][:analysis].select{|x| x[:answer_value] == dataset_answer[:value]}.first
+            end
+
+            if dataset_answer_results.present?
+              if is_weighted == true
+                dataset_item[:unweighted_count] = dataset_answer_results[:unweighted_count]
+                dataset_item[:weighted_count] = dataset_answer_results[:weighted_count]
+                dataset_item[:weighted_percent] = dataset_answer_results[:weighted_percent]
+              else
+                dataset_item[:count] = dataset_answer_results[:count]
+                dataset_item[:percent] = dataset_answer_results[:percent]
+              end
             end
           end
         end
