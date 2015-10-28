@@ -2,10 +2,11 @@
   langs ||= nil
   current_locale ||= I18n.locale.to_s
   share = false if share.nil?
+  redirect = redirect.nil? ? '' : " redirect"
 -%>
 
 <% if langs.present? -%>
-  <div class="available-language-switcher">
+  <div class="available-language-switcher<%= redirect %>">
     <label><%= t('.label') %></label>
     <div class="dropdown">
       <a href="#" class="dropdown-toggle" data-toggle="dropdown">

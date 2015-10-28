@@ -37,7 +37,10 @@
           </div>
           <% if with_time_series_link && dataset.time_series_datasets.present? %>
             <div class="time-series" title="<%= t('app.menu.titles.dataset_to_time_series') %>" data-placement="left"  data-class="tooltip-time-series">
-              <%= link_to  image_tag("svg/timeseries.svg", alt: t('app.menu.titles.dataset_to_time_series')), explore_time_series_dashboard_path(dataset.time_series_datasets.first.time_series_permalink)%>
+              <%= link_to explore_time_series_dashboard_path(dataset.time_series_datasets.first.time_series_permalink) do %>
+                <%= image_tag("svg/timeseries.svg", alt: t('app.menu.titles.dataset_to_time_series')) %>
+                <%= t('app.menu.time_series') %>
+              <% end %>
             </div>
           <% end %>
         </div>

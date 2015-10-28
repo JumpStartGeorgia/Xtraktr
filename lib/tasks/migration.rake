@@ -97,6 +97,9 @@ namespace :migration do
     require "./db/migrate/set_questions_download_true.rb"
   end
 
-
+  desc "make dataitem datas to be cleaned"
+  task :clean_dataitem_data_values => :environment do
+    require "./db/migrate/clean_dataitem_data_values.rb"
+  end
 
 end
