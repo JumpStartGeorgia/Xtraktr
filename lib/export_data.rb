@@ -582,7 +582,7 @@ private
 
 
     if !File.exists?(stata_file_path) || dataset.reset_download_files?         # create stata file
-      output = '* IMPORTANT: you must update the path to the file at the end of the next line to include the full path (e.g., C:\Desktop\...)\n\ninsheet '
+      output = "* IMPORTANT: you must update the path to the file at the end of the next line to include the full path (e.g., C:\\Desktop\...)\n\ninsheet "
       questions.each do |question|
         code = Unidecoder.decode(question.original_code, LANG_MAP_TO_ENG3)
         output << code
