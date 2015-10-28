@@ -16,4 +16,11 @@ namespace :generate_files do
     ExportData.create_all_forced_dataset_files
   end
 
+  # desc "test"
+  # task :test => :environment do |t, args|
+  #   require "export_data"
+
+  #   ExportData.test
+  # end
+
 end
