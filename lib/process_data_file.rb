@@ -137,7 +137,7 @@ module ProcessDataFile
             if code_data.present?
               self.data_items_attributes = [{code: clean_text(code, format_code: true),
                                             original_code: clean_text(code),
-                                            data: code_data
+                                            data: clean_data_item(code_data)
                                           }]
             else
               puts "******************************"
@@ -578,7 +578,7 @@ private
       # if field is '', replace with nil
       puts "- cleaning data"
       (1..data.last_row).each do |index|
-        data_items << data.row(index).map{|cell| cell == '\\N' ? nil : cell}
+        data_items << data.row(index).map{|cell| cell == '\\N' ? nil : clean_data_item(cell)}
       end
 
       # get headers
@@ -634,6 +634,15 @@ private
     return result
   end
 
+  def self.clean_data_item(text)
+    if !text.nil?
+      x = text.gsub('\\n', ' ').gsub('\\r', ' ').strip
+      if x.present?
+        return x
+      end
+    end
+    return nil
+  end
 
   #### OLD
 
