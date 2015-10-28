@@ -555,7 +555,7 @@ ka:
           title_filter_weighted: "შეუწონელი პასუხების ჯამური რაოდენობა %{total}-0იდან*: %{nums}"
   datatable:
     search: "ძებნა"
-    search_footer: %{name}-ს მოძებნა
+    search_footer: "%{name}-ს მოძებნა"
     copy:
       title: "კოპირება"
       tooltip: "კოპირება"
