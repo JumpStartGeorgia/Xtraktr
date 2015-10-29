@@ -423,7 +423,7 @@ ka:
       invalid_language: "%{lang_locale}' არ არის ვალიდური ენა"
       dataset_length: "პერიოდული შედარების შესანახად სულ მცირე მონაცემთა ორი ცხრილია საჭირო"
       missing_questions: "ჯგუფის შესანახად სულ მცირე ერთი შეკითხვა უნდა იყოს არჩეული"
-      license_requirements: The License Title and License Description fields are both required for Language %{language} if you are providing a license.
+      license_requirements: თუ ლიცენზიის გამოქვეყნება გსურთ, ლიცენზიის სათაურის და ლიცენზიის აღწერის ველები უნდა შეივსოს %{language} ენაზე.  
   mass_uploads_msgs:
     bad_headers: "ფაილში სვეტების სახელები არ ემთხვევა ნიმუშის სვეტების სახელებს. გთხოვთ, ჩამოტვირთეთ შეკითხვის ნიმუშის ფაილი და გამოიყენეთ მისი სვეტების სახელები."
     missing_code: "რიგი %{n}: ამ კოდით შეკითხვა არ მოიძებნა '%{code}'"
@@ -1267,7 +1267,7 @@ ka:
       other_weights: "სხვა შეწონვები, რომელთაც ეს შეკითხვა მიეკუთვნება"
   time_series:
     index:
-      title: Time Series for <em>%{owner}</em>
+      title: პერიოდული შედარება <em>%{owner}</em>-სთვის
     form:
       header_datasets: "მონაცემები"
       header_add_dataset: "ამ პერიოდული შედარებისთვის ახალი მონაცემების დამატება"
