@@ -653,7 +653,7 @@ $(document).ready(function() {
         container = $(".tab-pane.active > div");
 
       $(".tab-pane.active").animate({
-        scrollTop: container.find(href).prop("offsetTop") - container.find("> div:first").prop("offsetTop") // Math.abs($(".tab-pane.active > div > div:first").offset().top - $(".tab-pane.active " + href).offset().top)
+        scrollTop: container.find(href).prop("offsetTop") - container.find("> div:first").prop("offsetTop")
       }, 1500);
     });
 
