@@ -3,8 +3,8 @@ ka:
   mongoid:
     models:
       user: "მომხმარებელი"
-      organization: Organization
-      member: Member
+      organization: ორგანიზაცია
+      member: წევრი
       page_content: "ტექსტი გვერდებისთვის"
       dataset: "მონაცემები"
       shapeset: "რუკის კონტურული ფორმები"
@@ -24,7 +24,7 @@ ka:
       time_series_group: "ჯგუფი"
       time_series_weight: "შეწონვა"
       time_series_weight_assignment: "შეწონვის მინიჭება"
-      invitation: Invitation
+      invitation: მოწვევა
     attributes:
       user:
         email: "ელ. ფოსტა"
@@ -47,19 +47,18 @@ ka:
         description: "Brief Description of Yourself (<i>არჩევითი</i>)"
         notifications: "ახალი მონაცემების დამატების დროს მინდა შეტყობინების მიღება"
         notification_locale: "შეტყობინების ენა"
-        phone: Phone Number
-        website_url: Website
-        permalink: Name in URL
-        org_name: Organization Name
-        org_name_alt: Organization
-        org_description: Organization Description
-        avatar: Avatar
-        created_at: Added On
-        org_created_at: Organization Added On
-        joined_at: Joined Organization On
-        dataset_count: Number of Datasets
-        organizations: Organizations
-        is_user: User or Org
+        phone: ტელეფონის ნომერი
+        website_url: ვებგვერდი
+        permalink: სახელი URL-ში
+        org_name: ორგანიზაციის სახელი
+        org_name_alt: ორგანიზაცია
+        org_description: ორგანიზაციის აღწერა
+        avatar: ავატარი
+        org_created_at: ორგანიზაციის დამატების თარიღი
+        joined_at: ორგანიზაციაში გაწევრიანების თარიღი
+        dataset_count: მონაცემთა ბაზების რაოდენობა
+        organizations: ორგანიზაციები
+        is_user: მომხმარებელი ან ორგანიზაცია
       message:
         name: "სახელი"
         email: "ელ. ფოსტა"
@@ -108,14 +107,14 @@ ka:
         country_ids: "მონაცემებით წარმოდგენილი ქვეყანა/ქვეყნები"
         permalink: "მონაცემთა URL"
         is_weighted: "შეწონილი მონაცემები"
-        created_at: Date Added to Site
+        created_at: საიტზე დამატების თარიღი
         updated_at: "ბოლო განახლების თარიღი"
         donor: "დონორი"
         license_title: "ლიცენზიის სახელწოდება"
         license_description: "ლიცენზიის აღწერა"
         license_url: "ლიცენზიის URL"
-        user_id: Uploaded By
-        owner_id: Maintain Under Account
+        user_id: ატვირთა
+        owner_id: გამოვიყენოთ შემდეგი ანგარიში
       stats:
         questions_analyzable: "გაანალიზებადი შეკითხვები"
         public_questions_analyzable: "საჯარო გაანალიზებადი შეკითხვები"
@@ -188,7 +187,7 @@ ka:
         license_title: "ლიცენზიის სახელწოდება"
         license_description: "ლიცენზიის აღწერა"
         license_url: "ლიცენზიის URL"
-        user_id: Uploaded By
+        user_id: ატვირთა
       time_series_dataset:
         dataset_id: "მონაცემები"
         title: "იარლიყი"
@@ -274,7 +273,7 @@ ka:
         version: "ბრაუზერის ვერსია"
         os: OS
         platform: OS პლატფორმა
-        app: App
+        app: აპლიკაცია
         is_mobile: "მობილური მოწყობილობაა?"
         created_at: "თარიღი"
       api_key:
@@ -307,7 +306,7 @@ ka:
         license_title: "ლიცენზიის სახელწოდება"
         license_description: "ლიცენზიის მოკლე აღწერა"
         license_url: "იმ ვებგვერდის URL, რომელზეც არის მეტი ინფორმაცია ლიცენზიის შესახებ"
-        owner_id: Select the account that you want the dataset to be stored under
+        owner_id: აირჩიეთ ანგარიში, რომლითაც გინდათ მონაცემთა გამოქვეყნება
       shapeset:
         title: "სახელწოდება ფორმების კრებულისთვის"
         description: "ფორმების ცხრილის შინაარსის მოკლე აღწერა"
@@ -363,7 +362,7 @@ ka:
         license_title: "ლიცენზიის სახელწოდება"
         license_description: "ლიცენზიის მოკლე აღწერა"
         license_url: "იმ ვებგვერდის URL, რომელზეც არის მეტი ინფორმაცია ლიცენზიის შესახებ"
-        owner_id: Select the account that you want the time series to be stored under
+        owner_id: აირჩიეთ ანგარიში, რომლითაც გინდათ პერიოდული შედარების გამოქვეყნება
       time_series_dataset:
         dataset_id: "მონიშნეთ მონაცემები, რათა დაემატოს პერიოდულ შედარებას"
         title: "ტექსტი, რომელიც აღწერს ამ მონაცემებს პერიოდულ შედარებაში, უმეტესწილად, დროის ინდიკატორი. მაგალითად, თუ თქვენი მონაცემები 2015 წლისაა, შეგიძლიათ შეიყვანოთ '2015'; ან თუ 2015 წლის იანვრისაა, მაშინ - 'იანვარი, 2015'.  "
@@ -495,8 +494,8 @@ ka:
           title_weighted: "შეუწონელი პასუხების ჯამური რაოდენობა*: %{x_of_y}"
           title_filter_weighted: "შეუწონელი პასუხების ჯამური რაოდენობა* (%{totals} შესაძლებლიდან): %{nums}"
   explore_data:
-    chart_type_bar: View data using a bar chart
-    chart_type_pie: View data using a pie chart
+    chart_type_bar: მონაცემთა სვეტოვანი დიაგრამით გამოსახვა
+    chart_type_pie: მონაცემთა წრიული დიაგრამით გამოსახვა
     v1:
       hover_region: "მიიტანეთ კურსორი რეგიონზე"
       na: "არ არის ხელმისაწვდომი"
@@ -593,7 +592,7 @@ ka:
           title_filter_weighted: "შეუწონელი პასუხების ჯამური რაოდენობა %{total}-0იდან*: %{nums}"
   datatable:
     search: "ძებნა"
-    search_footer: Search %{name}
+    search_footer: "%{name}-ს მოძებნა"
     copy:
       title: "კოპირება"
       tooltip: "კოპირება"
@@ -627,12 +626,12 @@ ka:
         subject: Xtraktr-ს ახალი მონაცემები დაემატა!
         message: 'Xtraktr-ზე ახალი მონაცემები აიტვირთა. შეგიძლიათ ნახოთ, გააანალიზოთ, ვიზუალურად გამოსახოთ და სხვებსაც გაუზიაროთ.  '
       new_organization_member:
-        subject: "You have been invited to join an organization on Xtraktr!"
-        message: "You have received the following invitations to join an organization on Xtraktr. If you would like to accept the invitation, simply click the 'Accept the Invitation' link. If you want to decline this invitation, no action is needed on your part."
-        from: From
-        msg: Message
-        accept_link: Accept the Invitation
-        all_invitations: View all of your Xtraktr organization invitations.
+        subject: "თქვენ მოგიწვიათ ორგანიზაციამ Xtraktr-ზე!"
+        message: "თქვენ მიიღეთ მოწვევა ორგანიზაციისგან Xtraktr-ზე. თუ გსურთ შეუერთდეთ ამ მოწვევას დააჭირეთ 'მოწვევის მიღების' ღილაკს. თუ გსურთ უარყოთ მოწვევა შეგიძლიათ უპასუხოთ დატოვოთ ეს გზავნილი."
+        from: გამგზავნი
+        msg: გზავნილი
+        accept_link: მოწვევის მიღება
+        all_invitations: იხილეთ ყველა ორგანიზაციის მოწვევა Xtraktr-ზე.
     contact:
       contact_form:
         subject: Xtraktr-ის საკონტაქტო ფორმა
@@ -666,8 +665,8 @@ ka:
       sign_out: "გასვლა"
       sign_in_provider: "შესვლა %{provider}-ით"
       sign_up_provider: "დარეგისტრირდით %{provider}-ით"
-      sign_up_local: Sign up with an email and password
-      sign_up_facebook: Sign up with Facebook
+      sign_up_local: დარეგისტრირდი მეილის და პაროლის გამოყენებით
+      sign_up_facebook: დარეგისტრირდი Facebook-ის გამოყენებით
       sign_in_local_or_provider: "ან შეიყვანეთ თქვენი ელ. ფოსტა და პაროლი"
       reset_or_sign_in: "შედით facebook-ით ან შეცვალეთ პაროლი"
       explanation: "მოხარულნი ვართ, რომ დაინტერესდით ჩვენი მონაცემებით. ჩვენ გვსურს გავიგოთ მეტი თქვენ შესახებ. მონაცემთა ჩამოსატვირთად, გთხოვთ შეავსოთ ჩვენი ფორმა."
@@ -771,8 +770,8 @@ ka:
       share: "გაზიარება"
       codebook_title: "კოდირების დოკუმენტის ჩამოტვირთვა"
       all_categories: "ყველა კატეგორია"
-      all_countries: All Countries
-      all_donors: All Donors
+      all_countries: ყველა ქვეყანა
+      all_donors: ყველა დონორი
       all_owners: All Loaders
       private_question: "ეს შეკითხვა არ არის საჯარო"
       private_answer: "პასუხი არ არის საჯაროდ ხელმისაწვდომი"
@@ -781,11 +780,11 @@ ka:
       powered_by_xtraktr: "შექმნილია Xtraktr-ით"
       powered_by_xtraktr_title: "მონაცემები შექმნილია Xtraktr-ის პლატფორმის გამოყენებით. გაიგეთ მეტი და დაამატეთ თქვენი მონაცემები Xtraktr-ს. "
       weighted_footnote: "მიკუთვნებული შეწოვნა: "
-      download_data_explanation: 'For more in-depth analysis, you can download this dataset in one of the following formats.'      
+      download_data_explanation: 'სიღრმისეული ანალიზისთვის შეგიძლიათ მონაცემთა შემდეგ ფორმატში ჩამოტვირთვა.'      
     msgs:
       does_not_exist: "თქვენ ცდილობთ ისეთი გვერდის ნახვას, რომელიც არ არსებობს."
       not_authorized: "თქვენ არ გაქვთ ამ გვერდის ნახვის უფლება."
-      success_saved: "%{obj} was successfully saved."
+      success_saved: "%{obj} წარმატებით იქნა შენახული."
       success_created: "%{obj} შექმნილია."
       success_updated: "%{obj} განახლებულია."
       success_deleted: "%{obj} წაშლილია. "
@@ -828,8 +827,8 @@ ka:
       question_no_answers: "ამ შეკითხვას არ აქვს პასუხები და ვერ გაანალიზდება"
       admin_codebook_questions: "კოდირების დოკუმენტის ადმინისტრატორის პანელიდან ნახვისას ხელმისაწვდომია ყველა შეკითხვა, მათ შორის ანალიზიდან გამორიცხული და უპასუხო შეკითხვებიც, რომელთა გარჩევაც შეკითხვის სახელის გასწვრივ არსებული ხატულით არის შესაძლებელი. გთხოვთ, გაითვალისწინოთ, რომ ასეთი შეკითხვები არ არის ხელმისაწვდომი და ხილული საჯაროდ. "
       members:
-        success_remove: '%{name} was removed as a member'
-        user_not_found: User to remove as a member could not be found
+        success_remove: '%{name} წაშლილი იქნა წევრებიდან'
+        user_not_found: მომხმარებელი რომლის წაშლაც გნებავთ, არ მოიძებნა
         success_invitations: მოწვევები გაგზავნილია!
         error_invitations_all: "მოწვევები ვერ გაიგზავნა შემდეგი ხარვეზის გამო: %{msg}"
         error_invitations_some: "ზოგიერთი მოწვევა ვერ გაიგზავნა შემდეგი ხარვეზის გამო: %{msg}"
@@ -845,7 +844,7 @@ ka:
       highlights: "რჩეული ფაქტები"
       about: "შესახებ"
       settings: "მომხმარებლის პარამეტრები"
-      owner_dashboard: Dashboard
+      owner_dashboard: მთავარი გვერდი
       about_dataset: "შესახებ"
       about_time_series: "შესახებ"
       all_datasets: "ყველა მონაცემები"
@@ -855,7 +854,7 @@ ka:
       instructions: "ინსტრუქცია"
       home: "მთავარი"
       disclaimer: "შენიშვნა"
-      new_dataset: Add Dataset      
+      new_dataset: ყველა მონაცემთა ბაზა
       titles:
         explore_dataset: "მონაცემთა გაცნობა დიაგრამების, რუკებისა და ცხრილების საშუალებით"
         explore_time_series: "პერიოდული შედარებების გაცნობა დიაგრამებისა და ცხრილების საშუალებით"
@@ -912,7 +911,7 @@ ka:
   layouts:
     nav:
       toggle: "ნავიგაციის ჩართვა/გამორთვა"
-      switch_to: Switch Accounts
+      switch_to: სხვა ანგარიშზე გადასვლა
     explore_data:
       private_share_header: "პირადად გაზიარებული '%{title}'"
       private_share_explanation: "შეგიძლიათ დააკოპიროთ და გაუზიაროთ შემდეგი URL მას, ვინც გსურთ, რომ იხილოს '%{title}' იმ შემთხვევაშიც კი, თუ თქვენი მონაცემთა ცხრილი არ არის საჯარო. ამ ადამიანებს ექნებათ საშუალება, გაეცნონ თქვენს მონაცემებს, მაგრამ ვერ შეძლებენ მის შეცვლას და შესწორებას."
@@ -956,42 +955,42 @@ ka:
         p3: "პაროლის შესაცვლელად უნდა გადახვიდეთ ბმულზე და შექმნათ ახალი პაროლი "
   settings:
     index:
-      title: Settings for <em>%{owner}</em>
+      title: "<em>%{owner}</em>-ის პარამეტრები"
       tabs:
         settings: "პარამეტრები"
-        organizations: Organizations
-        members: Members
+        organizations: ორგანიზაციები
+        members: წევრები
         api: API-ს დაშვების გასაღები
-      org_explanation: Xtraktr Organization's allow you to load datasets under an organization's name instead of an individual person. You can be the sole administrator of the organization or you can invite other people to join your organization and help administer your datasets.
-      org_add: Create An Organization
-      switch_to_org: Switch to Organization Account
-      leave_org: Stop Being a Member of this Organization
-      member_explanation: Members are the users that have access to manage the datasets in your organization.
-      member_add: Add a Member
+      org_explanation: Xtraktr-ის ორგანიზაციები' გაძლევთ საშუალებას ატვირთოთ მონაცემთა ბაზები ორგანიზაციის სახელით. თქვენ შეგიძლიათ იყოთ თქვენი ორგანიზაციის გვერდის ადმინისტრატორი, ისევე როგორც შეგიძლიათ მოიწვიოთ სხვა მომხმარებლები, რომლებიც დაგეხმარებიან გვერდის მართვაში. 
+      org_add: ორგანიზაციის შექმნა
+      switch_to_org: ორგანიზაციის გვერდზე გადასვლა
+      leave_org: ორგანიზაციის წევრებიდან ამოშლა
+      member_explanation: წევრები არიან ის მომხმარებლები, რომელთაც აქვთ თქვეინ ორგანიზაციის მონაცემთა ბაზების მართვის უფლება. 
+      member_add: წევრის დამატება
       api_explanation1: API საშუალებას გაძლევთ, პროგრამულად მიიღოთ ინფორმაცია და ჩაატაროთ ანალიზი საიტზე არსებულ მონაცემთა ცხრილსა და პერიოდულ შედარებაში. API-ის ყველა გამოძაღება ითხოვს დაშვების გასაღებს, რომელიც გვატყობინებს, თუ ვინ აკეთებს მოთხოვნას. გამოძახებისთვის უბრალოდ დააჭირეთ ქვემოთ მოცემულ ღილაკს.
       api_link_text: API-ის დოკუმენტაციის სექცია
       api_explanation2: "[link]-ზე გადასვლით გაიგებთ მეტს API-ის და დაშვების გასაღების შესახებ."
       no_api_keys: "თქვენ არ გაქვთ API-ის დაშვების გასაღები მოცემული ფაილისთვის."
       get_api: API-ის დაშვების გასაღების მიღება
       delete_api: API-ის დაშვების გასაღების წაშლა
-      no_groups: You do not belong to any organizations.
-      no_members: This group does not have any members.
-      pending: Membership Pending
-      join: Join Organization
+      no_groups: თქვენ არ ეკუთვნით არცერთ ორგანიზაციას.
+      no_members: ამ ჯგუფს არ ყავს წევრები.
+      pending: გაწევრიანების მოლოდინში
+      join: ორგანიზაციის შეერთება
     organization_new:
-      title: Create An Organization
+      title: ორგანიზაციის შექმნა
     organization_edit:
-      title: Edit An Organization
+      title: ორგანიზაციის რედაქტირება
     member_new:
-      title: Add an Organization Member
+      title: ორგანიზაციის წევრის დამატება
       explanation: |
-        Use the form below to search for users in Xtraktr to add as members to your organization. You can enter multiple users at once.
+        გამოიყენეთ ქვემოთ მოცემული ფორმა, რათა მოიწვიოთ წევრები Xtraktr-ზე თქვენს ორგანიზაციაში დასამატებლად. შეგოძლიათ ერთდროულად რამდენიმე წევრის დამატება.
 
-        If the person is not already in Xtraktr, enter their email address and they will be asked to join Xtraktr.
+        თუკი თქვენთვის სასურველ ადამიანს ჯერ არ აქვს  Xtraktr-ის ანგარიში, შეიყვანეთ მათი ელექტრონული ფოსტა და მათ გაეგზავნებათ Xtraktr-ის სარეგისტრაციო ფორმა.
 
-        Invitations will be sent to these users asking them to become a member of your organization. If you wish, you may also provide an additional message.
-      search_label: Enter names or email addresses of the people you want to invite
-      message: Add Message to Notification (optional)
+        თქვენი ორგანიზაციაში გაწევრიანების მოწვევა გაეგზავნება ამ მომხმარებლებს. სურვილის შემთხვევაში, თქვენ შეგიძლიათ დაამატოთ ტექსტური შეტყობინება. 
+      search_label: შეიყვანეთ იმ მომხმარებლის სახელი ან საფოსტო მისამართი, რომლის მოწვევაც გსურთ
+      message: შეტყობინებაში გზავნილის დამატება (არ არის სავალდებულო)
   root:
     index:
       header_latest_datasets: "უახლესი მონაცემები"
@@ -1020,9 +1019,9 @@ ka:
         publish: "აქ გამოქვეყნების თარიღი"
       no_data: "ამ მომენტისთვის ვებგვერდზე არ ჩატვირთულა მონაცემთა ცხრილი"
       no_match: "ბოდიში, თქვენი მოთხოვნის შესაბამისი მონაცემები ვერ მოიძებნა"
-      filter_by_country: Country
-      filter_by_donor: Donor
-      filter_by_owner: Uploaded By
+      filter_by_country: ქვეყანა
+      filter_by_donor: დონორი
+      filter_by_owner: ატვირთა
     explore_data_datasets:
       no_match: "ბოდიში, თქვენი მოთხოვნის შესაბამისი მონაცემები ვერ მოიძებნა"
     explore_data_show:
@@ -1036,8 +1035,8 @@ ka:
         publish: "აქ გამოქვეყნების თარიღი"
       no_data: "ამ მომენტისთვის ვებგვერდზე არ შექმნილა პერიოდული შედარება."
       no_match: "ბოდიში, თქვენი მოთხოვნის შესაბამისი პერიოდული შედარება ვერ მოიძებნა"
-      filter_by_country: Country
-      filter_by_owner: Uploaded By
+      filter_by_country: ქვეყანა
+      filter_by_owner: ატვირთა
     explore_data_time_series:
       no_match: "ბოდიში, თქვენი მოთხოვნის შესაბამისი პერიოდული შედარება ვერ მოიძებნა"
     explore_time_series_show:
@@ -1065,7 +1064,7 @@ ka:
       no_content: "ამ მეთოდისთვის დოკუმენტაცია ჯერ არ შექმნილა"
   datasets:
     index:
-      title: Datasets for <em>%{owner}</em>
+      title: მონაცემთა ბაზები <em>%{owner}</em>-სთვის
       view_warnings: "დეტალების ნახვა"
     warnings:
       title: "გაფრთხილებები"
@@ -1205,14 +1204,14 @@ ka:
         header: "შეკითხვები"
         template: "ღილაკზე დაჭერით თქვენ ჩამოტვირთავთ ნიმუშს ამ მონაცემების ყველა შეკითხვისთვის. გააკეთეთ ცვლილებები ცხრილში და გამოიყენეთ ქვემოთ მოცემული ფორმა განხორციელებული ცვლილებების შესანახად."
         template2: "სვეტები, რომლის შეცვლაც შეუძლებელია: %{code}"
-        template3: "If you are using Excel, please use the XLSX format for Excel may not properly load CSV files."
+        template3: "თუკი თქვენ იყენებთ Excel-ს, გთხოვთ, გამოიყენოთ XLSX ფორმატი, რადგან Excel-მა, შესაძლოა, ვერ ჩატვირთოს CSV ფაილი. "
         template_link: "შეკითხვების ნიმუშების ჩამოტვირთვა"
         submit: "შეკითხვების განახლება"
       answers:
         header: "პასუხები"
         template: "ქვემოთ მოცემულ ღილაკზე დაჭერით ჩამოიტვირთება მონაცემთა ცხრილში არსებული ყველა პასუხის ნიმუში. გააკეთეთ ცვლილებები ცხრილში და გამოიყენეთ ქვემოთ მოცემული ფორმა განხორციელებული ცვლილებების შესანახად."
         template2: "სვეტები, რომლის შეცვლაც შეუძლებელია: %{code}"
-        template3: "If you are using Excel, please use the XLSX format for Excel may not properly load CSV files."
+        template3: "თუკი თქვენ იყენებთ Excel-ს, გთხოვთ, გამოიყენოთ XLSX ფორმატი, რადგან Excel-მა, შესაძლოა, ვერ ჩატვირთოს CSV ფაილი. "
         template_link: "პასუხების ნიმუშების ჩამოტვირთვა"
         submit: "პასუხების განახლება"
   groups:
@@ -1321,7 +1320,7 @@ ka:
         ჯგუფებისა და შეკითხვების დალაგება შესაძლებელია ორნაირად:
 
         1) მოკიდეთ ხელი და გადააადგილეთ თქვენთვის სასურველ ადგილას;
-        2) მონიშნეთ ის სტრიქონ(ებ)ი, რომელთა გადააადგილებაც გსურთ და ცხრილის ზემოთ მოცემული პარამეტრების საშუალებით აირჩიეთ მიმართულება.  "
+        2) მონიშნეთ ის სტრიქონ(ებ)ი, რომელთა გადააადგილებაც გსურთ და ცხრილის ზემოთ მოცემული პარამეტრების საშუალებით აირჩიეთ მიმართულება.  
   time_series_questions:
     index:
       title: "პერიოდული შედარების შეკითხვებისა და პასუხების რედაქტირება"
@@ -1354,14 +1353,14 @@ ka:
         header: "შეკითხვები"
         template: "ღილაკზე დაჭერით თქვენ ჩამოტვირთავთ ნიმუშს ამ პერიოდული შედარების ყველა შეკითხვისთვის. გააკეთეთ ცვლილებები ცხრილში და გამოიყენეთ ქვემოთ მოცემული ფორმა განხორციელებული ცვლილებების შესანახად."
         template2: "სვეტები, რომლის შეცვლაც შეუძლებელია: %{code}"
-        template3: "If you are using Excel, please use the XLSX format for Excel may not properly load CSV files."
+        template3: "თუკი თქვენ იყენებთ Excel-ს, გთხოვთ, გამოიყენოთ XLSX ფორმატი, რადგან Excel-მა, შესაძლოა, ვერ ჩატვირთოს CSV ფაილი. "
         template_link: "შეკითხვების ნიმუშების ჩამოტვირთვა"
         submit: "შეკითხვების განახლება"
       answers:
         header: "პასუხები"
         template: "ღილაკზე დაჭერით თქვენ ჩამოტვირთავთ ნიმუშს პერიოდული შედარებების ყველა პასუხისთვის. გააკეთეთ ცვლილებები ცხრილში და გამოიყენეთ ქვემოთ მოცემული ფორმა განხორციელებული ცვლილებების შესანახად."
         template2: "სვეტები, რომლის შეცვლაც შეუძლებელია: %{code}"
-        template3: "If you are using Excel, please use the XLSX format for Excel may not properly load CSV files."
+        template3: "თუკი თქვენ იყენებთ Excel-ს, გთხოვთ, გამოიყენოთ XLSX ფორმატი, რადგან Excel-მა, შესაძლოა, ვერ ჩატვირთოს CSV ფაილი. "
         template_link: "პასუხების ნიმუშების ჩამოტვირთვა"
         submit: "პასუხების განახლება"
   time_series_groups:
@@ -1477,7 +1476,7 @@ ka:
         reports: "ანგარიშები"
         licensing: "ლიცენზია"
         meta: "დამატებითი ინფორმაცია"
-        download: Download Data
+        download: მონაცემთა ჩამოტვირთვა
       no_methodology: "ამ მონაცემებისთვის არ არის მეთოდოლოგია"
       no_reports: "ამ მონაცემებისთვის არ არის ანგარიში"
       no_highlights: "ამ მონაცემებისთვის არ არის შექმნილი რჩეული ფაქტები"
@@ -1498,7 +1497,7 @@ ka:
         licensing: "ლიცენზია"
         datasets: "მონაცემები"
         meta: "დამატებითი ინფორმაცია"
-        download: Download Data
+        download: მონაცემთა ჩამოტვირთვა
       no_highlights: "ამ პერიოდული შედარებისთვის არ არის შექმნილი რჩეული ფაქტები"
       no_license: "ამ პერიოდულ შედარებას არ აქვს განსაზღვრული ლიცენზია "
       learn_more: "გაიგეთ მეტი ამ ლიცენზიის შესახებ"
@@ -1510,14 +1509,14 @@ ka:
       jumpto_group: "ჯგუფზე გადასვლა"
     dashboard_owner:
       tabs:
-        datasets: Datasets <span class="num">(%{num})</span>
-        time_series: Time Series <span class="num">(%{num})</span>
+        datasets: მონაცემთა ბაზები <span class="num">(%{num})</span>
+        time_series: პერიოდული შედარებები <span class="num">(%{num})</span>
       user:
-        no_datasets: The user has not loaded any datasets.
-        no_time_series: The user has not loaded any time series.
+        no_datasets: მომხმარებელს არ აქვს ატვირთული მონაცემთა ბაზა.
+        no_time_series: მომხმარებელს არ აქვს ატვირთული პერიოდული შედარება.
       org:
-        no_datasets: The organization has not loaded any datasets.
-        no_time_series: The organization has not loaded any time series.
+        no_datasets: ორგანიზაციას არ აქვს ატვირთული მონაცემთა ბაზა.
+        no_time_series: ორგანიზაციას არ აქვს ატვირთული პერიოდული შედარება.
     language_switcher:
       label: "ხელმისაწვდომი ენები"
     embed:
@@ -1554,7 +1553,7 @@ ka:
         - CSV: %{csv}, რომელიც დაფორმატებულია STATA-ში ჩასატვირთად, ამიტომაც სვეტის სათაურები არიან ცვლადები, ხოლო პასუხები - პასუხის მნიშვნელობები და არა - პასუხის ტექსტი.
 
         - DO: კოდირებული ფაილი, რომელიც გაიშვება STATA-ში და ჩატვირთავს მონაცემებს CSV-დან თითოეული ცვლადისა და შესაძლო მნიშვნელობის შექმნით.
-              მნიშვნელოვანია - SPSS-ში კოდირებული ფაილის გაშვებამდე, თქვენ უნდა განაახლოთ 'using'.  "
+              მნიშვნელოვანია - SPSS-ში კოდირებული ფაილის გაშვებამდე, თქვენ უნდა განაახლოთ 'using'.  
       r: |
         R ჩამოსატვირთი მასალა შეიცავს 3 ფაილს:
         - კოდირების სახელმძღვანელო: %{codebook}
@@ -1569,10 +1568,10 @@ ka:
       spss: SPSS
       stata: STATA
       r: R
-      original: Original
+      original: ორიგინალი
     title:
       csv: "ცხრილისთვის დაფორმატებული მონაცემები"
       spss: SPSS-ისთვის დაფორმატებული მონაცემები
       stata: STATA-სთვის დაფორმატებული მონაცემები
       r: R-ისთვის დაფორმატებული მონაცემები
-      original: The original data file
+      original: მონაცემთა ფაილის ორიგინალი 
