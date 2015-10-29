@@ -337,6 +337,7 @@ function build_highmap (shape_question_code, adjustable_max, json_map_set, chart
       color: "#eeeeee",
       showInLegend: false,
       tooltip: {
+        backgroundColor: "#fff",
         headerFormat: "",
         pointFormat: "<b>{point.properties.name_en}:</b> " + gon.na
         // using name_en in case shape has no data and therefore no display_name
@@ -359,6 +360,7 @@ function build_highmap (shape_question_code, adjustable_max, json_map_set, chart
       joinBy: ["name_en", "shape_name"],
       allAreas: false, // if shape does not have value, do not show it so base layer above will show
       tooltip: {
+        backgroundColor: "#fff",
         headerFormat: "",
         pointFormat: "<b>{point.display_name}:</b> {point.count:,.0f} ({point.value}%)"
       },
@@ -439,7 +441,6 @@ function build_bar_chart (json_chart, chart_height, weight_name) { // build pie 
       labels:
       {
         style: { "color": "#3c4352", "fontSize": "14px", "fontFamily":"'sourcesans_pro', 'sans-serif'", "fontWeight": "normal", "textAlign": "right" },
-        useHTML: true,
         step: 1,
         formatter: function () { return (this.value+"").upcase(); }
       }
@@ -452,6 +453,7 @@ function build_bar_chart (json_chart, chart_height, weight_name) { // build pie 
       }
     },
     tooltip: {
+      backgroundColor: "#fff",
       formatter: function () {
         return "<b>" + this.key + ":</b> " + Highcharts.numberFormat(this.point.options.count, 0) + " (" + this.y + "%)";
       }
@@ -544,7 +546,7 @@ function build_crosstab_chart (question_text, broken_down_by_code, broken_down_b
       labels:
       {
         style: { "color": "#3c4352", "fontSize": "14px", "fontFamily":"'sourcesans_pro', 'sans-serif'", "fontWeight": "normal", "textAlign": "right" },
-        useHTML: true,
+        // useHTML: true,
         step: 1
       }
     },
@@ -656,6 +658,7 @@ function build_pie_chart (json_chart, chart_height, weight_name) { // build pie 
       style: {"text-align": "center"}
     },
     tooltip: {
+      backgroundColor: "#fff",
       formatter: function () {
         return "<b>" + this.key + ":</b> " + Highcharts.numberFormat(this.point.options.count, 0) + " (" + this.y + "%)";
       }
@@ -773,6 +776,7 @@ function build_time_series_chart (json_chart, chart_height, weight_name) { // bu
       }]
     },
     tooltip: {
+      backgroundColor: "#fff",
       headerFormat: "<span style='font-size: 13px; font-style: italic; font-weight: bold;'>{point.key}</span><br/>",
       pointFormat: "<span style='font-weight: bold;'>{series.name}</span>: {point.count:,.0f} ({point.y:.2f}%)<br/>"
     },
