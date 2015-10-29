@@ -463,7 +463,6 @@ class DatasetsController < ApplicationController
         add_dataset_nav_options()
       }
       format.js {
-        Rails.logger.debug("--------------------------------------------before here")
         begin
            
           @msg = t('app.msgs.mass_change_question_type_saved')
@@ -480,7 +479,6 @@ class DatasetsController < ApplicationController
             end
           end        
         rescue Exception => e
-          Rails.logger.debug("--------------------------------------------before her2e")
           @msg = t('app.msgs.mass_change_question_not_saved')
           @success = false
 

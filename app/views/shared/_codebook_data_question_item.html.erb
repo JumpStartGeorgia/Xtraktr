@@ -84,10 +84,12 @@
                   <div class="col descriptive-statistics default-search">
                     <ul class="list-unstyled">
                       <% question.descriptive_statistics.keys.each {|st| %>
-                      <li>
-                        <span><%= t("app.common.descriptive_statistics." + st) %>:</span>
-                        <%= question.descriptive_statistics[st].round(2) %>
-                      </li>
+                      <% if question.descriptive_statistics[st].present? %>
+                        <li>
+                          <span><%= t("app.common.descriptive_statistics." + st) %>:</span>
+                          <%= question.descriptive_statistics[st].round(2) %>
+                        </li>
+                      <% end %>
                       <% } %>                    
                     </ul>         
                   </div>

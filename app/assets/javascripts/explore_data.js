@@ -1,8 +1,5 @@
 /*global  $, gon, Highcharts, params */
 /*eslint camelcase: 0, no-underscore-dangle: 0, no-unused-vars: 0, no-undef: 0*/
-var js = {
-  cache: {}
-};
 var datatables, h, i, j, k, cacheId;
 
 function update_available_weights () { // update the list of avilable weights based on questions that are selected
@@ -856,6 +853,7 @@ function get_explore_data (is_back_button) { // get data and load page
         $("#explore-error").fadeIn("slow");
       }
       else {
+         console.log(json);
         js.cache[cacheId] = json;
         update_content();
       }
