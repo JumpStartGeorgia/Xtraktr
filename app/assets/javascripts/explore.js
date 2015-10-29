@@ -384,10 +384,16 @@ function build_highmap (shape_question_code, adjustable_max, json_map_set, chart
       sourceHeight: chart_height,
       filename: json_map_set.title.text.replace(/[\|&;\$%@"\'<>\(\)\+,]/g, ""),
       chartOptions:{
+        chart: {
+          spacingLeft:110,
+          spacingRight:110
+        },
         title: {
+          useHTML: false,
           text: json_map_set.title.text
         },
         subtitle: {
+          useHTML: false,
           text: json_map_set.subtitle.text
         }
       },
@@ -459,10 +465,16 @@ function build_bar_chart (json_chart, chart_height, weight_name) { // build pie 
       sourceHeight: chart_height,
       filename: json_chart.title.text.replace(/[\|&;\$%@"\'<>\(\)\+,]/g, ""),
       chartOptions:{
+        chart: {
+          spacingLeft:110,
+          spacingRight:110
+        },
         title: {
+          useHTML: false,
           text: json_chart.title.text
         },
         subtitle: {
+          useHTML: false,
           text: json_chart.subtitle.text
         },
         legend: {
@@ -579,17 +591,22 @@ function build_crosstab_chart (question_text, broken_down_by_code, broken_down_b
       sourceHeight: chart_height,
       filename: json_chart.title.text.replace(/[\|&;\$%@"\'<>\(\)\+,]/g, ""),
       chartOptions:{
+        chart: {
+          spacingLeft:110,
+          spacingRight:110
+        },
         title: {
+          useHTML: false,
           text: json_chart.title.text
         },
         subtitle: {
+          useHTML: false,
           text: json_chart.subtitle.text
         }
       },
       buttons: buttons_options
     }
   });
-
 
   finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id, weight_name, gon.visual_types.crosstab_chart);
 }
@@ -670,10 +687,16 @@ function build_pie_chart (json_chart, chart_height, weight_name) { // build pie 
       sourceHeight: chart_height,
       filename: json_chart.title.text.replace(/[\|&;\$%@"\'<>\(\)\+,]/g, ""),
       chartOptions:{
+        chart: {
+          spacingLeft:110,
+          spacingRight:110
+        },
         title: {
+          useHTML: false,
           text: json_chart.title.text
         },
         subtitle: {
+          useHTML: false,
           text: json_chart.subtitle.text
         },
         legend: {
@@ -767,10 +790,16 @@ function build_time_series_chart (json_chart, chart_height, weight_name) { // bu
       sourceHeight: chart_height,
       filename: json_chart.title.text.replace(/[\|&;\$%@"'<>\(\)\+,]/g, ""),
       chartOptions:{
+        chart: {
+          spacingLeft:110,
+          spacingRight:110
+        },
         title: {
+          useHTML: false,
           text: json_chart.title.text
         },
         subtitle: {
+          useHTML: false,
           text: json_chart.subtitle.text
         }
       },
