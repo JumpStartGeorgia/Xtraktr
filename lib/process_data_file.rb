@@ -634,7 +634,7 @@ private
     return result
   end
 
-  def self.clean_data_item(text)
+  def clean_data_item(text)
     if !text.nil?
       x = text.gsub('\\n', ' ').gsub('\\r', ' ').strip
       if x.present?
