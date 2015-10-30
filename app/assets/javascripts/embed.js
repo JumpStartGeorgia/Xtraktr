@@ -232,7 +232,7 @@ $(document).ready(function () {
     lang: {
       contextButtonTitle: gon.highcharts_context_title
     },
-    colors: ["#C6CA53", "#7DAA92", "#725752", "#E29A27", "#998746", "#A6D3A0", "#808782", "#B4656F", "#294739", "#1B998B", "#7DAA92", "#BE6E46", "#565264"]
+    colors: ['#00adee', '#e88d42', '#9674a9', '#f3d952', '#6fa187', '#b2a440', '#d95d6a', '#737d91', '#d694e0', '#80b5bc', '#a6c449', '#1b74cc', '#4eccae']
   });
   if(gon.highlight_data){ load_highlights(gon.highlight_data); }
 
