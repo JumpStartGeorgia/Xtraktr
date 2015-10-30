@@ -137,24 +137,21 @@ $(document).ready(function (){
         }
       },    
       prepaire_data: function (code) {
-
+        var t = this;
         var _d = {},
           meta = get_code_meta(code),
           code_meta = meta.data,
           data_type = code_meta[0],
           sub_id = code_meta.join(";");
 
-        code_meta.push((code_meta[4] - code_meta[3])/code_meta[2]);
+        
         if(data_type === 1) {
           console.log("Bar chart");
-          if(cache.hasOwnProperty(code)) {
+
+          if(cache.hasOwnProperty(code) && cache[code].hasOwnProperty("frequency_data") && cache[code].frequency_data.hasOwnProperty(sub_id)) {
             var cc = cache[code];
-            if(cc.data.hasOwnProperty(sub_id))
+            if(!cc.data.hasOwnProperty(sub_id)) // 
             {
-              console.log("data for sub_id", sub_id);
-            }
-            else {
-              console.log("no data for", sub_id);
               cc.data[sub_id] = cc.data;
             }
             _d = { meta: code_meta, data: cc.data[sub_id] };
@@ -169,22 +166,21 @@ $(document).ready(function (){
               success: function (d) {
                 cache[code] = d;
                 var tmpA = [],
-                  gr = cache[code].data;
-                if(typeof gr !== "undefined" && gr !== null) {
-                  tmpA = gr.slice();
-                }
-                else {
-                  tmpA = cache[code].data;
-                }
-                gr = {};
-                gr[sub_id] = tmpA;
-                _d = { meta: code_meta, data: tmpA };
-                render_chart();
+                  fr = cache[code].frequency_data;
+
+                if(typeof fr !== "undefined" && fr !== null) {
+                  tmpA = fr.slice();
+                  fr = {};
+                  fr[sub_id] = tmpA;
+                  _d = { meta: code_meta, data: tmpA };
+                  render_chart();
+                }                
               }
             });
           }
         }
         else if(data_type === 2) {
+          code_meta.push((code_meta[4] - code_meta[3])/code_meta[2]);
           if(cache.hasOwnProperty(code)) {
             var cached_code = cache[code];
             if(cached_code.frequency_data.hasOwnProperty(sub_id))
@@ -205,9 +201,11 @@ $(document).ready(function (){
               data: { dataset_id: dataset_id, question_code: code },
               url: view_chart_path,
               success: function (d) {
+                console.log(d);
                 cache[code] = d;
                 var tmpA = [],
                   gr = cache[code].frequency_data;
+                   console.log(gr);
                 if(typeof gr !== "undefined" && gr !== null) {
                   tmpA = gr.slice();
                 }
@@ -232,7 +230,7 @@ $(document).ready(function (){
             nc = true;
             preview.code = code;
           }          
-          this.chart((data_type == 1 ? "bar" : "histogramm"), _d.meta, _d.data, nc);
+          t.chart((data_type == 1 ? "bar" : "histogramm"), _d.meta, _d.data, nc);
         }
         function get_frequency_data (meta, raw_data) {
           var frequency_data = replicate(meta[2], 0);
@@ -511,25 +509,30 @@ $(document).ready(function (){
   function get_code_meta (code) {
     var tr = mass_change.find("tr#" + code),
       tmp = "[name='question["+code+"][numerical]",
+      data_type = +tr.find("[name='question["+code+"][data_type]']:checked").val(),
       titles = {}, out;
+    if(data_type === 1) {
+      return { data: [data_type] };
+    }
+    else {
+      var input = tr.find(".locale-box input"),
+        input_key = input.attr("data-locale");
+      titles[input_key] = input.val();
+      tr.find(".locale-picker ul li:not(.reset)").each(function (i, d) {
+        var dd = $(d);
+        if(dd.attr("data-key") !== input_key && dd.attr("data-orig-value") !== dd.attr("data-value")) {
+          titles[dd.attr("data-key")] = dd.attr("data-value");
+        }
+      });
 
-    var input = tr.find(".locale-box input"),
-      input_key = input.attr("data-locale");
-    titles[input_key] = input.val();
-    tr.find(".locale-picker ul li:not(.reset)").each(function (i, d) {
-      var dd = $(d);
-      if(dd.attr("data-key") !== input_key && dd.attr("data-orig-value") !== dd.attr("data-value")) {
-        titles[dd.attr("data-key")] = dd.attr("data-value");
-      }
-    });
-
-    out = [ tr.find("[name='question["+code+"][data_type]']:checked").val(),
-      tr.find(tmp + "[type]']").val(),
-      tr.find(tmp + "[size]']").val(),
-      tr.find(tmp + "[min]']").val(),
-      tr.find(tmp + "[max]']").val() ].map(function (d){ return d=+d; });
-    // out.unshift(titles);
-    return { data: out, titles: titles };
+      out = [data_type,
+        tr.find(tmp + "[type]']").val(),
+        tr.find(tmp + "[size]']").val(),
+        tr.find(tmp + "[min]']").val(),
+        tr.find(tmp + "[max]']").val() ].map(function (d){ return d=+d; });
+      // out.unshift(titles);
+      return { data: out, titles: titles };
+    }
   }
   init();
 });

@@ -390,6 +390,8 @@ var is_touch = is_touch_device();
       return decimalAdjust("ceil", value, exp);
     };
   }
+
+})();
   function isN (obj) {
     return !jQuery.isArray( obj ) && (obj - parseFloat( obj ) + 1) >= 0;
   }
@@ -399,4 +401,3 @@ var is_touch = is_touch_device();
     }
     return xs;
   }
-})();
