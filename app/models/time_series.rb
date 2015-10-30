@@ -616,6 +616,10 @@ class TimeSeries < CustomTranslation
               answer_values << question_answers[dataset_id].map{|x| x.value}
               puts "- dataset #{dataset_id} has #{question_answers[dataset_id].length} answers"
             end
+          else
+            # build question record for dataset but do not add question code
+            # - this is to allow users to be able to add the correct question later
+            q.dataset_questions.build(dataset_id: dataset_id)
           end
         end
       end

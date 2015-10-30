@@ -18,7 +18,7 @@
       </tr>
     </thead>
     <tbody>
-      <% @time_series_question.dataset_questions.each_with_index do |dataset_question, index| %>
+      <% @time_series_question.dataset_questions.sorted.each_with_index do |dataset_question, index| %>
         <%= f.semantic_fields_for :dataset_questions, dataset_question do |f_dataset_question| %>
           <%= render partial: 'dataset_question_fields', :locals => {f: f_dataset_question, 
               ts_dataset: @datasets.select{|x| x.dataset_id == dataset_question.dataset_id}.first, 

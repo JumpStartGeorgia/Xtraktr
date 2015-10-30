@@ -25,6 +25,24 @@ class TimeSeriesQuestion < CustomTranslation
     def by_dataset_id(dataset_id)
       where(dataset_id: dataset_id).first
     end
+
+    # sort the questions in the right order
+    def sorted
+      sorted = []
+      datasets = all
+      # get time series dataset sort order
+      sorted_ids = base.time_series.datasets.dataset_ids
+
+      sorted_ids.each do |id|
+        # get the dataset with this id
+        match = datasets.select{|x| x.dataset_id == id}.first
+        if match.present?
+          sorted << match
+        end
+      end
+
+      return sorted
+    end
   end
 
   embeds_many :answers, class_name: 'TimeSeriesAnswer', cascade_callbacks: true do
