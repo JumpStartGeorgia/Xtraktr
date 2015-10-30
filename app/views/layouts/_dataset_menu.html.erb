@@ -43,7 +43,7 @@
                       <%= t('app.menu.admin_dataset.warnings') %>
                     <% end %>
                   </li>
-                  <% if !dataset.public? %>
+                  <% if false && !dataset.public? %>
                     <li role="menuitem">
                       <%= link_to '#private-share', :'data-toggle' => "modal"  do %>
                         <span class="glyphicon glyphicon-lock"></span>
