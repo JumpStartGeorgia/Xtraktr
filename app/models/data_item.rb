@@ -11,7 +11,7 @@ class DataItem
   field :original_code, type: String
   field :data, type: Array
   field :formatted_data, type: Array
-  field :grouped_data, type: Array
+  field :frequency_data, type: Hash
 
   #############################
 

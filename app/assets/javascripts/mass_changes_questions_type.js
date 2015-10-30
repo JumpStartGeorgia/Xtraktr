@@ -3,7 +3,7 @@
 //= require jquery.ui.draggable
 
 $(document).ready(function (){
-  var cache = {},// code and all data with grouped_data for each numerical so it will be grouped_data: { "type;size;min;max": grouped data}
+  var cache = {},// code and all data with frequency_data for each numerical so it will be frequency_data: { "type;size;min;max": grouped data}
     first = true,
     datatable = null,
     dirty_rows = { },
@@ -187,15 +187,15 @@ $(document).ready(function (){
         else if(data_type === 2) {
           if(cache.hasOwnProperty(code)) {
             var cached_code = cache[code];
-            if(cached_code.grouped_data.hasOwnProperty(sub_id))
+            if(cached_code.frequency_data.hasOwnProperty(sub_id))
             {
               console.log("data for sub_id", sub_id);
             }
             else {
               console.log("no data for", sub_id);
-              cached_code.grouped_data[sub_id] = get_grouped_data(code_meta, cached_code.data);
+              cached_code.frequency_data[sub_id] = get_frequency_data(code_meta, cached_code.data);
             }
-            _d = { meta: code_meta, data: cached_code.grouped_data[sub_id] };
+            _d = { meta: code_meta, data: cached_code.frequency_data[sub_id] };
             render_chart();
           }
           else {
@@ -207,12 +207,12 @@ $(document).ready(function (){
               success: function (d) {
                 cache[code] = d;
                 var tmpA = [],
-                  gr = cache[code].grouped_data;
+                  gr = cache[code].frequency_data;
                 if(typeof gr !== "undefined" && gr !== null) {
                   tmpA = gr.slice();
                 }
                 else {
-                  tmpA = get_grouped_data(code_meta, cache[code].data);
+                  tmpA = get_frequency_data(code_meta, cache[code].data);
                 }
                 gr = {};
                 gr[sub_id] = tmpA;
@@ -234,8 +234,8 @@ $(document).ready(function (){
           }          
           this.chart((data_type == 1 ? "bar" : "histogramm"), _d.meta, _d.data, nc);
         }
-        function get_grouped_data (meta, raw_data) {
-          var grouped_data = replicate(meta[2], 0);
+        function get_frequency_data (meta, raw_data) {
+          var frequency_data = replicate(meta[2], 0);
           if (Array.isArray(raw_data)) {
 
             raw_data.forEach(function (raw_d) {
@@ -249,12 +249,12 @@ $(document).ready(function (){
                 }
 
                 if(d >= meta[3] && d <= meta[4]) {
-                  grouped_data[Math.floor((d-meta[3])/meta[5])] += 1;
+                  frequency_data[Math.floor((d-meta[3])/meta[5])] += 1;
                 }
               }
             });
           }
-          return grouped_data;
+          return frequency_data;
         }
       }
     };

@@ -86,6 +86,7 @@ module ProcessDataFile
         puts "=============================="
         puts "reading in questions from #{file_questions} and saving to questions attribute"
         question_codes = [] # record the question codes from the questions file
+        are_question_codes_categorical = []
         if File.exists?(file_questions)
           line_number = 0
           CSV.foreach(file_questions).each_with_index do |row, i|
@@ -95,6 +96,7 @@ module ProcessDataFile
             # - need this for when pulling in data in the next section
             if row[0].present? && row[0].strip.present?
               question_codes << row[0].strip
+              are_question_codes_categorical << false
             end
 
             # only add if the code is presetn ## and text are present
@@ -118,40 +120,7 @@ module ProcessDataFile
           end
         end
         puts " - added #{self.questions.length} questions"
-
-
-
-        puts "=============================="
-        puts "saving data from #{file_data} and saving to data_items attribute"
-        # if this is a spreadsheet do not use the quote char setting
-        if is_spreadsheet
-          data = CSV.read(file_data)
-        else
-          data = CSV.read(file_data, :quote_char => "\0")
-        end
-        # only conintue if the # of cols match the # of quesiton codes
-        # - have to subtract 1 from cols because csv file has ',' after last item
-        if (is_spreadsheet && data.first.length == question_codes.length) || (!is_spreadsheet && data.first.length-1 == question_codes.length)
-          question_codes.each_with_index do |code, code_index|
-            code_data = data.map{|x| x[code_index]}
-            if code_data.present?
-              self.data_items_attributes = [{code: clean_text(code, format_code: true),
-                                            original_code: clean_text(code),
-                                            data: code_data
-                                          }]
-            else
-              puts "******************************"
-              puts "Column #{code_index} (supposed to be #{code}) of #{file_questions} does not exist."
-              puts "******************************"
-            end
-          end
-        else
-          puts "******************************"
-          puts "ERROR"
-          puts "The number of columns in #{file_data} (#{data.first.length} does not match the number of question codes #{self.questions.unique_codes.length}"
-          puts "******************************"
-        end
-        puts "added #{self.data_items.length} columns worth of data"
+    
 
 =begin
         # before can read in data, we have to add a header row to it
@@ -252,7 +221,8 @@ module ProcessDataFile
                     # update question to indciate it has answers
                     question.has_code_answers = true
                     question.has_code_answers_for_analysis = true
-                    question.data_type = Question::DATA_TYPE_VALUES[:categorical]
+                    question.data_type = Question::DATA_TYPE_VALUES[:categorical]  
+                    are_question_codes_categorical[question_codes.index(key)] = true
                     # include question in public download
                     question.can_download = true
                   else
@@ -272,6 +242,56 @@ module ProcessDataFile
             end
           end
         end
+
+
+
+
+        puts "=============================="
+        puts "saving data from #{file_data} and saving to data_items attribute"
+        # if this is a spreadsheet do not use the quote char setting
+        if is_spreadsheet
+          data = CSV.read(file_data)
+        else
+          data = CSV.read(file_data, :quote_char => "\0")
+        end
+        # only conintue if the # of cols match the # of quesiton codes
+        # - have to subtract 1 from cols because csv file has ',' after last item
+        if (is_spreadsheet && data.first.length == question_codes.length) || (!is_spreadsheet && data.first.length-1 == question_codes.length)
+          question_codes.each_with_index do |code, code_index|
+            clean_code = clean_text(code, format_code: true)
+
+            code_data = data.map{|x| x[code_index]}
+            frequency_data = {}
+            if are_question_codes_categorical[code_index]
+              question = self.questions.with_code(clean_code)
+              question.answers.sorted.each {|answer|
+                frequency_data[answer.value] = code_data.select{|x| x == answer.value }.count
+              }
+            end
+
+            if code_data.present?
+              self.data_items_attributes = [{code: clean_code,
+                                            original_code: clean_text(code),
+                                            data: code_data
+                                          }.merge(frequency_data.present? ? { frequency_data: frequency_data } : {})]
+            else
+              puts "******************************"
+              puts "Column #{code_index} (supposed to be #{code}) of #{file_questions} does not exist."
+              puts "******************************"
+            end
+          end
+        else
+          puts "******************************"
+          puts "ERROR"
+          puts "The number of columns in #{file_data} (#{data.first.length} does not match the number of question codes #{self.questions.unique_codes.length}"
+          puts "******************************"
+        end
+        puts "added #{self.data_items.length} columns worth of data"
+
+
+
+
+
 
         if !is_spreadsheet
           # if answers exists, write to csv file

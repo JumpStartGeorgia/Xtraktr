@@ -241,6 +241,15 @@ class Question < CustomTranslation
   def weight_titles(ignore_id=nil)
     return weights(ignore_id).map{|x| x.text}
   end
+  def unknown_type?
+    return data_type == DATA_TYPE_VALUES[:unknown]
+  end
+  def categorical_type?
+    return data_type == DATA_TYPE_VALUES[:categorical]
+  end
+  def numerical_type?
+    return data_type == DATA_TYPE_VALUES[:numerical]
+  end
   def has_type?
     return data_type != DATA_TYPE_VALUES[:unknown]
   end

@@ -376,10 +376,10 @@ class Dataset < CustomTranslation
     end
 
     # get the formatted_data array for the provided code
-    def code_grouped_data(code)
+    def code_frequency_data(code)
       x = where(:code => code.downcase).first if code.present?
       if x.present?
-        return x.grouped_data
+        return x.frequency_data
       else
         return nil
       end
@@ -1028,7 +1028,8 @@ class Dataset < CustomTranslation
   end
 
 # TODOHERE
-  def questions_data_recalculate(data)      
+  def questions_data_recalculate(data, type)      
+      if type == "numerical"
       require 'descriptive_statistics/safe'
       if data.keys.length
         data.keys.each {|t| 
@@ -1039,14 +1040,14 @@ class Dataset < CustomTranslation
 
           if dt[0] == 1 
             items.formatted_data = nil
-            items.grouped_data = nil
+            items.frequency_data = nil
           elsif dt[0] == 2
             question = questions.with_code(code)
             predefined_answers = question.answers.map { |f| f.value }
             num = question.numerical            
             step = (num.max - num.min)/num.size
             items.formatted_data = []
-            items.grouped_data = Array.new(num.size, 0)
+            items.frequency_data = Array.new(num.size, 0)
 
             #formatted and grouped data calculation
             items.data.each {|d|
@@ -1060,7 +1061,7 @@ class Dataset < CustomTranslation
                 if tmpD >= num.min && tmpD <= num.max
                   items.formatted_data.push(tmpD);
                   index = ((tmpD-num.min)/step).floor
-                  items.grouped_data[index] += 1
+                  items.frequency_data[index] += 1
                 else 
                 end
              end 
@@ -1085,15 +1086,18 @@ class Dataset < CustomTranslation
           end
           items.save
         }
-      end       
+      end 
+    elsif type == "categorical"
+
+    end      
   end
-          def self.calculate_percentile(array=[],percentile=0.0)
-  # multiply items in the array by the required percentile 
-  # (e.g. 0.75 for 75th percentile)
-  # round the result up to the next whole number
-  # then subtract one to get the array item we need to return
-  array ? array.sort[((array.length * percentile).ceil)-1] : nil
-end
+  def self.calculate_percentile(array=[],percentile=0.0)
+    # multiply items in the array by the required percentile 
+    # (e.g. 0.75 for 75th percentile)
+    # round the result up to the next whole number
+    # then subtract one to get the array item we need to return
+    array ? array.sort[((array.length * percentile).ceil)-1] : nil
+  end
   def is_numeric?(obj) 
      obj.to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? false : true
   end

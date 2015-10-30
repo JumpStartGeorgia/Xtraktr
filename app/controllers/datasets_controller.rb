@@ -469,7 +469,7 @@ class DatasetsController < ApplicationController
           @success = true
           if params[:mass_data].present? && params[:mass_data].keys.length > 0
             @dataset.questions.reflag_questions_type(params[:mass_data])  
-            @dataset.questions_data_recalculate(params[:mass_data])
+            @dataset.questions_data_recalculate(params[:mass_data], "numerical")
             # force question callbacks
             @dataset.check_questions_for_changes_status = true
 
