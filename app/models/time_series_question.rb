@@ -52,7 +52,7 @@ class TimeSeriesQuestion < CustomTranslation
   #############################
 
   accepts_nested_attributes_for :dataset_questions
-  accepts_nested_attributes_for :answers
+  accepts_nested_attributes_for :answers, :allow_destroy => true
 
   attr_accessible :code, :text, :original_code, :notes, :notes_translations, :has_can_exclude_answers,
                   :answers_attributes, :text_translations, :dataset_questions_attributes, :group_id, :sort_order, :is_weight
