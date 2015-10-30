@@ -34,7 +34,7 @@
       </tr>
     </thead>
     <tbody>
-      <% @time_series_question.dataset_questions.each do |dataset_question| %>
+      <% @time_series_question.dataset_questions.sorted.each do |dataset_question| %>
         <tr>
           <td>
             <%
