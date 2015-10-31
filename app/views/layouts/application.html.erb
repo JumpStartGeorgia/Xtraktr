@@ -9,8 +9,8 @@
     <div id="page-wrapper" class='wrappers<%=@klass%>'>
       <div class="content">
           <% if Rails.env.staging? %>
-            <div class="alert alert-warning">
-            The live site is now operational. Please stop using this test site and use the live site from now own.
+            <div class="alert alert-danger">
+            The live site is now operational. Please stop using this test site and use the live site from now on.
             <a href="http://unicef-data.jumpstart.ge/">Click here to go to the live site</a>.
             </div>
           <% end %>
