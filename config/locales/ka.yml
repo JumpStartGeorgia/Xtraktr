@@ -2,24 +2,60 @@
 ka:
   mongoid:
     models:
-      user: "მომხმარებელი"
-      page_content: "ტექსტი გვერდებისთვის"
-      dataset: "მონაცემები"
-      shapeset: "რუკის კონტურული ფორმები"
-      question: "შეკითხვა"
-      time_series: "პერიოდული შედარება"
-      time_series_question: "შეკითხვა"
-      time_series_answer: "პასუხი"
-      api_version: API ვერსია
-      api_method: API მეთოდი
-      api_key: API-ის დაშვების გასაღები
-      category: "კატეგორია"
-      category_mapper: "კატეგორიები"
-      group: "ჯგუფი"
-      weight: "შეწონვა"
-      time_series_group: "ჯგუფი"
-      time_series_weight: "შეწონვა"
-      time_series_weight_assignment: "შეწონვის მინიჭება"
+      user:
+        one: "მომხმარებელი"
+        other: "მომხმარებელი"
+      page_content: 
+        one: "ტექსტი გვერდებისთვის"
+        other: "ტექსტი გვერდებისთვის"
+      dataset: 
+        one: "მონაცემები"
+        other: "მონაცემები"
+      shapeset: 
+        one: "რუკის კონტურული ფორმები"
+        other: "რუკის კონტურული ფორმები"
+      question: 
+        one: "შეკითხვა"
+        other: "შეკითხვა"
+      time_series: 
+        one: "პერიოდული შედარება"
+        other: "პერიოდული შედარება"
+      time_series_question: 
+        one: "შეკითხვა"
+        other: "შეკითხვა"
+      time_series_answer: 
+        one: "პასუხი"
+        other: "პასუხი"
+      api_version: 
+        one: API ვერსია
+        other: API ვერსია
+      api_method: 
+        one: API მეთოდი
+        other: API ვერსია
+      api_key: 
+        one: API-ის დაშვების გასაღები
+        other: API-ის დაშვების გასაღები
+      category: 
+        one: "კატეგორია"
+        other: "კატეგორია"
+      category_mapper: 
+        one: "კატეგორიები"
+        other: "კატეგორიები"
+      group: 
+        one: "ჯგუფი"
+        other: "ჯგუფი"
+      weight: 
+        one: "შეწონვა"
+        other: "შეწონვა"
+      time_series_group: 
+        one: "ჯგუფი"
+        other: "ჯგუფი"
+      time_series_weight: 
+        one: "შეწონვა"
+        other: "შეწონვა"
+      time_series_weight_assignment: 
+        one: "შეწონვის მინიჭება"
+        other: "შეწონვის მინიჭება"
     attributes:
       user:
         email: "ელ. ფოსტა"

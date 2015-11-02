@@ -1,5 +1,5 @@
 <%- model_class = PageContent -%>
-<% title t '.title', :default => model_class.model_name.human.pluralize %>
+<% title t '.title', :default => model_class.model_name.human(:count => 2) %>
 
 <div class="form-group form-group-admin-buttons">
   <%= link_to t('.new', :default => t("helpers.links.new")),
