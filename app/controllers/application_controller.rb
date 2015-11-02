@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
 
   PER_PAGE_COUNT = 6
 
-  DEVISE_CONTROLLERS = ['users/sessions', 'users/registrations', 'devise/passwords']
+  DEVISE_CONTROLLERS = ['users/sessions', 'users/registrations', 'users/passwords']
 
 	before_filter :set_locale
   before_filter :set_owner_id
