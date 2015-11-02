@@ -25,6 +25,24 @@ class TimeSeriesQuestion < CustomTranslation
     def by_dataset_id(dataset_id)
       where(dataset_id: dataset_id).first
     end
+
+    # sort the questions in the right order
+    def sorted
+      sorted = []
+      datasets = all
+      # get time series dataset sort order
+      sorted_ids = base.time_series.datasets.dataset_ids
+
+      sorted_ids.each do |id|
+        # get the dataset with this id
+        match = datasets.select{|x| x.dataset_id == id}.first
+        if match.present?
+          sorted << match
+        end
+      end
+
+      return sorted
+    end
   end
 
   embeds_many :answers, class_name: 'TimeSeriesAnswer', cascade_callbacks: true do
@@ -52,7 +70,7 @@ class TimeSeriesQuestion < CustomTranslation
   #############################
 
   accepts_nested_attributes_for :dataset_questions
-  accepts_nested_attributes_for :answers
+  accepts_nested_attributes_for :answers, :allow_destroy => true
 
   attr_accessible :code, :text, :original_code, :notes, :notes_translations, :has_can_exclude_answers,
                   :answers_attributes, :text_translations, :dataset_questions_attributes, :group_id, :sort_order, :is_weight

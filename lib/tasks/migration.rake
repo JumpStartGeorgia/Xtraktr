@@ -117,4 +117,10 @@ namespace :migration do
     require "./db/migrate/clean_dataitem_data_values.rb"
   end
 
+
+  desc "add missing time series question dataset records"
+  task :add_missing_time_series_question_datasets => :environment do
+    require "./db/migrate/add_missing_time_series_question_datasets.rb"
+  end
+
 end

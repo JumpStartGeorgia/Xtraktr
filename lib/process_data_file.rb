@@ -137,7 +137,7 @@ module ProcessDataFile
             if code_data.present?
               self.data_items_attributes = [{code: clean_text(code, format_code: true),
                                             original_code: clean_text(code),
-                                            data: clean_data_item(code_data)
+                                            data: clean_data_item_array(code_data)
                                           }]
             else
               puts "******************************"
@@ -634,7 +634,16 @@ private
     return result
   end
 
-  def self.clean_data_item(text)
+  def clean_data_item_array(ary)
+    if !ary.nil?
+      ary.each do |item|
+        clean_data_item(item)
+      end
+    end
+    return ary
+  end
+
+  def clean_data_item(text)
     if !text.nil?
       x = text.gsub('\\n', ' ').gsub('\\r', ' ').strip
       if x.present?

@@ -32,7 +32,6 @@ BootstrapStarter::Application.routes.draw do
       end
     end
 
-
     # api
     match '/api', to: 'api#index', as: :api, via: :get
     namespace :api do
@@ -134,7 +133,7 @@ BootstrapStarter::Application.routes.draw do
       end
 
       resources :time_series, path: :manage_time_series do
-        resources :time_series_questions, :only => [:index, :show, :new, :create, :edit, :update], :path => 'questions', :as => 'questions' do
+        resources :time_series_questions, :path => 'questions', :as => 'questions' do
           collection do
             get 'mass_changes'
             post 'mass_changes'
