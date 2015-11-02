@@ -701,6 +701,7 @@ ka:
       js_link_title: "“ჯამპსტარტ ჯორჯია” - ჩვენ გაწვდით მონაცემებს უკეთ!"
       question: "შეკითხვა"
       questions: "შეკითხვები"
+      questions_count: შეკითხვა
       question_code: "კოდი"
       question_codes: "კოდები"
       answers: "პასუხები"

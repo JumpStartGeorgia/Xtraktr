@@ -71,13 +71,13 @@ class RootController < ApplicationController
       case params[:sort].downcase
         when 'publish'
           @datasets = @datasets.sorted_public_at
-        when 'release'
-          @datasets = @datasets.sorted_released_at
-        else #when 'title'
+        when 'title'
           @datasets = @datasets.sorted_title
+        else #when 'release'
+          @datasets = @datasets.sorted_released_at
       end
     else
-      @datasets = @datasets.sorted_title
+      @datasets = @datasets.sorted_released_at
     end
     # add category
     if params[:category].present?
