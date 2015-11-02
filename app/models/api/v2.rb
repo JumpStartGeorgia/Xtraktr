@@ -75,10 +75,9 @@ class Api::V2
     return {
       dataset: { id: dataset.id, title: dataset.title },
       question: create_dataset_question_hash(question),
-      data: data_items.data,
-      formatted_data: (data_items.formatted_data if question.data_type == 2),
-      grouped_meta_data: ({ type: num.type, size: num.size, min: num.min, max: num.max, step: (num.max - num.min)/num.size } if question.data_type == 2),
-      frequency_data: (data_items.frequency_data if question.has_type?)
+      data: question.data_type == 2 ? data_items.formatted_data : data_items.data,
+      frequency_data: (data_items.frequency_data if question.has_type?),
+      frequency_data_meta: ({ type: num.type, size: num.size, min: num.min, max: num.max, step: (num.max - num.min)/num.size } if question.data_type == 2)
     }
   end
 

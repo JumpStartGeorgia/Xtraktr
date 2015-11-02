@@ -406,7 +406,7 @@ class DatasetsController < ApplicationController
         @dataset.languages_sorted.each do |locale|
           gon.locale_picker_data[locale] = [I18n.t("app.language." + locale),I18n.t("app.language." + locale)[0..1].downcase]
         end
-
+        gon.total_responses_out_of = I18n.t("app.common.total_responses_out_of")
         @dataset.questions.each do |q|
             data = {
               code: q.original_code,
@@ -416,7 +416,8 @@ class DatasetsController < ApplicationController
               nm_size: 0,
               nm_min: 0,
               nm_max: 0,
-              nm_title: nil
+              nm_title: nil,
+              has_answers: q.has_code_answers_for_analysis
             }
             if q.numerical?
               orig_locale = I18n.locale.to_s

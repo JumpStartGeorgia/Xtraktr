@@ -3,63 +3,104 @@
 //= require jquery.ui.draggable
 
 $(document).ready(function (){
-  var cache = {},// code and all data with frequency_data for each numerical so it will be frequency_data: { "type;size;min;max": grouped data}
-    first = true,
+
+  var cache = {
+  },// code and all data with frequency_data for each numerical so it will be frequency_data: { "type;size;min;max": grouped data}
+    cq = null, // current question
+    //first = true,
     datatable = null,
     dirty_rows = { },
     form = $("#mass_change_form"),
     view_chart_path = form.attr("data-view-chart-path"),
     dataset_id = form.attr("data-id"),
-    mass_change = $("#mass_change"),
+    mass_change = $("#mass_change"),    
     preview = {
       closed: true,
       code: null,
       selector: null,
+      style1: {"text-align": "center", "font-family":"sourcesans_pro_l, sans-serif", "font-size": "18px", "color": "#3c4352" },
+      style2: { "cursor": "pointer", "font-family":"sourcesans_pro_l, sans-serif", "font-size": "13px", "color": "#3C4352", "fontWeight": "normal" },
       init: function () {
         $("body").append("<div id='preview' class='preview'><div class='header'><div class='move'></div><div class='close'></div></div><div class='chart'></div></div>");
         this.selector = $("#preview");
         this.bind();
       },
       bind: function () {
-        this.selector.draggable({ handle: ".header > .move", cursor: "move" });
-
-        this.selector.find(".close" ).click(function () {
+        var _t = this;
+        _t.selector.draggable({ handle: ".header > .move", cursor: "move" });
+        _t.selector.find(".close" ).click(function () {
           var t = $(this),
             p = t.closest("#preview");
           p.hide();
           p.find(".chart").highcharts().destroy();
-          this.closed = true;
+          _t.closed = true;
         });
       },
       show: function (code, only_if_opened) {
+
         if(typeof only_if_opened !== "boolean") { only_if_opened = false; }
         if(only_if_opened && this.closed) { return; }
 
         this.prepaire_data(code);
       },
-      chart: function (type, meta, data, newCode) {
-        
-        var histogramm = function () {
-          var t = $("#preview"), chart, sum = data.reduce(function (a, b){return a+b;});
-          t.show();
+      render_chart: function () {
+        var t = this;
+        console.log(cq, cache);
 
-          if(this.closed || newCode) {
+        var nc = false; // if code is new
+        if(preview.code !== cq.code) {
+          nc = true;
+          preview.code = cq.code;
+        }
+         console.log("here",cache[cq.code].data[cq.sub_id]);
+        var cd = cache[cq.code].data[cq.sub_id].fd, // current data
+          cm = cq.meta, // current data
+          cg = cache[cq.code].general;  // current general data
+
+        var $preview = $("#preview"), chart;
+        $preview.show();
+
+        var histogramm = function () {
+          var sum = cd.reduce(function (a, b){return a+b;});
+          
+          var num = 0;
+          cg.orig_data.forEach(function(n){
+            if(isN(n) && +n >= 0) {
+              ++num;
+            }
+          });
+
+          if(t.closed || nc) {
+            console.log("new");
             chart = new Highcharts.Chart({
+              colors: ["#C6CA53"],
               chart: {
                 renderTo: $("#preview .chart")[0],
                 type: "column",
                 spacingRight: 40
               },
               credits: { enabled: false },
+              title: {
+                text: "<span class='code-highlight'>" + cg.question.original_code + "</span> - " + cg.question.text,
+                useHTML: true,
+                style: t.style1
+              },
+              subtitle: {
+                text: gon.total_responses_out_of.replace("X", num).replace("XX", cg.orig_data.length),
+                useHTML: true,
+                style: t.style2
+              },
               xAxis: {
+                title: { text: cq.titles[$("html").attr("lang")] },
                 labels: {
                   align: "right",
                   x:-10
                 },
                 startOnTick: true,
                 endOnTick: true,
-                categories: formatLabel(meta)
+                categories: formatLabel(cm)
               },
+              yAxis: { title: null },
               plotOptions: {
                 column: {
                   groupPadding: 0,
@@ -68,16 +109,17 @@ $(document).ready(function (){
                 }
               },
               series: [{
-                data: data
+                data: cd
               }],
               tooltip: {
                 formatter: function () {
                   return this.y + " (" + Math.round10(this.y*100/sum, -2) + "%)";
                 }
-              }
+              },
+              legend: { enabled: false }
             }, function () {
               var box = this.plotBox;
-              var label = this.renderer.label(meta[4], (box.x+box.width) - 7, (box.y + box.height) + 5)
+              var label = this.renderer.label(cm[4], (box.x+box.width) - 7, (box.y + box.height) + 5)
                 .css({
                   color:"#606060",
                   cursor:"default",
@@ -89,19 +131,20 @@ $(document).ready(function (){
               this.isDirtyBox = true;
               this.redraw();
               label.xSetter((box.x+box.width) - 7);
-              if(first) {
-                t.css({top: $(window).height() - t.height() - 10 });
-                first = false;
-              }
+              // if(first) {
+                $preview.css({top: $(window).height() - $preview.height() - 10 });
+                // first = false;
+              //}
             });
           }
           else {
-            chart = $("#preview .chart").highcharts();
-            chart.xAxis[0].setCategories(formatLabel(meta), true, true);
-            chart.series[0].setData(data, false, true);
+            console.log("old");
+            chart = $preview.find(".chart").highcharts();
+            chart.xAxis[0].setCategories(formatLabel(cm), true, true);
+            chart.series[0].setData(cd, false, true);
             $("#preview .chart .histogramm-last-label").remove();
             var box = chart.plotBox;
-            var label = chart.renderer.label(meta[4], (box.x+box.width) - 7, (box.y + box.height) + 5)
+            var label = chart.renderer.label(cm[4], (box.x+box.width) - 7, (box.y + box.height) + 5)
               .css({
                 color:"#606060",
                 cursor:"default",
@@ -113,125 +156,137 @@ $(document).ready(function (){
             chart.isDirtyBox = true;
             chart.redraw();
             label.xSetter((box.x+box.width) - 7);
-            console.log("old chart", label );
-          }
-
-          if(this.closed) {
-            this.closed = false;
-          }
-
-          function formatLabel (meta) {
-            var v = [];
-            for(var i = 0; i < meta[2]; ++i) {
-              v.push(Math.round(meta[3]+i*meta[5]));
-            }
-            return v;
+            //console.log("old chart", label );
           }
         },
-        bar = function () {};
+        bar = function () {
+          var sum = 0, keys = [],
+          cd_keys = [], cd_values = [];
+          Object.keys(cd).forEach(function(key) {
+             console.log(+cd[key]);
+            if(isN(key) && +key >= 0) {
+              sum+=+cd[key];
+              keys.push(key);
+              cd_keys.push(cg.question.answers.filter(function(ans) { return ans.value === key; })[0].text);
+              cd_values.push(cd[key]);
+            }
+          });
+          var num = 0;
+          cg.orig_data.forEach(function(n){
+            if(isN(n) && +n >= 0) {
+              ++num;
+            }
+          });
+           console.log(cd_keys, cd_values, sum);
+          console.log("drawing bar");
+          if(t.closed || nc) {
+            console.log("new");
+            chart = new Highcharts.Chart({
+              colors: ["#C6CA53"],
+              chart: {
+                renderTo: $("#preview .chart")[0],
+                type: "column",
+                spacingRight: 40,
+                inverted: true
+              },
+              title: {
+                text: "<span class='code-highlight'>" + cg.question.original_code + "</span> - " + cg.question.text,
+                useHTML: true,
+                style: t.style1
+              },
+              subtitle: {
+                text: gon.total_responses_out_of.replace("X", num).replace("XX", cg.orig_data.length),
+                useHTML: true,
+                style: t.style2
+              },
+              credits: { enabled: false },
+              xAxis: {
+                categories: cd_keys
+              },
+              yAxis: { title:null },
+              series: [{
+                data: cd_values
+              }],
+              tooltip: {
+                formatter: function () {
+                  return this.y + " (" + Math.round10(this.y*100/sum, -2) + "%)";
+                }
+              },
+              legend: { enabled: false }
 
-        if(type == "histogramm") {
-          histogramm();
-        } else if(type == "bar") {
-          bar();
+            }, function () {
+                $preview.css({top: $(window).height() - $preview.height() - 10 });
+            });
+          }
+          else {
+            console.log("old");
+          }
+        };
+
+
+        function formatLabel (meta) {
+          var v = [];
+          for(var i = 0; i < meta[2]; ++i) {
+            v.push(Math.round(meta[3]+i*meta[5]));
+          }
+          return v;
         }
-      },    
+
+        if(cq.type === 1) {
+          bar();
+        } else if(cq.type === 2) {
+          histogramm();
+        }
+        if(t.closed) {
+          t.closed = false;
+        }
+      },
       prepaire_data: function (code) {
-        var t = this;
-        var _d = {},
+        var t = this,
           meta = get_code_meta(code),
           code_meta = meta.data,
           data_type = code_meta[0],
           sub_id = code_meta.join(";");
 
-        
-        if(data_type === 1) {
-          console.log("Bar chart");
+        cq = { code: code, sub_id: sub_id, type: data_type, meta: code_meta, titles: (data_type === 2 ? meta.titles : []) };
 
-          if(cache.hasOwnProperty(code) && cache[code].hasOwnProperty("frequency_data") && cache[code].frequency_data.hasOwnProperty(sub_id)) {
-            var cc = cache[code];
-            if(!cc.data.hasOwnProperty(sub_id)) // 
-            {
-              cc.data[sub_id] = cc.data;
+        if(cache.hasOwnProperty(code) && cache[code].hasOwnProperty("data")) {
+          if(data_type === 2) {
+            code_meta.push((code_meta[4] - code_meta[3])/code_meta[2]);
+            if(!cache[code]["data"].hasOwnProperty(sub_id)) {
+              cache[code]["data"][sub_id] = { fd: get_frequency_data(code_meta, cache[code].general.orig_data) };
             }
-            _d = { meta: code_meta, data: cc.data[sub_id] };
-            render_chart();
+            t.render_chart();
+            return;
           }
-          else {
-            $.ajax({
-              type: "GET",
-              dataType: "json",
-              data: { dataset_id: dataset_id, question_code: code },
-              url: view_chart_path,
-              success: function (d) {
-                cache[code] = d;
-                var tmpA = [],
-                  fr = cache[code].frequency_data;
-
-                if(typeof fr !== "undefined" && fr !== null) {
-                  tmpA = fr.slice();
-                  fr = {};
-                  fr[sub_id] = tmpA;
-                  _d = { meta: code_meta, data: tmpA };
-                  render_chart();
-                }                
-              }
-            });
+          else if(cache[code]["data"].hasOwnProperty(sub_id)) {
+            t.render_chart();
+            return;
           }
         }
-        else if(data_type === 2) {
+         console.log("remote");
+        cache[code] = { code: code, general: {}, data: {}};
+
+        if(data_type === 2) {
           code_meta.push((code_meta[4] - code_meta[3])/code_meta[2]);
-          if(cache.hasOwnProperty(code)) {
-            var cached_code = cache[code];
-            if(cached_code.frequency_data.hasOwnProperty(sub_id))
-            {
-              console.log("data for sub_id", sub_id);
-            }
-            else {
-              console.log("no data for", sub_id);
-              cached_code.frequency_data[sub_id] = get_frequency_data(code_meta, cached_code.data);
-            }
-            _d = { meta: code_meta, data: cached_code.frequency_data[sub_id] };
-            render_chart();
-          }
-          else {
-            $.ajax({
-              type: "GET",
-              dataType: "json",
-              data: { dataset_id: dataset_id, question_code: code },
-              url: view_chart_path,
-              success: function (d) {
-                console.log(d);
-                cache[code] = d;
-                var tmpA = [],
-                  gr = cache[code].frequency_data;
-                   console.log(gr);
-                if(typeof gr !== "undefined" && gr !== null) {
-                  tmpA = gr.slice();
-                }
-                else {
-                  tmpA = get_frequency_data(code_meta, cache[code].data);
-                }
-                gr = {};
-                gr[sub_id] = tmpA;
-                _d = { meta: code_meta, data: tmpA };
-                render_chart();
-              }
-            });
-          }
-        }
-        else {
-          console.log("Message no data-type");
         }
 
-        function render_chart () {
-          var nc = false; // if code is new
-          if(preview.code !== code) {
-            nc = true;
-            preview.code = code;
-          }          
-          t.chart((data_type == 1 ? "bar" : "histogramm"), _d.meta, _d.data, nc);
-        }
+        $.ajax({
+          type: "GET",
+          dataType: "json",
+          data: { dataset_id: dataset_id, question_code: code },
+          url: view_chart_path,
+          success: function (d) {
+            cache[code].general = { dataset: d.dataset, orig_data: d.data, question: d.question };
+            cache[code].data[sub_id] = { fd: d.frequency_data };
+            if(data_type === 2)
+            {
+              cache[code].data[sub_id]["dfm"]= d.frequency_data_meta;
+            }
+            t.render_chart();
+          }
+        });
+
         function get_frequency_data (meta, raw_data) {
           var frequency_data = replicate(meta[2], 0);
           if (Array.isArray(raw_data)) {
@@ -271,12 +326,16 @@ $(document).ready(function (){
         row.id = data.code;
       },
       "columns": [
-        {"data":null, "defaultContent": "<div class='btn btn-default view-chart'>View</div>"},
+        {"data":null,
+          render: function (data, type, full) {
+            return "<div class='btn btn-default view-chart' "+(full.data_type === 0 ? " disabled" : "")+">View</div>";
+          }
+        },
         {"data":"code"},
         {"data":"question"},
         {"data":"data_type",
           render: function (data, type, full) {
-            return "<input class='numerical' type='radio' value='1' name='question["+full.code +"][data_type]'" + (data == 1 ? " checked": "") + " data-o='"+data+"'>";
+            return "<input class='numerical' type='radio' value='1' name='question["+full.code +"][data_type]'" + (data == 1 ? " checked": "") + " data-o='"+data+"' "+(full.has_answers ? "" : " disabled title='"+ "Question has no answers so it can be viewed as Bar chart"+"'") + ">";
           },
           class: "c"
         },
@@ -331,7 +390,6 @@ $(document).ready(function (){
     });
   }
   function init_binds () {
-
     form.submit( function () {
       var keys = Object.keys(dirty_rows),
         current_data = {};
@@ -381,7 +439,7 @@ $(document).ready(function (){
       t.toggleClass("selected");
     });
 
-    $(datatable).on("click", ".view-chart", function () { //debounce(, 500)
+    $(datatable).on("click", ".view-chart", function () { //debounce(, 500)            
       preview.show($(this).closest("tr").attr("id"));
     });
 
@@ -400,8 +458,12 @@ $(document).ready(function (){
         new_value = +t.val();
       }
 
+      if(t.attr("name") === "question["+code+"][data_type]") {
+        tr.find(".view-chart").removeAttr("disabled");
+      }
       if(t.hasClass("numerical")) {
         if(new_value === 2) {
+          prepare_numerical_fields(code);
           tr.find(".conditional, .conditional input").removeAttr("disabled");
         }
         else {
@@ -532,6 +594,49 @@ $(document).ready(function (){
         tr.find(tmp + "[max]']").val() ].map(function (d){ return d=+d; });
       // out.unshift(titles);
       return { data: out, titles: titles };
+    }
+  }
+  function prepare_numerical_fields(code) {
+    mass_change.find("tr#" + code).attr("disabled", "disabled").find(".view-chart").parent().addClass("row-loader");
+
+    //console.log(cache[code]);
+    if(cache.hasOwnProperty(code) && cache[code].hasOwnProperty("general") && cache[code]["general"].hasOwnProperty("orig_data")) {          
+      prepare_numerical_fields_callback();
+    }
+    else {
+      cache[code] = { code: code, general: {}, data: {}};
+      $.ajax({
+        type: "GET",
+        dataType: "json",
+        data: { dataset_id: dataset_id, question_code: code },
+        url: view_chart_path,
+        success: function (d) {
+          cache[code].general = { dataset: d.dataset, orig_data: d.data, question: d.question };
+          //cache[code].data[sub_id] = { fd: d.frequency_data };  
+          prepare_numerical_fields_callback();           
+        }
+      });
+    }
+
+    function prepare_numerical_fields_callback ()
+    {
+      var orig_data = cache[code].general.orig_data, min = Number.MAX_VALUE, max = Number.MIN_VALUE , isFloat;
+      orig_data.forEach(function (d, i) {
+        if(isN(d)) {
+          orig_data[i] = +d;
+          if(orig_data[i] < min) {
+            min = orig_data[i];
+          }
+          if(orig_data[i] > max) {
+            max = orig_data[i];
+          }
+        }
+      });
+      var tmp = Math.round(max-min);
+      var group_size =  tmp >  8 ? 8 : tmp;
+       console.log(orig_data, min, max, group_size);
+      console.log();
+      mass_change.find("tr#" + code).removeAttr("disabled", "disabled").find(".view-chart").parent().removeClass("row-loader");
     }
   }
   init();

@@ -808,7 +808,8 @@ ka:
         q2: Percentile 50%
         q3: Percentile 75%
         standart_deviation: Standart Deviation
-        variance: Variance      
+        variance: Variance
+      total_responses_out_of: "Total Responses: <span class='number'>X</span> out of <span class='number'>XX</span>"
     msgs:
       does_not_exist: "თქვენ ცდილობთ ისეთი გვერდის ნახვას, რომელიც არ არსებობს."
       not_authorized: "თქვენ არ გაქვთ ამ გვერდის ნახვის უფლება."

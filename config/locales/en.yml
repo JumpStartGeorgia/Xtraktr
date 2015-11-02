@@ -808,7 +808,8 @@ en:
         q2: Percentile 50%
         q3: Percentile 75%
         standart_deviation: Standart Deviation
-        variance: Variance      
+        variance: Variance
+      total_responses_out_of: "Total Responses: <span class='number'>X</span> out of <span class='number'>XX</span>"   
     msgs:
       does_not_exist: You tried to access a page that does not exist.
       not_authorized: You are not authorized to view that page.

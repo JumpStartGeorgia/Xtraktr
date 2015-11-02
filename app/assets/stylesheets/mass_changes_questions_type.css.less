@@ -15,12 +15,28 @@ td .r {
 #mass_change {
   tbody tr td {
     background-color:transparent;
+    vertical-align:middle;
   }
   tbody tr:hover {
     background-color:#efefef;
   }
   tbody tr.selected, tbody tr.selected:hover {
     background-color:rgba(206, 206, 206, 0.35);
+  }
+  tbody tr {
+    position:relative;
+  }
+  tbody tr td.row-loader:before { 
+    content:"";
+    display:inline-block;
+    background: rgba(146, 183, 88, 0.17) url(/assets/svg/loading.svg) no-repeat center / 100px;
+    width: 100%;
+    height:40px;
+    position:absolute;
+    z-index:320;
+  }
+  tbody tr td div.view-chart {
+    display:inline-block;
   }
 }
 
@@ -145,4 +161,12 @@ td .r {
     background: rgba(16, 0, 0, 0) url(svg/question.svg) no-repeat center;
     margin-left: 6px;
     vertical-align: bottom;
+}
+span.code-highlight
+{
+  font:18px 'sourcesans_pro', 'sans-serif';
+  color: #d67456;
+}
+span.number {
+  color: #d67456; 
 }
