@@ -2,29 +2,75 @@
 en:
   mongoid:
     models:
-      user: User
-      organization: Organization
-      member: Member
-      page_content: Text for Pages
-      dataset: Dataset
-      shapeset: Shapeset
-      question: Question
-      time_series: Time Series
-      time_series_question: Question
-      time_series_answer: Answer
-      api_version: API Version
-      api_method: API Method
-      api_key: API Access Token
-      category: Category
-      category_mapper: Categories
-      country: Country
-      country_mappery: Countries
-      group: Group
-      weight: Weight
-      time_series_group: Group
-      time_series_weight: Weight
-      time_series_weight_assignment: Weight Assignment
-      invitation: Invitation
+      user: 
+        one: User
+        other: Users
+      organization: 
+        one: Organization
+        other: Organizations
+      member: 
+        one: Member
+        other: Members
+      page_content: 
+        one: Text for Pages
+        other: Text for Pages
+      dataset: 
+        one: Dataset
+        other: Datasets
+      shapeset: 
+        one: Shapeset
+        other: Shapesets
+      question: 
+        one: Question
+        other: Questions
+      time_series: 
+        one: Time Series
+        other: Time Series
+      time_series_question: 
+        one: Question
+        other: Questions
+      time_series_answer: 
+        one: Answer
+        other: Answers
+      api_version: 
+        one: API Version
+        other: API Versions
+      api_method: 
+        one: API Method
+        other: API Methods
+      api_key: 
+        one: API Access Token
+        other: API Access Tokens
+      category: 
+        one: Category
+        other: Categories
+      category_mapper: 
+        one: Categories
+        other: Categories
+      country: 
+        one: Country
+        other: Countries
+      country_mappery: 
+        one: Countries
+        other: Countries
+      group: 
+        one: Group
+        other: Groups
+      weight: 
+        one: Weight
+        other: Weights
+      time_series_group: 
+        one: Groups
+        other: Groups
+      time_series_weight: 
+        one: Weight
+        other: Weights
+      time_series_weight_assignment: 
+        one: Weight Assignment
+        other: Weight Assignments
+      invitation: 
+        one: Invitation
+        other: Invitations
     attributes:
       user:
         email: Email Address
