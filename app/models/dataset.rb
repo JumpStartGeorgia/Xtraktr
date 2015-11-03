@@ -1064,25 +1064,26 @@ class Dataset < CustomTranslation
                   items.frequency_data[index] += 1
                 else 
                 end
-             end 
-              
-              # descriptive statistics
-              dt = items.formatted_data
-              dt.extend(DescriptiveStatistics)
-              question.descriptive_statistics = {
-                :number => dt.number.to_i,
-                :min => num.type == 0 ? dt.min.to_i : dt.min,
-                :max => num.type == 0 ? dt.max.to_i : dt.max,
-                :mean => dt.mean,
-                :median => num.type == 0 ? dt.median.to_i : dt.median,
-                :mode => num.type == 0 ? dt.mode.to_i : dt.mode,
-                :q1 => num.type == 0 ? dt.percentile(25).to_i : dt.percentile(25),
-                :q2 => num.type == 0 ? dt.percentile(50).to_i : dt.percentile(50),
-                :q3 => num.type == 0 ? dt.percentile(75).to_i : dt.percentile(75),
-                :variance => dt.variance,
-                :standard_deviation => dt.standard_deviation
-              }
+              end 
             }
+            
+            # descriptive statistics
+            dt = items.formatted_data
+            dt.extend(DescriptiveStatistics)
+            question.descriptive_statistics = {
+              :number => dt.number.to_i,
+              :min => num.type == 0 ? dt.min.to_i : dt.min,
+              :max => num.type == 0 ? dt.max.to_i : dt.max,
+              :mean => dt.mean,
+              :median => num.type == 0 ? dt.median.to_i : dt.median,
+              :mode => num.type == 0 ? dt.mode.to_i : dt.mode,
+              :q1 => num.type == 0 ? dt.percentile(25).to_i : dt.percentile(25),
+              :q2 => num.type == 0 ? dt.percentile(50).to_i : dt.percentile(50),
+              :q3 => num.type == 0 ? dt.percentile(75).to_i : dt.percentile(75),
+              :variance => dt.variance,
+              :standard_deviation => dt.standard_deviation
+            }
+           
           end
           items.save
         }

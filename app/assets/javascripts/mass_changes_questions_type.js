@@ -1,11 +1,10 @@
-/*global  $, gon, console, Highcharts, jQuery, debounce, isN, replicate */
+/*global  $, gon, console, Highcharts, jQuery, debounce, isN, replicate, isInteger */
 /*eslint no-console: 0, no-unused-vars: 0*/
 //= require jquery.ui.draggable
 
 $(document).ready(function (){
 
-  var cache = {
-  },// code and all data with frequency_data for each numerical so it will be frequency_data: { "type;size;min;max": grouped data}
+  var cache = { }, // code and all data with frequency_data for each numerical so it will be frequency_data: { "type;size;min;max": grouped data}
     cq = null, // current question
     //first = true,
     datatable = null,
@@ -13,7 +12,7 @@ $(document).ready(function (){
     form = $("#mass_change_form"),
     view_chart_path = form.attr("data-view-chart-path"),
     dataset_id = form.attr("data-id"),
-    mass_change = $("#mass_change"),    
+    mass_change = $("#mass_change"),
     preview = {
       closed: true,
       code: null,
@@ -37,11 +36,11 @@ $(document).ready(function (){
         });
       },
       show: function (code, only_if_opened) {
-
+         console.log("show");
         if(typeof only_if_opened !== "boolean") { only_if_opened = false; }
         if(only_if_opened && this.closed) { return; }
 
-        this.prepaire_data(code);
+        this.prepaire_data(code);        
       },
       render_chart: function () {
         var t = this;
@@ -52,7 +51,7 @@ $(document).ready(function (){
           nc = true;
           preview.code = cq.code;
         }
-         console.log("here",cache[cq.code].data[cq.sub_id]);
+        console.log("here", cache[cq.code].data[cq.sub_id]);
         var cd = cache[cq.code].data[cq.sub_id].fd, // current data
           cm = cq.meta, // current data
           cg = cache[cq.code].general;  // current general data
@@ -62,16 +61,16 @@ $(document).ready(function (){
 
         var histogramm = function () {
           var sum = cd.reduce(function (a, b){return a+b;});
-          
+
           var num = 0;
-          cg.orig_data.forEach(function(n){
+          cg.orig_data.forEach(function (n){
             if(isN(n) && +n >= 0) {
               ++num;
             }
           });
 
           if(t.closed || nc) {
-            console.log("new");
+            console.log("new",typeof cd );
             chart = new Highcharts.Chart({
               colors: ["#C6CA53"],
               chart: {
@@ -109,7 +108,7 @@ $(document).ready(function (){
                 }
               },
               series: [{
-                data: cd
+                data: cd.slice()
               }],
               tooltip: {
                 formatter: function () {
@@ -131,17 +130,16 @@ $(document).ready(function (){
               this.isDirtyBox = true;
               this.redraw();
               label.xSetter((box.x+box.width) - 7);
-              // if(first) {
-                $preview.css({top: $(window).height() - $preview.height() - 10 });
-                // first = false;
-              //}
+              $preview.css({top: $(window).height() - $preview.height() - 10 });
             });
           }
           else {
-            console.log("old");
+            var ss = 0;
+            cd.slice().forEach(function(ddd){ ss+=ddd; });
+            console.log("old", ss );
             chart = $preview.find(".chart").highcharts();
             chart.xAxis[0].setCategories(formatLabel(cm), true, true);
-            chart.series[0].setData(cd, false, true);
+            chart.series[0].setData(cd.slice(), false, true);
             $("#preview .chart .histogramm-last-label").remove();
             var box = chart.plotBox;
             var label = chart.renderer.label(cm[4], (box.x+box.width) - 7, (box.y + box.height) + 5)
@@ -156,78 +154,79 @@ $(document).ready(function (){
             chart.isDirtyBox = true;
             chart.redraw();
             label.xSetter((box.x+box.width) - 7);
-            //console.log("old chart", label );
           }
         },
-        bar = function () {
-          var sum = 0, keys = [],
-          cd_keys = [], cd_values = [];
-          Object.keys(cd).forEach(function(key) {
-             console.log(+cd[key]);
-            if(isN(key) && +key >= 0) {
-              sum+=+cd[key];
-              keys.push(key);
-              cd_keys.push(cg.question.answers.filter(function(ans) { return ans.value === key; })[0].text);
-              cd_values.push(cd[key]);
-            }
-          });
-          var num = 0;
-          cg.orig_data.forEach(function(n){
-            if(isN(n) && +n >= 0) {
-              ++num;
-            }
-          });
-           console.log(cd_keys, cd_values, sum);
-          console.log("drawing bar");
-          if(t.closed || nc) {
-            console.log("new");
-            chart = new Highcharts.Chart({
-              colors: ["#C6CA53"],
-              chart: {
-                renderTo: $("#preview .chart")[0],
-                type: "column",
-                spacingRight: 40,
-                inverted: true
-              },
-              title: {
-                text: "<span class='code-highlight'>" + cg.question.original_code + "</span> - " + cg.question.text,
-                useHTML: true,
-                style: t.style1
-              },
-              subtitle: {
-                text: gon.total_responses_out_of.replace("X", num).replace("XX", cg.orig_data.length),
-                useHTML: true,
-                style: t.style2
-              },
-              credits: { enabled: false },
-              xAxis: {
-                categories: cd_keys
-              },
-              yAxis: { title:null },
-              series: [{
-                data: cd_values
-              }],
-              tooltip: {
-                formatter: function () {
-                  return this.y + " (" + Math.round10(this.y*100/sum, -2) + "%)";
-                }
-              },
-              legend: { enabled: false }
-
-            }, function () {
-                $preview.css({top: $(window).height() - $preview.height() - 10 });
+          bar = function () {
+            var sum = 0,
+              keys = [],
+              cd_keys = [],
+              cd_values = [];
+            Object.keys(cd).forEach(function (key) {
+              console.log(+cd[key]);
+              if(isN(key) && +key >= 0) {
+                sum+=+cd[key];
+                keys.push(key);
+                cd_keys.push(cg.question.answers.filter(function (ans) { return ans.value === key; })[0].text);
+                cd_values.push(cd[key]);
+              }
             });
-          }
-          else {
-            console.log("old");
-          }
-        };
+            var num = 0;
+            cg.orig_data.forEach(function (n){
+              if(isN(n) && +n >= 0) {
+                ++num;
+              }
+            });
+            console.log(cd_keys, cd_values, sum);
+            console.log("drawing bar");
+            if(t.closed || nc) {
+              console.log("new");
+              chart = new Highcharts.Chart({
+                colors: ["#C6CA53"],
+                chart: {
+                  renderTo: $("#preview .chart")[0],
+                  type: "column",
+                  spacingRight: 40,
+                  inverted: true
+                },
+                title: {
+                  text: "<span class='code-highlight'>" + cg.question.original_code + "</span> - " + cg.question.text,
+                  useHTML: true,
+                  style: t.style1
+                },
+                subtitle: {
+                  text: gon.total_responses_out_of.replace("X", num).replace("XX", cg.orig_data.length),
+                  useHTML: true,
+                  style: t.style2
+                },
+                credits: { enabled: false },
+                xAxis: {
+                  categories: cd_keys
+                },
+                yAxis: { title:null },
+                series: [{
+                  data: cd_values
+                }],
+                tooltip: {
+                  formatter: function () {
+                    return this.y + " (" + Math.round10(this.y*100/sum, -2) + "%)";
+                  }
+                },
+                legend: { enabled: false }
+
+              }, function () {
+                  $preview.css({top: $(window).height() - $preview.height() - 10 });
+                });
+            }
+            else {
+              console.log("old");
+            }
+          };
 
 
         function formatLabel (meta) {
           var v = [];
           for(var i = 0; i < meta[2]; ++i) {
-            v.push(Math.round(meta[3]+i*meta[5]));
+            v.push(Math.floor(meta[3]+i*meta[5]));
           }
           return v;
         }
@@ -242,6 +241,7 @@ $(document).ready(function (){
         }
       },
       prepaire_data: function (code) {
+         console.log("prepaire_data");
         var t = this,
           meta = get_code_meta(code),
           code_meta = meta.data,
@@ -251,20 +251,25 @@ $(document).ready(function (){
         cq = { code: code, sub_id: sub_id, type: data_type, meta: code_meta, titles: (data_type === 2 ? meta.titles : []) };
 
         if(cache.hasOwnProperty(code) && cache[code].hasOwnProperty("data")) {
+           console.log("here1");
           if(data_type === 2) {
+            console.log("here2");
             code_meta.push((code_meta[4] - code_meta[3])/code_meta[2]);
             if(!cache[code]["data"].hasOwnProperty(sub_id)) {
+              console.log("here3");
               cache[code]["data"][sub_id] = { fd: get_frequency_data(code_meta, cache[code].general.orig_data) };
             }
+            console.log("here4", cache[code]["data"][sub_id].fd);
             t.render_chart();
             return;
           }
           else if(cache[code]["data"].hasOwnProperty(sub_id)) {
+            console.log("here5");
             t.render_chart();
             return;
           }
         }
-         console.log("remote");
+        console.log("remote");
         cache[code] = { code: code, general: {}, data: {}};
 
         if(data_type === 2) {
@@ -277,7 +282,8 @@ $(document).ready(function (){
           data: { dataset_id: dataset_id, question_code: code },
           url: view_chart_path,
           success: function (d) {
-            cache[code].general = { dataset: d.dataset, orig_data: d.data, question: d.question };
+             console.log(d);
+            cache[code].general = { dataset: d.dataset, orig_data: d.data, formatted_data: d.data, question: d.question };
             cache[code].data[sub_id] = { fd: d.frequency_data };
             if(data_type === 2)
             {
@@ -286,29 +292,6 @@ $(document).ready(function (){
             t.render_chart();
           }
         });
-
-        function get_frequency_data (meta, raw_data) {
-          var frequency_data = replicate(meta[2], 0);
-          if (Array.isArray(raw_data)) {
-
-            raw_data.forEach(function (raw_d) {
-              var d = raw_d;
-              if(isN(d)) {
-                if(meta[1] == 0) {
-                  d = parseInt(d);
-                }
-                else if(meta[1] == 1) {
-                  d = parseFloat(d);
-                }
-
-                if(d >= meta[3] && d <= meta[4]) {
-                  frequency_data[Math.floor((d-meta[3])/meta[5])] += 1;
-                }
-              }
-            });
-          }
-          return frequency_data;
-        }
       }
     };
 
@@ -332,7 +315,7 @@ $(document).ready(function (){
           }
         },
         {"data":"code"},
-        {"data":"question"},
+        {"data":"question", "width": "100%"},
         {"data":"data_type",
           render: function (data, type, full) {
             return "<input class='numerical' type='radio' value='1' name='question["+full.code +"][data_type]'" + (data == 1 ? " checked": "") + " data-o='"+data+"' "+(full.has_answers ? "" : " disabled title='"+ "Question has no answers so it can be viewed as Bar chart"+"'") + ">";
@@ -344,6 +327,9 @@ $(document).ready(function (){
             return "<input class='numerical' type='radio' value='2' name='question["+full.code +"][data_type]'" + (data == 2 ? " checked": "") + " data-o='"+data+"'>";
           },
           class: "c"
+
+
+
         },
         {"data":"nm_title",
           render: function (data, type, full) {
@@ -439,8 +425,16 @@ $(document).ready(function (){
       t.toggleClass("selected");
     });
 
-    $(datatable).on("click", ".view-chart", function () { //debounce(, 500)            
+    $(datatable).on("click", ".view-chart", function () { //debounce(, 500)
+      var t = $(this), tr = t.closest("tr");
+
+      tr.attr("disabled", "disabled");
+      t.parent().addClass("row-loader");
+
       preview.show($(this).closest("tr").attr("id"));
+
+      tr.removeAttr("disabled", "disabled");
+      t.parent().removeClass("row-loader");
     });
 
     $(datatable).on("change", "input, select", function () {
@@ -465,6 +459,7 @@ $(document).ready(function (){
         if(new_value === 2) {
           prepare_numerical_fields(code);
           tr.find(".conditional, .conditional input").removeAttr("disabled");
+          tr.find(".locale-picker").removeAttr("disabled");
         }
         else {
           tr.find(".conditional, .conditional input").attr("disabled", "disabled");
@@ -494,7 +489,7 @@ $(document).ready(function (){
         var index = dirty_rows[code].fields.indexOf(field_index);
         if(index !== -1 && dirty_rows[code].count !== 1) {
           --dirty_rows[code].count;
-          dirty_rows[code].fields.splice(index,1);
+          dirty_rows[code].fields.splice(index, 1);
         }
         else { delete dirty_rows[code]; }
       }
@@ -596,14 +591,33 @@ $(document).ready(function (){
       return { data: out, titles: titles };
     }
   }
-  function prepare_numerical_fields(code) {
+  function set_code_meta (code, meta) {
+    var tr = mass_change.find("tr#" + code),
+      str = "[name='question["+code+"][numerical]";
+
+    tr.find(str+"[type]']").val(meta[1]);
+    tr.find(str+"[size]']").val(meta[2]);
+    tr.find(str+"[min]']").val(meta[3]);
+    tr.find(str+"[max]']").val(meta[4]);
+  }
+  function prepare_numerical_fields (code) {
+     console.log("prepare_numerical_fields");
     mass_change.find("tr#" + code).attr("disabled", "disabled").find(".view-chart").parent().addClass("row-loader");
 
-    //console.log(cache[code]);
-    if(cache.hasOwnProperty(code) && cache[code].hasOwnProperty("general") && cache[code]["general"].hasOwnProperty("orig_data")) {          
-      prepare_numerical_fields_callback();
+    if(cache.hasOwnProperty(code) && cache[code].hasOwnProperty("general") && cache[code]["general"].hasOwnProperty("orig_data")) {
+       console.log("Has General");
+      if(cache[code].hasOwnProperty("data") && cache[code].data.hasOwnProperty("default")) {
+        console.log("Has Default for numerical");
+        set_code_meta(code, cache[code]["data"]["default"].fdm);
+        mass_change.find("tr#" + code).removeAttr("disabled", "disabled").find(".view-chart").parent().removeClass("row-loader");
+      }
+      else {
+        console.log("Has No Default for numerical");
+        prepare_numerical_fields_callback();
+      }
     }
     else {
+      console.log("Has No Default for numerical, ajax");
       cache[code] = { code: code, general: {}, data: {}};
       $.ajax({
         type: "GET",
@@ -611,33 +625,93 @@ $(document).ready(function (){
         data: { dataset_id: dataset_id, question_code: code },
         url: view_chart_path,
         success: function (d) {
-          cache[code].general = { dataset: d.dataset, orig_data: d.data, question: d.question };
-          //cache[code].data[sub_id] = { fd: d.frequency_data };  
-          prepare_numerical_fields_callback();           
+          cache[code].general = { dataset: d.dataset, orig_data: d.data, formatted_data: d.data, question: d.question };
+          prepare_numerical_fields_callback();
         }
       });
     }
 
-    function prepare_numerical_fields_callback ()
-    {
-      var orig_data = cache[code].general.orig_data, min = Number.MAX_VALUE, max = Number.MIN_VALUE , isFloat;
-      orig_data.forEach(function (d, i) {
-        if(isN(d)) {
-          orig_data[i] = +d;
-          if(orig_data[i] < min) {
-            min = orig_data[i];
+    function prepare_numerical_fields_callback () {
+      var formatted = cache[code].general.formatted_data, // formatted formatted_data
+        min = Number.MAX_VALUE,
+        max = Number.MIN_VALUE,
+        isFloat,
+        question = cache[code].general.question,
+        predefined_answers = question.answers.map(function (d){ return d.value; }),
+        num = [2, 0, 0, 0, 0],
+        predefinedData = [];
+      formatted.forEach(function (d, i) {
+        if(isN(d) && predefined_answers.indexOf(d) === -1) {
+          formatted[i] = +d;
+          if(num[1] === 1 && !isInteger(formatted[i])) {
+            num[1] = 1;
           }
-          if(orig_data[i] > max) {
-            max = orig_data[i];
+          if(formatted[i] < min) {
+            min = formatted[i];
+          }
+          if(formatted[i] > max) {
+            max = formatted[i];
+          }
+        }
+        else {
+          predefinedData.push(i);
+        }
+      });
+      predefinedData.forEach(function (d){
+        formatted.splice(d, 1);
+      });
+
+      if(min === Number.MAX_VALUE) {
+        min = 0;
+      }
+      if(max === Number.MIN_VALUE) {
+        max = min + 1;
+      }
+
+      var tmp = Math.round(max-min);
+      num[2] = tmp > 8 ? 8 : tmp;
+      num[3] = min;
+      num[4] = max;
+      var sub_id = num.join(";");
+
+      num.push((num[4] - num[3])/num[2]);
+      cache[code].data[sub_id] = { fd: replicate(num[2], 0), fdm: num };
+      cache[code].data["default"] = { fd: replicate(num[2], 0), fdm: num };
+      var fd = cache[code].data[sub_id].fd,
+        fd2 = cache[code].data["default"].fd;
+
+      formatted.forEach(function (d){
+        if(d >= num[3] && d <= num[4]) {
+          fd[Math.floor((d-num[3])/num[5])] += 1;
+          fd2[Math.floor((d-num[3])/num[5])] += 1;
+        }
+      });
+
+      set_code_meta(code, num);
+      mass_change.find("tr#" + code).removeAttr("disabled", "disabled").find(".view-chart").parent().removeClass("row-loader");
+    }
+  }
+  function get_frequency_data (meta, raw_data) {
+    var frequency_data = replicate(meta[2], 0);
+    if (Array.isArray(raw_data)) {
+
+      raw_data.forEach(function (raw_d) {
+        var d = raw_d;
+        if(isN(d)) {
+          if(meta[1] == 0) {
+            d = parseInt(d);
+          }
+          else if(meta[1] == 1) {
+            d = parseFloat(d);
+          }
+
+          if(d >= meta[3] && d <= meta[4]) {
+            frequency_data[Math.floor((d-meta[3])/meta[5])] += 1;
           }
         }
       });
-      var tmp = Math.round(max-min);
-      var group_size =  tmp >  8 ? 8 : tmp;
-       console.log(orig_data, min, max, group_size);
-      console.log();
-      mass_change.find("tr#" + code).removeAttr("disabled", "disabled").find(".view-chart").parent().removeClass("row-loader");
     }
+    return frequency_data;
   }
   init();
 });

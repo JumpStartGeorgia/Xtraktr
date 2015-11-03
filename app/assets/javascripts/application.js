@@ -401,3 +401,6 @@ var is_touch = is_touch_device();
     }
     return xs;
   }
+function isInteger(x) {
+  return Math.round(x) === +x;
+}
