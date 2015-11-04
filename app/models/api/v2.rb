@@ -414,7 +414,7 @@ class Api::V2
     end
 
     # if language provided, set it
-    if language.present? && dataset.languages.include?(language)
+    if language.present? && time_series.languages.include?(language)
       time_series.current_locale = language
     end
     @language = (I18n.available_locales.include? time_series.current_locale.to_sym) ? time_series.current_locale : I18n.locale.to_s

@@ -16,7 +16,7 @@ BootstrapStarter::Application.routes.draw do
 
 
     get 'omniauth/:provider' => 'omniauth#localized', as: :localized_omniauth
-    devise_for :users, skip: :omniauth_callbacks, :path_names => {:sign_in => 'login', :sign_out => 'logout'}, controllers: { registrations: 'users/registrations', sessions: 'users/sessions'}
+    devise_for :users, skip: :omniauth_callbacks, :path_names => {:sign_in => 'login', :sign_out => 'logout'}, controllers: { registrations: 'users/registrations', sessions: 'users/sessions', passwords: 'users/passwords'}
 
 
     match '/admin', :to => 'admin#index', :as => :admin, :via => :get
@@ -75,7 +75,7 @@ BootstrapStarter::Application.routes.draw do
     end
 
     resources :time_series, path: :manage_time_series do
-      resources :time_series_questions, :only => [:index, :show, :new, :create, :edit, :update], :path => 'questions', :as => 'questions' do
+      resources :time_series_questions, :path => 'questions', :as => 'questions' do
         collection do
           get 'mass_changes'
           post 'mass_changes'

@@ -581,8 +581,10 @@ private
     zip_file_path = "#{download_path}/#{dataset.current_locale}/#{zip_name}"
 
 
-    if !File.exists?(stata_file_path) || dataset.reset_download_files?         # create stata file
-      output = "* IMPORTANT: you must update the path to the file at the end of the next line to include the full path (e.g., C:\\Desktop\...)\n\ninsheet "
+    # create stata file
+    if !File.exists?(stata_file_path) || dataset.reset_download_files?         
+      output = "* IMPORTANT: In the line below, replace ***** with the path to the folder where the .do file is located (e.g., C:\\Desktop...).\n\n"
+      output << "cd \"*****\"\n\ninsheet "
       questions.each do |question|
         code = Unidecoder.decode(question.original_code, LANG_MAP_TO_ENG3)
         output << code
@@ -599,7 +601,8 @@ private
     end
 
 
-    if !File.exists?(csv_file_path) || dataset.reset_download_files?     # create csv file
+    # create csv file
+    if !File.exists?(csv_file_path) || dataset.reset_download_files?     
       if use_processed_csv
         copy_processed_csv(csv_file_path)
       else
@@ -913,7 +916,16 @@ private
     if !File.exists?(zip_file_path)
       # zip the files and move to the main folder
       ZipRuby::Archive.open(zip_file_path, ZipRuby::CREATE) do |zipfile|
-        title = dataset.title.to_ascii.gsub(/[\\ \/ \: \* \? \" \< \> \| \, \. ]/,'')
+        # if the dataset has a slug, use it (slug is not the id)
+        # else use the title
+        #  and if title is too long, cut it off at 70 chars
+        title = if !dataset.slug.start_with?(dataset.id.to_s)
+          dataset.slug.to_ascii.gsub(/[\\ \/ \: \* \? \" \< \> \| \, \. ]/,'')
+        elsif dataset.title.length < 70
+          dataset.title.to_ascii.gsub(/[\\ \/ \: \* \? \" \< \> \| \, \. ]/,'')
+        else
+          dataset.title[0..69].to_ascii.gsub(/[\\ \/ \: \* \? \" \< \> \| \, \. ]/,'')
+        end
         zipfile.add_dir(title)
         files.each do |file|
           # args: file name (with directory), source
