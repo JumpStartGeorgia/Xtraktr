@@ -8,9 +8,11 @@
       <div class="sort"  data-filter='sort'>
         <label><%= t('.sort_by.this') %>:</label>
         <select>
-          <option value="title"><%= t('.sort_by.title') %></option>
-          <option value="release"><%= t('.sort_by.release') %></option>
-          <option value="publish"><%= t('.sort_by.publish') %></option>
+        <%-
+          current_sort = params[:sort].present? ? params[:sort] : 'release'
+          ["title", "release", "publish"].each {|opt| -%>
+            <option value="<%= opt %>"<%= " selected" if current_sort == opt %>><%= t(".sort_by.#{opt}") %></option>
+        <%- } -%>
         </select>
       </div>
 
