@@ -72,7 +72,7 @@ class TimeSeriesWeightsController < ApplicationController
 
     respond_to do |format|
       if @weight.save
-        format.html { redirect_to time_series_weights_path(@owner), flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.time_series_weight'))} }
+        format.html { redirect_to time_series_weights_path(@owner), flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.time_series_weight.one'))} }
         format.json { render json: @weight, status: :created, location: @weight }
       else
         add_common_options
@@ -92,7 +92,7 @@ class TimeSeriesWeightsController < ApplicationController
     if @weight.present?
       respond_to do |format|
         if @weight.update_attributes(params[:time_series_weight])
-          format.html { redirect_to time_series_weights_path(@owner), flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.time_series_weight'))} }
+          format.html { redirect_to time_series_weights_path(@owner), flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.time_series_weight.one'))} }
           format.json { head :no_content }
         else
           add_common_options
@@ -115,7 +115,7 @@ class TimeSeriesWeightsController < ApplicationController
     @weight.destroy
 
     respond_to do |format|
-      format.html { redirect_to time_series_weights_url(@owner), flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.time_series_weight'))} }
+      format.html { redirect_to time_series_weights_url(@owner), flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.time_series_weight.one'))} }
       format.json { head :no_content }
     end
   end

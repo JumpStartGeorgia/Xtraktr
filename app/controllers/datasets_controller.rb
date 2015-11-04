@@ -128,7 +128,7 @@ class DatasetsController < ApplicationController
 
     respond_to do |format|
       if @dataset.save
-        format.html { redirect_to dataset_path(@dataset.owner_slug, @dataset), flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.dataset'))} }
+        format.html { redirect_to dataset_path(@dataset.owner_slug, @dataset), flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.dataset.one'))} }
         format.json { render json: @dataset, status: :created, location: @dataset }
       else
         # set the date values for the datepicker
@@ -235,7 +235,7 @@ class DatasetsController < ApplicationController
 
     respond_to do |format|
       if @dataset.save
-        format.html { redirect_to dataset_path(@dataset.owner_slug, @dataset), flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.dataset'))} }
+        format.html { redirect_to dataset_path(@dataset.owner_slug, @dataset), flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.dataset.one'))} }
         format.json { head :no_content }
       else
         # set the date values for the datepicker
@@ -265,7 +265,7 @@ class DatasetsController < ApplicationController
     @dataset.destroy
 
     respond_to do |format|
-      format.html { redirect_to datasets_url(@owner), flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.dataset'))} }
+      format.html { redirect_to datasets_url(@owner), flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.dataset.one'))} }
       format.json { head :no_content }
     end
   end
@@ -637,11 +637,11 @@ class DatasetsController < ApplicationController
           id_name, type, name, desc, link, cls = nil
           if item.class == Question
             id_name = 'questions'
-            type = I18n.t('mongoid.models.question')
+            type = I18n.t('mongoid.models.question.one')
             name = item.code_with_text
           elsif item.class == Group
             id_name = 'groups'
-            type = I18n.t('mongoid.models.group')
+            type = I18n.t('mongoid.models.group.one')
             name = item.title
             desc = item.description.present? ? " - #{item.description}" : ''
             link = view_context.link_to(I18n.t('helpers.links.view_group_items'), params.merge(group_id: item.id), class: 'btn btn-default btn-view-group btn-xs')

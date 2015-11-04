@@ -71,7 +71,7 @@ class WeightsController < ApplicationController
 
     respond_to do |format|
       if @weight.save
-        format.html { redirect_to dataset_weights_path(@owner), flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.weight'))} }
+        format.html { redirect_to dataset_weights_path(@owner), flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.weight.one'))} }
         format.json { render json: @weight, status: :created, location: @weight }
       else
         gon.datatable_json = create_datatable_json(@dataset.questions, @weight.codes, @weight.id)
@@ -92,7 +92,7 @@ class WeightsController < ApplicationController
     if @weight.present?
       respond_to do |format|
         if @weight.update_attributes(params[:weight])
-          format.html { redirect_to dataset_weights_path(@owner), flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.weight'))} }
+          format.html { redirect_to dataset_weights_path(@owner), flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.weight.one'))} }
           format.json { head :no_content }
         else
           gon.datatable_json = create_datatable_json(@dataset.questions, @weight.codes, @weight.id)
@@ -117,7 +117,7 @@ class WeightsController < ApplicationController
     @weight.destroy
 
     respond_to do |format|
-      format.html { redirect_to dataset_weights_url(@owner), flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.weight'))} }
+      format.html { redirect_to dataset_weights_url(@owner), flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.weight.one'))} }
       format.json { head :no_content }
     end
   end

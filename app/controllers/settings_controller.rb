@@ -86,7 +86,7 @@ class SettingsController < ApplicationController
           # add this user as a member
           @group.members.create(member_id: @owner.id)
           respond_to do |format|
-            format.html { redirect_to settings_path(@owner, page: 'organizations'), flash: {success:  t('app.msgs.success_saved', :obj => t('mongoid.models.organization'))} }
+            format.html { redirect_to settings_path(@owner, page: 'organizations'), flash: {success:  t('app.msgs.success_saved', :obj => t('mongoid.models.organization.one'))} }
           end
         else
           respond_to do |format|
@@ -116,7 +116,7 @@ class SettingsController < ApplicationController
 
         if @group.update_attributes(params[:user])
           respond_to do |format|
-            format.html { redirect_to settings_path(@owner, page: 'organizations'), flash: {success:  t('app.msgs.success_saved', :obj => t('mongoid.models.organization'))} }
+            format.html { redirect_to settings_path(@owner, page: 'organizations'), flash: {success:  t('app.msgs.success_saved', :obj => t('mongoid.models.organization.one'))} }
           end
         else
           respond_to do |format|
@@ -144,7 +144,7 @@ class SettingsController < ApplicationController
       @group.destroy
 
       respond_to do |format|
-        format.html { redirect_to settings_path(:owner_id => @owner.slug, page: 'organizations'), flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.organization'))} }
+        format.html { redirect_to settings_path(:owner_id => @owner.slug, page: 'organizations'), flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.organization.one'))} }
         format.json { head :no_content }
       end
     else
@@ -165,7 +165,7 @@ class SettingsController < ApplicationController
       Invitation.delete_accepted_invitation(@group.id, @user.id)
 
       respond_to do |format|
-        format.html { redirect_to settings_path(:owner_id => @user.slug, page: 'organizations'), flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.organization'))} }
+        format.html { redirect_to settings_path(:owner_id => @user.slug, page: 'organizations'), flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.organization.one'))} }
         format.json { head :no_content }
       end
     else
@@ -209,7 +209,7 @@ class SettingsController < ApplicationController
       @invitation.destroy
 
       respond_to do |format|
-        format.html { redirect_to settings_path(:owner_id => @owner.slug, page: 'organizations'), flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.invitation'))} }
+        format.html { redirect_to settings_path(:owner_id => @owner.slug, page: 'organizations'), flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.invitation.one'))} }
         format.json { head :no_content }
       end
     else
@@ -339,7 +339,7 @@ class SettingsController < ApplicationController
       member.destroy_all if member.present?
 
       respond_to do |format|
-        format.html { redirect_to settings_path(:owner_id => @owner.slug, page: 'members'), flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.member'))} }
+        format.html { redirect_to settings_path(:owner_id => @owner.slug, page: 'members'), flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.member.one'))} }
         format.json { head :no_content }
       end
     else
@@ -358,7 +358,7 @@ class SettingsController < ApplicationController
       @invitation.destroy
 
       respond_to do |format|
-        format.html { redirect_to settings_path(:owner_id => @owner.slug, page: 'members'), flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.invitation'))} }
+        format.html { redirect_to settings_path(:owner_id => @owner.slug, page: 'members'), flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.invitation.one'))} }
         format.json { head :no_content }
       end
     else

@@ -53,7 +53,7 @@ class Admin::CategoriesController < ApplicationController
 
     respond_to do |format|
       if @category.save
-        format.html { redirect_to admin_categories_path, flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.category'))} }
+        format.html { redirect_to admin_categories_path, flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.category.one'))} }
         format.json { render json: @category, status: :created, location: @category }
       else
         set_tabbed_translation_form_settings
@@ -71,7 +71,7 @@ class Admin::CategoriesController < ApplicationController
 
     respond_to do |format|
       if @category.update_attributes(params[:category])
-        format.html { redirect_to admin_categories_path, flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.category'))} }
+        format.html { redirect_to admin_categories_path, flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.category.one'))} }
         format.json { head :no_content }
       else
         set_tabbed_translation_form_settings
@@ -89,7 +89,7 @@ class Admin::CategoriesController < ApplicationController
     @category.destroy
 
     respond_to do |format|
-      format.html { redirect_to admin_categories_url, flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.category'))} }
+      format.html { redirect_to admin_categories_url, flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.category.one'))} }
       format.json { head :no_content }
     end
   end

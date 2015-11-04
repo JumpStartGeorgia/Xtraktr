@@ -124,7 +124,7 @@ class TimeSeriesController < ApplicationController
 
     respond_to do |format|
       if @time_series.save
-        format.html { redirect_to time_series_questions_path(@owner, @time_series), flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.time_series'))} }
+        format.html { redirect_to time_series_questions_path(@owner, @time_series), flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.time_series.one'))} }
         format.json { render json: @time_series, status: :created, location: @time_series }
       else
         @datasets = Dataset.by_owner(@owner.id, current_user.id).only_id_title_languages.sorted
@@ -227,7 +227,7 @@ class TimeSeriesController < ApplicationController
 
     respond_to do |format|
       if @time_series.save
-        format.html { redirect_to @time_series, flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.time_series'))} }
+        format.html { redirect_to @time_series, flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.time_series.one'))} }
         format.json { head :no_content }
       else
         @datasets = Dataset.by_owner(@owner.id, current_user.id).only_id_title_languages.sorted
@@ -251,7 +251,7 @@ class TimeSeriesController < ApplicationController
     @time_series.destroy
 
     respond_to do |format|
-      format.html { redirect_to time_series_index_url(@owner), flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.time_series'))} }
+      format.html { redirect_to time_series_index_url(@owner), flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.time_series.one'))} }
       format.json { head :no_content }
     end
   end
@@ -391,11 +391,11 @@ class TimeSeriesController < ApplicationController
           id_name, type, name, desc, link, cls = nil
           if item.class == TimeSeriesQuestion
             id_name = 'questions'
-            type = I18n.t('mongoid.models.time_series_question')
+            type = I18n.t('mongoid.models.time_series_question.one')
             name = item.code_with_text
           elsif item.class == TimeSeriesGroup
             id_name = 'groups'
-            type = I18n.t('mongoid.models.time_series_group')
+            type = I18n.t('mongoid.models.time_series_group.one')
             name = item.title
             desc = item.description.present? ? " - #{item.description}" : ''
             link = view_context.link_to(I18n.t('helpers.links.view_group_items'), params.merge(group_id: item.id), class: 'btn btn-default btn-view-group btn-xs')
