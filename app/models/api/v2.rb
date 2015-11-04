@@ -414,7 +414,7 @@ class Api::V2
     end
 
     # if language provided, set it
-    if language.present? && dataset.languages.include?(language)
+    if language.present? && time_series.languages.include?(language)
       time_series.current_locale = language
     end
     @language = (I18n.available_locales.include? time_series.current_locale.to_sym) ? time_series.current_locale : I18n.locale.to_s
@@ -966,7 +966,7 @@ private
         # - this is where can_exclude removes the unwanted answers
         q_answer_values = question[:answers].map{|x| x[:value]}
         bdb_answer_values = broken_down_by[:answers].map{|x| x[:value]}
-        merged_data.delete_if{|x| !q_answer_values.include?(x[1]) && !bdb_answer_values.include?(x[2])}
+        merged_data.delete_if{|x| !q_answer_values.include?(x[1][0]) && !bdb_answer_values.include?(x[1][1])}
 
         filter_results = nil
         if with_title
