@@ -181,5 +181,12 @@ $(document).ready(function(){
   $('.question-link-groups .question-link-group', codebook).click(function(){
     $('body').animate({ scrollTop: $('.group-item[data-id="' + $(this).data('id') + '"]', codebook).offset().top - $('nav.navbar').height() }, 1500);
   });
+
+  $(document).on("click", ".view-all label", function (){
+    var t = $(this),
+      p = t.parent();
+    p.toggleClass("active");
+    t.text(t.attr("data-show-" + (p.hasClass("active") ? "less" : "more")));
+  });
 });
 

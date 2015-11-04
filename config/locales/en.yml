@@ -827,6 +827,8 @@ en:
       powered_by_xtraktr_title: This data was built using the Xtraktr platform. Learn more and add your own data on the Xtraktr website.
       weighted_footnote: 'Applied weight: '
       download_data_explanation: 'For more in-depth analysis, you can download this dataset in one of the following formats.'
+      show_more: Show More
+      show_less: Show Less
     msgs:
       does_not_exist: You tried to access a page that does not exist.
       not_authorized: You are not authorized to view that page.

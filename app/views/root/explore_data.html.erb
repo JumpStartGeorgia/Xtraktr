@@ -2,20 +2,21 @@
 <% title t('.title') %>
 
 <div class="article explore">
-
     <div class="filters" data-path="<%= explore_data_path %>">
       <div class="box">
         <div class="search" data-filter='search'><div class="box"><input type="search" placeholder="<%= t('helpers.search') %>" value="<%=params[:q]%>"><div class="go"><%= t('app.common.go') %></div></div></div>
         <div class="sort"  data-filter='sort'>
           <label><%= t('.sort_by.this') %>:</label>
           <div class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <%= t('.sort_by.title') %>
-            </a>
+          <%-
+            current_sort = params[:sort].present? ? params[:sort] : 'title'
+            current_sort_label = t(".sort_by.#{current_sort}")
+          -%>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= current_sort_label %></a>
             <ul class="dropdown-menu" role="menu">
-              <li role="menuitem" class="selected" data-value="title"><a href="#"><%= t('.sort_by.title') %></a></li>
-              <li role="menuitem" data-value="release"><a href="#"><%= t('.sort_by.release') %></a></li>
-              <li role="menuitem" data-value="publish"><a href="#"><%= t('.sort_by.publish') %></a></li>
+              <%- ["title", "release", "publish"].each {|opt| -%>
+                <li role="menuitem" data-value="<%= opt %>"<%= " class='selected'" if current_sort == opt %>><a href="#"><%= t(".sort_by.#{opt}") %></a></li>
+              <%- } -%>
             </ul>
           </div>
         </div>
@@ -44,7 +45,7 @@
             <div class="country"  data-filter='country'>
               <%-
                   current = params[:country].present? ? params[:country] : 'none'
-                  cat = @countries.select{|x| x.id == current}
+                  cat = @countries.select{|x| x.id.to_s == current}
               -%>
               <label><%= t('.filter_by_country').html_safe %>:</label>
               <div class="dropdown">
@@ -54,7 +55,7 @@
                 <ul class="dropdown-menu" role="menu">
                   <li role="menuitem" data-value="none" <%= "class=selected" if current == 'none' %>><a href="#"><%= t('app.common.all_countries') %></a></li>
                   <% @countries.each {|x| %>
-                    <li role="menuitem" data-value="<%= x.id %>" <%="class=selected" if current == x.id %>><a href="#"><%= x.name %></a></li>
+                    <li role="menuitem" data-value="<%= x.id %>" <%="class=selected" if current == x.id.to_s %>><a href="#"><%= x.name %></a></li>
                   <% } %>
                 </ul>
               </div>
@@ -84,7 +85,7 @@
             <div class="owner"  data-filter='owner'>
               <%-
                   current = params[:owner].present? ? params[:owner] : 'none'
-                  cat = @owners.select{|x| x.id == current}
+                  cat = @owners.select{|x| x.id.to_s == current}
               -%>
               <label><%= t('.filter_by_owner').html_safe %>:</label>
               <div class="dropdown">
@@ -94,7 +95,7 @@
                 <ul class="dropdown-menu" role="menu">
                   <li role="menuitem" data-value="none" <%= "class=selected" if current == 'none' %>><a href="#"><%= t('app.common.all_owners') %></a></li>
                   <% @owners.each {|x| %>
-                    <li role="menuitem" data-value="<%= x.id %>" <%="class=selected" if current == x.id %>><a href="#"><%= x.name %></a></li>
+                    <li role="menuitem" data-value="<%= x.id %>" <%="class=selected" if current == x.id.to_s %>><a href="#"><%= x.name %></a></li>
                   <% } %>
                 </ul>
               </div>
