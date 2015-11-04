@@ -966,7 +966,7 @@ private
         # - this is where can_exclude removes the unwanted answers
         q_answer_values = question[:answers].map{|x| x[:value]}
         bdb_answer_values = broken_down_by[:answers].map{|x| x[:value]}
-        merged_data.delete_if{|x| !q_answer_values.include?(x[1]) && !bdb_answer_values.include?(x[2])}
+        merged_data.delete_if{|x| !q_answer_values.include?(x[1][0]) && !bdb_answer_values.include?(x[1][1])}
 
         filter_results = nil
         if with_title
