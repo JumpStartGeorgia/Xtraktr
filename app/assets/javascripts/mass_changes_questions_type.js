@@ -691,6 +691,21 @@ $(document).ready(function (){
       mass_change.find("tr#" + code).removeAttr("disabled", "disabled").find(".view-chart").parent().removeClass("row-loader");
     }
   }
+  function get_range_map (step, min, max) {
+    var range_map = [min],
+      prev_ticker = min, 
+      ticker = min+step, prev_ticker;
+
+    while(Math.round(ticker)<max) {
+      range_map.push(Math.round(ticker));
+      prev_ticker = ticker;       
+      ticker=ticker+step;
+    }
+    if(prev_ticker != max) {
+      range_map.push(max);
+    }
+    return range_map;
+  }
   function get_frequency_data (meta, raw_data) {
     var frequency_data = replicate(meta[2], 0);
     if (Array.isArray(raw_data)) {
