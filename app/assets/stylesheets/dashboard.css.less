@@ -814,6 +814,51 @@
           vertical-align:middle;
         }
       }
+      li.view-all {
+        label {
+          font: 13px 'sourcesans_pro', 'sans-serif';
+          line-height: 11px;
+          color: #636975;
+          width: 100%;
+          padding: 0px;
+          opacity: 0.8;
+          -webkit-transition: opacity 0.1s ease-in-out;
+          transition: opacity 0.1s ease-in-out;
+          &:after {
+            content:"";
+            display:inline-block;
+            width:30px;
+            height:7px;
+            background:transparent url(/assets/svg/select_arrow.svg) no-repeat center right / 21px 7px;  
+          }
+          
+          padding-right: 30px;
+          &:hover {
+            opacity:1;
+            cursor:pointer;
+          }
+        }
+        &:before { 
+          content:none;
+        }
+        ul {
+          display:none;
+        }
+        &.active {
+          label { 
+            &:after {
+              background-repeat: no-repeat;
+              -moz-transform: rotate(180deg);
+              -o-transform: rotate(180deg);
+              -webkit-transform: rotate(180deg);
+              -ms-transform: rotate(180deg);
+            }            
+          }
+          ul {
+            display:inline-block;
+          }
+        }
+      }
     }
   }
 }
