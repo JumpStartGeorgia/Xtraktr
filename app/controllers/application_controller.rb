@@ -366,8 +366,8 @@ class ApplicationController < ActionController::Base
         gon.embed_button_link = embed_v2_url('replace') if time_series.public?
 
         # record javascript variables
-        gon.na = I18n.t('explore_time_series.na')
-        gon.percent = I18n.t('explore_time_series.percent')
+        gon.na = I18n.t('explore_time_series.v2.na')
+        gon.percent = I18n.t('explore_time_series.v2.percent')
         gon.table_questions_header = I18n.t('app.common.questions')
         set_gon_highcharts(time_series.current_locale)
         set_gon_datatables
