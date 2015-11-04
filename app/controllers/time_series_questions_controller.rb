@@ -128,7 +128,7 @@ class TimeSeriesQuestionsController < ApplicationController
 
       respond_to do |format|
         if @time_series_question.save
-          format.html { redirect_to time_series_question_path(@time_series, @time_series_question), flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.time_series_question'))} }
+          format.html { redirect_to time_series_question_path(@time_series, @time_series_question), flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.time_series_question.one'))} }
           format.json { render json: @time_series_question, status: :created, location: @time_series_question }
         else
           @datasets = @time_series.datasets.sorted
@@ -164,7 +164,7 @@ class TimeSeriesQuestionsController < ApplicationController
 
       respond_to do |format|
         if @time_series_question.update_attributes(params[:time_series_question])
-          format.html { redirect_to time_series_question_path(@time_series, @time_series_question), flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.time_series_question'))} }
+          format.html { redirect_to time_series_question_path(@time_series, @time_series_question), flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.time_series_question.one'))} }
           format.json { head :no_content }
         else
           @datasets = @time_series.datasets.sorted
@@ -202,7 +202,7 @@ class TimeSeriesQuestionsController < ApplicationController
       @time_series_question.destroy
 
       respond_to do |format|
-        format.html { redirect_to time_series_questions_url, flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.time_series_question'))} }
+        format.html { redirect_to time_series_questions_url, flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.time_series_question.one'))} }
         format.json { head :no_content }
       end
     else

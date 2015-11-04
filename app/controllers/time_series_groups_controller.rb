@@ -102,7 +102,7 @@ class TimeSeriesGroupsController < ApplicationController
 
           respond_to do |format|
             if @time_series.save
-              format.html { redirect_to time_series_time_series_groups_path, flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.group'))} }
+              format.html { redirect_to time_series_time_series_groups_path, flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.group.one'))} }
               format.json { render json: @group, status: :created, location: @group }
             else
               logger.debug "!!!!!!!!!!! error = #{@time_series.errors.messages.inspect}"
@@ -167,7 +167,7 @@ class TimeSeriesGroupsController < ApplicationController
           end
           respond_to do |format|
             if @time_series.save
-              format.html { redirect_to time_series_time_series_groups_path, flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.group'))} }
+              format.html { redirect_to time_series_time_series_groups_path, flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.group.one'))} }
               format.json { head :no_content }
             else
               add_common_options
@@ -211,7 +211,7 @@ class TimeSeriesGroupsController < ApplicationController
       @group.destroy
 
       respond_to do |format|
-        format.html { redirect_to time_series_time_series_groups_url, flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.group'))} }
+        format.html { redirect_to time_series_time_series_groups_url, flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.group.one'))} }
         format.json { head :no_content }
       end
     else

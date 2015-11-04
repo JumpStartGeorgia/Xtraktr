@@ -102,7 +102,7 @@ class GroupsController < ApplicationController
 
           respond_to do |format|
             if @dataset.save
-              format.html { redirect_to dataset_groups_path, flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.group'))} }
+              format.html { redirect_to dataset_groups_path, flash: {success:  t('app.msgs.success_created', :obj => t('mongoid.models.group.one'))} }
               format.json { render json: @group, status: :created, location: @group }
             else
               logger.debug "!!!!!!!!!!! error = #{@dataset.errors.messages.inspect}"
@@ -167,7 +167,7 @@ class GroupsController < ApplicationController
           end
           respond_to do |format|
             if @dataset.save
-              format.html { redirect_to dataset_groups_path, flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.group'))} }
+              format.html { redirect_to dataset_groups_path, flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.group.one'))} }
               format.json { head :no_content }
             else
               add_common_options
@@ -211,7 +211,7 @@ class GroupsController < ApplicationController
       @group.destroy
 
       respond_to do |format|
-        format.html { redirect_to dataset_groups_url, flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.group'))} }
+        format.html { redirect_to dataset_groups_url, flash: {success:  t('app.msgs.success_deleted', :obj => t('mongoid.models.group.one'))} }
         format.json { head :no_content }
       end
     else
