@@ -1,6 +1,6 @@
 class RootController < ApplicationController
   def index
-    @datasets = Dataset.meta_only.is_public.recent.sorted.limit(6)
+    @datasets = Dataset.meta_only.is_public.recent.sorted_released_at.limit(6)
 
     ts = TimeSeries.meta_only.is_public.find('wms')
     @wms_id = ts.slug if ts.present?
