@@ -79,16 +79,27 @@
                     if answers.present?
                   -%>
                     <ul>
-                      <%- answers.each do |answer| -%>
-                        <li>
-                          <% if answer.exclude? %>
-                            <span class="item-icons">
-                              <%= exclude_answer_icon.html_safe %>
-                            </span>
-                          <% end %>
-                          <%= answer.text %>
-                        </li>
+                      <%- view_all = "<li class='view-all'><ul>" 
+                          view_all_show = false
+                      -%>
+                      <%- answers.each_with_index do |answer, answer_index| -%>
+                        <% if answer_index < 10 %>
+                          <li>
+                            <% if answer.exclude? %>
+                              <span class="item-icons">
+                                <%= exclude_answer_icon.html_safe %>
+                              </span>
+                            <% end %>
+                            <%= answer.text %>
+                          </li>
+                        <%- else 
+                          view_all_show = true
+                          view_all << "<li>"
+                          view_all << "<span class='item-icons'>#{exclude_answer_icon.html_safe}</span>" if answer.exclude?
+                          view_all << "#{answer.text}</li>"
+                        end -%>
                       <%- end -%>
+                      <%= "#{view_all}</ul><label data-show-more='#{t('app.common.show_more')}' data-show-less='#{t('app.common.show_less')}' >#{t('app.common.show_more')}</label></li>".html_safe if view_all_show %>
                     </ul>
                   <% end %>
                 </div>
