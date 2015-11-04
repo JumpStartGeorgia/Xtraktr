@@ -871,10 +871,12 @@ private
           map_item[:filter_results][:map_sets][:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
 
           map_item[:filter_results][:map_sets][:data] = []
-          answers.each_with_index do |answer|
-            data_result = filter[:filter_results][:analysis].select{|x| x[:answer_value] == answer.value}.first
+          
+          data[:question][:answers].each_with_index do |answer|
+            answer_obj = answers.select{|x| x.value == answer[:value]}.first
+            data_result = filter[:filter_results][:analysis].select{|x| x[:answer_value] == answer[:value]}.first
             if data_result.present?
-              map_item[:filter_results][:map_sets][:data] << dataset_single_map_processing(answer, data_result)
+              map_item[:filter_results][:map_sets][:data] << dataset_single_map_processing(answer_obj, data_result)
             end
           end
 
@@ -900,10 +902,11 @@ private
 
         # load the data
         map[:map_sets][:data] = []
-        answers.each_with_index do |answer|
-          data_result = data[:results][:analysis].select{|x| x[:answer_value] == answer.value}.first
+        data[:question][:answers].each_with_index do |answer|
+          answer_obj = answers.select{|x| x.value == answer[:value]}.first
+          data_result = data[:results][:analysis].select{|x| x[:answer_value] == answer[:value]}.first
           if data_result.present?
-            map[:map_sets][:data] << dataset_single_map_processing(answer, data_result)
+            map[:map_sets][:data] << dataset_single_map_processing(answer_obj, data_result)
           end
         end
       end
@@ -1286,14 +1289,14 @@ private
             end
 
             map_item[:filter_results][:map_sets] = []
-            broken_down_by_answers.each_with_index do |bdb_answer, bdb_index|
-              item = {broken_down_answer_value: bdb_answer.value, broken_down_answer_text: bdb_answer.text}
+            data[:broken_down_by][:answers].each_with_index do |bdb_answer, bdb_index|
+              item = {broken_down_answer_value: bdb_answer[:value], broken_down_answer_text: bdb_answer[:text]}
 
               # set the titles
               if with_title
                 item[:title] = {}
-                item[:title][:html] = dataset_comparative_analysis_map_title('html', data[:question], data[:broken_down_by], bdb_answer.text, data[:filtered_by], filter[:filter_answer_text])
-                item[:title][:text] = dataset_comparative_analysis_map_title('text', data[:question], data[:broken_down_by], bdb_answer.text, data[:filtered_by], filter[:filter_answer_text])
+                item[:title][:html] = dataset_comparative_analysis_map_title('html', data[:question], data[:broken_down_by], bdb_answer[:text], data[:filtered_by], filter[:filter_answer_text])
+                item[:title][:text] = dataset_comparative_analysis_map_title('text', data[:question], data[:broken_down_by], bdb_answer[:text], data[:filtered_by], filter[:filter_answer_text])
                 item[:subtitle] = {}
                 subtitle_count = for_total_resp[bdb_index].present? ? for_total_resp[bdb_index].inject(:+) : 0
                 item[:subtitle][:html] = dataset_analysis_subtitle('html', subtitle_count, filter[:filter_results][:total_possible_responses], data[:weighted_by].present?)
@@ -1302,7 +1305,7 @@ private
 
               # create embed id
               # add broken down by value & filter value
-              options['broken_down_value'] = bdb_answer.value
+              options['broken_down_value'] = bdb_answer[:value]
               options['filtered_by_value'] = filter[:filter_answer_value]
               options['visual_type'] = 'map'
               item[:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
@@ -1310,9 +1313,9 @@ private
               # load the data
               item[:data] = []
               if counts.present?
-                question_answers.each_with_index do |q_answer, q_index|
-
-                  item[:data] << dataset_comparative_map_processing(q_answer, percents[bdb_index][q_index], counts[bdb_index][q_index])
+                data[:question][:answers].each_with_index do |q_answer, q_index|
+                  answer_obj = question_answers.select{|x| x.value == q_answer[:value]}.first
+                  item[:data] << dataset_comparative_map_processing(answer_obj, percents[bdb_index][q_index], counts[bdb_index][q_index])
                 end
               end
 
@@ -1329,14 +1332,14 @@ private
 
             map_item[:filter_results][:map_sets] = []
             if counts.present?
-              question_answers.each_with_index do |q_answer, q_index|
-                item = {broken_down_answer_value: q_answer.value, broken_down_answer_text: q_answer.text}
+              data[:question][:answers].each_with_index do |q_answer, q_index|
+                item = {broken_down_answer_value: q_answer[:value], broken_down_answer_text: q_answer[:text]}
 
                 # set the titles
                 if with_title
                   item[:title] = {}
-                  item[:title][:html] = dataset_comparative_analysis_map_title('html', data[:broken_down_by], data[:question], q_answer.text, data[:filtered_by], filter[:filter_answer_text])
-                  item[:title][:text] = dataset_comparative_analysis_map_title('text', data[:broken_down_by], data[:question], q_answer.text, data[:filtered_by], filter[:filter_answer_text])
+                  item[:title][:html] = dataset_comparative_analysis_map_title('html', data[:broken_down_by], data[:question], q_answer[:text], data[:filtered_by], filter[:filter_answer_text])
+                  item[:title][:text] = dataset_comparative_analysis_map_title('text', data[:broken_down_by], data[:question], q_answer[:text], data[:filtered_by], filter[:filter_answer_text])
                   item[:subtitle] = {}
                   subtitle_count = for_total_resp[q_index].present? ? for_total_resp[q_index].inject(:+) : 0
                   item[:subtitle][:html] = dataset_analysis_subtitle('html', subtitle_count, filter[:filter_results][:total_possible_responses], data[:weighted_by].present?)
@@ -1345,15 +1348,16 @@ private
 
                 # create embed id
                 # add broken down by value & filter value
-                options['broken_down_value'] = q_answer.value
+                options['broken_down_value'] = q_answer[:value]
                 options['filtered_by_value'] = filter[:filter_answer_value]
                 options['visual_type'] = 'map'
                 item[:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
 
                 # load the data
                 item[:data] = []
-                broken_down_by_answers.each_with_index do |bdb_answer, bdb_index|
-                  item[:data] << dataset_comparative_map_processing(bdb_answer, percents[q_index][bdb_index], counts[q_index][bdb_index])
+                data[:broken_down_by][:answers].each_with_index do |bdb_answer, bdb_index|
+                  answer_obj = broken_down_by_answers.select{|x| x.value == bdb_answer[:value]}.first
+                  item[:data] << dataset_comparative_map_processing(answer_obj, percents[q_index][bdb_index], counts[q_index][bdb_index])
                 end
                 map_item[:filter_results][:map_sets] << item
               end
@@ -1391,14 +1395,14 @@ private
             end
           end
 
-          broken_down_by_answers.each_with_index do |bdb_answer, bdb_index|
-            item = {broken_down_answer_value: bdb_answer.value, broken_down_answer_text: bdb_answer.text}
+          data[:broken_down_by][:answers].each_with_index do |bdb_answer, bdb_index|
+            item = {broken_down_answer_value: bdb_answer[:value], broken_down_answer_text: bdb_answer[:text]}
 
             # set the titles
             if with_title
               item[:title] = {}
-              item[:title][:html] = dataset_comparative_analysis_map_title('html', data[:question], data[:broken_down_by], bdb_answer.text)
-              item[:title][:text] = dataset_comparative_analysis_map_title('text', data[:question], data[:broken_down_by], bdb_answer.text)
+              item[:title][:html] = dataset_comparative_analysis_map_title('html', data[:question], data[:broken_down_by], bdb_answer[:text])
+              item[:title][:text] = dataset_comparative_analysis_map_title('text', data[:question], data[:broken_down_by], bdb_answer[:text])
               item[:subtitle] = {}
               subtitle_count = for_total_resp[bdb_index].present? ? for_total_resp[bdb_index].inject(:+) : 0
               item[:subtitle][:html] = dataset_analysis_subtitle('html', subtitle_count, data[:results][:total_possible_responses], data[:weighted_by].present?)
@@ -1407,15 +1411,16 @@ private
 
             # create embed id
             # add broken down by value
-            options['broken_down_value'] = bdb_answer.value
+            options['broken_down_value'] = bdb_answer[:value]
             options['visual_type'] = 'map'
             item[:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
 
             # load the data
             item[:data] = []
             if counts.present?
-              question_answers.each_with_index do |q_answer, q_index|
-                item[:data] << dataset_comparative_map_processing(q_answer, percents[bdb_index][q_index], counts[bdb_index][q_index])
+              data[:question][:answers].each_with_index do |q_answer, q_index|
+                answer_obj = question_answers.select{|x| x.value == q_answer[:value]}.first
+                item[:data] << dataset_comparative_map_processing(answer_obj, percents[bdb_index][q_index], counts[bdb_index][q_index])
               end
             end
             map[:map_sets] << item
@@ -1429,14 +1434,14 @@ private
           percents = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[percent_key]}}
           for_total_resp = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[count_key]}}.transpose
 
-          question_answers.each_with_index do |q_answer, q_index|
-            item = {broken_down_answer_value: q_answer.value, broken_down_answer_text: q_answer.text}
+          data[:question][:answers].each_with_index do |q_answer, q_index|
+            item = {broken_down_answer_value: q_answer[:value], broken_down_answer_text: q_answer[:text]}
 
             # set the titles
             if with_title
               item[:title] = {}
-              item[:title][:html] = dataset_comparative_analysis_map_title('html', data[:broken_down_by], data[:question], q_answer.text)
-              item[:title][:text] = dataset_comparative_analysis_map_title('text', data[:question], data[:broken_down_by], q_answer.text)
+              item[:title][:html] = dataset_comparative_analysis_map_title('html', data[:broken_down_by], data[:question], q_answer[:text])
+              item[:title][:text] = dataset_comparative_analysis_map_title('text', data[:question], data[:broken_down_by], q_answer[:text])
               item[:subtitle] = {}
               subtitle_count = for_total_resp[q_index].present? ? for_total_resp[q_index].inject(:+) : 0
               item[:subtitle][:html] = dataset_analysis_subtitle('html', subtitle_count, data[:results][:total_possible_responses], data[:weighted_by].present?)
@@ -1445,14 +1450,15 @@ private
 
             # create embed id
             # add broken down by value
-            options['broken_down_value'] = q_answer.value
+            options['broken_down_value'] = q_answer[:value]
             options['visual_type'] = 'map'
             item[:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
 
             # load the data
             item[:data] = []
-            broken_down_by_answers.each_with_index do |bdb_answer, bdb_index|
-              item[:data] << dataset_comparative_map_processing(bdb_answer, percents[q_index][bdb_index], counts[q_index][bdb_index])
+            data[:broken_down_by][:answers].each_with_index do |bdb_answer, bdb_index|
+              answer_obj = broken_down_by_answers.select{|x| x.value == bdb_answer[:value]}.first
+              item[:data] << dataset_comparative_map_processing(answer_obj, percents[q_index][bdb_index], counts[q_index][bdb_index])
             end
             map[:map_sets] << item
           end
