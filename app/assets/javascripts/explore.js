@@ -391,7 +391,6 @@ function build_highmap (shape_question_code, adjustable_max, json_map_set, chart
 }
 
 function build_bar_chart (json_chart, chart_height, weight_name) { // build pie chart
-   console.log(json_chart.data.map(function (d) { return d.name.upcase();}), json_chart.data);
   var opt = prepareChart(chart_height, "chart"),
     selector_path = opt[1],
     highlight_path = opt[2],

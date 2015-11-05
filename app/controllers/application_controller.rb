@@ -314,6 +314,12 @@ class ApplicationController < ActionController::Base
         gon.na = I18n.t('explore_data.v2.na')
         gon.percent = I18n.t('explore_data.v2.percent')
         gon.table_questions_header = I18n.t('app.common.questions')
+        gon.mappable_question = I18n.t('app.common.mappable_question')
+        gon.private_question = I18n.t('app.common.private_answer')
+        gon.question_type_categorical = I18n.t('app.common.categorical')
+        gon.question_type_numerical = I18n.t('app.common.numerical')
+        gon.is_subgroup = I18n.t('app.msgs.is_subgroup')
+        gon.is_group = I18n.t('app.msgs.is_group')
 
         set_gon_highcharts
         set_gon_datatables
@@ -321,7 +327,7 @@ class ApplicationController < ActionController::Base
         gon.explore_data = true
         gon.dataset_id = params[:id]
         gon.api_dataset_analysis_path = api_v2_dataset_analysis_path
-        gon.questions = { items: @tree, weights: @dataset.weights, question_code: @question_code, broken_down_by_code: @broken_down_by_code, filtered_by_code: @filtered_by_code }
+        gon.questions = { items: @tree, weights: @dataset.weights, filters:[ @question_code, @broken_down_by_code, @filtered_by_code] }
       }
     end
   end

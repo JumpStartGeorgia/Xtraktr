@@ -885,41 +885,69 @@ function reset_filter_form () { // reset the filter forms and select a random va
   $("#btn-swap-vars").hide();
 }
 
-function build_selects (only_categorical, skip_content) {
-  console.log(gon.questions);
+function build_selects (skip_content) {
+  //console.log(gon.questions);
   var q = gon.questions,
     dataset = q.dataset,
-    html = "";
+    html = "",
+    html_only_categorical = "";
+  var type_map = [];
 
   skip_content = (typeof skip_content !== "boolean" ? false : skip_content);
-  only_categorical = (typeof only_categorical !== "boolean" ? false : only_categorical);
 
-  build_options_partial(q.items, "group");
+  build_options_partial(q.items, null);
 
   function build_options_partial (items, level) {
+    var tmp = "";
     items.forEach(function (item) {
       if(item.hasOwnProperty("parent_id")) { // Group
-        html += build_selects_group_option(item);
+        tmp = build_selects_group_option(item);
+        html += tmp;
+        html_only_categorical += tmp;
+
+        type_map.push([(level === null ? 0 : 1)]);
 
         if(item.subitems !== null) {
-          build_options_partial(item.subitems, "subgroup");
+          build_options_partial(item.subitems, (level !== null ? "subgroup" : "group"));
         }
       }
       else if(item.hasOwnProperty("group_id")){ // Question
-        if (item.has_code_answers_for_analysis && !(only_categorical && item.data_type != 1)) {
-          html += build_selects_question_option(item, level, skip_content);
+        if (item.has_code_answers_for_analysis) {
+          tmp = build_selects_question_option(item, level, skip_content);
+          html += tmp;
+          type_map.push([2, item.code, item.data_type]);
+          if(item.data_type === 1) { html_only_categorical += tmp; }
         }
       }
     });
   }
-  return html;
+  var counts = [0,0,0,0]; // group cat, num, subgroup cat, num
+  var cat_count = 0, num_count = 0, cur;
+  for(i = type_map.length-1; i >= 0; --i) {
+    cur = type_map[i];
+    if(cur[0] == 2) {
+      if(cur[2] == 1) { ++counts[0]; ++counts[2]; }
+      if(cur[2] == 2) { ++counts[1]; ++counts[3]; }
+    }
+    else if(cur[0] == 1) {
+      cur.push(counts[2]);
+      cur.push(counts[3]);
+      counts[2] = counts[3] = 0;
+    }
+    else if(cur[0] == 0) {
+      cur.push(counts[0]);
+      cur.push(counts[1]);
+      counts[0] = counts[1] = counts[2] = counts[3] = 0;
+    }
+  }
+  return [html, html_only_categorical, type_map];
 }
 function build_selects_group_option (group) {
   var has_parent = group.parent_id !== null,
     sub = (has_parent ? "sub" : ""),
     g_text = group.title,
     content = "data-content=\"<span>" + g_text + "</span><span class='pull-right'>" + "<img src='/assets/svg/"+sub+"group.svg' title='" + gon["is_" + sub + "group"] + "' />" + "</span>\"";
-  return "<option class='" + sub + "group' disabled='disabled' " + content + ">" + g_text + "</option>";
+  return "<option class='" + sub + "group' disabled='disabled' " + content + " data-blah='kj'>" + g_text + "</option>";
 }
 function build_selects_question_option (question, level, skip_content) {
   var q_text = question.original_code + " - " + question.text,
@@ -935,7 +963,7 @@ function build_selects_question_option (question, level, skip_content) {
   if(gon.questions.weights.length) {
     var w = gon.questions.weights.filter(function (weight) { return (weight.is_default || weight.applies_to_all || weight.codes.indexOf(question.code) !== -1); });
     if(w.length) {
-      weights = "data-weights='['" + w.map(function (x){ return x.code; }).join("','") + "']'";
+      weights = "data-weights=\'[\"" + w.map(function (x){ return x.code; }).join("\",\"") + "\"]\'";
     }
   }
   // if the question is mappable or is excluded, show the icons for this
@@ -971,13 +999,29 @@ $(document).ready(function () {
   });
 
 
-  if (gon.explore_data){
-     var select_options = build_selects();
-     $("select#question_code").append(select_options);
-     $("select#broken_down_by_code").append(select_options);
-     $("select#filtered_by_code").append(select_options);
 
-    return;
+
+  if (gon.explore_data){
+    var select_options = build_selects(),
+      fqc = $("select#question_code"),
+      fbc = $("select#broken_down_by_code"),
+      ffc = $("select#filtered_by_code"),
+      select_map = select_options[2];
+
+    fqc.append(select_options[0]);
+    fbc.append(select_options[0]);
+    ffc.append(select_options[1]);
+
+    function select_options_default (filters) {
+      fqc.find("option[value='"+filters[0]+"']").attr("selected=seleted");
+      fqc.find("option[value='"+filters[1]+"']").attr("data-disabled=disabled");
+      fbc.find("option[value='"+filters[1]+"']").attr("selected=seleted");
+      fbc.find("option[value='"+filters[0]+"']").attr("data-disabled=disabled");
+      ffc.find("option[value='"+filters[2]+"']").attr("selected=seleted");
+      ffc.find("option[value='"+filters[0]+"'], option[value='"+filters[1]+"']").attr("data-disabled=disabled");
+    }
+    select_options_default(gon.questions.filters);
+    
     // due to using tabs, the map, chart and table cannot be properly drawn
     // because they may be hidden.
     // this event catches when a tab is being shown to make sure
@@ -1076,15 +1120,21 @@ $(document).ready(function () {
         broken_by_menu.find("li").hide();
 
         //broken_by_menu.find("li[style*='display: none']").show(); // turn on all hidden items
-        
-        
-        $(".form-explore-filter-by").toggle(type==1);
-        // turn on all items of same data_type
-        select_broken_down.find("option[data-type='"+type+"']").each(function (i, d) {
-          broken_by_menu.find("li[data-original-index='" + ($(d).index()) + "']").show();
+        $(".form-explore-filter-by").toggle(type===1);
+
+        select_map.forEach(function (d, i){
+          if( (d[0] === 2 && d[2] == type) ||
+              (d[0] == 1 && ((type == 1 && d[1] > 0)||(type == 2 && d[2] > 0))) ||
+              (d[0] == 0 && ((type == 1 && d[1] > 0)||(type == 2 && d[2] > 0)))) {
+            broken_by_menu.find("li[data-original-index='" + (i + 1) + "']").show();
+          }
         });
         broken_by_menu.find("li:eq(" + (index+1) + ")").hide(); // turn on off this item
 
+        // turn on all items of same data_type
+        // select_broken_down.find("option[data-type='"+type+"']").each(function (i, d) {
+        //   broken_by_menu.find("li[data-original-index='" + ($(d).index()) + "']").show();
+        // });
       }
       else if (id == "broken_down_by_code"){ // update question list
         var question_code_menu = $(".form-explore-question-code .bootstrap-select ul.dropdown-menu");

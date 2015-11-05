@@ -1194,7 +1194,6 @@ class Dataset < CustomTranslation
   end
 
   def tree(options={})
-    indent = options[:group_id].present? ? '    ' : ''
     items = []
 
      if options[:include_groups] == true
@@ -1250,9 +1249,9 @@ class Dataset < CustomTranslation
 
     # sort these items
     # way to sort: sort only items that have sort_order, then add groups with no sort_order, then add questions with no sort_order
-    items = items.select{|x| x[:sort_order].present? }.sort{|x,y| y[:sort_order] <=> x[:sort_order] } +
-            items.select{|x| x[:parent_id].present? && x[:sort_order].nil?} +
-            items.select{|x| x[:group_id].present? && x[:sort_order].nil?}
+    items = items.select{|x| x["sort_order"].present? }.sort{|x,y| x["sort_order"] <=> y["sort_order"] } + 
+      items.select{|x| x["parent_id"].present? && x["sort_order"].nil?} +
+      items.select{|x| x["group_id"].present? && x["sort_order"].nil?}
 
 
     return items
