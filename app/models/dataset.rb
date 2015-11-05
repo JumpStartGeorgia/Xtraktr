@@ -95,7 +95,6 @@ class Dataset < CustomTranslation
     def sub_groups(parent_id)
       where(parent_id: parent_id)
     end
-
   end
   accepts_nested_attributes_for :groups
 
@@ -1121,6 +1120,7 @@ class Dataset < CustomTranslation
     return self.var_arranged_items
   end
 
+  
   # returnt an array of sorted gruops and questions, that match the provided options
   # options:
   # - question_type - type of questions to get (download, analysis, anlysis_with_exclude_questions, or all)
@@ -1139,6 +1139,7 @@ class Dataset < CustomTranslation
       # - else get main groups
       groups = []
       if options[:group_id].present?
+
         groups << self.groups.sub_groups(options[:group_id])
       else
         groups << self.groups.main_groups
@@ -1192,6 +1193,70 @@ class Dataset < CustomTranslation
     return items
   end
 
+  def tree(options={})
+    indent = options[:group_id].present? ? '    ' : ''
+    items = []
+
+     if options[:include_groups] == true
+
+
+      # get the groups
+      # - if group id provided, get subgroups in that group
+      # - else get main groups
+      groups = []
+      if options[:group_id].present?
+        groups << self.groups.sub_groups(options[:group_id])
+      else
+        groups << self.groups.main_groups
+      end
+      groups.flatten!
+
+      # if a group has items, add it
+      group_options = options.dup
+      group_options[:include_groups] = options[:include_subgroups] == true
+      groups.each do |group|
+        # get all items for this group (subgroup/questions)
+        group_options[:group_id] = group.id
+        group.var_arranged_items = tree(group_options)
+        # only add the group if it has content
+        if group.var_arranged_items.present? #|| options[:include_group_with_no_items] == true
+          items << group.as_json({only: [:title, :parent_id, :subitems, :sort_order]})
+        end
+
+      end
+    end
+
+    if options[:include_questions] == true
+      # get questions that are assigned to groups
+      # - if group_id not provided, then getting questions that are not assigned to group
+ 
+      tmp_items = case options[:question_type]
+        when 'download'
+          self.questions.where(:can_download => true, :group_id => options[:group_id])
+        when 'analysis'
+          self.questions.where(:exclude => false, :has_code_answers_for_analysis => true, :group_id => options[:group_id])
+        when 'anlysis_with_exclude_questions'
+          self.questions.where(:has_code_answers_for_analysis => true, :group_id => options[:group_id])
+        else
+          self.questions.where(:group_id => options[:group_id])
+      end
+
+      if options[:exclude_unknown_data_type]
+        tmp_items = tmp_items.where(:data_type.ne => Question::DATA_TYPE_VALUES[:unknown])
+      end
+      items << tmp_items.as_json({only: [:code, :original_code, :text, :data_type, :group_id, :exclude, :is_mappable, :has_can_exclude_answers, :has_code_answers_for_analysis, :sort_order]})
+    end
+    items.flatten!
+
+    # sort these items
+    # way to sort: sort only items that have sort_order, then add groups with no sort_order, then add questions with no sort_order
+    items = items.select{|x| x[:sort_order].present? }.sort{|x,y| y[:sort_order] <=> x[:sort_order] } +
+            items.select{|x| x[:parent_id].present? && x[:sort_order].nil?} +
+            items.select{|x| x[:group_id].present? && x[:sort_order].nil?}
+
+
+    return items
+  end
   #############################
   ## paths to dataset related files
 

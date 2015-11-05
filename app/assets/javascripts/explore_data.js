@@ -852,8 +852,7 @@ function get_explore_data (is_back_button) { // get data and load page
         $("#explore-data-loader").fadeOut("slow");
         $("#explore-error").fadeIn("slow");
       }
-      else {
-         console.log(json);
+      else {         
         js.cache[cacheId] = json;
         update_content();
       }
@@ -886,6 +885,81 @@ function reset_filter_form () { // reset the filter forms and select a random va
   $("#btn-swap-vars").hide();
 }
 
+function build_selects (only_categorical, skip_content) {
+  console.log(gon.questions);
+  var q = gon.questions,
+    dataset = q.dataset,
+    html = "";
+
+  skip_content = (typeof skip_content !== "boolean" ? false : skip_content);
+  only_categorical = (typeof only_categorical !== "boolean" ? false : only_categorical);
+
+  build_options_partial(q.items, "group");
+
+  function build_options_partial (items, level) {
+    items.forEach(function (item) {
+      if(item.hasOwnProperty("parent_id")) { // Group
+        html += build_selects_group_option(item);
+
+        if(item.subitems !== null) {
+          build_options_partial(item.subitems, "subgroup");
+        }
+      }
+      else if(item.hasOwnProperty("group_id")){ // Question
+        if (item.has_code_answers_for_analysis && !(only_categorical && item.data_type != 1)) {
+          html += build_selects_question_option(item, level, skip_content);
+        }
+      }
+    });
+  }
+  return html;
+}
+function build_selects_group_option (group) {
+  var has_parent = group.parent_id !== null,
+    sub = (has_parent ? "sub" : ""),
+    g_text = group.title,
+    content = "data-content=\"<span>" + g_text + "</span><span class='pull-right'>" + "<img src='/assets/svg/"+sub+"group.svg' title='" + gon["is_" + sub + "group"] + "' />" + "</span>\"";
+  return "<option class='" + sub + "group' disabled='disabled' " + content + ">" + g_text + "</option>";
+}
+function build_selects_question_option (question, level, skip_content) {
+  var q_text = question.original_code + " - " + question.text,
+    selected = "",
+    disabled = "",
+    // selected = selected_code.present? && selected_code == question.code ? 'selected=selected ' : '',
+    // disabled = (disabled_code.present? && disabled_code == question.code) || (disabled_code2.present? && disabled_code2 == question.code) ? 'data-disabled=disabled ' : '',
+    can_exclude = question.has_can_exclude_answers ? "data-can-exclude=true " : "",
+    cls = (level === "group" ? "grouped" : (level === "subgroup" ? "grouped subgrouped" : "")),
+    weights = "",
+    content = "";
+
+  if(gon.questions.weights.length) {
+    var w = gon.questions.weights.filter(function (weight) { return (weight.is_default || weight.applies_to_all || weight.codes.indexOf(question.code) !== -1); });
+    if(w.length) {
+      weights = "data-weights='['" + w.map(function (x){ return x.code; }).join("','") + "']'";
+    }
+  }
+  // if the question is mappable or is excluded, show the icons for this
+  if (!skip_content || question.data_type !== 0) {
+    content += "data-content=\"<span class='outer-layer'><span class='inner-layer'><span>" + q_text + "</span><span class='pull-right'>";
+
+    if(question.data_type !== 0) {
+      var type = question.data_type == 1 ? "categorical" : "numerical";
+      content += "<img src='/assets/svg/" + type + ".svg' title='"+ gon["question_type_" + type] + "'/>";
+    }
+
+    if(question.is_mappable) {
+      content += "<img src='/assets/svg/map.svg' title='" + gon.mappable_question + "' />";
+    }
+
+    if(question.exclude) {
+      content += "<img src='/assets/svg/lock.svg' title='" + gon.private_question + "' />";
+    }
+
+    content += "</span></span></span>\"";
+
+  }
+  return "<option class='"+cls+"' value='"+question.code+"' title='"+q_text+"' "+selected+" "+disabled+" "+content+" "+can_exclude+" "+weights+" data-type='"+question.data_type+"'>"+q_text+"</option>";
+}
 $(document).ready(function () {
   // set languaage text
   Highcharts.setOptions({
@@ -898,6 +972,12 @@ $(document).ready(function () {
 
 
   if (gon.explore_data){
+     var select_options = build_selects();
+     $("select#question_code").append(select_options);
+     $("select#broken_down_by_code").append(select_options);
+     $("select#filtered_by_code").append(select_options);
+
+    return;
     // due to using tabs, the map, chart and table cannot be properly drawn
     // because they may be hidden.
     // this event catches when a tab is being shown to make sure

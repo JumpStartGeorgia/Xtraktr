@@ -268,20 +268,20 @@ class ApplicationController < ActionController::Base
 
     # get the appropriate questions/groups in the correct order
     question_type = show_private_questions == true ? 'analysis_with_exclude_questions' : 'analysis'
-    @items = dataset.arranged_items(question_type: question_type, include_groups: true, include_subgroups: true, include_questions: true)
-
+    #@items = dataset.arranged_items(question_type: question_type, include_groups: true, include_subgroups: true, include_questions: true)
+    @tree = dataset.tree(question_type: question_type, include_groups: true, include_subgroups: true, include_questions: true)
 
     if @questions.present?
 
       # initialize variables
-      # start with a random question
-      @question_code = @questions.map{|x| x.code}.sample
       @broken_down_by_code = nil
       @filtered_by_code = nil
 
       # check for valid question value
       if params[:question_code].present? && @questions.index{|x| x.code == params[:question_code]}.present?
         @question_code = params[:question_code]
+      else
+        @question_code = @questions.map{|x| x.code}.sample # start with a random question
       end
 
       # check for valid broken down by value
@@ -321,7 +321,7 @@ class ApplicationController < ActionController::Base
         gon.explore_data = true
         gon.dataset_id = params[:id]
         gon.api_dataset_analysis_path = api_v2_dataset_analysis_path
-
+        gon.questions = { items: @tree, weights: @dataset.weights, question_code: @question_code, broken_down_by_code: @broken_down_by_code, filtered_by_code: @filtered_by_code }
       }
     end
   end

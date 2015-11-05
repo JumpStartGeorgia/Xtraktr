@@ -2,7 +2,6 @@ module ExploreDatasetHelper
 
   # generate the options for the explore data drop down list
   def generate_explore_dataset_options(items, dataset, options={})
-     Rails.logger.debug("-------------sdfd-------------------------------#{items[0]}")
     skip_content = options[:skip_content].nil? ? false : options[:skip_content]
     selected_code = options[:selected_code].nil? ? nil : options[:selected_code]
     disabled_code = options[:disabled_code].nil? ? nil : options[:disabled_code]
