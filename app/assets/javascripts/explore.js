@@ -487,6 +487,117 @@ function build_bar_chart (json_chart, chart_height, weight_name) { // build pie 
   finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id.bar_chart, weight_name, gon.visual_types.pie_chart);
 }
 
+function build_histogramm_chart (json_chart, chart_height, weight_name) { // build pie chart
+  var opt = prepareChart(chart_height, "chart"),
+    selector_path = opt[1],
+    highlight_path = opt[2],
+    chart_id = opt[3];
+
+  chart_height = opt[0];
+
+  // create chart
+  $(selector_path + " #" + chart_id).highcharts({
+    credits: { enabled: false },
+    chart: {
+      type: "column",
+      inverted: true
+    },
+    title: {
+      text: build_visual_title(highlight_path, json_chart.title.html),
+      useHTML: true,
+      style: style1
+    },
+    subtitle: {
+      text: json_chart.subtitle.html,
+      useHTML: true,
+      style: {"text-align": "center"}
+    },
+    xAxis: {
+      title: { text: "title here" }, //cq.titles[$("html").attr("lang")] },
+      labels: {
+        align: "right",
+        x:-10
+      },
+      startOnTick: true,
+      endOnTick: true,
+      categories: formatLabel(json_chart.data)
+    },
+    yAxis: { title: null },
+    legend: {
+      enabled: false
+    },
+
+    plotOptions: {
+      column: {
+        groupPadding: 0,
+        pointPadding: 0,
+        borderWidth: 0
+      }
+    },
+    series: [{ data: json_chart.data }],
+    exporting: {
+      sourceWidth: 1280,
+      sourceHeight: chart_height,
+      filename: json_chart.title.text.replace(/[\|&;\$%@"\'<>\(\)\+,]/g, ""),
+      chartOptions:{
+        title: {
+          text: json_chart.title.text
+        },
+        subtitle: {
+          text: json_chart.subtitle.text
+        },
+        legend: {
+          enabled: false
+        }
+      },
+      buttons: buttons_options
+    },
+    navigation: {
+      buttonOptions: {
+        theme: {
+          "stroke-width": 0,
+          r: 0,
+          states: {
+            hover: {
+              fill: "#fff",
+              stroke: "#eaeaea",
+              "stroke-width": 1
+            },
+            select: {
+              fill: "#fff",
+              stroke: "#eaeaea",
+              "stroke-width": 1
+            }
+          }
+        }
+      }
+    }
+
+  }, function () {
+    var box = this.plotBox;
+    var label = this.renderer.label("999", (box.x+box.width) - 7, (box.y + box.height) + 5)
+      .css({
+        color:"#606060",
+        cursor:"default",
+        "font-size":"11px",
+        "fill":"#606060"
+      }).attr("class", "histogramm-last-label")
+      .add();
+    this.spacing[1] = label.width + 10 > 40 ? label.width + 10 : 40;
+    this.isDirtyBox = true;
+    this.redraw();
+    label.xSetter((box.x+box.width) - 7);
+  });
+  function formatLabel (meta) {
+    var v = [];
+    for(var i = 0; i < meta[2]; ++i) {
+      v.push(Math.floor(meta[3]+i*meta[5]));
+    }
+    return v;
+  }
+  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id.bar_chart, weight_name, gon.visual_types.pie_chart);
+}
+
 function build_crosstab_chart (question_text, broken_down_by_code, broken_down_by_text, json_chart, chart_height, weight_name){ // build crosstab chart
 
   var opt = prepareChart(chart_height, "chart"),
@@ -564,6 +675,131 @@ function build_crosstab_chart (question_text, broken_down_by_code, broken_down_b
       }
     },
     series: json_chart.data,
+    exporting: {
+      sourceWidth: 1280,
+      sourceHeight: chart_height,
+      filename: json_chart.title.text.replace(/[\|&;\$%@"\'<>\(\)\+,]/g, ""),
+      chartOptions:{
+        title: {
+          text: json_chart.title.text
+        },
+        subtitle: {
+          text: json_chart.subtitle.text
+        }
+      },
+      buttons: buttons_options
+    }
+  });
+
+
+  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id, weight_name, gon.visual_types.crosstab_chart);
+}
+
+function build_scatter_chart (question_text, broken_down_by_code, broken_down_by_text, json_chart, chart_height, weight_name){ // build crosstab chart
+
+  var opt = prepareChart(chart_height, "chart"),
+    selector_path = opt[1],
+    highlight_path = opt[2],
+    chart_id = opt[3];
+
+  chart_height = opt[0];
+
+  // create chart
+  $(selector_path + " #" + chart_id).highcharts({
+    credits: { enabled: false },
+    chart: {
+      type: 'scatter',
+      zoomType: 'xy'
+    },
+    title: {
+      text: build_visual_title(highlight_path, json_chart.title.html),
+      useHTML: true,
+      style: style1
+    },
+    subtitle: {
+      text: json_chart.subtitle.html,
+      useHTML: true,
+      style: {"text-align": "center"}
+    },
+    xAxis: {
+      categories: json_chart.labels,
+      title: {
+        text: "<span class='code-highlight'>" + question_text + "</span>",
+        useHTML: true,
+        style: { "fontSize": "14px", "fontWeight": "bold" }
+      },
+      labels:
+      {
+        style: { "color": "#3c4352", "fontSize": "14px", "fontFamily":"'sourcesans_pro', 'sans-serif'", "fontWeight": "normal", "textAlign": "right" },
+        useHTML: true,
+        step: 1
+      }
+    },
+    yAxis: {
+      min: 0,
+      title: {
+        text: gon.percent,
+        style: { "fontSize": "14px", "fontWeight": "bold" }
+      },
+      labels:
+      {
+        style: { "color": "#777c86", "fontSize": "14px", "fontFamily":"'sourcesans_pro', 'sans-serif'", "fontWeight": "normal" },
+        useHTML: true
+      },
+      reversedStacks: false
+    },
+    legend: {
+      title: {
+        text: broken_down_by_code,
+        style: { "color": "#d67456", "fontSize": "18px", "fontFamily":"'sourcesans_pro_sb', 'sans-serif'", "fontWeight": "normal" }
+      },
+      useHTML: true,
+      layout: "vertical",
+      symbolWidth: 14,
+      symbolHeight: 14,
+      itemMarginBottom: 5,
+      itemStyle: style2,
+      symbolRadius: 100
+    },
+    tooltip: {
+      pointFormat: "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y:,.0f}</b> ({point.percentage:.2f}%)<br/>",
+      //shared: true,
+      backgroundColor: "rgba(255, 255, 255, 0.95)",
+      followPointer: true
+    },
+    plotOptions: {
+        scatter: {
+            marker: {
+                radius: 5,
+                states: {
+                    hover: {
+                        enabled: true,
+                        lineColor: 'rgb(100,100,100)'
+                    }
+                }
+            },
+            states: {
+                hover: {
+                    marker: {
+                        enabled: false
+                    }
+                }
+            },
+            tooltip: {
+                headerFormat: '<b>{series.name}</b><br>',
+                pointFormat: '{point.x} cm, {point.y} kg'
+            }
+        }
+    },
+    series: 
+    [{
+            name: 'Predefined symbol',
+            data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 316.4, 294.1, 195.6, 154.4],
+            marker: {
+                symbol: 'triangle'
+            }
+        }],
+    //json_chart.data,
     exporting: {
       sourceWidth: 1280,
       sourceHeight: chart_height,

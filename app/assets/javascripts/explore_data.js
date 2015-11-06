@@ -252,6 +252,50 @@ function build_crosstab_charts (json) { // build crosstab charts for each chart 
   }
 }
 
+function build_scatter_charts (json) { // build scatter charts for each chart item in json
+  var i;
+  var flag = false;
+
+  if (json.chart) {
+    // determine chart height
+    var chart_height = crosstab_chart_height(json);
+
+    // remove all existing charts
+    $("#container-chart").empty();
+    // remove all existing chart links
+    var select_selector = $("#jumpto #jumpto-chart select");
+    select_selector.empty();
+
+    var jumpto_text = "";
+    var weight_name = json.weighted_by ? json.weighted_by.weight_name : undefined;
+
+    // test if the filter is being used and build the chart(s) accordingly
+    if (json.chart.constructor === Array){
+      // filters
+      for(i=0; i<json.chart.length; i++){
+        // create chart
+        build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart[i].filter_results, chart_height, weight_name);
+
+        // add jumpto link
+        jumpto_text += "<option data-href='#chart-" + (i+1) + "'>" + json.filtered_by.text + " = " + json.chart[i].filter_answer_text + "</option>";
+      }
+
+      // show jumpto links
+      select_selector.append(jumpto_text);
+      select_selector.val($("#jumpto #jumpto-chart select option:first").attr("value"));
+      select_selector.selectpicker("refresh");
+      select_selector.selectpicker("render");
+      flag = true;
+
+    }
+    else{       // no filters
+      build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart, chart_height, weight_name);
+    }
+    $("#jumpto #jumpto-chart").toggle(flag);
+    $("#jumpto").toggle(flag);
+  }
+}
+
 function build_pie_charts (json) { // build pie chart for each chart item in json
   var flag = false;
 
@@ -343,240 +387,216 @@ function build_bar_charts (json) { // build pie chart for each chart item in jso
   }
 }
 
+function build_histogramm_charts (json) { // build histogramm chart for each chart item in json
+  var flag = false;
+
+  if (json.chart){
+
+    var chart_height = pie_chart_height(json), // determine chart height
+      container = $("#container-chart");
+
+    container.empty();
+    container.append("<div id='chart-type-toggle'><div class='toggle selected' data-type='bar' title='" + gon.chart_type_bar + "'></div><div class='toggle' data-type='pie' title='" + gon.chart_type_pie + "'></div>");
+    // remove all existing chart links
+    var select_selector = $("#jumpto #jumpto-chart select");
+    select_selector.empty();
+
+    var jumpto_text = "";
+    var weight_name = json.weighted_by ? json.weighted_by.weight_name : undefined;
+
+    // test if the filter is being used and build the chart(s) accordingly
+    if (json.chart.constructor === Array){
+      // filters
+      for(i=0; i<json.chart.length; i++){
+        // create chart
+        build_histogramm_chart(json.chart[i].filter_results, chart_height, weight_name);
+
+        // add jumpto link
+        jumpto_text += "<option data-href='#chart-" + (i+1) + "'>" + json.filtered_by.text + " = " + json.chart[i].filter_answer_text + "</option>";
+      }
+
+      // show jumpto links    
+      select_selector.append(jumpto_text);
+      select_selector.val(select_selector.find("option:first").attr("value"));
+      select_selector.selectpicker("refresh");
+      select_selector.selectpicker("render");
+      flag = true;
+    }
+    else {
+      build_histogramm_chart(json.chart, chart_height, weight_name);       // no filters
+    }
+
+    // show/hide jumpto
+    $("#jumpto #jumpto-chart").toggle(flag);
+    $("#jumpto").toggle(flag);
+  }
+}
+
 function build_datatable (json) { // build data table
-  var ln;
-  // set the title
-  $("#container-table h3").html(json.results.title.html + json.results.subtitle.html);
+  if(!(json.analysis_type == "comparative" && json.analysis_data_type == "numerical")) {
+    var ln;
+    // set the title
+    $("#container-table h3").html(json.results.title.html + json.results.subtitle.html);
 
-  // if the datatable alread exists, kill it
-  if (datatables != undefined && datatables.length > 0){
-    for (i=0;i<datatables.length;i++){
-      datatables[i].fnDestroy();
-    }
-  }
-
-  var col_headers = ["count", "percent"];
-
-  // test if data is weighted so can build table accordingly
-  var is_weighted = json.weighted_by != undefined;
-  if (is_weighted){
-    col_headers = ["unweighted-count", "weighted-count", "weighted-percent"];
-  }
-  var col_header_count = col_headers.length;
-
-  // build the table
-  var table = "";
-
-  // build head
-  table += "<thead>";
-
-  // test if the filter is being used and build the table accordingly
-  if (json.filtered_by == undefined){
-    if (json.analysis_type == "comparative"){
-      // 3 headers of:
-      //                broken_down_by question
-      //                broken_down_by answers .....
-
-      // question code question   count percent count percent .....
-      table += "<tr class='th-center'>";
-      table += "<th class='var1-col-red'>" + gon.table_questions_header + "</th>";
-      table += "<th class='code-highlight' colspan='" + (col_header_count*(json.broken_down_by.answers.length+1)).toString() + "'>";
-      table += json.broken_down_by.original_code;
-      table += "</th>";
-      table += "</tr>";
-
-      table += "<tr class='th-center'>";
-      table += "<th class='var1-col code-highlight' rowspan='2'>";
-      table += json.question.original_code;
-      table += "</th>";
-      ln = json.broken_down_by.answers.length;
-      for(i=0; i<ln;i++){
-        table += "<th colspan='" + col_header_count + "' class='color"+(i % 13 + 1)+"'>";
-        table += json.broken_down_by.answers[i].text.toString();
-        table += "</th>";
+    // if the datatable alread exists, kill it
+    if (datatables != undefined && datatables.length > 0){
+      for (i=0;i<datatables.length;i++){
+        datatables[i].fnDestroy();
       }
-      table += "</tr>";
+    }
 
-      table += "<tr>";
-      // table += "<th class='var1-col code-highlight'>";
-      // table += json.question.original_code;
-      // table += "</th>";
-      for(i=0; i<ln;i++){
+    var col_headers = ["count", "percent"];
+
+    // test if data is weighted so can build table accordingly
+    var is_weighted = json.weighted_by != undefined;
+    if (is_weighted){
+      col_headers = ["unweighted-count", "weighted-count", "weighted-percent"];
+    }
+    var col_header_count = col_headers.length;
+
+    // build the table
+    var table = "";
+
+    // build head
+    table += "<thead>";
+
+    // test if the filter is being used and build the table accordingly
+    if (json.filtered_by == undefined){
+      if (json.analysis_type == "comparative"){
+        // 3 headers of:
+        //                broken_down_by question
+        //                broken_down_by answers .....
+
+        // question code question   count percent count percent .....
+        table += "<tr class='th-center'>";
+        table += "<th class='var1-col-red'>" + gon.table_questions_header + "</th>";
+        table += "<th class='code-highlight' colspan='" + (col_header_count*(json.broken_down_by.answers.length+1)).toString() + "'>";
+        table += json.broken_down_by.original_code;
+        table += "</th>";
+        table += "</tr>";
+
+        table += "<tr class='th-center'>";
+        table += "<th class='var1-col code-highlight' rowspan='2'>";
+        table += json.question.original_code;
+        table += "</th>";
+        ln = json.broken_down_by.answers.length;
+        for(i=0; i<ln;i++){
+          table += "<th colspan='" + col_header_count + "' class='color"+(i % 13 + 1)+"'>";
+          table += json.broken_down_by.answers[i].text.toString();
+          table += "</th>";
+        }
+        table += "</tr>";
+
+        table += "<tr>";
+        // table += "<th class='var1-col code-highlight'>";
+        // table += json.question.original_code;
+        // table += "</th>";
+        for(i=0; i<ln;i++){
+          for(j=0; j<col_header_count;j++){
+            table += "<th>";
+            table += $("#container-table table").data(col_headers[j]);
+            table += "</th>";
+          }
+        }
+        table += "</tr>";
+      }else{
+        // 1 header of: question code question, count, percent
+        table += "<tr class='th-center'>";
+        table += "<th class='var1-col code-highlight'>";
+        table += json.question.original_code;
+        table += "</th>";
         for(j=0; j<col_header_count;j++){
           table += "<th>";
           table += $("#container-table table").data(col_headers[j]);
           table += "</th>";
         }
+        table += "</tr>";
       }
-      table += "</tr>";
     }else{
-      // 1 header of: question code question, count, percent
-      table += "<tr class='th-center'>";
-      table += "<th class='var1-col code-highlight'>";
-      table += json.question.original_code;
-      table += "</th>";
-      for(j=0; j<col_header_count;j++){
-        table += "<th>";
-        table += $("#container-table table").data(col_headers[j]);
+      if (json.analysis_type == "comparative"){
+        // 3 headers of:
+        //                broken_down_by question
+        //                broken_down_by answers .....
+
+        // filter question   count percent count percent .....
+        table += "<tr class='th-center'>";
+        table += "<th class='var1-col-red' colspan='2'>" + gon.table_questions_header + "</th>";
+        table += "<th class='code-highlight' colspan='" + (2*(json.broken_down_by.answers.length+1)).toString() + "'>";
+        table += json.broken_down_by.original_code;
         table += "</th>";
-      }
-      table += "</tr>";
-    }
-  }else{
-    if (json.analysis_type == "comparative"){
-      // 3 headers of:
-      //                broken_down_by question
-      //                broken_down_by answers .....
+        table += "</tr>";
 
-      // filter question   count percent count percent .....
-      table += "<tr class='th-center'>";
-      table += "<th class='var1-col-red' colspan='2'>" + gon.table_questions_header + "</th>";
-      table += "<th class='code-highlight' colspan='" + (2*(json.broken_down_by.answers.length+1)).toString() + "'>";
-      table += json.broken_down_by.original_code;
-      table += "</th>";
-      table += "</tr>";
-
-      table += "<tr class='th-center'>";
-      table += "<th class='var1-col code-highlight' rowspan='2'>";
-      table += json.filtered_by.original_code;
-      table += "</th>";
-      table += "<th class='var1-col code-highlight' rowspan='2'>";
-      table += json.question.original_code;
-      table += "</th>";
-
-      ln = json.broken_down_by.answers.length;
-      for(i=0; i<ln;i++) {
-        table += "<th colspan='" + col_header_count + "' class='color"+(i % 13 + 1)+"'>";
-        table += json.broken_down_by.answers[i].text.toString();
+        table += "<tr class='th-center'>";
+        table += "<th class='var1-col code-highlight' rowspan='2'>";
+        table += json.filtered_by.original_code;
         table += "</th>";
-      }
-      table += "</tr>";
+        table += "<th class='var1-col code-highlight' rowspan='2'>";
+        table += json.question.original_code;
+        table += "</th>";
 
-      table += "<tr>";
-      for(i=0; i<ln;i++){
+        ln = json.broken_down_by.answers.length;
+        for(i=0; i<ln;i++) {
+          table += "<th colspan='" + col_header_count + "' class='color"+(i % 13 + 1)+"'>";
+          table += json.broken_down_by.answers[i].text.toString();
+          table += "</th>";
+        }
+        table += "</tr>";
+
+        table += "<tr>";
+        for(i=0; i<ln;i++){
+          for(j=0; j<col_header_count;j++){
+            table += "<th>";
+            table += $("#container-table table").data(col_headers[j]);
+            table += "</th>";
+          }
+        }
+        table += "</tr>";
+
+      }else{
+
+        // 1 header of: filter question, count, percent
+        table += "<tr class='th-center'>";
+        table += "<th class='var1-col'>";
+        table += json.filtered_by.original_code;
+        table += "</th>";
+        table += "<th class='var1-col code-highlight'>";
+        table += json.question.original_code;
+        table += "</th>";
         for(j=0; j<col_header_count;j++){
           table += "<th>";
           table += $("#container-table table").data(col_headers[j]);
           table += "</th>";
         }
-      }
-      table += "</tr>";
-
-    }else{
-
-      // 1 header of: filter question, count, percent
-      table += "<tr class='th-center'>";
-      table += "<th class='var1-col'>";
-      table += json.filtered_by.original_code;
-      table += "</th>";
-      table += "<th class='var1-col code-highlight'>";
-      table += json.question.original_code;
-      table += "</th>";
-      for(j=0; j<col_header_count;j++){
-        table += "<th>";
-        table += $("#container-table table").data(col_headers[j]);
-        table += "</th>";
-      }
-      table += "</tr>";
-    }
-  }
-  table += "</thead>";
-
-
-  // build body
-  table += "<tbody>";
-  var key_text;
-  if (json.filtered_by == undefined){
-    if (json.analysis_type == "comparative"){
-      // cells per row: question code answer, count/percent for each col
-      for(i=0; i<json.results.analysis.length; i++){
-        table += "<tr>";
-        table += "<td class='var1-col' data-order='" + json.question.answers[i].sort_order + "'>";
-        table += json.results.analysis[i].answer_text;
-        table += "</td>";
-        for(j=0; j<json.results.analysis[i].broken_down_results.length; j++){
-          for(k=0; k<col_header_count;k++){
-            // key is written with "-" but for this part, it must be "_"
-            key_text = col_headers[k].replace("-", "_");
-            // percent is the last item and all items before are percent
-            if (k < col_header_count-1){
-              table += "<td data-order='" + json.results.analysis[i].broken_down_results[j][key_text] + "'>";
-              table += Highcharts.numberFormat(json.results.analysis[i].broken_down_results[j][key_text], 0);
-              table += "</td>";
-            }else{
-              table += "<td>";
-              if (json.results.analysis[i].broken_down_results[j][key_text]){
-                table += json.results.analysis[i].broken_down_results[j][key_text].toFixed(2);
-              }else{
-                table += "0";
-              }
-              table += "%";
-              table += "</td>";
-            }
-          }
-        }
-        table += "</tr>";
-      }
-
-    }else{
-
-      // cells per row: question code answer, count, percent
-      for(i=0; i<json.results.analysis.length; i++){
-        table += "<tr>";
-        table += "<td class='var1-col' data-order='" + json.question.answers[i].sort_order + "'>";
-        table += json.results.analysis[i].answer_text;
-        table += "</td>";
-        for(k=0; k<col_header_count;k++){
-          // key is written with "-" but for this part, it must be "_"
-          key_text = col_headers[k].replace("-", "_");
-          // percent is the last item and all items before are percent
-          if (k < col_header_count-1){
-            table += "<td data-order='" + json.results.analysis[i][key_text] + "'>";
-            table += Highcharts.numberFormat(json.results.analysis[i][key_text], 0);
-            table += "</td>";
-          }else{
-            table += "<td>";
-            if (json.results.analysis[i][key_text]){
-              table += json.results.analysis[i][key_text].toFixed(2);
-            }else{
-              table += "0";
-            }
-            table += "%";
-            table += "</td>";
-          }
-        }
         table += "</tr>";
       }
     }
+    table += "</thead>";
 
-  }else{
 
-    if (json.analysis_type == "comparative"){
-      // cells per row: filter question code answer, count/percent for each col
-      for(h=0; h<json.results.filter_analysis.length; h++){
-
-        for(i=0; i<json.results.filter_analysis[h].filter_results.analysis.length; i++){
+    // build body
+    table += "<tbody>";
+    var key_text;
+    if (json.filtered_by == undefined){
+      if (json.analysis_type == "comparative"){
+        // cells per row: question code answer, count/percent for each col
+        for(i=0; i<json.results.analysis.length; i++){
           table += "<tr>";
-          table += "<td class='var1-col' data-order='" + json.filtered_by.answers[h].sort_order + "'>";
-          table += json.results.filter_analysis[h].filter_answer_text;
-          table += "</td>";
           table += "<td class='var1-col' data-order='" + json.question.answers[i].sort_order + "'>";
-          table += json.results.filter_analysis[h].filter_results.analysis[i].answer_text;
+          table += json.results.analysis[i].answer_text;
           table += "</td>";
-
-          for(j=0; j<json.results.filter_analysis[h].filter_results.analysis[i].broken_down_results.length; j++){
+          for(j=0; j<json.results.analysis[i].broken_down_results.length; j++){
             for(k=0; k<col_header_count;k++){
               // key is written with "-" but for this part, it must be "_"
               key_text = col_headers[k].replace("-", "_");
               // percent is the last item and all items before are percent
               if (k < col_header_count-1){
-                table += "<td data-order='" + json.results.filter_analysis[h].filter_results.analysis[i].broken_down_results[j][key_text] + "'>";
-                table += Highcharts.numberFormat(json.results.filter_analysis[h].filter_results.analysis[i].broken_down_results[j][key_text], 0);
+                table += "<td data-order='" + json.results.analysis[i].broken_down_results[j][key_text] + "'>";
+                table += Highcharts.numberFormat(json.results.analysis[i].broken_down_results[j][key_text], 0);
                 table += "</td>";
               }else{
                 table += "<td>";
-                if (json.results.filter_analysis[h].filter_results.analysis[i].broken_down_results[j][key_text]){
-                  table += json.results.filter_analysis[h].filter_results.analysis[i].broken_down_results[j][key_text].toFixed(2);
+                if (json.results.analysis[i].broken_down_results[j][key_text]){
+                  table += json.results.analysis[i].broken_down_results[j][key_text].toFixed(2);
                 }else{
                   table += "0";
                 }
@@ -587,32 +607,27 @@ function build_datatable (json) { // build data table
           }
           table += "</tr>";
         }
-      }
-    }else{
-      // for each filter, show each question and the count/percents
-      // cells per row: filter question code answer, count, percent
-      for(h=0; h<json.results.filter_analysis.length; h++){
 
-        for(i=0; i<json.results.filter_analysis[h].filter_results.analysis.length; i++){
+      }else{
+
+        // cells per row: question code answer, count, percent
+        for(i=0; i<json.results.analysis.length; i++){
           table += "<tr>";
-          table += "<td class='var1-col' data-order='" + json.filtered_by.answers[h].sort_order + "'>";
-          table += json.results.filter_analysis[h].filter_answer_text;
-          table += "</td>";
           table += "<td class='var1-col' data-order='" + json.question.answers[i].sort_order + "'>";
-          table += json.results.filter_analysis[h].filter_results.analysis[i].answer_text;
+          table += json.results.analysis[i].answer_text;
           table += "</td>";
           for(k=0; k<col_header_count;k++){
             // key is written with "-" but for this part, it must be "_"
             key_text = col_headers[k].replace("-", "_");
             // percent is the last item and all items before are percent
             if (k < col_header_count-1){
-              table += "<td data-order='" + json.results.filter_analysis[h].filter_results.analysis[i][key_text] + "'>";
-              table += Highcharts.numberFormat(json.results.filter_analysis[h].filter_results.analysis[i][key_text], 0);
+              table += "<td data-order='" + json.results.analysis[i][key_text] + "'>";
+              table += Highcharts.numberFormat(json.results.analysis[i][key_text], 0);
               table += "</td>";
             }else{
               table += "<td>";
-              if (json.results.filter_analysis[h].filter_results.analysis[i][key_text]){
-                table += json.results.filter_analysis[h].filter_results.analysis[i][key_text].toFixed(2);
+              if (json.results.analysis[i][key_text]){
+                table += json.results.analysis[i][key_text].toFixed(2);
               }else{
                 table += "0";
               }
@@ -623,53 +638,135 @@ function build_datatable (json) { // build data table
           table += "</tr>";
         }
       }
+
+    }else{
+
+      if (json.analysis_type == "comparative"){
+        // cells per row: filter question code answer, count/percent for each col
+        for(h=0; h<json.results.filter_analysis.length; h++){
+
+          for(i=0; i<json.results.filter_analysis[h].filter_results.analysis.length; i++){
+            table += "<tr>";
+            table += "<td class='var1-col' data-order='" + json.filtered_by.answers[h].sort_order + "'>";
+            table += json.results.filter_analysis[h].filter_answer_text;
+            table += "</td>";
+            table += "<td class='var1-col' data-order='" + json.question.answers[i].sort_order + "'>";
+            table += json.results.filter_analysis[h].filter_results.analysis[i].answer_text;
+            table += "</td>";
+
+            for(j=0; j<json.results.filter_analysis[h].filter_results.analysis[i].broken_down_results.length; j++){
+              for(k=0; k<col_header_count;k++){
+                // key is written with "-" but for this part, it must be "_"
+                key_text = col_headers[k].replace("-", "_");
+                // percent is the last item and all items before are percent
+                if (k < col_header_count-1){
+                  table += "<td data-order='" + json.results.filter_analysis[h].filter_results.analysis[i].broken_down_results[j][key_text] + "'>";
+                  table += Highcharts.numberFormat(json.results.filter_analysis[h].filter_results.analysis[i].broken_down_results[j][key_text], 0);
+                  table += "</td>";
+                }else{
+                  table += "<td>";
+                  if (json.results.filter_analysis[h].filter_results.analysis[i].broken_down_results[j][key_text]){
+                    table += json.results.filter_analysis[h].filter_results.analysis[i].broken_down_results[j][key_text].toFixed(2);
+                  }else{
+                    table += "0";
+                  }
+                  table += "%";
+                  table += "</td>";
+                }
+              }
+            }
+            table += "</tr>";
+          }
+        }
+      }else{
+        // for each filter, show each question and the count/percents
+        // cells per row: filter question code answer, count, percent
+        for(h=0; h<json.results.filter_analysis.length; h++){
+
+          for(i=0; i<json.results.filter_analysis[h].filter_results.analysis.length; i++){
+            table += "<tr>";
+            table += "<td class='var1-col' data-order='" + json.filtered_by.answers[h].sort_order + "'>";
+            table += json.results.filter_analysis[h].filter_answer_text;
+            table += "</td>";
+            table += "<td class='var1-col' data-order='" + json.question.answers[i].sort_order + "'>";
+            table += json.results.filter_analysis[h].filter_results.analysis[i].answer_text;
+            table += "</td>";
+            for(k=0; k<col_header_count;k++){
+              // key is written with "-" but for this part, it must be "_"
+              key_text = col_headers[k].replace("-", "_");
+              // percent is the last item and all items before are percent
+              if (k < col_header_count-1){
+                table += "<td data-order='" + json.results.filter_analysis[h].filter_results.analysis[i][key_text] + "'>";
+                table += Highcharts.numberFormat(json.results.filter_analysis[h].filter_results.analysis[i][key_text], 0);
+                table += "</td>";
+              }else{
+                table += "<td>";
+                if (json.results.filter_analysis[h].filter_results.analysis[i][key_text]){
+                  table += json.results.filter_analysis[h].filter_results.analysis[i][key_text].toFixed(2);
+                }else{
+                  table += "0";
+                }
+                table += "%";
+                table += "</td>";
+              }
+            }
+            table += "</tr>";
+          }
+        }
+      }
+    }
+
+    table += "</tbody>";
+
+    $("#container-table table").html(table);
+
+    // initalize the datatable
+    datatables = [];
+    $("#container-table table").each(function () {
+      datatables.push($(this).dataTable({
+        "dom": "<'top'fl>t<'bottom'p><'clear'>",
+        "language": {
+          "url": gon.datatable_i18n_url,
+          "searchPlaceholder": gon.datatable_search
+        },
+        "pagingType": "full_numbers",
+        "tableTools": {
+          "sSwfPath": "/assets/dataTables/extras/swf/copy_csv_xls.swf",
+          "aButtons": [
+            {
+              "sExtends": "copy",
+              "sButtonText": gon.datatable_copy_title,
+              "sToolTip": gon.datatable_copy_tooltip
+            },
+            {
+              "sExtends": "csv",
+              "sButtonText": gon.datatable_csv_title,
+              "sToolTip": gon.datatable_csv_tooltip
+            },
+            {
+              "sExtends": "xls",
+              "sButtonText": gon.datatable_xls_title,
+              "sToolTip": gon.datatable_xls_tooltip
+            }
+          ]
+        }
+      }));
+    });
+
+    // if data is weighted, show footnote
+    if (json.weighted_by){
+      $("#tab-table .table-weighted-footnote .footnote-weight-name").html(json.weighted_by.weight_name);
+      $("#tab-table .table-weighted-footnote").show();
+    }else{
+      $("#tab-table .table-weighted-footnote .footnote-weight-name").empty();
+      $("#tab-table .table-weighted-footnote").hide();
     }
   }
-
-  table += "</tbody>";
-
-  $("#container-table table").html(table);
-
-  // initalize the datatable
-  datatables = [];
-  $("#container-table table").each(function () {
-    datatables.push($(this).dataTable({
-      "dom": "<'top'fl>t<'bottom'p><'clear'>",
-      "language": {
-        "url": gon.datatable_i18n_url,
-        "searchPlaceholder": gon.datatable_search
-      },
-      "pagingType": "full_numbers",
-      "tableTools": {
-        "sSwfPath": "/assets/dataTables/extras/swf/copy_csv_xls.swf",
-        "aButtons": [
-          {
-            "sExtends": "copy",
-            "sButtonText": gon.datatable_copy_title,
-            "sToolTip": gon.datatable_copy_tooltip
-          },
-          {
-            "sExtends": "csv",
-            "sButtonText": gon.datatable_csv_title,
-            "sToolTip": gon.datatable_csv_tooltip
-          },
-          {
-            "sExtends": "xls",
-            "sButtonText": gon.datatable_xls_title,
-            "sToolTip": gon.datatable_xls_tooltip
-          }
-        ]
-      }
-    }));
-  });
-
-  // if data is weighted, show footnote
-  if (json.weighted_by){
-    $("#tab-table .table-weighted-footnote .footnote-weight-name").html(json.weighted_by.weight_name);
-    $("#tab-table .table-weighted-footnote").show();
-  }else{
-    $("#tab-table .table-weighted-footnote .footnote-weight-name").empty();
-    $("#tab-table .table-weighted-footnote").hide();
+  else{
+    // no map so hide tab
+    $("#explore-tabs #nav-map").hide();
+    // make sure these are not active
+    $("#explore-tabs #nav-map, #explore-content #tab-map").removeClass("active");
   }
 }
 
@@ -753,15 +850,24 @@ function build_details (json) { // build details (question and possible answers)
 }
 
 function build_explore_data_page (json) { // build the visualizations for the explore data page
-  console.log(params, json, json.analysis_type);
   if (json.analysis_type == "comparative"){
-    build_crosstab_charts(json);
+    if(json.analysis_data_type == "categorical") {
+      build_crosstab_charts(json);
+    }
+    else if(json.analysis_data_type == "numerical") {
+      build_scatter_charts(json);
+    }
   }
   else {
+    if(json.analysis_data_type == "categorical") {
+      (typeof params.chart_type !== "undefined" && params.chart_type === "pie")
+        ? build_pie_charts(json)
+        : build_bar_charts(json);
+    }
+    else {
+      build_histogramm_charts(json);
+    }
 
-    (typeof params.chart_type !== "undefined" && params.chart_type === "pie")
-      ? build_pie_charts(json)
-      : build_bar_charts(json);
   }
   build_highmaps(json);
   build_datatable(json);
@@ -834,7 +940,7 @@ function get_explore_data (is_back_button) { // get data and load page
       cacheId += ajax_data[tmp] + ";";
     }
   }
-
+ console.log(ajax_data);
   if(js.cache.hasOwnProperty(cacheId)) {
     update_content();
   }
@@ -1009,21 +1115,21 @@ $(document).ready(function () {
       fbc = $("select#broken_down_by_code"),
       ffc = $("select#filtered_by_code"),
       select_map = select_options[2];
-
+ console.log(gon.questions);
     fqc.append(select_options[0]);
     fbc.append(select_options[0]);
     ffc.append(select_options[1]);
 
-    function select_options_default (filters) {
-      fqc.find("option[value='"+filters[0]+"']").attr("selected=seleted");
+    function select_options_default (filters) {       
+      fqc.find("option[value='"+filters[0]+"']").attr("selected=selected");
       fqc.find("option[value='"+filters[1]+"']").attr("data-disabled=disabled");
-      fbc.find("option[value='"+filters[1]+"']").attr("selected=seleted");
+      fbc.find("option[value='"+filters[1]+"']").attr("selected=selected");
       fbc.find("option[value='"+filters[0]+"']").attr("data-disabled=disabled");
-      ffc.find("option[value='"+filters[2]+"']").attr("selected=seleted");
+      ffc.find("option[value='"+filters[2]+"']").attr("selected=selected");
       ffc.find("option[value='"+filters[0]+"'], option[value='"+filters[1]+"']").attr("data-disabled=disabled");
     }
     select_options_default(gon.questions.filters);
-    
+
     // due to using tabs, the map, chart and table cannot be properly drawn
     // because they may be hidden.
     // this event catches when a tab is being shown to make sure
@@ -1101,7 +1207,7 @@ $(document).ready(function () {
 
 
     // if option changes, make sure the select option is not available in the other lists
-    $("select.selectpicker").change(function (){
+    $("select.selectpicker").change(function (){       
       var t = $(this),
         id = t.attr("id"),
         val = t.val(),
@@ -1122,7 +1228,7 @@ $(document).ready(function () {
         broken_by_menu.find("li").hide();
 
         //broken_by_menu.find("li[style*='display: none']").show(); // turn on all hidden items
-        $(".form-explore-filter-by").toggle(type===1);
+        // $(".form-explore-filter-by").toggle(type===1);
 
         select_map.forEach(function (d, i){
           if( (d[0] === 2 && d[2] == type) ||
@@ -1155,9 +1261,11 @@ $(document).ready(function () {
 
       filter_by_menu.find("li[style*='display: none']").show();
 
-      // turn off this item
-      if (q_index != -1){ filter_by_menu.find("li:eq(" + (q_index + 1) + ")").hide(); }
-      if (bdb_index != -1){ filter_by_menu.find("li:eq(" + bdb_index + ")").hide(); }
+      // turn off this item only if question type is categorical
+      if(type === 1) {
+        if (q_index != -1){ filter_by_menu.find("li:eq(" + (q_index + 1) + ")").hide(); }
+        if (bdb_index != -1){ filter_by_menu.find("li:eq(" + bdb_index + ")").hide(); }
+      }
       
       update_available_weights(); // update the list of weights
 
@@ -1265,7 +1373,7 @@ $(document).ready(function () {
 
     // the below code is to override back button to get the ajax content without page reload
     $(window).bind("popstate", function () {
-
+       console.log("here");
       // pull out the querystring
       params = queryStringToJSON(window.location.href);
 
@@ -1338,5 +1446,30 @@ $(document).ready(function () {
       $(this).tooltip('hide');
       build_explore_data_page(js.cache[cacheId]);
     });
+
+
+    // var broken_by_menu = $(".form-explore-broken-by .bootstrap-select ul.dropdown-menu"),
+    //   cur_question_option = fqc.find("option:selected"),
+    //   type = +cur_question_option.attr("data-type"),
+    //   cur_question_option_index = cur_question_option.index();
+    //   cur_broken_down_option = fbc.find("option:selected");
+    //   cur_broken_down_option_index = cur_broken_down_option.index();
+    //   broken_by_menu.find("li").hide(),
+    //   filter_by_menu = $(".form-explore-filter-by .bootstrap-select ul.dropdown-menu");
+
+    //   select_map.forEach(function (d, i){
+    //     if( (d[0] === 2 && d[2] == type) ||
+    //         (d[0] == 1 && ((type == 1 && d[1] > 0)||(type == 2 && d[2] > 0))) ||
+    //         (d[0] == 0 && ((type == 1 && d[1] > 0)||(type == 2 && d[2] > 0)))) {
+    //       broken_by_menu.find("li[data-original-index='" + (i + 1) + "']").show();
+    //     }
+    //   });
+    //   broken_by_menu.find("li:eq(" + (cur_question_option.index()+1) + ")").hide(); // turn on off this item
+       
+    //    if(type === 1) {
+    //     filter_by_menu.find("li:eq(" + (cur_question_option_index + 1) + ")").hide();
+    //     filter_by_menu.find("li:eq(" + cur_broken_down_option_index + ")").hide();
+    //   }
+
   }
 });

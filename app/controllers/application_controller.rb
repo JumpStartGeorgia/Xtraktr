@@ -258,6 +258,7 @@ class ApplicationController < ActionController::Base
   ## get data for explore view
   #######################
   def explore_data_generator(dataset, show_private_questions=false)
+     Rails.logger.debug("--------------------------------------------#{params.inspect}")
     # if the language parameter exists and it is valid, use it instead of the default current_locale
     if params[:language].present? && dataset.languages.include?(params[:language])
       dataset.current_locale = params[:language]
@@ -279,8 +280,10 @@ class ApplicationController < ActionController::Base
 
       # check for valid question value
       if params[:question_code].present? && @questions.index{|x| x.code == params[:question_code]}.present?
+         Rails.logger.debug("--------------------------------------------here1")
         @question_code = params[:question_code]
       else
+        Rails.logger.debug("--------------------------------------------here2")
         @question_code = @questions.map{|x| x.code}.sample # start with a random question
       end
 

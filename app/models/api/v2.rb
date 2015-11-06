@@ -2,7 +2,8 @@ class Api::V2
   extend ActionView::Helpers::NumberHelper
   ANALYSIS_TYPE = {:single => 'single', :comparative => 'comparative', :time_series => 'time_series'}
   WEIGHT_TYPE = {:unweighted => 'unweighted', :time_series => 'time_series'}
-
+  ANALYSIS_DATA_TYPE = {:categorical => 'categorical', :numerical => 'numerical'}
+  DATA_TYPE_VALUES = { :unknown => 0, :categorical => 1, :numerical => 2 }
   ########################################
   ## DATASETS
   ########################################
@@ -184,12 +185,13 @@ class Api::V2
     end
 
     # if filter by by exists, get it
+ 
     filtered_by = nil
     if options['filtered_by_code'].present?
       filtered_by = dataset.questions.with_code(options['filtered_by_code'].strip)
 
       # if the filter by question could not be found, stop
-      if filtered_by.nil?
+      if filtered_by.nil? || filtered_by.data_type != DATA_TYPE_VALUES[:categorical]
         return {errors: [{status: '404', detail: I18n.t('api.msgs.no_filtered_by') }]}
       end
     end
@@ -200,7 +202,7 @@ class Api::V2
       broken_down_by = dataset.questions.with_code(options['broken_down_by_code'].strip)
 
       # if the broken_down_by by question could not be found, stop
-      if broken_down_by.nil?
+      if broken_down_by.nil? || question.data_type != broken_down_by.data_type
         return {errors: [{status: '404', detail: I18n.t('api.msgs.no_broken_down_by') }]}
       end
     end
@@ -281,6 +283,7 @@ class Api::V2
     # do the analysis
     # if there is no broken down by then do single analysis, else do comparative analysis
     # use the data[] for the parameter values to get answers that should be included in analysis
+    data[:analysis_data_type] = question.data_type_s
     if broken_down_by.present?
       data[:analysis_type] = ANALYSIS_TYPE[:comparative]
       data[:results] = dataset_comparative_analysis(dataset, data, with_title)
@@ -1024,148 +1027,146 @@ private
     end
 
     if data.present?
-      if weight_values.present?
-        question_answer_template = {answer_value: nil, answer_text: nil, broken_down_results: nil}
-        broken_down_answer_template = {broken_down_answer_value: nil, broken_down_answer_text: nil, unweighted_count: 0, weighted_count: 0, weighted_percent: 0}
+      if data[:analysis_data_type] == ANALYSIS_DATA_TYPE[:categorical]
+        if weight_values.present?
+          question_answer_template = {answer_value: nil, answer_text: nil, broken_down_results: nil}
+          broken_down_answer_template = {broken_down_answer_value: nil, broken_down_answer_text: nil, unweighted_count: 0, weighted_count: 0, weighted_percent: 0}
 
-        merged_data = data.zip(weight_values).map{|x| x.flatten}
-        # get the counts for each question answer by each broken down answer
-        # format: {question_answer: [{broken_down_answer: count, broken_down_answer: count, broken_down_answer: count, }], ...}
-        counts_per_answer = {}
-        weighted_counts_per_answer = {}
-        data.map{|x| x[0]}.uniq.each do |data_item|
-          # do not include nil values
-          if data_item.present?
-            # get the broken down values that exist with this answer
-            # and then count how many times each appears
-            # do not process nil values for x[1]
-            counts_per_answer[data_item.to_s] = data.select{|x| x[0] == data_item && x[1].present?}
-                                      .each_with_object(Hash.new(0)) { |item,counts| counts[item[1].to_s] += 1 }
-            weighted_counts_per_answer[data_item.to_s] = merged_data.select{|x| x[0] == data_item && x[1].present?}
-                                      .each_with_object(Hash.new(0)) { |item,counts| counts[item[1].to_s] += 1*item[2].to_f }
+          merged_data = data.zip(weight_values).map{|x| x.flatten}
+          # get the counts for each question answer by each broken down answer
+          # format: {question_answer: [{broken_down_answer: count, broken_down_answer: count, broken_down_answer: count, }], ...}
+          counts_per_answer = {}
+          weighted_counts_per_answer = {}
+          data.map{|x| x[0]}.uniq.each do |data_item|
+            # do not include nil values
+            if data_item.present?
+              # get the broken down values that exist with this answer
+              # and then count how many times each appears
+              # do not process nil values for x[1]
+              counts_per_answer[data_item.to_s] = data.select{|x| x[0] == data_item && x[1].present?}
+                                        .each_with_object(Hash.new(0)) { |item,counts| counts[item[1].to_s] += 1 }
+              weighted_counts_per_answer[data_item.to_s] = merged_data.select{|x| x[0] == data_item && x[1].present?}
+                                        .each_with_object(Hash.new(0)) { |item,counts| counts[item[1].to_s] += 1*item[2].to_f }
+            end
           end
-        end
 
-        if counts_per_answer.present?
-          # - create counts and percents
-          total = 0
-          question[:answers].each do |answer|
-            answer_counts = counts_per_answer[answer[:value].to_s]
-            weighted_answer_counts = weighted_counts_per_answer[answer[:value].to_s]
-            question_answer_count = 0
-            weighted_question_answer_count = 0
-            item = question_answer_template.clone
-            item[:answer_value] = answer[:value]
-            item[:answer_text] = answer[:text]
-            item[:broken_down_results] = []
+          if counts_per_answer.present?
+            # - create counts and percents
+            total = 0
+            question[:answers].each do |answer|
+              answer_counts = counts_per_answer[answer[:value].to_s]
+              weighted_answer_counts = weighted_counts_per_answer[answer[:value].to_s]
+              question_answer_count = 0
+              weighted_question_answer_count = 0
+              item = question_answer_template.clone
+              item[:answer_value] = answer[:value]
+              item[:answer_text] = answer[:text]
+              item[:broken_down_results] = []
 
-            broken_down_by[:answers].each do |bdb_answer|
-              bdb_item = broken_down_answer_template.clone
-              bdb_item[:broken_down_answer_value] = bdb_answer[:value]
-              bdb_item[:broken_down_answer_text] = bdb_answer[:text]
+              broken_down_by[:answers].each do |bdb_answer|
+                bdb_item = broken_down_answer_template.clone
+                bdb_item[:broken_down_answer_value] = bdb_answer[:value]
+                bdb_item[:broken_down_answer_text] = bdb_answer[:text]
 
-              if answer_counts.present? && answer_counts[bdb_answer[:value].to_s].present?
-                bdb_item[:unweighted_count] = answer_counts[bdb_answer[:value].to_s]
-                question_answer_count += bdb_item[:unweighted_count]
+                if answer_counts.present? && answer_counts[bdb_answer[:value].to_s].present?
+                  bdb_item[:unweighted_count] = answer_counts[bdb_answer[:value].to_s]
+                  question_answer_count += bdb_item[:unweighted_count]
+                end
+                if weighted_answer_counts.present? && weighted_answer_counts[bdb_answer[:value].to_s].present?
+                  bdb_item[:weighted_count] = weighted_answer_counts[bdb_answer[:value].to_s].round
+                  weighted_question_answer_count += bdb_item[:weighted_count]
+                end
+
+                item[:broken_down_results] << bdb_item
               end
-              if weighted_answer_counts.present? && weighted_answer_counts[bdb_answer[:value].to_s].present?
-                bdb_item[:weighted_count] = weighted_answer_counts[bdb_answer[:value].to_s].round
-                weighted_question_answer_count += bdb_item[:weighted_count]
+
+              if weighted_question_answer_count > 0
+                # now that the counts for the question answer is done, compute the percents
+                item[:broken_down_results].each do |bdr_item|
+                  bdr_item[:weighted_percent] = (bdr_item[:weighted_count].to_f/weighted_question_answer_count*100).round(2)
+                end
+
+                # update overall total
+                total += question_answer_count
               end
 
-              item[:broken_down_results] << bdb_item
+              results[:analysis] << item
             end
 
-            if weighted_question_answer_count > 0
-              # now that the counts for the question answer is done, compute the percents
-              item[:broken_down_results].each do |bdr_item|
-                bdr_item[:weighted_percent] = (bdr_item[:weighted_count].to_f/weighted_question_answer_count*100).round(2)
+            # total responses
+            results[:total_responses] = total
+
+   
+          end
+        else
+          question_answer_template = {answer_value: nil, answer_text: nil, broken_down_results: nil}
+          broken_down_answer_template = {broken_down_answer_value: nil, broken_down_answer_text: nil, count: 0, percent: 0}
+
+          # get the counts for each question answer by each broken down answer
+          # format: {question_answer: [{broken_down_answer: count, broken_down_answer: count, broken_down_answer: count, }], ...}
+          counts_per_answer = {}
+          data.map{|x| x[0]}.uniq.each do |data_item|
+            # do not include nil values
+            if data_item.present?
+              # get the broken down values that exist with this answer
+              # and then count how many times each appears
+              # do not process nil values for x[1]
+              counts_per_answer[data_item.to_s] = data.select{|x| x[0] == data_item && x[1].present?}.map{|x| x[1]}
+                                        .each_with_object(Hash.new(0)) { |item,counts| counts[item.to_s] += 1 }
+            end
+          end
+
+          if counts_per_answer.present?
+            # - create counts and percents
+            total = 0
+            question[:answers].each do |answer|
+              answer_counts = counts_per_answer[answer[:value].to_s]
+              question_answer_count = 0
+              item = question_answer_template.clone
+              item[:answer_value] = answer[:value]
+              item[:answer_text] = answer[:text]
+              item[:broken_down_results] = []
+
+              broken_down_by[:answers].each do |bdb_answer|
+                bdb_item = broken_down_answer_template.clone
+                bdb_item[:broken_down_answer_value] = bdb_answer[:value]
+                bdb_item[:broken_down_answer_text] = bdb_answer[:text]
+
+                if answer_counts.present? && answer_counts[bdb_answer[:value].to_s].present?
+                  bdb_item[:count] = answer_counts[bdb_answer[:value].to_s]
+                  question_answer_count += bdb_item[:count]
+                end
+
+                item[:broken_down_results] << bdb_item
               end
 
-              # update overall total
-              total += question_answer_count
-            end
+              if question_answer_count > 0
+                # now that the coutns for the question answer is done, compute the percents
+                item[:broken_down_results].each do |bdr_item|
+                  bdr_item[:percent] = (bdr_item[:count].to_f/question_answer_count*100).round(2)
+                end
 
-            results[:analysis] << item
-          end
-
-          # total responses
-          results[:total_responses] = total
-
-          # set the titles
-          if with_title
-            results[:title][:html] = dataset_comparative_analysis_title('html', question, broken_down_by, filtered_by, filtered_by_answer)
-            results[:title][:text] = dataset_comparative_analysis_title('text', question, broken_down_by, filtered_by, filtered_by_answer)
-            results[:subtitle][:html] = dataset_analysis_subtitle('html', results[:total_responses], results[:total_possible_responses], weight_values.present?)
-            results[:subtitle][:text] = dataset_analysis_subtitle('text', results[:total_responses], results[:total_possible_responses], weight_values.present?)
-          end
-        end
-      else
-        question_answer_template = {answer_value: nil, answer_text: nil, broken_down_results: nil}
-        broken_down_answer_template = {broken_down_answer_value: nil, broken_down_answer_text: nil, count: 0, percent: 0}
-
-        # get the counts for each question answer by each broken down answer
-        # format: {question_answer: [{broken_down_answer: count, broken_down_answer: count, broken_down_answer: count, }], ...}
-        counts_per_answer = {}
-        data.map{|x| x[0]}.uniq.each do |data_item|
-          # do not include nil values
-          if data_item.present?
-            # get the broken down values that exist with this answer
-            # and then count how many times each appears
-            # do not process nil values for x[1]
-            counts_per_answer[data_item.to_s] = data.select{|x| x[0] == data_item && x[1].present?}.map{|x| x[1]}
-                                      .each_with_object(Hash.new(0)) { |item,counts| counts[item.to_s] += 1 }
-          end
-        end
-
-        if counts_per_answer.present?
-          # - create counts and percents
-          total = 0
-          question[:answers].each do |answer|
-            answer_counts = counts_per_answer[answer[:value].to_s]
-            question_answer_count = 0
-            item = question_answer_template.clone
-            item[:answer_value] = answer[:value]
-            item[:answer_text] = answer[:text]
-            item[:broken_down_results] = []
-
-            broken_down_by[:answers].each do |bdb_answer|
-              bdb_item = broken_down_answer_template.clone
-              bdb_item[:broken_down_answer_value] = bdb_answer[:value]
-              bdb_item[:broken_down_answer_text] = bdb_answer[:text]
-
-              if answer_counts.present? && answer_counts[bdb_answer[:value].to_s].present?
-                bdb_item[:count] = answer_counts[bdb_answer[:value].to_s]
-                question_answer_count += bdb_item[:count]
+                # update overall total
+                total += question_answer_count
               end
 
-              item[:broken_down_results] << bdb_item
+              results[:analysis] << item
             end
 
-            if question_answer_count > 0
-              # now that the coutns for the question answer is done, compute the percents
-              item[:broken_down_results].each do |bdr_item|
-                bdr_item[:percent] = (bdr_item[:count].to_f/question_answer_count*100).round(2)
-              end
-
-              # update overall total
-              total += question_answer_count
-            end
-
-            results[:analysis] << item
-          end
-
-          # total responses
-          results[:total_responses] = total
-
-          # set the titles
-          if with_title
-            results[:title][:html] = dataset_comparative_analysis_title('html', question, broken_down_by, filtered_by, filtered_by_answer)
-            results[:title][:text] = dataset_comparative_analysis_title('text', question, broken_down_by, filtered_by, filtered_by_answer)
-            results[:subtitle][:html] = dataset_analysis_subtitle('html', results[:total_responses], results[:total_possible_responses], weight_values.present?)
-            results[:subtitle][:text] = dataset_analysis_subtitle('text', results[:total_responses], results[:total_possible_responses], weight_values.present?)
+            # total responses
+            results[:total_responses] = total
           end
         end
+      elsif data[:analysis_data_type] == ANALYSIS_DATA_TYPE[:numerical]
+        results[:analysis] = data
+        results[:total_responses] = data.length
+      end
+      # set the titles
+      if with_title
+        results[:title][:html] = dataset_comparative_analysis_title('html', question, broken_down_by, filtered_by, filtered_by_answer)
+        results[:title][:text] = dataset_comparative_analysis_title('text', question, broken_down_by, filtered_by, filtered_by_answer)
+        results[:subtitle][:html] = dataset_analysis_subtitle('html', results[:total_responses], results[:total_possible_responses], weight_values.present?)
+        results[:subtitle][:text] = dataset_analysis_subtitle('text', results[:total_responses], results[:total_possible_responses], weight_values.present?)
       end
     end
     return results
@@ -1228,14 +1229,19 @@ private
         options['visual_type'] = 'chart'
         chart[:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
 
-        chart[:labels] = data[:question][:answers].map{|x| x[:text]}
 
         chart[:data] = []
-        # have to transpose the counts for highcharts
-        counts = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[count_key]}}.transpose
+        if data[:analysis_data_type] == ANALYSIS_DATA_TYPE[:categorical]
+          chart[:labels] = data[:question][:answers].map{|x| x[:text]}
 
-        data[:broken_down_by][:answers].each_with_index do |answer, i|
-          chart[:data] << {name: answer[:text], data: counts[i]}
+          # have to transpose the counts for highcharts
+          counts = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[count_key]}}.transpose
+
+          data[:broken_down_by][:answers].each_with_index do |answer, i|
+            chart[:data] << {name: answer[:text], data: counts[i]}
+          end
+        elsif data[:analysis_data_type] == ANALYSIS_DATA_TYPE[:numerical]
+          chart[:data] = data[:results][:analysis]          
         end
       end
 
