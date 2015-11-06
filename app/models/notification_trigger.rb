@@ -77,7 +77,7 @@ class NotificationTrigger
           NotificationMailer.send_new_user(message).deliver if !Rails.env.staging?
         end
       end
-      NotificationTrigger.where(:id => triggers.map{|x| x.id}).update_all(:processed => true)
+      NotificationTrigger.in(:id => triggers.map{|x| x.id}).update_all(:processed => true)
     end
   end
 
@@ -122,7 +122,7 @@ class NotificationTrigger
           NotificationMailer.send_new_data(message, dataset_ids, time_series_ids).deliver if !Rails.env.staging?
         end
       end
-      NotificationTrigger.where(:id => triggers.map{|x| x.id}).update_all(:processed => true)
+      NotificationTrigger.in(:id => triggers.map{|x| x.id}).update_all(:processed => true)
     end
   end
 
