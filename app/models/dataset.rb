@@ -1059,7 +1059,8 @@ class Dataset < CustomTranslation
 
                 if tmpD >= num.min && tmpD <= num.max
                   items.formatted_data.push(tmpD);
-                  index = ((tmpD-num.min)/step).floor
+                  index = ((tmpD-num.min)/step-0.00001).floor
+                   Rails.logger.debug("------------------------#{(tmpD-num.min)/step}--------------#{index}------#{num.inspect} #{tmpD} #{step}")
                   items.frequency_data[index] += 1
                 else 
                 end

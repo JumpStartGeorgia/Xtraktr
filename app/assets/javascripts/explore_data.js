@@ -753,10 +753,12 @@ function build_details (json) { // build details (question and possible answers)
 }
 
 function build_explore_data_page (json) { // build the visualizations for the explore data page
+  console.log(params, json, json.analysis_type);
   if (json.analysis_type == "comparative"){
     build_crosstab_charts(json);
   }
   else {
+
     (typeof params.chart_type !== "undefined" && params.chart_type === "pie")
       ? build_pie_charts(json)
       : build_bar_charts(json);
@@ -947,7 +949,7 @@ function build_selects_group_option (group) {
     sub = (has_parent ? "sub" : ""),
     g_text = group.title,
     content = "data-content=\"<span>" + g_text + "</span><span class='pull-right'>" + "<img src='/assets/svg/"+sub+"group.svg' title='" + gon["is_" + sub + "group"] + "' />" + "</span>\"";
-  return "<option class='" + sub + "group' disabled='disabled' " + content + " data-blah='kj'>" + g_text + "</option>";
+  return "<option class='" + sub + "group' disabled='disabled' " + content + ">" + g_text + "</option>";
 }
 function build_selects_question_option (question, level, skip_content) {
   var q_text = question.original_code + " - " + question.text,
