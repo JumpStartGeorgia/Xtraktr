@@ -946,7 +946,7 @@ en:
       header_latest_time_series: Latest Time Series
       no_time_series: 'At this time, no time series have been created in the site.'
       wms_title: Welfare <br />Monitoring Survey
-      wms_slogan: Comparing the <br />well-being of children <br />from 2009, 2011 and 2013
+      wms_slogan: Comparing the <br />well-being of households <br />from 2009, 2011 and 2013
       header_highlights: Highlights
       header_categories: Browse Categories
       search_datasets: Search Datasets
