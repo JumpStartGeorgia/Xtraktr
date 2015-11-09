@@ -494,7 +494,7 @@ function build_histogramm_chart (json_chart, chart_height, weight_name) { // bui
     chart_id = opt[3];
 
   chart_height = opt[0];
-
+ console.log("here");
   // create chart
   $(selector_path + " #" + chart_id).highcharts({
     credits: { enabled: false },

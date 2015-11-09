@@ -160,35 +160,26 @@ class DatasetsController < ApplicationController
     params[:dataset][:category_ids].delete('')
     cat_ids = @dataset.category_mappers.category_ids.map{|x| x.to_s}
     mappers_to_delete = []
-    logger.debug "====== existing categories = #{cat_ids}; class = #{cat_ids.first.class}"
     if params[:dataset][:category_ids].present?
-      logger.debug "======= cat ids present"
       # if mapper category is not in list, mark for deletion
       @dataset.category_mappers.each do |mapper|
-        logger.debug "======= - checking marker cat id #{mapper.category_id} for destroy"
 
         if !params[:dataset][:category_ids].include?(mapper.category_id.to_s)
-          logger.debug "======= -> marking #{mapper.category_id} for destroy"
           mappers_to_delete << mapper.id
         end
       end
       # if cateogry id not in mapper, add id
       params[:dataset][:category_ids].each do |category_id|
-        logger.debug "======= - checking form cat id #{category_id} for addition; class = #{category_id.class}"
         if !cat_ids.include?(category_id)
-          logger.debug "======= -> adding new category #{category_id}"
           @dataset.category_mappers.build(category_id: category_id)
         end
       end
     else
-      logger.debug "======= cat ids not present"
       # no categories so make sure mapper is nil
       @dataset.category_mappers.each do |mapper|
         mappers_to_delete << mapper.id
       end
     end
-
-    logger.debug "========== -> need to delete #{mappers_to_delete} mapper records"
 
     # if any mappers are marked as destroy, destroy them
     CategoryMapper.in(id: mappers_to_delete).destroy_all
@@ -200,35 +191,26 @@ class DatasetsController < ApplicationController
     params[:dataset][:country_ids].delete('')
     country_ids = @dataset.country_mappers.country_ids.map{|x| x.to_s}
     mappers_to_delete = []
-    logger.debug "====== existing countries = #{country_ids}; class = #{country_ids.first.class}"
     if params[:dataset][:country_ids].present?
-      logger.debug "======= cat ids present"
       # if mapper country is not in list, mark for deletion
       @dataset.country_mappers.each do |mapper|
-        logger.debug "======= - checking marker country id #{mapper.country_id} for destroy"
 
         if !params[:dataset][:country_ids].include?(mapper.country_id.to_s)
-          logger.debug "======= -> marking #{mapper.country_id} for destroy"
           mappers_to_delete << mapper.id
         end
       end
       # if cateogry id not in mapper, add id
       params[:dataset][:country_ids].each do |country_id|
-        logger.debug "======= - checking form country id #{country_id} for addition; class = #{country_id.class}"
         if !country_ids.include?(country_id)
-          logger.debug "======= -> adding new country #{country_id}"
           @dataset.country_mappers.build(country_id: country_id)
         end
       end
     else
-      logger.debug "======= country ids not present"
       # no countries so make sure mapper is nil
       @dataset.country_mappers.each do |mapper|
         mappers_to_delete << mapper.id
       end
     end
-
-    logger.debug "========== -> need to delete #{mappers_to_delete} mapper records"
 
     # if any mappers are marked as destroy, destroy them
     CountryMapper.in(id: mappers_to_delete).destroy_all
@@ -413,7 +395,7 @@ class DatasetsController < ApplicationController
               question: q.text,
               data_type: q.data_type,
               nm_type: 0,
-              nm_size: 0,
+              nm_width: 0,
               nm_min: 0,
               nm_max: 0,
               nm_title: nil,
@@ -435,7 +417,7 @@ class DatasetsController < ApplicationController
               titles.unshift(orig_title)
 
               data[:nm_type] = q.numerical.type
-              data[:nm_size] = q.numerical.size
+              data[:nm_width] = q.numerical.width
               data[:nm_min] = q.numerical.min
               data[:nm_max] = q.numerical.max
               data[:nm_title] = titles

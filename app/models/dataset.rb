@@ -264,9 +264,9 @@ class Dataset < CustomTranslation
              q["numerical"] = nil
           elsif dt[0] == 2
             if q.numerical.nil?
-              q.build_numerical({ type: dt[1].to_i, size: dt[2].to_i, min: dt[3].to_f, max: dt[4].to_f, title_translations: data[code]["titles"] })
+              q.build_numerical({ type: dt[1].to_i, width: dt[2].to_i, min: dt[3].to_f, max: dt[4].to_f, title_translations: data[code]["titles"] })
             else
-              q.numerical.update_attributes({ type: dt[1].to_i, size: dt[2].to_i, min: dt[3].to_f, max: dt[4].to_f, title_translations: data[code]["titles"] })
+              q.numerical.update_attributes({ type: dt[1].to_i, width: dt[2].to_i, min: dt[3].to_f, max: dt[4].to_f, title_translations: data[code]["titles"] })
             end
           end
         end
@@ -1043,10 +1043,12 @@ class Dataset < CustomTranslation
           elsif dt[0] == 2
             question = questions.with_code(code)
             predefined_answers = question.answers.map { |f| f.value }
-            num = question.numerical            
-            step = (num.max - num.min)/num.size
+            num = question.numerical  
+
+           # step = (num.max - num.min)/num.width
+
             items.formatted_data = []
-            items.frequency_data = Array.new(num.size, 0)
+            items.frequency_data = Array.new(num.width, 0)
 
             #formatted and grouped data calculation
             items.data.each {|d|
@@ -1059,8 +1061,8 @@ class Dataset < CustomTranslation
 
                 if tmpD >= num.min && tmpD <= num.max
                   items.formatted_data.push(tmpD);
-                  index = ((tmpD-num.min)/step-0.00001).floor
-                   Rails.logger.debug("------------------------#{(tmpD-num.min)/step}--------------#{index}------#{num.inspect} #{tmpD} #{step}")
+                  index = ((tmpD-num.min)/num.width-0.00001).floor
+                   #Rails.logger.debug("------------------------#{(tmpD-num.min)/step}--------------#{index}------#{num.inspect} #{tmpD} #{step}")
                   items.frequency_data[index] += 1
                 else 
                 end

@@ -850,6 +850,7 @@ function build_details (json) { // build details (question and possible answers)
 }
 
 function build_explore_data_page (json) { // build the visualizations for the explore data page
+   console.log(json, "here");
   if (json.analysis_type == "comparative"){
     if(json.analysis_data_type == "categorical") {
       build_crosstab_charts(json);
@@ -955,12 +956,15 @@ function get_explore_data (is_back_button) { // get data and load page
       //console.log( "Request failed: " + textStatus  + ". Error thrown: " + errorThrown);
     })
     .success(function ( json ) {
+       console.log("remot",json.errors);
       if (json.errors || ((json.results.analysis && json.results.analysis.length == 0) || json.results.filtered_analysis && json.results.filtered_analysis.length == 0)){
         $("#jumpto-loader").fadeOut("slow");
         $("#explore-data-loader").fadeOut("slow");
         $("#explore-error").fadeIn("slow");
+         console.log("erer");
       }
       else {         
+        console.log("erer2");
         js.cache[cacheId] = json;
         update_content();
       }
@@ -969,6 +973,7 @@ function get_explore_data (is_back_button) { // get data and load page
   }
 
   function update_content () {
+     console.log("update_content");
     var json = js.cache[cacheId];
     build_explore_data_page(json);
     resizeExploreData();

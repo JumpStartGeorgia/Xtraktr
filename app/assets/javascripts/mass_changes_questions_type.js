@@ -36,7 +36,7 @@ $(document).ready(function (){
         });
       },
       show: function (code, only_if_opened) {
-         console.log("show");
+        //console.log("show");
         if(typeof only_if_opened !== "boolean") { only_if_opened = false; }
         if(only_if_opened && this.closed) { return; }
 
@@ -44,33 +44,34 @@ $(document).ready(function (){
       },
       render_chart: function () {
         var t = this;
-        console.log(cq, cache);
+        //console.log(cq, cache);
 
         var nc = false; // if code is new
         if(preview.code !== cq.code) {
           nc = true;
           preview.code = cq.code;
         }
-        console.log("here", cache[cq.code].data[cq.sub_id]);
+        //console.log("here", cache[cq.code].data[cq.sub_id]);
         var cd = cache[cq.code].data[cq.sub_id].fd, // current data
           cm = cq.meta, // current data
           cg = cache[cq.code].general;  // current general data
-
+          // console.log(cd, cm, cg);
+           //return;
         var $preview = $("#preview"), chart;
         $preview.show();
 
         var histogramm = function () {
           var sum = cd.reduce(function (a, b){return a+b;});
 
-          var num = 0;
-          cg.orig_data.forEach(function (n){
-            if(isN(n) && +n >= 0) {
-              ++num;
-            }
-          });
+          // var num = 0;
+          // cg.orig_data.forEach(function (n){
+          //   if(isN(n) && +n >= 0) {
+          //     ++num;
+          //   }
+          // });
 
           if(t.closed || nc) {
-            console.log("new",typeof cd );
+            //console.log("new",typeof cd );
             chart = new Highcharts.Chart({
               colors: ["#C6CA53"],
               chart: {
@@ -85,7 +86,7 @@ $(document).ready(function (){
                 style: t.style1
               },
               subtitle: {
-                text: gon.total_responses_out_of.replace("X", num).replace("XX", cg.orig_data.length),
+                text: gon.total_responses_out_of.replace("X", cm[8]).replace("XX", cg.orig_data.length),
                 useHTML: true,
                 style: t.style2
               },
@@ -97,7 +98,10 @@ $(document).ready(function (){
                 },
                 startOnTick: true,
                 endOnTick: true,
-                categories: formatLabel(cm)
+                categories: formatLabel(cm),
+                // min:0,
+                // max:110,
+                // tickInterval: 10
               },
               yAxis: { title: null },
               plotOptions: {
@@ -118,7 +122,7 @@ $(document).ready(function (){
               legend: { enabled: false }
             }, function () {
               var box = this.plotBox;
-              var label = this.renderer.label(cm[4], (box.x+box.width) - 7, (box.y + box.height) + 5)
+              var label = this.renderer.label(cm[6], (box.x+box.width) - 7, (box.y + box.height) + 5)
                 .css({
                   color:"#606060",
                   cursor:"default",
@@ -134,15 +138,15 @@ $(document).ready(function (){
             });
           }
           else {
-            var ss = 0;
-            cd.slice().forEach(function(ddd){ ss+=ddd; });
-            console.log("old", ss );
+            // var ss = 0;
+            // cd.slice().forEach(function(ddd){ ss+=ddd; });
+            // console.log("old", ss );
             chart = $preview.find(".chart").highcharts();
-            chart.xAxis[0].setCategories(formatLabel(cm), true, true);
+            chart.xAxis[0].categories = formatLabel(cm);
             chart.series[0].setData(cd.slice(), false, true);
             $("#preview .chart .histogramm-last-label").remove();
             var box = chart.plotBox;
-            var label = chart.renderer.label(cm[4], (box.x+box.width) - 7, (box.y + box.height) + 5)
+            var label = chart.renderer.label(cm[6], (box.x+box.width) - 7, (box.y + box.height) + 5)
               .css({
                 color:"#606060",
                 cursor:"default",
@@ -162,10 +166,11 @@ $(document).ready(function (){
               cd_keys = [],
               cd_values = [];
             Object.keys(cd).forEach(function (key) {
-              console.log(+cd[key]);
+              //console.log(+cd[key]);
               if(isN(key) && +key >= 0) {
                 sum+=+cd[key];
                 keys.push(key);
+                 console.log(cd,cg.question.answers, key);
                 cd_keys.push(cg.question.answers.filter(function (ans) { return ans.value === key; })[0].text);
                 cd_values.push(cd[key]);
               }
@@ -176,10 +181,10 @@ $(document).ready(function (){
                 ++num;
               }
             });
-            console.log(cd_keys, cd_values, sum);
-            console.log("drawing bar");
+            //console.log(cd_keys, cd_values, sum);
+            //console.log("drawing bar");
             if(t.closed || nc) {
-              console.log("new");
+              //console.log("new");
               chart = new Highcharts.Chart({
                 colors: ["#C6CA53"],
                 chart: {
@@ -218,16 +223,17 @@ $(document).ready(function (){
                 });
             }
             else {
-              console.log("old");
+              //console.log("old");
             }
           };
 
 
         function formatLabel (meta) {
           var v = [];
-          for(var i = 0; i < meta[2]; ++i) {
-            v.push(Math.floor(meta[3]+i*meta[5]));
+          for(var i = 0; i < meta[7]; ++i) {
+            v.push(Math.floor(meta[5]+i*meta[2]));
           }
+           //console.log(v);
           return v;
         }
 
@@ -241,7 +247,7 @@ $(document).ready(function (){
         }
       },
       prepaire_data: function (code) {
-         console.log("prepaire_data");
+        //console.log("prepaire_data");
         var t = this,
           meta = get_code_meta(code),
           code_meta = meta.data,
@@ -251,30 +257,20 @@ $(document).ready(function (){
         cq = { code: code, sub_id: sub_id, type: data_type, meta: code_meta, titles: (data_type === 2 ? meta.titles : []) };
 
         if(cache.hasOwnProperty(code) && cache[code].hasOwnProperty("data")) {
-           console.log("here1");
           if(data_type === 2) {
-            console.log("here2");
-            code_meta.push((code_meta[4] - code_meta[3])/code_meta[2]);
             if(!cache[code]["data"].hasOwnProperty(sub_id)) {
-              console.log("here3");
-              cache[code]["data"][sub_id] = { fd: get_frequency_data(code_meta, cache[code].general.orig_data) };
+              cache[code]["data"][sub_id] = get_frequency_data(code_meta, cache[code].general.orig_data);
             }
-            console.log("here4", cache[code]["data"][sub_id].fd);
             t.render_chart();
             return;
           }
           else if(cache[code]["data"].hasOwnProperty(sub_id)) {
-            console.log("here5");
             t.render_chart();
             return;
           }
         }
-        console.log("remote");
+        //console.log("remote");
         cache[code] = { code: code, general: {}, data: {}};
-
-        if(data_type === 2) {
-          code_meta.push((code_meta[4] - code_meta[3])/code_meta[2]);
-        }
 
         $.ajax({
           type: "GET",
@@ -282,12 +278,17 @@ $(document).ready(function (){
           data: { dataset_id: dataset_id, question_code: code },
           url: view_chart_path,
           success: function (d) {
-             console.log(d);
+             //console.log("ajax", d);
             cache[code].general = { dataset: d.dataset, orig_data: d.data, formatted_data: d.data, question: d.question };
-            cache[code].data[sub_id] = { fd: d.frequency_data };
-            if(data_type === 2)
-            {
-              cache[code].data[sub_id]["dfm"]= d.frequency_data_meta;
+            if(d.frequency_data !== null) {
+              cache[code].data[sub_id] = { fd: d.frequency_data };
+              if(data_type === 2)
+              {
+                cache[code].data[sub_id]["dfm"] = d.frequency_data_meta;
+              }
+            }
+            else {
+              cache[code]["data"][sub_id] = get_frequency_data(code_meta, cache[code].general.orig_data);
             }
             t.render_chart();
           }
@@ -349,9 +350,9 @@ $(document).ready(function (){
           },
           class: "c"
         },
-        {"data":"nm_size",
+        {"data":"nm_width",
           render: function (data, type, full) {
-            return "<input class='conditional r' type='number' value='"+data+"' name='question["+full.code +"][numerical][size]' data-o='"+data+"'" + (full.data_type !== 2 ? " disabled" : "") + ">";
+            return "<input class='conditional r' type='number' value='"+data+"' name='question["+full.code +"][numerical][width]' data-o='"+data+"'" + (full.data_type !== 2 ? " disabled" : "") + ">";
           }
         },
         {"data":"nm_min",
@@ -394,7 +395,7 @@ $(document).ready(function (){
           url: $(this).attr("action"),
           success: function () {
             keys.forEach(function (d) {
-              set_code_original_values(d.loLowerCase());
+              set_code_original_values(d.toLowerCase());
             });
             dirty_rows = {};
           }
@@ -410,7 +411,7 @@ $(document).ready(function (){
         str += "[numerical]";
 
         tr.find(str+"[type]']").attr(dao, current_data[d][1]);
-        tr.find(str+"[size]']").attr(dao, current_data[d][2]).attr("value", current_data[d][2]);
+        tr.find(str+"[width]']").attr(dao, current_data[d][2]).attr("value", current_data[d][2]);
         tr.find(str+"[min]']").attr(dao, current_data[d][3]).attr("value", current_data[d][3]);
         tr.find(str+"[max]']").attr(dao, current_data[d][4]).attr("value", current_data[d][4]);
       }
@@ -584,10 +585,14 @@ $(document).ready(function (){
 
       out = [data_type,
         tr.find(tmp + "[type]']").val(),
-        tr.find(tmp + "[size]']").val(),
+        tr.find(tmp + "[width]']").val(),
         tr.find(tmp + "[min]']").val(),
         tr.find(tmp + "[max]']").val() ].map(function (d){ return d=+d; });
-      // out.unshift(titles);
+
+      out.push(Math.floor(out[3]/out[2]) * out[2]);
+      out.push(Math.ceil(out[4]/out[2]) * out[2]);
+      out.push((out[6]-out[5])/out[2]);
+
       return { data: out, titles: titles };
     }
   }
@@ -596,28 +601,28 @@ $(document).ready(function (){
       str = "[name='question["+code+"][numerical]";
 
     tr.find(str+"[type]']").val(meta[1]);
-    tr.find(str+"[size]']").val(meta[2]);
+    tr.find(str+"[width]']").val(meta[2]);
     tr.find(str+"[min]']").val(meta[3]);
     tr.find(str+"[max]']").val(meta[4]);
   }
   function prepare_numerical_fields (code) {
-     console.log("prepare_numerical_fields");
+    //console.log("prepare_numerical_fields");
     mass_change.find("tr#" + code).attr("disabled", "disabled").find(".view-chart").parent().addClass("row-loader");
 
     if(cache.hasOwnProperty(code) && cache[code].hasOwnProperty("general") && cache[code]["general"].hasOwnProperty("orig_data")) {
-       console.log("Has General");
+       //console.log("Has General");
       if(cache[code].hasOwnProperty("data") && cache[code].data.hasOwnProperty("default")) {
-        console.log("Has Default for numerical");
+        //console.log("Has Default for numerical");
         set_code_meta(code, cache[code]["data"]["default"].fdm);
         mass_change.find("tr#" + code).removeAttr("disabled", "disabled").find(".view-chart").parent().removeClass("row-loader");
       }
       else {
-        console.log("Has No Default for numerical");
+        //console.log("Has No Default for numerical");
         prepare_numerical_fields_callback();
       }
     }
     else {
-      console.log("Has No Default for numerical, ajax");
+      //console.log("Has No Default for numerical, ajax");
       cache[code] = { code: code, general: {}, data: {}};
       $.ajax({
         type: "GET",
@@ -640,10 +645,11 @@ $(document).ready(function (){
         predefined_answers = question.answers.map(function (d){ return d.value; }),
         num = [2, 0, 0, 0, 0],
         predefinedData = [];
+
       formatted.forEach(function (d, i) {
         if(isN(d) && predefined_answers.indexOf(d) === -1) {
           formatted[i] = +d;
-          if(num[1] === 1 && !isInteger(formatted[i])) {
+          if(num[1] !== 1 && !isInteger(formatted[i])) {
             num[1] = 1;
           }
           if(formatted[i] < min) {
@@ -707,26 +713,27 @@ $(document).ready(function (){
     return range_map;
   }
   function get_frequency_data (meta, raw_data) {
-    var frequency_data = replicate(meta[2], 0);
+    var frequency_data = replicate(meta[7], 0);
+    
     if (Array.isArray(raw_data)) {
-
       raw_data.forEach(function (raw_d) {
         var d = raw_d;
         if(isN(d)) {
+           //console.log(frequency_data.length);
           if(meta[1] == 0) {
             d = parseInt(d);
           }
           else if(meta[1] == 1) {
             d = parseFloat(d);
           }
-
-          if(d >= meta[3] && d <= meta[4]) {
-            frequency_data[Math.floor((d-meta[3])/meta[5])] += 1;
+          if(d >= meta[5] && d <= meta[6]) {
+            frequency_data[Math.floor((d-meta[5])/meta[2])] += 1;
           }
         }
       });
+      meta.push(frequency_data.reduce(function (a, b){return a+b;}));
     }
-    return frequency_data;
+    return { fd: frequency_data, fdm: meta };
   }
   init();
 });

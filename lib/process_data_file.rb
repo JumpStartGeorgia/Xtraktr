@@ -265,7 +265,8 @@ module ProcessDataFile
             if are_question_codes_categorical[code_index]
               question = self.questions.with_code(clean_code)
               question.answers.sorted.each {|answer|
-                frequency_data[answer.value] = code_data.select{|x| x == answer.value }.count
+                cnt = code_data.select{|x| x == answer.value }.count
+                frequency_data[answer.value] = [cnt, (cnt.to_f/code_data.length*100).round(2)]
               }
             end
 

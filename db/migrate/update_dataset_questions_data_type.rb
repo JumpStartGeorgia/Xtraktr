@@ -10,9 +10,14 @@ Dataset.each do |d|
       items = d.data_items.with_code(q.code)
       code_data = items.data
       frequency_data = {}
+      total = 0
       q.answers.sorted.each {|answer|
-        frequency_data[answer.value] = code_data.select{|x| x == answer.value }.count
+        cnt = code_data.select{|x| x == answer.value }.count
+        total += cnt
+        frequency_data[answer.value] = [cnt, (cnt.to_f/code_data.length*100).round(2)]
       }
+      frequency_data["_"] = total
+
       items.update_attributes({ frequency_data: frequency_data })          
     else 
       q.data_type = Question::DATA_TYPE_VALUES[:unknown]

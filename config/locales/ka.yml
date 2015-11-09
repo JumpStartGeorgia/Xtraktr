@@ -155,7 +155,7 @@ ka:
       numerical:
         title: X-axis Title
         type: Number type Integer/Float
-        size: Group size
+        width: Group width
         min: Min Value
         max: Max Value        
       group:

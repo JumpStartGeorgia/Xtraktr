@@ -152,8 +152,7 @@ class Api::V2
     with_map_data = options['with_map_data'].present? && options['with_map_data'].to_s.to_bool == true
     language = options['language']
     weight = options['weighted_by_code']
-    weight_values = options['weight_values'] # only present for weighted time series analysis that class this method
-
+    weight_values = options['weight_values'] # only present for weighted time series analysis that class this method 
     dataset = nil
     if private_user_id
       # decode the id
@@ -287,6 +286,7 @@ class Api::V2
     if broken_down_by.present?
       data[:analysis_type] = ANALYSIS_TYPE[:comparative]
       data[:results] = dataset_comparative_analysis(dataset, data, with_title)
+       Rails.logger.debug("--------------------------------------bbb------#{ data[:results].inspect}")
       data[:chart] = dataset_comparative_chart(data, with_title, options) if with_chart_data
       data[:map] = dataset_comparative_map(question.answers, broken_down_by.answers, data, question.is_mappable?, with_title, options) if with_map_data && (question.is_mappable? || broken_down_by.is_mappable?)
     else
@@ -295,7 +295,7 @@ class Api::V2
       data[:chart] = dataset_single_chart(data, with_title, options) if with_chart_data
       data[:map] = dataset_single_map(question.answers, data, with_title, options) if with_map_data && question.is_mappable?
     end
-
+Rails.logger.debug("-------------------------------------------123456-#{data[:results].inspect}")
     return data
   end
 
@@ -384,7 +384,7 @@ class Api::V2
   #   errors: [{status, detail}] (optional)
   # }
   def self.time_series_analysis(time_series_id, question_code, options={})
-#    puts "$$$$$$ time series analysis options = #{options}"
+    # puts "$$$$$$ time series analysis options = #{options}"
     data = {}
 
     if time_series_id.nil? || question_code.nil?
@@ -544,7 +544,7 @@ private
 
     hash = {}
     if question.present?
-      hash = {code: question.code, original_code: question.original_code, text: question.text, notes: question.notes, is_mappable: question.is_mappable, has_map_adjustable_max_range: question.has_map_adjustable_max_range}
+      hash = {code: question.code, original_code: question.original_code, data_type: question.data_type, text: question.text, notes: question.notes, is_mappable: question.is_mappable, has_map_adjustable_max_range: question.has_map_adjustable_max_range}
       # if this question belongs to a group, add it
       if question.group_id.present?
         group = question.group
@@ -621,7 +621,12 @@ private
           # only keep the data that is in the list of question answers
           # - this is where can_exclude removes the unwanted answers
           answer_values = question[:answers].map{|x| x[:value]}
-          merged_data.delete_if{|x| !answer_values.include?(x[1])}
+          
+          if question[:data_type] == DATA_TYPE_VALUES[:categorical]
+            merged_data.delete_if{|x| !answer_values.include?(x[1])}
+          elsif question[:data_type] == DATA_TYPE_VALUES[:numerical]
+            merged_data.delete_if{|x| answer_values.include?(x[1])}
+          end
 
           filter_results = nil
           if with_title
@@ -653,8 +658,11 @@ private
         # only keep the data that is in the list of question answers
         # - this is where can_exclude removes the unwanted answers
         answer_values = question[:answers].map{|x| x[:value]}
-        data.delete_if{|x| !answer_values.include?(x)}
-
+        if question[:data_type] == DATA_TYPE_VALUES[:categorical]
+          data.delete_if{|x| !answer_values.include?(x)}
+        elsif question[:data_type] == DATA_TYPE_VALUES[:numerical]
+          data.delete_if{|x| answer_values.include?(x)}
+        end
         return dataset_single_analysis_processing(question, data.length, data, with_title: with_title, weight_values: weight_values)
       end
     end
@@ -677,75 +685,82 @@ private
     end
 
     if data.present?
-      if weight_values.present?
-        # after zip format will be [ [[q,brb],w], [[q,brb],w], ...]
-        # need to flatten this to be [ [q,brb,w], [q,brb,w], ...]
-        merged_data = data.zip(weight_values).map{|x| x.flatten}
+      if question[:data_type] == DATA_TYPE_VALUES[:categorical]
+        if weight_values.present?
+          #merged_data = data.zip(weight_values)
 
-        # do not want to count nil values
-        counts_per_answer = data.select{|x| x.present?}
-                              .each_with_object(Hash.new(0)) { |item,counts| counts[item.to_s] += 1 }
-        weighted_counts_per_answer = merged_data.select{|x| x[0].present?}
-                              .each_with_object(Hash.new(0)) { |item,counts| counts[item[0].to_s] += 1*item[1].to_f }
+          # do not want to count nil values
+          counts_per_answer = data.frequency_data
+           #data.select{|x| x.present?}.each_with_object(Hash.new(0)) { |item,counts| counts[item.to_s] += 1 }
 
-        if counts_per_answer.present?
-          # record the total response
-          results[:total_responses] = counts_per_answer.values.inject(:+)
-          weighted_total_responses = weighted_counts_per_answer.values.inject(:+)
+          weighted_total_responses = 0
+          weighted_counts_per_answer = Hash.new(0)
 
-          # set the titles
-          if with_title
-            results[:title][:html] = dataset_single_analysis_title('html', question, filtered_by, filtered_by_answer)
-            results[:title][:text] = dataset_single_analysis_title('text', question, filtered_by, filtered_by_answer)
-            results[:subtitle][:html] = dataset_analysis_subtitle('html', results[:total_responses], results[:total_possible_responses], weight_values.present?)
-            results[:subtitle][:text] = dataset_analysis_subtitle('text', results[:total_responses], results[:total_possible_responses], weight_values.present?)
+          data.each_with_index{|x, i| 
+            if x.present?
+              weighted_counts_per_answer[x.to_s] += 1*weight_values[i].to_f 
+              weighted_total_responses += 1*weight_values[i].to_f 
+            end
+          }
+
+          # merged_data.select{|x| x[0].present?}
+          #                       .each_with_object(Hash.new(0)) { |item,counts| counts[item[0].to_s] += 1*item[1].to_f }
+
+          if counts_per_answer.present?
+            # record the total response
+            results[:total_responses] = counts_per_answer.values.inject(:+)
+            #weighted_total_responses = weighted_counts_per_answer.values.inject(:+)
+
+            # for each question answer, add the count and percent
+            question[:answers].each do |answer|
+              value = answer[:value]
+              item = {answer_value: answer[:value], answer_text: answer[:text], unweighted_count: 0, weighted_count: 0, weighted_percent: 0}
+              if counts_per_answer[value].present?
+                item[:unweighted_count] = counts_per_answer[value]
+              end
+              if weighted_counts_per_answer[value].present? && weighted_total_responses > 0
+                item[:weighted_count] = weighted_counts_per_answer[value].round
+                item[:weighted_percent] = (weighted_counts_per_answer[value].to_f/weighted_total_responses*100).round(2) if weighted_total_responses > 0
+              end
+              results[:analysis] << item
+            end
+
           end
 
-          # for each question answer, add the count and percent
-          question[:answers].each do |answer|
-            value = answer[:value]
-            item = {answer_value: answer[:value], answer_text: answer[:text], unweighted_count: 0, weighted_count: 0, weighted_percent: 0}
-            if counts_per_answer[value].present?
-              item[:unweighted_count] = counts_per_answer[value]
+        else
+          # do not want to count nil values
+          counts_per_answer = data.select{|x| x.present?}
+                                .each_with_object(Hash.new(0)) { |item,counts| counts[item.to_s] += 1 }
+
+
+          if counts_per_answer.present?
+            # record the total response
+            results[:total_responses] = counts_per_answer.values.inject(:+)
+
+         
+
+            # for each question answer, add the count and percent
+            question[:answers].each do |answer|
+              value = answer[:value]
+              item = {answer_value: answer[:value], answer_text: answer[:text], count: 0, percent: 0}
+              if counts_per_answer[value].present?
+                item[:count] = counts_per_answer[value]
+                item[:percent] = (counts_per_answer[value].to_f/results[:total_responses]*100).round(2) if results[:total_responses] > 0
+              end
+              results[:analysis] << item
             end
-            if weighted_counts_per_answer[value].present? && weighted_total_responses > 0
-              item[:weighted_count] = weighted_counts_per_answer[value].round
-              item[:weighted_percent] = (weighted_counts_per_answer[value].to_f/weighted_total_responses*100).round(2) if weighted_total_responses > 0
-            end
-            results[:analysis] << item
-          end
-
-        end
-
-      else
-        # do not want to count nil values
-        counts_per_answer = data.select{|x| x.present?}
-                              .each_with_object(Hash.new(0)) { |item,counts| counts[item.to_s] += 1 }
-
-
-        if counts_per_answer.present?
-          # record the total response
-          results[:total_responses] = counts_per_answer.values.inject(:+)
-
-          # set the titles
-          if with_title
-            results[:title][:html] = dataset_single_analysis_title('html', question, filtered_by, filtered_by_answer)
-            results[:title][:text] = dataset_single_analysis_title('text', question, filtered_by, filtered_by_answer)
-            results[:subtitle][:html] = dataset_analysis_subtitle('html', results[:total_responses], results[:total_possible_responses], weight_values.present?)
-            results[:subtitle][:text] = dataset_analysis_subtitle('text', results[:total_responses], results[:total_possible_responses], weight_values.present?)
-          end
-
-          # for each question answer, add the count and percent
-          question[:answers].each do |answer|
-            value = answer[:value]
-            item = {answer_value: answer[:value], answer_text: answer[:text], count: 0, percent: 0}
-            if counts_per_answer[value].present?
-              item[:count] = counts_per_answer[value]
-              item[:percent] = (counts_per_answer[value].to_f/results[:total_responses]*100).round(2) if results[:total_responses] > 0
-            end
-            results[:analysis] << item
           end
         end
+      elsif question[:data_type] == DATA_TYPE_VALUES[:numerical]
+        results[:analysis] = data
+        results[:total_responses] = data.length
+      end
+      # set the titles
+      if with_title
+        results[:title][:html] = dataset_single_analysis_title('html', question, filtered_by, filtered_by_answer)
+        results[:title][:text] = dataset_single_analysis_title('text', question, filtered_by, filtered_by_answer)
+        results[:subtitle][:html] = dataset_analysis_subtitle('html', results[:total_responses], results[:total_possible_responses], weight_values.present?)
+        results[:subtitle][:text] = dataset_analysis_subtitle('text', results[:total_responses], results[:total_possible_responses], weight_values.present?)
       end
     end
     return results
@@ -813,6 +828,10 @@ private
 
         # create data for chart
         chart[:data] = []
+        data[:results][:analysis].each{|x|
+          chart[:data] << dataset_single_chart_processing(answer, data_result)
+        }
+         Rails.logger.debug("-------------------------------------------bliblu-#{data[:results][:analysis].inspect}")
         data[:question][:answers].each do |answer|
           data_result = data[:results][:analysis].select{|x| x[:answer_value] == answer[:value]}.first
           if data_result.present?
@@ -969,7 +988,11 @@ private
         # - this is where can_exclude removes the unwanted answers
         q_answer_values = question[:answers].map{|x| x[:value]}
         bdb_answer_values = broken_down_by[:answers].map{|x| x[:value]}
-        merged_data.delete_if{|x| !q_answer_values.include?(x[1]) && !bdb_answer_values.include?(x[2])}
+        if question[:data_type] == DATA_TYPE_VALUES[:categorical]
+          merged_data.delete_if{|x| !q_answer_values.include?(x[1][0]) && !bdb_answer_values.include?(x[1][1])}
+        elsif question[:data_type] == DATA_TYPE_VALUES[:numerical]
+          merged_data.delete_if{|x| q_answer_values.include?(x[1][0]) || bdb_answer_values.include?(x[1][1])}
+        end
 
         filter_results = nil
         if with_title
@@ -1003,6 +1026,11 @@ private
       q_answer_values = question[:answers].map{|x| x[:value]}
       bdb_answer_values = broken_down_by[:answers].map{|x| x[:value]}
       data.delete_if{|x| !q_answer_values.include?(x[0]) && !bdb_answer_values.include?(x[1])}
+      if question[:data_type] == DATA_TYPE_VALUES[:categorical]
+        data.delete_if{|x| !q_answer_values.include?(x[0]) && !bdb_answer_values.include?(x[1])}
+      elsif question[:data_type] == DATA_TYPE_VALUES[:numerical]
+        data.delete_if{|x| q_answer_values.include?(x[0]) || bdb_answer_values.include?(x[1])}
+      end
 
       return dataset_comparative_analysis_processing(question, broken_down_by, data.length, data, with_title: with_title, weight_values: weight_values)
     end
@@ -1027,7 +1055,7 @@ private
     end
 
     if data.present?
-      if data[:analysis_data_type] == ANALYSIS_DATA_TYPE[:categorical]
+      if question[:data_type] == DATA_TYPE_VALUES[:categorical]
         if weight_values.present?
           question_answer_template = {answer_value: nil, answer_text: nil, broken_down_results: nil}
           broken_down_answer_template = {broken_down_answer_value: nil, broken_down_answer_text: nil, unweighted_count: 0, weighted_count: 0, weighted_percent: 0}
@@ -1157,7 +1185,7 @@ private
             results[:total_responses] = total
           end
         end
-      elsif data[:analysis_data_type] == ANALYSIS_DATA_TYPE[:numerical]
+      elsif question[:data_type] == DATA_TYPE_VALUES[:numerical]
         results[:analysis] = data
         results[:total_responses] = data.length
       end
