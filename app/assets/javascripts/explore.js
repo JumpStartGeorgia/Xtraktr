@@ -952,7 +952,7 @@ $(document).ready(function () {
     $(this).find("a").tab("show");
   });
   $(document).on("click", ".tab-content .up", function () {
-    $("body").animate({ scrollTop: 0 }, 1500);
+    $("body, html").animate({ scrollTop: 0 }, 1500);
   });
 
 
