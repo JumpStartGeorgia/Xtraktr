@@ -172,14 +172,16 @@ $(document).ready(function(){
   })
 
   // when select group, go to it
+   console.log(codebook);
   $('select.selectpicker-group', codebook).change(function(){
-    $('body').animate({ scrollTop: $('.group-item[data-id="' + $(this).val() + '"]', codebook).offset().top - $('nav.navbar').height() }, 1500);
+     console.log("here",$('.group-item[data-id="' + $(this).val() + '"]', codebook).offset().top, $('nav.navbar').height() );
+    $('html, body').animate({ scrollTop: $('.group-item[data-id="' + $(this).val() + '"]', codebook).offset().top - $('nav.navbar').height() }, 1500);
     // reset select to default value
     $(this).selectpicker('val', '');
   });
   // when click on group under question link, go to it
   $('.question-link-groups .question-link-group', codebook).click(function(){
-    $('body').animate({ scrollTop: $('.group-item[data-id="' + $(this).data('id') + '"]', codebook).offset().top - $('nav.navbar').height() }, 1500);
+    $('body, html').animate({ scrollTop: $('.group-item[data-id="' + $(this).data('id') + '"]', codebook).offset().top - $('nav.navbar').height() }, 1500);
   });
 
   $(document).on("click", ".view-all label", function (){
