@@ -1,6 +1,7 @@
 /*global  $, gon, Highcharts, params */
 /*eslint camelcase: 0, no-underscore-dangle: 0, no-unused-vars: 0, no-undef: 0*/
-var js = { cache: {} }, datatables, h, i, j, k, cacheId;
+var js = { cache: {} }, datatables, h, i, j, k, cacheId,
+  $jumpto, $jumpto_chart, $jumpto_map;
 
 function update_available_weights () { // update the list of avilable weights based on questions that are selected
   var select_weight = $("select#weighted_by_code"),
@@ -48,6 +49,7 @@ function set_can_exclude_visibility () { // show or hide the can exclude checkbo
 
 function build_highmaps (json) { // build highmap
   var i;
+  show_map_jumpto = true;
   if (json.map){
     // adjust the width of the map to fit its container
     // $("#container-map").width($("#explore-tabs").width());
@@ -136,19 +138,14 @@ function build_highmaps (json) { // build highmap
           $(select).selectpicker();
         }
         $("#jumpto #jumpto-map h4").show();
-        $("#jumpto #jumpto-map").show();
-        $("#jumpto").show();
       }else{
         $("#jumpto #jumpto-map select").append(jumpto_text);
         $("#jumpto #jumpto-map select").val($("#jumpto #jumpto-map select option:first").attr("value"));
         $("#jumpto #jumpto-map select").selectpicker("refresh");
         $("#jumpto #jumpto-map select").selectpicker("render");
-        $("#jumpto #jumpto-map").show();
-        $("#jumpto").show();
       }
 
     }else{
-
       // no filters
       if (json.broken_down_by && json.map.map_sets.constructor === Array){
         for(i=0; i<json.map.map_sets.length; i++){
@@ -159,19 +156,16 @@ function build_highmaps (json) { // build highmap
         }
 
         // show jumpto
-        $("#jumpto #jumpto-map select").append(jumpto_text);
-        $("#jumpto #jumpto-map select").val($("#jumpto #jumpto-map select option:first").attr("value"));
-        $("#jumpto #jumpto-map select").selectpicker("refresh");
-        $("#jumpto #jumpto-map select").selectpicker("render");
-        $("#jumpto #jumpto-map").show();
-        $("#jumpto").show();
+        var jmp_select = $("#jumpto #jumpto-map select");
+        jmp_select.append(jumpto_text);
+        jmp_select.val($("#jumpto #jumpto-map select option:first").attr("value"));
+        jmp_select.selectpicker("refresh");
+        jmp_select.selectpicker("render");
 
       }else{
         build_highmap(json.map.shape_question_code, json.map.adjustable_max_range, json.map.map_sets, chart_height, weight_name);
-
         // hide jumpto
-        $("#jumpto #jumpto-map").hide();
-        $("#jumpto").hide();
+        show_map_jumpto = false;
       }
     }
 
@@ -227,8 +221,8 @@ function build_crosstab_charts (json) { // build crosstab charts for each chart 
     else{       // no filters
       build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart, chart_height, weight_name);
     }
-    $("#jumpto #jumpto-chart").toggle(flag);
-    $("#jumpto").toggle(flag);
+     console.log("cross");
+    //jumpto(flag);
   }
 }
 
@@ -273,8 +267,9 @@ function build_pie_charts (json) { // build pie chart for each chart item in jso
     else {  // no filters
       build_pie_chart(json.chart, chart_height, weight_name);
     }
-    $("#jumpto #jumpto-chart").toggle(flag);
-    $("#jumpto").toggle(flag);
+   console.log("pie");
+ 
+    //jumpto(flag);
   }
 }
 
@@ -316,10 +311,9 @@ function build_bar_charts (json) { // build pie chart for each chart item in jso
     else {
       build_bar_chart(json.chart, chart_height, weight_name);       // no filters
     }
+console.log("bar");
 
-    // show/hide jumpto
-    $("#jumpto #jumpto-chart").toggle(flag);
-    $("#jumpto").toggle(flag);
+    //jumpto(flag);
   }
 }
 
@@ -731,8 +725,9 @@ function build_details (json) { // build details (question and possible answers)
   // add weight
   build_details_item("#tab-details #details-weighted-by-code", json.weighted_by);
 }
-
+var show_map_jumpto = false;
 function build_explore_data_page (json) { // build the visualizations for the explore data page
+  show_map_jumpto = false;
   if (json.analysis_type == "comparative"){
     build_crosstab_charts(json);
   }
@@ -746,15 +741,14 @@ function build_explore_data_page (json) { // build the visualizations for the ex
   build_details(json);
 
   build_page_title(json);
-
+  
   // if no visible tab is marked as active, mark the first one active
   var explore_tabs = $("#explore-tabs");
-
   // turn on tab and its content || make sure correct jumptos are showing
   $("#explore-tabs li" +
       (explore_tabs.find("li.active:visible").length == 0
         ? ":visible:first"
-        : "li.active" )).trigger("click");
+        : ".active" )).trigger("click");
 }
 
 function get_explore_data (is_back_button) { // get data and load page
@@ -870,7 +864,19 @@ function reset_filter_form () { // reset the filter forms and select a random va
   $("#btn-swap-vars").hide();
 }
 
+
+function jumpto(show, chart) { // show/hide jumpto show - for main box and if chart is false then map
+   console.log("jumpto", show, chart);
+  if(typeof chart === "undefined") { chart = true; }
+  $jumpto.toggle(show);
+  $jumpto_chart.toggle(show && chart);
+  $jumpto_map.toggle(show && !chart);
+}
 $(document).ready(function () {
+    $jumpto = $("#jumpto");
+    $jumpto_chart = $("#jumpto #jumpto-chart");
+    $jumpto_map = $("#jumpto #jumpto-map");
+
   // set languaage text
   Highcharts.setOptions({
     chart: { spacingRight: 30 },
@@ -1106,20 +1112,15 @@ $(document).ready(function () {
 
     // when chart tab/map clicked on, make sure the jumpto block is showing, else, hide it
     $("#explore-tabs li").click(function () {
+       console.log("change active tab");
       var ths_link = $(this).find("a");
 
       if ($(ths_link).attr("href") == "#tab-chart" && $("#jumpto #jumpto-chart select option").length > 0){
-        $("#jumpto").show();
-        $("#jumpto #jumpto-chart").show();
-        $("#jumpto #jumpto-map").hide();
+        jumpto(true, true);
       }else if ($(ths_link).attr("href") == "#tab-map" && $("#jumpto #jumpto-map select option").length > 0){
-        $("#jumpto").show();
-        $("#jumpto #jumpto-map").show();
-        $("#jumpto #jumpto-chart").hide();
+        jumpto(show_map_jumpto, false);
       }else{
-        $("#jumpto").hide();
-        $("#jumpto #jumpto-chart").hide();
-        $("#jumpto #jumpto-map").hide();
+        jumpto(false);
       }
     });
 
