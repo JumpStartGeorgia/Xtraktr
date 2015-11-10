@@ -263,10 +263,21 @@ class Dataset < CustomTranslation
           if dt[0] == 1
              q["numerical"] = nil
           elsif dt[0] == 2
+            num = { 
+              type: dt[1].to_i,
+              width: dt[2].to_f,
+              min: dt[3].to_f,
+              max: dt[4].to_f,
+              title_translations: data[code]["titles"] }
+
+            num[:min_range] = (num[:min] / num[:width]).floor * num[:width]      
+            num[:max_range] = (num[:max] / num[:width]).ceil * num[:width]     
+            num[:size] = (num[:max_range] - num[:min_range]) / num[:width]      
+
             if q.numerical.nil?
-              q.build_numerical({ type: dt[1].to_i, width: dt[2].to_i, min: dt[3].to_f, max: dt[4].to_f, title_translations: data[code]["titles"] })
+              q.build_numerical(num)
             else
-              q.numerical.update_attributes({ type: dt[1].to_i, width: dt[2].to_i, min: dt[3].to_f, max: dt[4].to_f, title_translations: data[code]["titles"] })
+              q.numerical.update_attributes(num)
             end
           end
         end
@@ -1027,7 +1038,8 @@ class Dataset < CustomTranslation
   end
 
 # TODOHERE
-  def questions_data_recalculate(data, type)      
+  def questions_data_recalculate(data, type)   
+   Rails.logger.debug("--------------------------------------------recalculating")   
       if type == "numerical"
       require 'descriptive_statistics/safe'
       if data.keys.length
@@ -1044,11 +1056,9 @@ class Dataset < CustomTranslation
             question = questions.with_code(code)
             predefined_answers = question.answers.map { |f| f.value }
             num = question.numerical  
-
-           # step = (num.max - num.min)/num.width
-
             items.formatted_data = []
-            items.frequency_data = Array.new(num.width, 0)
+            fd = Array.new(num.size, 0)
+            fd.each_with_index{|x, i| fd[i] = [0,0] }
 
             #formatted and grouped data calculation
             items.data.each {|d|
@@ -1061,27 +1071,31 @@ class Dataset < CustomTranslation
 
                 if tmpD >= num.min && tmpD <= num.max
                   items.formatted_data.push(tmpD);
-                  index = ((tmpD-num.min)/num.width-0.00001).floor
-                   #Rails.logger.debug("------------------------#{(tmpD-num.min)/step}--------------#{index}------#{num.inspect} #{tmpD} #{step}")
-                  items.frequency_data[index] += 1
+                  index = ((tmpD-num.min_range)/num.width-0.00001).floor
+                  fd[index][0] += 1
                 else 
                 end
               end 
             }
-            
+            total = 0
+            fd.each {|x| total+=x[0]}
+            fd.each_with_index {|x,i| 
+               fd[i][1] = (x[0].to_f/total*100).round(2) }
+
+            items.frequency_data = fd;
             # descriptive statistics
             dt = items.formatted_data
             dt.extend(DescriptiveStatistics)
             question.descriptive_statistics = {
               :number => dt.number.to_i,
-              :min => num.type == 0 ? dt.min.to_i : dt.min,
-              :max => num.type == 0 ? dt.max.to_i : dt.max,
+              :min => num.integer? ? dt.min.to_i : dt.min,
+              :max => num.integer? ? dt.max.to_i : dt.max,
               :mean => dt.mean,
-              :median => num.type == 0 ? dt.median.to_i : dt.median,
-              :mode => num.type == 0 ? dt.mode.to_i : dt.mode,
-              :q1 => num.type == 0 ? dt.percentile(25).to_i : dt.percentile(25),
-              :q2 => num.type == 0 ? dt.percentile(50).to_i : dt.percentile(50),
-              :q3 => num.type == 0 ? dt.percentile(75).to_i : dt.percentile(75),
+              :median => num.integer? ? dt.median.to_i : dt.median,
+              :mode => num.integer? ? dt.mode.to_i : dt.mode,
+              :q1 => num.integer? ? dt.percentile(25).to_i : dt.percentile(25),
+              :q2 => num.integer? ? dt.percentile(50).to_i : dt.percentile(50),
+              :q3 => num.integer? ? dt.percentile(75).to_i : dt.percentile(75),
               :variance => dt.variance,
               :standard_deviation => dt.standard_deviation
             }

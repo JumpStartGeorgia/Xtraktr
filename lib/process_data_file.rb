@@ -261,11 +261,13 @@ module ProcessDataFile
             clean_code = clean_text(code, format_code: true)
 
             code_data = data.map{|x| x[code_index]}
+            total = 0
             frequency_data = {}
             if are_question_codes_categorical[code_index]
               question = self.questions.with_code(clean_code)
               question.answers.sorted.each {|answer|
                 cnt = code_data.select{|x| x == answer.value }.count
+                total += cnt
                 frequency_data[answer.value] = [cnt, (cnt.to_f/code_data.length*100).round(2)]
               }
             end
@@ -274,7 +276,7 @@ module ProcessDataFile
               self.data_items_attributes = [{code: clean_code,
                                             original_code: clean_text(code),
                                             data: code_data
-                                          }.merge(frequency_data.present? ? { frequency_data: frequency_data } : {})]
+                                          }.merge(frequency_data.present? ? { frequency_data: frequency_data, frequency_data_count: total } : {})]
             else
               puts "******************************"
               puts "Column #{code_index} (supposed to be #{code}) of #{file_questions} does not exist."

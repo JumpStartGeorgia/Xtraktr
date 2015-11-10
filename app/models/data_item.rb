@@ -12,6 +12,7 @@ class DataItem
   field :data, type: Array
   field :formatted_data, type: Array
   field :frequency_data, type: Hash
+  field :frequency_data_total, type: Integer
 
   #############################
 

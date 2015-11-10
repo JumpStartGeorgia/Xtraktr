@@ -51,11 +51,13 @@ $(document).ready(function (){
           nc = true;
           preview.code = cq.code;
         }
+         console.log(cq, cache[cq.code]);
         //console.log("here", cache[cq.code].data[cq.sub_id]);
         var cd = cache[cq.code].data[cq.sub_id].fd, // current data
           cm = cq.meta, // current data
-          cg = cache[cq.code].general;  // current general data
-          // console.log(cd, cm, cg);
+          cg = cache[cq.code].general,
+          ct = cache[cq.code].data[cq.sub_id].fdt; // current general data
+           console.log(cd, cm, cg);
            //return;
         var $preview = $("#preview"), chart;
         $preview.show();
@@ -69,7 +71,6 @@ $(document).ready(function (){
           //     ++num;
           //   }
           // });
-
           if(t.closed || nc) {
             //console.log("new",typeof cd );
             chart = new Highcharts.Chart({
@@ -86,21 +87,24 @@ $(document).ready(function (){
                 style: t.style1
               },
               subtitle: {
-                text: gon.total_responses_out_of.replace("X", cm[8]).replace("XX", cg.orig_data.length),
+                text: gon.total_responses_out_of.replace("X", ct).replace("XX", cg.orig_data.length),
                 useHTML: true,
                 style: t.style2
               },
               xAxis: {
                 title: { text: cq.titles[$("html").attr("lang")] },
-                labels: {
-                  align: "right",
-                  x:-10
-                },
+                // labels: {
+                //   align: "left",
+                //   // x:-10,
+                //   // useHTML: true
+                // },
+                //tickmarkPlacement: "between",
+                tickPositions: formatLabel(cm), //[10,20,30,40,50],
                 startOnTick: true,
                 endOnTick: true,
-                categories: formatLabel(cm),
-                // min:0,
-                // max:110,
+                //categories: formatLabel(cm),
+                // min:20,
+                // max:40,
                 // tickInterval: 10
               },
               yAxis: { title: null },
@@ -108,32 +112,34 @@ $(document).ready(function (){
                 column: {
                   groupPadding: 0,
                   pointPadding: 0,
-                  borderWidth: 0
+                  borderWidth: 0,
+                  pointPlacement: "between"
                 }
               },
               series: [{
-                data: cd.slice()
+                data: cd.map(function(d,i){ return { x:cm[5] +cm[2]*i, y: d[0], percent: d[1] }; })
               }],
               tooltip: {
                 formatter: function () {
-                  return this.y + " (" + Math.round10(this.y*100/sum, -2) + "%)";
+                   console.log(this);
+                  return this.y + " (" + this.point.percent + "%)";
                 }
               },
               legend: { enabled: false }
             }, function () {
-              var box = this.plotBox;
-              var label = this.renderer.label(cm[6], (box.x+box.width) - 7, (box.y + box.height) + 5)
-                .css({
-                  color:"#606060",
-                  cursor:"default",
-                  "font-size":"11px",
-                  "fill":"#606060"
-                }).attr("class", "histogramm-last-label")
-                .add();
-              this.spacing[1] = label.width + 10 > 40 ? label.width + 10 : 40;
-              this.isDirtyBox = true;
-              this.redraw();
-              label.xSetter((box.x+box.width) - 7);
+              // var box = this.plotBox;
+              // var label = this.renderer.label(cm[6], (box.x+box.width) - 7, (box.y + box.height) + 5)
+              //   .css({
+              //     color:"#606060",
+              //     cursor:"default",
+              //     "font-size":"11px",
+              //     "fill":"#606060"
+              //   }).attr("class", "histogramm-last-label")
+              //   .add();
+              // this.spacing[1] = label.width + 10 > 40 ? label.width + 10 : 40;
+              // this.isDirtyBox = true;
+              // this.redraw();
+              // label.xSetter((box.x+box.width) - 7);
               $preview.css({top: $(window).height() - $preview.height() - 10 });
             });
           }
@@ -142,22 +148,23 @@ $(document).ready(function (){
             // cd.slice().forEach(function(ddd){ ss+=ddd; });
             // console.log("old", ss );
             chart = $preview.find(".chart").highcharts();
-            chart.xAxis[0].categories = formatLabel(cm);
-            chart.series[0].setData(cd.slice(), false, true);
-            $("#preview .chart .histogramm-last-label").remove();
-            var box = chart.plotBox;
-            var label = chart.renderer.label(cm[6], (box.x+box.width) - 7, (box.y + box.height) + 5)
-              .css({
-                color:"#606060",
-                cursor:"default",
-                "font-size":"11px",
-                "fill":"#606060"
-              }).attr("class", "histogramm-last-label")
-              .add();
-            chart.spacing[1] = label.width + 10 > 40 ? label.width + 10 : 40;
+             console.log(formatLabel(cm));
+            chart.xAxis[0].tickPositions = formatLabel(cm);
+            chart.series[0].setData(cd.map(function(d,i){ return { x:cm[5] +cm[2]*i, y: d[0], percent: d[1] }; }), false, true);
+            // $("#preview .chart .histogramm-last-label").remove();
+            // var box = chart.plotBox;
+            // var label = chart.renderer.label(cm[6], (box.x+box.width) - 7, (box.y + box.height) + 5)
+            //   .css({
+            //     color:"#606060",
+            //     cursor:"default",
+            //     "font-size":"11px",
+            //     "fill":"#606060"
+            //   }).attr("class", "histogramm-last-label")
+            //   .add();
+            // chart.spacing[1] = label.width + 10 > 40 ? label.width + 10 : 40;
             chart.isDirtyBox = true;
             chart.redraw();
-            label.xSetter((box.x+box.width) - 7);
+//            label.xSetter((box.x+box.width) - 7);
           }
         },
           bar = function () {
@@ -230,8 +237,8 @@ $(document).ready(function (){
 
         function formatLabel (meta) {
           var v = [];
-          for(var i = 0; i < meta[7]; ++i) {
-            v.push(Math.floor(meta[5]+i*meta[2]));
+          for(var i = 0; i <= meta[7]; ++i) {
+            v.push(meta[5]+i*meta[2]);
           }
            //console.log(v);
           return v;
@@ -259,7 +266,7 @@ $(document).ready(function (){
         if(cache.hasOwnProperty(code) && cache[code].hasOwnProperty("data")) {
           if(data_type === 2) {
             if(!cache[code]["data"].hasOwnProperty(sub_id)) {
-              cache[code]["data"][sub_id] = get_frequency_data(code_meta, cache[code].general.orig_data);
+              cache[code]["data"][sub_id] = get_frequency_data(code_meta, code);
             }
             t.render_chart();
             return;
@@ -278,6 +285,7 @@ $(document).ready(function (){
           data: { dataset_id: dataset_id, question_code: code },
           url: view_chart_path,
           success: function (d) {
+             console.log("here", d);
              //console.log("ajax", d);
             cache[code].general = { dataset: d.dataset, orig_data: d.data, formatted_data: d.data, question: d.question };
             if(d.frequency_data !== null) {
@@ -288,7 +296,7 @@ $(document).ready(function (){
               }
             }
             else {
-              cache[code]["data"][sub_id] = get_frequency_data(code_meta, cache[code].general.orig_data);
+              cache[code]["data"][sub_id] = get_frequency_data(code_meta, code);
             }
             t.render_chart();
           }
@@ -712,32 +720,38 @@ $(document).ready(function (){
     }
     return range_map;
   }
-  function get_frequency_data (meta, raw_data) {
-    var frequency_data = replicate(meta[7], 0);
-    
+  function get_frequency_data (meta, code) {
+
+    var raw_data = cache[code].general.orig_data,
+      frequency_data = replicate2(meta[7], 0),
+      predefined_answers = cache[code].general.question.answers.map(function(d){ return d.value; });
+ console.log(frequency_data, "sdfaf");
     if (Array.isArray(raw_data)) {
       raw_data.forEach(function (raw_d) {
         var d = raw_d;
-        if(isN(d)) {
-           //console.log(frequency_data.length);
+        if(isN(d) && predefined_answers.indexOf(d) === -1) {
           if(meta[1] == 0) {
             d = parseInt(d);
           }
           else if(meta[1] == 1) {
             d = parseFloat(d);
           }
-          if(d >= meta[5] && d <= meta[6]) {
-            frequency_data[Math.floor((d-meta[5])/meta[2])] += 1;
+          if(d >= meta[3] && d <= meta[4]) {
+            // maybe formatted data
+            frequency_data[Math.floor((d-meta[5])/meta[2]-0.00001)][0] += 1;
           }
         }
       });
-      meta.push(frequency_data.reduce(function (a, b){return a+b;}));
+      var total = 0;
+      frequency_data.forEach(function(d) { total+=d[0]; })
+      meta.push(total);
+      frequency_data.forEach(function (d, i) {
+        frequency_data[i][1] = Math.round10(d[0]/total*100, -2);
+      });
     }
-    return { fd: frequency_data, fdm: meta };
+      console.log(frequency_data.slice());
+    console.log("get_frequency_data", meta);
+    return { fd: frequency_data, fdm: meta, fdt: meta[8] };
   }
   init();
 });
-
-
-
-

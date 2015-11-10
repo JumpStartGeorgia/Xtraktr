@@ -421,6 +421,7 @@ class DatasetsController < ApplicationController
               data[:nm_min] = q.numerical.min
               data[:nm_max] = q.numerical.max
               data[:nm_title] = titles
+              #data[:num] = q.numerical
               #Rails.logger.debug("----------------------------------4----------#{titles.inspect} #{data[:nm_title].to_json}")
             else
               orig_locale = I18n.locale.to_s

@@ -16,9 +16,7 @@ Dataset.each do |d|
         total += cnt
         frequency_data[answer.value] = [cnt, (cnt.to_f/code_data.length*100).round(2)]
       }
-      frequency_data["_"] = total
-
-      items.update_attributes({ frequency_data: frequency_data })          
+      items.update_attributes({ frequency_data: frequency_data, frequency_data_total: total })          
     else 
       q.data_type = Question::DATA_TYPE_VALUES[:unknown]
     end
