@@ -744,7 +744,7 @@
   #explore-data-content {
     position: relative;
     min-height: 200px;
-    width:100%;
+    //width:100%;
      .share
       {
         position:absolute;
@@ -870,12 +870,17 @@
       display:table-cell;
         &:first-of-type
         {
-          width:300px;
-          min-width:300px;
-          max-width:300px;
+         
         }
       }
+      #explore-form, #explore-data-content {
+        display:inline-block;
+        // width:auto;
+      }
       #explore-form {
+         width:300px;
+          min-width:300px;
+          max-width:300px;
         padding:0px 30px;
         &:after { content:none; }
         .submit-box

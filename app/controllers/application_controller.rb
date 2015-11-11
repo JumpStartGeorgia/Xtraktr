@@ -286,7 +286,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
         end
 
         # add the required assets
-        @css.push('bootstrap-select.min.css', "tabs.css", "explore.css", "datasets.css")
+        @css.push('bootstrap-select.min.css', "tabs.css", "explore.css", "explore-dataset.css", "datasets.css")
         @js.push('bootstrap-select.min.js', "explore.js", "explore_data.js", 'highcharts.js', 'highcharts-map.js', 'highcharts-exporting.js')
 
         gon.embed_button_link = embed_v2_url('replace') if dataset.public?
