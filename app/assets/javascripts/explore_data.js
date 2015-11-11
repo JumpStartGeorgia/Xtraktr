@@ -64,7 +64,8 @@ function build_highmaps (json) { // build highmap
     // remove all existing map links
     $("#jumpto #jumpto-map select").empty();
     $("#jumpto #jumpto-map h4").empty().hide();
-    var template = $("#jumpto #jumpto-map .jumpto-map-item").clone();
+    var template = $("#jumpto #jumpto-map .jumpto-map-item:first").clone();
+     console.log(template.length);
     // remove any existing fancy select list
     $(template).find("div.bootstrap-select").remove();
     // remove all extra jumpto map items
@@ -94,6 +95,7 @@ function build_highmaps (json) { // build highmap
 
       for(h=0; h<json.map.length; h++){
         if (json.broken_down_by && json.map[h].filter_results.map_sets.constructor === Array){
+           console.log("here1");
           // add jumpto link
           jump_item = $(template).clone();
           $(jump_item).find("h4").html(json.filtered_by.text + " = <span>" + json.map[h].filter_answer_text + "</span>");
@@ -113,6 +115,7 @@ function build_highmaps (json) { // build highmap
           jump_ary.push(jump_item);
 
         }else{
+          console.log("here2");
           build_highmap(json.map[h].filter_results.shape_question_code, json.map[h].filter_results.adjustable_max_range, json.map[h].filter_results.map_sets, chart_height, weight_name);
 
           // add jumpto link
@@ -126,9 +129,12 @@ function build_highmaps (json) { // build highmap
       // show jumpto
       // - if jump_ary exists (filter and broken down), add a drop down for each filter value
       if (jump_ary != undefined && jump_ary.length > 0){
+        //return;
+        //console.log("here3", jump_ary);
         // remove the existing template
         $("#jumpto #jumpto-map .jumpto-map-item").remove();
         for (i=0; i<jump_ary.length; i++){
+           console.log(jump_ary[i]);
           $("#jumpto #jumpto-map").append(jump_ary[i]);
 
           var select = $("#jumpto #jumpto-map select:last");
@@ -139,6 +145,7 @@ function build_highmaps (json) { // build highmap
         }
         $("#jumpto #jumpto-map h4").show();
       }else{
+        console.log("here4");
         $("#jumpto #jumpto-map select").append(jumpto_text);
         $("#jumpto #jumpto-map select").val($("#jumpto #jumpto-map select option:first").attr("value"));
         $("#jumpto #jumpto-map select").selectpicker("refresh");
@@ -146,8 +153,10 @@ function build_highmaps (json) { // build highmap
       }
 
     }else{
+      console.log("here5");
       // no filters
       if (json.broken_down_by && json.map.map_sets.constructor === Array){
+        console.log("here6");
         for(i=0; i<json.map.map_sets.length; i++){
           build_highmap(json.map.shape_question_code, json.map.adjustable_max_range, json.map.map_sets[i], chart_height, weight_name);
 
@@ -163,6 +172,7 @@ function build_highmaps (json) { // build highmap
         jmp_select.selectpicker("render");
 
       }else{
+        console.log("here7");
         build_highmap(json.map.shape_question_code, json.map.adjustable_max_range, json.map.map_sets, chart_height, weight_name);
         // hide jumpto
         show_map_jumpto = false;
@@ -174,6 +184,7 @@ function build_highmaps (json) { // build highmap
 
   }
   else{
+    console.log("here8");
     // no map so hide tab
     $("#explore-tabs #nav-map").hide();
     // make sure these are not active
