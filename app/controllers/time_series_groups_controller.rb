@@ -241,7 +241,7 @@ class TimeSeriesGroupsController < ApplicationController
         if group.present?
           # if the group parent id equals the group id param, then get the existing questions for this group
           # else, the parent group is changing and the existing questions are no longer valid
-          if (group.parent_id.nil? && params[:group_id].empty?) || (group.parent_id == params[:group_id])
+          if (group.parent_id.nil? && params[:group_id].empty?) || (group.parent_id.to_s == params[:group_id])
             # get questions already assigned to the group
             assigned_questions = time_series.questions.assigned_to_group_meta_only(params[:id])
           end
