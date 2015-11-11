@@ -407,7 +407,7 @@ class Dataset < CustomTranslation
   index ({ :is_mappable => 1})
   index ({ :'questions.code' => 1})
   index ({ :'questions.original_code' => 1})
-  index ({ :'questions.text' => 1})
+  # index ({ :'questions.text' => 1}) # had to turn off for it was preventing long questions from being saved
   index ({ :'questions.is_mappable' => 1})
   index ({ :'questions.can_download' => 1})
   index ({ :'questions.has_code_answers' => 1})

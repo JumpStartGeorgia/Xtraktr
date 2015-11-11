@@ -57,17 +57,17 @@ class Question < CustomTranslation
     # get answers that are not excluded
     def all_for_analysis
       where(:exclude => false)
-        .order_by([[:sort_order, :asc], [:text, :asc]])
+        .order_by([[:sort_order, :asc], [:code, :asc]])
     end
 
     # get answers that must be included for analysis
     def must_include_for_analysis
       where(:can_exclude => false, :exclude => false)
-        .order_by([[:sort_order, :asc], [:text, :asc]])
+        .order_by([[:sort_order, :asc], [:code, :asc]])
     end
 
     def sorted
-      order_by([[:sort_order, :asc], [:text, :asc]])
+      order_by([[:sort_order, :asc], [:code, :asc]])
     end
 
   end
