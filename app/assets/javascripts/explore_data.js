@@ -221,8 +221,6 @@ function build_crosstab_charts (json) { // build crosstab charts for each chart 
     else{       // no filters
       build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart, chart_height, weight_name);
     }
-     console.log("cross");
-    //jumpto(flag);
   }
 }
 
@@ -267,9 +265,6 @@ function build_pie_charts (json) { // build pie chart for each chart item in jso
     else {  // no filters
       build_pie_chart(json.chart, chart_height, weight_name);
     }
-   console.log("pie");
- 
-    //jumpto(flag);
   }
 }
 
@@ -311,9 +306,6 @@ function build_bar_charts (json) { // build pie chart for each chart item in jso
     else {
       build_bar_chart(json.chart, chart_height, weight_name);       // no filters
     }
-console.log("bar");
-
-    //jumpto(flag);
   }
 }
 
@@ -861,7 +853,6 @@ function reset_filter_form () { // reset the filter forms and select a random va
 
 
 function jumpto(show, chart) { // show/hide jumpto show - for main box and if chart is false then map
-   console.log("jumpto", show, chart);
   if(typeof chart === "undefined") { chart = true; }
   $jumpto.toggle(show);
   $jumpto_chart.toggle(show && chart);
@@ -1107,12 +1098,11 @@ $(document).ready(function () {
    
     // when chart tab/map clicked on, make sure the jumpto block is showing, else, hide it
     $("#explore-tabs li").click(function () {
-       console.log("change active tab");
-      var ths_link = $(this).find("a");
+      var href = $(this).find("a").attr("href");
 
-      if ($(ths_link).attr("href") == "#tab-chart" && $("#jumpto #jumpto-chart select option").length > 0){
+      if (href == "#tab-chart" &&  $jumpto_chart.find("select option").length > 0){
         jumpto(true, true);
-      }else if ($(ths_link).attr("href") == "#tab-map" && $("#jumpto #jumpto-map select option").length > 0){
+      }else if (href == "#tab-map" &&  $jumpto_chart.find("select option").length > 0){
         jumpto(show_map_jumpto, false);
       }else{
         jumpto(false);
