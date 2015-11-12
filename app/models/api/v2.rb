@@ -286,7 +286,6 @@ class Api::V2
     if broken_down_by.present?
       data[:analysis_type] = ANALYSIS_TYPE[:comparative]
       data[:results] = dataset_comparative_analysis(dataset, data, with_title)
-       Rails.logger.debug("--------------------------------------bbb------#{ data[:results].inspect}")
       data[:chart] = dataset_comparative_chart(data, with_title, options) if with_chart_data
       data[:map] = dataset_comparative_map(question.answers, broken_down_by.answers, data, question.is_mappable?, with_title, options) if with_map_data && (question.is_mappable? || broken_down_by.is_mappable?)
     else
@@ -295,7 +294,6 @@ class Api::V2
       data[:chart] = dataset_single_chart(data, with_title, options) if with_chart_data
       data[:map] = dataset_single_map(question.answers, data, with_title, options) if with_map_data && question.is_mappable?
     end
-Rails.logger.debug("-------------------------------------------123456-#{data[:results].inspect}")
     return data
   end
 
@@ -690,8 +688,8 @@ private
           #merged_data = data.zip(weight_values)
 
           # do not want to count nil values
-          counts_per_answer = data.frequency_data
-           #data.select{|x| x.present?}.each_with_object(Hash.new(0)) { |item,counts| counts[item.to_s] += 1 }
+          #counts_per_answer = data.frequency_data
+          counts_per_answer =  data.select{|x| x.present?}.each_with_object(Hash.new(0)) { |item,counts| counts[item.to_s] += 1 }
 
           weighted_total_responses = 0
           weighted_counts_per_answer = Hash.new(0)
@@ -828,10 +826,10 @@ private
 
         # create data for chart
         chart[:data] = []
-        data[:results][:analysis].each{|x|
-          chart[:data] << dataset_single_chart_processing(answer, data_result)
-        }
-         Rails.logger.debug("-------------------------------------------bliblu-#{data[:results][:analysis].inspect}")
+        # data[:results][:analysis].each{|x|
+        #   chart[:data] << dataset_single_chart_processing(answer, data_result)
+        # }
+         #Rails.logger.debug("-------------------------------------------bliblu-#{data[:results][:analysis].inspect}")
         data[:question][:answers].each do |answer|
           data_result = data[:results][:analysis].select{|x| x[:answer_value] == answer[:value]}.first
           if data_result.present?
