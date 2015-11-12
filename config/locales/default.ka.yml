@@ -8,7 +8,7 @@ ka:
       default: "%d-%m-%Y"
       short: "%d %b"
       long: "%B %d, %Y"
-      day_first: '%d %b, %Y'
+      day_first: '%d %b %Y'
     day_names: [კვირა, ორშაბათი, სამშაბათი, ოთხშაბათი, ხუთშაბათი, პარასკევი, შაბათი]
     abbr_day_names: [კვ, ორშ, სამშ, ოთხშ, ხუთშ, პარ, შაბ]
     month_names: [~, იანვარი, თებერვალი, მარტი, აპრილი, მაისი, ივნისი, ივლისი, აგვისტო, სექტემბერი, ოქტომბერი, ნოემბერი,  დეკემბერი]
@@ -25,7 +25,7 @@ ka:
       long: "%d %b %Y %H:%M"
       file: "%Y %m %d %H:%M:%S"
       date_only: "%d-%m-%Y"
-      day_first: '%d %b, %Y'
+      day_first: '%d %b %Y'
     am: "am"
     pm: "pm"
 

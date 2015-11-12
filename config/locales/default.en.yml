@@ -37,7 +37,7 @@ en:
       default: ! '%Y-%m-%d'
       long: ! '%B %d, %Y'
       short: ! '%b %d'
-      day_first: '%d %b, %Y'
+      day_first: '%d %b %Y'
     month_names:
     -
     - January
@@ -201,7 +201,7 @@ en:
       short: ! '%d %b %H:%M'
       file: "%Y %m %d %H:%M:%S"
       date_only: ! '%Y-%m-%d'
-      day_first: '%d %b, %Y'
+      day_first: '%d %b %Y'
     pm: pm
 
   # remove these aliases after 'activemodel' and 'activerecord' namespaces are removed from Rails repository

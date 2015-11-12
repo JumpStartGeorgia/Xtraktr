@@ -399,8 +399,11 @@ private
     puts "=============================="
     puts "$$$$$$ process_spss"
     puts "=============================="
+    start = Time.now
     # run the R script
     result = system 'Rscript', '--default-packages=foreign,MASS', file_r, file_to_process, file_data, file_sps, file_questions, file_answers_complete
+
+    puts "@@@@@@@ it took #{Time.now-start} seconds to process the spss file"
 
     return result
   end
@@ -412,6 +415,7 @@ private
     puts "=============================="
     puts "$$$$$$ process_stata"
     puts "=============================="
+    start = Time.now
     # run the R script
     begin
       result = system 'Rscript', '--default-packages=foreign,MASS', file_r, file_to_process, file_data, file_sps, file_questions, file_answers_complete
@@ -419,6 +423,7 @@ private
       puts "!!!!!!!!!!!!!!!! an error occurred - #{e.inspect}"
       result = nil
     end
+    puts "@@@@@@@ it took #{Time.now-start} seconds to process the stata file"
 
     puts "Error was #{$?}"
 
