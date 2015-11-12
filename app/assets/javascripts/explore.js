@@ -375,7 +375,10 @@ function build_highmap (shape_question_code, adjustable_max, json_map_set, chart
       },
       dataLabels: {
         enabled: true,
-        color: "white",
+        color: "#3C4352",
+        style: {
+          textShadow: false
+        },
         formatter: function () {
           return Highcharts.numberFormat(this.point.count, 0) + "   (" + this.point.value + "%)";
         }
