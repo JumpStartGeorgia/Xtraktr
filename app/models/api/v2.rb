@@ -614,11 +614,14 @@ private
           # and then pull out the data that has the corresponding filter value
           merged_data = filter_data.zip(data)
           merged_weight_values = weight_values.present? ? filter_data.zip(weight_values) : []
-
           # only keep the data that is in the list of question answers
           # - this is where can_exclude removes the unwanted answers
           answer_values = question[:answers].map{|x| x[:value]}
-          merged_data.delete_if{|x| !answer_values.include?(x[1])}
+          #merged_data.delete_if{|x| !answer_values.include?(x[1])}
+
+          to_delete_indexes = merged_data.each_index.select{|i| !answer_values.include? merged_data[i][1] }
+          merged_data.delete_if.with_index { |_, index| to_delete_indexes.include? index }
+          merged_weight_values.delete_if.with_index { |_, index| to_delete_indexes.include? index }
 
           filter_results = nil
           if with_title
@@ -650,7 +653,11 @@ private
         # only keep the data that is in the list of question answers
         # - this is where can_exclude removes the unwanted answers
         answer_values = question[:answers].map{|x| x[:value]}
-        data.delete_if{|x| !answer_values.include?(x)}
+        #data.delete_if{|x| !answer_values.include?(x)}
+
+        to_delete_indexes = data.each_index.select{|i| !answer_values.include? data[i] }
+        data.delete_if.with_index { |_, index| to_delete_indexes.include? index }
+        weight_values.delete_if.with_index { |_, index| to_delete_indexes.include? index }
 
         return dataset_single_analysis_processing(question, data.length, data, with_title: with_title, weight_values: weight_values)
       end
@@ -969,7 +976,12 @@ private
         # - this is where can_exclude removes the unwanted answers
         q_answer_values = question[:answers].map{|x| x[:value]}
         bdb_answer_values = broken_down_by[:answers].map{|x| x[:value]}
-        merged_data.delete_if{|x| !q_answer_values.include?(x[1][0]) && !bdb_answer_values.include?(x[1][1])}
+
+        #merged_data.delete_if{|x| !q_answer_values.include?(x[1][0]) && !bdb_answer_values.include?(x[1][1])}
+
+        to_delete_indexes = merged_data.each_index.select{|i| !q_answer_values.include?(merged_data[i][1][0]) && !bdb_answer_values.include?(merged_data[i][1][1]) }
+        merged_data.delete_if.with_index { |_, index| to_delete_indexes.include? index }
+        merged_weight_values.delete_if.with_index { |_, index| to_delete_indexes.include? index }
 
         filter_results = nil
         if with_title
@@ -1002,7 +1014,13 @@ private
       # - this is where can_exclude removes the unwanted answers
       q_answer_values = question[:answers].map{|x| x[:value]}
       bdb_answer_values = broken_down_by[:answers].map{|x| x[:value]}
-      data.delete_if{|x| !q_answer_values.include?(x[0]) && !bdb_answer_values.include?(x[1])}
+      #data.delete_if{|x| !q_answer_values.include?(x[0]) && !bdb_answer_values.include?(x[1])}
+
+
+      to_delete_indexes = data.each_index.select{|i| !q_answer_values.include?(data[i][0]) && !bdb_answer_values.include?(data[i][1]) }
+      data.delete_if.with_index { |_, index| to_delete_indexes.include? index }
+      weight_values.delete_if.with_index { |_, index| to_delete_indexes.include? index }
+
 
       return dataset_comparative_analysis_processing(question, broken_down_by, data.length, data, with_title: with_title, weight_values: weight_values)
     end
