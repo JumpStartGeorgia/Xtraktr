@@ -1264,6 +1264,58 @@ private
     end
   end
 
+  # convert the results into highmaps map format
+  # options are needed to create embed id
+  # return format:
+  # - no filter: {shape_question_code, map_sets => [{title, subtitle, data => [ {shape_name, display_name, value, count}, ... ] } ] }
+  # - with filter: [{filter_answer_value, filter_answer_text, shape_question_code, filter_results => [ map_sets => [{title, subtitle, data => [ {shape_name, display_name, value, count}, ... ] } ] } ]
+  def self.dataset_comparative_map_new(question_answers, broken_down_by_answers, data, question_mappable=true, with_title=false, options={})
+    if question_answers.present? && broken_down_by_answers.present? && data.present?
+      map = nil
+      count_key = data[:weighted_by].present? ? :weighted_count : :count
+      percent_key = data[:weighted_by].present? ? :weighted_percent : :percent
+
+      if data[:filtered_by].present?
+
+      else    
+        map = {shape_question_code: nil, map_sets: []}
+
+        # get a reference to the question that is the map
+        question_with_map_key = question_mappable == true ? :question : :broken_down_by
+        question_not_map_key = question_mappable == true ? :broken_down_by : :question
+        
+        # need question code so know which shape data to use
+        map[:shape_question_code] = data[question_with_map_key][:code]
+        map[:adjustable_max_range] = data[question_with_map_key][:has_map_adjustable_max_range]
+
+        # get counts and percents
+        # have to transpose the counts for highcharts (and re-calculate percents)
+        counts = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[count_key]}}.transpose
+        for_total_resp = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[count_key]}}.transpose
+        percents = []
+        counts.each do |count_row|
+          total = count_row.inject(:+)
+          if total > 0
+            percent_row = []
+            count_row.each do |item|
+              percent_row << (item.to_f/total*100).round(2)
+            end
+            percents << percent_row
+          else
+            percents << Array.new(count_row.length){0}
+          end
+        end
+
+
+        data[:question_not_map_key][:answers].each_with_index do |q_answer, q_index|
+          item = {broken_down_answer_value: q_answer[:value], broken_down_answer_text: q_answer[:text]}
+        end
+      end
+      return map
+    end
+  end
+
+
 
 
   # convert the results into highmaps map format
@@ -1342,11 +1394,11 @@ private
           else
             # need question code so know which shape data to use
             map_item[:filter_results][:shape_question_code] = data[:broken_down_by][:code]
-            map_item[:filter_results][:adjustable_max_range] = data[:question][:has_map_adjustable_max_range]
+            map_item[:filter_results][:adjustable_max_range] = data[:broken_down_by][:has_map_adjustable_max_range]
 
             counts = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[count_key]}}
             percents = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[percent_key]}}
-            for_total_resp = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[count_key]}}.transpose
+            for_total_resp = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[count_key]}}
 
             map_item[:filter_results][:map_sets] = []
             if counts.present?
@@ -1446,11 +1498,11 @@ private
         else
           # need question code so know which shape data to use
           map[:shape_question_code] = data[:broken_down_by][:code]
-          map[:adjustable_max_range] = data[:question][:has_map_adjustable_max_range]
+          map[:adjustable_max_range] = data[:broken_down_by][:has_map_adjustable_max_range]
 
           counts = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[count_key]}}
           percents = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[percent_key]}}
-          for_total_resp = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[count_key]}}.transpose
+          for_total_resp = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[count_key]}}
 
           data[:question][:answers].each_with_index do |q_answer, q_index|
             item = {broken_down_answer_value: q_answer[:value], broken_down_answer_text: q_answer[:text]}
@@ -1459,7 +1511,7 @@ private
             if with_title
               item[:title] = {}
               item[:title][:html] = dataset_comparative_analysis_map_title('html', data[:broken_down_by], data[:question], q_answer[:text])
-              item[:title][:text] = dataset_comparative_analysis_map_title('text', data[:question], data[:broken_down_by], q_answer[:text])
+              item[:title][:text] = dataset_comparative_analysis_map_title('text', data[:broken_down_by], data[:question], q_answer[:text])
               item[:subtitle] = {}
               subtitle_count = for_total_resp[q_index].present? ? for_total_resp[q_index].inject(:+) : 0
               item[:subtitle][:html] = dataset_analysis_subtitle('html', subtitle_count, data[:results][:total_possible_responses], data[:weighted_by].present?)
