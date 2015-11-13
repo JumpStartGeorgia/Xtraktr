@@ -209,272 +209,63 @@ function build_highmaps (json) { // build highmap
   $("#tab-map").removeClass("behind_the_scenes");
 }
 
-function build_charts(data, type) {
-  if (json.chart) {
+function build_charts (data, type) {
+  if (data.chart) {
     var flag = false,
-      chart_height = window[type + "_chart_height"](json),     // determine chart height // pie_chart_height(json);
-      weight_name = json.weighted_by ? json.weighted_by.weight_name : undefined,
+      chart_height = window[type + "_chart_height"](data),     // determine chart height // pie_chart_height(json);
+      weight_name = data.weighted_by ? data.weighted_by.weight_name : undefined,
       jumpto_text = "";
+
+    // check existence of height function for all chart types
 
     js.chart.empty();  // remove all existing charts
     if(["pie", "bar"].indexOf(type) !== -1) {
       js.chart.append(js["chart_type_toggle_" + type]);
     }
-    js.jumpt_chart_select.empty();  // remove all existing chart links
+    js.jumpto_chart_select.empty();  // remove all existing chart links
 
     // test if the filter is being used and build the chart(s) accordingly
-    if (json.chart.constructor === Array) { // filters
+    if (data.chart.constructor === Array) { // filters
 
-      json.chart.forEach(function(d,i){
-        build_pie_chart(d.filter_results, chart_height, weight_name); // create chart
-        jumpto_text += "<option data-href='#chart-" + (i+1) + "'>" + json.filtered_by.text + " = " + d.filter_answer_text + "</option>"; // add jumpto link
-      });
+      data.chart.forEach(function (d, i){
+        if(["crosstab", "scatter"].indexOf(type) !== -1)
+        {
+          window["build_" + type + "_chart"](
+            data.question.original_code,
+            data.broken_down_by.original_code,
+            data.broken_down_by.text,
+            d.filter_results, chart_height, weight_name); // create chart
+        }
+        else {
+          window["build_" + type + "_chart"](d.filter_results, chart_height, weight_name); // create chart
+        }
+        build_crosstab_chart(
+         data.chart[i].filter_results, chart_height, weight_name);
 
-      // for(i=0; i<json.chart.length; i++){
-
-      //   // create chart
-      //   build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart[i].filter_results, chart_height, weight_name);
-      //   //build_pie_chart(d.filter_results, chart_height, weight_name); // create chart
-      //   //build_bar_chart(json.chart[i].filter_results, chart_height, weight_name);
-
-      //   // add jumpto link
-      //   jumpto_text += "<option data-href='#chart-" + (i+1) + "'>" + json.filtered_by.text + " = " + json.chart[i].filter_answer_text + "</option>";
-      // }
-
-      // show jumpto links
-      js.jumpt_chart_select.append(jumpto_text);
-      js.jumpt_chart_select.val(js.jumpt_chart_select.find("option:first").attr("value"));
-      js.jumpt_chart_select.selectpicker("refresh");
-      js.jumpt_chart_select.selectpicker("render");
-      flag = true;
-
-    }
-    else{       // no filters
-       //build_pie_chart(json.chart, chart_height, weight_name);
-       //build_bar_chart(json.chart, chart_height, weight_name);    
-      //build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart, chart_height, weight_name);
-    }
-    $("#jumpto #jumpto-chart").toggle(flag);
-    $("#jumpto").toggle(flag);
-  }
-}
-function build_crosstab_charts (json) { // build crosstab charts for each chart item in json
-  var i;
-  var flag = false;
-
-  if (json.chart) {
-    // determine chart height
-    var chart_height = crosstab_chart_height(json);
-
-    // remove all existing charts
-    $("#container-chart").empty();
-    // remove all existing chart links
-    var select_selector = $("#jumpto #jumpto-chart select");
-    select_selector.empty();
-
-    var jumpto_text = "";
-    var weight_name = json.weighted_by ? json.weighted_by.weight_name : undefined;
-
-    // test if the filter is being used and build the chart(s) accordingly
-    if (json.chart.constructor === Array){
-      // filters
-      for(i=0; i<json.chart.length; i++){
-        // create chart
-        build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart[i].filter_results, chart_height, weight_name);
-
-        // add jumpto link
-        jumpto_text += "<option data-href='#chart-" + (i+1) + "'>" + json.filtered_by.text + " = " + json.chart[i].filter_answer_text + "</option>";
-      }
-
-      // show jumpto links
-      select_selector.append(jumpto_text);
-      select_selector.val($("#jumpto #jumpto-chart select option:first").attr("value"));
-      select_selector.selectpicker("refresh");
-      select_selector.selectpicker("render");
-      flag = true;
-
-    }
-    else{       // no filters
-      build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart, chart_height, weight_name);
-    }
-    $("#jumpto #jumpto-chart").toggle(flag);
-    $("#jumpto").toggle(flag);
-  }
-}
-
-function build_scatter_charts (json) { // build scatter charts for each chart item in json
-  var i;
-  var flag = false;
-
-  if (json.chart) {
-    // determine chart height
-    var chart_height = crosstab_chart_height(json);
-
-    // remove all existing charts
-    $("#container-chart").empty();
-    // remove all existing chart links
-    var select_selector = $("#jumpto #jumpto-chart select");
-    select_selector.empty();
-
-    var jumpto_text = "";
-    var weight_name = json.weighted_by ? json.weighted_by.weight_name : undefined;
-
-    // test if the filter is being used and build the chart(s) accordingly
-    if (json.chart.constructor === Array){
-      // filters
-      for(i=0; i<json.chart.length; i++){
-        // create chart
-        build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart[i].filter_results, chart_height, weight_name);
-
-        // add jumpto link
-        jumpto_text += "<option data-href='#chart-" + (i+1) + "'>" + json.filtered_by.text + " = " + json.chart[i].filter_answer_text + "</option>";
-      }
-
-      // show jumpto links
-      select_selector.append(jumpto_text);
-      select_selector.val($("#jumpto #jumpto-chart select option:first").attr("value"));
-      select_selector.selectpicker("refresh");
-      select_selector.selectpicker("render");
-      flag = true;
-
-    }
-    else{       // no filters
-      build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart, chart_height, weight_name);
-    }
-    $("#jumpto #jumpto-chart").toggle(flag);
-    $("#jumpto").toggle(flag);
-  }
-}
-
-
-function build_pie_charts (json) { // build pie chart for each chart item in json
-  var flag = false;
-
-  if (json.chart){
-
-    // determine chart height
-    var chart_height = pie_chart_height(json);
-
-    // remove all existing charts
-    container.chart.empty();
-    container.chart.append(container.chart_type_toggle);
-
-    // remove all existing chart links
-    container.jumpto_chart_select.empty();
-
-    var jumpto_text = "",
-      weight_name = json.weighted_by ? json.weighted_by.weight_name : undefined;
-
-    // test if the filter is being used and build the chart(s) accordingly
-    if (json.chart.constructor === Array){
-      // filters
-      json.chart.forEach(function(d,i){
-        build_pie_chart(d.filter_results, chart_height, weight_name); // create chart
-        jumpto_text += "<option data-href='#chart-" + (i+1) + "'>" + json.filtered_by.text + " = " + d.filter_answer_text + "</option>"; // add jumpto link
+        jumpto_text += "<option data-href='#chart-" + (i+1) + "'>" + data.filtered_by.text + " = " + d.filter_answer_text + "</option>"; // add jumpto link
       });
 
       // show jumpto links
-     container.jumpto_chart_select.append(jumpto_text);
-     container.jumpto_chart_select.val($("#jumpto #jumpto-chart select option:first").attr("value"));
-     container.jumpto_chart_select.selectpicker("refresh");
-     container.jumpto_chart_select.selectpicker("render");
+      js.jumpto_chart_select.append(jumpto_text);
+      js.jumpto_chart_select.val(js.jumpto_chart_select.find("option:first").attr("value"));
+      js.jumpto_chart_select.selectpicker("refresh");
+      js.jumpto_chart_select.selectpicker("render");
       flag = true;
     }
-    else {  // no filters
-      build_pie_chart(json.chart, chart_height, weight_name);
-    }
-    container.jumpto_chart.toggle(flag);
-    container.jumpto.toggle(flag);
-  }
-}
-
-function build_bar_charts (json) { // build pie chart for each chart item in json
-  var flag = false;
-console.log(this);
-  if (json.chart){
-
-    var chart_height = pie_chart_height(json), // determine chart height
-      container = $("#container-chart");
-
-    container.empty();
-    container.append("<div id='chart-type-toggle'><div class='toggle selected' data-type='bar' title='" + gon.chart_type_bar + "'></div><div class='toggle' data-type='pie' title='" + gon.chart_type_pie + "'></div>");
-    // remove all existing chart links
-    var select_selector = $("#jumpto #jumpto-chart select");
-    select_selector.empty();
-
-    var jumpto_text = "";
-    var weight_name = json.weighted_by ? json.weighted_by.weight_name : undefined;
-
-    // test if the filter is being used and build the chart(s) accordingly
-    if (json.chart.constructor === Array){
-      // filters
-      for(i=0; i<json.chart.length; i++){
-        // create chart
-        build_bar_chart(json.chart[i].filter_results, chart_height, weight_name);
-
-        // add jumpto link
-        jumpto_text += "<option data-href='#chart-" + (i+1) + "'>" + json.filtered_by.text + " = " + json.chart[i].filter_answer_text + "</option>";
+    else { // no filters
+      if(["crosstab", "scatter"].indexOf(type) !== -1) {
+        window["build_" + type + "_chart"](
+              data.question.original_code,
+              data.broken_down_by.original_code,
+              data.broken_down_by.text,
+              data.chart, chart_height, weight_name);
       }
-
-      // show jumpto links    
-      select_selector.append(jumpto_text);
-      select_selector.val(select_selector.find("option:first").attr("value"));
-      select_selector.selectpicker("refresh");
-      select_selector.selectpicker("render");
-      flag = true;
-    }
-    else {
-      build_bar_chart(json.chart, chart_height, weight_name);       // no filters
-    }
-
-    // show/hide jumpto
-    $("#jumpto #jumpto-chart").toggle(flag);
-    $("#jumpto").toggle(flag);
-  }
-}
-
-function build_histogramm_charts (json) { // build histogramm chart for each chart item in json
-  var flag = false;
-
-  if (json.chart){
-
-    var chart_height = pie_chart_height(json), // determine chart height
-      container = $("#container-chart");
-
-    container.empty();
-    container.append("<div id='chart-type-toggle'><div class='toggle selected' data-type='bar' title='" + gon.chart_type_bar + "'></div><div class='toggle' data-type='pie' title='" + gon.chart_type_pie + "'></div>");
-    // remove all existing chart links
-    var select_selector = $("#jumpto #jumpto-chart select");
-    select_selector.empty();
-
-    var jumpto_text = "";
-    var weight_name = json.weighted_by ? json.weighted_by.weight_name : undefined;
-
-    // test if the filter is being used and build the chart(s) accordingly
-    if (json.chart.constructor === Array){
-      // filters
-      for(i=0; i<json.chart.length; i++){
-        // create chart
-        build_histogramm_chart(json.chart[i].filter_results, chart_height, weight_name);
-
-        // add jumpto link
-        jumpto_text += "<option data-href='#chart-" + (i+1) + "'>" + json.filtered_by.text + " = " + json.chart[i].filter_answer_text + "</option>";
+      else {
+        window["build_" + type + "_chart"](data.chart, chart_height, weight_name); // create chart
       }
-
-      // show jumpto links    
-      select_selector.append(jumpto_text);
-      select_selector.val(select_selector.find("option:first").attr("value"));
-      select_selector.selectpicker("refresh");
-      select_selector.selectpicker("render");
-      flag = true;
     }
-    else {
-      build_histogramm_chart(json.chart, chart_height, weight_name);       // no filters
-    }
-
-    // show/hide jumpto
-    $("#jumpto #jumpto-chart").toggle(flag);
-    $("#jumpto").toggle(flag);
+    js.jumpto_chart.toggle(flag);
+    js.jumpto.toggle(flag);
   }
 }
 
@@ -816,65 +607,72 @@ function build_datatable (json) { // build data table
   }
 }
 
-function build_details_item (selector, json_question) { // populat a details item block
-  if (json_question && json_question.text){
-    var tmp = $(selector);
-    if (tmp.length > 0){
-      var icon = "";
-      if (json_question.exclude){
-        icon += $(".details-icons #detail-icon-exclude-question")[0].outerHTML;
-      }
-      if (json_question.is_mappable){
-        icon += $(".details-icons #detail-icon-mappable-question")[0].outerHTML;
-      }
-      tmp.find(".name-variable").html(icon + json_question.text);
+function build_details_item (json) { // populat a details item block
+ 
+  var selector = "", json_question = undefined;
+  ["question", "brokey-down-by", "filtered-by", "weighted-by"].forEach(function(d){
+    selector = "#tab-details #details-"+ d +"-code";
+    json_question = json[d.replace(/-/g, "_")];
 
-      tmp.find(".name-code").html(json_question.original_code);
-      if (json_question.notes){
-        tmp.find(".notes").html(json_question.notes);
-        tmp.find(".details-notes").show();
-      }else{
-        tmp.find(".details-notes").hide();
-      }
-      if (json_question.weight_name){
-        tmp.find(".weight").html(json_question.weight_name);
-        tmp.find(".details-weight").show();
-      }else{
-        tmp.find(".details-weight").hide();
-      }
-      if (json_question.group){
-        tmp.find(".name-group .group-title").html(json_question.group.title);
-        if (json_question.group.description != ""){
-          tmp.find(".name-group .group-description").html(" - " + json_question.group.description);
+    if (json_question && json_question.text){
+      var tmp = $(selector);
+      if (tmp.length > 0){
+        var icon = "";
+        if (json_question.exclude){
+          icon += $(".details-icons #detail-icon-exclude-question")[0].outerHTML;
         }
-        tmp.find(".details-group").show();
-      }else{
-        tmp.find(".details-group").hide();
-      }
-      if (json_question.subgroup){
-        tmp.find(".name-subgroup .group-title").html(json_question.subgroup.title);
-        if (json_question.subgroup.description != ""){
-          tmp.find(".name-subgroup .group-description").html(" - " + json_question.subgroup.description);
+        if (json_question.is_mappable){
+          icon += $(".details-icons #detail-icon-mappable-question")[0].outerHTML;
         }
-        tmp.find(".details-subgroup").show();
-      }else{
-        tmp.find(".details-subgroup").hide();
-      }
-      if (json_question.answers){
-        for(var i=0;i<json_question.answers.length;i++){
-          icon = "";
-          if (json_question.answers[i].exclude){
-            icon += $(".details-icons #detail-icon-exclude-answer")[0].outerHTML;
+        tmp.find(".name-variable").html(icon + json_question.text);
+
+        tmp.find(".name-code").html(json_question.original_code);
+        if (json_question.notes){
+          tmp.find(".notes").html(json_question.notes);
+          tmp.find(".details-notes").show();
+        }else{
+          tmp.find(".details-notes").hide();
+        }
+        if (json_question.weight_name){
+          tmp.find(".weight").html(json_question.weight_name);
+          tmp.find(".details-weight").show();
+        }else{
+          tmp.find(".details-weight").hide();
+        }
+        if (json_question.group){
+          tmp.find(".name-group .group-title").html(json_question.group.title);
+          if (json_question.group.description != ""){
+            tmp.find(".name-group .group-description").html(" - " + json_question.group.description);
           }
-          tmp.find(".list-answers").append("<li>" + icon + json_question.answers[i].text + "</li>");
+          tmp.find(".details-group").show();
+        }else{
+          tmp.find(".details-group").hide();
         }
-        tmp.find(".details-answers").show();
-      }else{
-        tmp.find(".details-answers").hide();
+        if (json_question.subgroup){
+          tmp.find(".name-subgroup .group-title").html(json_question.subgroup.title);
+          if (json_question.subgroup.description != ""){
+            tmp.find(".name-subgroup .group-description").html(" - " + json_question.subgroup.description);
+          }
+          tmp.find(".details-subgroup").show();
+        }else{
+          tmp.find(".details-subgroup").hide();
+        }
+        if (json_question.answers){
+          for(var i=0;i<json_question.answers.length;i++){
+            icon = "";
+            if (json_question.answers[i].exclude){
+              icon += $(".details-icons #detail-icon-exclude-answer")[0].outerHTML;
+            }
+            tmp.find(".list-answers").append("<li>" + icon + json_question.answers[i].text + "</li>");
+          }
+          tmp.find(".details-answers").show();
+        }else{
+          tmp.find(".details-answers").hide();
+        }
+        tmp.show();
       }
-      tmp.show();
     }
-  }
+  });
 }
 
 function build_details (json) { // build details (question and possible answers)
@@ -882,40 +680,29 @@ function build_details (json) { // build details (question and possible answers)
   var details_item = $("#tab-details .details-item").hide();
   details_item.find(".name-group .group-title, .name-group .group-description, .name-subgroup .group-title, .name-subgroup .group-description, .name-variable, .name-code, .notes, .list-answers").empty();
 
-  // add questions
-  build_details_item("#tab-details #details-question-code", json.question);
-
-  // add broken down by
-  build_details_item("#tab-details #details-broken-down-by-code", json.broken_down_by);
-
-  // add filters
-  build_details_item("#tab-details #details-filtered-by-code", json.filtered_by);
-
-  // add weight
-  build_details_item("#tab-details #details-weighted-by-code", json.weighted_by);
+  build_details_item(json);
 }
 
 function build_explore_data_page (json) { // build the visualizations for the explore data page
-   console.log(json, "here");
+  var type = null;
+
   if (json.analysis_type == "comparative"){
     if(json.analysis_data_type == "categorical") {
-      build_crosstab_charts(json);
+      type = "crosstab";
     }
     else if(json.analysis_data_type == "numerical") {
-      build_scatter_charts(json);
+      type = "scatter";
     }
   }
   else {
     if(json.analysis_data_type == "categorical") {
-      (typeof params.chart_type !== "undefined" && params.chart_type === "pie")
-        ? build_pie_charts(json)
-        : build_bar_charts(json);
+      type = (typeof params.chart_type !== "undefined" && params.chart_type === "pie") ? "pie" : "bar";
     }
     else {
-      build_histogramm_charts(json);
+      type = "histogramm";
     }
-
   }
+  if(type !== null) { build_charts(json, type); }
   build_highmaps(json);
   build_datatable(json);
   build_details(json);
@@ -926,10 +713,9 @@ function build_explore_data_page (json) { // build the visualizations for the ex
   var explore_tabs = $("#explore-tabs");
 
   // turn on tab and its content || make sure correct jumptos are showing
-  $("#explore-tabs li" +
-      (explore_tabs.find("li.active:visible").length == 0
-        ? ":visible:first"
-        : "li.active" )).trigger("click");
+  explore_tabs.find("li" +
+    (explore_tabs.find("li.active:visible").length == 0 ? ":visible:first": "li.active" )
+  ).trigger("click");
 }
 
 function get_explore_data (is_back_button) { // get data and load page
@@ -1160,11 +946,13 @@ $(document).ready(function () {
   js = {
     cache: {},
     chart: $("#container-chart"),
-    jumpto_chart: $("#jumpto #jumpto-chart"),
-    jumpto_map: $("#jumpto #jumpto-map"),
+    jumpto: $("#jumpto"),
     chart_type_toggle_pie: "<div id='chart-type-toggle'><div class='toggle' data-type='bar' title='" + gon.chart_type_bar + "'></div><div class='toggle selected' data-type='pie' title='" + gon.chart_type_pie + "'></div>",
     chart_type_toggle_bar: "<div id='chart-type-toggle'><div class='toggle selected' data-type='bar' title='" + gon.chart_type_bar + "'></div><div class='toggle' data-type='pie' title='" + gon.chart_type_pie + "'></div>"
   };
+
+  js["jumpto_chart"] = js.jumpto.find("#jumpto-chart");
+  js["jumpto_map"] = js.jumpto.find("#jumpto-map");
   js["jumpto_chart_select"] = js.jumpto_chart.find("select");
   js["jumpto_map_select"] = js.jumpto_map.find("select");
 

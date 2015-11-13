@@ -72,7 +72,6 @@ function map_chart_height (json) { // determine heights of chart based on number
 
   return chart_height;
 }
-
 function pie_chart_height (json) {
   var chart_height = 501; // need the 1 for the border bottom line
   if (json.question.answers.length >= 5){
@@ -88,6 +87,7 @@ function pie_chart_height (json) {
 
   return chart_height;
 }
+var bar_chart_height = pie_chart_height;
 
 function crosstab_chart_height (json) {
   var chart_height = 501; // need the 1 for the border bottom line
