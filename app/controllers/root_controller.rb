@@ -180,6 +180,50 @@ class RootController < ApplicationController
       gon.chart_type_bar = t('explore_data.chart_type_bar')
       gon.chart_type_pie = t('explore_data.chart_type_pie')
       
+      # generate defualt page title based off of params
+      # - doing this so social media has a better title
+      @default_page_title = @dataset.title.dup
+      if params[:language].present? && @dataset.languages.include?(params[:language])
+        @dataset.current_locale = params[:language]
+      end
+      language = (I18n.available_locales.include? @dataset.current_locale.to_sym) ? @dataset.current_locale : I18n.locale.to_s
+
+      if params[:question_code].present?
+        q = @dataset.questions.with_code(params[:question_code])
+        if q.present?
+          f = nil
+          bdb = nil
+
+          @default_page_title << " | "
+
+          if params[:filtered_by_code].present?
+            f = @dataset.questions.with_code(params[:filtered_by_code])
+          end
+          if params[:broken_down_by_code].present?
+            bdb = @dataset.questions.with_code(params[:broken_down_by_code])
+          end
+
+          # build the title          
+          if bdb.present?
+            # comparing questions
+            @default_page_title << I18n.t("explore_data.v2.comparative.text.title", :question_code => q.original_code, :variable => q.text,
+                :broken_down_by_code => bdb.original_code, :broken_down_by => bdb.text, :group => "", :group2 => "", locale: language)
+
+            if f.present?
+              # comparing questions with filter
+              @default_page_title << I18n.t("explore_data.v2.comparative.text.title_filter", :code => f.original_code, :variable => f.text, :group => '', locale: language)
+            end
+          else
+            # single question
+            @default_page_title << I18n.t("explore_data.v2.single.text.title", :code => q.original_code, :variable => q.text, :group => '', locale: language)
+            if f.present?
+              # single question with filter
+              @default_page_title << I18n.t("explore_data.v2.single.text.title_filter", :code => f.original_code, :variable => f.text, :group => '', locale: language)
+            end
+          end
+        end
+      end
+
       # gon.embed_chart = "<div class='embed-chart-modal'>
       #                     <div class='header'>#{t('helpers.links.embed_chart')}</div>
       #                     <div class='figure'></div>
@@ -287,6 +331,37 @@ class RootController < ApplicationController
       @show_title = false
       @is_admin = false
       @time_series_url = explore_time_series_show_path(@time_series.owner, @time_series)
+
+      # generate defualt page title based off of params
+      # - doing this so social media has a better title
+      @default_page_title = @time_series.title.dup
+      if params[:language].present? && @time_series.languages.include?(params[:language])
+        @time_series.current_locale = params[:language]
+      end
+      language = (I18n.available_locales.include? @time_series.current_locale.to_sym) ? @time_series.current_locale : I18n.locale.to_s
+
+      if params[:question_code].present?
+        q = @time_series.questions.with_code(params[:question_code])
+        if q.present?
+          f = nil
+          bdb = nil
+
+          @default_page_title << " | "
+
+          if params[:filtered_by_code].present?
+            f = @time_series.questions.with_code(params[:filtered_by_code])
+          end
+
+          # build the title          
+          # single question
+          @default_page_title << I18n.t("explore_time_series.v2.single.text.title", :code => q.original_code, :variable => q.text, :group => '', locale: language)
+          if f.present?
+            # single question with filter
+            @default_page_title << I18n.t("explore_time_series.v2.single.text.title_filter", :code => f.original_code, :variable => f.text, :group => '', locale: language)
+          end
+        end
+      end
+
       # gon.embed_chart = "<div class='embed-chart-modal'>
       #                     <div class='header'>#{t('helpers.links.embed_chart')}</div>
       #                     <div class='figure'></div>

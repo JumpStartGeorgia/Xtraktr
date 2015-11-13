@@ -855,7 +855,7 @@ function build_page_title (json) { // update the page title to include the title
   // get current page title
   // first index - dataset/time series title
   // last index - app name
-  var title_parts = $("title").html().split(" | ");
+  var title_parts = $("title").data('original').split(" | ");
 
   $("head title").html(title_parts[0] + " | " +
     (json.results.title.text ? json.results.title.text + " | " + title_parts[title_parts.length-1]
