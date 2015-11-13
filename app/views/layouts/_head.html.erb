@@ -1,8 +1,10 @@
 <%- 
   main_css ||= 'application'
 
-  title = content_for?(:title) ? "#{yield(:title)} | #{t("app.common.#{@app_key_name}.app_name")}" :
-            "#{t("app.common.#{@app_key_name}.app_name")} | #{t("app.common.#{@app_key_name}.app_slogan")}".html_safe
+  title = (content_for?(:title) ? "#{strip_tags_nbsp(yield(:title))} | #{t("app.common.#{@app_key_name}.app_name")}" :
+            "#{t("app.common.#{@app_key_name}.app_name")} | #{t("app.common.#{@app_key_name}.app_slogan")}").html_safe
+
+  original_title = (content_for?(:original_title) ? "#{strip_tags_nbsp(yield(:original_title))} | #{t("app.common.#{@app_key_name}.app_name")}" : title).html_safe
 
   desc = I18n.t("app.common.#{@app_key_name}.app_description")
   if @dataset.present? && @dataset.description.present?
@@ -15,8 +17,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= content_for?(:title) ? "#{yield(:title)} | #{t("app.common.#{@app_key_name}.app_name")}" :
-                "#{t("app.common.#{@app_key_name}.app_name")} | #{t("app.common.#{@app_key_name}.app_slogan")}" %></title>
+    <title data-original="<%= original_title %>"><%= title %></title>
     <%= csrf_meta_tags %>
     <%= include_gon %>
 

@@ -3,6 +3,10 @@ module ApplicationHelper
     content_for(:title) { page_title.html_safe }
   end
 
+  def original_title(page_title)
+    content_for(:original_title) { page_title.html_safe }
+  end
+
   def subnav_left(text)
     content_for(:subnav_left) { text.html_safe }
   end
