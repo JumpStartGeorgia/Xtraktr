@@ -1,4 +1,4 @@
-/*global  $, gon, Highcharts, modal, js_modal_off, notification, is_touch, highmap_shapes */
+/*global  $, gon, Highcharts, modal, js_modal_off, notification, is_touch, highmap_shapes, page_wrapper */
 /*eslint camelcase: 0, no-underscore-dangle: 0, no-unused-vars: 0*/
 // collection of functions to build charts/maps
 // for datasets and time series
@@ -957,10 +957,6 @@ $(document).ready(function () {
   $(document).on("click", "#explore-data-content.tabs li", function () {
     $(this).find("a").tab("show");
   });
-  $(document).on("click", ".tab-content .up", function () {
-    $("body, html").animate({ scrollTop: 0 }, 1500);
-  });
-
 
   // show embed chart modal
   $(document).on("click", ".embed-chart", function () {
