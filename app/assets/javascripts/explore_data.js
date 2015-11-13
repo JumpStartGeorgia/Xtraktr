@@ -212,7 +212,7 @@ function build_highmaps (json) { // build highmap
 function build_charts(data, type) {
   if (json.chart) {
     var flag = false,
-      chart_height = crosstab_chart_height(json),     // determine chart height // pie_chart_height(json);
+      chart_height = window[type + "_chart_height"](json),     // determine chart height // pie_chart_height(json);
       weight_name = json.weighted_by ? json.weighted_by.weight_name : undefined,
       jumpto_text = "";
 
@@ -390,7 +390,7 @@ function build_pie_charts (json) { // build pie chart for each chart item in jso
 
 function build_bar_charts (json) { // build pie chart for each chart item in json
   var flag = false;
-
+console.log(this);
   if (json.chart){
 
     var chart_height = pie_chart_height(json), // determine chart height
