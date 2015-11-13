@@ -30,6 +30,7 @@ module ProcessDataFile
   #######################
   # process a data file
   def process_data_file
+    start = Time.now
     puts "$$$$$$ process_data_file"
 
     # if file extension does not exist, get it
@@ -67,6 +68,7 @@ module ProcessDataFile
 
       # process the file and populate the data, questions and answers csv spreadsheet files
       results = nil
+      start_task = Time.now
       case self.file_extension
         when 'sav'
           results = process_spss(file_to_process, file_r, file_sps, file_data, file_questions, file_answers_complete)
@@ -75,6 +77,9 @@ module ProcessDataFile
         when 'csv', 'xls', 'xlsx', 'ods'
           results = process_spreadsheet(file_to_process, file_data, file_questions, file_answers_complete)
       end
+      puts "=============================="
+      puts ">>>>>>> it took #{Time.now-start_task} seconds to process the data file"
+      puts "=============================="
 
       if results.nil? || results == false
         puts "Error was #{$?}"
@@ -86,6 +91,7 @@ module ProcessDataFile
         puts "=============================="
         puts "reading in questions from #{file_questions} and saving to questions attribute"
         question_codes = [] # record the question codes from the questions file
+        start_task = Time.now
         if File.exists?(file_questions)
           line_number = 0
           CSV.foreach(file_questions).each_with_index do |row, i|
@@ -118,11 +124,15 @@ module ProcessDataFile
           end
         end
         puts " - added #{self.questions.length} questions"
+        puts "=============================="
+        puts ">>>>>>> it took #{Time.now-start_task} seconds to add the questions"
+        puts "=============================="
 
 
 
         puts "=============================="
         puts "saving data from #{file_data} and saving to data_items attribute"
+        start_task = Time.now
         # if this is a spreadsheet do not use the quote char setting
         if is_spreadsheet
           data = CSV.read(file_data)
@@ -152,6 +162,9 @@ module ProcessDataFile
           puts "******************************"
         end
         puts "added #{self.data_items.length} columns worth of data"
+        puts "=============================="
+        puts ">>>>>>> it took #{Time.now-start_task} seconds to add the data items"
+        puts "=============================="
 
 =begin
         # before can read in data, we have to add a header row to it
@@ -179,6 +192,7 @@ module ProcessDataFile
 
         puts "=============================="
         puts "reading in answers from #{file_answers_complete} and converting to csv"
+        start_task = Time.now
         # format for non-spreadsheet data files for each line is: [1] "Question Code || Answer Value || Answer Text"
         # spreadsheet data files are already in proper format
         answers_complete = []
@@ -271,9 +285,13 @@ module ProcessDataFile
             end
           end
         end
+        puts "=============================="
+        puts ">>>>>>> it took #{Time.now-start_task} seconds to add question answers"
+        puts "=============================="
 
         if !is_spreadsheet
           # if answers exists, write to csv file
+          start_task = Time.now
           if answers_complete.length > 0
             puts "saving complete answers to csv"
             puts "++ - there were #{answers_complete.length} total answers recorded for #{answers_complete.map{|x| x[0]}.uniq.length} questions"
@@ -283,10 +301,14 @@ module ProcessDataFile
               end
             end
           end
+          puts "=============================="
+          puts ">>>>>>> it took #{Time.now-start_task} seconds to write the answers out to csv"
+          puts "=============================="
 
 
           puts "=============================="
           puts "reading in incomplete answers from sps file #{file_sps}"
+          start_task = Time.now
           # open the sps file and convert the list of answers into a csv file
           # row format: question_code, answer code, answer text
           answers_incomplete = []
@@ -346,11 +368,15 @@ module ProcessDataFile
               end
             end
           end
+          puts "=============================="
+          puts ">>>>>>> it took #{Time.now-start_task} seconds to read in the incomplete answers"
+          puts "=============================="
 
           puts "=============================="
 
           # if answers exists, write to csv file
           if answers_incomplete.length > 0
+            start_task = Time.now
             puts "saving incomplete answers to csv"
             puts "++ - there were #{answers_incomplete.length} total answers recorded for #{answers_incomplete.map{|x| x[0]}.uniq.length} questions"
             CSV.open(file_answers_incomplete, 'w') do |csv|
@@ -358,6 +384,9 @@ module ProcessDataFile
                 csv << answer
               end
             end
+            puts "=============================="
+            puts ">>>>>>> it took #{Time.now-start_task} seconds to create the answers incomplete csv"
+            puts "=============================="
           end
 
           puts "=============================="
@@ -386,6 +415,11 @@ module ProcessDataFile
       puts "******************************"
     end
 
+    puts "=============================="
+    puts "=============================="
+    puts ">>>>>>> it took #{Time.now-start} seconds to finish processing the data file"
+    puts "=============================="
+    puts "=============================="
     return true
   end
 
@@ -403,7 +437,7 @@ private
     # run the R script
     result = system 'Rscript', '--default-packages=foreign,MASS', file_r, file_to_process, file_data, file_sps, file_questions, file_answers_complete
 
-    puts "@@@@@@@ it took #{Time.now-start} seconds to process the spss file"
+    puts ">>>>>>> it took #{Time.now-start} seconds to process the spss file"
 
     return result
   end
@@ -423,7 +457,7 @@ private
       puts "!!!!!!!!!!!!!!!! an error occurred - #{e.inspect}"
       result = nil
     end
-    puts "@@@@@@@ it took #{Time.now-start} seconds to process the stata file"
+    puts ">>>>>>> it took #{Time.now-start} seconds to process the stata file"
 
     puts "Error was #{$?}"
 

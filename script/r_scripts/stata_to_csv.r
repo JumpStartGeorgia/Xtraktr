@@ -41,11 +41,14 @@ print(paste('text file for answers labels = ', args[5]))
 # - need value.label to be true so that label values are available on export
 data <- read.dta(args[1], convert.factors = T)
 
+### old code - was force encoding all questions, answers and data
+###          - stopped this because it took a long time to process the data, which is not even necessary
+###          - now only process question and answer text
 # read dta does not detect encoding and force it to utf8, so have to do it manually
 # - this assumes dta files are in windows 1252 encoding
-for (i in 1:length(names(data))){
-  data[[i]] <- iconv(data[[i]], 'CP1252', 'UTF-8', sub="byte")
-}
+# for (i in 1:length(names(data))){
+#   data[[i]] <- iconv(data[[i]], 'CP1252', 'UTF-8', sub="byte")
+# }
 
 # basic spss export
 # canont use: write.foreign(data, 'out.csv', 'code.sps', package="SPSS")
@@ -60,11 +63,14 @@ foreign:::writeForeignSPSS(data, gsub('.csv$','_bad.csv',args[2]), args[3], varn
 # - need value.label to be true so that label values are available on export
 data <- read.dta(args[1], convert.factors = F)
 
+### old code - was force encoding all questions, answers and data
+###          - stopped this because it took a long time to process the data, which is not even necessary
+###          - now only process question and answer text
 # read dta does not detect encoding and force it to utf8, so have to do it manually
 # - this assumes dta files are in windows 1252 encoding
-for (i in 1:length(names(data))){
-  data[[i]] <- iconv(data[[i]], 'CP1252', 'UTF-8', sub="byte")
-}
+# for (i in 1:length(names(data))){
+#   data[[i]] <- iconv(data[[i]], 'CP1252', 'UTF-8', sub="byte")
+# }
 
 # basic spss export
 # canont use: write.foreign(data, 'out.csv', 'code.sps', package="SPSS")
@@ -75,7 +81,8 @@ foreign:::writeForeignSPSS(data, args[2], gsub('.sps$','_bad.sps',args[3]), varn
 # write out the question labels
 # dta does not include the codes in var.labels, so have to combine them by hand
 # using hack of: code || text
-var <- attr(data, 'var.labels')
+# make sure the question text is properly encoded as utf8
+var <- iconv(attr(data, 'var.labels'), 'CP1252', 'UTF-8', sub="byte")
 val <- attr(data, 'val.labels')
 sink(args[4])
 # for each question
@@ -96,7 +103,10 @@ for (i in length(table):1){
     # for each answer in this question
     for (j in 1:length(unlist(table[i]))){
       # the answer text has the question code appended to it, so take it off using sub
-      print(paste(c(names(table[i]), unlist(table[i])[j], sub(paste(c(names(table[i]), '.'), collapse=''), '', names(unlist(table[i])[j]))), collapse=" || "))
+      # make sure the answer text is properly encoded as utf8
+      answer_text <- iconv(sub(paste(c(names(table[i]), '.'), collapse=''), '', names(unlist(table[i])[j])), 'CP1252', 'UTF-8', sub="byte")
+      # write to file as code || answer value || answer text
+      print(paste(c(names(table[i]), unlist(table[i])[j], answer_text), collapse=" || "))
     }
   }
 }
