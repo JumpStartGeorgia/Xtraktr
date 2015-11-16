@@ -8,6 +8,7 @@ Dataset.each do |d|
     if q.has_code_answers
       q.data_type = Question::DATA_TYPE_VALUES[:categorical]
       items = d.data_items.with_code(q.code)
+      # items.unset(:grouped_data) if field was removed but document had it.
       code_data = items.data
       frequency_data = {}
       total = 0

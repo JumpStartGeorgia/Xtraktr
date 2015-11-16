@@ -87,7 +87,9 @@ function pie_chart_height (json) {
 
   return chart_height;
 }
-var bar_chart_height = pie_chart_height;
+var bar_chart_height = pie_chart_height,
+  histogramm_chart_height = pie_chart_height,
+  scatter_chart_height = crosstab_chart_height;
 
 function crosstab_chart_height (json) {
   var chart_height = 501; // need the 1 for the border bottom line
@@ -488,19 +490,20 @@ function build_bar_chart (json_chart, chart_height, weight_name) { // build pie 
 }
 
 function build_histogramm_chart (json_chart, chart_height, weight_name) { // build pie chart
+   console.log(json_chart);
   var opt = prepareChart(chart_height, "chart"),
     selector_path = opt[1],
     highlight_path = opt[2],
-    chart_id = opt[3];
+    chart_id = opt[3],
+    nm = json_chart.numerical; // numerical meta data
 
   chart_height = opt[0];
- console.log("here");
-  // create chart
+
   $(selector_path + " #" + chart_id).highcharts({
     credits: { enabled: false },
+    colors: ["#C6CA53"],
     chart: {
-      type: "column",
-      inverted: true
+      type: "column"
     },
     title: {
       text: build_visual_title(highlight_path, json_chart.title.html),
@@ -513,28 +516,26 @@ function build_histogramm_chart (json_chart, chart_height, weight_name) { // bui
       style: {"text-align": "center"}
     },
     xAxis: {
-      title: { text: "title here" }, //cq.titles[$("html").attr("lang")] },
-      labels: {
-        align: "right",
-        x:-10
-      },
+      title: { text: nm.title },
+      tickPositions: formatLabel(),
       startOnTick: true,
       endOnTick: true,
-      categories: formatLabel(json_chart.data)
     },
     yAxis: { title: null },
-    legend: {
-      enabled: false
-    },
 
     plotOptions: {
       column: {
         groupPadding: 0,
         pointPadding: 0,
-        borderWidth: 0
+        borderWidth: 0,
+        pointPlacement: "between"
       }
     },
-    series: [{ data: json_chart.data }],
+    series: [{ data:  json_chart.data.map(function (d, i){ return { x:nm.min_range + nm.width*i, y: d.count, percent: d.y }; }) }],
+    legend: { enabled: false },
+    tooltip: {
+      formatter: function () { return this.y + " (" + this.point.percent + "%)"; }
+    },
     exporting: {
       sourceWidth: 1280,
       sourceHeight: chart_height,
@@ -572,26 +573,12 @@ function build_histogramm_chart (json_chart, chart_height, weight_name) { // bui
         }
       }
     }
-
-  }, function () {
-    var box = this.plotBox;
-    var label = this.renderer.label("999", (box.x+box.width) - 7, (box.y + box.height) + 5)
-      .css({
-        color:"#606060",
-        cursor:"default",
-        "font-size":"11px",
-        "fill":"#606060"
-      }).attr("class", "histogramm-last-label")
-      .add();
-    this.spacing[1] = label.width + 10 > 40 ? label.width + 10 : 40;
-    this.isDirtyBox = true;
-    this.redraw();
-    label.xSetter((box.x+box.width) - 7);
   });
-  function formatLabel (meta) {
-    var v = [];
-    for(var i = 0; i < meta[2]; ++i) {
-      v.push(Math.floor(meta[3]+i*meta[5]));
+
+  function formatLabel () {
+    var v = [], i;
+    for(i = 0; i <= nm.size; ++i) {
+      v.push(nm.min_range+i*nm.width);
     }
     return v;
   }

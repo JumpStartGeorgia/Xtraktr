@@ -177,7 +177,7 @@ class Api::V2
 
     # get the questions
     question = dataset.questions.with_code(question_code)
-
+    @_question = question
     # if the question could not be found, stop
     if question.nil?
       return {errors: [{status: '404', detail: I18n.t('api.msgs.no_question') }]}
@@ -292,7 +292,8 @@ class Api::V2
       data[:analysis_type] = ANALYSIS_TYPE[:single]
       data[:results] = dataset_single_analysis(dataset, data, with_title, weight_values)
       data[:chart] = dataset_single_chart(data, with_title, options) if with_chart_data
-      data[:map] = dataset_single_map(question.answers, data, with_title, options) if with_map_data && question.is_mappable?
+      #data[:map] = dataset_single_map(question.answers, data, with_title, options) if with_map_data && question.is_mappable?
+      data[:tmp] = dataset.data_items.code_data_all(question[:code])
     end
     return data
   end
@@ -543,6 +544,7 @@ private
     hash = {}
     if question.present?
       hash = {code: question.code, original_code: question.original_code, data_type: question.data_type, text: question.text, notes: question.notes, is_mappable: question.is_mappable, has_map_adjustable_max_range: question.has_map_adjustable_max_range}
+        .merge(question.numerical_type? ? { numerical: question.numerical.as_json(except: [:_id]) } : {})
       # if this question belongs to a group, add it
       if question.group_id.present?
         group = question.group
@@ -619,12 +621,14 @@ private
           # only keep the data that is in the list of question answers
           # - this is where can_exclude removes the unwanted answers
           answer_values = question[:answers].map{|x| x[:value]}
-          
+
           if question[:data_type] == DATA_TYPE_VALUES[:categorical]
-            merged_data.delete_if{|x| !answer_values.include?(x[1])}
+            to_delete_indexes = merged_data.each_index.select{|i| !answer_values.include? merged_data[i][1] }            
           elsif question[:data_type] == DATA_TYPE_VALUES[:numerical]
-            merged_data.delete_if{|x| answer_values.include?(x[1])}
+            to_delete_indexes = merged_data.each_index.select{|i| answer_values.include? merged_data[i][1] }            
           end
+          merged_data.delete_if.with_index { |_, index| to_delete_indexes.include? index }
+          merged_weight_values.delete_if.with_index { |_, index| to_delete_indexes.include? index }
 
           filter_results = nil
           if with_title
@@ -656,11 +660,15 @@ private
         # only keep the data that is in the list of question answers
         # - this is where can_exclude removes the unwanted answers
         answer_values = question[:answers].map{|x| x[:value]}
+        
         if question[:data_type] == DATA_TYPE_VALUES[:categorical]
-          data.delete_if{|x| !answer_values.include?(x)}
+          to_delete_indexes = data.each_index.select{|i| !answer_values.include? data[i] }
         elsif question[:data_type] == DATA_TYPE_VALUES[:numerical]
-          data.delete_if{|x| answer_values.include?(x)}
+          to_delete_indexes = data.each_index.select{|i| answer_values.include? data[i] }
         end
+        data.delete_if.with_index { |_, index| to_delete_indexes.include? index }
+        weight_values.delete_if.with_index { |_, index| to_delete_indexes.include? index }
+
         return dataset_single_analysis_processing(question, data.length, data, with_title: with_title, weight_values: weight_values)
       end
     end
@@ -683,12 +691,10 @@ private
     end
 
     if data.present?
-      if question[:data_type] == DATA_TYPE_VALUES[:categorical]
-        if weight_values.present?
-          #merged_data = data.zip(weight_values)
+      if weight_values.present?
+        if @_question.categorical_type?
 
           # do not want to count nil values
-          #counts_per_answer = data.frequency_data
           counts_per_answer =  data.select{|x| x.present?}.each_with_object(Hash.new(0)) { |item,counts| counts[item.to_s] += 1 }
 
           weighted_total_responses = 0
@@ -701,12 +707,9 @@ private
             end
           }
 
-          # merged_data.select{|x| x[0].present?}
-          #                       .each_with_object(Hash.new(0)) { |item,counts| counts[item[0].to_s] += 1*item[1].to_f }
-
           if counts_per_answer.present?
-            # record the total response
-            results[:total_responses] = counts_per_answer.values.inject(:+)
+            
+            results[:total_responses] = counts_per_answer.values.inject(:+) # record the total response
             #weighted_total_responses = weighted_counts_per_answer.values.inject(:+)
 
             # for each question answer, add the count and percent
@@ -724,21 +727,56 @@ private
             end
 
           end
+        elsif @_question.numerical_type?
 
-        else
+          num = @_question.numerical
+          fd = Array.new(num.size, 0)
+          fd.each_with_index{|x, i| fd[i] = [0,0] }
+          fdw = fd.clone
+
+          #formatted and grouped data calculation
+          data.each_with_index {|d,i|
+            if is_numeric?(d)
+              if num.type == 0 
+                tmpD = d.to_i
+              elsif num.type == 1
+                tmpD = d.to_f
+              end
+
+              if tmpD >= num.min && tmpD <= num.max
+                index = ((tmpD-num.min_range)/num.width-0.00001).floor
+                fd[index][0] += 1
+                fdw[index][0] += 1*weight_values[i].to_f
+              else 
+              end
+            end 
+          }
+          total = 0
+          total_w = 0
+          fd.each {|x| total+=x[0] }
+          fdw.each {|x| total_w+=x[0] }
+
+          results[:total_responses] = total
+          
+          fd.each_with_index {|x,i| 
+          fd[i][1] = (x[0].to_f/total*100).round(2) }
+          fdw.each_with_index {|x,i| 
+          fdw[i][1] = (x[0].to_f/total_w*100).round(2) }
+          
+          fd.each_with_index{|x,i| results[:analysis] << { answer_value: i, answer_text: num.min_range + num.width*i,
+           unweighted_count: x[0], weighted_count: fdw[i][0], weighted_percent: fdw[i][1] } }
+        end
+      else
+        if @_question.categorical_type?
+
           # do not want to count nil values
-          counts_per_answer = data.select{|x| x.present?}
-                                .each_with_object(Hash.new(0)) { |item,counts| counts[item.to_s] += 1 }
-
+          counts_per_answer = data.select{|x| x.present?}.each_with_object(Hash.new(0)) { |item,counts| counts[item.to_s] += 1 }
 
           if counts_per_answer.present?
-            # record the total response
-            results[:total_responses] = counts_per_answer.values.inject(:+)
-
-         
-
-            # for each question answer, add the count and percent
-            question[:answers].each do |answer|
+            
+            results[:total_responses] = counts_per_answer.values.inject(:+) # record the total response
+            
+            question[:answers].each do |answer| # for each question answer, add the count and percent
               value = answer[:value]
               item = {answer_value: answer[:value], answer_text: answer[:text], count: 0, percent: 0}
               if counts_per_answer[value].present?
@@ -748,11 +786,39 @@ private
               results[:analysis] << item
             end
           end
+        elsif @_question.numerical_type?
+
+          num = @_question.numerical
+          fd = Array.new(num.size, 0)
+          fd.each_with_index{|x, i| fd[i] = [0,0] }
+
+          #formatted and grouped data calculation
+          data.each {|d|
+            if is_numeric?(d)
+              if num.type == 0 
+                tmpD = d.to_i
+              elsif num.type == 1
+                tmpD = d.to_f
+              end
+
+              if tmpD >= num.min && tmpD <= num.max
+                index = ((tmpD-num.min_range)/num.width-0.00001).floor
+                fd[index][0] += 1
+              else 
+              end
+            end 
+          }
+          total = 0
+          fd.each {|x| total+=x[0]}
+          results[:total_responses] = total
+          fd.each_with_index {|x,i| 
+          fd[i][1] = (x[0].to_f/total*100).round(2) }
+
+          
+          fd.each_with_index{|x,i| results[:analysis] << { answer_value: i, answer_text: num.min_range + num.width*i, count: x[0], percent: x[1] } }
         end
-      elsif question[:data_type] == DATA_TYPE_VALUES[:numerical]
-        results[:analysis] = data
-        results[:total_responses] = data.length
       end
+
       # set the titles
       if with_title
         results[:title][:html] = dataset_single_analysis_title('html', question, filtered_by, filtered_by_answer)
@@ -776,66 +842,43 @@ private
         chart = []
         data[:results][:filter_analysis].each do |filter|
           chart_item = {filter_answer_value: filter[:filter_answer_value], filter_answer_text: filter[:filter_answer_text], filter_results: {} }
+          fr = chart_item[:filter_results]
 
-          # set the titles
-          # - assume titles are already set in data[:filtered_by][:results]
-          if with_title
-            chart_item[:filter_results][:title] = filter[:filter_results][:title]
-            chart_item[:filter_results][:subtitle] = filter[:filter_results][:subtitle]
+          if with_title # set the titles - assume titles are already set in data[:filtered_by][:results]
+            fr[:title] = filter[:filter_results][:title]
+            fr[:subtitle] = filter[:filter_results][:subtitle]
           end
-
-          # create embed id
-          # add filter value
-          options['filtered_by_value'] = filter[:filter_answer_value]
+          
+          options['filtered_by_value'] = filter[:filter_answer_value] # add filter value
           options['visual_type'] = 'chart'
-          # chart_item[:filter_results][:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
-          chart_item[:filter_results][:embed_id] = {
+
+          fr[:embed_id] = {           # create embed id
             pie_chart: Base64.urlsafe_encode64(clean_options(options.merge({ :chart_type => "pie"})).to_query),
             bar_chart: Base64.urlsafe_encode64(clean_options(options.merge({ :chart_type => "bar"})).to_query)
           } 
 
+          fr[:data] = [] # create data for chart
+          filter[:filter_results][:analysis].each{|x| fr[:data] << dataset_single_chart_processing(x); }
 
-          # create data for chart
-          chart_item[:filter_results][:data] = []
-          data[:question][:answers].each do |answer|
-            data_result = filter[:filter_results][:analysis].select{|x| x[:answer_value] == answer[:value]}.first
-            if data_result.present?
-              chart_item[:filter_results][:data] << dataset_single_chart_processing(answer, data_result)
-            end
-          end
-          if chart_item[:filter_results][:data].present?
-            chart << chart_item
-          end
+          chart << chart_item if fr[:data].present?
         end
       else
         chart = {}
-
-        # set the titles
-        # - assume titles are already set in data[:results]
-        if with_title
+        
+        if with_title # set the titles - assume titles are already set in data[:results]
           chart[:title] = data[:results][:title]
           chart[:subtitle] = data[:results][:subtitle]
         end
-
-        # create embed id
+        
         options['visual_type'] = 'chart'
-        chart[:embed_id] = {
-            pie_chart: Base64.urlsafe_encode64(clean_options(options.merge({ :chart_type => "pie"})).to_query),
-            bar_chart: Base64.urlsafe_encode64(clean_options(options.merge({ :chart_type => "bar"})).to_query)
-          } 
 
-        # create data for chart
-        chart[:data] = []
-        # data[:results][:analysis].each{|x|
-        #   chart[:data] << dataset_single_chart_processing(answer, data_result)
-        # }
-         #Rails.logger.debug("-------------------------------------------bliblu-#{data[:results][:analysis].inspect}")
-        data[:question][:answers].each do |answer|
-          data_result = data[:results][:analysis].select{|x| x[:answer_value] == answer[:value]}.first
-          if data_result.present?
-            chart[:data] << dataset_single_chart_processing(answer, data_result)
-          end
-        end
+        chart[:embed_id] = { # create embed id
+          pie_chart: Base64.urlsafe_encode64(clean_options(options.merge({ :chart_type => "pie"})).to_query),
+          bar_chart: Base64.urlsafe_encode64(clean_options(options.merge({ :chart_type => "bar"})).to_query)
+        } 
+
+        chart[:data] = [] # create data for chart
+        data[:results][:analysis].each{|x| chart[:data] << dataset_single_chart_processing(x); }    
       end
 
       return chart
@@ -844,22 +887,14 @@ private
 
 
   # format: {name, y(percent), count, answer_value}
-  def self.dataset_single_chart_processing(answer, data_result)
-    if data_result.has_key?(:weighted_count)
-      {
-        name: answer[:text],
-        y: data_result[:weighted_percent],
-        count: data_result[:weighted_count],
-        answer_value: answer[:value]
-      }
-    else
-      {
-        name: answer[:text],
-        y: data_result[:percent],
-        count: data_result[:count],
-        answer_value: answer[:value]
-      }
-    end
+  def self.dataset_single_chart_processing(item)
+    weighted = item.has_key?(:weighted_count) ? "weighted_" : ""
+    {
+      name: item[:answer_text],
+      y: item[:"#{weighted}percent"],
+      count: item[:"#{weighted}count"],
+      answer_value: item[:answer_value]
+    }   
   end
 
   # convert the results into highmaps map format
@@ -986,11 +1021,15 @@ private
         # - this is where can_exclude removes the unwanted answers
         q_answer_values = question[:answers].map{|x| x[:value]}
         bdb_answer_values = broken_down_by[:answers].map{|x| x[:value]}
+
         if question[:data_type] == DATA_TYPE_VALUES[:categorical]
-          merged_data.delete_if{|x| !q_answer_values.include?(x[1][0]) && !bdb_answer_values.include?(x[1][1])}
+          to_delete_indexes = merged_data.each_index.select{|i| !q_answer_values.include?(merged_data[i][1][0]) && !bdb_answer_values.include?(merged_data[i][1][1]) }
         elsif question[:data_type] == DATA_TYPE_VALUES[:numerical]
-          merged_data.delete_if{|x| q_answer_values.include?(x[1][0]) || bdb_answer_values.include?(x[1][1])}
+          to_delete_indexes = merged_data.each_index.select{|i| q_answer_values.include?(merged_data[i][1][0]) || bdb_answer_values.include?(merged_data[i][1][1]) }
         end
+        merged_data.delete_if.with_index { |_, index| to_delete_indexes.include? index }
+        merged_weight_values.delete_if.with_index { |_, index| to_delete_indexes.include? index }
+
 
         filter_results = nil
         if with_title
@@ -1023,12 +1062,14 @@ private
       # - this is where can_exclude removes the unwanted answers
       q_answer_values = question[:answers].map{|x| x[:value]}
       bdb_answer_values = broken_down_by[:answers].map{|x| x[:value]}
-      data.delete_if{|x| !q_answer_values.include?(x[0]) && !bdb_answer_values.include?(x[1])}
+
       if question[:data_type] == DATA_TYPE_VALUES[:categorical]
-        data.delete_if{|x| !q_answer_values.include?(x[0]) && !bdb_answer_values.include?(x[1])}
+        to_delete_indexes = data.each_index.select{|i| !q_answer_values.include?(data[i][0]) && !bdb_answer_values.include?(data[i][1]) }
       elsif question[:data_type] == DATA_TYPE_VALUES[:numerical]
-        data.delete_if{|x| q_answer_values.include?(x[0]) || bdb_answer_values.include?(x[1])}
+        to_delete_indexes = data.each_index.select{|i| q_answer_values.include?(data[i][0]) || bdb_answer_values.include?(data[i][1]) }
       end
+      data.delete_if.with_index { |_, index| to_delete_indexes.include? index }
+      weight_values.delete_if.with_index { |_, index| to_delete_indexes.include? index }
 
       return dataset_comparative_analysis_processing(question, broken_down_by, data.length, data, with_title: with_title, weight_values: weight_values)
     end
@@ -1532,7 +1573,7 @@ private
   def self.create_time_series_question_hash(question, can_exclude=false)
     hash = {}
     if question.present?
-      hash = {code: question.code, original_code: question.original_code, text: question.text, notes: question.notes}
+      hash = {code: question.code, original_code: question.original_code, text: question.text, notes: question.notes }
       # if this question belongs to a group, add it
       if question.group_id.present?
         group = question.group
@@ -2038,4 +2079,7 @@ private
     return title.html_safe
   end
 
+  def self.is_numeric?(obj) 
+     obj.to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? false : true
+  end
 end

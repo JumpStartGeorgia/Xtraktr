@@ -375,6 +375,16 @@ class Dataset < CustomTranslation
       end
     end      
 
+    # get hash of data [data, formatted_data, frequency_data, frequency_data_total] for the provided code
+    def code_data_all(code)
+      x = where(:code => code.downcase).first if code.present?
+      if x.present?
+        return x
+      else
+        return nil
+      end
+    end
+    
     # get the formatted_data array for the provided code
     def code_formatted_data(code)
       x = where(:code => code.downcase).first if code.present?
