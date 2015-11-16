@@ -1,5 +1,5 @@
 # data_type field was added to questions
-# update all questions to have categorical data_value where has_code_answers_for_analysis is true
+# update all questions to have categorical data_value where is_analysable is true
 
 puts "DATASETS - updating datasets questions data_type field, if question is categorical calculate frequency_data"
 Dataset.each do |d|

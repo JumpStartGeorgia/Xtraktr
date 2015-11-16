@@ -22,8 +22,8 @@ class Question < CustomTranslation
   field :notes, type: String, localize: true
   # whether or not the questions has answers
   field :has_code_answers, type: Boolean, default: false
-  # whether or not the questions has answers that can be analzyed
-  field :has_code_answers_for_analysis, type: Boolean, default: false
+  # whether or not the questions has answers that can be analazyed previously - has_code_answers_for_analysis
+  field :is_analysable, type: Boolean, default: false
   # whether or not the question should not be included in the analysis
   field :exclude, type: Boolean, default: false
   # whether or not the question is tied to a shapeset
@@ -99,7 +99,7 @@ class Question < CustomTranslation
   # index ({ :is_mappable => 1})
 
   #############################
-  attr_accessible :code, :text, :original_code, :has_code_answers, :has_code_answers_for_analysis, :is_mappable, :has_can_exclude_answers, :has_map_adjustable_max_range,
+  attr_accessible :code, :text, :original_code, :has_code_answers, :is_analysable, :is_mappable, :has_can_exclude_answers, :has_map_adjustable_max_range,
       :answers_attributes, :exclude, :text_translations, :notes, :notes_translations, :group_id, :sort_order, :is_weight, :numerical_attributes
 
   #############################
@@ -152,9 +152,9 @@ class Question < CustomTranslation
   end
 
   def update_flags
-   logger.debug "******** updating question flags for #{self.code}"
+    #logger.debug "******** updating question flags for #{self.code}"
     self.has_code_answers = self.answers.count > 0
-    self.has_code_answers_for_analysis = self.answers.all_for_analysis.count > 0
+    self.is_analysable = self.answers.all_for_analysis.count > 0 || self.numerical_type?
     self.has_can_exclude_answers = self.answers.has_can_exclude?
 
     return true
@@ -174,7 +174,7 @@ class Question < CustomTranslation
 
   # if the exclude flag changes, update the dataset stats
   def update_stats
-    logger.debug "@@@@@@@ question update stats"
+    #logger.debug "@@@@@@@ question update stats"
     if self.exclude_changed?
       self.dataset.update_stats
     end
@@ -184,15 +184,15 @@ class Question < CustomTranslation
   # if the question changed, make sure the dataset.reset_download_files flag is set to true
   # if the only change is to the flags, the donwload does not need to be updated
   def check_if_dirty(save_dataset=true)
-    puts "======= question changed? #{self.changed?}; changed: #{self.changed}"
-    ignore = [:has_can_exclude_answers, :has_code_answers, :has_code_answers_for_analysis]
+    #puts "======= question changed? #{self.changed?}; changed: #{self.changed}"
+    ignore = [:has_can_exclude_answers, :has_code_answers, :is_analysable]
     changed = self.changed
     if changed.present?
       # delete the keys we do not care about
       ignore.each{|x| changed.delete(x)}
     end
     if self.changed? && changed.present?
-      puts "========== question changed!, setting reset_download_files = true"
+      #puts "========== question changed!, setting reset_download_files = true"
       self.dataset.reset_download_files = true
       self.dataset.save if save_dataset
     end

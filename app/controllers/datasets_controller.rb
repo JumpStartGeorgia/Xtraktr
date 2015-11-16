@@ -399,7 +399,7 @@ class DatasetsController < ApplicationController
               nm_min: 0,
               nm_max: 0,
               nm_title: nil,
-              has_answers: q.has_code_answers_for_analysis
+              has_answers: q.is_analysable
             }
             if q.numerical?
               orig_locale = I18n.locale.to_s

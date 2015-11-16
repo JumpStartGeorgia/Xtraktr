@@ -23,7 +23,7 @@ module ExploreDatasetHelper
 
       elsif item.class == Question
         # add question
-        if item.has_code_answers_for_analysis? && !(only_categorical && item.data_type != Question::DATA_TYPE_VALUES[:categorical])
+        if item.is_analysable? && !(only_categorical && item.data_type != Question::DATA_TYPE_VALUES[:categorical])
           html << generate_explore_dataset_question_option(item, dataset, skip_content, selected_code, disabled_code, disabled_code2, group_type)
         end
       end

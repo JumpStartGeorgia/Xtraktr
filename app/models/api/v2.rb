@@ -753,11 +753,13 @@ private
           }
           total = 0
           total_w = 0
-          fd.each {|x| total+=x[0] }
+          fd.each {|x| total+=x[0]
+             Rails.logger.debug("--------------------------------------------#{x[0]}")
+          }
           fdw.each {|x| total_w+=x[0] }
-
+           Rails.logger.info("------------------------------------------here1--#{total}")
           results[:total_responses] = total
-          
+
           fd.each_with_index {|x,i| 
           fd[i][1] = (x[0].to_f/total*100).round(2) }
           fdw.each_with_index {|x,i| 

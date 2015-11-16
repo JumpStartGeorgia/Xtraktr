@@ -163,7 +163,7 @@ class Dataset < CustomTranslation
     end
 
     def for_analysis_not_in_codes(codes)
-      nin(:code => codes).where(:exclude => false, :has_code_answers_for_analysis => true)
+      nin(:code => codes).where(:exclude => false, :is_analysable => true)
     end
 
     def with_original_code(original_code)
@@ -177,17 +177,17 @@ class Dataset < CustomTranslation
 
     # get questions that are not excluded and have code answers
     def for_analysis
-      where(:exclude => false, :has_code_answers_for_analysis => true).to_a
+      where(:exclude => false, :is_analysable => true).to_a
     end
 
     # get questions that are not excluded and have code answers
     def for_analysis_with_exclude_questions
-      where(:has_code_answers_for_analysis => true).to_a
+      where(:is_analysable => true).to_a
     end
 
     # get count questions that are not excluded and have code answers
     def for_analysis_count
-      where(:exclude => false, :has_code_answers_for_analysis => true).count
+      where(:exclude => false, :is_analysable => true).count
     end
 
     # get all of the questions with code answers
@@ -221,7 +221,7 @@ class Dataset < CustomTranslation
 
     # get just the codes that can be analyzed
     def unique_codes_for_analysis
-      where(:exclude => false, :has_code_answers_for_analysis => true).only(:code).map{|x| x.code}
+      where(:exclude => false, :is_analysable => true, :data_type => 1).only(:code).map{|x| x.code}
     end
 
     # get all questions that are mappable
@@ -287,12 +287,12 @@ class Dataset < CustomTranslation
 
     # get questions that are mappable
     def mappable
-      where(:is_mappable => true, :has_code_answers_for_analysis => true)
+      where(:is_mappable => true, :is_analysable => true)
     end
 
     # get questions that are not mappable
     def not_mappable
-      where(:is_mappable => false, :has_code_answers_for_analysis => true)
+      where(:is_mappable => false, :is_analysable => true)
     end
 
     # get questions that are not assigned to groups
@@ -306,9 +306,9 @@ class Dataset < CustomTranslation
         when 'download'
           where(group_id: group_id, can_download: true).to_a
         when 'analysis'
-          where(group_id: group_id, exclude: false, has_code_answers_for_analysis: true).to_a
+          where(group_id: group_id, exclude: false, is_analysable: true).to_a
         when 'anlysis_with_exclude_questions'
-          where(group_id: group_id, has_code_answers_for_analysis: true).to_a
+          where(group_id: group_id, is_analysable: true).to_a
         else
           where(group_id: group_id)
       end
@@ -476,7 +476,7 @@ class Dataset < CustomTranslation
   index ({ :'questions.is_mappable' => 1})
   index ({ :'questions.can_download' => 1})
   index ({ :'questions.has_code_answers' => 1})
-  index ({ :'questions.has_code_answers_for_analysis' => 1})
+  index ({ :'questions.is_analysable' => 1})
   index ({ :'questions.exclude' => 1})
   index ({ :'questions.shapeset_id' => 1})
   index ({ :'questions.answers.can_exclude' => 1})
@@ -1196,9 +1196,9 @@ class Dataset < CustomTranslation
         when 'download'
           self.questions.where(:can_download => true, :group_id => options[:group_id])
         when 'analysis'
-          self.questions.where(:exclude => false, :has_code_answers_for_analysis => true, :group_id => options[:group_id])
+          self.questions.where(:exclude => false, :is_analysable => true, :group_id => options[:group_id])
         when 'anlysis_with_exclude_questions'
-          self.questions.where(:has_code_answers_for_analysis => true, :group_id => options[:group_id])
+          self.questions.where(:is_analysable => true, :group_id => options[:group_id])
         else
           self.questions.where(:group_id => options[:group_id])
       end
@@ -1260,9 +1260,9 @@ class Dataset < CustomTranslation
         when 'download'
           self.questions.where(:can_download => true, :group_id => options[:group_id])
         when 'analysis'
-          self.questions.where(:exclude => false, :has_code_answers_for_analysis => true, :group_id => options[:group_id])
+          self.questions.where(:exclude => false, :is_analysable => true, :group_id => options[:group_id])
         when 'anlysis_with_exclude_questions'
-          self.questions.where(:has_code_answers_for_analysis => true, :group_id => options[:group_id])
+          self.questions.where(:is_analysable => true, :group_id => options[:group_id])
         else
           self.questions.where(:group_id => options[:group_id])
       end
@@ -1270,7 +1270,7 @@ class Dataset < CustomTranslation
       if options[:exclude_unknown_data_type]
         tmp_items = tmp_items.where(:data_type.ne => Question::DATA_TYPE_VALUES[:unknown])
       end
-      items << tmp_items.as_json({only: [:code, :original_code, :text, :data_type, :group_id, :exclude, :is_mappable, :has_can_exclude_answers, :has_code_answers_for_analysis, :sort_order]})
+      items << (tmp_items.as_json(only: [:code, :original_code, :text, :data_type, :group_id, :exclude, :is_mappable, :has_can_exclude_answers, :is_analysable, :sort_order]))
     end
     items.flatten!
 
@@ -1278,7 +1278,7 @@ class Dataset < CustomTranslation
     # way to sort: sort only items that have sort_order, then add groups with no sort_order, then add questions with no sort_order
     items = items.select{|x| x["sort_order"].present? }.sort{|x,y| x["sort_order"] <=> y["sort_order"] } + 
       items.select{|x| x["parent_id"].present? && x["sort_order"].nil?} +
-      items.select{|x| x["group_id"].present? && x["sort_order"].nil?}
+      items.select{|x| x["code"].present? && x["sort_order"].nil?}
 
 
     return items

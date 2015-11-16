@@ -4,7 +4,7 @@ var datatables, h, i, j, k, cacheId,
   js, select_map;
 
 function build_charts (data, type) {
-   console.log(data, type);
+  console.log(data, type);
   if (data.chart) {
     var flag = false,
       chart_height = window[type + "_chart_height"](data),     // determine chart height // pie_chart_height(json);
@@ -644,7 +644,7 @@ function build_explore_data_page (json) { // build the visualizations for the ex
   }
   if(type !== null) { build_charts(json, type); }
   build_highmaps(json);
-  build_datatable(json);
+  //build_datatable(json);
   build_details(json);
 
   build_page_title(json);
@@ -775,14 +775,15 @@ function build_selects (skip_content) {
   var q = gon.questions,
     dataset = q.dataset,
     html = "",
-    html_only_categorical = "";
-  var type_map = [];
+    html_only_categorical = "",
+    type_map = [],
+    type_map_index = 0;
 
   skip_content = (typeof skip_content !== "boolean" ? false : skip_content);
 
-  build_options_partial(q.items, null);
+  build_options_partial(q.items, null, null);
 
-  function build_options_partial (items, level) {
+  function build_options_partial (items, level, parent_id) { // todo
     var tmp = "";
     items.forEach(function (item) {
       if(item.hasOwnProperty("parent_id")) { // Group
@@ -790,20 +791,21 @@ function build_selects (skip_content) {
         html += tmp;
         html_only_categorical += tmp;
 
-        type_map.push([(level === null ? 0 : 1)]);
+        type_map.push([(level === null ? 0 : 1), 0, 0, (level === null ? null : type_map_index)]);
 
         if(item.subitems !== null) {
-          build_options_partial(item.subitems, (level !== null ? "subgroup" : "group"));
+          build_options_partial(item.subitems, (level !== null ? "subgroup" : "group"), type_map_index);
         }
       }
-      else if(item.hasOwnProperty("group_id")){ // Question
-        if (item.has_code_answers_for_analysis) {
+      else if(item.hasOwnProperty("code")){ // Question
+        if (item.is_analysable) {
           tmp = build_selects_question_option(item, level, skip_content);
           html += tmp;
-          type_map.push([2, item.code, item.data_type]);
+          type_map.push([2, item.code, item.data_type, parent_id]);
           if(item.data_type === 1) { html_only_categorical += tmp; }
         }
       }
+      ++type_map_index;
     });
   }
   var counts = [0,0,0,0]; // group cat, num, subgroup cat, num
@@ -815,16 +817,17 @@ function build_selects (skip_content) {
       if(cur[2] == 2) { ++counts[1]; ++counts[3]; }
     }
     else if(cur[0] == 1) {
-      cur.push(counts[2]);
-      cur.push(counts[3]);
+      cur[1] = counts[2];
+      cur[2] = counts[3];
       counts[2] = counts[3] = 0;
     }
     else if(cur[0] == 0) {
-      cur.push(counts[0]);
-      cur.push(counts[1]);
+      cur[1] = counts[0];
+      cur[2] = counts[1];
       counts[0] = counts[1] = counts[2] = counts[3] = 0;
     }
   }
+   console.log(type_map);
   return [html, html_only_categorical, type_map];
 }
 function build_selects_group_option (group) {
@@ -1040,14 +1043,37 @@ $(document).ready(function () {
 
           //broken_by_menu.find("li[style*='display: none']").show(); // turn on all hidden items
           // $(".form-explore-filter-by").toggle(type===1);
-
+          var step = 0, tree_path = [-1,-1];
+          select_map.reverse.forEach(function(d, i) {
+            if(step === 0 && q_index === i) {              
+              step = 1;
+            }
+            else if (step === 1)
+            {
+              if(d[0] === 1) {
+                tree_path[0] = i;
+                step = 2;
+              }
+              else if(d[0] === 0){
+                step == 3;
+              }
+            }
+            else if(step === 2 && d[0] === 0)
+            {
+              step = 3;
+            }
+          });
           select_map.forEach(function (d, i){
+            if(i == 0) {
+             console.log(d, i, "-", type);
+             }
             if( (d[0] === 2 && d[2] == type) ||
                 (d[0] == 1 && ((type == 1 && d[1] > 0)||(type == 2 && d[2] > 0))) ||
                 (d[0] == 0 && ((type == 1 && d[1] > 0)||(type == 2 && d[2] > 0)))) {
               broken_by_menu.find("li[data-original-index='" + (i + 1) + "']").show();
             }
           });
+          broken_by_menu.find("li[data-original-index='0']").show();
           broken_by_menu.find("li:eq(" + (index+1) + ")").hide(); // turn on off this item
 
           // turn on all items of same data_type
