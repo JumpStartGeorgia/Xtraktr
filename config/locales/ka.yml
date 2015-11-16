@@ -764,7 +764,7 @@ ka:
       question_no_answers: "ამ შეკითხვას არ აქვს პასუხები და ვერ გაანალიზდება"
       powered_by_xtraktr: "შექმნილია Xtraktr-ით"
       powered_by_xtraktr_title: "მონაცემები შექმნილია Xtraktr-ის პლატფორმის გამოყენებით. გაიგეთ მეტი და დაამატეთ თქვენი მონაცემები Xtraktr-ს."
-      weighted_footnote: "მიკუთვნებული შეწოვნა:"
+      weighted_footnote: "მიკუთვნებული შეწონვა: "
       download_data_explanation: 'სიღრმისეული ანალიზისთვის შეგიძლიათ მონაცემთა შემდეგ ფორმატში ჩამოტვირთვა.'      
       show_more: ვრცლად
       show_less: მოკლედ      
