@@ -780,6 +780,12 @@ en:
       change_category: Change Category
       categories: Categories
       category: Category
+      csv:
+        title: CSV
+        tooltip: Download as CSV
+      xlsx:
+        title: XLSX
+        tooltip: Download as XLSX
     common:
       xtraktr:
         app_name: Xtraktr
