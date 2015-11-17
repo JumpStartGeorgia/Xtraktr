@@ -34,9 +34,10 @@ $(document).ready(function () {
     .off('click.dropdown touchstart.dropdown.data-api', '.dropdown')
     .on('click.dropdown touchstart.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation(); });
 
-  $('body').tooltip({
-    selector: '[title]',
-    container: 'body'
+  $("body").tooltip({
+    selector: "[title]",
+    container: "body",
+    html: true
   });
 
   $('#side-menu a').click(function () {

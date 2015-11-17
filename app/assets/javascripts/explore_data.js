@@ -1,7 +1,16 @@
 /*global  $, gon, Highcharts, params */
 /*eslint camelcase: 0, no-underscore-dangle: 0, no-unused-vars: 0, no-undef: 0*/
 var js = { cache: {} }, datatables, h, i, j, k, cacheId,
-  $jumpto, $jumpto_chart, $jumpto_map;
+  $jumpto,
+  $jumpto_chart,
+  $jumpto_map,
+  $jumpto_map_select,
+  $jumpto_map_label,
+  // $jumpto_map_filter_by,
+  // $jumpto_map_filter_by_select,
+  // $jumpto_map_broken_by,
+  // $jumpto_map_broken_by_select,
+  $tab_content;
 
 function update_available_weights () { // update the list of avilable weights based on questions that are selected
   var select_weight = $("select#weighted_by_code"),
@@ -48,133 +57,60 @@ function set_can_exclude_visibility () { // show or hide the can exclude checkbo
 }
 
 function build_highmaps (json) { // build highmap
-  var i;
-  show_map_jumpto = true;
   if (json.map){
-    // adjust the width of the map to fit its container
-    // $("#container-map").width($("#explore-tabs").width());
+    var chart_height = map_chart_height(json), // determine chart height
+      weight_name = json.weighted_by ? json.weighted_by.weight_name : undefined,
+      jump_options = "",
+      map_index = 1;
 
-    // determine chart height
-    var chart_height = map_chart_height(json);
-
-    // remove all existing maps
-    $("#container-map").empty();
+    $("#container-map").empty(); // remove all existing maps
     $("#tab-map").addClass("behind_the_scenes");
 
-    // remove all existing map links
-    $("#jumpto #jumpto-map select").empty();
-    $("#jumpto #jumpto-map h4").empty().hide();
-    var template = $("#jumpto #jumpto-map .jumpto-map-item:first").clone();
-    // remove any existing fancy select list
-    $(template).find("div.bootstrap-select").remove();
-    // remove all extra jumpto map items
-    if ($("#jumpto #jumpto-map .jumpto-map-item").length > 1){
-      for (i=$("#jumpto #jumpto-map .jumpto-map-item").length; i>0; i--){
-        $("#jumpto #jumpto-map .jumpto-map-item").splice(i-1, 1);
-      }
-    }
+    $jumpto_map_select.empty();
 
-    var jumpto_text = "";
-    var non_map_text;
-    if (json.broken_down_by){
-      non_map_text = json.broken_down_by.text;
-      if (json.broken_down_by.is_mappable == true){
-        non_map_text = json.question.text;
-      }
-    }
-
-    var weight_name = json.weighted_by ? json.weighted_by.weight_name : undefined;
-
-    // test if the filter is being used and build the chart(s) accordingly
-    if (json.map.constructor === Array){
-      // filters
-      var map_index = 0;
-      var jump_ary = [];
-      var jump_item;
-
+    if (json.map.constructor === Array) { // filters // test if the filter is being used and build the chart(s) accordingly
       for(h=0; h<json.map.length; h++){
         if (json.broken_down_by && json.map[h].filter_results.map_sets.constructor === Array){
-          // add jumpto link
-          jump_item = $(template).clone();
-          $(jump_item).find("h4").html(json.filtered_by.text + " = <span>" + json.map[h].filter_answer_text + "</span>");
-          jumpto_text = "<option></option>";
-
-          for(i=0; i<json.map[h].filter_results.map_sets.length; i++){
-            build_highmap(json.map[h].filter_results.shape_question_code, json.map[h].filter_results.adjustable_max_range, json.map[h].filter_results.map_sets[i], chart_height, weight_name);
-
-            // add jumpto link
-            jumpto_text += "<option data-href='#map-" + (map_index+1) + "'>" + non_map_text + " = " + json.map[h].filter_results.map_sets[i].broken_down_answer_text + "</option>";
-
-            // increase the map index
-            map_index += 1;
-          }
-
-          $(jump_item).find("select").append(jumpto_text);
-          jump_ary.push(jump_item);
-
-        }else{
+          json.map[h].filter_results.map_sets.forEach(function (d, i) {
+            build_highmap(json.map[h].filter_results.shape_question_code, json.map[h].filter_results.adjustable_max_range, d, chart_height, weight_name);
+            jump_options += "<option data-href='#map-" + (map_index) + "'>" + json.map[h].filter_answer_text + " -> " + d.broken_down_answer_text + "</option>";
+            ++map_index;
+          });
+        }
+        else{
           build_highmap(json.map[h].filter_results.shape_question_code, json.map[h].filter_results.adjustable_max_range, json.map[h].filter_results.map_sets, chart_height, weight_name);
-
-          // add jumpto link
-          jumpto_text += "<option data-href='#map-" + (map_index+1) + "'>" + json.filtered_by.text + " = " + json.map[h].filter_answer_text + "</option>";
-
-          // increase the map index
-          map_index += 1;
+          jump_options += "<option data-href='#map-" + (map_index) + "'>" + json.map[h].filter_answer_text + "</option>";
+          ++map_index;
         }
-      }
-
-      // show jumpto
-      // - if jump_ary exists (filter and broken down), add a drop down for each filter value
-      if (jump_ary != undefined && jump_ary.length > 0){
-        // remove the existing template
-        $("#jumpto #jumpto-map .jumpto-map-item").remove();
-        for (i=0; i<jump_ary.length; i++){
-          $("#jumpto #jumpto-map").append(jump_ary[i]);
-
-          var select = $("#jumpto #jumpto-map select:last");
-          if (i == 0) {
-            $(select).find("option:eq(1)").prop("selected", true);
-          }
-          $(select).selectpicker();
-        }
-        $("#jumpto #jumpto-map h4").show();
-      }else{
-        $("#jumpto #jumpto-map select").append(jumpto_text);
-        $("#jumpto #jumpto-map select").val($("#jumpto #jumpto-map select option:first").attr("value"));
-        $("#jumpto #jumpto-map select").selectpicker("refresh");
-        $("#jumpto #jumpto-map select").selectpicker("render");
-      }
-
-    }else{
-      // no filters
-      if (json.broken_down_by && json.map.map_sets.constructor === Array){
-        for(i=0; i<json.map.map_sets.length; i++){
-          build_highmap(json.map.shape_question_code, json.map.adjustable_max_range, json.map.map_sets[i], chart_height, weight_name);
-
-          // add jumpto link
-          jumpto_text += "<option data-href='#map-" + (i+1) + "'>" + non_map_text + " = " + json.map.map_sets[i].broken_down_answer_text + "</option>";
-        }
-        var jmp_select = $("#jumpto #jumpto-map select"); // show jumpto
-        jmp_select.append(jumpto_text);
-        jmp_select.val($("#jumpto #jumpto-map select option:first").attr("value"));
-        jmp_select.selectpicker("refresh");
-        jmp_select.selectpicker("render");
-
-      }else{
-        build_highmap(json.map.shape_question_code, json.map.adjustable_max_range, json.map.map_sets, chart_height, weight_name);
-        show_map_jumpto = false; // hide jumpto
       }
     }
+    else { // no filters
+      if (json.broken_down_by && json.map.map_sets.constructor === Array) {
+        json.map.map_sets.forEach(function (d, i) {
+          build_highmap(json.map.shape_question_code, json.map.adjustable_max_range, d, chart_height, weight_name);
+          jump_options += "<option data-href='#map-" + (i+1) + "'>" + d.broken_down_answer_text + "</option>";
+        });
+      }
+      else{
+        build_highmap(json.map.shape_question_code, json.map.adjustable_max_range, json.map.map_sets, chart_height, weight_name);
+      }
+    }
+    if(jump_options !== "") {
+      var lbl = [];
+      if(json.filtered_by) { lbl.push(json.filtered_by.original_code); }
+      if(json.broken_down_by) { lbl.push(json.broken_down_by.original_code); }
 
-
+      $jumpto_map_label.html(lbl.join(" -> "));
+      $jumpto_map_select.html(jump_options);
+      $jumpto_map_select.val($jumpto_map_select.find("option:first").attr("value"));
+      $jumpto_map_select.selectpicker("refresh");
+      $jumpto_map_select.selectpicker("render");
+    }
     $("#explore-tabs #nav-map").show(); // show map tabs
-
   }
   else{
-    // no map so hide tab
-    $("#explore-tabs #nav-map").hide();
-    // make sure these are not active
-    $("#explore-tabs #nav-map, #explore-content #tab-map").removeClass("active");
+    $("#explore-tabs #nav-map").hide(); // no map so hide tab
+    $("#explore-tabs #nav-map, #explore-content #tab-map").removeClass("active"); // make sure these are not active
   }
   $("#tab-map").removeClass("behind_the_scenes");
 }
@@ -864,7 +800,10 @@ $(document).ready(function () {
     $jumpto = $("#jumpto");
     $jumpto_chart = $("#jumpto #jumpto-chart");
     $jumpto_map = $("#jumpto #jumpto-map");
-
+    $jumpto_map_select = $jumpto_map.find("select");
+    $jumpto_map_label = $jumpto_map.find(".sub-label");
+    $tab_content = $(".tab-content");
+    $jumpto_map_select.selectpicker();
   // set languaage text
   Highcharts.setOptions({
     chart: { spacingRight: 30 },
@@ -1079,22 +1018,10 @@ $(document).ready(function () {
 
     // jumpto scrolling
     $("#jumpto").on("change", "select", function () {
-      var href = $(this).find("option:selected").data("href"),
-        container = $(".tab-content");
-      container.animate({
-        scrollTop: container.scrollTop() + container.find(".tab-pane.active > div > " + href).offset().top - container.offset().top
+      $("#jumpto button.dropdown-toggle").tooltip("fixTitle");
+      $tab_content.animate({
+        scrollTop: $tab_content.scrollTop() + $tab_content.find(".tab-pane.active > div > " + $(this).find("option:selected").data("href")).offset().top - $tab_content.offset().top
       }, 1500);
-
-      // if this is a map item and there are > 1 map items, make sure the other items are set to nil
-      var select_index = $("#jumpto #jumpto-map select").index($(this));
-      if ($(this).closest("#jumpto-map").length > 0 && $(this).closest("#jumpto-map").find(".jumpto-map-item").length > 1){
-        $("#jumpto #jumpto-map select").each(function (i){
-          if (i != select_index){
-            $(this).find("option:eq(0)").prop("selected", true);
-            $(this).selectpicker("refresh");
-          }
-        });
-      }
     });
 
     // when chart tab/map clicked on, make sure the jumpto block is showing, else, hide it
@@ -1103,7 +1030,7 @@ $(document).ready(function () {
       if (href == "#tab-chart" &&  $jumpto_chart.find("select option").length > 0){
         jumpto(true, true);
       }else if (href == "#tab-map" &&  $jumpto_map.find("select option").length > 0){
-        jumpto(show_map_jumpto, false);
+        jumpto(true, false);
       }else{
         jumpto(false);
       }
