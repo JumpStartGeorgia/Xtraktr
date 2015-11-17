@@ -808,7 +808,7 @@ function build_selects (skip_content) {
       ++type_map_index;
     });
   }
-  var counts = [0,0,0,0]; // group cat, num, subgroup cat, num
+  var counts = [0, 0, 0, 0]; // group cat, num, subgroup cat, num
   var cat_count = 0, num_count = 0, cur;
   for(i = type_map.length-1; i >= 0; --i) {
     cur = type_map[i];
@@ -940,7 +940,29 @@ function set_can_exclude_visibility () { // show or hide the can exclude checkbo
     $("select#broken_down_by_code option:selected").data("can-exclude") == true ||
     $("select#filtered_by_code option:selected").data("can-exclude") == true) ? "visible" : "hidden");
 }
+function jumpto(show, chart) { // show/hide jumpto show - for main box and if chart is false then map
+  if(typeof chart === "undefined") { chart = true; }
+  js.jumpto.toggle(show);
+  js.jumpto_chart.toggle(show && chart);
+  js.jumpto_map.toggle(show && !chart);
+}
+function empty_groups (index) {
+  var tmp_index = select_map[index][3],
+    tmp_data_type = select_map[index][2],
+    also_to_hide = [];
 
+  if([1, 2].indexOf(tmp_data_type) !== -1)
+  {
+    while(tmp_index !== null){
+      var gr = select_map[tmp_index];
+      if(gr[tmp_data_type] <= 1) {
+        also_to_hide.push(tmp_index);
+      }
+      tmp_index = select_map[tmp_index][3];
+    }
+  }
+  return also_to_hide;
+}
 $(document).ready(function () {
   var
     bind = function () {
@@ -1021,20 +1043,19 @@ $(document).ready(function () {
 
 
       // if option changes, make sure the select option is not available in the other lists
-      $("select.selectpicker").change(function (){       
+      $("select.selectpicker").change(function (){
         var t = $(this),
           id = t.attr("id"),
           val = t.val(),
           option = t.find("option[value='" + val + "']"),
           index = option.index(),
           type = +option.attr("data-type"),
-          select_question_code = $("select#question_code"),
-          q = select_question_code.val(),
-          q_index = select_question_code.find("option[value='" + q + "']").index(),
-          select_broken_down = $("select#broken_down_by_code"),
-          bdb = select_broken_down.val(),
-          bdb_index = select_broken_down.find("option[value='" + bdb + "']").index(),
-          select_filter_by = $("select#filtered_by_code");
+          q = js.select_qc.val(),
+          q_index = js.select_qc.find("option[value='" + q + "']").index(),
+          bdb = js.select_bd.val(),
+          bdb_index = js.select_bd.find("option[value='" + bdb + "']").index(),
+          select_filter_by = $("select#filtered_by_code"),
+          also_to_hide;
 
         // if this is question, update broken down by else vice-versa
         if(id == "question_code") { // update broken down by list
@@ -1043,33 +1064,14 @@ $(document).ready(function () {
 
           //broken_by_menu.find("li[style*='display: none']").show(); // turn on all hidden items
           // $(".form-explore-filter-by").toggle(type===1);
-          var step = 0, tree_path = [-1,-1];
-          select_map.reverse.forEach(function(d, i) {
-            if(step === 0 && q_index === i) {              
-              step = 1;
-            }
-            else if (step === 1)
-            {
-              if(d[0] === 1) {
-                tree_path[0] = i;
-                step = 2;
-              }
-              else if(d[0] === 0){
-                step == 3;
-              }
-            }
-            else if(step === 2 && d[0] === 0)
-            {
-              step = 3;
-            }
-          });
+          
+          also_to_hide = empty_groups(q_index);
+
           select_map.forEach(function (d, i){
-            if(i == 0) {
-             console.log(d, i, "-", type);
-             }
-            if( (d[0] === 2 && d[2] == type) ||
+            if( ((d[0] === 2 && d[2] == type) ||
                 (d[0] == 1 && ((type == 1 && d[1] > 0)||(type == 2 && d[2] > 0))) ||
-                (d[0] == 0 && ((type == 1 && d[1] > 0)||(type == 2 && d[2] > 0)))) {
+                (d[0] == 0 && ((type == 1 && d[1] > 0)||(type == 2 && d[2] > 0)))) && 
+                (also_to_hide.indexOf(i) === -1)) {
               broken_by_menu.find("li[data-original-index='" + (i + 1) + "']").show();
             }
           });
@@ -1086,6 +1088,10 @@ $(document).ready(function () {
           question_code_menu.find("li[style*='display: none']").show(); // turn on all hidden items
           question_code_menu.find("li:eq(" + (index-1) + ")").hide(); // turn on off this item
           $("button#btn-swap-vars").fadeToggle(val !== ""); // if val != "" then turn on swap button
+
+          empty_groups(bdb_index-1).forEach(function (d){
+            question_code_menu.find("li:eq(" + (d) + ")").hide();
+          });
         }
 
         // update filter list
@@ -1131,33 +1137,32 @@ $(document).ready(function () {
       // swap vars button
       // - when clicked, swap the values and then submit the form
       $("button#btn-swap-vars").click(function (){
-        // get the vals
-        var var1 = $("select#question_code").val();
-        var var2 = $("select#broken_down_by_code").val();
+        var var1 = js.select_qc.val(), // get the vals
+          var2 = js.select_bd.val();
 
         // turn off disabled options
         // so can select in next step
-        $("select#question_code option[value='" + var2 + "']").removeAttr("disabled");
-        $("select#broken_down_by_code option[value='" + var1 + "']").removeAttr("disabled");
+        js.select_qc.find("option[value='" + var2 + "']").removeAttr("disabled");
+        js.select_bd.find("option[value='" + var1 + "']").removeAttr("disabled");
 
         // refresh so disabled options are removed
-        $("select#question_code").selectpicker("refresh");
-        $("select#broken_down_by_code").selectpicker("refresh");
+        js.select_qc.selectpicker("refresh");
+        js.select_bd.selectpicker("refresh");
 
         // swap the vals
-        $("select#question_code").selectpicker("val", var2);
-        $("select#broken_down_by_code").selectpicker("val", var1);
+        js.select_qc.selectpicker("val", var2);
+        js.select_bd.selectpicker("val", var1);
 
-        $("select#question_code").selectpicker("render");
-        $("select#broken_down_by_code").selectpicker("render");
+        js.select_qc.selectpicker("render");
+        js.select_bd.selectpicker("render");
 
         // disable the swapped values
-        $("select#question_code option[value='" + var1 + "']").attr("disabled", "disabled");
-        $("select#broken_down_by_code option[value='" + var2 + "']").attr("disabled", "disabled");
+        js.select_qc.find("option[value='" + var1 + "']").attr("disabled", "disabled");
+        js.select_bd.find("option[value='" + var2 + "']").attr("disabled", "disabled");
 
         // refresh so disabled options are updated
-        $("select#question_code").selectpicker("refresh");
-        $("select#broken_down_by_code").selectpicker("refresh");
+        js.select_qc.selectpicker("refresh");
+        js.select_bd.selectpicker("refresh");
 
         // submit the form
         $("input#btn-submit").trigger("click");
@@ -1205,6 +1210,17 @@ $(document).ready(function () {
           $("#jumpto").hide();
           $("#jumpto #jumpto-chart").hide();
           $("#jumpto #jumpto-map").hide();
+        }
+      });
+      // when chart tab/map clicked on, make sure the jumpto block is showing, else, hide it
+      $("#explore-tabs li").click(function () {
+        var href = $(this).find("a").attr("href");
+        if (href == "#tab-chart" &&  $jumpto_chart.find("select option").length > 0){
+          jumpto(true, true);
+        }else if (href == "#tab-map" &&  $jumpto_map.find("select option").length > 0){
+          jumpto(show_map_jumpto, false);
+        }else{
+          jumpto(false);
         }
       });
 
@@ -1279,7 +1295,7 @@ $(document).ready(function () {
         if (new_url != window.location.href){ // !is_back_button && 
           window.history.pushState({path:new_url}, $("title").html(), new_url);
         }
-        $(this).tooltip('hide');
+        $(this).tooltip("hide");
         build_explore_data_page(js.cache[cacheId]);
       }); 
     },
@@ -1298,7 +1314,10 @@ $(document).ready(function () {
         chart: $("#container-chart"),
         jumpto: $("#jumpto"),
         chart_type_toggle_pie: "<div id='chart-type-toggle'><div class='toggle' data-type='bar' title='" + gon.chart_type_bar + "'></div><div class='toggle selected' data-type='pie' title='" + gon.chart_type_pie + "'></div>",
-        chart_type_toggle_bar: "<div id='chart-type-toggle'><div class='toggle selected' data-type='bar' title='" + gon.chart_type_bar + "'></div><div class='toggle' data-type='pie' title='" + gon.chart_type_pie + "'></div>"
+        chart_type_toggle_bar: "<div id='chart-type-toggle'><div class='toggle selected' data-type='bar' title='" + gon.chart_type_bar + "'></div><div class='toggle' data-type='pie' title='" + gon.chart_type_pie + "'></div>",
+        select_qc: $("select#question_code"),
+        select_bd: $("select#broken_down_by_code"),
+        select_fb: $("select#filtered_by_code")
       };
 
       js["jumpto_chart"] = js.jumpto.find("#jumpto-chart");
@@ -1306,27 +1325,23 @@ $(document).ready(function () {
       js["jumpto_chart_select"] = js.jumpto_chart.find("select");
       js["jumpto_map_select"] = js.jumpto_map.find("select");
 
-      var select_options = build_selects(),
-        fqc = $("select#question_code"),
-        fbc = $("select#broken_down_by_code"),
-        ffc = $("select#filtered_by_code");
+      var select_options = build_selects();
 
-        select_map = select_options[2];
+      select_map = select_options[2];
 
-      fqc.append(select_options[0]);
-      fbc.append(select_options[0]);
-      ffc.append(select_options[1]);
+      js.select_qc.append(select_options[0]);
+      js.select_bd.append(select_options[0]);
+      js.select_fb.append(select_options[1]);
 
-      function select_options_default (filters) {       
-        fqc.find("option[value='"+filters[0]+"']").attr("selected=selected");
-        fqc.find("option[value='"+filters[1]+"']").attr("data-disabled=disabled");
-        fbc.find("option[value='"+filters[1]+"']").attr("selected=selected");
-        fbc.find("option[value='"+filters[0]+"']").attr("data-disabled=disabled");
-        ffc.find("option[value='"+filters[2]+"']").attr("selected=selected");
-        ffc.find("option[value='"+filters[0]+"'], option[value='"+filters[1]+"']").attr("data-disabled=disabled");
+      function select_options_default (filters) {  
+        select_qc.find("option[value='"+filters[0]+"']").attr("selected=selected");
+        select_qc.find("option[value='"+filters[1]+"']").attr("data-disabled=disabled");
+        js.select_bd.find("option[value='"+filters[1]+"']").attr("selected=selected");
+        js.select_bd.find("option[value='"+filters[0]+"']").attr("data-disabled=disabled");
+        js.select_fb.find("option[value='"+filters[2]+"']").attr("selected=selected");
+        js.select_fb.find("option[value='"+filters[0]+"'], option[value='"+filters[1]+"']").attr("data-disabled=disabled");
       }
       select_options_default(gon.questions.filters);
-
 
       bind();
     };

@@ -750,7 +750,7 @@ private
               else 
               end
             end 
-          }
+          } 
           total = 0
           total_w = 0
           fd.each {|x| total+=x[0]
