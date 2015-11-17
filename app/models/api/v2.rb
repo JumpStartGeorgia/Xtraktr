@@ -860,6 +860,7 @@ private
 
       if data[:filtered_by].present?
         map = []
+
         data[:results][:filter_analysis].each do |filter|
           map_item = {filter_answer_value: filter[:filter_answer_value], filter_answer_text: filter[:filter_answer_text],
                     filter_results: {shape_question_code: data[:question][:code], adjustable_max_range: data[:question][:has_map_adjustable_max_range], map_sets: {}}}
@@ -891,7 +892,6 @@ private
             map << map_item
           end
         end
-
       else
         # need question code so know which shape data to use
         map = {shape_question_code: data[:question][:code], adjustable_max_range: data[:question][:has_map_adjustable_max_range], map_sets: {}}

@@ -38,7 +38,8 @@ $(document).ready(function () {
 
   $("body").tooltip({
     selector: "[title]",
-    container: "body"
+    container: "body",
+    html: true
   });
 
   $("#side-menu a").click(function () {
