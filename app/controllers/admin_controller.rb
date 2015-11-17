@@ -13,45 +13,34 @@ class AdminController < ApplicationController
 
 
   def download_api_requests
-    require 'csv'
-    csv = ApiRequest.generate_csv
-    filename = I18n.t("app.common.#{@app_key_name}.app_name")
-    filename << " API Requests "
-    filename << I18n.l(Time.now, :format => :file)
-
-    respond_to do |format|
-      format.csv {
-        if csv.nil?
-          return false
-        else
-          send_data csv, 
-            :type => 'text/csv; header=present',
-            :disposition => "attachment; filename=#{clean_filename(filename)}.csv"
-        end
-      }
+    if request.format.csv?
+      data = ApiRequest.generate_csv
+    elsif request.format.xlsx?
+      data = ApiRequest.generate_xlsx
     end
 
+    filename = I18n.t("app.common.#{@app_key_name}.app_name")
+    filename << " API Requests #{I18n.l(Time.now, :format => :file)}"
+    respond_to do |format|
+      format.csv { send_data data, :filename=> "#{clean_filename(filename)}.csv" }
+      format.xlsx { send_data data, :filename=> "#{clean_filename(filename)}.xlsx" }
+    end
   end
 
   def download_download_requests
-    require 'csv'
-    csv = Agreement.generate_csv
-    filename = I18n.t("app.common.#{@app_key_name}.app_name")
-    filename << " Download Requests "
-    filename << I18n.l(Time.now, :format => :file)
-
-    respond_to do |format|
-      format.csv {
-        if csv.nil?
-          return false
-        else
-          send_data csv, 
-            :type => 'text/csv; header=present',
-            :disposition => "attachment; filename=#{clean_filename(filename)}.csv"
-        end
-      }
+    if request.format.csv?
+      data = Agreement.generate_csv
+    elsif request.format.xlsx?
+      data = Agreement.generate_xlsx
     end
 
+    filename = I18n.t("app.common.#{@app_key_name}.app_name")
+    filename << " Download Requests #{I18n.l(Time.now, :format => :file)}"
+
+    respond_to do |format|
+      format.csv { send_data data, :filename=> "#{clean_filename(filename)}.csv" }
+      format.xlsx { send_data data, :filename=> "#{clean_filename(filename)}.xlsx" }
+    end
   end
 
 end

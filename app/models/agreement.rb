@@ -64,18 +64,37 @@ class Agreement
 
   # generate a csv object for all records on file
   def self.generate_csv
+    require 'csv'
     return CSV.generate do |csv_row|
-      # add header
-      csv_row << csv_header
-
-      # get the dataset titles for all records
+      csv_row << csv_header # add header
+      
       datasets = Dataset.only_id_title_languages.in(id: pluck(:dataset_id).uniq)
       
       sorted.each do |record|
-        # add row
-        csv_row << record.csv_data(datasets)
+        csv_row << record.csv_data(datasets) # add row
       end
     end
+  end
+
+  def self.generate_xlsx
+
+    workbook = RubyXL::Workbook.new
+    worksheet = workbook[0]
+
+    csv_header.each_with_index{|x,i| 
+      worksheet.add_cell(0, i, x)  
+    }
+
+    datasets = Dataset.only_id_title_languages.in(id: pluck(:dataset_id).uniq)
+
+    sorted.each_with_index { |r, r_i|
+      tmp = r.csv_data(datasets)
+      tmp.each_with_index { |c, c_i|
+        worksheet.add_cell(r_i+1, c_i, c)
+      }
+    }
+    
+    return workbook.stream.string
   end
 
 

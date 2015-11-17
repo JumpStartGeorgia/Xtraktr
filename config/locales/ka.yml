@@ -723,6 +723,12 @@ ka:
       change_category: "კატეგორიის შეცვლა"
       categories: "კატეგორიები"
       category: "კატეგორია"
+      csv:
+        title: CSV
+        tooltip: Download as CSV
+      xlsx:
+        title: XLSX
+        tooltip: Download as XLSX      
     common:
       xtraktr:
         app_name: Xtraktr
