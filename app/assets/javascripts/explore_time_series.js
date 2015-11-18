@@ -49,9 +49,9 @@ function update_available_weights(){
         $('select#weighted_by_code').selectpicker('val', $('select#weighted_by_code option:first').attr('value'));
       }
 
-      $('.form-weight-by').show();
+      $('.form-explore-weight-by').show();
     }else{
-      $('.form-weight-by').hide();
+      $('.form-explore-weight-by').hide();
       $('select#weighted_by_code').selectpicker('val', 'unweighted');
     }
   }

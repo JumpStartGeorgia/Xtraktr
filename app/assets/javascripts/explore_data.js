@@ -4,7 +4,7 @@ var datatables, h, i, j, k, cacheId,
   js, select_map;
 
 function build_charts (data, type) {
-  console.log(data, type);
+  console.log("build_charts", data, type);
   if (data.chart) {
     var flag = false,
       chart_height = window[type + "_chart_height"](data),     // determine chart height // pie_chart_height(json);
@@ -21,16 +21,16 @@ function build_charts (data, type) {
 
     // test if the filter is being used and build the chart(s) accordingly
     if (data.chart.constructor === Array) { // filters
-
       data.chart.forEach(function (d, i){
-        console.log("---",type);
-        if(["crosstab", "scatter"].indexOf(type) !== -1)
+        if(type === "crosstab")
         {
-          window["build_" + type + "_chart"](
-            data.question.original_code,
-            data.broken_down_by.original_code,
-            data.broken_down_by.text,
-            d.filter_results, chart_height, weight_name); // create chart
+          window["build_" + type + "_chart"]({
+            qcode: data.question.original_code,
+            qtext: data.question.text,
+            bcode: data.broken_down_by.original_code,
+            btext: data.broken_down_by.text,
+            filtered: data.filtered_by ? true : false },
+            d.filter_results, chart_height, weight_name);
         }
         else {
           if(type === "histogramm") {
@@ -48,13 +48,15 @@ function build_charts (data, type) {
       js.jumpto_chart_select.selectpicker("render");
       flag = true;
     }
-    else { // no filters
+    else { // no filters or filtered scatter
       if(["crosstab", "scatter"].indexOf(type) !== -1) {
-        window["build_" + type + "_chart"](
-              data.question.original_code,
-              data.broken_down_by.original_code,
-              data.broken_down_by.text,
-              data.chart, chart_height, weight_name);
+        window["build_" + type + "_chart"]({
+          qcode: data.question.original_code,
+          qtext: data.question.text,
+          bcode: data.broken_down_by.original_code,
+          btext: data.broken_down_by.text,
+          filtered: data.filtered_by ? true : false },
+          data.chart, chart_height, weight_name);
       }
       else {
         if(type === "histogramm") {
@@ -728,15 +730,12 @@ function get_explore_data (is_back_button) { // get data and load page
       //console.log( "Request failed: " + textStatus  + ". Error thrown: " + errorThrown);
     })
     .success(function ( json ) {
-       console.log("remot",json.errors);
       if (json.errors || ((json.results.analysis && json.results.analysis.length == 0) || json.results.filtered_analysis && json.results.filtered_analysis.length == 0)){
         $("#jumpto-loader").fadeOut("slow");
         $("#explore-data-loader").fadeOut("slow");
         $("#explore-error").fadeIn("slow");
-         console.log("erer");
       }
-      else {         
-        console.log("erer2", json);
+      else {
         js.cache[cacheId] = json;
         update_content();
       }
@@ -745,7 +744,6 @@ function get_explore_data (is_back_button) { // get data and load page
   }
 
   function update_content () {
-     console.log("update_content");
     var json = js.cache[cacheId];
     build_explore_data_page(json);
     resizeExploreData();
@@ -827,7 +825,6 @@ function build_selects (skip_content) {
       counts[0] = counts[1] = counts[2] = counts[3] = 0;
     }
   }
-   console.log(type_map);
   return [html, html_only_categorical, type_map];
 }
 function build_selects_group_option (group) {
@@ -879,12 +876,12 @@ function build_selects_question_option (question, level, skip_content) {
 
 function update_available_weights () { // update the list of avilable weights based on questions that are selected
   // update weight list if weights exist
-  if ($('select#weighted_by_code').length > 0){
-    var old_value = $('select#weighted_by_code').val();
+  if (js.type===1 && js.select_wb.length > 0) {
+    var old_value = js.select_wb.val();
     var items = [
-      $("select#question_code option:selected").data("weights"),
-      $("select#broken_down_by_code option:selected").data("weights"),
-      $("select#filtered_by_code option:selected").data("weights")
+      js.select_qc.find("option:selected").data("weights"),
+      js.select_bd.find("option:selected").data("weights"),
+      js.select_fb.find("option:selected").data("weights")
     ];
     // remove undefined (undefined exists if a select does not have a value)
     var und_ind = items.indexOf(undefined);
@@ -926,11 +923,16 @@ function update_available_weights () { // update the list of avilable weights ba
         $('select#weighted_by_code').selectpicker('val', $('select#weighted_by_code option:first').attr('value'));
       }
 
-      $('.form-weight-by').show();
-    }else{
-      $(".form-weight-by").hide();
+      $('.form-explore-weight-by').show();
+    } 
+    else {
+      $(".form-explore-weight-by").hide();
       $("select#weighted_by_code").selectpicker("val", "unweighted");
     }
+  }
+  else {
+    $(".form-explore-weight-by").hide();
+    $("select#weighted_by_code").selectpicker("val", "unweighted");
   }
 }
 
@@ -1056,7 +1058,7 @@ $(document).ready(function () {
           bdb_index = js.select_bd.find("option[value='" + bdb + "']").index(),
           select_filter_by = $("select#filtered_by_code"),
           also_to_hide;
-
+        js.type = type;
         // if this is question, update broken down by else vice-versa
         if(id == "question_code") { // update broken down by list
           var broken_by_menu = $(".form-explore-broken-by .bootstrap-select ul.dropdown-menu");
@@ -1088,10 +1090,12 @@ $(document).ready(function () {
           question_code_menu.find("li[style*='display: none']").show(); // turn on all hidden items
           question_code_menu.find("li:eq(" + (index-1) + ")").hide(); // turn on off this item
           $("button#btn-swap-vars").fadeToggle(val !== ""); // if val != "" then turn on swap button
-
-          empty_groups(bdb_index-1).forEach(function (d){
-            question_code_menu.find("li:eq(" + (d) + ")").hide();
-          });
+          if(bdb_index !== 0)
+          {
+            empty_groups(bdb_index-1).forEach(function (d){
+              question_code_menu.find("li:eq(" + (d) + ")").hide();
+            });
+          }
         }
 
         // update filter list
@@ -1196,28 +1200,10 @@ $(document).ready(function () {
 
       // when chart tab/map clicked on, make sure the jumpto block is showing, else, hide it
       $("#explore-tabs li").click(function () {
-        var ths_link = $(this).find("a");
-
-        if ($(ths_link).attr("href") == "#tab-chart" && $("#jumpto #jumpto-chart select option").length > 0){
-          $("#jumpto").show();
-          $("#jumpto #jumpto-chart").show();
-          $("#jumpto #jumpto-map").hide();
-        }else if ($(ths_link).attr("href") == "#tab-map" && $("#jumpto #jumpto-map select option").length > 0){
-          $("#jumpto").show();
-          $("#jumpto #jumpto-map").show();
-          $("#jumpto #jumpto-chart").hide();
-        }else{
-          $("#jumpto").hide();
-          $("#jumpto #jumpto-chart").hide();
-          $("#jumpto #jumpto-map").hide();
-        }
-      });
-      // when chart tab/map clicked on, make sure the jumpto block is showing, else, hide it
-      $("#explore-tabs li").click(function () {
         var href = $(this).find("a").attr("href");
-        if (href == "#tab-chart" &&  $jumpto_chart.find("select option").length > 0){
+        if (href == "#tab-chart" &&  js.jumpto_chart.find("select option").length > 0){
           jumpto(true, true);
-        }else if (href == "#tab-map" &&  $jumpto_map.find("select option").length > 0){
+        }else if (href == "#tab-map" &&  js.jumpto_map.find("select option").length > 0){
           jumpto(show_map_jumpto, false);
         }else{
           jumpto(false);
@@ -1306,7 +1292,8 @@ $(document).ready(function () {
         lang: {
           contextButtonTitle: gon.highcharts_context_title
         },
-        colors: ['#00adee', '#e88d42', '#9674a9', '#f3d952', '#6fa187', '#b2a440', '#d95d6a', '#737d91', '#d694e0', '#80b5bc', '#a6c449', '#1b74cc', '#4eccae']
+        colors: ['#00adee', '#e88d42', '#9674a9', '#f3d952', '#6fa187', '#b2a440', '#d95d6a', '#737d91', '#d694e0', '#80b5bc', '#a6c449', '#1b74cc', '#4eccae'],
+        credits: { enabled: false }
       });
 
       js = {
@@ -1317,7 +1304,9 @@ $(document).ready(function () {
         chart_type_toggle_bar: "<div id='chart-type-toggle'><div class='toggle selected' data-type='bar' title='" + gon.chart_type_bar + "'></div><div class='toggle' data-type='pie' title='" + gon.chart_type_pie + "'></div>",
         select_qc: $("select#question_code"),
         select_bd: $("select#broken_down_by_code"),
-        select_fb: $("select#filtered_by_code")
+        select_fb: $("select#filtered_by_code"),
+        select_wb: $('select#weighted_by_code'),
+        type: 1
       };
 
       js["jumpto_chart"] = js.jumpto.find("#jumpto-chart");
@@ -1334,8 +1323,9 @@ $(document).ready(function () {
       js.select_fb.append(select_options[1]);
 
       function select_options_default (filters) {  
-        select_qc.find("option[value='"+filters[0]+"']").attr("selected=selected");
-        select_qc.find("option[value='"+filters[1]+"']").attr("data-disabled=disabled");
+        js.select_qc.find("option[value='"+filters[0]+"']").attr("selected=selected");
+        js.type = +js.select_qc.find("option[value='"+filters[0]+"']").attr("data-type");
+        js.select_qc.find("option[value='"+filters[1]+"']").attr("data-disabled=disabled");
         js.select_bd.find("option[value='"+filters[1]+"']").attr("selected=selected");
         js.select_bd.find("option[value='"+filters[0]+"']").attr("data-disabled=disabled");
         js.select_fb.find("option[value='"+filters[2]+"']").attr("selected=selected");

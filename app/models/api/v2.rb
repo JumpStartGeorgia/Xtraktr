@@ -1000,8 +1000,14 @@ private
 
 
     # get the values for the codes from the data
-    question_data = dataset.data_items.code_data(question[:code])
-    broken_down_data = dataset.data_items.code_data(broken_down_by[:code])
+    if question[:data_type] == DATA_TYPE_VALUES[:categorical]
+      question_data = dataset.data_items.code_data(question[:code])
+      broken_down_data = dataset.data_items.code_data(broken_down_by[:code])
+    elsif question[:data_type] == DATA_TYPE_VALUES[:numerical]
+      question_data = dataset.data_items.code_formatted_data(question[:code])
+      broken_down_data = dataset.data_items.code_formatted_data(broken_down_by[:code])
+    end
+    
     # get the data for the weight
     weight_values = weight.present? ? dataset.data_items.code_data(weight[:code]) : []
 
@@ -1027,7 +1033,7 @@ private
         if question[:data_type] == DATA_TYPE_VALUES[:categorical]
           to_delete_indexes = merged_data.each_index.select{|i| !q_answer_values.include?(merged_data[i][1][0]) && !bdb_answer_values.include?(merged_data[i][1][1]) }
         elsif question[:data_type] == DATA_TYPE_VALUES[:numerical]
-          to_delete_indexes = merged_data.each_index.select{|i| q_answer_values.include?(merged_data[i][1][0]) || bdb_answer_values.include?(merged_data[i][1][1]) }
+          to_delete_indexes = merged_data.each_index.select{|i| !merged_data[i][1][0].present? || !merged_data[i][1][1].present? }
         end
         merged_data.delete_if.with_index { |_, index| to_delete_indexes.include? index }
         merged_weight_values.delete_if.with_index { |_, index| to_delete_indexes.include? index }
@@ -1068,7 +1074,7 @@ private
       if question[:data_type] == DATA_TYPE_VALUES[:categorical]
         to_delete_indexes = data.each_index.select{|i| !q_answer_values.include?(data[i][0]) && !bdb_answer_values.include?(data[i][1]) }
       elsif question[:data_type] == DATA_TYPE_VALUES[:numerical]
-        to_delete_indexes = data.each_index.select{|i| q_answer_values.include?(data[i][0]) || bdb_answer_values.include?(data[i][1]) }
+        to_delete_indexes = data.each_index.select{|i| !data[i][0].present? || !data[i][1].present? }
       end
       data.delete_if.with_index { |_, index| to_delete_indexes.include? index }
       weight_values.delete_if.with_index { |_, index| to_delete_indexes.include? index }
@@ -1253,35 +1259,52 @@ private
       count_key = data[:weighted_by].present? ? :weighted_count : :count
 
       if data[:filtered_by].present?
-        chart = []
-        data[:results][:filter_analysis].each do |filter|
-          chart_item = {filter_answer_value: filter[:filter_answer_value], filter_answer_text: filter[:filter_answer_text], filter_results: {}}
+        if data[:analysis_data_type] == ANALYSIS_DATA_TYPE[:categorical]
+          chart = []
+          data[:results][:filter_analysis].each do |filter|
+            chart_item = {filter_answer_value: filter[:filter_answer_value], filter_answer_text: filter[:filter_answer_text], filter_results: {}}
 
-          # set the titles
-          # - assume titles are already set in data[:filtered_by][:results]
-          if with_title
-            chart_item[:filter_results][:title] = filter[:filter_results][:title]
-            chart_item[:filter_results][:subtitle] = filter[:filter_results][:subtitle]
-          end
-
-          # create embed id
-          # add filter value
-          options['filtered_by_value'] = filter[:filter_answer_value]
-          options['visual_type'] = 'chart'
-          chart_item[:filter_results][:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
-
-          chart_item[:filter_results][:labels] = data[:question][:answers].map{|x| x[:text]}
-
-          # have to transpose the counts for highcharts
-          counts = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[count_key]}}.transpose
-
-          if counts.present?
-            chart_item[:filter_results][:data] = []
-            data[:broken_down_by][:answers].each_with_index do |answer, i|
-              chart_item[:filter_results][:data] << {name: answer[:text], data: counts[i]}
+            # set the titles
+            # - assume titles are already set in data[:filtered_by][:results]
+            if with_title
+              chart_item[:filter_results][:title] = filter[:filter_results][:title]
+              chart_item[:filter_results][:subtitle] = filter[:filter_results][:subtitle]
             end
 
-            chart << chart_item
+            # create embed id
+            # add filter value
+            options['filtered_by_value'] = filter[:filter_answer_value]
+            options['visual_type'] = 'chart'
+            chart_item[:filter_results][:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
+
+            chart_item[:filter_results][:labels] = data[:question][:answers].map{|x| x[:text]}
+
+            counts = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[count_key]}}.transpose # have to transpose the counts for highcharts
+
+            if counts.present?
+              chart_item[:filter_results][:data] = []
+              data[:broken_down_by][:answers].each_with_index do |answer, i|
+                chart_item[:filter_results][:data] << {name: answer[:text], data: counts[i]}
+              end
+
+              chart << chart_item
+            end
+          end
+        elsif data[:analysis_data_type] == ANALYSIS_DATA_TYPE[:numerical]
+          chart = {}
+
+          # set the titles
+          # - assume titles are already set in data[:results]
+          if with_title
+            chart[:title] = data[:results][:title]
+            chart[:subtitle] = data[:results][:subtitle]
+          end
+          options['visual_type'] = 'chart'
+          chart[:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
+
+          chart[:data] = []
+          data[:results][:filter_analysis].each do |filter|
+            chart[:data] << { data: filter[:filter_results][:analysis], name: filter[:filter_answer_text] }            
           end
         end
       else

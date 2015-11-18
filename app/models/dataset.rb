@@ -1084,8 +1084,12 @@ class Dataset < CustomTranslation
                   index = ((tmpD-num.min_range)/num.width-0.00001).floor
                   fd[index][0] += 1
                 else 
+                  items.formatted_data.push(nil);
                 end
-              end 
+              else 
+                items.formatted_data.push(nil)
+              end
+
             }
             total = 0
             fd.each {|x| total+=x[0]}

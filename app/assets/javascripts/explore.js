@@ -248,7 +248,6 @@ function build_highmap (shape_question_code, adjustable_max, json_map_set, chart
   }
 
   $(selector_path + " #" + map_id).highcharts("Map", {
-    credits: { enabled: false },
     chart:{
       events: {
         load: function () {
@@ -402,7 +401,6 @@ function build_bar_chart (json_chart, chart_height, weight_name) { // build pie 
 
   // create chart
   $(selector_path + " #" + chart_id).highcharts({
-    credits: { enabled: false },
     chart: {
       type: "column",
       inverted: true
@@ -490,7 +488,6 @@ function build_bar_chart (json_chart, chart_height, weight_name) { // build pie 
 }
 
 function build_histogramm_chart (json_chart, chart_height, weight_name) { // build pie chart
-   console.log(json_chart);
   var opt = prepareChart(chart_height, "chart"),
     selector_path = opt[1],
     highlight_path = opt[2],
@@ -500,7 +497,6 @@ function build_histogramm_chart (json_chart, chart_height, weight_name) { // bui
   chart_height = opt[0];
 
   $(selector_path + " #" + chart_id).highcharts({
-    credits: { enabled: false },
     colors: ["#C6CA53"],
     chart: {
       type: "column"
@@ -585,8 +581,7 @@ function build_histogramm_chart (json_chart, chart_height, weight_name) { // bui
   finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id.bar_chart, weight_name, gon.visual_types.pie_chart);
 }
 
-function build_crosstab_chart (question_text, broken_down_by_code, broken_down_by_text, json_chart, chart_height, weight_name){ // build crosstab chart
-
+function build_crosstab_chart (meta, json_chart, chart_height, weight_name){ // build crosstab chart
   var opt = prepareChart(chart_height, "chart"),
     selector_path = opt[1],
     highlight_path = opt[2],
@@ -596,7 +591,6 @@ function build_crosstab_chart (question_text, broken_down_by_code, broken_down_b
 
   // create chart
   $(selector_path + " #" + chart_id).highcharts({
-    credits: { enabled: false },
     chart: {
       type: "bar"
     },
@@ -613,7 +607,7 @@ function build_crosstab_chart (question_text, broken_down_by_code, broken_down_b
     xAxis: {
       categories: json_chart.labels,
       title: {
-        text: "<span class='code-highlight'>" + question_text + "</span>",
+        text: "<span class='code-highlight'>" + meta.qtext + "</span>",
         useHTML: true,
         style: { "fontSize": "14px", "fontWeight": "bold" }
       },
@@ -639,7 +633,7 @@ function build_crosstab_chart (question_text, broken_down_by_code, broken_down_b
     },
     legend: {
       title: {
-        text: broken_down_by_code,
+        text: meta.bcode,
         style: { "color": "#d67456", "fontSize": "18px", "fontFamily":"'sourcesans_pro_sb', 'sans-serif'", "fontWeight": "normal" }
       },
       useHTML: true,
@@ -682,21 +676,20 @@ function build_crosstab_chart (question_text, broken_down_by_code, broken_down_b
   finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id, weight_name, gon.visual_types.crosstab_chart);
 }
 
-function build_scatter_chart (question_text, broken_down_by_code, broken_down_by_text, json_chart, chart_height, weight_name){ // build crosstab chart
-
+function build_scatter_chart (meta, json_chart, chart_height, weight_name){ // build crosstab chart
   var opt = prepareChart(chart_height, "chart"),
     selector_path = opt[1],
     highlight_path = opt[2],
-    chart_id = opt[3];
+    chart_id = opt[3],
+    colors = Highcharts.getOptions().colors;
 
   chart_height = opt[0];
 
   // create chart
   $(selector_path + " #" + chart_id).highcharts({
-    credits: { enabled: false },
     chart: {
-      type: 'scatter',
-      zoomType: 'xy'
+      type: "scatter",
+      zoomType: "xy"
     },
     title: {
       text: build_visual_title(highlight_path, json_chart.title.html),
@@ -709,35 +702,33 @@ function build_scatter_chart (question_text, broken_down_by_code, broken_down_by
       style: {"text-align": "center"}
     },
     xAxis: {
-      categories: json_chart.labels,
       title: {
-        text: "<span class='code-highlight'>" + question_text + "</span>",
+        text: "<span class='code-highlight'>" + meta.qcode + "</span>",
         useHTML: true,
         style: { "fontSize": "14px", "fontWeight": "bold" }
       },
       labels:
       {
-        style: { "color": "#3c4352", "fontSize": "14px", "fontFamily":"'sourcesans_pro', 'sans-serif'", "fontWeight": "normal", "textAlign": "right" },
+        style: { "color": "#777c86", "fontSize": "14px", "fontFamily":"'sourcesans_pro', 'sans-serif'", "fontWeight": "normal", "textAlign": "right" },
         useHTML: true,
-        step: 1
       }
     },
-    yAxis: {
-      min: 0,
+    yAxis: {      
       title: {
-        text: gon.percent,
+        text: "<span class='code-highlight'>" + meta.bcode + "</span>",
+        useHTML: true,
         style: { "fontSize": "14px", "fontWeight": "bold" }
       },
       labels:
       {
         style: { "color": "#777c86", "fontSize": "14px", "fontFamily":"'sourcesans_pro', 'sans-serif'", "fontWeight": "normal" },
         useHTML: true
-      },
-      reversedStacks: false
+      }
     },
     legend: {
+      enabled: meta.filtered,
       title: {
-        text: broken_down_by_code,
+        text: null,// meta.bcode,
         style: { "color": "#d67456", "fontSize": "18px", "fontFamily":"'sourcesans_pro_sb', 'sans-serif'", "fontWeight": "normal" }
       },
       useHTML: true,
@@ -749,44 +740,26 @@ function build_scatter_chart (question_text, broken_down_by_code, broken_down_by
       symbolRadius: 100
     },
     tooltip: {
-      pointFormat: "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y:,.0f}</b> ({point.percentage:.2f}%)<br/>",
-      //shared: true,
-      backgroundColor: "rgba(255, 255, 255, 0.95)",
+      useHTML: true,
+      formatter: function () {
+        return (meta.filtered ? "<div class='title'>" + this.series.name + "</div>" : "") + 
+          "<span class='tooltip-code-highlight'>" + meta.qcode + "</span>: " + this.x + "<br/>" +
+          "<span class='tooltip-code-highlight'>" + meta.bcode + "</span>: " + this.y + "<br/>";
+      },
+      // pointFormat: "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y:,.0f}</b> ({point.percentage:.2f}%)<br/>",
+      // //shared: true,
+      // backgroundColor: "rgba(255, 255, 255, 0.95)",
       followPointer: true
     },
     plotOptions: {
-        scatter: {
-            marker: {
-                radius: 5,
-                states: {
-                    hover: {
-                        enabled: true,
-                        lineColor: 'rgb(100,100,100)'
-                    }
-                }
-            },
-            states: {
-                hover: {
-                    marker: {
-                        enabled: false
-                    }
-                }
-            },
-            tooltip: {
-                headerFormat: '<b>{series.name}</b><br>',
-                pointFormat: '{point.x} cm, {point.y} kg'
-            }
+      scatter: {
+        marker: {
+          radius: 3,
+          symbol: "circle"
         }
-    },
-    series: 
-    [{
-            name: 'Predefined symbol',
-            data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 316.4, 294.1, 195.6, 154.4],
-            marker: {
-                symbol: 'triangle'
-            }
-        }],
-    //json_chart.data,
+      }
+    },  
+    series: meta.filtered ? json_chart.data.map(function (d, i) { return {name: d.name, data: d.data, color: rgba(colors[i%colors.length]) }; }) : [{ data: json_chart.data, color: rgba(colors[0]) }],
     exporting: {
       sourceWidth: 1280,
       sourceHeight: chart_height,
@@ -818,7 +791,6 @@ function build_pie_chart (json_chart, chart_height, weight_name) { // build pie 
 
   // create chart
   $(selector_path + " #" + chart_id).highcharts({
-    credits: { enabled: false },
     chart:{
       plotBackgroundColor: null,
       plotBorderWidth: null,
@@ -931,7 +903,6 @@ function build_time_series_chart (json_chart, chart_height, weight_name) { // bu
 
   // create chart
   $(selector_path + " #" + chart_id).highcharts({
-    credits: { enabled: false },
     chart: {
       plotBackgroundColor: null,
       plotBorderWidth: null,
@@ -1287,4 +1258,14 @@ function share_toggle (state, t) {
     t.find(".prompt").css(dir2).stop().delay( 100 ).animate(dir, 250);
   }
   t.attr("data-state", state);
+}
+function rgba (hex) {
+  return "rgba(" + hex2rgb(hex).join(",") + ", .4)";
+}
+function hex2rgb (hex) {
+  var r = hex.match(/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i);
+  if (r) {
+    return r.slice(1, 4).map(function (x) { return parseInt(x, 16); });
+  }
+  return [255, 255, 255];
 }
