@@ -68,7 +68,6 @@ $(document).ready(function (){
 
   // remove the row in all other tables too
   $("table#dataset-answers").on("cocoon:before-remove", function (e, to_delete) {
-     console.log("here");
     // get index of this row so know which rows in other tables to delete
     var row_index = $(".tab-content .tab-pane:first table#dataset-answers tbody").children("tr").index(to_delete);
 
@@ -94,23 +93,4 @@ $(document).ready(function (){
     $(this).parent().find("option[value='" + $(this).val() + "']").remove();
     $(this).parent().val("");
   });
-
-
-  // $("a#delete-all-answers").click(function (e) { // delete all answers
-
-  //   var answer=confirm($(this).data("confirm-text"));
-  //   if(answer){
-  //     setTimeout(function () {
-  //       $("a#delete-all-answers").fadeOut(function (){
-  //         $("a#auto-create-answers").css("display", "none").removeClass("hide").fadeIn();
-  //       });
-  //     }, 1000);
-  //     $("table#dataset-answers tbody").empty();
-  //   }
-  //   else {
-  //     e.preventDefault();
-  //   }
-
-  // });
-
 });
