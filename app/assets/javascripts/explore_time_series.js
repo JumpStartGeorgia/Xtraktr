@@ -688,7 +688,6 @@ $(document).ready(function () {
         $("input#can_exclude").removeAttr("checked");
       }
 
-
       // reload the data
       $("#jumpto-loader").fadeIn("slow");
       $("#explore-error").fadeOut("slow");
