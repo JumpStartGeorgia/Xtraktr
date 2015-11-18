@@ -468,7 +468,7 @@ class Api::V2
       options['weighted_by_code'] = weight
     end
 
-    puts "== time series weight = #{weight}; item = #{weight_item.inspect}; question = #{weight_question.inspect}"
+    # puts "== time series weight = #{weight}; item = #{weight_item.inspect}; question = #{weight_question.inspect}"
 
     ########################
     # start populating the output
@@ -480,7 +480,7 @@ class Api::V2
     data[:analysis_type] = ANALYSIS_TYPE[:time_series]
     data[:results] = nil
 
-    puts "== weighted by hash = #{data[:weighted_by]}"
+    # puts "== weighted by hash = #{data[:weighted_by]}"
 
     ########################
     # do the analysis
@@ -493,7 +493,7 @@ class Api::V2
       # if using weights, get the weight values for this dataset
       if weight.present?
         dataset_options['weight_values'] = weight_item.assignments.dataset_weight_values(dq.dataset_id)
-        puts "==- dataset #{dq.dataset_id} has #{dataset_options['weight_values'].length} weight values"
+        # puts "==- dataset #{dq.dataset_id} has #{dataset_options['weight_values'].length} weight values"
       end
 
       x = dataset_analysis(dq.dataset_id, question_code, dataset_options)
@@ -585,7 +585,7 @@ private
     filtered_by = data_hash[:filtered_by]
     weight = data_hash[:weighted_by]
 
-    puts "==== dataset single analysis weight = #{weight}; provide weight values length = #{provided_weight_values.nil? ? 0 : provided_weight_values.length}"
+#    puts "==== dataset single analysis weight = #{weight}; provide weight values length = #{provided_weight_values.nil? ? 0 : provided_weight_values.length}"
 
     # get the data for this code
     data = dataset.data_items.code_data(question[:code])
@@ -597,10 +597,10 @@ private
       weight_values = []
       if weight.present?
         if weight == WEIGHT_TYPE[:time_series] && provided_weight_values.present?
-          puts "==-- using time series weights"
+ #         puts "==-- using time series weights"
           weight_values = provided_weight_values
         elsif weight != WEIGHT_TYPE[:time_series] && weight.class == Hash
-          puts "==-- using dataset weights"
+  #        puts "==-- using dataset weights"
           weight_values = dataset.data_items.code_data(weight[:code])
         end
       end
@@ -1597,7 +1597,7 @@ private
     filtered_by = options[:filtered_by]
     filter_answer_value = options[:filter_answer_value]
 
-    puts "===- time series single analysis processing options = #{options}"
+#    puts "===- time series single analysis processing options = #{options}"
 
     results = nil
     if with_title

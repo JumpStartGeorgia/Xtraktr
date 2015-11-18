@@ -247,6 +247,7 @@ $(document).ready(function(){
 
     // add select lists for the new row
     $('table#time-series-dataset-answers').on('cocoon:before-insert', function(e,to_add) {
+      alert('before');
       $('form select.dataset-question').each(function(){
         update_question_answers(this, false, to_add);
       });
@@ -254,6 +255,7 @@ $(document).ready(function(){
 
     // when a new answer is added, add row for each of the other languages
     $('table#time-series-dataset-answers').on('cocoon:after-insert', function(e,inserted_item) {
+      alert('after');
       create_answer_other_languages(inserted_item);
     });
 

@@ -475,7 +475,7 @@ function get_explore_time_series(is_back_button){
       $('#jumpto-loader').fadeOut('slow');
       $('#explore-data-loader').fadeOut('slow');
       $('#explore-error').fadeIn('slow');
-    }else if ((json.results.analysis && json.results.analysis.length == 0) || json.results.filtered_analysis && json.results.filtered_analysis.length == 0){
+    }else if ((json.results.analysis && json.results.analysis.length == 0) || (json.results.filtered_analysis && json.results.filtered_analysis.length == 0)){
       $('#jumpto-loader').fadeOut('slow');
       $('#explore-data-loader').fadeOut('slow');
       $('#explore-no-results').fadeIn('slow');
