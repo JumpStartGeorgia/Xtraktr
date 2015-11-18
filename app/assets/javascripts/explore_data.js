@@ -827,10 +827,15 @@ function get_explore_data (is_back_button) { // get data and load page
       //console.log( "Request failed: " + textStatus  + ". Error thrown: " + errorThrown);
     })
     .success(function ( json ) {
-      if (json.errors || ((json.results.analysis && json.results.analysis.length == 0) || json.results.filtered_analysis && json.results.filtered_analysis.length == 0)){
+      if (json.errors){
         $("#jumpto-loader").fadeOut("slow");
         $("#explore-data-loader").fadeOut("slow");
         $("#explore-error").fadeIn("slow");
+      }
+      else if ((json.results.analysis && json.results.analysis.length == 0) || (json.results.filtered_analysis && json.results.filtered_analysis.length == 0)){
+        $("#jumpto-loader").fadeOut("slow");
+        $("#explore-data-loader").fadeOut("slow");
+        $("#explore-no-results").fadeIn("slow");
       }
       else {
         js.cache[cacheId] = json;
