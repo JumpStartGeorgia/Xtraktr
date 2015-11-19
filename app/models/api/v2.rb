@@ -544,7 +544,7 @@ private
     hash = {}
     if question.present?
       hash = {code: question.code, original_code: question.original_code, data_type: question.data_type, text: question.text, notes: question.notes, is_mappable: question.is_mappable, has_map_adjustable_max_range: question.has_map_adjustable_max_range}
-        .merge(question.numerical_type? ? { numerical: question.numerical.as_json(except: [:_id]) } : {})
+        .merge(question.numerical_type? ? { numerical: question.numerical.as_json(except: [:_id]), descriptive_statistics: question.descriptive_statistics } : {})
       # if this question belongs to a group, add it
       if question.group_id.present?
         group = question.group

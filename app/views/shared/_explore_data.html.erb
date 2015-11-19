@@ -158,11 +158,13 @@
           </div>
 
           <div class="details-icons" style="display:none;">
-            <span id="detail-icon-exclude-question" class="icon-item"><%= exclude_question_icon.html_safe %></span>
-            <span id="detail-icon-exclude-answer" class="icon-item"><%= exclude_answer_icon.html_safe %></span>
-            <span id="detail-icon-mappable-question" class="icon-item"><%= mappable_question_icon.html_safe %></span>
-            <span id="detail-icon-group" class="icon-item"><%= group_icon.html_safe %></span>
-            <span id="detail-icon-subgroup" class="icon-item"><%= subgroup_icon.html_safe %></span>
+            <span class="icon-item exclude-question"><%= exclude_question_icon.html_safe %></span>
+            <span class="icon-item exclude-answer"><%= exclude_answer_icon.html_safe %></span>
+            <span class="icon-item mappable-question"><%= mappable_question_icon.html_safe %></span>
+            <span class="icon-item group"><%= group_icon.html_safe %></span>
+            <span class="icon-item subgroup"><%= subgroup_icon.html_safe %></span>
+            <span class="icon-item categorical"><%= question_data_type_icon(1).html_safe %></span>
+            <span class="icon-item numerical"><%= question_data_type_icon(2).html_safe %></span>
           </div>
         </div>
         <div class="tab-pane" id="tab-download">

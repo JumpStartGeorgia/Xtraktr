@@ -18,11 +18,26 @@
               <div class="k"><%= t('app.common.question_code') %>:</div>
               <div class="name-code"></div>
             </div>
+            <div class="details-data-type" data-categorical="<%= t("app.common.categorical") %>" data-numerical="<%= t("app.common.numerical") %>">
+              <div class="k"><%= t('app.common.data_type') %>:</div>
+              <div class="v"></div>
+            </div>
+            <div class="details-descriptive-statistics">
+              <div class="k"><%= t('app.common.descriptive_statistics.title') %>:</div>
+              <ul class="v v-list">
+              <% ["number", "min", "max", "mean", "median", "mode", "q1", "q2", "q3", "variance", "standard_deviation"].each {|x| %>
+                <li data-field='<%= x %>'>
+                  <%= t("app.common.descriptive_statistics." + x) %>:
+                  <span></span>
+                </li>
+              <% } %>                
+              </ul>
+            </div>
             <div class="details-notes">
               <div class="k"><%= t('app.common.notes') %>:</div>
               <div class="notes"></div>
             </div>
             <div class="details-answers">
               <div class="k"><%= t('app.common.answers') %>:</div>
-              <ul class="list-answers"></ul>
+              <ul class="list-answers v-list"></ul>
             </div>

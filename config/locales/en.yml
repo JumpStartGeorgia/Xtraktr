@@ -807,7 +807,7 @@ en:
         q1: Percentile 25%
         q2: Percentile 50%
         q3: Percentile 75%
-        standart_deviation: Standart Deviation
+        standard_deviation: Standard Deviation
         variance: Variance
       total_responses_out_of: "Total Responses: <span class='number'>X</span> out of <span class='number'>XX</span>"   
     msgs:

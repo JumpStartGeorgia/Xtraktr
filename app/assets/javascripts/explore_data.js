@@ -4,7 +4,7 @@ var datatables, h, i, j, k, cacheId,
   js, select_map;
 
 function build_charts (data, type) {
-  console.log("build_charts", data, type);
+  //console.log("build_charts", data, type);
   if (data.chart) {
     var flag = false,
       chart_height = window[type + "_chart_height"](data),     // determine chart height // pie_chart_height(json);
@@ -558,67 +558,87 @@ function build_details (json) { // build details (question and possible answers)
   build_details_item(json);
 
   function build_details_item (json) { // populat a details item block
- 
-    var selector = "", json_question = undefined;
-    ["question", "brokey-down-by", "filtered-by", "weighted-by"].forEach(function(d){
+    var selector = "", json_question = undefined, t, exist, tmp, icon, is_categorical;
+    ["question", "brokey-down-by", "filtered-by", "weighted-by"].forEach(function (d){
       selector = "#tab-details #details-"+ d +"-code";
       json_question = json[d.replace(/-/g, "_")];
-
       if (json_question && json_question.text){
-        var tmp = $(selector);
+        tmp = $(selector);
         if (tmp.length > 0){
-          var icon = "";
+          icon = "";
+          is_categorical = json_question.data_type === 1;
           if (json_question.exclude){
-            icon += $(".details-icons #detail-icon-exclude-question")[0].outerHTML;
+            icon += $(".details-icons .exclude-question")[0].outerHTML;
           }
           if (json_question.is_mappable){
-            icon += $(".details-icons #detail-icon-mappable-question")[0].outerHTML;
+            icon += $(".details-icons .mappable-question")[0].outerHTML;
           }
-          tmp.find(".name-variable").html(icon + json_question.text);
 
+          tmp.find(".name-variable").html(icon + json_question.text);
           tmp.find(".name-code").html(json_question.original_code);
-          if (json_question.notes){
-            tmp.find(".notes").html(json_question.notes);
-            tmp.find(".details-notes").show();
-          }else{
-            tmp.find(".details-notes").hide();
+
+
+          t = tmp.find(".details-data-type");
+          exist = !!json_question["data_type"];
+          if(exist) {
+            var type_str = is_categorical ? "categorical" : "numerical",
+              type_text = t.data(type_str);
+            t.find(".v").html("<span>" + type_text + "</span>" + $(".details-icons ." + type_str)[0].outerHTML);
           }
-          if (json_question.weight_name){
-            tmp.find(".weight").html(json_question.weight_name);
-            tmp.find(".details-weight").show();
-          }else{
-            tmp.find(".details-weight").hide();
+          t.toggle(exist);
+
+          t = tmp.find(".details-descriptive-statistics");
+          if(json_question.descriptive_statistics) {
+            t.find(".v li").each(function (i, d) {
+              var $t = $(d),
+                field_value = json_question.descriptive_statistics[$t.data("field")];
+
+              if(field_value)
+              {
+                $t.find("span").html(Math.round10(+field_value, -2));
+                $t.show();
+              }
+              else { $t.hide(); }
+            });
+            t.show();
           }
-          if (json_question.group){
-            tmp.find(".name-group .group-title").html(json_question.group.title);
-            if (json_question.group.description != ""){
-              tmp.find(".name-group .group-description").html(" - " + json_question.group.description);
+          else { t.hide(); }
+
+          ["notes", "weight"].forEach(function (d, i){
+            t = tmp.find(".details-" + d);
+            d = (d === "weight" ? "weight_name" : d);
+            exist = !!json_question[d];
+            if(exist) { t.find("." + d).html(json_question[d]); }
+            t.toggle(exist);
+          });
+
+          ["group", "subgroup"].forEach(function (d, i){
+            t = tmp.find(".details-" + d);
+            exist = !!json_question[d];
+            if(exist) {
+              var ng = t.find(".name-" + d);
+              ng.find(".group-title").html(json_question[d].title);
+              if (json_question[d].description !== ""){
+                ng.find(".group-description").html(" - " + json_question[d].description);
+              }
             }
-            tmp.find(".details-group").show();
-          }else{
-            tmp.find(".details-group").hide();
-          }
-          if (json_question.subgroup){
-            tmp.find(".name-subgroup .group-title").html(json_question.subgroup.title);
-            if (json_question.subgroup.description != ""){
-              tmp.find(".name-subgroup .group-description").html(" - " + json_question.subgroup.description);
-            }
-            tmp.find(".details-subgroup").show();
-          }else{
-            tmp.find(".details-subgroup").hide();
-          }
-          if (json_question.answers){
+            t.toggle(exist);
+          });
+
+          t = tmp.find(".details-answers");
+          if (json_question.answers && is_categorical){
             for(var i=0;i<json_question.answers.length;i++){
               icon = "";
               if (json_question.answers[i].exclude){
-                icon += $(".details-icons #detail-icon-exclude-answer")[0].outerHTML;
+                icon += $(".details-icons .exclude-answer")[0].outerHTML;
               }
-              tmp.find(".list-answers").append("<li>" + icon + json_question.answers[i].text + "</li>");
+              t.find(".list-answers").append("<li>" + icon + json_question.answers[i].text + "</li>");
             }
-            tmp.find(".details-answers").show();
+            t.show();
           }else{
-            tmp.find(".details-answers").hide();
+            t.hide();
           }
+
           tmp.show();
         }
       }

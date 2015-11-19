@@ -369,7 +369,7 @@ function build_details_item(selector, json_question){
         for(var i=0;i<json_question.answers.length;i++){
           icon = '';
           if (json_question.answers[i].exclude){
-            icon += $('.details-icons #detail-icon-exclude-answer')[0].outerHTML;
+            icon += $('.details-icons .exclude-answer')[0].outerHTML;
           }
           tmp.find('.list-answers').append('<li>' + icon + json_question.answers[i].text + '</li>');
         }
