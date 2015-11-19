@@ -1,4 +1,9 @@
-var datatables, i, j, json_data;
+var datatables, i, j, json_data,
+  $jumpto,
+  $jumpto_chart,
+  $jumpto_chart_select,
+  $jumpto_chart_label,
+  $tab_content;
 
 function update_available_weights () { // update the list of avilable weights based on questions that are selected
   var select_weight = $("select#weighted_by_code"),
@@ -57,7 +62,8 @@ function build_time_series_charts(json){
     // remove all existing charts
     $('#container-chart').empty();
     // remove all existing chart links
-    $('#jumpto #jumpto-chart select').empty();
+    $jumpto_chart_select.empty();
+
     var jumpto_text = '';
     var weight_name = json.weighted_by ? json.weighted_by.weight_name : undefined;
 
@@ -69,24 +75,19 @@ function build_time_series_charts(json){
         build_time_series_chart(json.chart[i].filter_results, chart_height, weight_name);
 
         // add jumpto link
-        jumpto_text += '<option data-href="#chart-' + (i+1) + '">' + json.filtered_by.text + ' = ' + json.chart[i].filter_answer_text + '</option>';
+        jumpto_text += '<option data-href="#chart-' + (i+1) + '">' + json.chart[i].filter_answer_text + '</option>';
       }
 
       // show jumpto links
-      $('#jumpto #jumpto-chart select').append(jumpto_text);
-      $('#jumpto #jumpto-chart select').val($('#jumpto #jumpto-chart select option:first').attr('value'));
-      $('#jumpto #jumpto-chart select').selectpicker('refresh');
-      $('#jumpto #jumpto-chart select').selectpicker('render');
-      $('#jumpto #jumpto-chart').show();
-      $('#jumpto').show();
+      $jumpto_chart_label.html("(" + json.filtered_by.original_code + ")");
+      $jumpto_chart_select.append(jumpto_text);
+      $jumpto_chart_select.val($jumpto_chart_select.find("option:first").attr("value"));
+      $jumpto_chart_select.selectpicker("refresh");
+      $jumpto_chart_select.selectpicker("render");
 
     }else{
       // no filters
       build_time_series_chart(json.chart, chart_height, weight_name);
-
-      // hide jumpto
-      $('#jumpto #jumpt-chart').hide();
-      $('#jumpto').hide();
     }
   }
 
@@ -513,10 +514,17 @@ function reset_filter_form(){
 
 }
 
-////////////////////////////////////////////////
-////////////////////////////////////////////////
+function jumpto (show) { // show/hide jumpto show - for main box and if chart is false then map
+  $jumpto.toggle(show);
+  $jumpto_chart.toggle(show);
+}
 
 $(document).ready(function() {
+  $jumpto = $("#jumpto");
+  $jumpto_chart = $("#jumpto #jumpto-chart");
+  $jumpto_chart_select = $jumpto_chart.find("select");
+  $jumpto_chart_label = $jumpto_chart.find("label span");
+  $tab_content = $(".tab-content");
   // set languaage text
   Highcharts.setOptions({
     chart: { spacingRight: 30 },
@@ -648,28 +656,23 @@ $(document).ready(function() {
 
 
     // jumpto scrolling
-    $("#jumpto").on('change', 'select', function(){
-      var href = $(this).find('option:selected').data('href'),
-        container = $(".tab-pane.active > div");
-
-      $(".tab-pane.active").animate({
-        scrollTop: container.find(href).prop("offsetTop") - container.find("> div:first").prop("offsetTop")
+    $("#jumpto").on("change", "select", function () {
+      $("#jumpto button.dropdown-toggle").tooltip("fixTitle");
+      $tab_content.animate({
+        scrollTop: $tab_content.scrollTop() + $tab_content.find(".tab-pane.active > div > " + $(this).find("option:selected").data("href")).offset().top - $tab_content.offset().top
       }, 1500);
     });
 
     // when chart tab clicked on, make sure the jumpto block is showing, else, hide it
-    $('#explore-tabs li a').click(function(){
-      var ths_link = $(this).find('a');
-
-      if ($(ths_link).attr('href') == '#tab-chart' && $('#jumpto #jumpto-chart select option').length > 0){
-        $('#jumpto').show();
-        $('#jumpto #jumpto-chart').show();
+    $("#explore-tabs li").click(function () {
+      var href = $(this).find("a").attr("href");
+      if (href == "#tab-chart" &&  $jumpto_chart_select.find("option").length > 0){
+        jumpto(true);
       }else{
-        $('#jumpto').hide();
-        $('#jumpto #jumpto-chart').hide();
+        jumpto(false);
       }
     });
-
+    
     // the below code is to override back button to get the ajax content without page reload
     $(window).bind('popstate', function() {
 
