@@ -3,6 +3,8 @@
 var js = { cache: {} }, datatables, h, i, j, k, cacheId,
   $jumpto,
   $jumpto_chart,
+  $jumpto_chart_select,
+  $jumpto_chart_label,
   $jumpto_map,
   $jumpto_map_select,
   $jumpto_map_label,
@@ -100,7 +102,7 @@ function build_highmaps (json) { // build highmap
       if(json.filtered_by) { lbl.push(json.filtered_by.original_code); }
       if(json.broken_down_by) { lbl.push(json.broken_down_by.original_code); }
 
-      $jumpto_map_label.html(lbl.join(" -> "));
+      $jumpto_map_label.html("(" + lbl.join(" -> ") + ")");
       $jumpto_map_select.html(jump_options);
       $jumpto_map_select.val($jumpto_map_select.find("option:first").attr("value"));
       $jumpto_map_select.selectpicker("refresh");
@@ -117,7 +119,6 @@ function build_highmaps (json) { // build highmap
 
 function build_crosstab_charts (json) { // build crosstab charts for each chart item in json
   var i;
-  var flag = false;
 
   if (json.chart) {
     // determine chart height
@@ -125,9 +126,9 @@ function build_crosstab_charts (json) { // build crosstab charts for each chart 
 
     // remove all existing charts
     $("#container-chart").empty();
+
     // remove all existing chart links
-    var select_selector = $("#jumpto #jumpto-chart select");
-    select_selector.empty();
+    $jumpto_chart_select.empty();
 
     var jumpto_text = "";
     var weight_name = json.weighted_by ? json.weighted_by.weight_name : undefined;
@@ -140,15 +141,15 @@ function build_crosstab_charts (json) { // build crosstab charts for each chart 
         build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart[i].filter_results, chart_height, weight_name);
 
         // add jumpto link
-        jumpto_text += "<option data-href='#chart-" + (i+1) + "'>" + json.filtered_by.text + " = " + json.chart[i].filter_answer_text + "</option>";
+        jumpto_text += "<option data-href='#chart-" + (i+1) + "'>" + json.chart[i].filter_answer_text + "</option>";
       }
 
       // show jumpto links
-      select_selector.append(jumpto_text);
-      select_selector.val($("#jumpto #jumpto-chart select option:first").attr("value"));
-      select_selector.selectpicker("refresh");
-      select_selector.selectpicker("render");
-      flag = true;
+      $jumpto_chart_label.html("(" + json.filtered_by.original_code + ")");
+      $jumpto_chart_select.append(jumpto_text);
+      $jumpto_chart_select.val($jumpto_chart_select.find("option:first").attr("value"));
+      $jumpto_chart_select.selectpicker("refresh");
+      $jumpto_chart_select.selectpicker("render");
 
     }
     else{       // no filters
@@ -158,7 +159,6 @@ function build_crosstab_charts (json) { // build crosstab charts for each chart 
 }
 
 function build_pie_charts (json) { // build pie chart for each chart item in json
-  var flag = false;
 
   if (json.chart){
 
@@ -171,8 +171,7 @@ function build_pie_charts (json) { // build pie chart for each chart item in jso
     container.append("<div id='chart-type-toggle'><div class='toggle' data-type='bar' title='" + gon.chart_type_bar + "'></div><div class='toggle selected' data-type='pie' title='" + gon.chart_type_pie + "'></div>");
 
     // remove all existing chart links
-    var select_selector = $("#jumpto #jumpto-chart select");
-    select_selector.empty();
+    $jumpto_chart_select.empty();
 
     var jumpto_text = "",
       weight_name = json.weighted_by ? json.weighted_by.weight_name : undefined;
@@ -185,15 +184,15 @@ function build_pie_charts (json) { // build pie chart for each chart item in jso
         build_pie_chart(json.chart[i].filter_results, chart_height, weight_name);
 
         // add jumpto link
-        jumpto_text += "<option data-href='#chart-" + (i+1) + "'>" + json.filtered_by.text + " = " + json.chart[i].filter_answer_text + "</option>";
+        jumpto_text += "<option data-href='#chart-" + (i+1) + "'>" + json.chart[i].filter_answer_text + "</option>";
       }
 
       // show jumpto links
-      select_selector.append(jumpto_text);
-      select_selector.val($("#jumpto #jumpto-chart select option:first").attr("value"));
-      select_selector.selectpicker("refresh");
-      select_selector.selectpicker("render");
-      flag = true;
+      $jumpto_chart_label.html("(" + json.filtered_by.original_code + ")");
+      $jumpto_chart_select.append(jumpto_text);
+      $jumpto_chart_select.val($jumpto_chart_select.find("option:first").attr("value"));
+      $jumpto_chart_select.selectpicker("refresh");
+      $jumpto_chart_select.selectpicker("render");
     }
     else {  // no filters
       build_pie_chart(json.chart, chart_height, weight_name);
@@ -202,7 +201,6 @@ function build_pie_charts (json) { // build pie chart for each chart item in jso
 }
 
 function build_bar_charts (json) { // build pie chart for each chart item in json
-  var flag = false;
 
   if (json.chart){
 
@@ -211,9 +209,9 @@ function build_bar_charts (json) { // build pie chart for each chart item in jso
 
     container.empty();
     container.append("<div id='chart-type-toggle'><div class='toggle selected' data-type='bar' title='" + gon.chart_type_bar + "'></div><div class='toggle' data-type='pie' title='" + gon.chart_type_pie + "'></div>");
+
     // remove all existing chart links
-    var select_selector = $("#jumpto #jumpto-chart select");
-    select_selector.empty();
+    $jumpto_chart_select.empty();
 
     var jumpto_text = "";
     var weight_name = json.weighted_by ? json.weighted_by.weight_name : undefined;
@@ -226,15 +224,16 @@ function build_bar_charts (json) { // build pie chart for each chart item in jso
         build_bar_chart(json.chart[i].filter_results, chart_height, weight_name);
 
         // add jumpto link
-        jumpto_text += "<option data-href='#chart-" + (i+1) + "'>" + json.filtered_by.text + " = " + json.chart[i].filter_answer_text + "</option>";
+        jumpto_text += "<option data-href='#chart-" + (i+1) + "'>" + json.chart[i].filter_answer_text + "</option>";
       }
 
       // show jumpto links    
-      select_selector.append(jumpto_text);
-      select_selector.val(select_selector.find("option:first").attr("value"));
-      select_selector.selectpicker("refresh");
-      select_selector.selectpicker("render");
-      flag = true;
+      $jumpto_chart_label.html("(" + json.filtered_by.original_code + ")");
+      $jumpto_chart_select.append(jumpto_text);
+      $jumpto_chart_select.val($jumpto_chart_select.find("option:first").attr("value"));
+      $jumpto_chart_select.selectpicker("refresh");
+      $jumpto_chart_select.selectpicker("render");
+
     }
     else {
       build_bar_chart(json.chart, chart_height, weight_name);       // no filters
@@ -790,7 +789,7 @@ function reset_filter_form () { // reset the filter forms and select a random va
 }
 
 
-function jumpto(show, chart) { // show/hide jumpto show - for main box and if chart is false then map
+function jumpto (show, chart) { // show/hide jumpto show - for main box and if chart is false then map
   if(typeof chart === "undefined") { chart = true; }
   $jumpto.toggle(show);
   $jumpto_chart.toggle(show && chart);
@@ -799,11 +798,12 @@ function jumpto(show, chart) { // show/hide jumpto show - for main box and if ch
 $(document).ready(function () {
     $jumpto = $("#jumpto");
     $jumpto_chart = $("#jumpto #jumpto-chart");
+    $jumpto_chart_select = $jumpto_chart.find("select");
+    $jumpto_chart_label = $jumpto_chart.find("label span");
     $jumpto_map = $("#jumpto #jumpto-map");
     $jumpto_map_select = $jumpto_map.find("select");
-    $jumpto_map_label = $jumpto_map.find(".sub-label");
-    $tab_content = $(".tab-content");
-    $jumpto_map_select.selectpicker();
+    $jumpto_map_label = $jumpto_map.find("label span");
+    $tab_content = $(".tab-content");    
   // set languaage text
   Highcharts.setOptions({
     chart: { spacingRight: 30 },
@@ -1027,9 +1027,9 @@ $(document).ready(function () {
     // when chart tab/map clicked on, make sure the jumpto block is showing, else, hide it
     $("#explore-tabs li").click(function () {
       var href = $(this).find("a").attr("href");
-      if (href == "#tab-chart" &&  $jumpto_chart.find("select option").length > 0){
+      if (href == "#tab-chart" &&  $jumpto_chart_select.find("option").length > 0){
         jumpto(true, true);
-      }else if (href == "#tab-map" &&  $jumpto_map.find("select option").length > 0){
+      }else if (href == "#tab-map" &&  $jumpto_map_select.find("option").length > 0){
         jumpto(true, false);
       }else{
         jumpto(false);
