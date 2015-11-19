@@ -3,7 +3,7 @@
 -%>
 <div class="article explore-data">
   <% if @questions.present? %>
-    <div id="explore-form" class="c">
+    <div id="explore-form">
       <h2><%= @time_series.title %></h2>
       <%= form_tag(explore_time_path, :id => 'form-explore-time-series') do %>
         <div class="form-explore-question-code">
@@ -66,7 +66,7 @@
 
     </div>
 
-    <div id="explore-data-content" class="c tabs style2">
+    <div id="explore-data-content" class="tabs style2">
       <div class="tab-header">
         <div class="tab-caption"><%= t('.tabs.chart') %></div>
         <button type="button" class="navbar-toggle tab-toggle collapsed" data-toggle="collapse" data-target=".tab-collapse">
@@ -80,7 +80,7 @@
         <li id="nav-chart" class="active"><a href="#tab-chart" role="tab" data-toggle="tab"><%= t('.tabs.chart') %></a></li>
         <li id="nav-table"><a href="#tab-table" role="tab" data-toggle="tab"><%= t('.tabs.table') %></a></li>
         <li id="nav-details"><a href="#tab-details" role="tab" data-toggle="tab"><%= t('.tabs.details') %></a></li>
-]      </ul>
+      </ul>
       <% if !@is_time_series_admin %>
         <div class="share share-box"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>
       <% end %>
