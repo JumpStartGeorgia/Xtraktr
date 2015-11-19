@@ -51,7 +51,7 @@ private
     g_text = group.title
 
     # if the question is mappable or is excluded, show the icons for this
-    content = 'data-content=\'<span>' + g_text + '</span><span class="pull-right">'
+    content = 'data-content=\'<span>' + g_text + '</span><span class="right-icons">'
 
     if group.parent_id.present?
       content << subgroup_icon(I18n.t('app.msgs.is_subgroup'))
@@ -87,7 +87,7 @@ private
     # if the question is mappable or is excluded, show the icons for this
     content = ''
     if !skip_content #&& (question.is_mappable? || question.exclude?)
-      content << 'data-content=\'<span class="outer-layer"><span class="inner-layer"><span>' + q_text + '</span><span class="pull-right">'
+      content << 'data-content=\'<span class="outer-layer"><span class="inner-layer"><span>' + q_text + '</span><span class="right-icons">'
 
       if question.is_mappable?
         content << mappable_question_icon
