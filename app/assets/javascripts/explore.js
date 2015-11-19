@@ -312,8 +312,8 @@ function build_highmap (shape_question_code, adjustable_max, json_map_set, chart
     colorAxis: {
       min: 0,
       max: max,
-      minColor: "#d2f1f9",
-      maxColor: "#0086a5",
+      minColor: "#dae8dc",
+      maxColor: "#36663e",
       labels: {
         formatter: function () {
           return this.value + "%";
@@ -346,7 +346,7 @@ function build_highmap (shape_question_code, adjustable_max, json_map_set, chart
       borderWidth: 2,
       states: {
         hover: {
-          color: "#0086a5",
+          color: "#25512b",
           borderColor: "#3c4352",
           borderWidth: 2
         }
@@ -368,7 +368,7 @@ function build_highmap (shape_question_code, adjustable_max, json_map_set, chart
       borderWidth: 2,
       states: {
         hover: {
-          color: "#0086a5",
+          color: "#25512b",
           borderColor: "#3c4352",
           borderWidth: 2
         }
