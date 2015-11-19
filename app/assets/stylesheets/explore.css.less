@@ -1161,15 +1161,33 @@ select {
         margin-left: 20px;
         box-shadow: -1px 0 0px 0px @db8042;
       }
-      &.grouped{
+      &.group, &.subgroup {
+        > span {
+          display:table-cell;
+          &:first-child {
+            width:100%;
+          }
+        }
+      }
+      &.grouped {
         padding-left: 10px;
         margin-left: 20px;
         box-shadow: -1px 0 0px 0px @db8042;
       }
-      &.subgrouped{
+      &.subgrouped {
         padding-left: 10px;
         margin-left: 40px;
         box-shadow: -1px 0 0px 0px @af5213, -20px 0 0 0 #fff, -21px 0 0 0 @db8042;
+      }  
+      &.grouped, &.subgrouped {
+        .inner-layer {
+          > span {
+            display:table-cell;
+            &:first-child {
+              width:100%;
+            }
+          } 
+        }                
       }
     }
     &.disabled a{

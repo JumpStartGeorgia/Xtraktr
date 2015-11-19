@@ -257,3 +257,8 @@ This is a short description on how to use this repo as the start of a new projec
     * run: 
         * git remote add origin [clone url here]
         * git push -u origin master
+
+* Custom vendor scripts
+    * bootstrap-select.min.js
+        * default for showIcon to false = !1
+        * find check-mark and comment whole span tag that wraps it
