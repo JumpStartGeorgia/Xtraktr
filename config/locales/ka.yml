@@ -1474,6 +1474,7 @@ ka:
       dataset_title: "მონაცემები"
       form:
         question_code: "გაეცანით პასუხებს"
+        no_question: Select a Question
         broken_down_by_code: "ჩაშლილია"
         optional: "არჩევითი"
         no_comparison: "არ არის შედარება"
@@ -1496,6 +1497,25 @@ ka:
         download: "მონაცემთა გაცნობა"
       map:
         filter: "რუკის გაფილტვრა ამ პასუხის არჩევით '%{text}':"
+      instructions:
+        unweighted: |
+            -- select a question to being your exploration
+
+            -- selecting a broken down by question will generate a stacked bar chart
+
+            -- selecting a filtered by question will generate a chart for each answer in the filter
+
+            -- click here to run the analysis
+        weighted: |
+            -- select a question to being your exploration
+
+            -- selecting a broken down by question will generate a stacked bar chart
+
+            -- selecting a filtered by question will generate a chart for each answer in the filter
+
+            -- using a weight will apply the analysis results to the general population, not just the respondents
+
+            -- click here to run the analysis
     explore_time_series:
       no_matches: "თქვენ მიერ მონიშნული პარამეტრებით მონაცემები არ მოიძებნა. გთხოვთ, სცადოთ განსხვავებული პარამეტრები. "
       no_data: "%{title}' არ შეიცავს მონაცემებს, რომლებიც გაანალიზებადია ამ დროისთვის."
@@ -1504,6 +1524,7 @@ ka:
       time_series_title: "პერიოდული შედარება"
       form:
         question_code: "გაეცანით პასუხებს"
+        no_question: Select a Question
         submit: "დაანგარიშება"
         reset: "გადატვირთვა"
         filtered_by_code: "გაფილტრულია"
@@ -1516,6 +1537,21 @@ ka:
         chart: "დიაგრამა"
         table: "ცხრილი"
         details: "დეტალები"
+      instructions:
+        unweighted: |
+            -- select a question to being your exploration
+
+            -- selecting a filtered by question will generate a chart for each answer in the filter
+
+            -- click here to run the analysis
+        weighted: |
+            -- select a question to being your exploration
+
+            -- selecting a filtered by question will generate a chart for each answer in the filter
+
+            -- using a weight will apply the analysis results to the general population, not just the respondents
+
+            -- click here to run the analysis
     dashboard_data:
       tabs:
         highlights: "რჩეული ფაქტები"

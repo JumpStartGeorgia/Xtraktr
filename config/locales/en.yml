@@ -1474,6 +1474,7 @@ en:
       dataset_title: Dataset
       form:
         question_code: Explore Answers To
+        no_question: Select a Question
         broken_down_by_code: Broken Down By
         optional: optional
         no_comparison: No Comparison
@@ -1496,6 +1497,25 @@ en:
         download: Download Data
       map:
         filter: "Filter map by selecting an answer to '%{text}':"
+      instructions:
+        unweighted: |
+            -- select a question to being your exploration
+
+            -- selecting a broken down by question will generate a stacked bar chart
+
+            -- selecting a filtered by question will generate a chart for each answer in the filter
+
+            -- click here to run the analysis
+        weighted: |
+            -- select a question to being your exploration
+
+            -- selecting a broken down by question will generate a stacked bar chart
+
+            -- selecting a filtered by question will generate a chart for each answer in the filter
+
+            -- using a weight will apply the analysis results to the general population, not just the respondents
+
+            -- click here to run the analysis
     explore_time_series:
       no_matches: Your selections returned no data. Please try again with a different selection.
       no_data: "'%{title}' does not have any data that is analyzable at this time."
@@ -1504,6 +1524,7 @@ en:
       time_series_title: Time Series
       form:
         question_code: Explore Answers To
+        no_question: Select a Question
         submit: Generate
         reset: Reset
         filtered_by_code: Filtered By
@@ -1516,6 +1537,21 @@ en:
         chart: Chart
         table: Table
         details: Details
+      instructions:
+        unweighted: |
+            -- select a question to being your exploration
+
+            -- selecting a filtered by question will generate a chart for each answer in the filter
+
+            -- click here to run the analysis
+        weighted: |
+            -- select a question to being your exploration
+
+            -- selecting a filtered by question will generate a chart for each answer in the filter
+
+            -- using a weight will apply the analysis results to the general population, not just the respondents
+
+            -- click here to run the analysis
     dashboard_data:
       tabs:
         highlights: Highlights

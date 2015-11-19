@@ -7,15 +7,18 @@ function update_available_weights () { // update the list of avilable weights ba
   if (!select_weight.length) { return; }
 
   var old_value = select_weight.val(),
+    matches=[],
     items = [
       $("select#question_code option:selected").data("weights"),
       $("select#filtered_by_code option:selected").data("weights")
-    ].filter(function (d) { return typeof d !== "undefined"; }),
+    ].filter(function (d) { return typeof d !== "undefined"; });
+  if (items.length > 0){
     matches = items.shift().filter(function (v) {
       return items.every(function (a) {
         return a.indexOf(v) !== -1;
       });
     });
+  }
   dropdown_weight.find("li:not(:last)").hide();   // hide all items except unweighted
 
   if (matches.length) { // if there are matches, show the weights that match, and unweighted else hide weight option and set value to unweighted
@@ -552,12 +555,21 @@ $(document).ready(function() {
     // catch the form submit and call the url with the
     // form values in the url
     $("form#form-explore-time-series").submit(function(){
-      $('#jumpto-loader').fadeIn('slow');
-      $('#explore-error').fadeOut('slow');
-      $('#explore-no-results').fadeOut('slow');
-      $('#explore-data-loader').fadeIn('slow', function(){
-        get_explore_time_series();
-      });
+      if ($('select#question_code').val() == ''){
+        $('.instructions').fadeIn("slow");
+        $('.tab-container').addClass('hide');
+      }else{
+        if ($('.instructions').is(':visible')){
+          $('.instructions').fadeOut("slow");
+          $('.tab-container').removeClass('hide');
+        }
+        $('#jumpto-loader').fadeIn('slow');
+        $('#explore-error').fadeOut('slow');
+        $('#explore-no-results').fadeOut('slow');
+        $('#explore-data-loader').fadeIn('slow', function(){
+          get_explore_time_series();
+        });
+      }
       return false;
     });
 
@@ -591,6 +603,10 @@ $(document).ready(function() {
     // make sure the correct weights are being shown
     update_available_weights();
 
+    // make sure the instructions start at the correct offset to align with the first drop down
+    $('.instructions p:first').css('margin-top', ($('.form-explore-question-code').offset().top - $('.content').offset().top) + 5);
+
+
     // if option changes, make sure the select option is not available in the other lists
     $('select.selectpicker').change(function(){
       val = $(this).val();
@@ -609,8 +625,8 @@ $(document).ready(function() {
       $('.form-explore-filter-by .bootstrap-select ul.dropdown-menu li[style*="display: none"]').show();
 
       // turn off this item
-      if (q_index != -1){
-        $('.form-explore-filter-by .bootstrap-select ul.dropdown-menu li:eq(' + (q_index + 1) + ')').hide();
+      if (q != '' && q_index != -1){
+        $('.form-explore-filter-by .bootstrap-select ul.dropdown-menu li:eq(' + (q_index) + ')').hide();
       }
 
       // update the list of weights
