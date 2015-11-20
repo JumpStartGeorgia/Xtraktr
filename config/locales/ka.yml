@@ -725,10 +725,10 @@ ka:
       category: "კატეგორია"
       csv:
         title: CSV
-        tooltip: Download as CSV
+        tooltip: ჩამოტვირთეთ CSV ფორმატში
       xlsx:
         title: XLSX
-        tooltip: Download as XLSX      
+        tooltip: ჩამოტვირთეთ XLSX ფორმატში
     common:
       xtraktr:
         app_name: Xtraktr
