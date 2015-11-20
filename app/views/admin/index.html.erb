@@ -7,15 +7,19 @@
         <li><%= link_to t('.categories'), admin_categories_path %></li>
         <li><%= link_to t('.api_documentation'), admin_api_versions_path %></li>
         <li><%= link_to t('.shapesets'), admin_shapesets_path %></li>
-        <li>
-          <%= t('.download_download_requests') %>
-          <%= link_to t('app.buttons.csv.title'), admin_download_download_requests_path(format: 'csv'), title: t('app.buttons.csv.tooltip'), class: 'btn btn-primary' %><%= link_to t('app.buttons.xlsx.title'), admin_download_download_requests_path(format: 'xlsx'), title: t('app.buttons.xlsx.tooltip'), class: 'btn btn-primary' %>
-        </li>
-        <li>
-          <%= t('.download_api_requests') %>
-          <%= link_to t('app.buttons.csv.title'), admin_download_api_requests_path(format: 'csv'), title: t('app.buttons.csv.tooltip'), class: 'btn btn-primary' %><%= link_to t('app.buttons.xlsx.title'), admin_download_api_requests_path(format: 'xlsx'), title: t('app.buttons.xlsx.tooltip'), class: 'btn btn-primary' %>
-        </li>
         <li><%= link_to t('.users'), admin_users_path %></li>
    		</ul>
+    </div>
+    <div class="col-sm-4">
+      <p>
+        <%= t('.download_download_requests') %>:<br />
+        <%= link_to t('app.buttons.csv.title'), admin_download_download_requests_path(format: 'csv'), title: t('app.buttons.csv.tooltip'), class: 'btn btn-primary btn-xs' %>
+        <%= link_to t('app.buttons.xlsx.title'), admin_download_download_requests_path(format: 'xlsx'), title: t('app.buttons.xlsx.tooltip'), class: 'btn btn-primary btn-xs' %>
+      </p>
+      <p>
+        <%= t('.download_api_requests') %>:<br />
+        <%= link_to t('app.buttons.csv.title'), admin_download_api_requests_path(format: 'csv'), title: t('app.buttons.csv.tooltip'), class: 'btn btn-primary btn-xs' %>
+        <%= link_to t('app.buttons.xlsx.title'), admin_download_api_requests_path(format: 'xlsx'), title: t('app.buttons.xlsx.tooltip'), class: 'btn btn-primary btn-xs' %>
+      </p>
     </div>
   <% end %>
