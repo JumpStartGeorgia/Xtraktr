@@ -36,6 +36,7 @@ from: http://getbootstrap.com/examples/sticky-footer-navbar/
 html {
   position: relative;
   min-height: 100%;
+  height:100%;
 }
 
 body {
@@ -45,6 +46,17 @@ body {
   /* set default font for site */
   font:16px 'sourcesans_pro', 'sans-serif';
   background-color: @f6f7f7;
+  overflow:hidden;
+  height:100%;
+}
+.wrappers {
+  overflow-y:auto;
+  height:100%;
+}
+.content {
+  position:relative;
+  padding-bottom:41px;
+  min-height:100%;
 }
 a {
   color: @3c4352;
@@ -55,8 +67,8 @@ a {
   }
 }
 #page-wrapper {
-    padding:0px 0px 41px 0px;
-    min-height: 568px;
+    padding:0px 0px 0px 0px;
+    //min-height: 568px;
     background-color: @f6f7f7;
     &.white { background-color:@fff; }
 }
@@ -1007,4 +1019,12 @@ footer {
       transform:translateY(-50%);
     }
   }
+}
+
+.bootstrap-select.btn-group .dropdown-menu {
+    width:400px;
+    max-width: 400px;
+    li a {
+      white-space:normal;
+    }
 }

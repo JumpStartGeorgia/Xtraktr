@@ -8,12 +8,12 @@
 
 <div class="article explore-data">
   <% if @questions.present? %>
-    <div id="explore-form" class="c">
+    <div id="explore-form">
       <h2><%= @dataset.title %></h2>
       <%= form_tag(explore_data_path, :id => 'form-explore-data') do %>
         <div class="form-explore-question-code">
             <%= label_tag 'question_code', t('.form.question_code') %>
-            <select data-live-search="true" data-width="100%" class="selectpicker" id="question_code" name="question_code">
+            <select data-live-search="true" data-width="100%" class="selectpicker" data-container="body" id="question_code" name="question_code">
               <%= generate_explore_dataset_options(@items, @dataset, selected_code: @question_code, disabled_code: @broken_down_by_code) %>
             </select>
         </div>
@@ -26,7 +26,7 @@
               %>
               <button id="btn-swap-vars" type="button" class="btn-swap" title="<%= t('.form.swap') %>" <%= display %>></button>
             </div>
-            <select data-live-search="true" data-width="100%" class="selectpicker" id="broken_down_by_code" name="broken_down_by_code">
+            <select data-live-search="true" data-width="100%" class="selectpicker" data-container="body" id="broken_down_by_code" name="broken_down_by_code">
               <%
                 selected = @broken_down_by_code.blank? ? 'selected=selected' : '' %>
               %>
@@ -36,7 +36,7 @@
           </div>
           <div class="form-explore-filter-by">
             <%= label_tag 'filtered_by_code', t('.form.filtered_by_code') %>
-            <select data-live-search="true" data-width="100%" class="selectpicker-filter" id="filtered_by_code" name="filtered_by_code">
+            <select data-live-search="true" data-width="100%" class="selectpicker-filter" data-container="body" id="filtered_by_code" name="filtered_by_code">
               <option value=""><%= t('.form.no_filter') %></option>
               <%= generate_explore_dataset_options(@items, @dataset, selected_code: @filtered_by_code, disabled_code: @question_code, disabled_code2: @broken_down_by_code) %>
             </select>
@@ -46,7 +46,7 @@
             <% # determine if need to show weight when page loads %>
             <div class="form-explore-weight-by">
               <%= label_tag 'weighted_by_code', t('.form.weighted_by_code') %>
-              <select data-live-search="true" data-width="100%" class="selectpicker-weight" id="weighted_by_code" name="weighted_by_code">
+              <select data-live-search="true" data-width="100%" class="selectpicker-weight" data-container="body" id="weighted_by_code" name="weighted_by_code">
                 <% @dataset.weights.each do |weight| %>
                   <%
                     is_default = weight.is_default? ? 'data-default=true' : ''
@@ -76,21 +76,16 @@
 
       <div id="jumpto">
         <div id='jumpto-chart'>
-          <label><%= t('.jumpto.chart') %></label>
-          <select data-live-search="true" data-width="100%" class="selectpicker" data-dropup-auto="false"></select>
+          <label><%= t('.jumpto.chart') %> <span></span></label>
+          <select data-live-search="true" data-width="100%" class="selectpicker" data-container="body"></select>
         </div>
-
         <div id='jumpto-map'>
-          <label><%= t('.jumpto.map') %></label>
-          <div class='jumpto-map-item'>
-            <label class="h4"></label>
-            <select data-live-search="true" data-width="100%" class="selectpicker" data-dropup-auto="false"></select>
-          </div>
+          <label><%= t('.jumpto.map') %> <span></span></label>
+          <select data-live-search="true" data-width="100%" class="selectpicker" data-container="body"></select>          
         </div>
         <div id="jumpto-loader"></div>
       </div>
-    </div>
-    <div id="explore-data-content" class="c tabs style2">
+    </div><div id="explore-data-content" class="tabs style2">
       <div class="tab-header">
         <div class="tab-caption"><%= t('.tabs.chart') %></div>
         <button type="button" class="navbar-toggle tab-toggle collapsed" data-toggle="collapse" data-target=".tab-collapse">

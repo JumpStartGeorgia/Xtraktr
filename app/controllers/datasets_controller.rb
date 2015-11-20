@@ -40,7 +40,6 @@ class DatasetsController < ApplicationController
     load_highlight_assets(@highlights.map{|x| x.embed_id}, @dataset.current_locale) if @highlights.present?
 
     @show_title = false
-
     @css.push('bootstrap-select.min.css', 'list.css', "dashboard.css", 'highlights.css', 'boxic.css', 'tabs.css', 'explore.css')
     @js.push('bootstrap-select.min.js', "live_search.js", 'highlights.js', 'explore.js')
 

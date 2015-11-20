@@ -22,8 +22,10 @@
 //= require dataTables/extras/dataTables.tableTools
 //= require modal
 //= require vendor
-var globalCallback = globalCallback || function () {};
+var globalCallback = globalCallback || function () {},
+  page_wrapper;
 $(document).ready(function () {
+  page_wrapper = $("#page-wrapper");
    // set focus to first text box on page
   if (gon.highlight_first_form_field) {
     $(":input:visible:enabled:first").focus();
@@ -36,7 +38,8 @@ $(document).ready(function () {
 
   $("body").tooltip({
     selector: "[title]",
-    container: "body"
+    container: "body",
+    html: true
   });
 
   $("#side-menu a").click(function () {

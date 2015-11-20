@@ -1,4 +1,4 @@
-/*global  $, gon, Highcharts, modal, js_modal_off, notification, is_touch, highmap_shapes */
+/*global  $, gon, Highcharts, modal, js_modal_off, notification, is_touch, highmap_shapes, page_wrapper */
 /*eslint camelcase: 0, no-underscore-dangle: 0, no-unused-vars: 0*/
 // collection of functions to build charts/maps
 // for datasets and time series
@@ -312,8 +312,8 @@ function build_highmap (shape_question_code, adjustable_max, json_map_set, chart
     colorAxis: {
       min: 0,
       max: max,
-      minColor: "#d2f1f9",
-      maxColor: "#0086a5",
+      minColor: "#dae8dc",
+      maxColor: "#36663e",
       labels: {
         formatter: function () {
           return this.value + "%";
@@ -346,7 +346,7 @@ function build_highmap (shape_question_code, adjustable_max, json_map_set, chart
       borderWidth: 2,
       states: {
         hover: {
-          color: "#0086a5",
+          color: "#25512b",
           borderColor: "#3c4352",
           borderWidth: 2
         }
@@ -368,14 +368,17 @@ function build_highmap (shape_question_code, adjustable_max, json_map_set, chart
       borderWidth: 2,
       states: {
         hover: {
-          color: "#0086a5",
+          color: "#25512b",
           borderColor: "#3c4352",
           borderWidth: 2
         }
       },
       dataLabels: {
         enabled: true,
-        color: "white",
+        color: "#3C4352",
+        style: {
+          textShadow: false
+        },
         formatter: function () {
           return Highcharts.numberFormat(this.point.count, 0) + "   (" + this.point.value + "%)";
         }
@@ -865,15 +868,18 @@ function build_page_title (json) { // update the page title to include the title
 function resizeExploreData (){
   var w = $(window).width(),
     h = $(window).height(),
-    expform = $("#explore-form");
+    footerHeight = 41,
+    headerHeight = 51,
+    sidebarFilterWidth = 140 + 300,
+    explore_data = $(".explore-data"),
+    explore_form = explore_data.find("#explore-form");
+  $("html").toggleClass("l992", w < 992);
+  if(explore_form.length) {
+    var tab_content = $(".tab-content");
+    explore_data.height(h-headerHeight-$("#subnav-navbar").outerHeight()-footerHeight);
+    tab_content.height(h-tab_content.offset().top-footerHeight);
+    explore_data.find("#explore-data-content").width(w - sidebarFilterWidth);
 
-  if(expform.length) {
-    var offset = expform.offset();
-    var offsetWidth = offset.left == 0 ? 0 : (offset.left + 302);
-    var tmp = expform.find("form");
-
-    $("#explore-form #jumpto").css({"height": (offset.left != 0 ? (h - (tmp.offset().top + tmp.height() + 41 + 2)) : "auto") });
-    $("#explore-data-content  .tab-pane").css({"width": w-offsetWidth, "height":h-(51+31+40+41+2)});
   }
 }
 ////////////////////////////////////////////////
@@ -951,10 +957,6 @@ $(document).ready(function () {
   $(document).on("click", "#explore-data-content.tabs li", function () {
     $(this).find("a").tab("show");
   });
-  $(document).on("click", ".tab-content .up", function () {
-    $("body").animate({ scrollTop: 0 }, 1500);
-  });
-
 
   // show embed chart modal
   $(document).on("click", ".embed-chart", function () {

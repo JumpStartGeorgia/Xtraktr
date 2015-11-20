@@ -1,6 +1,18 @@
 /*global  $, gon, Highcharts, params */
 /*eslint camelcase: 0, no-underscore-dangle: 0, no-unused-vars: 0, no-undef: 0*/
-var js = { cache: {} }, datatables, h, i, j, k, cacheId;
+var js = { cache: {} }, datatables, h, i, j, k, cacheId,
+  $jumpto,
+  $jumpto_chart,
+  $jumpto_chart_select,
+  $jumpto_chart_label,
+  $jumpto_map,
+  $jumpto_map_select,
+  $jumpto_map_label,
+  // $jumpto_map_filter_by,
+  // $jumpto_map_filter_by_select,
+  // $jumpto_map_broken_by,
+  // $jumpto_map_broken_by_select,
+  $tab_content;
 
 function update_available_weights () { // update the list of avilable weights based on questions that are selected
   var select_weight = $("select#weighted_by_code"),
@@ -47,150 +59,66 @@ function set_can_exclude_visibility () { // show or hide the can exclude checkbo
 }
 
 function build_highmaps (json) { // build highmap
-  var i;
   if (json.map){
-    // adjust the width of the map to fit its container
-    // $("#container-map").width($("#explore-tabs").width());
+    var chart_height = map_chart_height(json), // determine chart height
+      weight_name = json.weighted_by ? json.weighted_by.weight_name : undefined,
+      jump_options = "",
+      map_index = 1;
 
-    // determine chart height
-    var chart_height = map_chart_height(json);
-
-    // remove all existing maps
-    $("#container-map").empty();
+    $("#container-map").empty(); // remove all existing maps
     $("#tab-map").addClass("behind_the_scenes");
 
-    // remove all existing map links
-    $("#jumpto #jumpto-map select").empty();
-    $("#jumpto #jumpto-map h4").empty().hide();
-    var template = $("#jumpto #jumpto-map .jumpto-map-item").clone();
-    // remove any existing fancy select list
-    $(template).find("div.bootstrap-select").remove();
-    // remove all extra jumpto map items
-    if ($("#jumpto #jumpto-map .jumpto-map-item").length > 1){
-      for (i=$("#jumpto #jumpto-map .jumpto-map-item").length; i>0; i--){
-        $("#jumpto #jumpto-map .jumpto-map-item").splice(i-1, 1);
-      }
-    }
+    $jumpto_map_select.empty();
 
-    var jumpto_text = "";
-    var non_map_text;
-    if (json.broken_down_by){
-      non_map_text = json.broken_down_by.text;
-      if (json.broken_down_by.is_mappable == true){
-        non_map_text = json.question.text;
-      }
-    }
-
-    var weight_name = json.weighted_by ? json.weighted_by.weight_name : undefined;
-
-    // test if the filter is being used and build the chart(s) accordingly
-    if (json.map.constructor === Array){
-      // filters
-      var map_index = 0;
-      var jump_ary = [];
-      var jump_item;
-
+    if (json.map.constructor === Array) { // filters // test if the filter is being used and build the chart(s) accordingly
       for(h=0; h<json.map.length; h++){
         if (json.broken_down_by && json.map[h].filter_results.map_sets.constructor === Array){
-          // add jumpto link
-          jump_item = $(template).clone();
-          $(jump_item).find("h4").html(json.filtered_by.text + " = <span>" + json.map[h].filter_answer_text + "</span>");
-          jumpto_text = "<option></option>";
-
-          for(i=0; i<json.map[h].filter_results.map_sets.length; i++){
-            build_highmap(json.map[h].filter_results.shape_question_code, json.map[h].filter_results.adjustable_max_range, json.map[h].filter_results.map_sets[i], chart_height, weight_name);
-
-            // add jumpto link
-            jumpto_text += "<option data-href='#map-" + (map_index+1) + "'>" + non_map_text + " = " + json.map[h].filter_results.map_sets[i].broken_down_answer_text + "</option>";
-
-            // increase the map index
-            map_index += 1;
-          }
-
-          $(jump_item).find("select").append(jumpto_text);
-          jump_ary.push(jump_item);
-
-        }else{
+          json.map[h].filter_results.map_sets.forEach(function (d, i) {
+            build_highmap(json.map[h].filter_results.shape_question_code, json.map[h].filter_results.adjustable_max_range, d, chart_height, weight_name);
+            jump_options += "<option data-href='#map-" + (map_index) + "'>" + json.map[h].filter_answer_text + " -> " + d.broken_down_answer_text + "</option>";
+            ++map_index;
+          });
+        }
+        else{
           build_highmap(json.map[h].filter_results.shape_question_code, json.map[h].filter_results.adjustable_max_range, json.map[h].filter_results.map_sets, chart_height, weight_name);
-
-          // add jumpto link
-          jumpto_text += "<option data-href='#map-" + (map_index+1) + "'>" + json.filtered_by.text + " = " + json.map[h].filter_answer_text + "</option>";
-
-          // increase the map index
-          map_index += 1;
+          jump_options += "<option data-href='#map-" + (map_index) + "'>" + json.map[h].filter_answer_text + "</option>";
+          ++map_index;
         }
-      }
-
-      // show jumpto
-      // - if jump_ary exists (filter and broken down), add a drop down for each filter value
-      if (jump_ary != undefined && jump_ary.length > 0){
-        // remove the existing template
-        $("#jumpto #jumpto-map .jumpto-map-item").remove();
-        for (i=0; i<jump_ary.length; i++){
-          $("#jumpto #jumpto-map").append(jump_ary[i]);
-
-          var select = $("#jumpto #jumpto-map select:last");
-          if (i == 0) {
-            $(select).find("option:eq(1)").prop("selected", true);
-          }
-          $(select).selectpicker();
-        }
-        $("#jumpto #jumpto-map h4").show();
-        $("#jumpto #jumpto-map").show();
-        $("#jumpto").show();
-      }else{
-        $("#jumpto #jumpto-map select").append(jumpto_text);
-        $("#jumpto #jumpto-map select").val($("#jumpto #jumpto-map select option:first").attr("value"));
-        $("#jumpto #jumpto-map select").selectpicker("refresh");
-        $("#jumpto #jumpto-map select").selectpicker("render");
-        $("#jumpto #jumpto-map").show();
-        $("#jumpto").show();
-      }
-
-    }else{
-
-      // no filters
-      if (json.broken_down_by && json.map.map_sets.constructor === Array){
-        for(i=0; i<json.map.map_sets.length; i++){
-          build_highmap(json.map.shape_question_code, json.map.adjustable_max_range, json.map.map_sets[i], chart_height, weight_name);
-
-          // add jumpto link
-          jumpto_text += "<option data-href='#map-" + (i+1) + "'>" + non_map_text + " = " + json.map.map_sets[i].broken_down_answer_text + "</option>";
-        }
-
-        // show jumpto
-        $("#jumpto #jumpto-map select").append(jumpto_text);
-        $("#jumpto #jumpto-map select").val($("#jumpto #jumpto-map select option:first").attr("value"));
-        $("#jumpto #jumpto-map select").selectpicker("refresh");
-        $("#jumpto #jumpto-map select").selectpicker("render");
-        $("#jumpto #jumpto-map").show();
-        $("#jumpto").show();
-
-      }else{
-        build_highmap(json.map.shape_question_code, json.map.adjustable_max_range, json.map.map_sets, chart_height, weight_name);
-
-        // hide jumpto
-        $("#jumpto #jumpto-map").hide();
-        $("#jumpto").hide();
       }
     }
+    else { // no filters
+      if (json.broken_down_by && json.map.map_sets.constructor === Array) {
+        json.map.map_sets.forEach(function (d, i) {
+          build_highmap(json.map.shape_question_code, json.map.adjustable_max_range, d, chart_height, weight_name);
+          jump_options += "<option data-href='#map-" + (i+1) + "'>" + d.broken_down_answer_text + "</option>";
+        });
+      }
+      else{
+        build_highmap(json.map.shape_question_code, json.map.adjustable_max_range, json.map.map_sets, chart_height, weight_name);
+      }
+    }
+    if(jump_options !== "") {
+      var lbl = [];
+      if(json.filtered_by) { lbl.push(json.filtered_by.original_code); }
+      if(json.broken_down_by) { lbl.push(json.broken_down_by.original_code); }
 
-    // show map tabs
-    $("#explore-tabs #nav-map").show();
-
+      $jumpto_map_label.html("(" + lbl.join(" -> ") + ")");
+      $jumpto_map_select.html(jump_options);
+      $jumpto_map_select.val($jumpto_map_select.find("option:first").attr("value"));
+      $jumpto_map_select.selectpicker("refresh");
+      $jumpto_map_select.selectpicker("render");
+    }
+    $("#explore-tabs #nav-map").show(); // show map tabs
   }
   else{
-    // no map so hide tab
-    $("#explore-tabs #nav-map").hide();
-    // make sure these are not active
-    $("#explore-tabs #nav-map, #explore-content #tab-map").removeClass("active");
+    $("#explore-tabs #nav-map").hide(); // no map so hide tab
+    $("#explore-tabs #nav-map, #explore-content #tab-map").removeClass("active"); // make sure these are not active
   }
   $("#tab-map").removeClass("behind_the_scenes");
 }
 
 function build_crosstab_charts (json) { // build crosstab charts for each chart item in json
   var i;
-  var flag = false;
 
   if (json.chart) {
     // determine chart height
@@ -198,9 +126,9 @@ function build_crosstab_charts (json) { // build crosstab charts for each chart 
 
     // remove all existing charts
     $("#container-chart").empty();
+
     // remove all existing chart links
-    var select_selector = $("#jumpto #jumpto-chart select");
-    select_selector.empty();
+    $jumpto_chart_select.empty();
 
     var jumpto_text = "";
     var weight_name = json.weighted_by ? json.weighted_by.weight_name : undefined;
@@ -213,27 +141,24 @@ function build_crosstab_charts (json) { // build crosstab charts for each chart 
         build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart[i].filter_results, chart_height, weight_name);
 
         // add jumpto link
-        jumpto_text += "<option data-href='#chart-" + (i+1) + "'>" + json.filtered_by.text + " = " + json.chart[i].filter_answer_text + "</option>";
+        jumpto_text += "<option data-href='#chart-" + (i+1) + "'>" + json.chart[i].filter_answer_text + "</option>";
       }
 
       // show jumpto links
-      select_selector.append(jumpto_text);
-      select_selector.val($("#jumpto #jumpto-chart select option:first").attr("value"));
-      select_selector.selectpicker("refresh");
-      select_selector.selectpicker("render");
-      flag = true;
+      $jumpto_chart_label.html("(" + json.filtered_by.original_code + ")");
+      $jumpto_chart_select.append(jumpto_text);
+      $jumpto_chart_select.val($jumpto_chart_select.find("option:first").attr("value"));
+      $jumpto_chart_select.selectpicker("refresh");
+      $jumpto_chart_select.selectpicker("render");
 
     }
     else{       // no filters
       build_crosstab_chart(json.question.original_code, json.broken_down_by.original_code, json.broken_down_by.text, json.chart, chart_height, weight_name);
     }
-    $("#jumpto #jumpto-chart").toggle(flag);
-    $("#jumpto").toggle(flag);
   }
 }
 
 function build_pie_charts (json) { // build pie chart for each chart item in json
-  var flag = false;
 
   if (json.chart){
 
@@ -246,8 +171,7 @@ function build_pie_charts (json) { // build pie chart for each chart item in jso
     container.append("<div id='chart-type-toggle'><div class='toggle' data-type='bar' title='" + gon.chart_type_bar + "'></div><div class='toggle selected' data-type='pie' title='" + gon.chart_type_pie + "'></div>");
 
     // remove all existing chart links
-    var select_selector = $("#jumpto #jumpto-chart select");
-    select_selector.empty();
+    $jumpto_chart_select.empty();
 
     var jumpto_text = "",
       weight_name = json.weighted_by ? json.weighted_by.weight_name : undefined;
@@ -260,26 +184,23 @@ function build_pie_charts (json) { // build pie chart for each chart item in jso
         build_pie_chart(json.chart[i].filter_results, chart_height, weight_name);
 
         // add jumpto link
-        jumpto_text += "<option data-href='#chart-" + (i+1) + "'>" + json.filtered_by.text + " = " + json.chart[i].filter_answer_text + "</option>";
+        jumpto_text += "<option data-href='#chart-" + (i+1) + "'>" + json.chart[i].filter_answer_text + "</option>";
       }
 
       // show jumpto links
-      select_selector.append(jumpto_text);
-      select_selector.val($("#jumpto #jumpto-chart select option:first").attr("value"));
-      select_selector.selectpicker("refresh");
-      select_selector.selectpicker("render");
-      flag = true;
+      $jumpto_chart_label.html("(" + json.filtered_by.original_code + ")");
+      $jumpto_chart_select.append(jumpto_text);
+      $jumpto_chart_select.val($jumpto_chart_select.find("option:first").attr("value"));
+      $jumpto_chart_select.selectpicker("refresh");
+      $jumpto_chart_select.selectpicker("render");
     }
     else {  // no filters
       build_pie_chart(json.chart, chart_height, weight_name);
     }
-    $("#jumpto #jumpto-chart").toggle(flag);
-    $("#jumpto").toggle(flag);
   }
 }
 
 function build_bar_charts (json) { // build pie chart for each chart item in json
-  var flag = false;
 
   if (json.chart){
 
@@ -288,9 +209,9 @@ function build_bar_charts (json) { // build pie chart for each chart item in jso
 
     container.empty();
     container.append("<div id='chart-type-toggle'><div class='toggle selected' data-type='bar' title='" + gon.chart_type_bar + "'></div><div class='toggle' data-type='pie' title='" + gon.chart_type_pie + "'></div>");
+
     // remove all existing chart links
-    var select_selector = $("#jumpto #jumpto-chart select");
-    select_selector.empty();
+    $jumpto_chart_select.empty();
 
     var jumpto_text = "";
     var weight_name = json.weighted_by ? json.weighted_by.weight_name : undefined;
@@ -303,23 +224,20 @@ function build_bar_charts (json) { // build pie chart for each chart item in jso
         build_bar_chart(json.chart[i].filter_results, chart_height, weight_name);
 
         // add jumpto link
-        jumpto_text += "<option data-href='#chart-" + (i+1) + "'>" + json.filtered_by.text + " = " + json.chart[i].filter_answer_text + "</option>";
+        jumpto_text += "<option data-href='#chart-" + (i+1) + "'>" + json.chart[i].filter_answer_text + "</option>";
       }
 
-      // show jumpto links    
-      select_selector.append(jumpto_text);
-      select_selector.val(select_selector.find("option:first").attr("value"));
-      select_selector.selectpicker("refresh");
-      select_selector.selectpicker("render");
-      flag = true;
+      // show jumpto links
+      $jumpto_chart_label.html("(" + json.filtered_by.original_code + ")");
+      $jumpto_chart_select.append(jumpto_text);
+      $jumpto_chart_select.val($jumpto_chart_select.find("option:first").attr("value"));
+      $jumpto_chart_select.selectpicker("refresh");
+      $jumpto_chart_select.selectpicker("render");
+
     }
     else {
       build_bar_chart(json.chart, chart_height, weight_name);       // no filters
     }
-
-    // show/hide jumpto
-    $("#jumpto #jumpto-chart").toggle(flag);
-    $("#jumpto").toggle(flag);
   }
 }
 
@@ -731,8 +649,9 @@ function build_details (json) { // build details (question and possible answers)
   // add weight
   build_details_item("#tab-details #details-weighted-by-code", json.weighted_by);
 }
-
+var show_map_jumpto = false;
 function build_explore_data_page (json) { // build the visualizations for the explore data page
+  show_map_jumpto = false;
   if (json.analysis_type == "comparative"){
     build_crosstab_charts(json);
   }
@@ -744,17 +663,15 @@ function build_explore_data_page (json) { // build the visualizations for the ex
   build_highmaps(json);
   build_datatable(json);
   build_details(json);
-
   build_page_title(json);
 
   // if no visible tab is marked as active, mark the first one active
   var explore_tabs = $("#explore-tabs");
-
   // turn on tab and its content || make sure correct jumptos are showing
   $("#explore-tabs li" +
       (explore_tabs.find("li.active:visible").length == 0
         ? ":visible:first"
-        : "li.active" )).trigger("click");
+        : ".active" )).trigger("click");
 }
 
 function get_explore_data (is_back_button) { // get data and load page
@@ -870,7 +787,24 @@ function reset_filter_form () { // reset the filter forms and select a random va
   $("#btn-swap-vars").hide();
 }
 
+
+function jumpto (show, chart) { // show/hide jumpto show - for main box and if chart is false then map
+  if(typeof chart === "undefined") { chart = true; }
+  $jumpto.toggle(show);
+  $jumpto_chart.toggle(show && chart);
+  $jumpto_map.toggle(show && !chart);
+}
 $(document).ready(function () {
+
+  $jumpto = $("#jumpto");
+  $jumpto_chart = $("#jumpto #jumpto-chart");
+  $jumpto_chart_select = $jumpto_chart.find("select");
+  $jumpto_chart_label = $jumpto_chart.find("label span");
+  $jumpto_map = $("#jumpto #jumpto-map");
+  $jumpto_map_select = $jumpto_map.find("select");
+  $jumpto_map_label = $jumpto_map.find("label span");
+  $tab_content = $(".tab-content");
+
   // set languaage text
   Highcharts.setOptions({
     chart: { spacingRight: 30 },
@@ -879,7 +813,6 @@ $(document).ready(function () {
     },
     colors: ["#C6CA53", "#7DAA92", "#725752", "#E29A27", "#998746", "#A6D3A0", "#808782", "#B4656F", "#294739", "#1B998B", "#7DAA92", "#BE6E46", "#565264"]
   });
-
 
   if (gon.explore_data){
     // due to using tabs, the map, chart and table cannot be properly drawn
@@ -1085,41 +1018,21 @@ $(document).ready(function () {
 
     // jumpto scrolling
     $("#jumpto").on("change", "select", function () {
-      var href = $(this).find("option:selected").data("href"),
-        container = $(".tab-pane.active > div");
-      
-      $(".tab-pane.active").animate({
-        scrollTop: container.find(href).prop("offsetTop") - container.find("> div:first").prop("offsetTop")
+      $("#jumpto button.dropdown-toggle").tooltip("fixTitle");
+      $tab_content.animate({
+        scrollTop: $tab_content.scrollTop() + $tab_content.find(".tab-pane.active > div > " + $(this).find("option:selected").data("href")).offset().top - $tab_content.offset().top
       }, 1500);
-
-      // if this is a map item and there are > 1 map items, make sure the other items are set to nil
-      var select_index = $("#jumpto #jumpto-map select").index($(this));
-      if ($(this).closest("#jumpto-map").length > 0 && $(this).closest("#jumpto-map").find(".jumpto-map-item").length > 1){
-        $("#jumpto #jumpto-map select").each(function (i){
-          if (i != select_index){
-            $(this).find("option:eq(0)").prop("selected", true);
-            $(this).selectpicker("refresh");
-          }
-        });
-      }
     });
-   
+
     // when chart tab/map clicked on, make sure the jumpto block is showing, else, hide it
     $("#explore-tabs li").click(function () {
-      var ths_link = $(this).find("a");
-
-      if ($(ths_link).attr("href") == "#tab-chart" && $("#jumpto #jumpto-chart select option").length > 0){
-        $("#jumpto").show();
-        $("#jumpto #jumpto-chart").show();
-        $("#jumpto #jumpto-map").hide();
-      }else if ($(ths_link).attr("href") == "#tab-map" && $("#jumpto #jumpto-map select option").length > 0){
-        $("#jumpto").show();
-        $("#jumpto #jumpto-map").show();
-        $("#jumpto #jumpto-chart").hide();
+      var href = $(this).find("a").attr("href");
+      if (href == "#tab-chart" && $jumpto_chart_select.find("option").length > 0){
+        jumpto(true, true);
+      }else if (href == "#tab-map" && $jumpto_map_select.find("option").length > 0){
+        jumpto(true, false);
       }else{
-        $("#jumpto").hide();
-        $("#jumpto #jumpto-chart").hide();
-        $("#jumpto #jumpto-map").hide();
+        jumpto(false);
       }
     });
 
@@ -1192,15 +1105,15 @@ $(document).ready(function () {
 
       var new_url = [location.protocol, "//", location.host, location.pathname, "?", paramsA.join("&")].join("");
       // // change the browser URL to the given link location
-      if (new_url != window.location.href){ // !is_back_button && 
+      if (new_url != window.location.href){ // !is_back_button &&
         window.history.pushState({path:new_url}, $("title").html(), new_url);
       }
-      $(this).tooltip('hide');
+      $(this).tooltip("hide");
       build_explore_data_page(js.cache[cacheId]);
     });
-    $(document).on("click", ".available-language-switcher.redirect .dropdown-menu a", function (e){ 
+    $(document).on("click", ".available-language-switcher.redirect .dropdown-menu a", function (e){
       e.preventDefault();
-       window.location.href = window.location.href + "&" +  $(this).attr("href").substr(1);
-     });
+      window.location.href = window.location.href + "&" + $(this).attr("href").substr(1);
+    });
   }
 });

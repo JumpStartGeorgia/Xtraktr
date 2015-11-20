@@ -3,7 +3,7 @@
 -%>
 <div class="article explore-data">
   <% if @questions.present? %>
-    <div id="explore-form" class="c">
+    <div id="explore-form">
       <h2><%= @time_series.title %></h2>
       <%= form_tag(explore_time_path, :id => 'form-explore-time-series') do %>
         <div class="form-explore-question-code">
@@ -11,14 +11,14 @@
             has_can_exclude = false
           %>
           <%= label_tag 'question_code', t('.form.question_code') %>
-          <select data-live-search="true" data-width="100%" class="selectpicker" id="question_code" name="question_code">
+          <select data-live-search="true" data-width="100%" class="selectpicker" data-container="body" id="question_code" name="question_code">
             <%= generate_explore_time_series_options(@items, @time_series, selected_code: @question_code, skip_content: true) %>
           </select>
         </div>
 
         <div class="form-explore-filter-by">
           <%= label_tag 'filtered_by_code', t('.form.filtered_by_code') %>
-          <select data-live-search="true" data-width="100%" class="selectpicker-filter" id="filtered_by_code" name="filtered_by_code">
+          <select data-live-search="true" data-width="100%" class="selectpicker-filter" data-container="body"  id="filtered_by_code" name="filtered_by_code">
             <option value=""><%= t('.form.no_filter') %></option>
             <%= generate_explore_time_series_options(@items, @time_series, selected_code: @filtered_by_code, disabled_code: @question_code, skip_content: true) %>
           </select>
@@ -28,7 +28,7 @@
           <% # determine if need to show weight when page loads %>
           <div class="form-explore-weight-by">
             <%= label_tag 'weighted_by_code', t('.form.weighted_by_code') %>
-            <select data-live-search="true" data-width="100%" class="selectpicker-weight" id="weighted_by_code" name="weighted_by_code">
+            <select data-live-search="true" data-width="100%" class="selectpicker-weight" data-container="body"  id="weighted_by_code" name="weighted_by_code">
               <% @time_series.weights.each do |weight| %>
                 <%
                   is_default = weight.is_default? ? 'data-default=true' : ''
@@ -55,18 +55,14 @@
           </div>
         </div>
       <% end %>
-
       <div id="jumpto">
         <div id='jumpto-chart'>
-          <label><%= t('.jumpto.chart') %></label>
-          <select data-live-search="true" data-width="100%" class="selectpicker" data-dropup-auto="false"></select>
+          <label><%= t('.jumpto.chart') %> <span></span></label>
+          <select data-live-search="true" data-width="100%" class="selectpicker" data-container="body"></select>
         </div>
         <div id="jumpto-loader"></div>
       </div>
-
-    </div>
-
-    <div id="explore-data-content" class="c tabs style2">
+    </div><div id="explore-data-content" class="tabs style2">
       <div class="tab-header">
         <div class="tab-caption"><%= t('.tabs.chart') %></div>
         <button type="button" class="navbar-toggle tab-toggle collapsed" data-toggle="collapse" data-target=".tab-collapse">
@@ -80,7 +76,7 @@
         <li id="nav-chart" class="active"><a href="#tab-chart" role="tab" data-toggle="tab"><%= t('.tabs.chart') %></a></li>
         <li id="nav-table"><a href="#tab-table" role="tab" data-toggle="tab"><%= t('.tabs.table') %></a></li>
         <li id="nav-details"><a href="#tab-details" role="tab" data-toggle="tab"><%= t('.tabs.details') %></a></li>
-]      </ul>
+      </ul>
       <% if !@is_time_series_admin %>
         <div class="share share-box"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>
       <% end %>

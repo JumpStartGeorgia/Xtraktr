@@ -1,23 +1,13 @@
  $(document).ready(function(){
-  var type="success";
-  var msg = '<%= @msg %>';
-  if (<%= @success %> == false){
-    type="danger";
-  }
+  var type="success",
+    msg = '<%= @msg %>';
+  if (<%= @success %> == false){ type="danger"; }
 
-  var html = '<div class="alert alert-'+ type +' fade in">' +
-          '<a href="#" data-dismiss="alert" class="close">×</a>' +
-           msg +
-          '</div>';
-
-  // show the message
-  $('#flash-message').fadeOut(300, function(){
+  var html = '<div class="alert alert-'+ type +' fade in"><a href="#" data-dismiss="alert" class="close">×</a>' + msg + '</div>';
+  
+  $('#flash-message').fadeOut(300, function () { // show the message
     $('#flash-message').html(html).fadeIn(300);
   });
 
-  // scroll to the top
-  $('html,body').animate({
-    scrollTop: ($('body').offset().top)
-  }, 1000);
-
+  page_wrapper.animate({ scrollTop: 0 }, 1000); // scroll to the top
 });
