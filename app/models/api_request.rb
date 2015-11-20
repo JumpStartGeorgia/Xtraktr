@@ -120,17 +120,34 @@ class ApiRequest
 
   # generate a csv object for all records on file
   def self.generate_csv
+    require 'csv'
     return CSV.generate do |csv_row|
-      # add header
-      csv_row << csv_header
-
+      csv_row << csv_header # add header
       sorted.each do |record|
-        # add row
-        csv_row << record.csv_data
+        csv_row << record.csv_data # add row
       end
     end
   end
 
+  # generate a csv object for all records on file
+  def self.generate_xlsx
+
+    workbook = RubyXL::Workbook.new
+    worksheet = workbook[0]
+
+    csv_header.each_with_index{|x,i| 
+      worksheet.add_cell(0, i, x)  
+    }
+    
+    sorted.each_with_index { |r, r_i|
+      tmp = r.csv_data
+      tmp.each_with_index { |c, c_i|
+        worksheet.add_cell(r_i+1, c_i, c)
+      }
+    }
+    
+    return workbook.stream.string
+  end
 
   def self.csv_header
     model = ApiRequest
