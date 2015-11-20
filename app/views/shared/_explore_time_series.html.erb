@@ -21,7 +21,9 @@
         </div>
 
         <div class="form-explore-filter-by">
-          <%= label_tag 'filtered_by_code', t('.form.filtered_by_code') %>
+          <%= label_tag 'filtered_by_code' do %>
+            <%= t('.form.filtered_by_code') %><i class="q" title="<%= t('.instructions.filter') %>"></i>
+          <% end %>          
           <select data-live-search="true" data-width="100%" class="selectpicker-filter" id="filtered_by_code" name="filtered_by_code">
             <option value=""><%= t('.form.no_filter') %></option>
             <%= generate_explore_time_series_options(@items, @time_series, selected_code: @filtered_by_code, disabled_code: @question_code, skip_content: true) %>
@@ -31,7 +33,9 @@
         <% if @time_series.is_weighted? %>
           <% # determine if need to show weight when page loads %>
           <div class="form-explore-weight-by">
-            <%= label_tag 'weighted_by_code', t('.form.weighted_by_code') %>
+            <%= label_tag 'weighted_by_code' do %>
+              <%= t('.form.weighted_by_code') %><i class="q" title="<%= t('.instructions.weight') %>"></i>
+            <% end %>  
             <select data-live-search="true" data-width="100%" class="selectpicker-weight" id="weighted_by_code" name="weighted_by_code">
               <% @time_series.weights.each do |weight| %>
                 <%
@@ -55,7 +59,7 @@
         <div class="submit-box" id="buttons">
           <%= submit_tag t('.form.reset'), :class => 'btn btn-reset', :id => 'btn-reset' %>
           <div class="submit-btn-box">
-            <%= submit_tag t('.form.submit'), :class => 'btn btn-submit', :id => 'btn-submit' %>
+            <%= submit_tag t('.form.submit'), :class => 'btn btn-submit', :id => 'btn-submit', :title => t(".instructions.generate")  %>
           </div>
         </div>
       <% end %>
@@ -74,10 +78,7 @@
       <% tabs_display_css = '' %>
       <% if @question_code.nil? %>
         <% tabs_display_css = 'hide' %>
-        <div class="instructions">
-          <% key = @time_series.is_weighted? ? 'weighted' : 'unweighted' %>
-          <%= simple_format(t(".instructions.#{key}")) %>
-        </div>
+        <div class="instructions"><%= simple_format(t(".instructions.question")) %></div>
       <% end %>
 
       <div class="tab-container <%= tabs_display_css %>">

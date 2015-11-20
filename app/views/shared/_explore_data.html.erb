@@ -23,7 +23,9 @@
         </div>
         <div class="form-explore-broken-by">
             <div id="var2-label-swap" class="clear">
-              <%= label_tag 'broken_down_by_code', "#{t('.form.broken_down_by_code')} (#{t('.form.optional')})" %>
+              <%= label_tag 'broken_down_by_code' do %>
+                <%= "#{t('.form.broken_down_by_code')} (#{t('.form.optional')})" %><i class="q" title="<%= t('.instructions.broken') %>"></i>
+              <% end %>
               <%
                 display = 'style=display:none;'
                 display = '' if @broken_down_by_code.present?
@@ -39,7 +41,9 @@
             </select>
           </div>
           <div class="form-explore-filter-by">
-            <%= label_tag 'filtered_by_code', t('.form.filtered_by_code') %>
+            <%= label_tag 'filtered_by_code' do %>
+              <%= t('.form.filtered_by_code') %><i class="q" title="<%= t('.instructions.filter') %>"></i>
+            <% end %>
             <select data-live-search="true" data-width="100%" class="selectpicker-filter" id="filtered_by_code" name="filtered_by_code">
               <option value=""><%= t('.form.no_filter') %></option>
               <%= generate_explore_dataset_options(@items, @dataset, selected_code: @filtered_by_code, disabled_code: @question_code, disabled_code2: @broken_down_by_code) %>
@@ -49,7 +53,9 @@
           <% if @dataset.is_weighted? %>
             <% # determine if need to show weight when page loads %>
             <div class="form-explore-weight-by">
-              <%= label_tag 'weighted_by_code', t('.form.weighted_by_code') %>
+              <%= label_tag 'weighted_by_code' do %>
+                <%= t('.form.weighted_by_code') %><i class="q" title="<%= t('.instructions.weight') %>"></i>
+              <% end %>              
               <select data-live-search="true" data-width="100%" class="selectpicker-weight" id="weighted_by_code" name="weighted_by_code">
                 <% @dataset.weights.each do |weight| %>
                   <%
@@ -73,7 +79,7 @@
           <div class="submit-box" id="buttons">
             <%= submit_tag t('.form.reset'), :class => 'btn btn-reset', :id => 'btn-reset' %>
             <div class="submit-btn-box">
-              <%= submit_tag t('.form.submit'), :class => 'btn btn-submit', :id => 'btn-submit' %>
+              <%= submit_tag t('.form.submit'), :class => 'btn btn-submit', :id => 'btn-submit', :title => t(".instructions.generate") %>
             </div>
           </div>
       <% end %>
@@ -99,10 +105,7 @@
       <% tabs_display_css = '' %>
       <% if @question_code.nil? %>
         <% tabs_display_css = 'hide' %>
-        <div class="instructions">
-          <% key = @dataset.is_weighted? ? 'weighted' : 'unweighted' %>
-          <%= simple_format(t(".instructions.#{key}")) %>
-        </div>
+        <div class="instructions"><%= simple_format(t(".instructions.question")) %></div>
       <% end %>
 
       <div class="tab-container <%= tabs_display_css %>">
