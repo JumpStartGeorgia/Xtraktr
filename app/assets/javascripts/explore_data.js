@@ -227,7 +227,7 @@ function build_bar_charts (json) { // build pie chart for each chart item in jso
         jumpto_text += "<option data-href='#chart-" + (i+1) + "'>" + json.chart[i].filter_answer_text + "</option>";
       }
 
-      // show jumpto links    
+      // show jumpto links
       $jumpto_chart_label.html("(" + json.filtered_by.original_code + ")");
       $jumpto_chart_select.append(jumpto_text);
       $jumpto_chart_select.val($jumpto_chart_select.find("option:first").attr("value"));
@@ -663,9 +663,8 @@ function build_explore_data_page (json) { // build the visualizations for the ex
   build_highmaps(json);
   build_datatable(json);
   build_details(json);
-
   build_page_title(json);
-  
+
   // if no visible tab is marked as active, mark the first one active
   var explore_tabs = $("#explore-tabs");
   // turn on tab and its content || make sure correct jumptos are showing
@@ -796,14 +795,16 @@ function jumpto (show, chart) { // show/hide jumpto show - for main box and if c
   $jumpto_map.toggle(show && !chart);
 }
 $(document).ready(function () {
-    $jumpto = $("#jumpto");
-    $jumpto_chart = $("#jumpto #jumpto-chart");
-    $jumpto_chart_select = $jumpto_chart.find("select");
-    $jumpto_chart_label = $jumpto_chart.find("label span");
-    $jumpto_map = $("#jumpto #jumpto-map");
-    $jumpto_map_select = $jumpto_map.find("select");
-    $jumpto_map_label = $jumpto_map.find("label span");
-    $tab_content = $(".tab-content");    
+
+  $jumpto = $("#jumpto");
+  $jumpto_chart = $("#jumpto #jumpto-chart");
+  $jumpto_chart_select = $jumpto_chart.find("select");
+  $jumpto_chart_label = $jumpto_chart.find("label span");
+  $jumpto_map = $("#jumpto #jumpto-map");
+  $jumpto_map_select = $jumpto_map.find("select");
+  $jumpto_map_label = $jumpto_map.find("label span");
+  $tab_content = $(".tab-content");
+
   // set languaage text
   Highcharts.setOptions({
     chart: { spacingRight: 30 },
@@ -812,7 +813,6 @@ $(document).ready(function () {
     },
     colors: ['#00adee', '#e88d42', '#9674a9', '#f3d952', '#6fa187', '#b2a440', '#d95d6a', '#737d91', '#d694e0', '#80b5bc', '#a6c449', '#1b74cc', '#4eccae']
   });
-
 
   if (gon.explore_data){
     // due to using tabs, the map, chart and table cannot be properly drawn
@@ -1027,9 +1027,9 @@ $(document).ready(function () {
     // when chart tab/map clicked on, make sure the jumpto block is showing, else, hide it
     $("#explore-tabs li").click(function () {
       var href = $(this).find("a").attr("href");
-      if (href == "#tab-chart" &&  $jumpto_chart_select.find("option").length > 0){
+      if (href == "#tab-chart" && $jumpto_chart_select.find("option").length > 0){
         jumpto(true, true);
-      }else if (href == "#tab-map" &&  $jumpto_map_select.find("option").length > 0){
+      }else if (href == "#tab-map" && $jumpto_map_select.find("option").length > 0){
         jumpto(true, false);
       }else{
         jumpto(false);
@@ -1105,15 +1105,15 @@ $(document).ready(function () {
 
       var new_url = [location.protocol, "//", location.host, location.pathname, "?", paramsA.join("&")].join("");
       // // change the browser URL to the given link location
-      if (new_url != window.location.href){ // !is_back_button && 
+      if (new_url != window.location.href){ // !is_back_button &&
         window.history.pushState({path:new_url}, $("title").html(), new_url);
       }
-      $(this).tooltip('hide');
+      $(this).tooltip("hide");
       build_explore_data_page(js.cache[cacheId]);
     });
-    $(document).on("click", ".available-language-switcher.redirect .dropdown-menu a", function (e){ 
+    $(document).on("click", ".available-language-switcher.redirect .dropdown-menu a", function (e){
       e.preventDefault();
-       window.location.href = window.location.href + "&" +  $(this).attr("href").substr(1);
-     });
+      window.location.href = window.location.href + "&" + $(this).attr("href").substr(1);
+    });
   }
 });
