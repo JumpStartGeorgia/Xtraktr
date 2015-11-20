@@ -1498,11 +1498,12 @@ en:
       map:
         filter: "Filter map by selecting an answer to '%{text}':"
       instructions:
-        question: select a question to being your exploration
-        broken: selecting a broken down by question will generate a stacked bar chart
-        filter: selecting a filtered by question will generate a chart for each answer in the filter
-        weight: using a weight will apply the analysis results to the general population, not just the respondents
-        generate: click here to run the analysis
+        question: Select a question to being your exploration.
+        broken: Selecting a broken down by question will generate a stacked bar chart
+        filter: Selecting a filtered by question will generate a chart for each answer in the filter
+        weight: Using a weight will apply the analysis results to the general population, not just the respondents
+        generate: Click to run the analysis
+        reset: Click to reset the selections
     explore_time_series:
       no_matches: Your selections returned no data. Please try again with a different selection.
       no_data: "'%{title}' does not have any data that is analyzable at this time."
@@ -1525,10 +1526,11 @@ en:
         table: Table
         details: Details
       instructions:
-        question: select a question to being your exploration
-        filter: selecting a filtered by question will generate a chart for each answer in the filter
-        weight: using a weight will apply the analysis results to the general population, not just the respondents
-        generate: click here to run the analysis
+        question: Select a question to being your exploration.
+        filter: Selecting a filtered by question will generate a chart for each answer in the filter
+        weight: Using a weight will apply the analysis results to the general population, not just the respondents
+        generate: Click to run the analysis
+        reset: Click to reset the selections
     dashboard_data:
       tabs:
         highlights: Highlights
