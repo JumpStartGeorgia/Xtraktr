@@ -303,7 +303,7 @@ class ApplicationController < ActionController::Base
         end
 
         # add the required assets
-        @css.push('bootstrap-select.min.css', "tabs.css", "explore.css", "explore-dataset.css", "datasets.css")
+        @css.push('bootstrap-select.min.css', "tabs.css", "explore.css", "explore-page.css", "datasets.css")
         @js.push('bootstrap-select.min.js', "explore.js", "explore_data.js", 'highcharts.js', 'highcharts-map.js', 'highcharts-exporting.js')
 
         gon.embed_button_link = embed_v2_url('replace') if dataset.public?
@@ -360,7 +360,7 @@ class ApplicationController < ActionController::Base
     respond_to do |format|
       format.html{
         # add the required assets
-        @css.push('bootstrap-select.min.css', "tabs.css", "explore.css", "time_series.css")
+        @css.push('bootstrap-select.min.css', "tabs.css", "explore.css", "explore-page.css", "time_series.css")
         @js.push('bootstrap-select.min.js', "explore.js", "explore_time_series.js", 'highcharts.js', 'highcharts-exporting.js')
 
         gon.embed_button_link = embed_v2_url('replace') if time_series.public?
