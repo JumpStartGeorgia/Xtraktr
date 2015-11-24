@@ -388,7 +388,6 @@ function build_explore_time_series_page (json){ // build the visualizations for 
 }
 
 function get_explore_time_series (is_back_button){ // get data and load page
-
   if (is_back_button == undefined){
     is_back_button = false;
   }
@@ -460,7 +459,6 @@ function get_explore_time_series (is_back_button){ // get data and load page
     console.log( "Request failed: " + textStatus + ". Error thrown: " + errorThrown);
   })
   .success(function (json) {
-
     if (json.errors){
       $('#jumpto-loader').fadeOut('slow');
       $('#explore-data-loader').fadeOut('slow');
@@ -546,11 +544,11 @@ $(document).ready(function () {
     // form values in the url
     $("form#form-explore-time-series").submit(function (){
       if ($("select#question_code").val() == ""){
-        $(".instructions").fadeIn("slow");
+        $(".instructions").show();//fadeIn("slow");
         $(".tab-container").addClass("hide");
       }else{
         if ($(".instructions").is(":visible")){
-          $(".instructions").fadeOut("slow");
+          $(".instructions").hide();//fadeOut("slow");
           $(".tab-container").removeClass("hide");
         }
         $("#jumpto-loader").fadeIn("slow");
@@ -643,11 +641,15 @@ $(document).ready(function () {
     });
 
     // get the initial data
-    $("#explore-error").fadeOut("slow");
-    $("#explore-no-results").fadeOut("slow");
-    $("#explore-data-loader").fadeIn("slow", function (){
-      get_explore_time_series();
-    });
+    if($("select#question_code").val() !== "")
+    {
+      // get the initial data
+      $("#explore-error").fadeOut("slow");
+      $("#explore-no-results").fadeOut("slow");
+      $("#explore-data-loader").fadeIn("slow", function (){
+        get_explore_time_series();
+      });
+    }
 
 
     // jumpto scrolling
