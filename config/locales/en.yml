@@ -1509,7 +1509,7 @@ en:
       map:
         filter: "Filter map by selecting an answer to '%{text}':"
       instructions:
-        question: Select a question to being your exploration.
+        question: Select a question to begin your exploration.
         broken: Selecting a broken down by question will generate a stacked bar chart
         filter: Selecting a filtered by question will generate a chart for each answer in the filter
         weight: Using a weight will apply the analysis results to the general population, not just the respondents
@@ -1539,7 +1539,7 @@ en:
         table: Table
         details: Details
       instructions:
-        question: Select a question to being your exploration.
+        question: Select a question to begin your exploration.
         filter: Selecting a filtered by question will generate a chart for each answer in the filter
         weight: Using a weight will apply the analysis results to the general population, not just the respondents
         generate: Click to run the analysis
