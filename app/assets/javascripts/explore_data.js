@@ -72,7 +72,7 @@ function build_highmaps (json) { // build highmap
       map_index = 1;
 
     $("#container-map").empty(); // remove all existing maps
-    $("#tab-map").addClass("behind_the_scenes");
+    //$("#tab-map").addClass("behind_the_scenes");
 
     $jumpto_map_select.empty();
 
@@ -126,7 +126,7 @@ function build_highmaps (json) { // build highmap
   var ititle = $("#jumpto #jumpto-map i");
   ititle.attr("title", ititle.data("title-" + jumpto_title));
   ititle.tooltip("fixTitle");
-  $("#tab-map").removeClass("behind_the_scenes");
+  //$("#tab-map").removeClass("behind_the_scenes");
 }
 
 function build_crosstab_charts (json) { // build crosstab charts for each chart item in json
