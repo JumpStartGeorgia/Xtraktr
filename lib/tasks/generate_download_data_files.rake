@@ -16,11 +16,11 @@ namespace :generate_files do
     ExportData.create_all_forced_dataset_files
   end
 
-  # desc "test"
-  # task :test => :environment do |t, args|
-  #   require "export_data"
+  desc "replace '.' in original_codes with '_'"
+  task :replace_dots_in_codes => :environment do |t, args|
+    require "./db/migrate/replace_dots_in_codes.rb"
+  end
 
-  #   ExportData.test
-  # end
+
 
 end
