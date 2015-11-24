@@ -258,7 +258,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 
       # initialize variables
       # start with a random question
-      @question_code = @questions.map{|x| x.code}.sample
+      @question_code = nil #@questions.map{|x| x.code}.sample
       @broken_down_by_code = nil
       @filtered_by_code = nil
 
@@ -326,7 +326,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 
       # initialize variables
       # start with a random question
-      @question_code = @questions.map{|x| x.code}.sample
+      @question_code = nil # @questions.map{|x| x.code}.sample
       @filter_by_code = nil
 
       # check for valid question value
