@@ -86,12 +86,12 @@
 
       <div id="jumpto">
         <div id='jumpto-chart'>
-          <label><%= t('.jumpto.chart') %></label>
+          <label><%= t('.jumpto.chart') %><i class="q" data-title-broken="<%= t('.jumpto.hint.map_broken') %>" data-title-filtered="<%= t('.jumpto.hint.map_filtered') %>" data-title-both="<%= t('.jumpto.hint.map_broken_filtered') %>"></i></label>
           <select data-live-search="true" data-width="100%" class="selectpicker" data-dropup-auto="false"></select>
         </div>
 
         <div id='jumpto-map'>
-          <label><%= t('.jumpto.map') %></label>
+          <label><%= t('.jumpto.map') %><%= t('.jumpto.chart') %><i class="q" title="<%= t('.jumpto.hint.chart') %>"></i></label>
           <div class='jumpto-map-item'>
             <label class="h4"></label>
             <select data-live-search="true" data-width="100%" class="selectpicker" data-dropup-auto="false"></select>

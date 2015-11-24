@@ -51,10 +51,10 @@ function set_can_exclude_visibility () { // show or hide the can exclude checkbo
 
 function build_highmaps (json) { // build highmap
   var i;
+  var jumpto_title = "";
   if (json.map){
     // adjust the width of the map to fit its container
     // $("#container-map").width($("#explore-tabs").width());
-
     // determine chart height
     var chart_height = map_chart_height(json);
 
@@ -96,6 +96,7 @@ function build_highmaps (json) { // build highmap
       for(h=0; h<json.map.length; h++){
         if (json.broken_down_by && json.map[h].filter_results.map_sets.constructor === Array){
           // add jumpto link
+          jumpto_title = "both";
           jump_item = $(template).clone();
           $(jump_item).find("h4").html(json.filtered_by.text + " = <span>" + json.map[h].filter_answer_text + "</span>");
           jumpto_text = "<option></option>";
@@ -114,6 +115,7 @@ function build_highmaps (json) { // build highmap
           jump_ary.push(jump_item);
 
         }else{
+          jumpto_title = "filtered";
           build_highmap(json.map[h].filter_results.shape_question_code, json.map[h].filter_results.adjustable_max_range, json.map[h].filter_results.map_sets, chart_height, weight_name);
 
           // add jumpto link
@@ -154,6 +156,7 @@ function build_highmaps (json) { // build highmap
 
       // no filters
       if (json.broken_down_by && json.map.map_sets.constructor === Array){
+        jumpto_title = "broken";
         for(i=0; i<json.map.map_sets.length; i++){
           build_highmap(json.map.shape_question_code, json.map.adjustable_max_range, json.map.map_sets[i], chart_height, weight_name);
 
@@ -178,6 +181,7 @@ function build_highmaps (json) { // build highmap
       }
     }
 
+    
     // show map tabs
     $("#explore-tabs #nav-map").show();
 
@@ -188,6 +192,9 @@ function build_highmaps (json) { // build highmap
     // make sure these are not active
     $("#explore-tabs #nav-map, #explore-content #tab-map").removeClass("active");
   }
+  var ititle = $("#jumpto #jumpto-map i");
+  ititle.attr("title", ititle.data("title-" + jumpto_title));
+  ititle.tooltip("fixTitle");
   $("#tab-map").removeClass("behind_the_scenes");
 }
 
@@ -918,13 +925,13 @@ $(document).ready(function () {
     // catch the form submit and call the url with the
     // form values in the url
     $("form#form-explore-data").submit(function () {
-      if ($('select#question_code').val() == ''){
-        $('.instructions').fadeIn("slow");
-        $('.tab-container').addClass('hide');
+      if ($("select#question_code").val() == ""){
+        $(".instructions").show();// fadeIn("slow");
+        $(".tab-container").addClass("hide");
       }else{
-        if ($('.instructions').is(':visible')){
-          $('.instructions').fadeOut("slow");
-          $('.tab-container').removeClass('hide');
+        if ($(".instructions").is(":visible")){
+          $(".instructions").hide();//fadeOut("slow");
+          $(".tab-container").removeClass("hide");
         }
         $("#jumpto-loader").fadeIn("slow");
         $("#explore-error").fadeOut("slow");
@@ -1094,13 +1101,16 @@ $(document).ready(function () {
       // submit the form
       $("input#btn-submit").trigger("click");
     });
-
-    // get the initial data
-    // $("#explore-error").fadeOut("slow");
-    // $("#explore-no-results").fadeOut("slow");
-    // $("#explore-data-loader").fadeIn("slow", function (){
-    //   get_explore_data();
-    // });
+  
+    if($("select#question_code").val() !== "")
+    {
+      // get the initial data
+      $("#explore-error").fadeOut("slow");
+      $("#explore-no-results").fadeOut("slow");
+      $("#explore-data-loader").fadeIn("slow", function (){
+        get_explore_data();
+      });
+    }
 
     // jumpto scrolling
     $("#jumpto").on("change", "select", function () {

@@ -1489,6 +1489,11 @@ en:
       jumpto:
         chart: Jump to Chart
         map: Jump to Map
+        hint:
+          chart:                There is a chart for each answer in the filtered by question. Use the drop down to quickly jump to the answer you want to explore.
+          map_broken:           There is a chart for each answer in the broken down by question. Use the drop down to quickly jump to the answer you want to explore.
+          map_filtered:         There is a chart for each answer in the filtered by question. Use the drop down to quickly jump to the answer you want to explore.
+          map_broken_filtered:  There is a chart for each combination of answers from the broken down by question and filtered by question. Use the drop down to quickly jump to the answer you want to explore.
       tabs:
         map: Map
         chart: Chart
