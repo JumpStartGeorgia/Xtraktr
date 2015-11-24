@@ -14,12 +14,16 @@
         <div class="form-explore-question-code">
             <%= label_tag 'question_code', t('.form.question_code') %>
             <select data-live-search="true" data-width="100%" class="selectpicker" data-container="body" id="question_code" name="question_code">
+              <% selected = @question_code.nil? ? 'selected=selected' : '' %>
+              <option value="" <%= selected %>><%= t('.form.no_question') %></option>
               <%= generate_explore_dataset_options(@items, @dataset, selected_code: @question_code, disabled_code: @broken_down_by_code) %>
             </select>
         </div>
         <div class="form-explore-broken-by">
             <div id="var2-label-swap" class="clear">
-              <%= label_tag 'broken_down_by_code', "#{t('.form.broken_down_by_code')} (#{t('.form.optional')})" %>
+              <%= label_tag 'broken_down_by_code' do %>
+                <%= "#{t('.form.broken_down_by_code')} (#{t('.form.optional')})" %><i class="q" title="<%= t('.instructions.broken') %>"></i>
+              <% end %>
               <%
                 display = 'style=display:none;'
                 display = '' if @broken_down_by_code.present?
@@ -27,15 +31,15 @@
               <button id="btn-swap-vars" type="button" class="btn-swap" title="<%= t('.form.swap') %>" <%= display %>></button>
             </div>
             <select data-live-search="true" data-width="100%" class="selectpicker" data-container="body" id="broken_down_by_code" name="broken_down_by_code">
-              <%
-                selected = @broken_down_by_code.blank? ? 'selected=selected' : '' %>
-              %>
+              <% selected = @broken_down_by_code.blank? ? 'selected=selected': '' %>
               <option value="" <%= selected %>><%= t('.form.no_comparison') %></option>
               <%= generate_explore_dataset_options(@items, @dataset, selected_code: @broken_down_by_code, disabled_code: @question_code) %>
             </select>
           </div>
           <div class="form-explore-filter-by">
-            <%= label_tag 'filtered_by_code', t('.form.filtered_by_code') %>
+            <%= label_tag 'filtered_by_code' do %>
+              <%= t('.form.filtered_by_code') %><i class="q" title="<%= t('.instructions.filter') %>"></i>
+            <% end %>
             <select data-live-search="true" data-width="100%" class="selectpicker-filter" data-container="body" id="filtered_by_code" name="filtered_by_code">
               <option value=""><%= t('.form.no_filter') %></option>
               <%= generate_explore_dataset_options(@items, @dataset, selected_code: @filtered_by_code, disabled_code: @question_code, disabled_code2: @broken_down_by_code) %>
@@ -45,7 +49,9 @@
           <% if @dataset.is_weighted? %>
             <% # determine if need to show weight when page loads %>
             <div class="form-explore-weight-by">
-              <%= label_tag 'weighted_by_code', t('.form.weighted_by_code') %>
+              <%= label_tag 'weighted_by_code' do %>
+                <%= t('.form.weighted_by_code') %><i class="q" title="<%= t('.instructions.weight') %>"></i>
+              <% end %>   
               <select data-live-search="true" data-width="100%" class="selectpicker-weight" data-container="body" id="weighted_by_code" name="weighted_by_code">
                 <% @dataset.weights.each do |weight| %>
                   <%
@@ -67,123 +73,132 @@
              <%= label_tag 'can_exclude', t('.form.can_exclude'), :title => t('.form.can_exclude_hint') %>
           </div>
           <div class="submit-box" id="buttons">
-            <%= submit_tag t('.form.reset'), :class => 'btn btn-reset', :id => 'btn-reset' %>
+            <%= submit_tag t('.form.reset'), :class => 'btn btn-reset', :id => 'btn-reset', :title => t(".instructions.reset")  %>
             <div class="submit-btn-box">
-              <%= submit_tag t('.form.submit'), :class => 'btn btn-submit', :id => 'btn-submit' %>
+              <%= submit_tag t('.form.submit'), :class => 'btn btn-submit', :id => 'btn-submit', :title => t(".instructions.generate") %>
             </div>
           </div>
       <% end %>
 
       <div id="jumpto">
         <div id='jumpto-chart'>
-          <label><%= t('.jumpto.chart') %> <span></span></label>
+          <label><%= t('.jumpto.chart') %> <span></span><i class="q" title="<%= t('.jumpto.hint.chart') %>"></i></label>
           <select data-live-search="true" data-width="100%" class="selectpicker" data-container="body"></select>
         </div>
         <div id='jumpto-map'>
-          <label><%= t('.jumpto.map') %> <span></span></label>
+          <label><%= t('.jumpto.map') %> <span></span><i class="q" data-title-broken="<%= t('.jumpto.hint.map_broken') %>" data-title-filtered="<%= t('.jumpto.hint.map_filtered') %>" data-title-both="<%= t('.jumpto.hint.map_broken_filtered') %>"></i></label>
           <select data-live-search="true" data-width="100%" class="selectpicker" data-container="body"></select>          
         </div>
         <div id="jumpto-loader"></div>
       </div>
     </div><div id="explore-data-content" class="tabs style2">
-      <div class="tab-header">
-        <div class="tab-caption"><%= t('.tabs.chart') %></div>
-        <button type="button" class="navbar-toggle tab-toggle collapsed" data-toggle="collapse" data-target=".tab-collapse">
-          <span class="sr-only"><%= t('.toggle') %></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-      </div>
-      <ul class="nav nav-tabs collapse tab-collapse" id="explore-tabs">
-        <li id="nav-chart" class="active"><a href="#tab-chart" role="tab" data-toggle="tab"><%= t('.tabs.chart') %></a></li>
-        <li id="nav-map" style="display:none;"><a href="#tab-map" role="tab" data-toggle="tab"><%= t('.tabs.map') %></a></li>
-        <li id="nav-table"><a href="#tab-table" role="tab" data-toggle="tab"><%= t('.tabs.table') %></a></li>
-        <li id="nav-details"><a href="#tab-details" role="tab" data-toggle="tab"><%= t('.tabs.details') %></a></li>
-        <li id="nav-download"><a href="#tab-download" role="tab" data-toggle="tab"><%= t('.tabs.download') %></a></li>
-      </ul>
-      <% if !@is_dataset_admin %>
-        <div class="share share-box"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>
+    
+      <% tabs_display_css = '' %>
+      <% if @question_code.nil? %>
+        <% tabs_display_css = 'hide' %>
+        <div class="instructions"><%= simple_format(t(".instructions.question")) %></div>
       <% end %>
-      <div class="tab-content" id="explore-content">
-        <%-
-          data_attr = ''
-          if @is_dataset_admin
-            data_attr = "data-add-highlight=#{add_highlight_dataset_path(@dataset.owner, id: @dataset)} data-delete-highlight=#{remove_highlight_dataset_path(@dataset.owner, id: @dataset)} data-description=#{highlights_edit_description_path}"
-          end
-        -%>
-        <div class="tab-pane fade in active" id="tab-chart">
-          <div id="container-chart" <%= data_attr %> ></div>
+
+      <div class="tab-container <%= tabs_display_css %>">      
+        <div class="tab-header">
+          <div class="tab-caption"><%= t('.tabs.chart') %></div>
+          <button type="button" class="navbar-toggle tab-toggle collapsed" data-toggle="collapse" data-target=".tab-collapse">
+            <span class="sr-only"><%= t('.toggle') %></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
         </div>
-
-
-        <div class="tab-pane" id="tab-map">
-          <div id="container-map" <%= data_attr %> ></div>
-        </div>
-
-
-        <div class="tab-pane fade" id="tab-table">
-          <div id="container-table">
-            <h3></h3>
-            <table class="table-data table table-striped table-hover table-nonfluid"
-                  data-count="<%= t('app.common.count') %>" data-percent="<%= t('app.common.percent') %>"
-                  data-unweighted-count="<%= t('app.common.unweighted_count') %>" data-weighted-count="<%= t('app.common.weighted_count') %>"
-                  data-weighted-percent="<%= t('app.common.weighted_percent') %>">
-            </table>
-            <p class="table-weighted-footnote"><span class="footnote-flag">*</span><%= t('app.common.weighted_footnote') %><span class="footnote-weight-name"></span></p>
-          </div>
-        </div>
-
-
-        <div class="tab-pane fade" id="tab-details">
-          <div class="details-item" id="details-question-code">
-            <h3><%= t('.form.question_code') %></h3>
-            <%= render partial: 'shared/explore_details_block' %>
-          </div>
-          <div class="details-item" id="details-broken-down-by-code">
-            <h3><%= t('.form.broken_down_by_code') %></h3>
-            <%= render partial: 'shared/explore_details_block' %>
-          </div>
-          <div class="details-item" id="details-filtered-by-code">
-            <h3><%= t('.form.filtered_by_code') %></h3>
-            <%= render partial: 'shared/explore_details_block' %>
-          </div>
-          <div class="details-item" id="details-weighted-by-code">
-            <h3><%= t('.form.weighted_by_code') %></h3>
-            <%= render partial: 'shared/explore_details_block' %>
+        <ul class="nav nav-tabs collapse tab-collapse" id="explore-tabs">
+          <li id="nav-chart" class="active"><a href="#tab-chart" role="tab" data-toggle="tab"><%= t('.tabs.chart') %></a></li>
+          <li id="nav-map" style="display:none;"><a href="#tab-map" role="tab" data-toggle="tab"><%= t('.tabs.map') %></a></li>
+          <li id="nav-table"><a href="#tab-table" role="tab" data-toggle="tab"><%= t('.tabs.table') %></a></li>
+          <li id="nav-details"><a href="#tab-details" role="tab" data-toggle="tab"><%= t('.tabs.details') %></a></li>
+          <li id="nav-download"><a href="#tab-download" role="tab" data-toggle="tab"><%= t('.tabs.download') %></a></li>
+        </ul>
+        <% if !@is_dataset_admin %>
+          <div class="share share-box"><div class="prompt"><%= t('app.common.share') %></div><div class="addthis_sharing_toolbox"></div></div>
+        <% end %>
+        <div class="tab-content" id="explore-content">
+          <%-
+            data_attr = ''
+            if @is_dataset_admin
+              data_attr = "data-add-highlight=#{add_highlight_dataset_path(@dataset.owner, id: @dataset)} data-delete-highlight=#{remove_highlight_dataset_path(@dataset.owner, id: @dataset)} data-description=#{highlights_edit_description_path}"
+            end
+          -%>
+          <div class="tab-pane fade in active" id="tab-chart">
+            <div id="container-chart" <%= data_attr %> ></div>
           </div>
 
-          <div class="details-icons" style="display:none;">
-            <span id="detail-icon-exclude-question" class="icon-item"><%= exclude_question_icon.html_safe %></span>
-            <span id="detail-icon-exclude-answer" class="icon-item"><%= exclude_answer_icon.html_safe %></span>
-            <span id="detail-icon-mappable-question" class="icon-item"><%= mappable_question_icon.html_safe %></span>
-            <span id="detail-icon-group" class="icon-item"><%= group_icon.html_safe %></span>
-            <span id="detail-icon-subgroup" class="icon-item"><%= subgroup_icon.html_safe %></span>
+
+          <div class="tab-pane" id="tab-map">
+            <div id="container-map" <%= data_attr %> ></div>
           </div>
-        </div>
-        <div class="tab-pane" id="tab-download">
-            <div class="download-text"><%= t('app.common.download_data_explanation') %></div>
-            <% if @dataset.urls.present? && @dataset.urls.codebook.present? %>
-              <div class="download-wrapper" >
-                <div class="download" data-id="<%= @dataset.id.to_s %>" data-lang="<%= @dataset.current_locale %>" data-download-type="public">                                    
-                  <ul>
-                    <li><div class="type" data-type='csv' title="<%= t('download_data_options.title.csv') %>" data-placement="bottom"><%= t('download_data_options.text.csv') %></div></li>
-                    <li><div class="type" data-type='r' title="<%= t('download_data_options.title.r') %>" data-placement="bottom"><%= t('download_data_options.text.r') %></div></li>
-                    <li><div class="type" data-type='spss' title="<%= t('download_data_options.title.spss') %>" data-placement="bottom"><%= t('download_data_options.text.spss') %></div></li>
-                    <li><div class="type" data-type='stata' title="<%= t('download_data_options.title.stata') %>" data-placement="bottom"><%= t('download_data_options.text.stata') %></div></li>
-                  </ul>
+
+
+          <div class="tab-pane fade" id="tab-table">
+            <div id="container-table">
+              <h3></h3>
+              <table class="table-data table table-striped table-hover table-nonfluid"
+                    data-count="<%= t('app.common.count') %>" data-percent="<%= t('app.common.percent') %>"
+                    data-unweighted-count="<%= t('app.common.unweighted_count') %>" data-weighted-count="<%= t('app.common.weighted_count') %>"
+                    data-weighted-percent="<%= t('app.common.weighted_percent') %>">
+              </table>
+              <p class="table-weighted-footnote"><span class="footnote-flag">*</span><%= t('app.common.weighted_footnote') %><span class="footnote-weight-name"></span></p>
+            </div>
+          </div>
+
+
+          <div class="tab-pane fade" id="tab-details">
+            <div class="details-item" id="details-question-code">
+              <h3><%= t('.form.question_code') %></h3>
+              <%= render partial: 'shared/explore_details_block' %>
+            </div>
+            <div class="details-item" id="details-broken-down-by-code">
+              <h3><%= t('.form.broken_down_by_code') %></h3>
+              <%= render partial: 'shared/explore_details_block' %>
+            </div>
+            <div class="details-item" id="details-filtered-by-code">
+              <h3><%= t('.form.filtered_by_code') %></h3>
+              <%= render partial: 'shared/explore_details_block' %>
+            </div>
+            <div class="details-item" id="details-weighted-by-code">
+              <h3><%= t('.form.weighted_by_code') %></h3>
+              <%= render partial: 'shared/explore_details_block' %>
+            </div>
+
+            <div class="details-icons" style="display:none;">
+              <span id="detail-icon-exclude-question" class="icon-item"><%= exclude_question_icon.html_safe %></span>
+              <span id="detail-icon-exclude-answer" class="icon-item"><%= exclude_answer_icon.html_safe %></span>
+              <span id="detail-icon-mappable-question" class="icon-item"><%= mappable_question_icon.html_safe %></span>
+              <span id="detail-icon-group" class="icon-item"><%= group_icon.html_safe %></span>
+              <span id="detail-icon-subgroup" class="icon-item"><%= subgroup_icon.html_safe %></span>
+            </div>
+          </div>
+          <div class="tab-pane" id="tab-download">
+              <div class="download-text"><%= t('app.common.download_data_explanation') %></div>
+              <% if @dataset.urls.present? && @dataset.urls.codebook.present? %>
+                <div class="download-wrapper" >
+                  <div class="download" data-id="<%= @dataset.id.to_s %>" data-lang="<%= @dataset.current_locale %>" data-download-type="public">                                    
+                    <ul>
+                      <li><div class="type" data-type='csv' title="<%= t('download_data_options.title.csv') %>" data-placement="bottom"><%= t('download_data_options.text.csv') %></div></li>
+                      <li><div class="type" data-type='r' title="<%= t('download_data_options.title.r') %>" data-placement="bottom"><%= t('download_data_options.text.r') %></div></li>
+                      <li><div class="type" data-type='spss' title="<%= t('download_data_options.title.spss') %>" data-placement="bottom"><%= t('download_data_options.text.spss') %></div></li>
+                      <li><div class="type" data-type='stata' title="<%= t('download_data_options.title.stata') %>" data-placement="bottom"><%= t('download_data_options.text.stata') %></div></li>
+                    </ul>
+                  </div>
                 </div>
-              </div>
-            <% end %>
+              <% end %>
+          </div>
         </div>
-      </div>
 
-      <div id="explore-data-loader"></div>
-      <div id="explore-error">
-        <p><%= t('app.msgs.explore_error') %></p>
-      </div>
-      <div id="explore-no-results">
-        <p><%= t('app.msgs.explore_no_data') %></p>
+        <div id="explore-data-loader"></div>
+        <div id="explore-error">
+          <p><%= t('app.msgs.explore_error') %></p>
+        </div>
+        <div id="explore-no-results">
+          <p><%= t('app.msgs.explore_no_data') %></p>
+        </div>
       </div>
     </div>
   <% else %>
