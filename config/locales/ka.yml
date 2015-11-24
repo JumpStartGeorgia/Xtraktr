@@ -1480,6 +1480,7 @@ ka:
       dataset_title: "მონაცემები"
       form:
         question_code: "გაეცანით პასუხებს"
+        no_question: აირჩიეთ კითხვა
         broken_down_by_code: "ჩაშლილია"
         optional: "არჩევითი"
         no_comparison: "არ არის შედარება"
@@ -1494,6 +1495,11 @@ ka:
       jumpto:
         chart: "დიაგრამაზე გადასვლა"
         map: "რუკაზე გადასვლა"
+        hint:
+          chart: There is a chart for each answer in the filtered by question. Use the drop down to quickly jump to the answer you want to explore.
+          map_broken: There is a chart for each answer in the broken down by question. Use the drop down to quickly jump to the answer you want to explore.
+          map_filtered: There is a chart for each answer in the filtered by question. Use the drop down to quickly jump to the answer you want to explore.
+          map_broken_filtered: There is a chart for each combination of answers from the broken down by question and filtered by question. Use the drop down to quickly jump to the answer you want to explore.        
       tabs:
         map: "რუკა"
         chart: "დიაგრამა"
@@ -1502,6 +1508,13 @@ ka:
         download: "მონაცემთა გაცნობა"
       map:
         filter: "რუკის გაფილტვრა ამ პასუხის არჩევით '%{text}':"
+      instructions:
+        question: მონაცემთა სანახავად აირჩიეთ კითხვა.
+        broken: შეკითხვებით ჩაშლის არჩევა მონაცემებს ჩალაგებული სვეტოვანი დიაგრამით აჩვენებს
+        filter: შეკითხვებით გაფილტრვის  არჩევის დროს თითოეული პასუხისთვის ცალკე დიაგრამა იქნება ნაჩვენები
+        weight: შეწონვის გამოყენება ანალიზის შედეგს მოარგებს მთელს მოსახლეობას და არა მარტო რესპოდენტებს
+        generate: დააჭირეთ და დაიწყეთ ანალიზი
+        reset: დააჭირეთ მონიშვნების გასაუქმებლად
     explore_time_series:
       no_matches: "თქვენ მიერ მონიშნული პარამეტრებით მონაცემები არ მოიძებნა. გთხოვთ, სცადოთ განსხვავებული პარამეტრები. "
       no_data: "%{title}' არ შეიცავს მონაცემებს, რომლებიც გაანალიზებადია ამ დროისთვის."
@@ -1510,6 +1523,7 @@ ka:
       time_series_title: "პერიოდული შედარება"
       form:
         question_code: "გაეცანით პასუხებს"
+        no_question: აირჩიეთ კითხვა
         submit: "დაანგარიშება"
         reset: "გადატვირთვა"
         filtered_by_code: "გაფილტრულია"
@@ -1518,10 +1532,18 @@ ka:
         can_exclude_hint: ანალიზიდან წაშალე პასუხები "არ ვიცი" & "უარი პასუხზე"
       jumpto:
         chart: "დიაგრამაზე გადასვლა"
+        hint:
+          chart: There is a chart for each answer in the filtered by question. Use the drop down to quickly jump to the answer you want to explore.        
       tabs:
         chart: "დიაგრამა"
         table: "ცხრილი"
         details: "დეტალები"
+      instructions:
+        question: მონაცემთა სანახავად აირჩიეთ კითხვა.
+        filter: შეკითხვებით გაფილტრვის  არჩევის დროს თითოეული პასუხისთვის ცალკე დიაგრამა იქნება ნაჩვენები
+        weight: შეწონვის გამოყენება ანალიზის შედეგს მოარგებს მთელს მოსახლეობას და არა მარტო რესპოდენტებს
+        generate: დააჭირეთ და დაიწყეთ ანალიზი
+        reset: დააჭირეთ მონიშვნების გასაუქმებლად     
     dashboard_data:
       tabs:
         highlights: "რჩეული ფაქტები"
