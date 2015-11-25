@@ -589,7 +589,7 @@ private
 
     # get the data for this code
     data = dataset.data_items.code_data(question[:code])
-
+    data_length = data.length
     if data.present?
       # get the data for the weight
       # - if the weight is from time series, use the provided weight values,
@@ -636,15 +636,15 @@ private
           filtered_by[:answers].each do |filter_answer|
             filter_item = {filter_answer_value: filter_answer[:value], filter_answer_text: filter_answer[:text]}
 
-            filter_item[:filter_results] = dataset_single_analysis_processing(question, data.length, merged_data.select{|x| x[0].to_s == filter_answer[:value].to_s}.map{|x| x[1]}, weight_values: merged_weight_values.select{|x| x[0].to_s == filter_answer[:value].to_s}.map{|x| x[1]}, with_title: with_title, filtered_by: filtered_by, filtered_by_answer: filter_answer[:text])
+            filter_item[:filter_results] = dataset_single_analysis_processing(question, data_length, merged_data.select{|x| x[0].to_s == filter_answer[:value].to_s}.map{|x| x[1]}, weight_values: merged_weight_values.select{|x| x[0].to_s == filter_answer[:value].to_s}.map{|x| x[1]}, with_title: with_title, filtered_by: filtered_by, filtered_by_answer: filter_answer[:text])
 
             filter_results[:filter_analysis] << filter_item
           end
 
           if with_title
             # needed to run all anaylsis in order to have all total responses for subtitle
-            filter_results[:subtitle][:html] = dataset_analysis_subtitle_filtered('html', filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis], data.length, weight.present?)
-            filter_results[:subtitle][:text] = dataset_analysis_subtitle_filtered('text', filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis], data.length, weight.present?)
+            filter_results[:subtitle][:html] = dataset_analysis_subtitle_filtered('html', filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis], data_length, weight.present?)
+            filter_results[:subtitle][:text] = dataset_analysis_subtitle_filtered('text', filtered_by[:original_code], filtered_by[:text], filter_results[:filter_analysis], data_length, weight.present?)
           end
 
           return filter_results
@@ -659,7 +659,7 @@ private
         data.delete_if.with_index { |_, index| to_delete_indexes.include? index }
         weight_values.delete_if.with_index { |_, index| to_delete_indexes.include? index }
 
-        return dataset_single_analysis_processing(question, data.length, data, with_title: with_title, weight_values: weight_values)
+        return dataset_single_analysis_processing(question, data_length, data, with_title: with_title, weight_values: weight_values)
       end
     end
   end
