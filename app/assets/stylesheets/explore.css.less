@@ -178,7 +178,11 @@
         span {
           font:12px 'sourcesans_pro', 'sans-serif';
         }
+        .tooltip {
+          text-transform:normal !important;
+        }
       }
+
       #jumpto-chart, #jumpto-map{
         display:none;
       }
@@ -729,6 +733,14 @@
       }
     }
   }
+  .instructions{
+    font: 15px "prime","sans-serif";
+    margin-left: 20px;
+    font-style: italic;
+    p{
+      margin-top: 57px;
+    }
+  }
   #explore-error, #explore-no-results {
     background-color: rgba(0, 0, 0, 0.4);
     position: absolute;
@@ -1085,11 +1097,11 @@ span.footnote-flag{
   }
 }
 
-.behind_the_scenes {
-  position: fixed !important;
-  left: 9999px !important;
-  display: block !important;
-}
+// .behind_the_scenes {
+//   position: fixed !important;
+//   left: 9999px !important;
+//   display: block !important;
+// }
 
 select {
   border:0px;
@@ -1175,7 +1187,7 @@ select {
         margin-left: 40px;
         box-shadow: -1px 0 0px 0px @af5213, -20px 0 0 0 #fff, -21px 0 0 0 @db8042;
       }  
-      &.grouped, &.subgrouped {
+      &.grouped, &.subgrouped, & {
         .inner-layer {
           > span {
             display:table-cell;

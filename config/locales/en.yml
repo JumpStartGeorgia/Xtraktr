@@ -1365,6 +1365,7 @@ en:
       dataset_title: Dataset
       form:
         question_code: Explore Answers To
+        no_question: Select a Question
         broken_down_by_code: Broken Down By
         optional: optional
         no_comparison: No Comparison
@@ -1379,6 +1380,11 @@ en:
       jumpto:
         chart: Jump to Chart
         map: Jump to Map
+        hint:
+          chart: There is a chart for each answer in the filtered by question. Use the drop down to quickly jump to the answer you want to explore.
+          map_broken: There is a chart for each answer in the broken down by question. Use the drop down to quickly jump to the answer you want to explore.
+          map_filtered: There is a chart for each answer in the filtered by question. Use the drop down to quickly jump to the answer you want to explore.
+          map_broken_filtered: There is a chart for each combination of answers from the broken down by question and filtered by question. Use the drop down to quickly jump to the answer you want to explore.
       tabs:
         map: Map
         chart: Chart
@@ -1387,6 +1393,13 @@ en:
         download: Download Data
       map:
         filter: "Filter map by selecting an answer to '%{text}':"
+      instructions:
+        question: Select a question to begin your exploration.
+        broken: Selecting a broken down by question will generate a stacked bar chart
+        filter: Selecting a filtered by question will generate a chart for each answer in the filter
+        weight: Using a weight will apply the analysis results to the general population, not just the respondents
+        generate: Click to run the analysis
+        reset: Click to reset the selections
     explore_time_series:
       no_matches: Your selections returned no data. Please try again with a different selection.
       no_data: "'%{title}' does not have any data that is analyzable at this time."
@@ -1395,6 +1408,7 @@ en:
       time_series_title: Time Series
       form:
         question_code: Explore Answers To
+        no_question: Select a Question
         submit: Generate
         reset: Reset
         filtered_by_code: Filtered By
@@ -1403,10 +1417,18 @@ en:
         can_exclude_hint: Remove answers like "Don't know" & "Refuse" from the analysis
       jumpto:
         chart: Jump to Chart
+        hint:
+          chart: There is a chart for each answer in the filtered by question. Use the drop down to quickly jump to the answer you want to explore.
       tabs:
         chart: Chart
         table: Table
         details: Details
+      instructions:
+        question: Select a question to begin your exploration.
+        filter: Selecting a filtered by question will generate a chart for each answer in the filter
+        weight: Using a weight will apply the analysis results to the general population, not just the respondents
+        generate: Click to run the analysis
+        reset: Click to reset the selections
     dashboard_data:
       tabs:
         highlights: Highlights
