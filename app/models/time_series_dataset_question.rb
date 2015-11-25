@@ -16,5 +16,4 @@ class TimeSeriesDatasetQuestion
 
   attr_accessible :code, :dataset_id, :text, :text_translations
 
-
 end
