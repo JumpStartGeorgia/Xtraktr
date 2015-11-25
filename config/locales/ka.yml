@@ -505,6 +505,41 @@ ka:
           title_filter: "პასუხების ჯამური რაოდენობა: %{nums}"
           title_weighted: "შეუწონელი პასუხების ჯამური რაოდენობა*: %{x_of_y}"
           title_filter_weighted: "შეუწონელი პასუხების ჯამური რაოდენობა* (%{totals} შესაძლებლიდან): %{nums}"
+    v3:
+      na: "არ არის ხელმისაწვდომი"
+      percent: "პროცენტი (%)"
+      group:
+        html:
+          title: "<span class='group-highlight'>%{text}</span> "
+        text:
+          title: "%{text}"
+      subgroup:
+        html:
+          title: "<span class='subgroup-highlight'>%{text}</span> "
+        text:
+          title: "%{text}"
+      single:
+        html:
+          title: "<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
+          title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable}'-ის მიხედვით"
+          title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable} = <span class='code-highlight'>%{value}</span>'-ის მიხედვით"
+        text:
+          title: "%{code} - %{group} %{variable}'"
+          title_filter: ", გაფილტრულია: '%{code} - %{variable}'-ის მიხედვით"
+          title_filter_value: ", გაფილტრულია: '%{code} - %{group} %{variable} = %{value}'-ის მიხედვით"
+      subtitle:
+        html:
+          title: "პასუხების ჯამური რაოდენობა: <br />%{x_of_y}"
+          title_x_of_y: "%{dataset}: <span class='number'>%{num}</span> %{total}-დან"
+          title_filter: "პასუხების ჯამური რაოდენობა <br />(%{totals} შესაძლებლიდან): <br />%{nums}"
+          title_weighted: "შეუწონელი პასუხების ჯამური რაოდენობა<span class='footnote-flag'>*</span>: <br />%{x_of_y}"
+          title_filter_weighted: "შეუწონელი პასუხების ჯამური რაოდენობა<span class='footnote-flag'>*</span> <br />(%{totals} შესაძლებლიდან): <br />%{nums}"
+        text:
+          title: "პასუხების ჯამური რაოდენობა: %{x_of_y}"
+          title_x_of_y: "%{dataset}: %{num} %{total}-დან"
+          title_filter: "პასუხების ჯამური რაოდენობა: %{nums}"
+          title_weighted: "შეუწონელი პასუხების ჯამური რაოდენობა*: %{x_of_y}"
+          title_filter_weighted: "შეუწონელი პასუხების ჯამური რაოდენობა* (%{totals} შესაძლებლიდან): %{nums}"          
   explore_data:
     chart_type_bar: View data using a bar chart
     chart_type_pie: View data using a pie chart
@@ -602,6 +637,59 @@ ka:
           title_filter: "პასუხების ჯამური რაოდენობა %{total}-იდან: %{nums}"
           title_weighted: "შეუწონელი პასუხების ჯამური რაოდენობა*: %{num} %{total}-იდან"
           title_filter_weighted: "შეუწონელი პასუხების ჯამური რაოდენობა %{total}-0იდან*: %{nums}"
+    v3:
+      hover_region: "მიიტანეთ კურსორი რეგიონზე"
+      na: "არ არის ხელმისაწვდომი"
+      percent: "პროცენტი"
+      group:
+        html:
+          title: "<span class='group-highlight'>%{text}</span> "
+        text:
+          title: "%{text}"
+      subgroup:
+        html:
+          title: "<span class='subgroup-highlight'>%{text}</span> "
+        text:
+          title: "%{text}"
+      comparative:
+        html:
+          title: "<span class='code-highlight'>%{question_code}</span> - %{variable}' <br /> <span class='title-highlight'>ჩაშლილია:</span> <br /> '<span class='code-highlight'>%{broken_down_by_code}</span> - %{broken_down_by}'"
+          title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'-ის მიხედვით"
+          title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'-ის მიხედვით"
+          map:
+            title: "<span class='code-highlight'>%{code}</span> - %{variable}'"
+            title_broken_down_by: "<br /> <span class='title-highlight'>ჩაშლილია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{broken_down_by} = <span class=”code-highlight”>%{broken_down_by_answer}</span>'-ის მიხედვით"
+            title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'-ის მიხედვით"
+            title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'-ის მიხედვით"
+        text:
+          title: "%{question_code} - %{variable}', ჩაშლილია: '%{broken_down_by_code} - %{broken_down_by}'-ის მიხედვით"
+          title_filter: ", გაფილტრულია: '%{code} - %{variable}'-ის მიხედვით"
+          title_filter_value: ", გაფილტრულია: '%{code} - %{variable} = %{value}'-ის მიხედვით"
+          map:
+            title: "%{code} - %{variable}'"
+            title_broken_down_by: "ჩაშლილია: '%{code} - %{broken_down_by} = %{broken_down_by_answer}'"
+            title_filter: ", გაფილტრულია: '%{code} - %{variable}'-ის მიხედვით"
+            title_filter_value: ", გაფილტრულია: '%{code} - %{variable} = %{value}'-ის მიხედვით"
+      single:
+        html:
+          title: "<span class='code-highlight'>%{code}</span> - %{variable}'"
+          title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'-ის მიხედვით"
+          title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'-ის მიხედვით"
+        text:
+          title: "%{code} - %{variable}'"
+          title_filter: ", გაფილტრულია: '%{code} - %{variable}'-ის მიხედვით"
+          title_filter_value: ", გაფილტრულია: '%{code} - %{variable} = %{value}'-ის მიხედვით"
+      subtitle:
+        html:
+          title: "პასუხების ჯამური რაოდენობა: <span class='number'>%{num}</span>  %{total}-იდან"
+          title_filter: "პასუხების ჯამური რაოდენობა %{total}-იდან: <br />%{nums}"
+          title_weighted: "შესწორებების ცხრილი"
+          title_filter_weighted: "შეუწონელი პასუხების ჯამური რაოდენობა %{total}-იდან<span class='footnote-flag'>*</span>: <br />%{nums}"
+        text:
+          title: "პასუხების ჯამური რაოდენობა: %{num} %{total}-იდან"
+          title_filter: "პასუხების ჯამური რაოდენობა %{total}-იდან: %{nums}"
+          title_weighted: "შეუწონელი პასუხების ჯამური რაოდენობა*: %{num} %{total}-იდან"
+          title_filter_weighted: "შეუწონელი პასუხების ჯამური რაოდენობა %{total}-0იდან*: %{nums}"          
   datatable:
     search: "ძებნა"
     search_footer: Search %{name}
@@ -1559,6 +1647,9 @@ ka:
       v2:
         title_site: "გადასვლა %{app_name} -ზე"
         title_datalist: "ყველა მონაცემის ნახვა"
+      v3:
+        title_site: "გადასვლა %{app_name} -ზე"
+        title_datalist: "ყველა მონაცემის ნახვა"        
   export_data:
     dataset: "მონაცემთა ცხრილი: %{title}"
     download_from: "ჩამოტვირთულია აქედან: %{app_name} at %{url}."

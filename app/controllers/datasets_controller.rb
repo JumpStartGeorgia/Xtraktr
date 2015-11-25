@@ -56,7 +56,7 @@ class DatasetsController < ApplicationController
     add_dataset_nav_options(show_title: false)
 
     gon.explore_data = true
-    gon.api_dataset_analysis_path = api_v2_dataset_analysis_path
+    gon.api_dataset_analysis_path = api_v3_dataset_analysis_path
     gon.embed_ids = @dataset.highlights.embed_ids
     gon.private_user = Base64.urlsafe_encode64(current_user.id.to_s)
 

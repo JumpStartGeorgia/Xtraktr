@@ -505,6 +505,41 @@ en:
           title_filter: "Total Responses: %{nums}"
           title_weighted: "Unweighted Total Responses*: %{x_of_y}"
           title_filter_weighted: "Unweighted Total Responses* (out of a possible: %{totals}): %{nums}"
+    v3:
+      na: N/A
+      percent: Percent (%)
+      group:
+        html:
+          title: "<span class='group-highlight'>%{text}</span> "
+        text:
+          title: "%{text}"
+      subgroup:
+        html:
+          title: "<span class='subgroup-highlight'>%{text}</span> "
+        text:
+          title: "%{text}"
+      single:
+        html:
+          title: "'<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
+          title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
+          title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable} = <span class='code-highlight'>%{value}</span>'"
+        text:
+          title: "'%{code} - %{group} %{variable}'"
+          title_filter: ", filtered by: '%{code} - %{group} %{variable}'"
+          title_filter_value: ", filtered by: '%{code} - %{group} %{variable} = %{value}'"
+      subtitle:
+        html:
+          title: "Total Responses: <br />%{x_of_y}"
+          title_x_of_y: "%{dataset}: <span class='number'>%{num}</span> out of %{total}"
+          title_filter: "Total Responses <br />(out of a possible: %{totals}): <br />%{nums}"
+          title_weighted: "Unweighted Total Responses<span class='footnote-flag'>*</span>: <br />%{x_of_y}"
+          title_filter_weighted: "Unweighted Total Responses<span class='footnote-flag'>*</span> <br />(out of a possible: %{totals}): <br />%{nums}"
+        text:
+          title: "Total Responses: %{x_of_y}"
+          title_x_of_y: "%{dataset}: %{num} out of %{total}"
+          title_filter: "Total Responses: %{nums}"
+          title_weighted: "Unweighted Total Responses*: %{x_of_y}"
+          title_filter_weighted: "Unweighted Total Responses* (out of a possible: %{totals}): %{nums}"          
   explore_data:
     chart_type_bar: View data using a bar chart
     chart_type_pie: View data using a pie chart
@@ -602,6 +637,59 @@ en:
           title_filter: "Total Responses out of %{total}: %{nums}"
           title_weighted: "Unweighted Total Responses*: %{num} out of %{total}"
           title_filter_weighted: "Unweighted Total Responses out of %{total}*: %{nums}"
+    v3:
+      hover_region: Hover over a Region
+      na: N/A
+      percent: Percent
+      group:
+        html:
+          title: "<span class='group-highlight'>%{text}</span> "
+        text:
+          title: "%{text}"
+      subgroup:
+        html:
+          title: "<span class='subgroup-highlight'>%{text}</span> "
+        text:
+          title: "%{text}"
+      comparative:
+        html:
+          title: "'<span class='code-highlight'>%{question_code}</span> - %{group}%{variable}' <br /> <span class='title-highlight'>broken down by:</span> <br /> '<span class='code-highlight'>%{broken_down_by_code}</span> - %{group2}%{broken_down_by}'"
+          title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
+          title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable} = <span class='code-highlight'>%{value}</span>'"
+          map:
+            title: "'<span class='code-highlight'>%{code}</span> - %{group}%{variable}' "
+            title_broken_down_by: "<br /> <span class='title-highlight'>broken down by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{broken_down_by} = <span class='code-highlight'>%{broken_down_by_answer}</span>' "
+            title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
+            title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable} = <span class='code-highlight'>%{value}</span>'"
+        text:
+          title: "'%{question_code} - %{group} %{variable}', broken down by: '%{broken_down_by_code} - %{group2} %{broken_down_by}'"
+          title_filter: ", filtered by: '%{code} - %{group} %{variable}'"
+          title_filter_value: ", filtered by: '%{code} - %{group} %{variable} = %{value}'"
+          map:
+            title: "'%{code} - %{group} %{variable}'"
+            title_broken_down_by: " broken down by: '%{code} - %{group} %{broken_down_by} = %{broken_down_by_answer}'"
+            title_filter: ", filtered by: '%{code} - %{group} %{variable}'"
+            title_filter_value: ", filtered by: '%{code} - %{group} %{variable} = %{value}'"
+      single:
+        html:
+          title: "'<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
+          title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
+          title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable} = <span class='code-highlight'>%{value}</span>'"
+        text:
+          title: "'%{code} - %{group} %{variable}'"
+          title_filter: ", filtered by: '%{code} - %{group} %{variable}'"
+          title_filter_value: ", filtered by: '%{code} - %{group} %{variable} = %{value}'"
+      subtitle:
+        html:
+          title: "Total Responses: <span class='number'>%{num}</span> out of %{total}"
+          title_filter: "Total Responses out of %{total}: <br />%{nums}"
+          title_weighted: "Unweighted Total Responses<span class='footnote-flag'>*</span>: <span class='number'>%{num}</span> out of %{total}"
+          title_filter_weighted: "Unweighted Total Responses out of %{total}<span class='footnote-flag'>*</span>: <br />%{nums}"
+        text:
+          title: "Total Responses: %{num} out of %{total}"
+          title_filter: "Total Responses out of %{total}: %{nums}"
+          title_weighted: "Unweighted Total Responses*: %{num} out of %{total}"
+          title_filter_weighted: "Unweighted Total Responses out of %{total}*: %{nums}"          
   datatable:
     search: Search
     search_footer: 'Search %{name}'
@@ -1565,6 +1653,9 @@ en:
       v2:
         title_site: Go to %{app_name}
         title_datalist: View All Datasets
+      v3:
+        title_site: Go to %{app_name}
+        title_datalist: View All Datasets        
   export_data:
     dataset: 'Dataset: %{title}'
     download_from: 'Downloaded From: %{app_name} at %{url}.'
