@@ -1,6 +1,6 @@
 /*global  $, gon, Highcharts, params */
 /*eslint camelcase: 0, no-underscore-dangle: 0, no-unused-vars: 0, no-undef: 0*/
-var js = { cache: {} }, datatables, h, i, j, k, cacheId,
+var js = { cache: {}, isFox: /Firefox/.test(navigator.userAgent) }, datatables, h, i, j, k, cacheId,
   $jumpto,
   $jumpto_chart,
   $jumpto_chart_select,
@@ -755,7 +755,7 @@ function get_explore_data (is_back_button) { // get data and load page
     .error(function ( jqXHR, textStatus, errorThrown ) {
       //console.log( "Request failed: " + textStatus  + ". Error thrown: " + errorThrown);
     })
-    .success(function ( json ) {
+    .success(function ( json ) {       
       if (json.errors){
         $("#jumpto-loader").fadeOut("slow");
         $("#explore-data-loader").fadeOut("slow");
@@ -770,7 +770,6 @@ function get_explore_data (is_back_button) { // get data and load page
         js.cache[cacheId] = json;
         update_content();
       }
-
     });
   }
 
