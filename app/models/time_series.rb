@@ -232,8 +232,8 @@ class TimeSeries < CustomTranslation
 
   #############################
 
-  accepts_nested_attributes_for :datasets, reject_if: :all_blank
-  accepts_nested_attributes_for :questions, reject_if: :all_blank
+  accepts_nested_attributes_for :datasets, reject_if: :all_blank, :allow_destroy => true
+  accepts_nested_attributes_for :questions, reject_if: :all_blank, :allow_destroy => true
   accepts_nested_attributes_for :category_mappers, reject_if: :all_blank, :allow_destroy => true
 
   attr_accessible :title, :description, :user_id,
@@ -534,7 +534,7 @@ class TimeSeries < CustomTranslation
     ts = TimeSeries.find(id)
 
     if ts.present?
-      if ts.user_id == user_id
+      if ts.user_id.to_s == user_id
         time_series = ts
       else
         u = ts.user
