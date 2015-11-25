@@ -217,8 +217,8 @@ class TimeSeries < CustomTranslation
 
   #############################
 
-  accepts_nested_attributes_for :datasets, reject_if: :all_blank
-  accepts_nested_attributes_for :questions, reject_if: :all_blank
+  accepts_nested_attributes_for :datasets, reject_if: :all_blank, :allow_destroy => true
+  accepts_nested_attributes_for :questions, reject_if: :all_blank, :allow_destroy => true
   accepts_nested_attributes_for :category_mappers, reject_if: :all_blank, :allow_destroy => true
 
   attr_accessible :title, :description, :user_id,
