@@ -1,4 +1,4 @@
-/*global  $, gon, Highcharts, modal, js_modal_off, notification, is_touch, highmap_shapes, page_wrapper */
+/*global  $, gon, Highcharts, modal, js_modal_off, notification, is_touch, highmap_shapes, page_wrapper, js */
 /*eslint camelcase: 0, no-underscore-dangle: 0, no-unused-vars: 0*/
 // collection of functions to build charts/maps
 // for datasets and time series
@@ -403,6 +403,16 @@ function build_highmap (shape_question_code, adjustable_max, json_map_set, chart
         }
       },
       buttons: buttons_options
+    }
+  }, function () {
+    if(js.isFox)
+    {
+      var t = this;
+      setTimeout(function () {
+        var rect = $(t.container).find(".highcharts-legend-item > rect"),
+          rect_value = rect.attr("fill");
+        rect.attr("fill", "").attr("fill", rect_value);
+      }, 500);
     }
   });
 
