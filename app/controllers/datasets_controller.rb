@@ -316,7 +316,7 @@ class DatasetsController < ApplicationController
             .exception_notification(request.env, e)
             .deliver
         end
-
+        render 'message.js'
       }
     end
   end
@@ -368,14 +368,13 @@ class DatasetsController < ApplicationController
             .exception_notification(request.env, e)
             .deliver
         end
-
+        render 'message.js'
       }
     end
   end
 
   # set questions data types [:categorical, :numerical or :unknown]
   def mass_changes_questions_type
-     Rails.logger.debug("-----------------------------------------here---#{params.inspect}")
     respond_to do |format|
       format.html {
         @js.push("mass_changes_questions_type.js", "highcharts.js")
@@ -389,23 +388,29 @@ class DatasetsController < ApplicationController
           gon.locale_picker_data[locale] = [I18n.t("app.language." + locale),I18n.t("app.language." + locale)[0..1].downcase]
         end
         gon.total_responses_out_of = I18n.t("app.common.total_responses_out_of")
+
+        # prepaire data for table if numerical fill fields else send reset values
         @dataset.questions.each do |q|
             data = {
               code: q.original_code,
               question: q.text,
               data_type: q.data_type,
-              nm_type: 0,
-              nm_width: 0,
-              nm_min: 0,
-              nm_max: 0,
-              nm_title: nil,
-              has_answers: q.is_analysable
+              has_answers: q.is_analysable,              
+              num: {
+                type: 0,
+                width: 0,
+                min: 0,
+                max: 0,
+                title: nil
+              }
             }
-            if q.numerical?
-              orig_locale = I18n.locale.to_s
-              orig_title = []
-              titles = []
+            num = data[:num]
 
+            orig_locale = I18n.locale.to_s
+            orig_title = []
+            titles = []
+
+            if q.numerical?
               @dataset.languages_sorted.each do |locale|
                 value = q.numerical.title_translations[locale].blank? ? "" : q.numerical.title_translations[locale]
                 if locale == orig_locale
@@ -415,18 +420,12 @@ class DatasetsController < ApplicationController
                 end
               end
               titles.unshift(orig_title)
-
-              data[:nm_type] = q.numerical.type
-              data[:nm_width] = q.numerical.width
-              data[:nm_min] = q.numerical.min
-              data[:nm_max] = q.numerical.max
-              data[:nm_title] = titles
-              #data[:num] = q.numerical
-              #Rails.logger.debug("----------------------------------4----------#{titles.inspect} #{data[:nm_title].to_json}")
+              
+              num[:type] = q.numerical.type
+              num[:width] = q.numerical.width
+              num[:min] = q.numerical.min
+              num[:max] = q.numerical.max
             else
-              orig_locale = I18n.locale.to_s
-              orig_title = []
-              titles = []
 
               @dataset.languages_sorted.each do |locale|
                 if locale == orig_locale
@@ -436,11 +435,9 @@ class DatasetsController < ApplicationController
                 end
               end
               titles.unshift(orig_title)
-              data[:nm_title] = titles
             end
 
-
-
+            num[:title] = titles
             gon.datatable_json << data
         end
 
@@ -453,7 +450,7 @@ class DatasetsController < ApplicationController
           @success = true
           if params[:mass_data].present? && params[:mass_data].keys.length > 0
             @dataset.questions.reflag_questions_type(params[:mass_data])  
-            @dataset.questions_data_recalculate(params[:mass_data], "numerical")
+            @dataset.questions_data_recalculate(params[:mass_data])
             # force question callbacks
             @dataset.check_questions_for_changes_status = true
 
@@ -461,7 +458,7 @@ class DatasetsController < ApplicationController
               @msg = @dataset.errors.full_messages
               @success = false
             end
-          end        
+          end  
         rescue Exception => e
           @msg = t('app.msgs.mass_change_question_not_saved')
           @success = false
@@ -471,6 +468,7 @@ class DatasetsController < ApplicationController
             .exception_notification(request.env, e)
             .deliver
         end
+        render 'message.js'
       }
     end
   end

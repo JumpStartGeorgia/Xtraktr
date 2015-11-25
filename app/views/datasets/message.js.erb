@@ -1,0 +1,12 @@
+ $(document).ready(function(){
+  var type=(<%= @success %> == false) ? "error" : "success",
+    msg = '<%= @msg %>',
+    html = notification(type, msg);
+  
+  $('.data-loader').fadeOut('fast');
+
+  $('#page-wrapper > .content').prepend(html);
+  $('.content > .message').delay(3000).fadeOut(3000);
+
+  $('html,body').animate({ scrollTop: ($('body').offset().top) }, 1000);
+});

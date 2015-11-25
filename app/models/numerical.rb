@@ -1,6 +1,6 @@
 class Numerical
 
-  NUMERIC_DEFAULT_NUMBER_GROUP = 8
+  #NUMERIC_DEFAULT_NUMBER_GROUP = 8
   TYPE_VALUES = { integer: 0, float: 1}
   include Mongoid::Document
 

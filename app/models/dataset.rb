@@ -1048,10 +1048,8 @@ class Dataset < CustomTranslation
   end
 
 # TODOHERE
-  def questions_data_recalculate(data, type)   
-   Rails.logger.debug("--------------------------------------------recalculating")   
-      if type == "numerical"
-      require 'descriptive_statistics/safe'
+  def questions_data_recalculate(data)#, type)   
+      #if type == "numerical"
       if data.keys.length
         data.keys.each {|t| 
           code = t.downcase
@@ -1059,14 +1057,17 @@ class Dataset < CustomTranslation
           dt[0] = dt[0].to_i
           items = data_items.with_code(code)
 
+          question = questions.with_code(code)
           if dt[0] == 1 
             items.formatted_data = nil
             items.frequency_data = nil
+            question.descriptive_statistics = nil
           elsif dt[0] == 2
-            question = questions.with_code(code)
             predefined_answers = question.answers.map { |f| f.value }
             num = question.numerical  
             items.formatted_data = []
+            vfd = [] # only valid formatted data for calculating stats
+
             fd = Array.new(num.size, 0)
             fd.each_with_index{|x, i| fd[i] = [0,0] }
 
@@ -1081,6 +1082,7 @@ class Dataset < CustomTranslation
 
                 if tmpD >= num.min && tmpD <= num.max
                   items.formatted_data.push(tmpD);
+                  vfd.push(tmpD);
                   index = ((tmpD-num.min_range)/num.width-0.00001).floor
                   fd[index][0] += 1
                 else 
@@ -1097,30 +1099,30 @@ class Dataset < CustomTranslation
                fd[i][1] = (x[0].to_f/total*100).round(2) }
 
             items.frequency_data = fd;
-            # descriptive statistics
-            dt = items.formatted_data
-            dt.extend(DescriptiveStatistics)
+
+            vfd.extend(DescriptiveStatistics) # descriptive statistics
+            
             question.descriptive_statistics = {
-              :number => dt.number.to_i,
-              :min => num.integer? ? dt.min.to_i : dt.min,
-              :max => num.integer? ? dt.max.to_i : dt.max,
-              :mean => dt.mean,
-              :median => num.integer? ? dt.median.to_i : dt.median,
-              :mode => num.integer? ? dt.mode.to_i : dt.mode,
-              :q1 => num.integer? ? dt.percentile(25).to_i : dt.percentile(25),
-              :q2 => num.integer? ? dt.percentile(50).to_i : dt.percentile(50),
-              :q3 => num.integer? ? dt.percentile(75).to_i : dt.percentile(75),
-              :variance => dt.variance,
-              :standard_deviation => dt.standard_deviation
+              :number => vfd.number.to_i,
+              :min => num.integer? ? vfd.min.to_i : vfd.min,
+              :max => num.integer? ? vfd.max.to_i : vfd.max,
+              :mean => vfd.mean,
+              :median => num.integer? ? vfd.median.to_i : vfd.median,
+              :mode => num.integer? ? vfd.mode.to_i : vfd.mode,
+              :q1 => num.integer? ? vfd.percentile(25).to_i : vfd.percentile(25),
+              :q2 => num.integer? ? vfd.percentile(50).to_i : vfd.percentile(50),
+              :q3 => num.integer? ? vfd.percentile(75).to_i : vfd.percentile(75),
+              :variance => vfd.variance,
+              :standard_deviation => vfd.standard_deviation
             }
            
           end
           items.save
         }
       end 
-    elsif type == "categorical"
+    # elsif type == "categorical"
 
-    end      
+    # end      
   end
   def self.calculate_percentile(array=[],percentile=0.0)
     # multiply items in the array by the required percentile 

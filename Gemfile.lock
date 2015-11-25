@@ -339,7 +339,7 @@ DEPENDENCIES
   capistrano (~> 2.12.0)
   cocoon (~> 1.1.2)
   coffee-rails (~> 3.2.2)
-  descriptive_statistics
+  descriptive_statistics (~> 2.4.0)
   devise (~> 3.4.1)
   dynamic_form (~> 1.1.4)
   exception_notification (~> 2.5.2)

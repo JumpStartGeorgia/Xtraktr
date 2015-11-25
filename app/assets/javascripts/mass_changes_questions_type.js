@@ -336,11 +336,8 @@ $(document).ready(function (){
             return "<input class='numerical' type='radio' value='2' name='question["+full.code +"][data_type]'" + (data == 2 ? " checked": "") + " data-o='"+data+"'>";
           },
           class: "c"
-
-
-
         },
-        {"data":"nm_title",
+        {"data":"num.title",
           render: function (data, type, full) {
             return "<div class='conditional locale-box' name='question["+full.code +"][numerical][title]' data-o='' "+(full.data_type !== 2 ? " disabled" : "")+">"+
             "<div class='locale-picker' "+(full.data_type !== 2 ? " disabled" : "")+"><div class='locale-toggle' title='"+gon.locale_picker_data[data[0][0]]+"'>"+data[0][0]+"</div><ul>" +
@@ -351,24 +348,24 @@ $(document).ready(function (){
           },
           class: "c"
         },
-        {"data":"nm_type",
+        {"data":"num.type",
           render: function (data, type, full) {
             return "<select class='conditional' name='question["+full.code +"][numerical][type]' data-o='"+data+"'" + (full.data_type !== 2 ? " disabled" : "") + "><option value='0'" + (data == 0 ? "selected": "") + ">Integer</option>" +
               "<option value='1'" + (data == "1" ? "selected": "") + ">Float</option></select>";
           },
           class: "c"
         },
-        {"data":"nm_width",
+        {"data":"num.width",
           render: function (data, type, full) {
             return "<input class='conditional r' type='number' value='"+data+"' name='question["+full.code +"][numerical][width]' data-o='"+data+"'" + (full.data_type !== 2 ? " disabled" : "") + ">";
           }
         },
-        {"data":"nm_min",
+        {"data":"num.min",
           render: function (data, type, full){
             return "<input class='conditional r' type='number' value='"+data+"' name='question["+full.code +"][numerical][min]' data-o='"+data+"'" + (full.data_type !== 2 ? " disabled" : "") + ">";
           }
         },
-        {"data":"nm_max",
+        {"data":"num.max",
           render: function (data, type, full){
             return "<input class='conditional r' type='number' value='"+data+"' name='question["+full.code +"][numerical][max]' data-o='"+data+"'" + (full.data_type !== 2 ? " disabled" : "") + ">";
           }
