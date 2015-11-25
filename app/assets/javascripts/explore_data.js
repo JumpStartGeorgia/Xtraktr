@@ -755,25 +755,21 @@ function get_explore_data (is_back_button) { // get data and load page
     .error(function ( jqXHR, textStatus, errorThrown ) {
       //console.log( "Request failed: " + textStatus  + ". Error thrown: " + errorThrown);
     })
-    .success(function ( json ) {
+    .success(function ( json ) {       
       if (json.errors){
         $("#jumpto-loader").fadeOut("slow");
         $("#explore-data-loader").fadeOut("slow");
         $("#explore-error").fadeIn("slow");
-         console.log("1");
       }
       else if ((json.results.analysis && json.results.analysis.length == 0) || (json.results.filtered_analysis && json.results.filtered_analysis.length == 0)){
         $("#jumpto-loader").fadeOut("slow");
         $("#explore-data-loader").fadeOut("slow");
         $("#explore-no-results").fadeIn("slow");
-        console.log("2");
       }
       else {
         js.cache[cacheId] = json;
         update_content();
-        console.log("3");
       }
-
     });
   }
 
