@@ -749,8 +749,7 @@ function get_explore_data (is_back_button) { // get data and load page
     .error(function ( jqXHR, textStatus, errorThrown ) {
       //console.log( "Request failed: " + textStatus  + ". Error thrown: " + errorThrown);
     })
-    .success(function ( json ) {
-       console.log(json);
+    .success(function ( json ) {       
       if (json.errors || ((json.results.analysis && json.results.analysis.length == 0) || json.results.filtered_analysis && json.results.filtered_analysis.length == 0)){
         $("#jumpto-loader").fadeOut("slow");
         $("#explore-data-loader").fadeOut("slow");
