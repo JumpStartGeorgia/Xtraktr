@@ -18,12 +18,15 @@
       </tr>
     </thead>
     <tbody>
-      <% @time_series_question.dataset_questions.sorted.each_with_index do |dataset_question, index| %>
-        <%= f.semantic_fields_for :dataset_questions, dataset_question do |f_dataset_question| %>
-          <%= render partial: 'dataset_question_fields', :locals => {f: f_dataset_question, 
-              ts_dataset: @datasets.select{|x| x.dataset_id == dataset_question.dataset_id}.first, 
-              questions: @questions[dataset_question.dataset_id.to_s]} %>
-        <% end %>
+      <% @datasets.each do |dataset|
+          dataset_question = @time_series_question.dataset_questions.by_dataset_id(dataset.dataset_id)
+          dataset_question = @time_series_question.dataset_questions.build(dataset_id: dataset.dataset_id) if dataset_question.nil? %>
+  
+          <%= f.semantic_fields_for :dataset_questions, dataset_question do |f_dataset_question| %>
+            <%= render partial: 'dataset_question_fields', :locals => {f: f_dataset_question,
+                ts_dataset: dataset,
+                questions: @questions[dataset_question.dataset_id.to_s]} %>
+          <% end %>
       <% end %>
     </tbody>
   </table>                  
