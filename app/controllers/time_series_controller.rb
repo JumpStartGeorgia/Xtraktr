@@ -227,7 +227,7 @@ class TimeSeriesController < ApplicationController
 
     respond_to do |format|
       if @time_series.save
-        format.html { redirect_to @time_series, flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.time_series.one'))} }
+        format.html { redirect_to time_series_path(@owner, @time_series), flash: {success:  t('app.msgs.success_updated', :obj => t('mongoid.models.time_series.one'))} }
         format.json { head :no_content }
       else
         @datasets = Dataset.by_owner(@owner.id, current_user.id).only_id_title_languages.sorted
