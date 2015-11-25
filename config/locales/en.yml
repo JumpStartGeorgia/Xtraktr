@@ -1104,7 +1104,14 @@ en:
       tab_no_answers: Questions with No Answers
       tab_no_text: Questions with No Text
       bad_answers: 'The following %{number} questions contain values that were not listed as one of the possible answers. For example, the list of possible answers was 1, 2, 3 or 4 and one record had a value of 5. The records with the extra values will not be used during analysis.'
-      no_answers: "The following %{number} questions do not have a list of possible answers. For example, a question 'What is your age?' could come with answers like <20, 20-40, 40-60, >60 and each of these answers would represent a certain value like 1, 2, 3, 4 that is stored in the data. These questions will not be available for analysis unless a list of possible answers are provided."
+      no_answers: |
+        The following %{number} questions do not have a list of possible answers. If your data file is a from a statistical package (SPSS, STATA, etc), this happens because the question is numerical or because a categorical question did not have a predefined list of answers. If your data file is a spreadsheet (CSV, XLSX, etc), this happens because you need to define which questions are numerical and which are categorical.
+
+        To define which questions are numerical or categorical, use the <a href="%{link}">Data Type form</a>.
+
+        To define answers for a categorical question, use the 'Add Answers' button below.
+
+        These questions will not be available for analysis unless the data type is set to numerical or answers are defined to categorical questions.
       no_text: "The following %{number} questions do not have text. For example a code of 'A1' was given, but no text describing what 'A1' represents was provided. These questions will not be available for analysis unless text is provided."
       no_bad_answers: Congratulations! All of the data file data contains valid answers.
       no_no_answers: Congratulations! All of the data file questions have answers.

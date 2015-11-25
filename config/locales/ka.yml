@@ -1102,7 +1102,14 @@ ka:
       tab_no_answers: "შეკითხვები პასუხების გარეშე"
       tab_no_text: "შეკითხვები ტექსტის გარეშე"
       bad_answers: "შემდეგი %{number} შეკითხვა შეიცავს მნიშვნელობებს, რომლებიც არ იყო მითითებული შესაძლო პასუხების ჩამონათვალში. მაგალითად, შეკითხვის შესაძლო პასუხები იყო 1, 2, 3 და 4, ხოლო ერთერთი ჩანაწერის მნიშვნელობა არის 5. ჩანაწერები, რომელთაც აქვთ განსხვავებული მნიშვნელობები, ანალიზის დროს არ იქნებიან გათვალისწინებული. "
-      no_answers: 'შემდეგ %{number} შეკითხვას არ აქვს შესაძლო პასუხების ჩამონათვალი. მაგალითად, შეკითხვას "რამდენი წლის ხართ" შეიძლება ჰქონდეს შემდეგი პასუხები: <20, 20-40, 40-60, >60, ხოლო თითოეული მათგანი წარმოდგენილი იყოს გარკვეული მნიშვნელობებით, მაგალითად 1, 2, 3, 4 და შენახული იყოს მონაცემებში. ამ კითხვების გაანალიზება არ იქნება შესაძლებელი, თუკი შესაძლო პასუხები არ არის ჩამონათვალში. '
+      no_answers: |
+        The following %{number} questions do not have a list of possible answers. If your data file is a from a statistical package (SPSS, STATA, etc), this happens because the question is numerical or because a categorical question did not have a predefined list of answers. If your data file is a spreadsheet (CSV, XLSX, etc), this happens because you need to define which questions are numerical and which are categorical.
+
+        To define which questions are numerical or categorical, use the <a href="%{link}">Data Type form</a>.
+
+        To define answers for a categorical question, use the 'Add Answers' button below.
+
+        These questions will not be available for analysis unless the data type is set to numerical or answers are defined to categorical questions.
       no_text: "შემდეგ %{number} შეკითხვას არ აქვს ტექსტი. მაგალითად, მოცემულია კოდი 'A1', რომელსაც არ აქვს აღწერის ტექსტი. ტექსტის გარეშე ამ შეკითხვების გაანალიზება შესაძლებელი არ იქნება. "
       no_bad_answers: "გილოცავთ! მონაცემების ფაილის ყველა მონაცემი შეიცავს სწორ პასუხს."
       no_no_answers: "გილოცავთ! მონაცემების ყველა ფაილს აქვს პასუხი."
