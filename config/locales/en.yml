@@ -892,9 +892,9 @@ en:
         mean: Mean
         median: Median
         mode: Mode
-        q1: Percentile 25%
-        q2: Percentile 50%
-        q3: Percentile 75%
+        q1: 25th Percentile
+        q2: 50th Percentile
+        q3: 75th Percentile
         standard_deviation: Standard Deviation
         variance: Variance
       total_responses_out_of: "Total Responses: <span class='number'>X</span> out of <span class='number'>XX</span>"   

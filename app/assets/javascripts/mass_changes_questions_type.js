@@ -51,13 +51,13 @@ $(document).ready(function (){
           nc = true;
           preview.code = cq.code;
         }
-         console.log(cq, cache[cq.code]);
+        //console.log(cq, cache[cq.code]);
         //console.log("here", cache[cq.code].data[cq.sub_id]);
         var cd = cache[cq.code].data[cq.sub_id].fd, // current data
           cm = cq.meta, // current data
           cg = cache[cq.code].general,
           ct = cache[cq.code].data[cq.sub_id].fdt; // current general data
-           console.log(cd, cm, cg);
+           console.log(cd, cm, cg, "bb");
            //return;
         var $preview = $("#preview"), chart;
         $preview.show();
@@ -164,7 +164,7 @@ $(document).ready(function (){
             // chart.spacing[1] = label.width + 10 > 40 ? label.width + 10 : 40;
             chart.isDirtyBox = true;
             chart.redraw();
-//            label.xSetter((box.x+box.width) - 7);
+            //            label.xSetter((box.x+box.width) - 7);
           }
         },
           bar = function () {
@@ -173,11 +173,12 @@ $(document).ready(function (){
               cd_keys = [],
               cd_values = [];
             Object.keys(cd).forEach(function (key) {
+               //console.log(cd, "");
               //console.log(+cd[key]);
               if(isN(key) && +key >= 0) {
                 sum+=+cd[key];
                 keys.push(key);
-                 console.log(cd,cg.question.answers, key);
+                 //console.log(cd,cg.question.answers, key);
                 cd_keys.push(cg.question.answers.filter(function (ans) { return ans.value === key; })[0].text);
                 cd_values.push(cd[key]);
               }
@@ -289,6 +290,7 @@ $(document).ready(function (){
              //console.log("ajax", d);
             cache[code].general = { dataset: d.dataset, orig_data: d.data, formatted_data: d.data, question: d.question };
             if(d.frequency_data !== null) {
+               console.log("test1");
               cache[code].data[sub_id] = { fd: d.frequency_data };
               if(data_type === 2)
               {
@@ -296,6 +298,7 @@ $(document).ready(function (){
               }
             }
             else {
+               console.log("test2");
               cache[code]["data"][sub_id] = get_frequency_data(code_meta, code);
             }
             t.render_chart();
@@ -475,6 +478,16 @@ $(document).ready(function (){
       update_dirty_rows(code, td.index(), old_value, new_value);
       preview.show(code, true);
     });
+
+    $("a.btn-select-all").click(function (){
+      var t = $(this),
+        state_all = t.attr("data-state") == "all";
+
+      $(datatable.$("tr", {"filter": "applied"})).find("td input.numerical[value='1']").prop("checked", state_all).trigger("change");
+
+      t.attr("data-state", state_all ? "none" : "all" );
+      return false;
+    });
   }
   function update_dirty_rows (code, field_index, old_value, new_value) {
     if(old_value != new_value)
@@ -648,7 +661,7 @@ $(document).ready(function (){
         isFloat,
         question = cache[code].general.question,
         predefined_answers = question.answers.map(function (d){ return d.value; }),
-        num = [2, 0, 0, 0, 0],
+        num = [2, 0, 0, 0, 0, 0, 0, 0],
         predefinedData = [];
 
       formatted.forEach(function (d, i) {
@@ -668,33 +681,33 @@ $(document).ready(function (){
           predefinedData.push(i);
         }
       });
-      predefinedData.forEach(function (d){
-        formatted.splice(d, 1);
+      predefinedData.forEach(function (d, i){
+        formatted.splice(d-i, 1);
       });
 
-      if(min === Number.MAX_VALUE) {
-        min = 0;
-      }
-      if(max === Number.MIN_VALUE) {
-        max = min + 1;
-      }
+      if(min === Number.MAX_VALUE) { min = 0; }
+      if(max === Number.MIN_VALUE) { max = min + 1; }
 
       var tmp = Math.round(max-min);
-      num[2] = tmp > 8 ? 8 : tmp;
+      num[2] = tmp > 10 ? 10 : tmp;
       num[3] = min;
       num[4] = max;
+
+      num[5] = Math.floor(num[3] / num[2]) * num[2];
+      num[6] = Math.ceil(num[4] / num[2]) * num[2];
+      num[7] = (num[6] - num[5]) / num[2];
+
       var sub_id = num.join(";");
 
-      num.push((num[4] - num[3])/num[2]);
-      cache[code].data[sub_id] = { fd: replicate(num[2], 0), fdm: num };
-      cache[code].data["default"] = { fd: replicate(num[2], 0), fdm: num };
+      cache[code].data[sub_id] = { fd: replicate(num[7], 0), fdm: num };
+      cache[code].data["default"] = { fd: replicate(num[7], 0), fdm: num };
       var fd = cache[code].data[sub_id].fd,
         fd2 = cache[code].data["default"].fd;
 
       formatted.forEach(function (d){
         if(d >= num[3] && d <= num[4]) {
-          fd[Math.floor((d-num[3])/num[5])] += 1;
-          fd2[Math.floor((d-num[3])/num[5])] += 1;
+          fd[Math.floor((d-num[5])/num[2]-0.00001)] += 1;
+          fd2[Math.floor((d-num[5])/num[2]-0.00001)] += 1;
         }
       });
 
@@ -722,7 +735,7 @@ $(document).ready(function (){
     var raw_data = cache[code].general.orig_data,
       frequency_data = replicate2(meta[7], 0),
       predefined_answers = cache[code].general.question.answers.map(function(d){ return d.value; });
- console.log(frequency_data, "sdfaf");
+    console.log(frequency_data, "sdfaf");
     if (Array.isArray(raw_data)) {
       raw_data.forEach(function (raw_d) {
         var d = raw_d;

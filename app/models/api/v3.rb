@@ -77,9 +77,8 @@ class Api::V3
       dataset: { id: dataset.id, title: dataset.title },
       question: create_dataset_question_hash(question),
       data: question.data_type == 2 ? data_items.formatted_data : data_items.data,
-      frequency_data: (data_items.frequency_data if question.has_type?),
-      frequency_data_meta: ({ type: num.type, size: num.size, min: num.min, max: num.max, step: (num.max - num.min)/num.size } if question.data_type == 2)
-    }
+      frequency_data: (data_items.frequency_data if question.has_type?)
+    }.merge(question.data_type == 2 ? { frequency_data_meta: { type: num.type, width: num.width, min: num.min, max: num.max, min_range: num.min_range, max_range: num.max_range,  size: num.size } } : {})
   end
 
   # get codebook for a dataset
@@ -765,7 +764,18 @@ private
           fdw.each_with_index {|x,i| 
           fdw[i][1] = (x[0].to_f/total_w*100).round(2) }
           
-          fd.each_with_index{|x,i| results[:analysis] << { answer_value: i, answer_text: num.min_range + num.width*i,
+          fd.each_with_index{|x,i|
+            start = num.min_range + num.width * i
+            start = num.type == 0 ? start.to_i : start.to_f
+            minus = num.type == 0 ? 1 : (num.width.to_s.include?(".") ? ("0." + "0"*(num.width.to_s.split(".")[1].length-1) + "1").to_f : 0.1)
+
+            if fd.length-1 == i
+              minus = 0
+            end
+            
+            endd = start + num.width - minus
+            endd = num.type == 0 ? endd.to_i : endd.to_f
+            results[:analysis] << { answer_value: i, answer_text: "#{start} - #{endd}",
            unweighted_count: x[0], weighted_count: fdw[i][0], weighted_percent: fdw[i][1] } }
         end
       else
@@ -817,7 +827,18 @@ private
           fd[i][1] = (x[0].to_f/total*100).round(2) }
 
           
-          fd.each_with_index{|x,i| results[:analysis] << { answer_value: i, answer_text: num.min_range + num.width*i, count: x[0], percent: x[1] } }
+          fd.each_with_index{|x,i| 
+            start = num.min_range + num.width * i
+            start = num.type == 0 ? start.to_i : start.to_f
+            minus = num.type == 0 ? 1 : (num.width.to_s.include?(".") ? ("0." + "0"*(num.width.to_s.split(".")[1].length-1) + "1").to_f : 0.1)
+
+            if fd.length-1 == i
+              minus = 0
+            end
+            
+            endd = start + num.width - minus
+            endd = num.type == 0 ? endd.to_i : endd.to_f
+            results[:analysis] << { answer_value: i, answer_text: "#{start} - #{endd}", count: x[0], percent: x[1] } }
         end
       end
 

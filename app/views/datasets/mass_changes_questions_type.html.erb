@@ -12,7 +12,12 @@
             <th><%= t("helpers.links.view") %></th>
             <th><%= model_class.human_attribute_name(:code) %></th>
             <th><%= model_class.human_attribute_name(:text) %></th>
-            <th class="center"><%= model_class.human_attribute_name(:data_type_categorical) %></th>
+            <th class="center">
+              <%= model_class.human_attribute_name(:data_type_categorical) %>
+              <%= link_to '#', class: 'btn btn-default btn-xs btn-select-all', :'data-state' => 'all' do %>
+                <span class="glyphicon glyphicon-ok" title="<%= t('helpers.links.select_all') %>"></span>
+              <% end %>
+            </th>
             <th class="center"><%= model_class.human_attribute_name(:data_type_numerical) %></th>
             <th><%= Numerical.human_attribute_name(:title) %><span class="hint-tooltip" title="<%= t('mongoid.hints.numerical.title') %>"></span></th>
             <th><%= Numerical.human_attribute_name(:type) %></th>
