@@ -106,8 +106,8 @@ class TimeSeriesQuestionsController < ApplicationController
 
         # get the list of questions for each dataset in the time series that are not already in the time series
         @questions = {}
-        @datasets.each do |ts_dataset|
-          @questions[ts_dataset.dataset_id] = ts_dataset.dataset.questions.for_analysis_not_in_codes(@time_series.questions.codes_for_dataset(ts_dataset.dataset_id))
+        @datasets.each do |dataset|
+          @questions[ts_dataset.dataset_id.to_s] = ts_dataset.dataset.questions.for_analysis_not_in_codes(@time_series.questions.codes_for_dataset(dataset.dataset_id))
         end
 
         add_common_options
@@ -134,13 +134,28 @@ class TimeSeriesQuestionsController < ApplicationController
 
         # get the list of questions for each dataset in the time series that are not already in the time series
         @questions = {}
-        @time_series_question.dataset_questions.each do |dataset_question|
+
+        @datasets.each do |dataset|
+          # get the dataset question
+          # - if it does not exist, build it
+          dataset_question = @time_series_question.dataset_questions.by_dataset_id(dataset.dataset_id)
+          dataset_question = @time_series_question.dataset_questions.build(dataset_id: dataset.dataset_id) if dataset_question.nil?
+
+          @questions[dataset_question.dataset_id.to_s] = []
           # get all other questions not being used for this dataset
-          @questions[dataset_question.dataset_id] = dataset_question.dataset.questions.for_analysis_not_in_codes(@time_series.questions.codes_for_dataset(dataset_question.dataset_id)).to_a
+          not_in_use = dataset_question.dataset.questions.for_analysis_not_in_codes(@time_series.questions.codes_for_dataset(dataset_question.dataset_id)).to_a
+          if not_in_use.present?
+            @questions[dataset_question.dataset_id.to_s] << not_in_use
+          end
           # get question for this dataset
-          @questions[dataset_question.dataset_id] << dataset_question.dataset.questions.with_code(dataset_question.code)
-          @questions[dataset_question.dataset_id].sort_by!{|x| x.original_code}
+          in_use = dataset_question.dataset.questions.with_code(dataset_question.code)
+          if in_use.present?
+            @questions[dataset_question.dataset_id.to_s] << in_use
+          end
+          @questions[dataset_question.dataset_id.to_s].flatten!.sort_by!{|x| x.original_code} if @questions[dataset_question.dataset_id.to_s].present?
+
         end
+
 
         add_common_options
 
