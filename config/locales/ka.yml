@@ -885,7 +885,7 @@ ka:
       categorical: Categorical
       numerical: Numerical
       descriptive_statistics:
-        title: Descriptive Statistics
+        title: აღწერითი სტატისტიკა
         number: Total Responses
         min: Min
         max: Max

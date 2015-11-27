@@ -427,7 +427,7 @@ function build_details (json) { // build details (question and possible answers)
           if(exist) {
             var type_str = is_categorical ? "categorical" : "numerical",
               type_text = t.data(type_str);
-            t.find(".v").html("<span>" + type_text + "</span>" + $(".details-icons ." + type_str)[0].outerHTML);
+            t.find(".v").html($(".details-icons ." + type_str)[0].outerHTML + "<span>" + type_text + "</span>");
           }
           t.toggle(exist);
 
@@ -439,7 +439,7 @@ function build_details (json) { // build details (question and possible answers)
 
               if(field_value)
               {
-                $t.find("span").html(Math.round10(+field_value, -2));
+                $t.find("span").html(field_value);
                 $t.show();
               }
               else { $t.hide(); }
@@ -720,6 +720,7 @@ function build_selects_question_option (question, level, skip_content) {
   }
   // if the question is mappable or is excluded, show the icons for this
   if (!skip_content || question.data_type !== 0) {
+    if(q_text == "a2_2 - Age") console.log("testign", question);
     content += "data-content=\"<span class='outer-layer'><span class='inner-layer'><span>" + q_text + "</span><span class='pull-right'>";
 
     if(question.data_type !== 0) {

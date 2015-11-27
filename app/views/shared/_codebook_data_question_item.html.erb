@@ -10,7 +10,7 @@
               <div class="col question-link" data-group="<%= current_group.present? ? current_group.id : '' %>" data-subgroup="<%= current_subgroup.present? ? current_subgroup.id : '' %>">
                 <%
                   cls = question.exclude? ? 'exclude-question' : ''
-                  disable_link = !question.has_code_answers? || !question.has_type?
+                  disable_link = (question.categorical_type? && !question.has_code_answers?) || !question.has_type?
                 %>
                 <% if disable_link %>
                   <div class="no-answers">
@@ -42,7 +42,7 @@
               <div>
                 <div class="col k"><%= t('app.common.question') %>: </div>
                 <div class="col question default-search">
-                  <% if !question.has_code_answers? %>
+                  <% if disable_link %>
                     <span class="item-icons">
                       <%= no_answers_icon.html_safe %>
                     </span>
@@ -70,11 +70,11 @@
                 <div class="col k"><%= t('app.common.data_type') %>: </div>
                 <div class="col data-type default-search">
                   <% if question.data_type == Question::DATA_TYPE_VALUES[:categorical] %>
-                    <span><%= t("app.common.categorical") %></span>
                     <img src="/assets/svg/categorical.svg" alt="<%= t('app.common.categorical') %>" title="<%= t('app.common.categorical') %>"/>
+                    <span><%= t("app.common.categorical") %></span>
                   <% elsif question.data_type == Question::DATA_TYPE_VALUES[:numerical] %>
-                    <span><%= t("app.common.numerical") %></span>
                     <img src="/assets/svg/numerical.svg" alt="<%= t('app.common.numerical') %>" title="<%= t('app.common.numerical') %>"/>                  
+                    <span><%= t("app.common.numerical") %></span>
                   <% end %>                  
                 </div>
               </div>
@@ -84,10 +84,11 @@
                   <div class="col descriptive-statistics default-search">
                     <ul class="list-unstyled">
                       <% question.descriptive_statistics.keys.each {|st| %>
-                      <% if question.descriptive_statistics[st].present? %>
+                      <% v = question.descriptive_statistics[st] %>
+                      <% if v.present? %>
                         <li>
                           <span><%= t("app.common.descriptive_statistics." + st) %>:</span>
-                          <%= question.descriptive_statistics[st].round(2) %>
+                          <%= number_with_delimiter(v % 1 == 0  ? v : v.round(2), :delimiter => ',') %>
                         </li>
                       <% end %>
                       <% } %>                    

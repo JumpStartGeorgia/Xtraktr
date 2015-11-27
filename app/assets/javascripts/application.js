@@ -403,10 +403,10 @@ var is_touch = is_touch_device();
   }
   function replicate2 (n, x) {
     for (var i = 0, xs = []; i < n; ++i) {
-      xs.push ([x,x]);
+      xs.push ([x, x]);
     }
     return xs;
   }
-function isInteger(x) {
+function isInteger (x) {
   return Math.round(x) === +x;
 }

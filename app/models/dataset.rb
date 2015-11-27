@@ -177,12 +177,12 @@ class Dataset < CustomTranslation
 
     # get questions that are not excluded and have code answers
     def for_analysis
-      where(:exclude => false, :is_analysable => true).to_a
+      where(:exclude => false, :is_analysable => true, :data_type.ne => Question::DATA_TYPE_VALUES[:unknown]).to_a
     end
 
     # get questions that are not excluded and have code answers
     def for_analysis_with_exclude_questions
-      where(:is_analysable => true).to_a
+      where(:is_analysable => true, :data_type.ne => Question::DATA_TYPE_VALUES[:unknown]).to_a
     end
 
     # get count questions that are not excluded and have code answers
@@ -1266,9 +1266,9 @@ class Dataset < CustomTranslation
         when 'download'
           self.questions.where(:can_download => true, :group_id => options[:group_id])
         when 'analysis'
-          self.questions.where(:exclude => false, :is_analysable => true, :group_id => options[:group_id])
+          self.questions.where(:exclude => false, :is_analysable => true, :group_id => options[:group_id], :data_type.ne => Question::DATA_TYPE_VALUES[:unknown] )
         when 'anlysis_with_exclude_questions'
-          self.questions.where(:is_analysable => true, :group_id => options[:group_id])
+          self.questions.where(:is_analysable => true, :group_id => options[:group_id], :data_type.ne => Question::DATA_TYPE_VALUES[:unknown])
         else
           self.questions.where(:group_id => options[:group_id])
       end

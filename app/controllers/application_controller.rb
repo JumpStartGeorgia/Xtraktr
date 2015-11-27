@@ -280,10 +280,8 @@ class ApplicationController < ActionController::Base
 
       # check for valid question value
       if params[:question_code].present? && @questions.index{|x| x.code == params[:question_code]}.present?
-         Rails.logger.debug("--------------------------------------------here1")
         @question_code = params[:question_code]
       else
-        Rails.logger.debug("--------------------------------------------here2")
         @question_code = @questions.map{|x| x.code}.sample # start with a random question
       end
 

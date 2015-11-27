@@ -57,7 +57,7 @@ $(document).ready(function (){
           cm = cq.meta, // current data
           cg = cache[cq.code].general,
           ct = cache[cq.code].data[cq.sub_id].fdt; // current general data
-           console.log(cd, cm, cg, "bb");
+           //console.log(cd, cm, cg, "bb");
            //return;
         var $preview = $("#preview"), chart;
         $preview.show();
@@ -148,7 +148,7 @@ $(document).ready(function (){
             // cd.slice().forEach(function(ddd){ ss+=ddd; });
             // console.log("old", ss );
             chart = $preview.find(".chart").highcharts();
-             console.log(formatLabel(cm));
+             // console.log(formatLabel(cm));
             chart.xAxis[0].tickPositions = formatLabel(cm);
             chart.series[0].setData(cd.map(function(d,i){ return { x:cm[5] +cm[2]*i, y: d[0], percent: d[1] }; }), false, true);
             // $("#preview .chart .histogramm-last-label").remove();
@@ -168,29 +168,16 @@ $(document).ready(function (){
           }
         },
           bar = function () {
-            var sum = 0,
+            var num = 0,
               keys = [],
               cd_keys = [],
               cd_values = [];
             Object.keys(cd).forEach(function (key) {
-               //console.log(cd, "");
-              //console.log(+cd[key]);
-              if(isN(key) && +key >= 0) {
-                sum+=+cd[key];
-                keys.push(key);
-                 //console.log(cd,cg.question.answers, key);
-                cd_keys.push(cg.question.answers.filter(function (ans) { return ans.value === key; })[0].text);
-                cd_values.push(cd[key]);
-              }
+              num+=+cd[key][0];
+              //keys.push(key);
+              cd_keys.push(cg.question.answers.filter(function (ans) { return ans.value === key; })[0].text);
+              cd_values.push({y: cd[key][0], percent: cd[key][1]});
             });
-            var num = 0;
-            cg.orig_data.forEach(function (n){
-              if(isN(n) && +n >= 0) {
-                ++num;
-              }
-            });
-            //console.log(cd_keys, cd_values, sum);
-            //console.log("drawing bar");
             if(t.closed || nc) {
               //console.log("new");
               chart = new Highcharts.Chart({
@@ -221,7 +208,7 @@ $(document).ready(function (){
                 }],
                 tooltip: {
                   formatter: function () {
-                    return this.y + " (" + Math.round10(this.y*100/sum, -2) + "%)";
+                    return this.y + " (" + this.point.options.percent + "%)";
                   }
                 },
                 legend: { enabled: false }
@@ -280,17 +267,19 @@ $(document).ready(function (){
         //console.log("remote");
         cache[code] = { code: code, general: {}, data: {}};
 
+        var to_send = { dataset_id: dataset_id, question_code: code };
+        if (typeof gon.private_user !== "undefined"){
+          to_send["private_user_id"] = gon.private_user;
+        }
+
         $.ajax({
           type: "GET",
           dataType: "json",
-          data: { dataset_id: dataset_id, question_code: code },
+          data: to_send,
           url: view_chart_path,
           success: function (d) {
-             console.log("here", d);
-             //console.log("ajax", d);
             cache[code].general = { dataset: d.dataset, orig_data: d.data, formatted_data: d.data, question: d.question };
             if(d.frequency_data !== null) {
-               console.log("test1");
               cache[code].data[sub_id] = { fd: d.frequency_data };
               if(data_type === 2)
               {
@@ -298,8 +287,13 @@ $(document).ready(function (){
               }
             }
             else {
-               console.log("test2");
-              cache[code]["data"][sub_id] = get_frequency_data(code_meta, code);
+              if(data_type === 2)
+              {
+                cache[code]["data"][sub_id] = get_frequency_data(code_meta, code);
+              }
+              else {
+                console.log("Categorical should have frequency data in it");
+              }
             }
             t.render_chart();
           }
@@ -735,7 +729,7 @@ $(document).ready(function (){
     var raw_data = cache[code].general.orig_data,
       frequency_data = replicate2(meta[7], 0),
       predefined_answers = cache[code].general.question.answers.map(function(d){ return d.value; });
-    console.log(frequency_data, "sdfaf");
+    //console.log(frequency_data, "sdfaf");
     if (Array.isArray(raw_data)) {
       raw_data.forEach(function (raw_d) {
         var d = raw_d;
@@ -759,8 +753,8 @@ $(document).ready(function (){
         frequency_data[i][1] = Math.round10(d[0]/total*100, -2);
       });
     }
-      console.log(frequency_data.slice());
-    console.log("get_frequency_data", meta);
+    // console.log(frequency_data.slice());
+    // console.log("get_frequency_data", meta);
     return { fd: frequency_data, fdm: meta, fdt: meta[8] };
   }
   init();

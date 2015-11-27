@@ -74,7 +74,7 @@ function map_chart_height (json) { // determine heights of chart based on number
 }
 function pie_chart_height (json) {
   var chart_height = 501; // need the 1 for the border bottom line
-  if (json.question.answers.length >= 5){
+  if (json.question.hasOwnProperty("answers") && json.question.answers.length >= 5){
     chart_height = 425 + json.question.answers.length*21 + 1;
   }
   // if showing group, add space for it

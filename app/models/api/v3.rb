@@ -54,8 +54,17 @@ class Api::V3
     # get options
     language = options['language'].present? ? options['language'].downcase : nil
 
+    private_user_id = options['private_user_id']
     # get dataset
-    dataset = Dataset.is_public.find(dataset_id)
+    if private_user_id
+      begin # decode the id
+        user_id = Base64.urlsafe_decode64(private_user_id)
+      end
+      # get the dataset
+      dataset = Dataset.by_id_for_user(dataset_id, user_id) if user_id.present?
+    else
+      dataset = Dataset.is_public.find(dataset_id)
+    end
 
     if dataset.nil?
       return {errors: [{status: '404', detail: I18n.t('api.msgs.no_dataset') }]}    
@@ -73,10 +82,11 @@ class Api::V3
 
     data_items = dataset.data_items.with_code(question_code)
     num = question.numerical
+     Rails.logger.info("--------------------------------------#{question.answers}------#{data_items.frequency_data}")
     return {
       dataset: { id: dataset.id, title: dataset.title },
-      question: create_dataset_question_hash(question),
-      data: question.data_type == 2 ? data_items.formatted_data : data_items.data,
+      question: create_dataset_question_hash(question, private_user_id: private_user_id),
+      data: data_items.data, # question.data_type == 2 ? data_items.formatted_data : 
       frequency_data: (data_items.frequency_data if question.has_type?)
     }.merge(question.data_type == 2 ? { frequency_data_meta: { type: num.type, width: num.width, min: num.min, max: num.max, min_range: num.min_range, max_range: num.max_range,  size: num.size } } : {})
   end
@@ -542,8 +552,10 @@ private
 
     hash = {}
     if question.present?
+
       hash = {code: question.code, original_code: question.original_code, data_type: question.data_type, text: question.text, notes: question.notes, is_mappable: question.is_mappable, has_map_adjustable_max_range: question.has_map_adjustable_max_range}
-        .merge(question.numerical_type? ? { numerical: question.numerical.as_json(except: [:_id]), descriptive_statistics: question.descriptive_statistics } : {})
+        .merge(question.numerical_type? ? { numerical: question.numerical.as_json(except: [:_id]), descriptive_statistics: question.descriptive_statistics.inject({}){ |hash, (k, v)| hash.merge( k => number_with_delimiter(v % 1 == 0  ? v : v.round(2), :delimiter => ',') ) } } : {})
+
       # if this question belongs to a group, add it
       if question.group_id.present?
         group = question.group
@@ -557,12 +569,14 @@ private
           end
         end
       end
-      # if this is for admin, include whether the question is excluded
-      if private_user_id.present?
-        hash[:exclude] = question.exclude
-        hash[:answers] = (can_exclude == true ? question.answers.must_include_for_analysis : question.answers.sorted).map{|x| {value: x.value, text: x.text, exclude: x.exclude, can_exclude: x.can_exclude, sort_order: x.sort_order}}
-      else
-        hash[:answers] = (can_exclude == true ? question.answers.must_include_for_analysis : question.answers.all_for_analysis).map{|x| {value: x.value, text: x.text, can_exclude: x.can_exclude, sort_order: x.sort_order}}
+      if question.categorical_type?
+        # if this is for admin, include whether the question is excluded
+        if private_user_id.present?
+          hash[:exclude] = question.exclude
+          hash[:answers] = (can_exclude == true ? question.answers.must_include_for_analysis : question.answers.sorted).map{|x| {value: x.value, text: x.text, exclude: x.exclude, can_exclude: x.can_exclude, sort_order: x.sort_order}}
+        else
+          hash[:answers] = (can_exclude == true ? question.answers.must_include_for_analysis : question.answers.all_for_analysis).map{|x| {value: x.value, text: x.text, can_exclude: x.can_exclude, sort_order: x.sort_order}}
+        end
       end
     end
 
@@ -658,7 +672,8 @@ private
       else
         # only keep the data that is in the list of question answers
         # - this is where can_exclude removes the unwanted answers
-        answer_values = question[:answers].map{|x| x[:value]}
+        
+        answer_values = question[:answers].present? ? question[:answers].map{|x| x[:value]} : []
         
         if question[:data_type] == DATA_TYPE_VALUES[:categorical]
           to_delete_indexes = data.each_index.select{|i| !answer_values.include? data[i] }
@@ -1092,6 +1107,7 @@ private
     else
       # only keep the data that is in the list of question/broken down by answers
       # - this is where can_exclude removes the unwanted answers
+              answer_values = question[:answers].present? ? question[:answers].map{|x| x[:value]} : []
       q_answer_values = question[:answers].map{|x| x[:value]}
       bdb_answer_values = broken_down_by[:answers].map{|x| x[:value]}
 

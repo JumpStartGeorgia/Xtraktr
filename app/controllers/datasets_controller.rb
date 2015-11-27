@@ -382,7 +382,7 @@ class DatasetsController < ApplicationController
 
         # create data for datatables (faster to load this way)
         gon.datatable_json = []
-
+        gon.private_user = Base64.urlsafe_encode64(current_user.id.to_s)
         gon.locale_picker_data = { reset: I18n.t("app.buttons.reset") }
         @dataset.languages_sorted.each do |locale|
           gon.locale_picker_data[locale] = [I18n.t("app.language." + locale),I18n.t("app.language." + locale)[0..1].downcase]
