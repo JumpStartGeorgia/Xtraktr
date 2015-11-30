@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
 
 gem 'bundler'
-gem "rails", "3.2.18"
-gem "mongoid", "~> 3.1.6"
+gem "rails", "3.2.22"
+gem "mongoid", "~> 3.1.7"
 
 #gem 'smarter_csv' # format csv into array of hashes
 

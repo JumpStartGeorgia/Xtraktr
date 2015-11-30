@@ -18,8 +18,10 @@ Dataset.each do |d|
         frequency_data[answer.value] = [cnt, (cnt.to_f/code_data.length*100).round(2)]
       }
       items.update_attributes({ frequency_data: frequency_data, frequency_data_total: total })          
+      q.is_analysable = q.answers.all_for_analysis.count > 0
     else 
       q.data_type = Question::DATA_TYPE_VALUES[:unknown]
+      q.is_analysable = false
     end
   end
   d.save
