@@ -605,9 +605,9 @@ private
 
     # get the data for this code
     data = dataset.data_items.code_data(question[:code])
-    data_length = data.length
 
     if data.present?
+      data_length = data.length
       # get the data for the weight
       # - if the weight is from time series, use the provided weight values,
       #   otherwise get the weight values from the dataset
