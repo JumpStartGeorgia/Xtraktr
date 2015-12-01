@@ -1,4 +1,4 @@
-class TimeSeriesDatasetQuestion
+class TimeSeriesDatasetQuestion < CustomTranslation
   include Mongoid::Document
 
   #############################
@@ -15,5 +15,12 @@ class TimeSeriesDatasetQuestion
   #############################
 
   attr_accessible :code, :dataset_id, :text, :text_translations
+
+  #############################
+  ## override get methods for fields that are localized
+  def text
+    get_translation(self.text_translations, self.time_series_question.time_series.current_locale, self.time_series_question.time_series.default_language)
+  end
+
 
 end
