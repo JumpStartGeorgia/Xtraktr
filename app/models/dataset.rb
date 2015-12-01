@@ -1047,7 +1047,6 @@ class Dataset < CustomTranslation
     only(:donor).nin(donor: nil).map{|x| x.donor}.select{|x| x.present?}.uniq.sort
   end
 
-# TODOHERE
   def questions_data_recalculate(data)#, type)   
       #if type == "numerical"
       if data.keys.length
@@ -1083,7 +1082,8 @@ class Dataset < CustomTranslation
                 if tmpD >= num.min && tmpD <= num.max
                   items.formatted_data.push(tmpD);
                   vfd.push(tmpD);
-                  index = ((tmpD-num.min_range)/num.width-0.00001).floor
+
+                  index = tmpD == num.min_range ? 0 : ((tmpD-num.min_range)/num.width-0.00001).floor
                   fd[index][0] += 1
                 else 
                   items.formatted_data.push(nil);

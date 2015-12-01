@@ -72,7 +72,7 @@ $(document).ready(function (){
 
         var histogramm = function () {
           var sum = cd.reduce(function (a, b){return a+b;});
-
+           console.log(cd, cm, cd.map(function(d,i){ return { x:cm[5] +cm[2]*i, y: d[0], percent: d[1] }; }));
           // var num = 0;
           // cg.orig_data.forEach(function (n){
           //   if(isN(n) && +n >= 0) {
@@ -501,17 +501,21 @@ $(document).ready(function (){
       }
       if(t.hasClass("numerical")) {
         if(new_value === 2) {
-          prepare_numerical_fields(code);
           tr.find(".conditional, .conditional input").removeAttr("disabled");
           tr.find(".locale-picker").removeAttr("disabled");
+          prepare_numerical_fields(code, function () {
+            update_dirty_rows(code, td.index(), old_value, new_value);
+            preview.show(code, true);
+          });
         }
         else {
           tr.find(".conditional, .conditional input").attr("disabled", "disabled");
+          update_dirty_rows(code, td.index(), old_value, new_value);
+          preview.show(code, true);
         }
       }
 
-      update_dirty_rows(code, td.index(), old_value, new_value);
-      preview.show(code, true);
+
     });
 
     $("a.btn-select-all").click(function (){
@@ -658,7 +662,8 @@ $(document).ready(function (){
     tr.find(str+"[min]']").val(meta[3]);
     tr.find(str+"[max]']").val(meta[4]);
   }
-  function prepare_numerical_fields (code) {
+  function prepare_numerical_fields (code, callback) {
+    console.log("here");
     //console.log("prepare_numerical_fields");
     mass_change.find("tr#" + code).attr("disabled", "disabled").find(".view-chart").parent().addClass("row-loader");
 
@@ -672,6 +677,7 @@ $(document).ready(function (){
       else {
         //console.log("Has No Default for numerical");
         prepare_numerical_fields_callback();
+        callback();
       }
     }
     else {
@@ -683,8 +689,10 @@ $(document).ready(function (){
         data: { dataset_id: dataset_id, question_code: code },
         url: view_chart_path,
         success: function (d) {
+           console.log("remote");
           cache[code].general = { dataset: d.dataset, orig_data: d.data, formatted_data: d.data, question: d.question };
           prepare_numerical_fields_callback();
+          callback();
         }
       });
     }
@@ -696,10 +704,9 @@ $(document).ready(function (){
         isFloat,
         question = cache[code].general.question,
         predefined_answers = question.hasOwnProperty("answers") ? question.answers.map(function (d){ return d.value; }) : [],
-        num = [2, 0, 0, 0, 0, 0, 0, 0],
+        num = [2, 0, 0, 0, 0, 0, 0, 0, 0],
         predefinedData = [];
-
-      formatted.forEach(function (d, i) {
+      formatted.forEach(function (d, i) {        
         if(isN(d) && predefined_answers.indexOf(d) === -1) {
           formatted[i] = +d;
           if(num[1] !== 1 && !isInteger(formatted[i])) {
@@ -733,17 +740,29 @@ $(document).ready(function (){
       num[7] = (num[6] - num[5]) / num[2];
 
       var sub_id = num.join(";");
+      cache[code].data[sub_id] = { fd: replicate2(num[7], 0) };
+      cache[code].data["default"] = { fd: replicate2(num[7], 0)};
 
-      cache[code].data[sub_id] = { fd: replicate(num[7], 0), fdm: num };
-      cache[code].data["default"] = { fd: replicate(num[7], 0), fdm: num };
+      //console.log(cache[code].data[sub_id], sub_id);
+
       var fd = cache[code].data[sub_id].fd,
         fd2 = cache[code].data["default"].fd;
-
       formatted.forEach(function (d){
         if(d >= num[3] && d <= num[4]) {
-          fd[Math.floor((d-num[5])/num[2]-0.00001)] += 1;
-          fd2[Math.floor((d-num[5])/num[2]-0.00001)] += 1;
+          var ind = d === num[5] ? 0 : Math.floor((d-num[5])/num[2]-0.00001);
+          fd[ind][0] += 1;
+          fd2[ind][0] += 1;
         }
+      });
+
+      var total = 0;
+      fd.forEach(function (d) { total+=d[0]; });
+      num[8] = total;
+      cache[code].data[sub_id]["fdm"] = num;
+      cache[code].data["default"]["fdm"] = num;
+
+      fd.forEach(function (d, i) {
+        fd[i][1] = Math.round10(d[0]/total*100, -2);
       });
 
       set_code_meta(code, num);
@@ -767,9 +786,10 @@ $(document).ready(function (){
   }
   function get_frequency_data (meta, code) {
 
-    var raw_data = cache[code].general.orig_data,
+    var ind,
+      raw_data = cache[code].general.orig_data,
       frequency_data = replicate2(meta[7], 0),
-      predefined_answers = cache[code].general.question.answers.map(function(d){ return d.value; });
+      predefined_answers = cache[code].general.question.hasOwnProperty("answers") ? cache[code].general.question.answers.map(function(d){ return d.value; }) : [];
     //console.log(frequency_data, "sdfaf");
     if (Array.isArray(raw_data)) {
       raw_data.forEach(function (raw_d) {
@@ -783,7 +803,8 @@ $(document).ready(function (){
           }
           if(d >= meta[3] && d <= meta[4]) {
             // maybe formatted data
-            frequency_data[Math.floor((d-meta[5])/meta[2]-0.00001)][0] += 1;
+            ind = d === meta[5] ? 0 : Math.floor((d-meta[5])/meta[2]-0.00001);
+            frequency_data[ind][0] += 1;
           }
         }
       });

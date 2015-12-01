@@ -759,7 +759,7 @@ private
               end
 
               if tmpD >= num.min && tmpD <= num.max
-                index = ((tmpD-num.min_range)/num.width-0.00001).floor
+                index = tmpD == num.min_range ? 0 : ((tmpD-num.min_range)/num.width-0.00001).floor
                 fd[index][0] += 1
                 fdw[index][0] += 1*weight_values[i].to_f
               else 
@@ -828,7 +828,7 @@ private
               end
 
               if tmpD >= num.min && tmpD <= num.max
-                index = ((tmpD-num.min_range)/num.width-0.00001).floor
+                index = tmpD == num.min_range ? 0 : ((tmpD-num.min_range)/num.width-0.00001).floor
                 fd[index][0] += 1
               else 
               end
