@@ -384,6 +384,8 @@ class DatasetsController < ApplicationController
         gon.datatable_json = []
         gon.private_user = Base64.urlsafe_encode64(current_user.id.to_s)
         gon.locale_picker_data = { reset: I18n.t("app.buttons.reset") }
+        gon.no_answer = I18n.t("datasets.mass_changes_questions_type.no_answer")
+        gon.percent = I18n.t("datasets.mass_changes_questions_type.percent")
         @dataset.languages_sorted.each do |locale|
           gon.locale_picker_data[locale] = [I18n.t("app.language." + locale),I18n.t("app.language." + locale)[0..1].downcase]
         end

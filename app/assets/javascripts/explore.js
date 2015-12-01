@@ -73,9 +73,11 @@ function map_chart_height (json) { // determine heights of chart based on number
   return chart_height;
 }
 function pie_chart_height (json) {
-  var chart_height = 501; // need the 1 for the border bottom line
-  if (json.question.hasOwnProperty("answers") && json.question.answers.length >= 5){
-    chart_height = 425 + json.question.answers.length*21 + 1;
+  var chart_height = 501, // need the 1 for the border bottom line
+    q_ans_len = json.question.hasOwnProperty("answers") ? json.question.answers.length : 0;
+
+  if (q_ans_len >= 5){
+    chart_height = 425 + q_ans_len*21 + 1;
   }
   // if showing group, add space for it
   if (json.question.group && json.question.group.include_in_charts){
@@ -92,9 +94,12 @@ var bar_chart_height = pie_chart_height,
   scatter_chart_height = crosstab_chart_height;
 
 function crosstab_chart_height (json) {
-  var chart_height = 501; // need the 1 for the border bottom line
-  if (json.question.answers.length + json.broken_down_by.answers.length >= 10){
-    chart_height = 330 + json.question.answers.length*26.125 + json.broken_down_by.answers.length*21 + 1;
+  var chart_height = 501, // need the 1 for the border bottom line
+    q_ans_len = json.question.hasOwnProperty("answers") ? json.question.answers.length : 0,
+    bd_ans_len = json.broken_down_by.hasOwnProperty("answers") ? json.broken_down_by.answers.length : 0;
+
+  if(q_ans_len + bd_ans_len >= 10){
+    chart_height = 330 + q_ans_len*26.125 + bd_ans_len*21 + 1;
   }
   // if showing group, add space for it
   if (json.question.group && json.question.group.include_in_charts){
@@ -400,6 +405,7 @@ function build_bar_chart (json_chart, chart_height, weight_name) { // build pie 
   chart_height = opt[0];
 
   // create chart
+  $(selector_path + " #" + chart_id).addClass("pie_or_bar");
   $(selector_path + " #" + chart_id).highcharts({
     chart: {
       type: "column",
@@ -440,9 +446,7 @@ function build_bar_chart (json_chart, chart_height, weight_name) { // build pie 
         return "<b>" + this.key + ":</b> " + Highcharts.numberFormat(this.point.options.count, 0) + " (" + this.y + "%)";
       }
     },
-    legend: {
-      enabled: false
-    },
+    legend: { enabled: false },
     series: [{ data: json_chart.data }],
     exporting: {
       sourceWidth: 1280,
@@ -494,8 +498,7 @@ function build_histogramm_chart (json_chart, chart_height, weight_name) { // bui
     chart_id = opt[3],
     nm = json_chart.numerical; // numerical meta data
 
-  chart_height = opt[0];
-
+  chart_height = opt[0];  
   $(selector_path + " #" + chart_id).highcharts({
     colors: ["#C6CA53"],
     chart: {

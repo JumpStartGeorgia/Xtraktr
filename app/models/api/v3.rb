@@ -633,7 +633,7 @@ private
 
           # only keep the data that is in the list of question answers
           # - this is where can_exclude removes the unwanted answers
-          answer_values = question[:answers].map{|x| x[:value]}
+          answer_values = question[:answers].present? ? question[:answers].map{|x| x[:value]} : []
 
           if question[:data_type] == DATA_TYPE_VALUES[:categorical]
             to_delete_indexes = merged_data.each_index.select{|i| !answer_values.include? merged_data[i][1] }            
@@ -1066,8 +1066,10 @@ private
 
         # only keep the data that is in the list of question/broken down by answers
         # - this is where can_exclude removes the unwanted answers
-        q_answer_values = question[:answers].map{|x| x[:value]}
-        bdb_answer_values = broken_down_by[:answers].map{|x| x[:value]}
+        
+
+        q_answer_values = question[:answers].present? ? question[:answers].map{|x| x[:value]} : []
+        bdb_answer_values = broken_down_by[:answers].present? ? broken_down_by[:answers].map{|x| x[:value]} : []
 
         if question[:data_type] == DATA_TYPE_VALUES[:categorical]
           to_delete_indexes = merged_data.each_index.select{|i| !q_answer_values.include?(merged_data[i][1][0]) && !bdb_answer_values.include?(merged_data[i][1][1]) }
@@ -1106,10 +1108,9 @@ private
       end
     else
       # only keep the data that is in the list of question/broken down by answers
-      # - this is where can_exclude removes the unwanted answers
-              answer_values = question[:answers].present? ? question[:answers].map{|x| x[:value]} : []
-      q_answer_values = question[:answers].map{|x| x[:value]}
-      bdb_answer_values = broken_down_by[:answers].map{|x| x[:value]}
+      # - this is where can_exclude removes the unwanted answers              
+      q_answer_values = question[:answers].present? ? question[:answers].map{|x| x[:value]} : []
+      bdb_answer_values = broken_down_by[:answers].present? ? broken_down_by[:answers].map{|x| x[:value]} : []
 
       if question[:data_type] == DATA_TYPE_VALUES[:categorical]
         to_delete_indexes = data.each_index.select{|i| !q_answer_values.include?(data[i][0]) && !bdb_answer_values.include?(data[i][1]) }

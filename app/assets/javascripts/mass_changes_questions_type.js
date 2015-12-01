@@ -34,13 +34,21 @@ $(document).ready(function (){
           p.find(".chart").highcharts().destroy();
           _t.closed = true;
         });
+        $(document).keyup(function (e) {
+          if (e.keyCode == 27 && !_t.closed) { // escape key maps to keycode `27`
+            _t.selector.hide();
+            _t.selector.find(".chart").highcharts().destroy();
+            _t.closed = true;
+            e.preventDefault();
+          }
+        });
       },
       show: function (code, only_if_opened) {
         //console.log("show");
         if(typeof only_if_opened !== "boolean") { only_if_opened = false; }
         if(only_if_opened && this.closed) { return; }
 
-        this.prepaire_data(code);        
+        this.prepaire_data(code);
       },
       render_chart: function () {
         var t = this;
@@ -176,7 +184,7 @@ $(document).ready(function (){
               num+=+cd[key][0];
               //keys.push(key);
               cd_keys.push(cg.question.answers.filter(function (ans) { return ans.value === key; })[0].text);
-              cd_values.push({y: cd[key][0], percent: cd[key][1]});
+              cd_values.push({y: cd[key][1], count: cd[key][0]});
             });
             if(t.closed || nc) {
               //console.log("new");
@@ -200,15 +208,26 @@ $(document).ready(function (){
                 },
                 credits: { enabled: false },
                 xAxis: {
-                  categories: cd_keys
+                  categories: cd_keys,
+                  labels: {
+                    style: { "color": "#3c4352", "fontSize": "14px", "fontFamily":"'sourcesans_pro', 'sans-serif'", "fontWeight": "normal", "textAlign": "right" },
+                    useHTML: true,
+                    step: 1
+                  }
                 },
-                yAxis: { title:null },
                 series: [{
                   data: cd_values
                 }],
+                yAxis: {
+                  floor: 0,
+                  ceiling: 100,
+                  title: {
+                    text: gon.percent
+                  }
+                },
                 tooltip: {
                   formatter: function () {
-                    return this.y + " (" + this.point.options.percent + "%)";
+                    return this.point.options.count + " (" + this.y + "%)";
                   }
                 },
                 legend: { enabled: false }
@@ -308,6 +327,16 @@ $(document).ready(function (){
     init_locale_picker();
   }
   function init_datatable () {
+
+    /* Create an array with the values of all the checkboxes in a column */
+    // take from: http://www.datatables.net/examples/plug-ins/dom_sort.html
+    $.fn.dataTable.ext.order["dom-radio"] = function ( settings, col )
+    {
+      return this.api().column( col, {order:"index"} ).nodes().map( function (td) {
+        return $("input[type='radio']", td).prop("checked") ? "1" : "0";
+      });
+    };
+
     datatable = $("#mass_change").dataTable({
       "dom": "<'top'fli>t<'bottom'p><'clear'>",
       "data": gon.datatable_json,
@@ -318,21 +347,26 @@ $(document).ready(function (){
         {"data":null,
           render: function (data, type, full) {
             return "<div class='btn btn-default view-chart' "+(full.data_type === 0 ? " disabled" : "")+">View</div>";
-          }
+          },
+          "orderable": false
         },
-        {"data":"code"},
-        {"data":"question", "width": "100%"},
+        {"data":"code" },
+        {"data":"question"},
         {"data":"data_type",
           render: function (data, type, full) {
-            return "<input class='numerical' type='radio' value='1' name='question["+full.code +"][data_type]'" + (data == 1 ? " checked": "") + " data-o='"+data+"' "+(full.has_answers ? "" : " disabled title='"+ "Question has no answers so it can be viewed as Bar chart"+"'") + ">";
+            return "<input class='numerical' type='radio' value='1' name='question["+full.code +"][data_type]'" + (data == 1 ? " checked": "") + " data-o='"+data+"' "+(full.has_answers ? "" : " disabled title='"+ gon.no_answer+"'") + ">";
           },
-          class: "c"
+          class: "c",
+          "orderDataType": "dom-radio",
+          "width": "120px"
         },
         {"data":"data_type",
           render: function (data, type, full) {
             return "<input class='numerical' type='radio' value='2' name='question["+full.code +"][data_type]'" + (data == 2 ? " checked": "") + " data-o='"+data+"'>";
           },
-          class: "c"
+          class: "c",
+          "orderDataType": "dom-radio",
+          "width": "120px"
         },
         {"data":"num.title",
           render: function (data, type, full) {
@@ -343,33 +377,40 @@ $(document).ready(function (){
             "<input type='text' class='title' value='"+data[0][1]+
             "' data-locale='"+ data[0][0] +"'" + (full.data_type !== 2 ? " disabled" : "") + "></div>";
           },
-          class: "c"
+          class: "c",
+          "orderable": false,
+          "width": "120px"
         },
         {"data":"num.type",
           render: function (data, type, full) {
             return "<select class='conditional' name='question["+full.code +"][numerical][type]' data-o='"+data+"'" + (full.data_type !== 2 ? " disabled" : "") + "><option value='0'" + (data == 0 ? "selected": "") + ">Integer</option>" +
               "<option value='1'" + (data == "1" ? "selected": "") + ">Float</option></select>";
           },
-          class: "c"
+          class: "c",
+          "orderable": false
         },
         {"data":"num.width",
           render: function (data, type, full) {
             return "<input class='conditional r' type='number' value='"+data+"' name='question["+full.code +"][numerical][width]' data-o='"+data+"'" + (full.data_type !== 2 ? " disabled" : "") + ">";
-          }
+          },
+          "orderable": false
         },
         {"data":"num.min",
           render: function (data, type, full){
             return "<input class='conditional r' type='number' value='"+data+"' name='question["+full.code +"][numerical][min]' data-o='"+data+"'" + (full.data_type !== 2 ? " disabled" : "") + ">";
-          }
+          },
+          "orderable": false
         },
         {"data":"num.max",
           render: function (data, type, full){
             return "<input class='conditional r' type='number' value='"+data+"' name='question["+full.code +"][numerical][max]' data-o='"+data+"'" + (full.data_type !== 2 ? " disabled" : "") + ">";
-          }
+          },
+          "orderable": false
         }
       ],
-      "sorting": [],
-      // "order": [[0, "asc"]],
+      "ordering": true,
+      // "sorting": [],
+      "order": [[1, "asc"]],
       "language": {
         "url": gon.datatable_i18n_url,
         "searchPlaceholder": gon.datatable_search
@@ -654,7 +695,7 @@ $(document).ready(function (){
         max = Number.MIN_VALUE,
         isFloat,
         question = cache[code].general.question,
-        predefined_answers = question.answers.map(function (d){ return d.value; }),
+        predefined_answers = question.hasOwnProperty("answers") ? question.answers.map(function (d){ return d.value; }) : [],
         num = [2, 0, 0, 0, 0, 0, 0, 0],
         predefinedData = [];
 

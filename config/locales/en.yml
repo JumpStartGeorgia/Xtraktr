@@ -1212,7 +1212,9 @@ en:
     mass_changes_questions_type:
       title: "Question Mass Changes"
       explanation: "Use this page to indicate which questions should not be included during analysis and which should be included when the public download's the data."
-      no_questions: There are no questions on file for this dataset.      
+      no_questions: There are no questions on file for this dataset.
+      no_answer: Question does not have predefined answers and, therefore, cannot be selected as a categorical type.     
+      percent: Percent
     mass_changes_answers:
       title: "Answer Mass Changes"
       explanation: "Use this page to indicate which answers should not be included during analysis and which answers can be included during analysis, but have the ability to be excluded (e.g., answers like: Don't Know, Refuse to Answer, etc)."
