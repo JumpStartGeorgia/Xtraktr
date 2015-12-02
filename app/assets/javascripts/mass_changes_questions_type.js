@@ -44,7 +44,6 @@ $(document).ready(function (){
         });
       },
       show: function (code, only_if_opened) {
-        //console.log("show");
         if(typeof only_if_opened !== "boolean") { only_if_opened = false; }
         if(only_if_opened && this.closed) { return; }
 
@@ -52,35 +51,22 @@ $(document).ready(function (){
       },
       render_chart: function () {
         var t = this;
-        //console.log(cq, cache);
-
         var nc = false; // if code is new
         if(preview.code !== cq.code) {
           nc = true;
           preview.code = cq.code;
         }
-        //console.log(cq, cache[cq.code]);
-        //console.log("here", cache[cq.code].data[cq.sub_id]);
         var cd = cache[cq.code].data[cq.sub_id].fd, // current data
           cm = cq.meta, // current data
-          cg = cache[cq.code].general,
-          ct = cache[cq.code].data[cq.sub_id].fdt; // current general data
-           //console.log(cd, cm, cg, "bb");
-           //return;
-        var $preview = $("#preview"), chart;
+          cg = cache[cq.code].general, // current general data
+          ct = cache[cq.code].data[cq.sub_id].fdt,
+          $preview = $("#preview"),
+          chart;
         $preview.show();
 
         var histogramm = function () {
           var sum = cd.reduce(function (a, b){return a+b;});
-           console.log(cd, cm, cd.map(function(d,i){ return { x:cm[5] +cm[2]*i, y: d[0], percent: d[1] }; }));
-          // var num = 0;
-          // cg.orig_data.forEach(function (n){
-          //   if(isN(n) && +n >= 0) {
-          //     ++num;
-          //   }
-          // });
           if(t.closed || nc) {
-            //console.log("new",typeof cd );
             chart = new Highcharts.Chart({
               colors: ["#C6CA53"],
               chart: {
@@ -101,19 +87,9 @@ $(document).ready(function (){
               },
               xAxis: {
                 title: { text: cq.titles[$("html").attr("lang")] },
-                // labels: {
-                //   align: "left",
-                //   // x:-10,
-                //   // useHTML: true
-                // },
-                //tickmarkPlacement: "between",
-                tickPositions: formatLabel(cm), //[10,20,30,40,50],
+                tickPositions: formatLabel(cm),
                 startOnTick: true,
-                endOnTick: true,
-                //categories: formatLabel(cm),
-                // min:20,
-                // max:40,
-                // tickInterval: 10
+                endOnTick: true
               },
               yAxis: { title: null },
               plotOptions: {
@@ -124,55 +100,23 @@ $(document).ready(function (){
                   pointPlacement: "between"
                 }
               },
-              series: [{
-                data: cd.map(function(d,i){ return { x:cm[5] +cm[2]*i, y: d[0], percent: d[1] }; })
-              }],
+              series: [{ data: cd.map(function (d, i){ return { x:cm[5] +cm[2]*i, y: d[0], percent: d[1] }; }) }],
               tooltip: {
                 formatter: function () {
-                   console.log(this);
                   return this.y + " (" + this.point.percent + "%)";
                 }
               },
               legend: { enabled: false }
             }, function () {
-              // var box = this.plotBox;
-              // var label = this.renderer.label(cm[6], (box.x+box.width) - 7, (box.y + box.height) + 5)
-              //   .css({
-              //     color:"#606060",
-              //     cursor:"default",
-              //     "font-size":"11px",
-              //     "fill":"#606060"
-              //   }).attr("class", "histogramm-last-label")
-              //   .add();
-              // this.spacing[1] = label.width + 10 > 40 ? label.width + 10 : 40;
-              // this.isDirtyBox = true;
-              // this.redraw();
-              // label.xSetter((box.x+box.width) - 7);
               $preview.css({top: $(window).height() - $preview.height() - 10 });
             });
           }
           else {
-            // var ss = 0;
-            // cd.slice().forEach(function(ddd){ ss+=ddd; });
-            // console.log("old", ss );
             chart = $preview.find(".chart").highcharts();
-             // console.log(formatLabel(cm));
             chart.xAxis[0].tickPositions = formatLabel(cm);
-            chart.series[0].setData(cd.map(function(d,i){ return { x:cm[5] +cm[2]*i, y: d[0], percent: d[1] }; }), false, true);
-            // $("#preview .chart .histogramm-last-label").remove();
-            // var box = chart.plotBox;
-            // var label = chart.renderer.label(cm[6], (box.x+box.width) - 7, (box.y + box.height) + 5)
-            //   .css({
-            //     color:"#606060",
-            //     cursor:"default",
-            //     "font-size":"11px",
-            //     "fill":"#606060"
-            //   }).attr("class", "histogramm-last-label")
-            //   .add();
-            // chart.spacing[1] = label.width + 10 > 40 ? label.width + 10 : 40;
+            chart.series[0].setData(cd.map(function (d, i){ return { x:cm[5] +cm[2]*i, y: d[0], percent: d[1] }; }), false, true);
             chart.isDirtyBox = true;
             chart.redraw();
-            //            label.xSetter((box.x+box.width) - 7);
           }
         },
           bar = function () {
@@ -182,12 +126,10 @@ $(document).ready(function (){
               cd_values = [];
             Object.keys(cd).forEach(function (key) {
               num+=+cd[key][0];
-              //keys.push(key);
               cd_keys.push(cg.question.answers.filter(function (ans) { return ans.value === key; })[0].text);
               cd_values.push({y: cd[key][1], count: cd[key][0]});
             });
             if(t.closed || nc) {
-              //console.log("new");
               chart = new Highcharts.Chart({
                 colors: ["#C6CA53"],
                 chart: {
@@ -215,15 +157,11 @@ $(document).ready(function (){
                     step: 1
                   }
                 },
-                series: [{
-                  data: cd_values
-                }],
+                series: [{ data: cd_values }],
                 yAxis: {
                   floor: 0,
                   ceiling: 100,
-                  title: {
-                    text: gon.percent
-                  }
+                  title: { text: gon.percent }
                 },
                 tooltip: {
                   formatter: function () {
@@ -231,16 +169,13 @@ $(document).ready(function (){
                   }
                 },
                 legend: { enabled: false }
-
-              }, function () {
-                  $preview.css({top: $(window).height() - $preview.height() - 10 });
-                });
+              },
+              function () {
+                $preview.css({top: $(window).height() - $preview.height() - 10 });
+              });
             }
-            else {
-              //console.log("old");
-            }
+            else { }
           };
-
 
         function formatLabel (meta) {
           var v = [];
@@ -303,6 +238,9 @@ $(document).ready(function (){
               if(data_type === 2)
               {
                 cache[code].data[sub_id]["dfm"] = d.frequency_data_meta;
+                var total = 0;
+                d.frequency_data.forEach(function (d) { total+=d[0]; });
+                cache[code].data[sub_id]["fdt"] = total;
               }
             }
             else {
@@ -462,11 +400,14 @@ $(document).ready(function (){
     });
 
     $(datatable).on("click", "tr", function () {
-      var t = $(this);
+      var t = $(this), 
+        code = t.attr("id");
       if (!t.hasClass("selected")) {
         mass_change.find("tr.selected").removeClass("selected");
       }
       t.toggleClass("selected");
+
+      preview.show(code, true);
     });
 
     $(datatable).on("click", ".view-chart", function () { //debounce(, 500)
@@ -760,6 +701,9 @@ $(document).ready(function (){
       num[8] = total;
       cache[code].data[sub_id]["fdm"] = num;
       cache[code].data["default"]["fdm"] = num;
+
+      cache[code].data[sub_id]["fdt"] = total;
+      cache[code].data["default"]["fdt"] = total;
 
       fd.forEach(function (d, i) {
         fd[i][1] = Math.round10(d[0]/total*100, -2);

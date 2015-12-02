@@ -82,7 +82,6 @@ class Api::V3
 
     data_items = dataset.data_items.with_code(question_code)
     num = question.numerical
-     Rails.logger.info("--------------------------------------#{question.answers}------#{data_items.frequency_data}")
     return {
       dataset: { id: dataset.id, title: dataset.title },
       question: create_dataset_question_hash(question, private_user_id: private_user_id),
