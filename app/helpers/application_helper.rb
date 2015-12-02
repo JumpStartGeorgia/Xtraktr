@@ -140,5 +140,9 @@ module ApplicationHelper
     '<img src="/assets/svg/subgroup.svg" title="' + (description.present? ? description.strip : '') + '" />'
   end
 
+  def question_data_type_icon(data_type)
+    type = Question.type(data_type).to_s
+    '<img src="/assets/svg/' + type + '.svg" title="'+ I18n.t("app.common." + type) + '"/>'
+  end
 
 end

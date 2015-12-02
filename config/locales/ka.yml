@@ -184,6 +184,9 @@ ka:
         can_download: "შეიყვანე შეკითხვა საჯარო ჩამოტვირთვაში"
         has_map_adjustable_max_range: "რუკაზე დატანილი მონაცემების მაქსიმალური მნიშვნელობის შეცვლა შესაძლებელია "
         is_weight: "ეს შეკითხვა შეიცავს შეწონვებს"
+        data_type: Data Type
+        data_type_categorical: Categorical Data Type
+        data_type_numerical: Numerical Data Type        
       answer:
         value: "მნიშვნელობა"
         text: "პასუხი"
@@ -194,6 +197,12 @@ ka:
         no_questions: "ამ მონაცემებისთვის არ არის შეკითხვები "
         sort_order: "დახარისხების წყობა"
         shape_name: "რუკის კონტურული ფორმის სახელი"
+      numerical:
+        title: X-axis Title
+        type: Number type Integer/Float
+        width: Group width
+        min: Min Value
+        max: Max Value        
       group:
         title: "სახელი"
         description: "აღწერა"
@@ -375,6 +384,8 @@ ka:
         can_exclude: "მონიშვნის შემთხვევაში ეს შეკითხვა იქნება ხელმისაწვდომი ანალიზის დროს, მაგრამ მომხმარებლის სურვილის შემთხვევაში ის შეიძლება გამოირთოს"
         sort_order: "პასუხების გამოჩენის თანმიმდევრობა"
         default_text: "ეს არის პასუხის ტექსტი მთავარი ენიდან, რომელიც მოწოდებულია რათა თარგმანის გასაადვილებლად"
+      numerical:
+        title: "Click the language abbreviation to switch to the language you want to enter the x-axis title for. If you leave this field blank, no x-axis title will be shown."        
       group:
         title: "ჯგუფის სახელწოდება გამოჩნდება კოდირების დოკუმენტში, მონაცემების გვერდზე და შეკითხვების ჩამოსაშლელ ჩამონათვალში "
         description: "ჯგუფის აღწერა გამოჩნდება კოდირების დოკუმენტში, მონაცემების გვერდზე, შეკითხვების ჩამოსაშლელ ჩამონათვალში და დიაგრამების სათაურებში, სურვილის შემთხვევაში. "
@@ -539,6 +550,41 @@ ka:
           title_filter: "პასუხების ჯამური რაოდენობა: %{nums}"
           title_weighted: "შეუწონელი პასუხების ჯამური რაოდენობა*: %{x_of_y}"
           title_filter_weighted: "შეუწონელი პასუხების ჯამური რაოდენობა* (%{totals} შესაძლებლიდან): %{nums}"
+    v3:
+      na: "არ არის ხელმისაწვდომი"
+      percent: "პროცენტი (%)"
+      group:
+        html:
+          title: "<span class='group-highlight'>%{text}</span> "
+        text:
+          title: "%{text}"
+      subgroup:
+        html:
+          title: "<span class='subgroup-highlight'>%{text}</span> "
+        text:
+          title: "%{text}"
+      single:
+        html:
+          title: "<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
+          title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable}'-ის მიხედვით"
+          title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable} = <span class='code-highlight'>%{value}</span>'-ის მიხედვით"
+        text:
+          title: "%{code} - %{group} %{variable}'"
+          title_filter: ", გაფილტრულია: '%{code} - %{variable}'-ის მიხედვით"
+          title_filter_value: ", გაფილტრულია: '%{code} - %{group} %{variable} = %{value}'-ის მიხედვით"
+      subtitle:
+        html:
+          title: "პასუხების ჯამური რაოდენობა: <br />%{x_of_y}"
+          title_x_of_y: "%{dataset}: <span class='number'>%{num}</span> %{total}-დან"
+          title_filter: "პასუხების ჯამური რაოდენობა <br />(%{totals} შესაძლებლიდან): <br />%{nums}"
+          title_weighted: "შეუწონელი პასუხების ჯამური რაოდენობა<span class='footnote-flag'>*</span>: <br />%{x_of_y}"
+          title_filter_weighted: "შეუწონელი პასუხების ჯამური რაოდენობა<span class='footnote-flag'>*</span> <br />(%{totals} შესაძლებლიდან): <br />%{nums}"
+        text:
+          title: "პასუხების ჯამური რაოდენობა: %{x_of_y}"
+          title_x_of_y: "%{dataset}: %{num} %{total}-დან"
+          title_filter: "პასუხების ჯამური რაოდენობა: %{nums}"
+          title_weighted: "შეუწონელი პასუხების ჯამური რაოდენობა*: %{x_of_y}"
+          title_filter_weighted: "შეუწონელი პასუხების ჯამური რაოდენობა* (%{totals} შესაძლებლიდან): %{nums}"          
   explore_data:
     chart_type_bar: მონაცემთა სვეტოვანი დიაგრამით გამოსახვა
     chart_type_pie: მონაცემთა წრიული დიაგრამით გამოსახვა
@@ -636,6 +682,59 @@ ka:
           title_filter: "პასუხების ჯამური რაოდენობა %{total}-იდან: %{nums}"
           title_weighted: "შეუწონელი პასუხების ჯამური რაოდენობა*: %{num} %{total}-იდან"
           title_filter_weighted: "შეუწონელი პასუხების ჯამური რაოდენობა %{total}-0იდან*: %{nums}"
+    v3:
+      hover_region: "მიიტანეთ კურსორი რეგიონზე"
+      na: "არ არის ხელმისაწვდომი"
+      percent: "პროცენტი"
+      group:
+        html:
+          title: "<span class='group-highlight'>%{text}</span> "
+        text:
+          title: "%{text}"
+      subgroup:
+        html:
+          title: "<span class='subgroup-highlight'>%{text}</span> "
+        text:
+          title: "%{text}"
+      comparative:
+        html:
+          title: "<span class='code-highlight'>%{question_code}</span> - %{variable}' <br /> <span class='title-highlight'>ჩაშლილია:</span> <br /> '<span class='code-highlight'>%{broken_down_by_code}</span> - %{broken_down_by}'"
+          title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'-ის მიხედვით"
+          title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'-ის მიხედვით"
+          map:
+            title: "<span class='code-highlight'>%{code}</span> - %{variable}'"
+            title_broken_down_by: "<br /> <span class='title-highlight'>ჩაშლილია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{broken_down_by} = <span class=”code-highlight”>%{broken_down_by_answer}</span>'-ის მიხედვით"
+            title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'-ის მიხედვით"
+            title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'-ის მიხედვით"
+        text:
+          title: "%{question_code} - %{variable}', ჩაშლილია: '%{broken_down_by_code} - %{broken_down_by}'-ის მიხედვით"
+          title_filter: ", გაფილტრულია: '%{code} - %{variable}'-ის მიხედვით"
+          title_filter_value: ", გაფილტრულია: '%{code} - %{variable} = %{value}'-ის მიხედვით"
+          map:
+            title: "%{code} - %{variable}'"
+            title_broken_down_by: "ჩაშლილია: '%{code} - %{broken_down_by} = %{broken_down_by_answer}'"
+            title_filter: ", გაფილტრულია: '%{code} - %{variable}'-ის მიხედვით"
+            title_filter_value: ", გაფილტრულია: '%{code} - %{variable} = %{value}'-ის მიხედვით"
+      single:
+        html:
+          title: "<span class='code-highlight'>%{code}</span> - %{variable}'"
+          title_filter: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable}'-ის მიხედვით"
+          title_filter_value: "<br /> <span class='title-highlight'>გაფილტრულია:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{variable} = <span class='code-highlight'>%{value}</span>'-ის მიხედვით"
+        text:
+          title: "%{code} - %{variable}'"
+          title_filter: ", გაფილტრულია: '%{code} - %{variable}'-ის მიხედვით"
+          title_filter_value: ", გაფილტრულია: '%{code} - %{variable} = %{value}'-ის მიხედვით"
+      subtitle:
+        html:
+          title: "პასუხების ჯამური რაოდენობა: <span class='number'>%{num}</span>  %{total}-იდან"
+          title_filter: "პასუხების ჯამური რაოდენობა %{total}-იდან: <br />%{nums}"
+          title_weighted: "შესწორებების ცხრილი"
+          title_filter_weighted: "შეუწონელი პასუხების ჯამური რაოდენობა %{total}-იდან<span class='footnote-flag'>*</span>: <br />%{nums}"
+        text:
+          title: "პასუხების ჯამური რაოდენობა: %{num} %{total}-იდან"
+          title_filter: "პასუხების ჯამური რაოდენობა %{total}-იდან: %{nums}"
+          title_weighted: "შეუწონელი პასუხების ჯამური რაოდენობა*: %{num} %{total}-იდან"
+          title_filter_weighted: "შეუწონელი პასუხების ჯამური რაოდენობა %{total}-0იდან*: %{nums}"          
   datatable:
     search: "ძებნა"
     search_footer: "%{name}-ს მოძებნა"
@@ -835,6 +934,23 @@ ka:
       download_data_explanation: 'სიღრმისეული ანალიზისთვის შეგიძლიათ მონაცემთა შემდეგ ფორმატში ჩამოტვირთვა.'      
       show_more: ვრცლად
       show_less: მოკლედ      
+      data_type: Data Type
+      categorical: Categorical
+      numerical: Numerical
+      descriptive_statistics:
+        title: აღწერითი სტატისტიკა
+        number: Total Responses
+        min: Min
+        max: Max
+        mean: Mean
+        median: Median
+        mode: Mode
+        q1: 25th Percentile
+        q2: 50th Percentile
+        q3: 75th Percentile
+        standard_deviation: Standard Deviation
+        variance: Variance
+      total_responses_out_of: "Total Responses: <span class='number'>X</span> out of <span class='number'>XX</span>"
     msgs:
       does_not_exist: "თქვენ ცდილობთ ისეთი გვერდის ნახვას, რომელიც არ არსებობს."
       not_authorized: "თქვენ არ გაქვთ ამ გვერდის ნახვის უფლება."
@@ -925,6 +1041,7 @@ ka:
         private_share: "არასაჯარო მონაცემების გაზიარება"
         mass_changes: "მასობრივი ცვლილებები ცხრილის საშუალებით"
         mass_changes_questions: "შეკითხვის მასობრივი ცვლილებები"
+        mass_changes_questions_type: Question Type Mass Changes
         mass_changes_answers: "პასუხების მასობრივი ცვლილებები"
         download_data: "მონაცემების ჩამოტვირთვა"
         groups: "შეკითხვების დაჯგუფება"
@@ -1126,7 +1243,14 @@ ka:
       tab_no_answers: "შეკითხვები პასუხების გარეშე"
       tab_no_text: "შეკითხვები ტექსტის გარეშე"
       bad_answers: "შემდეგი %{number} შეკითხვა შეიცავს მნიშვნელობებს, რომლებიც არ იყო მითითებული შესაძლო პასუხების ჩამონათვალში. მაგალითად, შეკითხვის შესაძლო პასუხები იყო 1, 2, 3 და 4, ხოლო ერთერთი ჩანაწერის მნიშვნელობა არის 5. ჩანაწერები, რომელთაც აქვთ განსხვავებული მნიშვნელობები, ანალიზის დროს არ იქნებიან გათვალისწინებული. "
-      no_answers: 'შემდეგ %{number} შეკითხვას არ აქვს შესაძლო პასუხების ჩამონათვალი. მაგალითად, შეკითხვას "რამდენი წლის ხართ" შეიძლება ჰქონდეს შემდეგი პასუხები: <20, 20-40, 40-60, >60, ხოლო თითოეული მათგანი წარმოდგენილი იყოს გარკვეული მნიშვნელობებით, მაგალითად 1, 2, 3, 4 და შენახული იყოს მონაცემებში. ამ კითხვების გაანალიზება არ იქნება შესაძლებელი, თუკი შესაძლო პასუხები არ არის ჩამონათვალში. '
+      no_answers: |
+        The following %{number} questions do not have a list of possible answers. If your data file is a from a statistical package (SPSS, STATA, etc), this happens because the question is numerical or because a categorical question did not have a predefined list of answers. If your data file is a spreadsheet (CSV, XLSX, etc), this happens because you need to define which questions are numerical and which are categorical.
+
+        To define which questions are numerical or categorical, use the <a href="%{link}">Data Type form</a>.
+
+        To define answers for a categorical question, use the 'Add Answers' button below.
+
+        These questions will not be available for analysis unless the data type is set to numerical or answers are defined to categorical questions.
       no_text: "შემდეგ %{number} შეკითხვას არ აქვს ტექსტი. მაგალითად, მოცემულია კოდი 'A1', რომელსაც არ აქვს აღწერის ტექსტი. ტექსტის გარეშე ამ შეკითხვების გაანალიზება შესაძლებელი არ იქნება. "
       no_bad_answers: "გილოცავთ! მონაცემების ფაილის ყველა მონაცემი შეიცავს სწორ პასუხს."
       no_no_answers: "გილოცავთ! მონაცემების ყველა ფაილს აქვს პასუხი."
@@ -1602,6 +1726,9 @@ ka:
       v2:
         title_site: "გადასვლა %{app_name} -ზე"
         title_datalist: "ყველა მონაცემის ნახვა"
+      v3:
+        title_site: "გადასვლა %{app_name} -ზე"
+        title_datalist: "ყველა მონაცემის ნახვა"        
   export_data:
     dataset: "მონაცემთა ცხრილი: %{title}"
     download_from: "ჩამოტვირთულია აქედან: %{app_name} at %{url}."

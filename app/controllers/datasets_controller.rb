@@ -55,7 +55,7 @@ class DatasetsController < ApplicationController
     add_dataset_nav_options(show_title: false)
 
     gon.explore_data = true
-    gon.api_dataset_analysis_path = api_v2_dataset_analysis_path
+    gon.api_dataset_analysis_path = api_v3_dataset_analysis_path
     gon.embed_ids = @dataset.highlights.embed_ids
     gon.private_user = Base64.urlsafe_encode64(current_user.id.to_s)
 
@@ -159,35 +159,26 @@ class DatasetsController < ApplicationController
     params[:dataset][:category_ids].delete('')
     cat_ids = @dataset.category_mappers.category_ids.map{|x| x.to_s}
     mappers_to_delete = []
-    logger.debug "====== existing categories = #{cat_ids}; class = #{cat_ids.first.class}"
     if params[:dataset][:category_ids].present?
-      logger.debug "======= cat ids present"
       # if mapper category is not in list, mark for deletion
       @dataset.category_mappers.each do |mapper|
-        logger.debug "======= - checking marker cat id #{mapper.category_id} for destroy"
 
         if !params[:dataset][:category_ids].include?(mapper.category_id.to_s)
-          logger.debug "======= -> marking #{mapper.category_id} for destroy"
           mappers_to_delete << mapper.id
         end
       end
       # if cateogry id not in mapper, add id
       params[:dataset][:category_ids].each do |category_id|
-        logger.debug "======= - checking form cat id #{category_id} for addition; class = #{category_id.class}"
         if !cat_ids.include?(category_id)
-          logger.debug "======= -> adding new category #{category_id}"
           @dataset.category_mappers.build(category_id: category_id)
         end
       end
     else
-      logger.debug "======= cat ids not present"
       # no categories so make sure mapper is nil
       @dataset.category_mappers.each do |mapper|
         mappers_to_delete << mapper.id
       end
     end
-
-    logger.debug "========== -> need to delete #{mappers_to_delete} mapper records"
 
     # if any mappers are marked as destroy, destroy them
     CategoryMapper.in(id: mappers_to_delete).destroy_all
@@ -199,35 +190,26 @@ class DatasetsController < ApplicationController
     params[:dataset][:country_ids].delete('')
     country_ids = @dataset.country_mappers.country_ids.map{|x| x.to_s}
     mappers_to_delete = []
-    logger.debug "====== existing countries = #{country_ids}; class = #{country_ids.first.class}"
     if params[:dataset][:country_ids].present?
-      logger.debug "======= cat ids present"
       # if mapper country is not in list, mark for deletion
       @dataset.country_mappers.each do |mapper|
-        logger.debug "======= - checking marker country id #{mapper.country_id} for destroy"
 
         if !params[:dataset][:country_ids].include?(mapper.country_id.to_s)
-          logger.debug "======= -> marking #{mapper.country_id} for destroy"
           mappers_to_delete << mapper.id
         end
       end
       # if cateogry id not in mapper, add id
       params[:dataset][:country_ids].each do |country_id|
-        logger.debug "======= - checking form country id #{country_id} for addition; class = #{country_id.class}"
         if !country_ids.include?(country_id)
-          logger.debug "======= -> adding new country #{country_id}"
           @dataset.country_mappers.build(country_id: country_id)
         end
       end
     else
-      logger.debug "======= country ids not present"
       # no countries so make sure mapper is nil
       @dataset.country_mappers.each do |mapper|
         mappers_to_delete << mapper.id
       end
     end
-
-    logger.debug "========== -> need to delete #{mappers_to_delete} mapper records"
 
     # if any mappers are marked as destroy, destroy them
     CountryMapper.in(id: mappers_to_delete).destroy_all
@@ -333,7 +315,7 @@ class DatasetsController < ApplicationController
             .exception_notification(request.env, e)
             .deliver
         end
-
+        render 'message.js'
       }
     end
   end
@@ -385,7 +367,109 @@ class DatasetsController < ApplicationController
             .exception_notification(request.env, e)
             .deliver
         end
+        render 'message.js'
+      }
+    end
+  end
 
+  # set questions data types [:categorical, :numerical or :unknown]
+  def mass_changes_questions_type
+    respond_to do |format|
+      format.html {
+        @js.push("mass_changes_questions_type.js", "highcharts.js")
+        @css.push("mass_changes_questions_type.css")
+
+        # create data for datatables (faster to load this way)
+        gon.datatable_json = []
+        gon.private_user = Base64.urlsafe_encode64(current_user.id.to_s)
+        gon.locale_picker_data = { reset: I18n.t("app.buttons.reset") }
+        gon.no_answer = I18n.t("datasets.mass_changes_questions_type.no_answer")
+        gon.percent = I18n.t("datasets.mass_changes_questions_type.percent")
+        @dataset.languages_sorted.each do |locale|
+          gon.locale_picker_data[locale] = [I18n.t("app.language." + locale),I18n.t("app.language." + locale)[0..1].downcase]
+        end
+        gon.total_responses_out_of = I18n.t("app.common.total_responses_out_of")
+
+        # prepaire data for table if numerical fill fields else send reset values
+        @dataset.questions.each do |q|
+            data = {
+              code: q.original_code,
+              question: q.text,
+              data_type: q.data_type,
+              has_answers: q.has_code_answers,              
+              num: {
+                type: 0,
+                width: 0,
+                min: 0,
+                max: 0,
+                title: nil
+              }
+            }
+            num = data[:num]
+
+            orig_locale = I18n.locale.to_s
+            orig_title = []
+            titles = []
+
+            if q.numerical?
+              @dataset.languages_sorted.each do |locale|
+                value = q.numerical.title_translations[locale].blank? ? "" : q.numerical.title_translations[locale]
+                if locale == orig_locale
+                  orig_title = [locale, value]
+                else
+                  titles.push([locale, value])
+                end
+              end
+              titles.unshift(orig_title)
+              
+              num[:type] = q.numerical.type
+              num[:width] = q.numerical.width
+              num[:min] = q.numerical.min
+              num[:max] = q.numerical.max
+            else
+
+              @dataset.languages_sorted.each do |locale|
+                if locale == orig_locale
+                  orig_title = [locale, ""]
+                else
+                  titles.push([locale, ""])
+                end
+              end
+              titles.unshift(orig_title)
+            end
+
+            num[:title] = titles
+            gon.datatable_json << data
+        end
+
+        add_dataset_nav_options()
+      }
+      format.js {
+        begin
+           
+          @msg = t('app.msgs.mass_change_question_type_saved')
+          @success = true
+          if params[:mass_data].present? && params[:mass_data].keys.length > 0
+            @dataset.questions.reflag_questions_type(params[:mass_data])  
+            @dataset.questions_data_recalculate(params[:mass_data])
+            # force question callbacks
+            @dataset.check_questions_for_changes_status = true
+
+            if !@dataset.save
+              @msg = @dataset.errors.full_messages
+              @success = false
+            end
+          end  
+        rescue Exception => e
+          @msg = t('app.msgs.mass_change_question_not_saved')
+          @success = false
+
+          # send the error notification
+          ExceptionNotifier::Notifier
+            .exception_notification(request.env, e)
+            .deliver
+        end
+        render 'message.js'
       }
     end
   end

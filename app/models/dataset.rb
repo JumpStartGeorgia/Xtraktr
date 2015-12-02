@@ -95,7 +95,6 @@ class Dataset < CustomTranslation
     def sub_groups(parent_id)
       where(parent_id: parent_id)
     end
-
   end
   accepts_nested_attributes_for :groups
 
@@ -164,7 +163,7 @@ class Dataset < CustomTranslation
     end
 
     def for_analysis_not_in_codes(codes)
-      nin(:code => codes).where(:exclude => false, :has_code_answers_for_analysis => true)
+      nin(:code => codes).where(:exclude => false, :is_analysable => true)
     end
 
     def with_original_code(original_code)
@@ -178,17 +177,17 @@ class Dataset < CustomTranslation
 
     # get questions that are not excluded and have code answers
     def for_analysis
-      where(:exclude => false, :has_code_answers_for_analysis => true).to_a
+      where(:exclude => false, :is_analysable => true, :data_type.ne => Question::DATA_TYPE_VALUES[:unknown]).to_a
     end
 
     # get questions that are not excluded and have code answers
     def for_analysis_with_exclude_questions
-      where(:has_code_answers_for_analysis => true).to_a
+      where(:is_analysable => true, :data_type.ne => Question::DATA_TYPE_VALUES[:unknown]).to_a
     end
 
     # get count questions that are not excluded and have code answers
     def for_analysis_count
-      where(:exclude => false, :has_code_answers_for_analysis => true).count
+      where(:exclude => false, :is_analysable => true).count
     end
 
     # get all of the questions with code answers
@@ -222,7 +221,7 @@ class Dataset < CustomTranslation
 
     # get just the codes that can be analyzed
     def unique_codes_for_analysis
-      where(:exclude => false, :has_code_answers_for_analysis => true).only(:code).map{|x| x.code}
+      where(:exclude => false, :is_analysable => true, :data_type => 1).only(:code).map{|x| x.code}
     end
 
     # get all questions that are mappable
@@ -249,15 +248,51 @@ class Dataset < CustomTranslation
       end
       return nil
     end
+    # questions types
+    def reflag_questions_type(data)      
+      codes = []
+      if data.keys.length
+        data.keys.each {|t| 
+          codes.push(t.downcase)
+        }
+        where(:code.in => codes).each do |q|
+          code = q[:code]
+          dt = data[code]["data"]
+          
+          q["data_type"] = dt[0] = dt[0].to_i
+          if dt[0] == 1
+             q["numerical"] = nil
+          elsif dt[0] == 2
+            num = { 
+              type: dt[1].to_i,
+              width: dt[2].to_f,
+              min: dt[3].to_f,
+              max: dt[4].to_f,
+              title_translations: data[code]["titles"] }
+
+            num[:min_range] = (num[:min] / num[:width]).floor * num[:width]      
+            num[:max_range] = (num[:max] / num[:width]).ceil * num[:width]     
+            num[:size] = (num[:max_range] - num[:min_range]) / num[:width]      
+
+            if q.numerical.nil?
+              q.build_numerical(num)
+            else
+              q.numerical.update_attributes(num)
+            end
+          end
+        end
+      end       
+      return nil      
+    end
 
     # get questions that are mappable
     def mappable
-      where(:is_mappable => true, :has_code_answers_for_analysis => true)
+      where(:is_mappable => true, :is_analysable => true)
     end
 
     # get questions that are not mappable
     def not_mappable
-      where(:is_mappable => false, :has_code_answers_for_analysis => true)
+      where(:is_mappable => false, :is_analysable => true)
     end
 
     # get questions that are not assigned to groups
@@ -271,9 +306,9 @@ class Dataset < CustomTranslation
         when 'download'
           where(group_id: group_id, can_download: true).to_a
         when 'analysis'
-          where(group_id: group_id, exclude: false, has_code_answers_for_analysis: true).to_a
+          where(group_id: group_id, exclude: false, is_analysable: true).to_a
         when 'anlysis_with_exclude_questions'
-          where(group_id: group_id, has_code_answers_for_analysis: true).to_a
+          where(group_id: group_id, is_analysable: true).to_a
         else
           where(group_id: group_id)
       end
@@ -335,6 +370,36 @@ class Dataset < CustomTranslation
       x = where(:code => code.downcase).first if code.present?
       if x.present?
         return x.data
+      else
+        return nil
+      end
+    end      
+
+    # get hash of data [data, formatted_data, frequency_data, frequency_data_total] for the provided code
+    def code_data_all(code)
+      x = where(:code => code.downcase).first if code.present?
+      if x.present?
+        return x
+      else
+        return nil
+      end
+    end
+    
+    # get the formatted_data array for the provided code
+    def code_formatted_data(code)
+      x = where(:code => code.downcase).first if code.present?
+      if x.present?
+        return x.formatted_data
+      else
+        return nil
+      end
+    end
+
+    # get the formatted_data array for the provided code
+    def code_frequency_data(code)
+      x = where(:code => code.downcase).first if code.present?
+      if x.present?
+        return x.frequency_data
       else
         return nil
       end
@@ -411,7 +476,7 @@ class Dataset < CustomTranslation
   index ({ :'questions.is_mappable' => 1})
   index ({ :'questions.can_download' => 1})
   index ({ :'questions.has_code_answers' => 1})
-  index ({ :'questions.has_code_answers_for_analysis' => 1})
+  index ({ :'questions.is_analysable' => 1})
   index ({ :'questions.exclude' => 1})
   index ({ :'questions.shapeset_id' => 1})
   index ({ :'questions.answers.can_exclude' => 1})
@@ -781,7 +846,7 @@ class Dataset < CustomTranslation
     if self.changed? && !(self.changed.include?('reset_download_files') && self.reset_download_files == false)
       logger.debug "========== dataset changed!, setting reset_download_files = true"
       self.reset_download_files = true
-    end
+    end     
     return true
   end
 
@@ -987,7 +1052,93 @@ class Dataset < CustomTranslation
     only(:donor).nin(donor: nil).map{|x| x.donor}.select{|x| x.present?}.uniq.sort
   end
 
+  def questions_data_recalculate(data)#, type)   
+      #if type == "numerical"
+      if data.keys.length
+        data.keys.each {|t| 
+          code = t.downcase
+          dt = data[code]["data"]
+          dt[0] = dt[0].to_i
+          items = data_items.with_code(code)
 
+          question = questions.with_code(code)
+          if dt[0] == 1 
+            items.formatted_data = nil
+            items.frequency_data = nil
+            question.descriptive_statistics = nil
+          elsif dt[0] == 2
+            predefined_answers = question.answers.map { |f| f.value }
+            num = question.numerical  
+            items.formatted_data = []
+            vfd = [] # only valid formatted data for calculating stats
+
+            fd = Array.new(num.size, 0)
+            fd.each_with_index{|x, i| fd[i] = [0,0] }
+
+            #formatted and grouped data calculation
+            items.data.each {|d|
+              if is_numeric?(d) && !predefined_answers.include?(d)
+                if num.type == 0 
+                  tmpD = d.to_i
+                elsif num.type == 1
+                  tmpD = d.to_f
+                end
+
+                if tmpD >= num.min && tmpD <= num.max
+                  items.formatted_data.push(tmpD);
+                  vfd.push(tmpD);
+
+                  index = tmpD == num.min_range ? 0 : ((tmpD-num.min_range)/num.width-0.00001).floor
+                  fd[index][0] += 1
+                else 
+                  items.formatted_data.push(nil);
+                end
+              else 
+                items.formatted_data.push(nil)
+              end
+
+            }
+            total = 0
+            fd.each {|x| total+=x[0]}
+            fd.each_with_index {|x,i| 
+               fd[i][1] = (x[0].to_f/total*100).round(2) }
+
+            items.frequency_data = fd;
+
+            vfd.extend(DescriptiveStatistics) # descriptive statistics
+            
+            question.descriptive_statistics = {
+              :number => vfd.number.to_i,
+              :min => num.integer? ? vfd.min.to_i : vfd.min,
+              :max => num.integer? ? vfd.max.to_i : vfd.max,
+              :mean => vfd.mean,
+              :median => num.integer? ? vfd.median.to_i : vfd.median,
+              :mode => num.integer? ? vfd.mode.to_i : vfd.mode,
+              :q1 => num.integer? ? vfd.percentile(25).to_i : vfd.percentile(25),
+              :q2 => num.integer? ? vfd.percentile(50).to_i : vfd.percentile(50),
+              :q3 => num.integer? ? vfd.percentile(75).to_i : vfd.percentile(75),
+              :variance => vfd.variance,
+              :standard_deviation => vfd.standard_deviation
+            }
+           
+          end
+          items.save
+        }
+      end 
+    # elsif type == "categorical"
+
+    # end      
+  end
+  def self.calculate_percentile(array=[],percentile=0.0)
+    # multiply items in the array by the required percentile 
+    # (e.g. 0.75 for 75th percentile)
+    # round the result up to the next whole number
+    # then subtract one to get the array item we need to return
+    array ? array.sort[((array.length * percentile).ceil)-1] : nil
+  end
+  def is_numeric?(obj) 
+     obj.to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? false : true
+  end
   ##########################################
 
   # get the groups and questions in sorted order
@@ -1007,6 +1158,7 @@ class Dataset < CustomTranslation
     return self.var_arranged_items
   end
 
+  
   # returnt an array of sorted gruops and questions, that match the provided options
   # options:
   # - question_type - type of questions to get (download, analysis, anlysis_with_exclude_questions, or all)
@@ -1025,6 +1177,7 @@ class Dataset < CustomTranslation
       # - else get main groups
       groups = []
       if options[:group_id].present?
+
         groups << self.groups.sub_groups(options[:group_id])
       else
         groups << self.groups.main_groups
@@ -1049,18 +1202,23 @@ class Dataset < CustomTranslation
     if options[:include_questions] == true
       # get questions that are assigned to groups
       # - if group_id not provided, then getting questions that are not assigned to group
-      items << case options[:question_type]
+ 
+      tmp_items = case options[:question_type]
         when 'download'
           self.questions.where(:can_download => true, :group_id => options[:group_id])
         when 'analysis'
-          self.questions.where(:exclude => false, :has_code_answers_for_analysis => true, :group_id => options[:group_id])
+          self.questions.where(:exclude => false, :is_analysable => true, :group_id => options[:group_id])
         when 'anlysis_with_exclude_questions'
-          self.questions.where(:has_code_answers_for_analysis => true, :group_id => options[:group_id])
+          self.questions.where(:is_analysable => true, :group_id => options[:group_id])
         else
           self.questions.where(:group_id => options[:group_id])
       end
-    end
 
+      if options[:exclude_unknown_data_type]
+        tmp_items = tmp_items.where(:data_type.ne => Question::DATA_TYPE_VALUES[:unknown])
+      end
+      items << tmp_items
+    end
     items.flatten!
 
     # sort these items
@@ -1073,6 +1231,69 @@ class Dataset < CustomTranslation
     return items
   end
 
+  def tree(options={})
+    items = []
+
+     if options[:include_groups] == true
+
+
+      # get the groups
+      # - if group id provided, get subgroups in that group
+      # - else get main groups
+      groups = []
+      if options[:group_id].present?
+        groups << self.groups.sub_groups(options[:group_id])
+      else
+        groups << self.groups.main_groups
+      end
+      groups.flatten!
+
+      # if a group has items, add it
+      group_options = options.dup
+      group_options[:include_groups] = options[:include_subgroups] == true
+      groups.each do |group|
+        # get all items for this group (subgroup/questions)
+        group_options[:group_id] = group.id
+        group.var_arranged_items = tree(group_options)
+        # only add the group if it has content
+        if group.var_arranged_items.present? #|| options[:include_group_with_no_items] == true
+          items << group.as_json({only: [:title, :parent_id, :subitems, :sort_order]})
+        end
+
+      end
+    end
+
+    if options[:include_questions] == true
+      # get questions that are assigned to groups
+      # - if group_id not provided, then getting questions that are not assigned to group
+ 
+      tmp_items = case options[:question_type]
+        when 'download'
+          self.questions.where(:can_download => true, :group_id => options[:group_id])
+        when 'analysis'
+          self.questions.where(:exclude => false, :is_analysable => true, :group_id => options[:group_id], :data_type.ne => Question::DATA_TYPE_VALUES[:unknown] )
+        when 'anlysis_with_exclude_questions'
+          self.questions.where(:is_analysable => true, :group_id => options[:group_id], :data_type.ne => Question::DATA_TYPE_VALUES[:unknown])
+        else
+          self.questions.where(:group_id => options[:group_id])
+      end
+
+      if options[:exclude_unknown_data_type]
+        tmp_items = tmp_items.where(:data_type.ne => Question::DATA_TYPE_VALUES[:unknown])
+      end
+      items << (tmp_items.as_json(only: [:code, :original_code, :text, :data_type, :group_id, :exclude, :is_mappable, :has_can_exclude_answers, :is_analysable, :sort_order]))
+    end
+    items.flatten!
+
+    # sort these items
+    # way to sort: sort only items that have sort_order, then add groups with no sort_order, then add questions with no sort_order
+    items = items.select{|x| x["sort_order"].present? }.sort{|x,y| x["sort_order"] <=> y["sort_order"] } + 
+      items.select{|x| x["parent_id"].present? && x["sort_order"].nil?} +
+      items.select{|x| x["code"].present? && x["sort_order"].nil?}
+
+
+    return items
+  end
   #############################
   ## paths to dataset related files
 
