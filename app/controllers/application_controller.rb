@@ -258,7 +258,6 @@ class ApplicationController < ActionController::Base
   ## get data for explore view
   #######################
   def explore_data_generator(dataset, show_private_questions=false)
-     Rails.logger.debug("--------------------------------------------#{params.inspect}")
     # if the language parameter exists and it is valid, use it instead of the default current_locale
     if params[:language].present? && dataset.languages.include?(params[:language])
       dataset.current_locale = params[:language]

@@ -397,7 +397,7 @@ class DatasetsController < ApplicationController
               code: q.original_code,
               question: q.text,
               data_type: q.data_type,
-              has_answers: q.is_analysable,              
+              has_answers: q.has_code_answers,              
               num: {
                 type: 0,
                 width: 0,
