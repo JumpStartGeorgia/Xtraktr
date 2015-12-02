@@ -621,7 +621,7 @@ function build_selects_group_option (group) {
   var has_parent = group.parent_id !== null,
     sub = (has_parent ? "sub" : ""),
     g_text = group.title,
-    content = "data-content=\"<span>" + g_text + "</span><span class='pull-right'>" + "<img src='/assets/svg/"+sub+"group.svg' title='" + gon["is_" + sub + "group"] + "' />" + "</span>\"";
+    content = "data-content=\"<span>" + g_text + "</span><span class='right-icons'>" + "<img src='/assets/svg/"+sub+"group.svg' title='" + gon["is_" + sub + "group"] + "' />" + "</span>\"";
   return "<option class='" + sub + "group' disabled='disabled' " + content + ">" + g_text + "</option>";
 }
 function build_selects_question_option (question, level, skip_content) {
@@ -643,7 +643,7 @@ function build_selects_question_option (question, level, skip_content) {
   }
   // if the question is mappable or is excluded, show the icons for this
   if (!skip_content || question.data_type !== 0) {    
-    content += "data-content=\"<span class='outer-layer'><span class='inner-layer'><span>" + q_text + "</span><span class='pull-right'>";
+    content += "data-content=\"<span class='outer-layer'><span class='inner-layer'><span>" + q_text + "</span><span class='right-icons'>";
 
     if(question.data_type !== 0) {
       var type = question.data_type == 1 ? "categorical" : "numerical";
@@ -666,10 +666,9 @@ function build_selects_question_option (question, level, skip_content) {
 
 function update_available_weights () { // update the list of avilable weights based on questions that are selected
   // update weight list if weights exist
+  var select_weight = $("select#weighted_by_code"),
+    dropdown_weight = $(".form-explore-weight-by .bootstrap-select ul.dropdown-menu");
   if (js.type===1 && js.select_wb.length > 0) {
-    var select_weight = $("select#weighted_by_code"),
-      dropdown_weight = $(".form-explore-weight-by .bootstrap-select ul.dropdown-menu");
-
     if (!select_weight.length) { return; }
 
     var old_value = select_weight.val(),
@@ -704,10 +703,12 @@ function update_available_weights () { // update the list of avilable weights ba
       }
     }
     else{
+      $(".form-explore-weight-by").hide();
       select_weight.selectpicker("val", "unweighted");
     }
   }
   else {
+    $(".form-explore-weight-by").hide();
     select_weight.selectpicker("val", "unweighted");
   }
 }
@@ -862,21 +863,21 @@ $(document).ready(function () {
                 (d[0] == 1 && ((type == 1 && d[1] > 0)||(type == 2 && d[2] > 0))) ||
                 (d[0] == 0 && ((type == 1 && d[1] > 0)||(type == 2 && d[2] > 0)))) && 
                 (also_to_hide.indexOf(i) === -1)) {
-              broken_by_menu.find("li[data-original-index='" + (i + 1) + "']").show();
+              broken_by_menu.find("li[data-original-index='" + i + "']").show();
             }
           });
           broken_by_menu.find("li[data-original-index='0']").show();
-          broken_by_menu.find("li:eq(" + (index+1) + ")").hide(); // turn on off this item
+          broken_by_menu.find("li:eq(" + index + ")").hide(); // turn on off this item
           if(type !== old_type) { js.select_bd.selectpicker("val", ""); }
         }
         else if (id == "broken_down_by_code"){ // update question list
           var question_code_menu = $(".form-explore-question-code .bootstrap-select ul.dropdown-menu");
           question_code_menu.find("li[style*='display: none']").show(); // turn on all hidden items
-          question_code_menu.find("li:eq(" + (index-1) + ")").hide(); // turn on off this item
+          question_code_menu.find("li:eq(" + index + ")").hide(); // turn on off this item
           $("button#btn-swap-vars").fadeToggle(val !== ""); // if val != "" then turn on swap button
           if(bdb_index !== 0)
           {
-            empty_groups(bdb_index-1).forEach(function (d){
+            empty_groups(bdb_index).forEach(function (d){
               question_code_menu.find("li:eq(" + (d) + ")").hide();
             });
           }
@@ -1116,13 +1117,13 @@ $(document).ready(function () {
           var type = js.type;
 
           also_to_hide = empty_groups(q_index);
-          js.select_bd.find("option:eq("+(q_index+1)+")").attr("data-disabled", "disabled");
+          js.select_bd.find("option:eq("+(q_index)+")").attr("data-disabled", "disabled");
           select_map.forEach(function (d, i){
             if(!(((d[0] === 2 && d[2] == type) ||
                 (d[0] == 1 && ((type == 1 && d[1] > 0)||(type == 2 && d[2] > 0))) ||
                 (d[0] == 0 && ((type == 1 && d[1] > 0)||(type == 2 && d[2] > 0)))) &&
                 (also_to_hide.indexOf(i) === -1))) {
-              js.select_bd.find("option:eq("+(i+1)+")").attr("data-disabled", "disabled");
+              js.select_bd.find("option:eq(" + i + ")").attr("data-disabled", "disabled");
             }
           });
 
@@ -1130,11 +1131,11 @@ $(document).ready(function () {
             var bdb_index = bd_option.index();
             bd_option.attr("selected", "selected");
             if(bdb_index !== 0) {
-              js.select_qc.find("option:eq("+(bdb_index-1)+")").attr("data-disabled", "disabled");
+              js.select_qc.find("option:eq(" + bdb_index + ")").attr("data-disabled", "disabled");
               $("button#btn-swap-vars").fadeToggle(true); // if val != "" then turn on swap button
 
               empty_groups(bdb_index-1).forEach(function (d){
-                js.select_qc.find("option:eq("+(d)+")").attr("data-disabled", "disabled");
+                js.select_qc.find("option:eq("+ d +")").attr("data-disabled", "disabled");
               });
             }
           }
