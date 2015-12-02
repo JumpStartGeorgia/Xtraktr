@@ -54,6 +54,8 @@ BootstrapStarter::Application.routes.draw do
         post 'mass_changes_questions'
         get 'mass_changes_answers'
         post 'mass_changes_answers'
+        get 'mass_changes_questions_type'
+        post 'mass_changes_questions_type'
         get 'mappable'
         get 'mappable_form'
         post 'mappable_form'
@@ -106,7 +108,8 @@ BootstrapStarter::Application.routes.draw do
 
     # api
     match '/api', to: 'api#index', as: :api, via: :get
-    namespace :api do
+    namespace :api do   
+      ### v1
       match '/v1', to: 'v1#index', as: :v1, via: :get
       match '/v1/documentation(/:method)', to: 'v1#documentation', as: :v1_documentation, via: :get
       match '/v1/dataset_catalog', to: 'v1#dataset_catalog', as: :v1_dataset_catalog, via: :get, :defaults => { :format => 'json' }
@@ -117,7 +120,7 @@ BootstrapStarter::Application.routes.draw do
       match '/v1/time_series', to: 'v1#time_series', as: :v1_time_series, via: :get, :defaults => { :format => 'json' }
       match '/v1/time_series_codebook', to: 'v1#time_series_codebook', as: :v1_time_series_codebook, via: :get, :defaults => { :format => 'json' }
       match '/v1/time_series_analysis', to: 'v1#time_series_analysis', as: :v1_time_series_analysis, via: :get, :defaults => { :format => 'json' }
-      ###
+      ### v2
       match '/v2', to: 'v2#index', as: :v2, via: :get
       match '/v2/documentation(/:method)', to: 'v2#documentation', as: :v2_documentation, via: :get
       match '/v2/dataset_catalog', to: 'v2#dataset_catalog', as: :v2_dataset_catalog, via: :get, :defaults => { :format => 'json' }
@@ -129,6 +132,18 @@ BootstrapStarter::Application.routes.draw do
       match '/v2/time_series', to: 'v2#time_series', as: :v2_time_series, via: :get, :defaults => { :format => 'json' }
       match '/v2/time_series_codebook', to: 'v2#time_series_codebook', as: :v2_time_series_codebook, via: :get, :defaults => { :format => 'json' }
       match '/v2/time_series_analysis', to: 'v2#time_series_analysis', as: :v2_time_series_analysis, via: :get, :defaults => { :format => 'json' }
+      ### v3
+      match '/v3', to: 'v3#index', as: :v3, via: :get
+      match '/v3/documentation(/:method)', to: 'v3#documentation', as: :v3_documentation, via: :get
+      match '/v3/dataset_catalog', to: 'v3#dataset_catalog', as: :v3_dataset_catalog, via: :get, :defaults => { :format => 'json' }
+      match '/v3/dataset', to: 'v3#dataset', as: :v3_dataset, via: :get, :defaults => { :format => 'json' }
+      match '/v3/dataset_question_data', to: 'v3#dataset_question_data', as: :v3_dataset_question_data, via: :get, :defaults => { :format => 'json' }
+      match '/v3/dataset_codebook', to: 'v3#dataset_codebook', as: :v3_dataset_codebook, via: :get, :defaults => { :format => 'json' }
+      match '/v3/dataset_analysis', to: 'v3#dataset_analysis', as: :v3_dataset_analysis, via: :get, :defaults => { :format => 'json' }
+      match '/v3/time_series_catalog', to: 'v3#time_series_catalog', as: :v3_time_series_catalog, via: :get, :defaults => { :format => 'json' }
+      match '/v3/time_series', to: 'v3#time_series', as: :v3_time_series, via: :get, :defaults => { :format => 'json' }
+      match '/v3/time_series_codebook', to: 'v3#time_series_codebook', as: :v3_time_series_codebook, via: :get, :defaults => { :format => 'json' }
+      match '/v3/time_series_analysis', to: 'v3#time_series_analysis', as: :v3_time_series_analysis, via: :get, :defaults => { :format => 'json' }
     end
 
     # embed pages
@@ -136,6 +151,7 @@ BootstrapStarter::Application.routes.draw do
     namespace :embed do
       match '/v1/:id', to: 'v1#index', as: :v1, via: :get
       match '/v2/:id', to: 'v2#index', as: :v2, via: :get
+      match '/v3/:id', to: 'v3#index', as: :v3, via: :get
     end
 
     # highlights
@@ -157,6 +173,7 @@ BootstrapStarter::Application.routes.draw do
     match '/time_series/:id/explore', :to => 'root#explore_time_series_show', :as => :explore_time_series_show, :via => :get
     match '/private_share/:id', :to => 'root#private_share', :as => :private_share, :via => :get
     match '/generate_highlights', :to => 'root#generate_highlights', :as => :generate_highlights, :via => :post, :defaults => { :format => 'json' }
+
 
     match '/settings', :to => 'settings#index', :as => :settings, :via => [:get, :put]
     match '/settings/get_api_token', :to => 'settings#get_api_token', :as => :settings_get_api_token, :via => :post

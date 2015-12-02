@@ -36,7 +36,6 @@ function update_available_weights () { // update the list of avilable weights ba
         dropdown_weight.find("li:eq(" + index + ")").show();
       }
     });
-
     if (matches.indexOf(old_value) === -1) { // if the old value is no longer an option, select the first one
       select_weight.selectpicker("val", select_weight.find("option:first").attr("value"));
     }
@@ -343,7 +342,7 @@ function build_details_item (selector, json_question){ // populat a details item
         for(var i=0;i<json_question.answers.length;i++){
           var icon = "";
           if (json_question.answers[i].exclude){
-            icon += $(".details-icons #detail-icon-exclude-answer")[0].outerHTML;
+            icon += $(".details-icons .exclude-answer")[0].outerHTML;
           }
           tmp.find(".list-answers").append("<li>" + icon + json_question.answers[i].text + "</li>");
         }

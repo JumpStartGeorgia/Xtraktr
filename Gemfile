@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
 
 gem 'bundler'
-gem "rails", "3.2.18"
-gem "mongoid", "~> 3.1.6"
+gem "rails", "3.2.22"
+gem "mongoid", "~> 3.1.7"
 
 #gem 'smarter_csv' # format csv into array of hashes
 
@@ -47,7 +47,7 @@ gem 'roadie', '~> 2.4.3' # apply easy styling to html emails
 gem 'mongoid-slug', '~> 4.0.0' # permalink urls with mongoid
 gem "autoprefixer-rails" # no need to prefix css, it will automatically do it
 gem "rubyXL"
-
+gem 'descriptive_statistics', '~> 2.4.0', :require => 'descriptive_statistics/safe'
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do

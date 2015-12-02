@@ -251,20 +251,21 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 
     # get the appropriate questions/groups in the correct order
     question_type = show_private_questions == true ? 'analysis_with_exclude_questions' : 'analysis'
-    @items = dataset.arranged_items(question_type: question_type, include_groups: true, include_subgroups: true, include_questions: true)
-
+    #@items = dataset.arranged_items(question_type: question_type, include_groups: true, include_subgroups: true, include_questions: true)
+    @tree = dataset.tree(question_type: question_type, include_groups: true, include_subgroups: true, include_questions: true)
 
     if @questions.present?
 
       # initialize variables
-      # start with a random question
-      @question_code = nil #@questions.map{|x| x.code}.sample
+      @question_code = nil #@questions.map{|x| x.code}.sample 
       @broken_down_by_code = nil
       @filtered_by_code = nil
 
       # check for valid question value
       if params[:question_code].present? && @questions.index{|x| x.code == params[:question_code]}.present?
         @question_code = params[:question_code]
+      else
+        @question_code = @questions.map{|x| x.code}.sample # start with a random question
       end
 
       # check for valid broken down by value
@@ -289,20 +290,29 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
         @css.push('bootstrap-select.min.css', "tabs.css", "explore.css", "explore-page.css", "datasets.css")
         @js.push('bootstrap-select.min.js', "explore.js", "explore_data.js", 'highcharts.js', 'highcharts-map.js', 'highcharts-exporting.js')
 
-        gon.embed_button_link = embed_v2_url('replace') if dataset.public?
+        gon.embed_button_link = embed_v3_url('replace') if dataset.public?
 
         # record javascript variables
-        gon.hover_region = I18n.t('explore_data.v2.hover_region')
-        gon.na = I18n.t('explore_data.v2.na')
-        gon.percent = I18n.t('explore_data.v2.percent')
+        gon.hover_region = I18n.t('explore_data.v3.hover_region')
+        gon.na = I18n.t('explore_data.v3.na')
+        gon.percent = I18n.t('explore_data.v3.percent')
         gon.table_questions_header = I18n.t('app.common.questions')
+
+        gon.mappable_question = I18n.t('app.common.mappable_question')
+        gon.private_question = I18n.t('app.common.private_answer')
+        gon.question_type_categorical = I18n.t('app.common.categorical')
+        gon.question_type_numerical = I18n.t('app.common.numerical')
+        gon.is_subgroup = I18n.t('app.msgs.is_subgroup')
+        gon.is_group = I18n.t('app.msgs.is_group')
+
         set_gon_highcharts(dataset.current_locale)
+
         set_gon_datatables
 
         gon.explore_data = true
         gon.dataset_id = params[:id]
-        gon.api_dataset_analysis_path = api_v2_dataset_analysis_path
-
+        gon.api_dataset_analysis_path = api_v3_dataset_analysis_path
+        gon.questions = { items: @tree, weights: @dataset.weights, filters:[ @question_code, @broken_down_by_code, @filtered_by_code] }
       }
     end
   end
@@ -346,7 +356,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
         @css.push('bootstrap-select.min.css', "tabs.css", "explore.css", "explore-page.css", "time_series.css")
         @js.push('bootstrap-select.min.js', "explore.js", "explore_time_series.js", 'highcharts.js', 'highcharts-exporting.js')
 
-        gon.embed_button_link = embed_v2_url('replace') if time_series.public?
+        gon.embed_button_link = embed_v3_url('replace') if time_series.public?
 
         # record javascript variables
         gon.na = I18n.t('explore_time_series.v2.na')
@@ -357,7 +367,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 
         gon.explore_time_series = true
         gon.time_series_id = params[:id]
-        gon.api_time_series_analysis_path = api_v2_time_series_analysis_path
+        gon.api_time_series_analysis_path = api_v3_time_series_analysis_path
 
       }
     end
@@ -387,7 +397,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
       if options['dataset_id'].present?
         output[:type] = 'dataset'
 
-        data = Api::V2.dataset_analysis(options['dataset_id'], options['question_code'], options)
+        data = Api::V3.dataset_analysis(options['dataset_id'], options['question_code'], options)
 
          if data.present? && data[:dataset].present?
           # save dataset title
@@ -411,7 +421,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
       elsif options['time_series_id'].present?
         output[:type] = 'time_series'
 
-        data = Api::V2.time_series_analysis(options['time_series_id'], options['question_code'], options)
+        data = Api::V3.time_series_analysis(options['time_series_id'], options['question_code'], options)
 
         if data.present? && data[:time_series].present?
           # save dataset title

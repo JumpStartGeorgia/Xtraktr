@@ -19,7 +19,7 @@
     <tbody>
       <% @highlights.each do |highlight| %>
         <tr>
-          <td><%= link_to t('helpers.links.view'), embed_v2_path(highlight.embed_id), class: 'btn btn-default', target: :blank %>
+          <td><%= link_to t('helpers.links.view'), embed_v3_path(highlight.embed_id), class: 'btn btn-default', target: :blank %>
           <td>
             <ul class="list-unstyled">
               <% q = @dataset.questions.with_code(highlight.question_code) %>

@@ -1,8 +1,9 @@
-class Api::V2
+class Api::V3
   extend ActionView::Helpers::NumberHelper
   ANALYSIS_TYPE = {:single => 'single', :comparative => 'comparative', :time_series => 'time_series'}
   WEIGHT_TYPE = {:unweighted => 'unweighted', :time_series => 'time_series'}
-
+  ANALYSIS_DATA_TYPE = {:categorical => 'categorical', :numerical => 'numerical'}
+  DATA_TYPE_VALUES = { :unknown => 0, :categorical => 1, :numerical => 2 }
   ########################################
   ## DATASETS
   ########################################
@@ -49,12 +50,21 @@ class Api::V2
     if dataset_id.nil? || question_code.nil?
       return {errors: [{status: '404', detail: I18n.t('api.msgs.missing_required_params') }]}
     end
-
+    
     # get options
     language = options['language'].present? ? options['language'].downcase : nil
 
+    private_user_id = options['private_user_id']
     # get dataset
-    dataset = Dataset.is_public.find(dataset_id)
+    if private_user_id
+      begin # decode the id
+        user_id = Base64.urlsafe_decode64(private_user_id)
+      end
+      # get the dataset
+      dataset = Dataset.by_id_for_user(dataset_id, user_id) if user_id.present?
+    else
+      dataset = Dataset.is_public.find(dataset_id)
+    end
 
     if dataset.nil?
       return {errors: [{status: '404', detail: I18n.t('api.msgs.no_dataset') }]}    
@@ -70,12 +80,14 @@ class Api::V2
       dataset.current_locale = language
     end
 
-
+    data_items = dataset.data_items.with_code(question_code)
+    num = question.numerical
     return {
       dataset: { id: dataset.id, title: dataset.title },
-      question: create_dataset_question_hash(question),
-      data: dataset.data_items.code_data(question_code) 
-    }
+      question: create_dataset_question_hash(question, private_user_id: private_user_id),
+      data: data_items.data, # question.data_type == 2 ? data_items.formatted_data : 
+      frequency_data: (data_items.frequency_data if question.has_type?)
+    }.merge(question.data_type == 2 ? { frequency_data_meta: { type: num.type, width: num.width, min: num.min, max: num.max, min_range: num.min_range, max_range: num.max_range,  size: num.size } } : {})
   end
 
   # get codebook for a dataset
@@ -146,10 +158,9 @@ class Api::V2
     with_title = options['with_title'].present? && options['with_title'].to_s.to_bool == true
     with_chart_data = options['with_chart_data'].present? && options['with_chart_data'].to_s.to_bool == true
     with_map_data = options['with_map_data'].present? && options['with_map_data'].to_s.to_bool == true
-    language = options['language'] if options['language'].present?
+    language = options['language']
     weight = options['weighted_by_code']
-    weight_values = options['weight_values'] # only present for weighted time series analysis that class this method
-
+    weight_values = options['weight_values'] # only present for weighted time series analysis that class this method 
     dataset = nil
     if private_user_id
       # decode the id
@@ -171,23 +182,23 @@ class Api::V2
     if language.present? && dataset.languages.include?(language)
       dataset.current_locale = language
     end
-    @language = (I18n.available_locales.include? dataset.current_locale.to_sym) ? dataset.current_locale : I18n.locale.to_s
 
     # get the questions
     question = dataset.questions.with_code(question_code)
-
+    @_question = question
     # if the question could not be found, stop
     if question.nil?
       return {errors: [{status: '404', detail: I18n.t('api.msgs.no_question') }]}
     end
 
     # if filter by by exists, get it
+ 
     filtered_by = nil
     if options['filtered_by_code'].present?
       filtered_by = dataset.questions.with_code(options['filtered_by_code'].strip)
 
       # if the filter by question could not be found, stop
-      if filtered_by.nil?
+      if filtered_by.nil? || filtered_by.data_type != DATA_TYPE_VALUES[:categorical]
         return {errors: [{status: '404', detail: I18n.t('api.msgs.no_filtered_by') }]}
       end
     end
@@ -198,7 +209,7 @@ class Api::V2
       broken_down_by = dataset.questions.with_code(options['broken_down_by_code'].strip)
 
       # if the broken_down_by by question could not be found, stop
-      if broken_down_by.nil?
+      if broken_down_by.nil? || question.data_type != broken_down_by.data_type
         return {errors: [{status: '404', detail: I18n.t('api.msgs.no_broken_down_by') }]}
       end
     end
@@ -279,6 +290,7 @@ class Api::V2
     # do the analysis
     # if there is no broken down by then do single analysis, else do comparative analysis
     # use the data[] for the parameter values to get answers that should be included in analysis
+    data[:analysis_data_type] = question.data_type_s
     if broken_down_by.present?
       data[:analysis_type] = ANALYSIS_TYPE[:comparative]
       data[:results] = dataset_comparative_analysis(dataset, data, with_title)
@@ -288,9 +300,9 @@ class Api::V2
       data[:analysis_type] = ANALYSIS_TYPE[:single]
       data[:results] = dataset_single_analysis(dataset, data, with_title, weight_values)
       data[:chart] = dataset_single_chart(data, with_title, options) if with_chart_data
-      data[:map] = dataset_single_map(question.answers, data, with_title, options) if with_map_data && question.is_mappable?
+      #data[:map] = dataset_single_map(question.answers, data, with_title, options) if with_map_data && question.is_mappable?
+      data[:tmp] = dataset.data_items.code_data_all(question[:code])
     end
-
     return data
   end
 
@@ -379,7 +391,7 @@ class Api::V2
   #   errors: [{status, detail}] (optional)
   # }
   def self.time_series_analysis(time_series_id, question_code, options={})
-#    puts "$$$$$$ time series analysis options = #{options}"
+    # puts "$$$$$$ time series analysis options = #{options}"
     data = {}
 
     if time_series_id.nil? || question_code.nil?
@@ -393,7 +405,7 @@ class Api::V2
     can_exclude = options['can_exclude'].present? && options['can_exclude'].to_s.to_bool == true
     with_title = options['with_title'].present? && options['with_title'].to_s.to_bool == true
     with_chart_data = options['with_chart_data'].present? && options['with_chart_data'].to_s.to_bool == true
-    language = options['language'] if options['language'].present?
+    language = options['language']
     weight = options['weighted_by_code']
 
     time_series = nil
@@ -417,8 +429,6 @@ class Api::V2
     if language.present? && time_series.languages.include?(language)
       time_series.current_locale = language
     end
-    @language = (I18n.available_locales.include? time_series.current_locale.to_sym) ? time_series.current_locale : I18n.locale.to_s
-
 
     question = time_series.questions.with_code(question_code)
 
@@ -468,7 +478,7 @@ class Api::V2
       options['weighted_by_code'] = weight
     end
 
-    # puts "== time series weight = #{weight}; item = #{weight_item.inspect}; question = #{weight_question.inspect}"
+    #puts "== time series weight = #{weight}; item = #{weight_item.inspect}; question = #{weight_question.inspect}"
 
     ########################
     # start populating the output
@@ -480,7 +490,7 @@ class Api::V2
     data[:analysis_type] = ANALYSIS_TYPE[:time_series]
     data[:results] = nil
 
-    # puts "== weighted by hash = #{data[:weighted_by]}"
+    #puts "== weighted by hash = #{data[:weighted_by]}"
 
     ########################
     # do the analysis
@@ -493,7 +503,7 @@ class Api::V2
       # if using weights, get the weight values for this dataset
       if weight.present?
         dataset_options['weight_values'] = weight_item.assignments.dataset_weight_values(dq.dataset_id)
-        # puts "==- dataset #{dq.dataset_id} has #{dataset_options['weight_values'].length} weight values"
+        #puts "==- dataset #{dq.dataset_id} has #{dataset_options['weight_values'].length} weight values"
       end
 
       x = dataset_analysis(dq.dataset_id, question_code, dataset_options)
@@ -541,7 +551,10 @@ private
 
     hash = {}
     if question.present?
-      hash = {code: question.code, original_code: question.original_code, text: question.text, notes: question.notes, is_mappable: question.is_mappable, has_map_adjustable_max_range: question.has_map_adjustable_max_range}
+
+      hash = {code: question.code, original_code: question.original_code, data_type: question.data_type, text: question.text, notes: question.notes, is_mappable: question.is_mappable, has_map_adjustable_max_range: question.has_map_adjustable_max_range}
+        .merge(question.numerical_type? ? { numerical: question.numerical.as_json(except: [:_id]), descriptive_statistics: question.descriptive_statistics.inject({}){ |hash, (k, v)| hash.merge( k => number_with_delimiter(v % 1 == 0  ? v : v.round(2), :delimiter => ',') ) } } : {})
+
       # if this question belongs to a group, add it
       if question.group_id.present?
         group = question.group
@@ -555,12 +568,14 @@ private
           end
         end
       end
-      # if this is for admin, include whether the question is excluded
-      if private_user_id.present?
-        hash[:exclude] = question.exclude
-        hash[:answers] = (can_exclude == true ? question.answers.must_include_for_analysis : question.answers.sorted).map{|x| {value: x.value, text: x.text, exclude: x.exclude, can_exclude: x.can_exclude, sort_order: x.sort_order}}
-      else
-        hash[:answers] = (can_exclude == true ? question.answers.must_include_for_analysis : question.answers.all_for_analysis).map{|x| {value: x.value, text: x.text, can_exclude: x.can_exclude, sort_order: x.sort_order}}
+      if question.categorical_type?
+        # if this is for admin, include whether the question is excluded
+        if private_user_id.present?
+          hash[:exclude] = question.exclude
+          hash[:answers] = (can_exclude == true ? question.answers.must_include_for_analysis : question.answers.sorted).map{|x| {value: x.value, text: x.text, exclude: x.exclude, can_exclude: x.can_exclude, sort_order: x.sort_order}}
+        else
+          hash[:answers] = (can_exclude == true ? question.answers.must_include_for_analysis : question.answers.all_for_analysis).map{|x| {value: x.value, text: x.text, can_exclude: x.can_exclude, sort_order: x.sort_order}}
+        end
       end
     end
 
@@ -585,22 +600,23 @@ private
     filtered_by = data_hash[:filtered_by]
     weight = data_hash[:weighted_by]
 
-#    puts "==== dataset single analysis weight = #{weight}; provide weight values length = #{provided_weight_values.nil? ? 0 : provided_weight_values.length}"
+    #puts "==== dataset single analysis weight = #{weight}; provide weight values length = #{provided_weight_values.nil? ? 0 : provided_weight_values.length}"
 
     # get the data for this code
     data = dataset.data_items.code_data(question[:code])
-    data_length = data.length
+
     if data.present?
+      data_length = data.length
       # get the data for the weight
       # - if the weight is from time series, use the provided weight values,
       #   otherwise get the weight values from the dataset
       weight_values = []
       if weight.present?
         if weight == WEIGHT_TYPE[:time_series] && provided_weight_values.present?
- #         puts "==-- using time series weights"
+          #puts "==-- using time series weights"
           weight_values = provided_weight_values
         elsif weight != WEIGHT_TYPE[:time_series] && weight.class == Hash
-  #        puts "==-- using dataset weights"
+          #puts "==-- using dataset weights"
           weight_values = dataset.data_items.code_data(weight[:code])
         end
       end
@@ -614,12 +630,16 @@ private
           # and then pull out the data that has the corresponding filter value
           merged_data = filter_data.zip(data)
           merged_weight_values = weight_values.present? ? filter_data.zip(weight_values) : []
+
           # only keep the data that is in the list of question answers
           # - this is where can_exclude removes the unwanted answers
-          answer_values = question[:answers].map{|x| x[:value]}
-          #merged_data.delete_if{|x| !answer_values.include?(x[1])}
+          answer_values = question[:answers].present? ? question[:answers].map{|x| x[:value]} : []
 
-          to_delete_indexes = merged_data.each_index.select{|i| !answer_values.include? merged_data[i][1] }
+          if question[:data_type] == DATA_TYPE_VALUES[:categorical]
+            to_delete_indexes = merged_data.each_index.select{|i| !answer_values.include? merged_data[i][1] }            
+          elsif question[:data_type] == DATA_TYPE_VALUES[:numerical]
+            to_delete_indexes = merged_data.each_index.select{|i| answer_values.include? merged_data[i][1] }            
+          end
           merged_data.delete_if.with_index { |_, index| to_delete_indexes.include? index }
           merged_weight_values.delete_if.with_index { |_, index| to_delete_indexes.include? index }
 
@@ -652,10 +672,14 @@ private
       else
         # only keep the data that is in the list of question answers
         # - this is where can_exclude removes the unwanted answers
-        answer_values = question[:answers].map{|x| x[:value]}
-        #data.delete_if{|x| !answer_values.include?(x)}
-
-        to_delete_indexes = data.each_index.select{|i| !answer_values.include? data[i] }
+        
+        answer_values = question[:answers].present? ? question[:answers].map{|x| x[:value]} : []
+        
+        if question[:data_type] == DATA_TYPE_VALUES[:categorical]
+          to_delete_indexes = data.each_index.select{|i| !answer_values.include? data[i] }
+        elsif question[:data_type] == DATA_TYPE_VALUES[:numerical]
+          to_delete_indexes = data.each_index.select{|i| answer_values.include? data[i] }
+        end
         data.delete_if.with_index { |_, index| to_delete_indexes.include? index }
         weight_values.delete_if.with_index { |_, index| to_delete_indexes.include? index }
 
@@ -682,74 +706,161 @@ private
 
     if data.present?
       if weight_values.present?
-        # after zip format will be [ [[q,brb],w], [[q,brb],w], ...]
-        # need to flatten this to be [ [q,brb,w], [q,brb,w], ...]
-        merged_data = data.zip(weight_values).map{|x| x.flatten}
+        if @_question.categorical_type?
 
-        # do not want to count nil values
-        counts_per_answer = data.select{|x| x.present?}
-                              .each_with_object(Hash.new(0)) { |item,counts| counts[item.to_s] += 1 }
-        weighted_counts_per_answer = merged_data.select{|x| x[0].present?}
-                              .each_with_object(Hash.new(0)) { |item,counts| counts[item[0].to_s] += 1*item[1].to_f }
+          # do not want to count nil values
+          counts_per_answer =  data.select{|x| x.present?}.each_with_object(Hash.new(0)) { |item,counts| counts[item.to_s] += 1 }
 
-        if counts_per_answer.present?
-          # record the total response
-          results[:total_responses] = counts_per_answer.values.inject(:+)
-          weighted_total_responses = weighted_counts_per_answer.values.inject(:+)
+          weighted_total_responses = 0
+          weighted_counts_per_answer = Hash.new(0)
 
-          # set the titles
-          if with_title
-            results[:title][:html] = dataset_single_analysis_title('html', question, filtered_by, filtered_by_answer)
-            results[:title][:text] = dataset_single_analysis_title('text', question, filtered_by, filtered_by_answer)
-            results[:subtitle][:html] = dataset_analysis_subtitle('html', results[:total_responses], results[:total_possible_responses], weight_values.present?)
-            results[:subtitle][:text] = dataset_analysis_subtitle('text', results[:total_responses], results[:total_possible_responses], weight_values.present?)
-          end
-
-          # for each question answer, add the count and percent
-          question[:answers].each do |answer|
-            value = answer[:value]
-            item = {answer_value: answer[:value], answer_text: answer[:text], unweighted_count: 0, weighted_count: 0, weighted_percent: 0}
-            if counts_per_answer[value].present?
-              item[:unweighted_count] = counts_per_answer[value]
+          data.each_with_index{|x, i| 
+            if x.present?
+              weighted_counts_per_answer[x.to_s] += 1*weight_values[i].to_f 
+              weighted_total_responses += 1*weight_values[i].to_f 
             end
-            if weighted_counts_per_answer[value].present? && weighted_total_responses > 0
-              item[:weighted_count] = weighted_counts_per_answer[value].round
-              item[:weighted_percent] = (weighted_counts_per_answer[value].to_f/weighted_total_responses*100).round(2) if weighted_total_responses > 0
-            end
-            results[:analysis] << item
-          end
+          }
 
+          if counts_per_answer.present?
+            
+            results[:total_responses] = counts_per_answer.values.inject(:+) # record the total response
+            #weighted_total_responses = weighted_counts_per_answer.values.inject(:+)
+
+            # for each question answer, add the count and percent
+            question[:answers].each do |answer|
+              value = answer[:value]
+              item = {answer_value: answer[:value], answer_text: answer[:text], unweighted_count: 0, weighted_count: 0, weighted_percent: 0}
+              if counts_per_answer[value].present?
+                item[:unweighted_count] = counts_per_answer[value]
+              end
+              if weighted_counts_per_answer[value].present? && weighted_total_responses > 0
+                item[:weighted_count] = weighted_counts_per_answer[value].round
+                item[:weighted_percent] = (weighted_counts_per_answer[value].to_f/weighted_total_responses*100).round(2) if weighted_total_responses > 0
+              end
+              results[:analysis] << item
+            end
+
+          end
+        elsif @_question.numerical_type?
+
+          num = @_question.numerical
+          fd = Array.new(num.size, 0)
+          fd.each_with_index{|x, i| fd[i] = [0,0] }
+          fdw = fd.clone
+
+          #formatted and grouped data calculation
+          data.each_with_index {|d,i|
+            if is_numeric?(d)
+              if num.type == 0 
+                tmpD = d.to_i
+              elsif num.type == 1
+                tmpD = d.to_f
+              end
+
+              if tmpD >= num.min && tmpD <= num.max
+                index = tmpD == num.min_range ? 0 : ((tmpD-num.min_range)/num.width-0.00001).floor
+                fd[index][0] += 1
+                fdw[index][0] += 1*weight_values[i].to_f
+              else 
+              end
+            end 
+          } 
+          total = 0
+          total_w = 0
+          fd.each {|x| total+=x[0]
+          }
+          fdw.each {|x| total_w+=x[0] }
+          results[:total_responses] = total
+
+          fd.each_with_index {|x,i| 
+          fd[i][1] = (x[0].to_f/total*100).round(2) }
+          fdw.each_with_index {|x,i| 
+          fdw[i][1] = (x[0].to_f/total_w*100).round(2) }
+          
+          fd.each_with_index{|x,i|
+            start = num.min_range + num.width * i
+            start = num.type == 0 ? start.to_i : start.to_f
+            minus = num.type == 0 ? 1 : (num.width.to_s.include?(".") ? ("0." + "0"*(num.width.to_s.split(".")[1].length-1) + "1").to_f : 0.1)
+
+            if fd.length-1 == i
+              minus = 0
+            end
+            
+            endd = start + num.width - minus
+            endd = num.type == 0 ? endd.to_i : endd.to_f
+            results[:analysis] << { answer_value: i, answer_text: "#{start} - #{endd}",
+           unweighted_count: x[0], weighted_count: fdw[i][0], weighted_percent: fdw[i][1] } }
         end
-
       else
-        # do not want to count nil values
-        counts_per_answer = data.select{|x| x.present?}
-                              .each_with_object(Hash.new(0)) { |item,counts| counts[item.to_s] += 1 }
+        if @_question.categorical_type?
 
+          # do not want to count nil values
+          counts_per_answer = data.select{|x| x.present?}.each_with_object(Hash.new(0)) { |item,counts| counts[item.to_s] += 1 }
 
-        if counts_per_answer.present?
-          # record the total response
-          results[:total_responses] = counts_per_answer.values.inject(:+)
-
-          # set the titles
-          if with_title
-            results[:title][:html] = dataset_single_analysis_title('html', question, filtered_by, filtered_by_answer)
-            results[:title][:text] = dataset_single_analysis_title('text', question, filtered_by, filtered_by_answer)
-            results[:subtitle][:html] = dataset_analysis_subtitle('html', results[:total_responses], results[:total_possible_responses], weight_values.present?)
-            results[:subtitle][:text] = dataset_analysis_subtitle('text', results[:total_responses], results[:total_possible_responses], weight_values.present?)
-          end
-
-          # for each question answer, add the count and percent
-          question[:answers].each do |answer|
-            value = answer[:value]
-            item = {answer_value: answer[:value], answer_text: answer[:text], count: 0, percent: 0}
-            if counts_per_answer[value].present?
-              item[:count] = counts_per_answer[value]
-              item[:percent] = (counts_per_answer[value].to_f/results[:total_responses]*100).round(2) if results[:total_responses] > 0
+          if counts_per_answer.present?
+            
+            results[:total_responses] = counts_per_answer.values.inject(:+) # record the total response
+            
+            question[:answers].each do |answer| # for each question answer, add the count and percent
+              value = answer[:value]
+              item = {answer_value: answer[:value], answer_text: answer[:text], count: 0, percent: 0}
+              if counts_per_answer[value].present?
+                item[:count] = counts_per_answer[value]
+                item[:percent] = (counts_per_answer[value].to_f/results[:total_responses]*100).round(2) if results[:total_responses] > 0
+              end
+              results[:analysis] << item
             end
-            results[:analysis] << item
           end
+        elsif @_question.numerical_type?
+
+          num = @_question.numerical
+          fd = Array.new(num.size, 0)
+          fd.each_with_index{|x, i| fd[i] = [0,0] }
+
+          #formatted and grouped data calculation
+          data.each {|d|
+            if is_numeric?(d)
+              if num.type == 0 
+                tmpD = d.to_i
+              elsif num.type == 1
+                tmpD = d.to_f
+              end
+
+              if tmpD >= num.min && tmpD <= num.max
+                index = tmpD == num.min_range ? 0 : ((tmpD-num.min_range)/num.width-0.00001).floor
+                fd[index][0] += 1
+              else 
+              end
+            end 
+          }
+          total = 0
+          fd.each {|x| total+=x[0]}
+          results[:total_responses] = total
+          fd.each_with_index {|x,i| 
+          fd[i][1] = (x[0].to_f/total*100).round(2) }
+
+          
+          fd.each_with_index{|x,i| 
+            start = num.min_range + num.width * i
+            start = num.type == 0 ? start.to_i : start.to_f
+            minus = num.type == 0 ? 1 : (num.width.to_s.include?(".") ? ("0." + "0"*(num.width.to_s.split(".")[1].length-1) + "1").to_f : 0.1)
+
+            if fd.length-1 == i
+              minus = 0
+            end
+            
+            endd = start + num.width - minus
+            endd = num.type == 0 ? endd.to_i : endd.to_f
+            results[:analysis] << { answer_value: i, answer_text: "#{start} - #{endd}", count: x[0], percent: x[1] } }
         end
+      end
+
+      # set the titles
+      if with_title
+        results[:title][:html] = dataset_single_analysis_title('html', question, filtered_by, filtered_by_answer)
+        results[:title][:text] = dataset_single_analysis_title('text', question, filtered_by, filtered_by_answer)
+        results[:subtitle][:html] = dataset_analysis_subtitle('html', results[:total_responses], results[:total_possible_responses], weight_values.present?)
+        results[:subtitle][:text] = dataset_analysis_subtitle('text', results[:total_responses], results[:total_possible_responses], weight_values.present?)
       end
     end
     return results
@@ -767,62 +878,43 @@ private
         chart = []
         data[:results][:filter_analysis].each do |filter|
           chart_item = {filter_answer_value: filter[:filter_answer_value], filter_answer_text: filter[:filter_answer_text], filter_results: {} }
+          fr = chart_item[:filter_results]
 
-          # set the titles
-          # - assume titles are already set in data[:filtered_by][:results]
-          if with_title
-            chart_item[:filter_results][:title] = filter[:filter_results][:title]
-            chart_item[:filter_results][:subtitle] = filter[:filter_results][:subtitle]
+          if with_title # set the titles - assume titles are already set in data[:filtered_by][:results]
+            fr[:title] = filter[:filter_results][:title]
+            fr[:subtitle] = filter[:filter_results][:subtitle]
           end
-
-          # create embed id
-          # add filter value
-          options['filtered_by_value'] = filter[:filter_answer_value]
+          
+          options['filtered_by_value'] = filter[:filter_answer_value] # add filter value
           options['visual_type'] = 'chart'
-          # chart_item[:filter_results][:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
-          chart_item[:filter_results][:embed_id] = {
+
+          fr[:embed_id] = {           # create embed id
             pie_chart: Base64.urlsafe_encode64(clean_options(options.merge({ :chart_type => "pie"})).to_query),
             bar_chart: Base64.urlsafe_encode64(clean_options(options.merge({ :chart_type => "bar"})).to_query)
           } 
 
+          fr[:data] = [] # create data for chart
+          filter[:filter_results][:analysis].each{|x| fr[:data] << dataset_single_chart_processing(x); }
 
-          # create data for chart
-          chart_item[:filter_results][:data] = []
-          data[:question][:answers].each do |answer|
-            data_result = filter[:filter_results][:analysis].select{|x| x[:answer_value] == answer[:value]}.first
-            if data_result.present?
-              chart_item[:filter_results][:data] << dataset_single_chart_processing(answer, data_result)
-            end
-          end
-          if chart_item[:filter_results][:data].present?
-            chart << chart_item
-          end
+          chart << chart_item if fr[:data].present?
         end
       else
         chart = {}
-
-        # set the titles
-        # - assume titles are already set in data[:results]
-        if with_title
+        
+        if with_title # set the titles - assume titles are already set in data[:results]
           chart[:title] = data[:results][:title]
           chart[:subtitle] = data[:results][:subtitle]
         end
-
-        # create embed id
+        
         options['visual_type'] = 'chart'
-        chart[:embed_id] = {
-            pie_chart: Base64.urlsafe_encode64(clean_options(options.merge({ :chart_type => "pie"})).to_query),
-            bar_chart: Base64.urlsafe_encode64(clean_options(options.merge({ :chart_type => "bar"})).to_query)
-          } 
 
-        # create data for chart
-        chart[:data] = []
-        data[:question][:answers].each do |answer|
-          data_result = data[:results][:analysis].select{|x| x[:answer_value] == answer[:value]}.first
-          if data_result.present?
-            chart[:data] << dataset_single_chart_processing(answer, data_result)
-          end
-        end
+        chart[:embed_id] = { # create embed id
+          pie_chart: Base64.urlsafe_encode64(clean_options(options.merge({ :chart_type => "pie"})).to_query),
+          bar_chart: Base64.urlsafe_encode64(clean_options(options.merge({ :chart_type => "bar"})).to_query)
+        } 
+
+        chart[:data] = [] # create data for chart
+        data[:results][:analysis].each{|x| chart[:data] << dataset_single_chart_processing(x); }    
       end
 
       return chart
@@ -831,22 +923,14 @@ private
 
 
   # format: {name, y(percent), count, answer_value}
-  def self.dataset_single_chart_processing(answer, data_result)
-    if data_result.has_key?(:weighted_count)
-      {
-        name: answer[:text],
-        y: data_result[:weighted_percent],
-        count: data_result[:weighted_count],
-        answer_value: answer[:value]
-      }
-    else
-      {
-        name: answer[:text],
-        y: data_result[:percent],
-        count: data_result[:count],
-        answer_value: answer[:value]
-      }
-    end
+  def self.dataset_single_chart_processing(item)
+    weighted = item.has_key?(:weighted_count) ? "weighted_" : ""
+    {
+      name: item[:answer_text],
+      y: item[:"#{weighted}percent"],
+      count: item[:"#{weighted}count"],
+      answer_value: item[:answer_value]
+    }   
   end
 
   # convert the results into highmaps map format
@@ -860,7 +944,6 @@ private
 
       if data[:filtered_by].present?
         map = []
-
         data[:results][:filter_analysis].each do |filter|
           map_item = {filter_answer_value: filter[:filter_answer_value], filter_answer_text: filter[:filter_answer_text],
                     filter_results: {shape_question_code: data[:question][:code], adjustable_max_range: data[:question][:has_map_adjustable_max_range], map_sets: {}}}
@@ -879,7 +962,7 @@ private
           map_item[:filter_results][:map_sets][:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
 
           map_item[:filter_results][:map_sets][:data] = []
-          
+
           data[:question][:answers].each_with_index do |answer|
             answer_obj = answers.select{|x| x.value == answer[:value]}.first
             data_result = filter[:filter_results][:analysis].select{|x| x[:answer_value] == answer[:value]}.first
@@ -892,6 +975,7 @@ private
             map << map_item
           end
         end
+
       else
         # need question code so know which shape data to use
         map = {shape_question_code: data[:question][:code], adjustable_max_range: data[:question][:has_map_adjustable_max_range], map_sets: {}}
@@ -953,8 +1037,14 @@ private
 
 
     # get the values for the codes from the data
-    question_data = dataset.data_items.code_data(question[:code])
-    broken_down_data = dataset.data_items.code_data(broken_down_by[:code])
+    if question[:data_type] == DATA_TYPE_VALUES[:categorical]
+      question_data = dataset.data_items.code_data(question[:code])
+      broken_down_data = dataset.data_items.code_data(broken_down_by[:code])
+    elsif question[:data_type] == DATA_TYPE_VALUES[:numerical]
+      question_data = dataset.data_items.code_formatted_data(question[:code])
+      broken_down_data = dataset.data_items.code_formatted_data(broken_down_by[:code])
+    end
+    
     # get the data for the weight
     weight_values = weight.present? ? dataset.data_items.code_data(weight[:code]) : []
 
@@ -974,14 +1064,19 @@ private
 
         # only keep the data that is in the list of question/broken down by answers
         # - this is where can_exclude removes the unwanted answers
-        q_answer_values = question[:answers].map{|x| x[:value]}
-        bdb_answer_values = broken_down_by[:answers].map{|x| x[:value]}
+        
 
-        #merged_data.delete_if{|x| !q_answer_values.include?(x[1][0]) && !bdb_answer_values.include?(x[1][1])}
+        q_answer_values = question[:answers].present? ? question[:answers].map{|x| x[:value]} : []
+        bdb_answer_values = broken_down_by[:answers].present? ? broken_down_by[:answers].map{|x| x[:value]} : []
 
-        to_delete_indexes = merged_data.each_index.select{|i| !q_answer_values.include?(merged_data[i][1][0]) && !bdb_answer_values.include?(merged_data[i][1][1]) }
+        if question[:data_type] == DATA_TYPE_VALUES[:categorical]
+          to_delete_indexes = merged_data.each_index.select{|i| !q_answer_values.include?(merged_data[i][1][0]) && !bdb_answer_values.include?(merged_data[i][1][1]) }
+        elsif question[:data_type] == DATA_TYPE_VALUES[:numerical]
+          to_delete_indexes = merged_data.each_index.select{|i| !merged_data[i][1][0].present? || !merged_data[i][1][1].present? }
+        end
         merged_data.delete_if.with_index { |_, index| to_delete_indexes.include? index }
         merged_weight_values.delete_if.with_index { |_, index| to_delete_indexes.include? index }
+
 
         filter_results = nil
         if with_title
@@ -1011,16 +1106,17 @@ private
       end
     else
       # only keep the data that is in the list of question/broken down by answers
-      # - this is where can_exclude removes the unwanted answers
-      q_answer_values = question[:answers].map{|x| x[:value]}
-      bdb_answer_values = broken_down_by[:answers].map{|x| x[:value]}
-      #data.delete_if{|x| !q_answer_values.include?(x[0]) && !bdb_answer_values.include?(x[1])}
+      # - this is where can_exclude removes the unwanted answers              
+      q_answer_values = question[:answers].present? ? question[:answers].map{|x| x[:value]} : []
+      bdb_answer_values = broken_down_by[:answers].present? ? broken_down_by[:answers].map{|x| x[:value]} : []
 
-
-      to_delete_indexes = data.each_index.select{|i| !q_answer_values.include?(data[i][0]) && !bdb_answer_values.include?(data[i][1]) }
+      if question[:data_type] == DATA_TYPE_VALUES[:categorical]
+        to_delete_indexes = data.each_index.select{|i| !q_answer_values.include?(data[i][0]) && !bdb_answer_values.include?(data[i][1]) }
+      elsif question[:data_type] == DATA_TYPE_VALUES[:numerical]
+        to_delete_indexes = data.each_index.select{|i| !data[i][0].present? || !data[i][1].present? }
+      end
       data.delete_if.with_index { |_, index| to_delete_indexes.include? index }
       weight_values.delete_if.with_index { |_, index| to_delete_indexes.include? index }
-
 
       return dataset_comparative_analysis_processing(question, broken_down_by, data.length, data, with_title: with_title, weight_values: weight_values)
     end
@@ -1045,148 +1141,146 @@ private
     end
 
     if data.present?
-      if weight_values.present?
-        question_answer_template = {answer_value: nil, answer_text: nil, broken_down_results: nil}
-        broken_down_answer_template = {broken_down_answer_value: nil, broken_down_answer_text: nil, unweighted_count: 0, weighted_count: 0, weighted_percent: 0}
+      if question[:data_type] == DATA_TYPE_VALUES[:categorical]
+        if weight_values.present?
+          question_answer_template = {answer_value: nil, answer_text: nil, broken_down_results: nil}
+          broken_down_answer_template = {broken_down_answer_value: nil, broken_down_answer_text: nil, unweighted_count: 0, weighted_count: 0, weighted_percent: 0}
 
-        merged_data = data.zip(weight_values).map{|x| x.flatten}
-        # get the counts for each question answer by each broken down answer
-        # format: {question_answer: [{broken_down_answer: count, broken_down_answer: count, broken_down_answer: count, }], ...}
-        counts_per_answer = {}
-        weighted_counts_per_answer = {}
-        data.map{|x| x[0]}.uniq.each do |data_item|
-          # do not include nil values
-          if data_item.present?
-            # get the broken down values that exist with this answer
-            # and then count how many times each appears
-            # do not process nil values for x[1]
-            counts_per_answer[data_item.to_s] = data.select{|x| x[0] == data_item && x[1].present?}
-                                      .each_with_object(Hash.new(0)) { |item,counts| counts[item[1].to_s] += 1 }
-            weighted_counts_per_answer[data_item.to_s] = merged_data.select{|x| x[0] == data_item && x[1].present?}
-                                      .each_with_object(Hash.new(0)) { |item,counts| counts[item[1].to_s] += 1*item[2].to_f }
+          merged_data = data.zip(weight_values).map{|x| x.flatten}
+          # get the counts for each question answer by each broken down answer
+          # format: {question_answer: [{broken_down_answer: count, broken_down_answer: count, broken_down_answer: count, }], ...}
+          counts_per_answer = {}
+          weighted_counts_per_answer = {}
+          data.map{|x| x[0]}.uniq.each do |data_item|
+            # do not include nil values
+            if data_item.present?
+              # get the broken down values that exist with this answer
+              # and then count how many times each appears
+              # do not process nil values for x[1]
+              counts_per_answer[data_item.to_s] = data.select{|x| x[0] == data_item && x[1].present?}
+                                        .each_with_object(Hash.new(0)) { |item,counts| counts[item[1].to_s] += 1 }
+              weighted_counts_per_answer[data_item.to_s] = merged_data.select{|x| x[0] == data_item && x[1].present?}
+                                        .each_with_object(Hash.new(0)) { |item,counts| counts[item[1].to_s] += 1*item[2].to_f }
+            end
           end
-        end
 
-        if counts_per_answer.present?
-          # - create counts and percents
-          total = 0
-          question[:answers].each do |answer|
-            answer_counts = counts_per_answer[answer[:value].to_s]
-            weighted_answer_counts = weighted_counts_per_answer[answer[:value].to_s]
-            question_answer_count = 0
-            weighted_question_answer_count = 0
-            item = question_answer_template.clone
-            item[:answer_value] = answer[:value]
-            item[:answer_text] = answer[:text]
-            item[:broken_down_results] = []
+          if counts_per_answer.present?
+            # - create counts and percents
+            total = 0
+            question[:answers].each do |answer|
+              answer_counts = counts_per_answer[answer[:value].to_s]
+              weighted_answer_counts = weighted_counts_per_answer[answer[:value].to_s]
+              question_answer_count = 0
+              weighted_question_answer_count = 0
+              item = question_answer_template.clone
+              item[:answer_value] = answer[:value]
+              item[:answer_text] = answer[:text]
+              item[:broken_down_results] = []
 
-            broken_down_by[:answers].each do |bdb_answer|
-              bdb_item = broken_down_answer_template.clone
-              bdb_item[:broken_down_answer_value] = bdb_answer[:value]
-              bdb_item[:broken_down_answer_text] = bdb_answer[:text]
+              broken_down_by[:answers].each do |bdb_answer|
+                bdb_item = broken_down_answer_template.clone
+                bdb_item[:broken_down_answer_value] = bdb_answer[:value]
+                bdb_item[:broken_down_answer_text] = bdb_answer[:text]
 
-              if answer_counts.present? && answer_counts[bdb_answer[:value].to_s].present?
-                bdb_item[:unweighted_count] = answer_counts[bdb_answer[:value].to_s]
-                question_answer_count += bdb_item[:unweighted_count]
+                if answer_counts.present? && answer_counts[bdb_answer[:value].to_s].present?
+                  bdb_item[:unweighted_count] = answer_counts[bdb_answer[:value].to_s]
+                  question_answer_count += bdb_item[:unweighted_count]
+                end
+                if weighted_answer_counts.present? && weighted_answer_counts[bdb_answer[:value].to_s].present?
+                  bdb_item[:weighted_count] = weighted_answer_counts[bdb_answer[:value].to_s].round
+                  weighted_question_answer_count += bdb_item[:weighted_count]
+                end
+
+                item[:broken_down_results] << bdb_item
               end
-              if weighted_answer_counts.present? && weighted_answer_counts[bdb_answer[:value].to_s].present?
-                bdb_item[:weighted_count] = weighted_answer_counts[bdb_answer[:value].to_s].round
-                weighted_question_answer_count += bdb_item[:weighted_count]
+
+              if weighted_question_answer_count > 0
+                # now that the counts for the question answer is done, compute the percents
+                item[:broken_down_results].each do |bdr_item|
+                  bdr_item[:weighted_percent] = (bdr_item[:weighted_count].to_f/weighted_question_answer_count*100).round(2)
+                end
+
+                # update overall total
+                total += question_answer_count
               end
 
-              item[:broken_down_results] << bdb_item
+              results[:analysis] << item
             end
 
-            if weighted_question_answer_count > 0
-              # now that the counts for the question answer is done, compute the percents
-              item[:broken_down_results].each do |bdr_item|
-                bdr_item[:weighted_percent] = (bdr_item[:weighted_count].to_f/weighted_question_answer_count*100).round(2)
+            # total responses
+            results[:total_responses] = total
+
+   
+          end
+        else
+          question_answer_template = {answer_value: nil, answer_text: nil, broken_down_results: nil}
+          broken_down_answer_template = {broken_down_answer_value: nil, broken_down_answer_text: nil, count: 0, percent: 0}
+
+          # get the counts for each question answer by each broken down answer
+          # format: {question_answer: [{broken_down_answer: count, broken_down_answer: count, broken_down_answer: count, }], ...}
+          counts_per_answer = {}
+          data.map{|x| x[0]}.uniq.each do |data_item|
+            # do not include nil values
+            if data_item.present?
+              # get the broken down values that exist with this answer
+              # and then count how many times each appears
+              # do not process nil values for x[1]
+              counts_per_answer[data_item.to_s] = data.select{|x| x[0] == data_item && x[1].present?}.map{|x| x[1]}
+                                        .each_with_object(Hash.new(0)) { |item,counts| counts[item.to_s] += 1 }
+            end
+          end
+
+          if counts_per_answer.present?
+            # - create counts and percents
+            total = 0
+            question[:answers].each do |answer|
+              answer_counts = counts_per_answer[answer[:value].to_s]
+              question_answer_count = 0
+              item = question_answer_template.clone
+              item[:answer_value] = answer[:value]
+              item[:answer_text] = answer[:text]
+              item[:broken_down_results] = []
+
+              broken_down_by[:answers].each do |bdb_answer|
+                bdb_item = broken_down_answer_template.clone
+                bdb_item[:broken_down_answer_value] = bdb_answer[:value]
+                bdb_item[:broken_down_answer_text] = bdb_answer[:text]
+
+                if answer_counts.present? && answer_counts[bdb_answer[:value].to_s].present?
+                  bdb_item[:count] = answer_counts[bdb_answer[:value].to_s]
+                  question_answer_count += bdb_item[:count]
+                end
+
+                item[:broken_down_results] << bdb_item
               end
 
-              # update overall total
-              total += question_answer_count
-            end
+              if question_answer_count > 0
+                # now that the coutns for the question answer is done, compute the percents
+                item[:broken_down_results].each do |bdr_item|
+                  bdr_item[:percent] = (bdr_item[:count].to_f/question_answer_count*100).round(2)
+                end
 
-            results[:analysis] << item
-          end
-
-          # total responses
-          results[:total_responses] = total
-
-          # set the titles
-          if with_title
-            results[:title][:html] = dataset_comparative_analysis_title('html', question, broken_down_by, filtered_by, filtered_by_answer)
-            results[:title][:text] = dataset_comparative_analysis_title('text', question, broken_down_by, filtered_by, filtered_by_answer)
-            results[:subtitle][:html] = dataset_analysis_subtitle('html', results[:total_responses], results[:total_possible_responses], weight_values.present?)
-            results[:subtitle][:text] = dataset_analysis_subtitle('text', results[:total_responses], results[:total_possible_responses], weight_values.present?)
-          end
-        end
-      else
-        question_answer_template = {answer_value: nil, answer_text: nil, broken_down_results: nil}
-        broken_down_answer_template = {broken_down_answer_value: nil, broken_down_answer_text: nil, count: 0, percent: 0}
-
-        # get the counts for each question answer by each broken down answer
-        # format: {question_answer: [{broken_down_answer: count, broken_down_answer: count, broken_down_answer: count, }], ...}
-        counts_per_answer = {}
-        data.map{|x| x[0]}.uniq.each do |data_item|
-          # do not include nil values
-          if data_item.present?
-            # get the broken down values that exist with this answer
-            # and then count how many times each appears
-            # do not process nil values for x[1]
-            counts_per_answer[data_item.to_s] = data.select{|x| x[0] == data_item && x[1].present?}.map{|x| x[1]}
-                                      .each_with_object(Hash.new(0)) { |item,counts| counts[item.to_s] += 1 }
-          end
-        end
-
-        if counts_per_answer.present?
-          # - create counts and percents
-          total = 0
-          question[:answers].each do |answer|
-            answer_counts = counts_per_answer[answer[:value].to_s]
-            question_answer_count = 0
-            item = question_answer_template.clone
-            item[:answer_value] = answer[:value]
-            item[:answer_text] = answer[:text]
-            item[:broken_down_results] = []
-
-            broken_down_by[:answers].each do |bdb_answer|
-              bdb_item = broken_down_answer_template.clone
-              bdb_item[:broken_down_answer_value] = bdb_answer[:value]
-              bdb_item[:broken_down_answer_text] = bdb_answer[:text]
-
-              if answer_counts.present? && answer_counts[bdb_answer[:value].to_s].present?
-                bdb_item[:count] = answer_counts[bdb_answer[:value].to_s]
-                question_answer_count += bdb_item[:count]
+                # update overall total
+                total += question_answer_count
               end
 
-              item[:broken_down_results] << bdb_item
+              results[:analysis] << item
             end
 
-            if question_answer_count > 0
-              # now that the coutns for the question answer is done, compute the percents
-              item[:broken_down_results].each do |bdr_item|
-                bdr_item[:percent] = (bdr_item[:count].to_f/question_answer_count*100).round(2)
-              end
-
-              # update overall total
-              total += question_answer_count
-            end
-
-            results[:analysis] << item
-          end
-
-          # total responses
-          results[:total_responses] = total
-
-          # set the titles
-          if with_title
-            results[:title][:html] = dataset_comparative_analysis_title('html', question, broken_down_by, filtered_by, filtered_by_answer)
-            results[:title][:text] = dataset_comparative_analysis_title('text', question, broken_down_by, filtered_by, filtered_by_answer)
-            results[:subtitle][:html] = dataset_analysis_subtitle('html', results[:total_responses], results[:total_possible_responses], weight_values.present?)
-            results[:subtitle][:text] = dataset_analysis_subtitle('text', results[:total_responses], results[:total_possible_responses], weight_values.present?)
+            # total responses
+            results[:total_responses] = total
           end
         end
+      elsif question[:data_type] == DATA_TYPE_VALUES[:numerical]
+        results[:analysis] = data
+        results[:total_responses] = data.length
+      end
+      # set the titles
+      if with_title
+        results[:title][:html] = dataset_comparative_analysis_title('html', question, broken_down_by, filtered_by, filtered_by_answer)
+        results[:title][:text] = dataset_comparative_analysis_title('text', question, broken_down_by, filtered_by, filtered_by_answer)
+        results[:subtitle][:html] = dataset_analysis_subtitle('html', results[:total_responses], results[:total_possible_responses], weight_values.present?)
+        results[:subtitle][:text] = dataset_analysis_subtitle('text', results[:total_responses], results[:total_possible_responses], weight_values.present?)
       end
     end
     return results
@@ -1204,35 +1298,52 @@ private
       count_key = data[:weighted_by].present? ? :weighted_count : :count
 
       if data[:filtered_by].present?
-        chart = []
-        data[:results][:filter_analysis].each do |filter|
-          chart_item = {filter_answer_value: filter[:filter_answer_value], filter_answer_text: filter[:filter_answer_text], filter_results: {}}
+        if data[:analysis_data_type] == ANALYSIS_DATA_TYPE[:categorical]
+          chart = []
+          data[:results][:filter_analysis].each do |filter|
+            chart_item = {filter_answer_value: filter[:filter_answer_value], filter_answer_text: filter[:filter_answer_text], filter_results: {}}
 
-          # set the titles
-          # - assume titles are already set in data[:filtered_by][:results]
-          if with_title
-            chart_item[:filter_results][:title] = filter[:filter_results][:title]
-            chart_item[:filter_results][:subtitle] = filter[:filter_results][:subtitle]
-          end
-
-          # create embed id
-          # add filter value
-          options['filtered_by_value'] = filter[:filter_answer_value]
-          options['visual_type'] = 'chart'
-          chart_item[:filter_results][:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
-
-          chart_item[:filter_results][:labels] = data[:question][:answers].map{|x| x[:text]}
-
-          # have to transpose the counts for highcharts
-          counts = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[count_key]}}.transpose
-
-          if counts.present?
-            chart_item[:filter_results][:data] = []
-            data[:broken_down_by][:answers].each_with_index do |answer, i|
-              chart_item[:filter_results][:data] << {name: answer[:text], data: counts[i]}
+            # set the titles
+            # - assume titles are already set in data[:filtered_by][:results]
+            if with_title
+              chart_item[:filter_results][:title] = filter[:filter_results][:title]
+              chart_item[:filter_results][:subtitle] = filter[:filter_results][:subtitle]
             end
 
-            chart << chart_item
+            # create embed id
+            # add filter value
+            options['filtered_by_value'] = filter[:filter_answer_value]
+            options['visual_type'] = 'chart'
+            chart_item[:filter_results][:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
+
+            chart_item[:filter_results][:labels] = data[:question][:answers].map{|x| x[:text]}
+
+            counts = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[count_key]}}.transpose # have to transpose the counts for highcharts
+
+            if counts.present?
+              chart_item[:filter_results][:data] = []
+              data[:broken_down_by][:answers].each_with_index do |answer, i|
+                chart_item[:filter_results][:data] << {name: answer[:text], data: counts[i]}
+              end
+
+              chart << chart_item
+            end
+          end
+        elsif data[:analysis_data_type] == ANALYSIS_DATA_TYPE[:numerical]
+          chart = {}
+
+          # set the titles
+          # - assume titles are already set in data[:results]
+          if with_title
+            chart[:title] = data[:results][:title]
+            chart[:subtitle] = data[:results][:subtitle]
+          end
+          options['visual_type'] = 'chart'
+          chart[:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
+
+          chart[:data] = []
+          data[:results][:filter_analysis].each do |filter|
+            chart[:data] << { data: filter[:filter_results][:analysis], name: filter[:filter_answer_text] }            
           end
         end
       else
@@ -1249,21 +1360,25 @@ private
         options['visual_type'] = 'chart'
         chart[:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
 
-        chart[:labels] = data[:question][:answers].map{|x| x[:text]}
 
         chart[:data] = []
-        # have to transpose the counts for highcharts
-        counts = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[count_key]}}.transpose
+        if data[:analysis_data_type] == ANALYSIS_DATA_TYPE[:categorical]
+          chart[:labels] = data[:question][:answers].map{|x| x[:text]}
 
-        data[:broken_down_by][:answers].each_with_index do |answer, i|
-          chart[:data] << {name: answer[:text], data: counts[i]}
+          # have to transpose the counts for highcharts
+          counts = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[count_key]}}.transpose
+
+          data[:broken_down_by][:answers].each_with_index do |answer, i|
+            chart[:data] << {name: answer[:text], data: counts[i]}
+          end
+        elsif data[:analysis_data_type] == ANALYSIS_DATA_TYPE[:numerical]
+          chart[:data] = data[:results][:analysis]          
         end
       end
 
       return chart
     end
   end
-
 
   # convert the results into highmaps map format
   # options are needed to create embed id
@@ -1346,13 +1461,12 @@ private
 
             counts = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[count_key]}}
             percents = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[percent_key]}}
-            for_total_resp = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[no_weight_count_key]}}
+            for_total_resp = filter[:filter_results][:analysis].map{|x| x[:broken_down_results].map{|y| y[no_weight_count_key]}}.transpose
 
             map_item[:filter_results][:map_sets] = []
             if counts.present?
               data[:question][:answers].each_with_index do |q_answer, q_index|
                 item = {broken_down_answer_value: q_answer[:value], broken_down_answer_text: q_answer[:text]}
-
                 # set the titles
                 if with_title
                   item[:title] = {}
@@ -1450,7 +1564,7 @@ private
 
           counts = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[count_key]}}
           percents = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[percent_key]}}
-          for_total_resp = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[no_weight_count_key]}}
+          for_total_resp = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[no_weight_count_key]}}.transpose
 
           data[:question][:answers].each_with_index do |q_answer, q_index|
             item = {broken_down_answer_value: q_answer[:value], broken_down_answer_text: q_answer[:text]}
@@ -1524,7 +1638,7 @@ private
   def self.create_time_series_question_hash(question, can_exclude=false)
     hash = {}
     if question.present?
-      hash = {code: question.code, original_code: question.original_code, text: question.text, notes: question.notes}
+      hash = {code: question.code, original_code: question.original_code, text: question.text, notes: question.notes }
       # if this question belongs to a group, add it
       if question.group_id.present?
         group = question.group
@@ -1538,7 +1652,6 @@ private
           end
         end
       end
-      
       # for each answer, record the answer attributes and the dataset_answer attributes
       answers = can_exclude == true ? question.answers.must_include_for_analysis : question.answers.sorted
       hash[:answers] = []
@@ -1615,7 +1728,7 @@ private
     filtered_by = options[:filtered_by]
     filter_answer_value = options[:filter_answer_value]
 
-#    puts "===- time series single analysis processing options = #{options}"
+    #puts "===- time series single analysis processing options = #{options}"
 
     results = nil
     if with_title
@@ -1824,24 +1937,24 @@ private
   def self.dataset_single_analysis_title(locale_key, question, filtered_by=nil, filtered_by_answer=nil)
     group = ''
     if question[:group].present? && question[:group][:include_in_charts]
-      group << I18n.t("explore_data.v2.group.#{locale_key}.title", text: question[:group][:description], locale: @language)
+      group << I18n.t("explore_data.v3.group.#{locale_key}.title", text: question[:group][:description])
       if question[:subgroup].present? && question[:subgroup][:include_in_charts]
-        group << I18n.t("explore_data.v2.subgroup.#{locale_key}.title", text: question[:subgroup][:description], locale: @language)
+        group << I18n.t("explore_data.v3.subgroup.#{locale_key}.title", text: question[:subgroup][:description])
       end
     end
-    title = I18n.t("explore_data.v2.single.#{locale_key}.title", :code => question[:original_code], :variable => question[:text], :group => group, locale: @language)
+    title = I18n.t("explore_data.v3.single.#{locale_key}.title", :code => question[:original_code], :variable => question[:text], :group => group)
     if filtered_by.present?
       group = ''
       if filtered_by[:group].present? && filtered_by[:group][:include_in_charts]
-        group << I18n.t("explore_data.v2.group.#{locale_key}.title", text: filtered_by[:group][:description], locale: @language)
+        group << I18n.t("explore_data.v3.group.#{locale_key}.title", text: filtered_by[:group][:description])
         if filtered_by[:subgroup].present? && filtered_by[:subgroup][:include_in_charts]
-          group << I18n.t("explore_data.v2.subgroup.#{locale_key}.title", text: filtered_by[:subgroup][:description], locale: @language)
+          group << I18n.t("explore_data.v3.subgroup.#{locale_key}.title", text: filtered_by[:subgroup][:description])
         end
       end
       if filtered_by_answer.present?
-        title << I18n.t("explore_data.v2.single.#{locale_key}.title_filter_value", :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer, :group => group, locale: @language)
+        title << I18n.t("explore_data.v3.single.#{locale_key}.title_filter_value", :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer, :group => group )
       else
-        title << I18n.t("explore_data.v2.single.#{locale_key}.title_filter", :code => filtered_by[:original_code], :variable => filtered_by[:text], :group => group, locale: @language)
+        title << I18n.t("explore_data.v3.single.#{locale_key}.title_filter", :code => filtered_by[:original_code], :variable => filtered_by[:text], :group => group)
       end
     end
     return title.html_safe
@@ -1850,32 +1963,32 @@ private
   def self.dataset_comparative_analysis_title(locale_key, question, broken_down_by, filtered_by=nil, filtered_by_answer=nil)
     group = ''
     if question[:group].present? && question[:group][:include_in_charts]
-      group << I18n.t("explore_data.v2.group.#{locale_key}.title", text: question[:group][:description], locale: @language)
+      group << I18n.t("explore_data.v3.group.#{locale_key}.title", text: question[:group][:description])
       if question[:subgroup].present? && question[:subgroup][:include_in_charts]
-        group << I18n.t("explore_data.v2.subgroup.#{locale_key}.title", text: question[:subgroup][:description], locale: @language)
+        group << I18n.t("explore_data.v3.subgroup.#{locale_key}.title", text: question[:subgroup][:description])
       end
     end
     group2 = ''
     if broken_down_by[:group].present? && broken_down_by[:group][:include_in_charts]
-      group2 << I18n.t("explore_data.v2.group.#{locale_key}.title", text: broken_down_by[:group][:description], locale: @language)
+      group2 << I18n.t("explore_data.v3.group.#{locale_key}.title", text: broken_down_by[:group][:description])
       if broken_down_by[:subgroup].present? && broken_down_by[:subgroup][:include_in_charts]
-        group2 << I18n.t("explore_data.v2.subgroup.#{locale_key}.title", text: broken_down_by[:subgroup][:description], locale: @language)
+        group2 << I18n.t("explore_data.v3.subgroup.#{locale_key}.title", text: broken_down_by[:subgroup][:description])
       end
     end
-    title = I18n.t("explore_data.v2.comparative.#{locale_key}.title", :question_code => question[:original_code], :variable => question[:text],
-              :broken_down_by_code => broken_down_by[:original_code], :broken_down_by => broken_down_by[:text], :group => group, :group2 => group2, locale: @language)
+    title = I18n.t("explore_data.v3.comparative.#{locale_key}.title", :question_code => question[:original_code], :variable => question[:text],
+              :broken_down_by_code => broken_down_by[:original_code], :broken_down_by => broken_down_by[:text], :group => group, :group2 => group2)
     if filtered_by.present?
       group = ''
       if filtered_by[:group].present? && filtered_by[:group][:include_in_charts]
-        group << I18n.t("explore_data.v2.group.#{locale_key}.title", text: filtered_by[:group][:description], locale: @language)
+        group << I18n.t("explore_data.v3.group.#{locale_key}.title", text: filtered_by[:group][:description])
         if filtered_by[:subgroup].present? && filtered_by[:subgroup][:include_in_charts]
-          group << I18n.t("explore_data.v2.subgroup.#{locale_key}.title", text: filtered_by[:subgroup][:description], locale: @language)
+          group << I18n.t("explore_data.v3.subgroup.#{locale_key}.title", text: filtered_by[:subgroup][:description])
         end
       end
       if filtered_by_answer.present?
-        title << I18n.t("explore_data.v2.comparative.#{locale_key}.title_filter_value", :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer, :group => group, locale: @language)
+        title << I18n.t("explore_data.v3.comparative.#{locale_key}.title_filter_value", :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer, :group => group )
       else
-        title << I18n.t("explore_data.v2.comparative.#{locale_key}.title_filter", :code => filtered_by[:original_code], :variable => filtered_by[:text], :group => group, locale: @language)
+        title << I18n.t("explore_data.v3.comparative.#{locale_key}.title_filter", :code => filtered_by[:original_code], :variable => filtered_by[:text], :group => group )
       end
     end
     return title.html_safe
@@ -1884,32 +1997,32 @@ private
   def self.dataset_comparative_analysis_map_title(locale_key, question, broken_down_by, broken_down_by_answer, filtered_by=nil, filtered_by_answer=nil)
     group = ''
     if question[:group].present? && question[:group][:include_in_charts]
-      group << I18n.t("explore_data.v2.group.#{locale_key}.title", text: question[:group][:description], locale: @language)
+      group << I18n.t("explore_data.v3.group.#{locale_key}.title", text: question[:group][:description])
       if question[:subgroup].present? && question[:subgroup][:include_in_charts]
-        group << I18n.t("explore_data.v2.subgroup.#{locale_key}.title", text: question[:subgroup][:description], locale: @language)
+        group << I18n.t("explore_data.v3.subgroup.#{locale_key}.title", text: question[:subgroup][:description])
       end
     end
     group2 = ''
     if broken_down_by[:group].present? && broken_down_by[:group][:include_in_charts]
-      group2 << I18n.t("explore_data.v2.group.#{locale_key}.title", text: broken_down_by[:group][:description], locale: @language)
+      group2 << I18n.t("explore_data.v3.group.#{locale_key}.title", text: broken_down_by[:group][:description])
       if broken_down_by[:subgroup].present? && broken_down_by[:subgroup][:include_in_charts]
-        group2 << I18n.t("explore_data.v2.subgroup.#{locale_key}.title", text: broken_down_by[:subgroup][:description], locale: @language)
+        group2 << I18n.t("explore_data.v3.subgroup.#{locale_key}.title", text: broken_down_by[:subgroup][:description])
       end
     end
-    title = I18n.t("explore_data.v2.comparative.#{locale_key}.map.title", :code => question[:original_code], :variable => question[:text], :group => group, locale: @language)
-    title << I18n.t("explore_data.v2.comparative.#{locale_key}.map.title_broken_down_by", :code => broken_down_by[:original_code], :broken_down_by => broken_down_by[:text], :broken_down_by_answer => broken_down_by_answer, :group => group2, locale: @language)
+    title = I18n.t("explore_data.v3.comparative.#{locale_key}.map.title", :code => question[:original_code], :variable => question[:text], :group => group)
+    title << I18n.t("explore_data.v3.comparative.#{locale_key}.map.title_broken_down_by", :code => broken_down_by[:original_code], :broken_down_by => broken_down_by[:text], :broken_down_by_answer => broken_down_by_answer, :group => group2)
     if filtered_by.present?
       group = ''
       if filtered_by[:group].present? && filtered_by[:group][:include_in_charts]
-        group << I18n.t("explore_data.v2.group.#{locale_key}.title", text: filtered_by[:group][:description], locale: @language)
+        group << I18n.t("explore_data.v3.group.#{locale_key}.title", text: filtered_by[:group][:description])
         if filtered_by[:subgroup].present? && filtered_by[:subgroup][:include_in_charts]
-          group << I18n.t("explore_data.v2.subgroup.#{locale_key}.title", text: filtered_by[:subgroup][:description], locale: @language)
+          group << I18n.t("explore_data.v3.subgroup.#{locale_key}.title", text: filtered_by[:subgroup][:description])
         end
       end
       if filtered_by_answer.present?
-        title << I18n.t("explore_data.v2.comparative.#{locale_key}.map.title_filter_value", :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer, :group => group, locale: @language)
+        title << I18n.t("explore_data.v3.comparative.#{locale_key}.map.title_filter_value", :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer, :group => group )
       else
-        title << I18n.t("explore_data.v2.comparative.#{locale_key}.map.title_filter", :code => filtered_by[:original_code], :variable => filtered_by[:text], :group => group, locale: @language)
+        title << I18n.t("explore_data.v3.comparative.#{locale_key}.map.title_filter", :code => filtered_by[:original_code], :variable => filtered_by[:text], :group => group )
       end
     end
     return title.html_safe
@@ -1922,7 +2035,7 @@ private
       if locale_key == 'html'
         title << "<br /> <span class='total_responses'>"
       end
-      title << I18n.t("explore_data.v2.subtitle.#{locale_key}.#{title_key}", :num => number_with_delimiter(num), total: number_with_delimiter(total), locale: @language)
+      title << I18n.t("explore_data.v3.subtitle.#{locale_key}.#{title_key}", :num => number_with_delimiter(num), total: number_with_delimiter(total))
       if locale_key == 'html'
         title << "</span>"
       end
@@ -1944,7 +2057,7 @@ private
         filter_responses << " #{result[:filter_answer_text]}: #{number_with_delimiter(result[:filter_results][:total_responses])}"
       end
     end
-    title << I18n.t("explore_data.v2.subtitle.#{locale_key}.#{title_key}", :code => filtered_by_code, :variable => filtered_by_text, :nums => filter_responses.join(join_text), :total => number_with_delimiter(total), locale: @language)
+    title << I18n.t("explore_data.v3.subtitle.#{locale_key}.#{title_key}", :code => filtered_by_code, :variable => filtered_by_text, :nums => filter_responses.join(join_text), :total => number_with_delimiter(total))
     if locale_key == 'html'
       title << "</span>"
     end
@@ -1958,24 +2071,24 @@ private
   def self.time_series_single_analysis_title(locale_key, question, filtered_by=nil, filtered_by_answer=nil)
     group = ''
     if question[:group].present? && question[:group][:include_in_charts]
-      group << I18n.t("explore_time_series.v2.group.#{locale_key}.title", text: question[:group][:description], locale: @language)
+      group << I18n.t("explore_time_series.v3.group.#{locale_key}.title", text: question[:group][:description])
       if question[:subgroup].present? && question[:subgroup][:include_in_charts]
-        group << I18n.t("explore_time_series.v2.subgroup.#{locale_key}.title", text: question[:subgroup][:description], locale: @language)
+        group << I18n.t("explore_time_series.v3.subgroup.#{locale_key}.title", text: question[:subgroup][:description])
       end
     end
-    title = I18n.t("explore_time_series.v2.single.#{locale_key}.title", :code => question[:original_code], :variable => question[:text], :group => group, locale: @language)
+    title = I18n.t("explore_time_series.v3.single.#{locale_key}.title", :code => question[:original_code], :variable => question[:text], :group => group)
     if filtered_by.present?
       group = ''
       if filtered_by[:group].present? && filtered_by[:group][:include_in_charts]
-        group << I18n.t("explore_time_series.v2.group.#{locale_key}.title", text: filtered_by[:group][:description], locale: @language)
+        group << I18n.t("explore_time_series.v3.group.#{locale_key}.title", text: filtered_by[:group][:description])
         if filtered_by[:subgroup].present? && filtered_by[:subgroup][:include_in_charts]
-          group << I18n.t("explore_time_series.v2.subgroup.#{locale_key}.title", text: filtered_by[:subgroup][:description], locale: @language)
+          group << I18n.t("explore_time_series.v3.subgroup.#{locale_key}.title", text: filtered_by[:subgroup][:description])
         end
       end
       if filtered_by_answer.present?
-        title << I18n.t("explore_time_series.v2.single.#{locale_key}.title_filter_value", :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer, :group => group, locale: @language)
+        title << I18n.t("explore_time_series.v3.single.#{locale_key}.title_filter_value", :code => filtered_by[:original_code], :variable => filtered_by[:text], :value => filtered_by_answer, :group => group )
       else
-        title << I18n.t("explore_time_series.v2.single.#{locale_key}.title_filter", :code => filtered_by[:original_code], :variable => filtered_by[:text], :group => group, locale: @language)
+        title << I18n.t("explore_time_series.v3.single.#{locale_key}.title_filter", :code => filtered_by[:original_code], :variable => filtered_by[:text], :group => group )
       end
     end
     return title.html_safe
@@ -1990,9 +2103,9 @@ private
     end
     num = []
     totals.each do |total|
-      num << I18n.t("explore_time_series.v2.subtitle.#{locale_key}.title_x_of_y", dataset: total[:dataset_label], num: number_with_delimiter(total[:total_responses]), total: number_with_delimiter(total[:total_possible_responses]), locale: @language)
+      num << I18n.t("explore_time_series.v3.subtitle.#{locale_key}.title_x_of_y", dataset: total[:dataset_label], num: number_with_delimiter(total[:total_responses]), total: number_with_delimiter(total[:total_possible_responses]))
     end
-    title << I18n.t("explore_time_series.v2.subtitle.#{locale_key}.#{title_key}", :x_of_y => num.join(join_key), locale: @language)
+    title << I18n.t("explore_time_series.v3.subtitle.#{locale_key}.#{title_key}", :x_of_y => num.join(join_key))
     if locale_key == 'html'
       title << "</span>"
     end
@@ -2037,10 +2150,14 @@ private
       totals << "#{response[:dataset_label]}: #{number_with_delimiter(response[:total_possible_responses])}"
     end
 
-    title << I18n.t("explore_time_series.v2.subtitle.#{locale_key}.#{title_key}", :code => filtered_by_code, :variable => filtered_by_text, :nums => filter_responses.join, totals: totals.join('; '), locale: @language)
+    title << I18n.t("explore_time_series.v3.subtitle.#{locale_key}.#{title_key}", :code => filtered_by_code, :variable => filtered_by_text, :nums => filter_responses.join, totals: totals.join('; '))
     if locale_key == 'html'
       title << "</span>"
     end
     return title.html_safe
+  end
+
+  def self.is_numeric?(obj) 
+     obj.to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? false : true
   end
 end
