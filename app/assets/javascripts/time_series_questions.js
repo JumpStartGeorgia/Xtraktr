@@ -268,7 +268,7 @@ $(document).ready(function (){
     });
 
     // when text of answer changes in default language, update the other languages default text table cell
-    $("table#time-series-dataset-answers tbody").on("change", "tr td:first-of-type input", function (){
+    $("table#time-series-dataset-answers:first tbody").on("change", "tr td:first-of-type input", function (){
       var text = $(this).val();
       var row_index = $(this).closest("tbody").children("tr").index($(this).closest("tr"));
 
