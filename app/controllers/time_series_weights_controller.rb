@@ -135,8 +135,13 @@ private
 
       # get the list of questions for each dataset that do not have answers
       @questions = {}
-      @datasets.each do |ts_dataset|
-        @questions[ts_dataset.dataset_id.to_s] = ts_dataset.dataset.questions.available_to_have_unique_ids
+      @datasets.each do |dataset|
+        # get the dataset question
+        # - if it does not exist, build it
+        dataset_assignment = @weight.assignments.with_dataset(dataset.dataset_id)
+        dataset_assignment = @weight.assignments.build(dataset_id: dataset.dataset_id) if dataset_assignment.nil?
+
+        @questions[dataset_assignment.dataset_id.to_s] = dataset.dataset.questions.available_to_have_unique_ids
       end
 
       gon.datatable_json = create_datatable_json(@time_series.questions, @weight.codes, @weight.id)
