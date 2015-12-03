@@ -127,4 +127,9 @@ namespace :migration do
     require "./db/migrate/add_missing_time_series_question_datasets.rb"
   end
 
+  desc "update highlights to have correct visual_type in url and as field"
+  task :update_highlight_visual_type => :environment do
+    require "./db/migrate/update_highlight_visual_type.rb"
+  end
+
 end

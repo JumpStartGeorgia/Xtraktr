@@ -14,9 +14,8 @@ class Highlight < CustomTranslation
   # field :show_home_page, type: Boolean, default: false
   field :visual_type, type: Integer
   field :description, type: String, localize: true
-
-  VISUAL_TYPES = { pie_chart: 1, crosstab_chart: 2, line_chart: 3, map: 4, histogramm: 5, scatter: 6 }
-
+  
+  VISUAL_TYPES = { pie: 1, crosstab: 2, time_series: 3, map: 4, bar: 5, histogramm: 6, scatter: 7 }
   #############################
   attr_accessible :dataset_id, :time_series_id, :embed_id, #:show_home_page,
                   :visual_type, :description, :description_translations
@@ -122,11 +121,12 @@ class Highlight < CustomTranslation
 
   # get the dataset/time series languages
   def languages
-    if self.dataset_id.present?
-      self.dataset.languages_sorted
-    elsif self.time_series_id.present?
-      self.time_series.languages_sorted
-    end
+    # if self.dataset_id.present?
+    #   self.dataset.languages_sorted
+    # elsif self.time_series_id.present?
+    #   self.time_series.languages_sorted
+    # end
+    []
   end
 
 

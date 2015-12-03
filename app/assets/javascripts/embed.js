@@ -8,7 +8,7 @@
 */
 function build_charts (data, type) {
   if (data.chart) {
-    var chart_height = window[type + "_chart_height"](data),     // determine chart height // pie_chart_height(json);
+    var chart_height = window[type + "_chart_height"](data),     // determine chart height
       weight_name = data.weighted_by ? data.weighted_by.weight_name : undefined,
       ch = undefined;
 
@@ -95,7 +95,7 @@ function build_highmaps (json){ // build highmap
 
 /**
 * Building all highlights(chart, map) based on type
-* @param {object} data - Data to build map
+* @param {object} highlight_data - Data about all highlights
 */
 function load_highlights (highlight_data){
   if(!highlight_data){ return; }
@@ -109,9 +109,7 @@ function load_highlights (highlight_data){
   });
 
   var data,
-    type,
-    is_comparative,
-    is_categorical;
+    type;
 
   Object.keys(highlight_data).forEach(function (key){ // build chart for each key
     data = highlight_data[key];
@@ -122,33 +120,19 @@ function load_highlights (highlight_data){
       if (data.filtered_by_value){ gon.filtered_by_value = data.filtered_by_value; }
 
       type = null;
-      is_comparative = data.json_data.analysis_type == "comparative";
-      is_categorical = data.json_data.analysis_data_type == "categorical";
 
       if (data.json_data.time_series) { type = "time_series"; } // test if time series or dataset
       else if(data.json_data.dataset) {
-        if (data.visual_type == "chart") { // test for visual type
-          if (is_comparative){
-            if(is_categorical) {
-              type = "crosstab";
-            }
-            else if(json.analysis_data_type == "numerical") {
-              type = "scatter";
-            }
+        Object.keys(gon.visual_types).forEach(function (d) {
+          if(gon.visual_types[d] == data.visual_type) {
+            type = d;
           }
-          else {
-            if(is_categorical) {
-              type = (typeof data.json_data.chart_type !== "undefined" && data.json_data.chart_type === "pie") ? "pie" : "bar";
-            }
-            else {
-              type = "histogramm";
-            }
-          }
-        }
-        else if (data.visual_type == "map") { build_highmaps(data.json_data); }
+        });
       }
+      
+      if(type === "map") { build_highmaps(data.json_data); }
+      else { build_charts(data.json_data, type); }
 
-      if(type) { build_charts(data.json_data, type); }
       if (gon.update_page_title){ build_page_title(data.json_data); }
     }
   });
