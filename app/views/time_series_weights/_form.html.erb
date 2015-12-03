@@ -97,7 +97,10 @@
         </tr>
       </thead>
       <tbody>
-        <% @weight.assignments.each_with_index do |dataset_assignment, index| %>
+      <% @datasets.each do |dataset|
+          dataset_assignment = @weight.assignments.with_dataset(dataset.dataset_id)
+          dataset_assignment = @weight.assignments.build(dataset_id: dataset.dataset_id) if dataset_assignment.nil? %>
+
           <%= f.semantic_fields_for :assignments, dataset_assignment do |f_dataset_assignment| %>
             <tr>
               <td>
