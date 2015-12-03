@@ -15,7 +15,7 @@ class Highlight < CustomTranslation
   field :visual_type, type: Integer
   field :description, type: String, localize: true
 
-  VISUAL_TYPES = {pie_chart: 1, crosstab_chart: 2, line_chart: 3, map: 4}
+  VISUAL_TYPES = { pie_chart: 1, crosstab_chart: 2, line_chart: 3, map: 4, histogramm: 5, scatter: 6 }
 
   #############################
   attr_accessible :dataset_id, :time_series_id, :embed_id, :show_home_page, :visual_type, :description, :description_translations
