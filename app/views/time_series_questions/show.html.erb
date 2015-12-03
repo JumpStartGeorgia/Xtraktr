@@ -108,7 +108,6 @@
                 </tr>
               </thead>
               <tbody>
-                <% logger.debug "====== time series question #{@time_series_question.code} has #{@time_series_question.answers.length} answers" %>
                 <% @time_series_question.answers.sorted.each do |answer| %>
                   <tr>
                     <td>

@@ -24,7 +24,7 @@ function build_select_lists (dataset_id, answers, is_page_load, tr_to_update){
   }
 
   // build the options
-  var options = "";
+  var options = "<option value=''></option>";
   $(answers).each(function (){
     options += "<option value='" + this.value + "'>" + this.text + "</option>";
   });
@@ -48,7 +48,7 @@ function build_select_lists (dataset_id, answers, is_page_load, tr_to_update){
     if (answers.length > 0){
       // add options
       $(select).append(options);
-      if (is_page_load && original_value){
+      if (is_page_load && original_value != undefined){
         // set the value using the data attribute of the select
         $(select).val(original_value);
       }else{
@@ -59,7 +59,7 @@ function build_select_lists (dataset_id, answers, is_page_load, tr_to_update){
     }
 
     // apply selectpicker
-    $(select).select2({width:"element", allowClear:true});
+    $(select).select2({width: "element", allowClear: true});
 
 
   });
