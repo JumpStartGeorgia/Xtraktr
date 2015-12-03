@@ -46,7 +46,7 @@ class TimeSeriesController < ApplicationController
       gon.highlight_show_title = false
       gon.highlight_show_links = false
       gon.highlight_admin_link = true
-      load_highlight_assets(@highlights.map{|x| x.embed_id}, @dataset.current_locale) if @highlights.present?
+      load_highlight_assets(@highlights.map{|x| x.embed_id}, @time_series.current_locale) if @highlights.present?
 
       @show_title = false
 
