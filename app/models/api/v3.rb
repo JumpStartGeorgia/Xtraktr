@@ -4,6 +4,7 @@ class Api::V3
   WEIGHT_TYPE = {:unweighted => 'unweighted', :time_series => 'time_series'}
   ANALYSIS_DATA_TYPE = {:categorical => 'categorical', :numerical => 'numerical'}
   DATA_TYPE_VALUES = { :unknown => 0, :categorical => 1, :numerical => 2 }
+  VISUAL_TYPES = Highlight::VISUAL_TYPES
   ########################################
   ## DATASETS
   ########################################
@@ -877,49 +878,48 @@ private
       if data[:filtered_by].present?
         chart = []
         data[:results][:filter_analysis].each do |filter|
-          chart_item = {filter_answer_value: filter[:filter_answer_value], filter_answer_text: filter[:filter_answer_text], filter_results: {} }
-          fr = chart_item[:filter_results]
 
-          if with_title # set the titles - assume titles are already set in data[:filtered_by][:results]
-            fr[:title] = filter[:filter_results][:title]
-            fr[:subtitle] = filter[:filter_results][:subtitle]
-          end
-          
           options['filtered_by_value'] = filter[:filter_answer_value] # add filter value
-          options['visual_type'] = 'chart'
-
-          fr[:embed_id] = {           # create embed id
-            pie_chart: Base64.urlsafe_encode64(clean_options(options.merge({ :chart_type => "pie"})).to_query),
-            bar_chart: Base64.urlsafe_encode64(clean_options(options.merge({ :chart_type => "bar"})).to_query)
-          } 
-
-          fr[:data] = [] # create data for chart
-          filter[:filter_results][:analysis].each{|x| fr[:data] << dataset_single_chart_processing(x); }
-
-          chart << chart_item if fr[:data].present?
+          chart_item = {
+            filter_answer_value: filter[:filter_answer_value],
+            filter_answer_text: filter[:filter_answer_text],
+            filter_results: dataset_single_chart_helper(filter, with_title, options, :filter_results) 
+          }
+          chart << chart_item if chart_item[:filter_results][:data].present?
         end
+        return chart
       else
-        chart = {}
-        
-        if with_title # set the titles - assume titles are already set in data[:results]
-          chart[:title] = data[:results][:title]
-          chart[:subtitle] = data[:results][:subtitle]
-        end
-        
-        options['visual_type'] = 'chart'
-
-        chart[:embed_id] = { # create embed id
-          pie_chart: Base64.urlsafe_encode64(clean_options(options.merge({ :chart_type => "pie"})).to_query),
-          bar_chart: Base64.urlsafe_encode64(clean_options(options.merge({ :chart_type => "bar"})).to_query)
-        } 
-
-        chart[:data] = [] # create data for chart
-        data[:results][:analysis].each{|x| chart[:data] << dataset_single_chart_processing(x); }    
+        return dataset_single_chart_helper(data, with_title, options, :results)
       end
-
-      return chart
     end
   end
+
+   def self.dataset_single_chart_helper(data, with_title=false, options={}, sym)
+    chart = {}
+    if with_title # set the titles - assume titles are already set in data[:results]
+      chart[:title] = data[sym][:title]
+      chart[:subtitle] = data[sym][:subtitle]
+    end
+
+    if data[:analysis_data_type] == ANALYSIS_DATA_TYPE[:categorical]
+      chart[:embed_id] = { # create embed id
+        pie: Base64.urlsafe_encode64(clean_options(options.merge({ :visual_type => VISUAL_TYPES[:pie] })).to_query),
+        bar: Base64.urlsafe_encode64(clean_options(options.merge({ :visual_type => VISUAL_TYPES[:bar]})).to_query)
+      } 
+      chart[:visual_type] = VISUAL_TYPES[:bar]
+    else 
+      chart[:embed_id] = Base64.urlsafe_encode64(clean_options(options.merge({ :visual_type => VISUAL_TYPES[:histogramm]})).to_query)
+      chart[:visual_type] = VISUAL_TYPES[:histogramm]
+    end
+
+    chart[:data] = [] # create data for chart
+    data[sym][:analysis].each{|x| chart[:data] << dataset_single_chart_processing(x); }  
+
+    return chart          
+   end
+
+
+
 
 
   # format: {name, y(percent), count, answer_value}
@@ -958,8 +958,9 @@ private
           # create embed id
           # add filter value
           options['filtered_by_value'] = filter[:filter_answer_value]
-          options['visual_type'] = 'map'
-          map_item[:filter_results][:map_sets][:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
+
+          map_item[:filter_results][:map_sets][:embed_id] = Base64.urlsafe_encode64(clean_options(options.merge({ :visual_type => VISUAL_TYPES[:map] })).to_query)
+          map_item[:filter_results][:map_sets][:visual_type] = VISUAL_TYPES[:map]
 
           map_item[:filter_results][:map_sets][:data] = []
 
@@ -988,8 +989,8 @@ private
         end
 
         # create embed id
-        options['visual_type'] = 'map'
-        map[:map_sets][:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
+        map[:map_sets][:embed_id] = Base64.urlsafe_encode64(clean_options(options.merge({ :visual_type => VISUAL_TYPES[:map] })).to_query)
+        map[:map_sets][:visual_type] = VISUAL_TYPES[:map]
 
         # load the data
         map[:map_sets][:data] = []
@@ -1296,9 +1297,11 @@ private
     if data.present?
       chart = nil
       count_key = data[:weighted_by].present? ? :weighted_count : :count
+      is_categorical = data[:analysis_data_type] == ANALYSIS_DATA_TYPE[:categorical]
+      is_numerical = data[:analysis_data_type] == ANALYSIS_DATA_TYPE[:numerical]
 
       if data[:filtered_by].present?
-        if data[:analysis_data_type] == ANALYSIS_DATA_TYPE[:categorical]
+        if is_categorical
           chart = []
           data[:results][:filter_analysis].each do |filter|
             chart_item = {filter_answer_value: filter[:filter_answer_value], filter_answer_text: filter[:filter_answer_text], filter_results: {}}
@@ -1313,8 +1316,9 @@ private
             # create embed id
             # add filter value
             options['filtered_by_value'] = filter[:filter_answer_value]
-            options['visual_type'] = 'chart'
-            chart_item[:filter_results][:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
+
+            chart_item[:filter_results][:embed_id] = Base64.urlsafe_encode64(clean_options(options.merge({ :visual_type => VISUAL_TYPES[:crosstab] })).to_query)
+            chart_item[:filter_results][:visual_type] = VISUAL_TYPES[:crosstab]
 
             chart_item[:filter_results][:labels] = data[:question][:answers].map{|x| x[:text]}
 
@@ -1329,7 +1333,7 @@ private
               chart << chart_item
             end
           end
-        elsif data[:analysis_data_type] == ANALYSIS_DATA_TYPE[:numerical]
+        elsif is_numerical
           chart = {}
 
           # set the titles
@@ -1338,8 +1342,8 @@ private
             chart[:title] = data[:results][:title]
             chart[:subtitle] = data[:results][:subtitle]
           end
-          options['visual_type'] = 'chart'
-          chart[:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
+          chart[:embed_id] = Base64.urlsafe_encode64(clean_options(options.merge({ :visual_type => VISUAL_TYPES[:scatter] })).to_query)
+          chart[:visual_type] = VISUAL_TYPES[:scatter]
 
           chart[:data] = []
           data[:results][:filter_analysis].each do |filter|
@@ -1356,22 +1360,23 @@ private
           chart[:subtitle] = data[:results][:subtitle]
         end
 
-        # create embed id
-        options['visual_type'] = 'chart'
-        chart[:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
-
-
         chart[:data] = []
-        if data[:analysis_data_type] == ANALYSIS_DATA_TYPE[:categorical]
-          chart[:labels] = data[:question][:answers].map{|x| x[:text]}
+        if is_categorical
+          chart[:embed_id] = Base64.urlsafe_encode64(clean_options(options.merge({ :visual_type => VISUAL_TYPES[:crosstab] })).to_query)
+          chart[:visual_type] = VISUAL_TYPES[:crosstab]
 
-          # have to transpose the counts for highcharts
-          counts = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[count_key]}}.transpose
+          chart[:labels] = data[:question][:answers].map{|x| x[:text]}
+          
+          counts = data[:results][:analysis].map{|x| x[:broken_down_results].map{|y| y[count_key]}}.transpose # have to transpose the counts for highcharts
 
           data[:broken_down_by][:answers].each_with_index do |answer, i|
             chart[:data] << {name: answer[:text], data: counts[i]}
           end
-        elsif data[:analysis_data_type] == ANALYSIS_DATA_TYPE[:numerical]
+        elsif is_numerical
+
+          chart[:embed_id] = Base64.urlsafe_encode64(clean_options(options.merge({ :visual_type => VISUAL_TYPES[:scatter] })).to_query)
+          chart[:visual_type] = VISUAL_TYPES[:scatter]
+
           chart[:data] = data[:results][:analysis]          
         end
       end
@@ -1440,8 +1445,9 @@ private
               # add broken down by value & filter value
               options['broken_down_value'] = bdb_answer[:value]
               options['filtered_by_value'] = filter[:filter_answer_value]
-              options['visual_type'] = 'map'
-              item[:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
+
+              item[:embed_id] = Base64.urlsafe_encode64(clean_options(options.merge({ :visual_type => VISUAL_TYPES[:map] })).to_query)
+              item[:visual_type] = VISUAL_TYPES[:map]
 
               # load the data
               item[:data] = []
@@ -1482,8 +1488,9 @@ private
                 # add broken down by value & filter value
                 options['broken_down_value'] = q_answer[:value]
                 options['filtered_by_value'] = filter[:filter_answer_value]
-                options['visual_type'] = 'map'
-                item[:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
+
+                item[:embed_id] = Base64.urlsafe_encode64(clean_options(options.merge({ :visual_type => VISUAL_TYPES[:map] })).to_query)
+                item[:visual_type] = VISUAL_TYPES[:map]
 
                 # load the data
                 item[:data] = []
@@ -1544,8 +1551,9 @@ private
             # create embed id
             # add broken down by value
             options['broken_down_value'] = bdb_answer[:value]
-            options['visual_type'] = 'map'
-            item[:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
+
+            item[:embed_id] = Base64.urlsafe_encode64(clean_options(options.merge({ :visual_type => VISUAL_TYPES[:map] })).to_query)
+            item[:visual_type] = VISUAL_TYPES[:map]
 
             # load the data
             item[:data] = []
@@ -1583,8 +1591,9 @@ private
             # create embed id
             # add broken down by value
             options['broken_down_value'] = q_answer[:value]
-            options['visual_type'] = 'map'
-            item[:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
+
+            item[:embed_id] = Base64.urlsafe_encode64(clean_options(options.merge({ :visual_type => VISUAL_TYPES[:map] })).to_query)
+            item[:visual_type] = VISUAL_TYPES[:map]
 
             # load the data
             item[:data] = []
@@ -1857,9 +1866,9 @@ private
           # create embed id
           # add filter value
           options['filtered_by_value'] = filter[:filter_answer_value]
-          options['visual_type'] = 'chart'
-          chart_item[:filter_results][:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
 
+          chart_item[:filter_results][:embed_id] = Base64.urlsafe_encode64(clean_options(options.merge({ :visual_type => VISUAL_TYPES[:time_series]})).to_query)
+          chart_item[:filter_results][:visual_type] = VISUAL_TYPES[:time_series]
 
           chart_item[:filter_results][:data] = []
           data[:question][:answers].each do |answer|
@@ -1890,8 +1899,8 @@ private
         chart[:datasets] = datasets
 
         # create embed id
-        options['visual_type'] = 'chart'
-        chart[:embed_id] = Base64.urlsafe_encode64(clean_options(options).to_query)
+        chart[:embed_id] = Base64.urlsafe_encode64(clean_options(options.merge({ :visual_type => VISUAL_TYPES[:time_series]})).to_query)
+        chart[:visual_type] = VISUAL_TYPES[:time_series]
 
         chart[:data] = []
         data[:question][:answers].each do |answer|

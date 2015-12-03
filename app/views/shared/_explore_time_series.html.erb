@@ -121,15 +121,15 @@
           <div class="tab-pane fade" id="tab-details">
             <div class="details-item" id="details-question-code">
               <h3><%= t('.form.question_code') %></h3>
-              <%= render partial: 'shared/explore_details_block' %>
+              <%= render partial: 'shared/explore_details_block', locals: { is_dataset: false} %>
             </div>
             <div class="details-item" id="details-filtered-by-code">
               <h3><%= t('.form.filtered_by_code') %></h3>
-              <%= render partial: 'shared/explore_details_block' %>
+              <%= render partial: 'shared/explore_details_block', locals: { is_dataset: false} %>
             </div>
             <div class="details-item" id="details-weighted-by-code">
               <h3><%= t('.form.weighted_by_code') %></h3>
-              <%= render partial: 'shared/explore_details_block' %>
+              <%= render partial: 'shared/explore_details_block', locals: { is_dataset: false} %>
             </div>
 
             <div class="details-icons" style="display:none;">

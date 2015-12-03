@@ -5,7 +5,7 @@ var datatables, h, i, j, k, cacheId, select_map;
 function build_charts (data, type) {
   //console.log("build_charts", data, type);
   if (data.chart) {
-    var chart_height = window[type + "_chart_height"](data),     // determine chart height // pie_chart_height(json);
+    var chart_height = window[type + "_chart_height"](data),     // determine chart height
       weight_name = data.weighted_by ? data.weighted_by.weight_name : undefined,
       jumpto_text = "";
 
@@ -134,9 +134,6 @@ function build_highmaps (json) { // build highmap
 }
 
 function build_datatable (json) { // build data table
-  //console.log("datatable",json);
-  //if(!(json.analysis_type == "comparative" && json.analysis_data_type == "numerical")) {
-
   $("#container-table h3").html(json.results.title.html + json.results.subtitle.html); // set the title
   
   if (datatables != undefined && datatables.length > 0) { // if the datatable alread exists, kill it
@@ -316,8 +313,7 @@ function build_datatable (json) { // build data table
 }
 
 function build_details (json) { // build details (question and possible answers)
-  // clear out existing content and hide
-  var details_item = $("#tab-details .details-item").hide();
+  var details_item = $("#tab-details .details-item").hide(); // clear out existing content and hide
   details_item.find(".name-group .group-title, .name-group .group-description, .name-subgroup .group-title, .name-subgroup .group-description, .name-variable, .name-code, .notes, .list-answers").empty();
 
   build_details_item(json);
@@ -413,25 +409,18 @@ function build_details (json) { // build details (question and possible answers)
 
 function build_explore_data_page (json) { // build the visualizations for the explore data page
   var type = null,
-    is_comparative = json.analysis_type == "comparative",
     is_categorical = json.analysis_data_type == "categorical";
 
-  if (is_comparative){
-    if(is_categorical) {
-      type = "crosstab";
+  Object.keys(gon.visual_types).forEach(function (d) {
+    if(gon.visual_types[d] == json.chart.visual_type) {
+      if([gon.visual_types["bar"], gon.visual_types["pie"]].indexOf(json.chart.visual_type) !== -1)
+      {
+        type = (typeof params.visual_type !== "undefined" && params.visual_type === gon.visual_types["pie"]) ? "pie" : "bar";
+      }
+      else { type = d; }
     }
-    else if(json.analysis_data_type == "numerical") {
-      type = "scatter";
-    }
-  }
-  else {
-    if(is_categorical) {
-      type = (typeof params.chart_type !== "undefined" && params.chart_type === "pie") ? "pie" : "bar";
-    }
-    else {
-      type = "histogramm";
-    }
-  }
+  });
+
   if(type !== null) { build_charts(json, type); }
   if(is_categorical) { build_highmaps(json); }
   build_datatable(json);
@@ -443,7 +432,7 @@ function build_explore_data_page (json) { // build the visualizations for the ex
 
   // turn on tab and its content || make sure correct jumptos are showing
   explore_tabs.find("li" +
-    (explore_tabs.find("li.active:visible").length == 0 ? ":visible:first": "li.active" )
+    (explore_tabs.find("li.active:visible").length == 0 ? ":visible:first": ".active" )
   ).trigger("click");
 }
 
@@ -538,8 +527,8 @@ function get_explore_data (is_back_button) { // get data and load page
     build_explore_data_page(json);
     resizeExploreData();
     // update url
-    if (typeof params.chart_type !== "undefined" && (["bar", "pie"].indexOf(params.chart_type) !== -1)) {
-      url_querystring.push("chart_type=" + params.chart_type);
+    if (typeof params.visual_type !== "undefined" && ([gon.visual_types["bar"], gon.visual_types["pie"]].indexOf(params.visual_type) !== -1)) {
+      url_querystring.push("visual_type=" + params.visual_type);
     }
     var new_url = [location.protocol, "//", location.host, location.pathname, "?", url_querystring.join("&")].join("");
 
@@ -1047,7 +1036,7 @@ $(document).ready(function () {
           type = t.attr("data-type"),
           paramsA = [];
 
-        params["chart_type"] = type;
+        params["visual_type"] = gon.visual_types[type];
         for(par in params) {
           paramsA.push(par + "=" + params[par]);
         }

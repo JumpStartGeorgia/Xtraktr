@@ -404,11 +404,11 @@ class RootController < ApplicationController
     # get the highlights
     highlights = Highlight.in(id: params[:ids].split(','))
     data = {}
-
     if highlights.present?
       @highlight_data = []
       highlights.each do |highlight|
         @highlight_data << {visual_type_name: highlight.visual_type_name, data: get_highlight_data(highlight.embed_id, highlight.id, params[:use_admin_link])}
+        Rails.logger.info("-----------------------------------------generate_highlights---#{}")
       end
 
       if @highlight_data.map{|x| x[:data]}.flatten.map{|x| x[:error]}.index{|x| x == true}.nil?

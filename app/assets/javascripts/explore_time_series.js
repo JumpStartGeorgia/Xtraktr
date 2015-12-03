@@ -1,59 +1,6 @@
 /*global  $, gon, Highcharts, params, console, queryStringToJSON, TableTools, time_series_chart_height, build_time_series_chart, build_page_title */
 /*eslint no-undef: 0, no-console: 0  */
-var datatables, i, j,
-  $jumpto,
-  $jumpto_chart,
-  $jumpto_chart_select,
-  $jumpto_chart_label,
-  $tab_content;
-
-function update_available_weights () { // update the list of avilable weights based on questions that are selected
-  var select_weight = $("select#weighted_by_code"),
-    dropdown_weight = $(".form-explore-weight-by .bootstrap-select ul.dropdown-menu");
-
-  if (!select_weight.length) { return; }
-
-  var old_value = select_weight.val(),
-    matches=[],
-    items = [
-      $("select#question_code option:selected").data("weights"),
-      $("select#filtered_by_code option:selected").data("weights")
-    ].filter(function (d) { return typeof d !== "undefined"; });
-  if(items.length > 0) {
-    matches = items.shift().filter(function (v) {
-      return items.every(function (a) {
-        return a.indexOf(v) !== -1;
-      });
-    });
-  }
-  dropdown_weight.find("li:not(:last)").hide();   // hide all items except unweighted
-
-  if (matches.length) { // if there are matches, show the weights that match, and unweighted else hide weight option and set value to unweighted
-    var index;
-    matches.forEach(function (d) {
-      index = select_weight.find("option[value='" + d + "']").index();
-      if (index != -1){
-        dropdown_weight.find("li:eq(" + index + ")").show();
-      }
-    });
-    if (matches.indexOf(old_value) === -1) { // if the old value is no longer an option, select the first one
-      select_weight.selectpicker("val", select_weight.find("option:first").attr("value"));
-    }
-  }
-  else{
-    select_weight.selectpicker("val", "unweighted");
-  }
-}
-
-function set_can_exclude_visibility (){ // show or hide the can exclude checkbox
-  if ($("select#question_code option:selected").data("can-exclude") == true ||
-      $("select#filtered_by_code option:selected").data("can-exclude") == true){
-
-    $("div#can-exclude-container").css("visibility", "visible");
-  }else{
-    $("div#can-exclude-container").css("visibility", "hidden");
-  }
-}
+var datatables, i, j;
 
 function build_time_series_charts (json){ // build time series line chart for each chart item in json
   if (json.chart){
@@ -63,7 +10,7 @@ function build_time_series_charts (json){ // build time series line chart for ea
     // remove all existing charts
     $("#container-chart").empty();
     // remove all existing chart links
-    $jumpto_chart_select.empty();
+    js.jumpto_chart_select.empty();
 
     var jumpto_text = "";
     var weight_name = json.weighted_by ? json.weighted_by.weight_name : undefined;
@@ -80,11 +27,11 @@ function build_time_series_charts (json){ // build time series line chart for ea
       }
 
       // show jumpto links
-      $jumpto_chart_label.html("(" + json.filtered_by.original_code + ")");
-      $jumpto_chart_select.append(jumpto_text);
-      $jumpto_chart_select.val($jumpto_chart_select.find("option:first").attr("value"));
-      $jumpto_chart_select.selectpicker("refresh");
-      $jumpto_chart_select.selectpicker("render");
+      js.jumpto_chart_label.html("(" + json.filtered_by.original_code + ")");
+      js.jumpto_chart_select.append(jumpto_text);
+      js.jumpto_chart_select.val(js.jumpto_chart_select.find("option:first").attr("value"));
+      js.jumpto_chart_select.selectpicker("refresh");
+      js.jumpto_chart_select.selectpicker("render");
 
     }else{
       // no filters
@@ -298,76 +245,67 @@ function build_datatable (json){ // build data table
     $("#tab-table .table-weighted-footnote .footnote-weight-name").empty();
     $("#tab-table .table-weighted-footnote").hide();
   }
-
 }
 
-function build_details_item (selector, json_question){ // populat a details item block
-  if (json_question && json_question.text){
-    var tmp = $(selector);
-    if (tmp.length > 0){
-      tmp.find(".name-variable").html(json_question.text);
+function build_details (json) { // build details (question and possible answers)
 
-      tmp.find(".name-code").html(json_question.original_code);
-      if (json_question.notes){
-        tmp.find(".notes").html(json_question.notes);
-        tmp.find(".details-notes").show();
-      }else{
-        tmp.find(".details-notes").hide();
-      }
-      if (json_question.weight_name){
-        tmp.find(".weight").html(json_question.weight_name);
-        tmp.find(".details-weight").show();
-      }else{
-        tmp.find(".details-weight").hide();
-      }
-      if (json_question.group){
-        tmp.find(".name-group .group-title").html(json_question.group.title);
-        if (json_question.group.description != ""){
-          tmp.find(".name-group .group-description").html(" - " + json_question.group.description);
-        }
-        tmp.find(".details-group").show();
-      }else{
-        tmp.find(".details-group").hide();
-      }
-      if (json_question.subgroup){
-        tmp.find(".name-subgroup .group-title").html(json_question.subgroup.title);
-        if (json_question.subgroup.description != ""){
-          tmp.find(".name-subgroup .group-description").html(" - " + json_question.subgroup.description);
-        }
-        tmp.find(".details-subgroup").show();
-      }else{
-        tmp.find(".details-subgroup").hide();
-      }
-      if (json_question.answers){
-        for(var i=0;i<json_question.answers.length;i++){
-          var icon = "";
-          if (json_question.answers[i].exclude){
-            icon += $(".details-icons .exclude-answer")[0].outerHTML;
-          }
-          tmp.find(".list-answers").append("<li>" + icon + json_question.answers[i].text + "</li>");
-        }
-        tmp.find(".details-answers").show();
-      }else{
-        tmp.find(".details-answers").hide();
-      }
-      tmp.show();
-    }
-  }
-}
-
-function build_details (json){ // build details (question and possible answers)
-  // clear out existing content and hide
-  var details_item = $("#tab-details .details-item").hide();
+  var details_item = $("#tab-details .details-item").hide(); // clear out existing content and hide
   details_item.find(".name-group .group-title, .name-group .group-description, .name-subgroup .group-title, .name-subgroup .group-description, .name-variable, .name-code, .notes, .list-answers").empty();
 
-  // add questions
-  build_details_item("#tab-details #details-question-code", json.question);
+  build_details_item(json);
 
-  // add filters
-  build_details_item("#tab-details #details-filtered-by-code", json.filtered_by);
+  function build_details_item (json) { // populat a details item block
+    var selector = "", json_question = undefined, t, exist, tmp, icon, is_categorical;
+    ["question", "filtered-by", "weighted-by"].forEach(function (d){
+      selector = "#tab-details #details-"+ d +"-code";
+      json_question = json[d.replace(/-/g, "_")];
+      if (json_question && json_question.text){
+        tmp = $(selector);
+        if (tmp.length > 0){
 
-  // add weight
-  build_details_item("#tab-details #details-weighted-by-code", json.weighted_by);
+          tmp.find(".name-variable").html(json_question.text);
+          tmp.find(".name-code").html(json_question.original_code);
+
+          ["notes", "weight"].forEach(function (d){
+            t = tmp.find(".details-" + d);
+            d = (d === "weight" ? "weight_name" : d);
+            exist = !!json_question[d];
+            if(exist) { t.find("." + d).html(json_question[d]); }
+            t.toggle(exist);
+          });
+
+          ["group", "subgroup"].forEach(function (d){
+            t = tmp.find(".details-" + d);
+            exist = !!json_question[d];
+            if(exist) {
+              var ng = t.find(".name-" + d);
+              ng.find(".group-title").html(json_question[d].title);
+              if (json_question[d].description !== ""){
+                ng.find(".group-description").html(" - " + json_question[d].description);
+              }
+            }
+            t.toggle(exist);
+          });
+
+          t = tmp.find(".details-answers");
+          if (json_question.answers && is_categorical){
+            for(var i=0;i<json_question.answers.length;i++){
+              icon = "";
+              if (json_question.answers[i].exclude){
+                icon += $(".details-icons .exclude-answer")[0].outerHTML;
+              }
+              t.find(".list-answers").append("<li>" + icon + json_question.answers[i].text + "</li>");
+            }
+            t.show();
+          }else{
+            t.hide();
+          }
+
+          tmp.show();
+        }
+      }
+    });
+  }
 }
 
 function build_explore_time_series_page (json){ // build the visualizations for the explore data page
@@ -377,13 +315,11 @@ function build_explore_time_series_page (json){ // build the visualizations for 
   build_details(json);
   build_page_title(json);
 
-  // if no visible tab is marked as active, mark the first one active
   var explore_tabs = $("#explore-tabs");
-  // turn on tab and its content || make sure correct jumptos are showing
-  $("#explore-tabs li" +
-      (explore_tabs.find("li.active:visible").length == 0
-        ? ":visible:first"
-        : ".active" )).trigger("click");
+  // if no visible tab is marked as active, mark the first one active
+  explore_tabs.find("li" +
+    (explore_tabs.find("li.active:visible").length == 0 ? ":visible:first": ".active" )
+  ).trigger("click");
 }
 
 function get_explore_time_series (is_back_button){ // get data and load page
@@ -459,13 +395,13 @@ function get_explore_time_series (is_back_button){ // get data and load page
   })
   .success(function (json) {
     if (json.errors){
-      $('#jumpto-loader').fadeOut('slow');
-      $('#explore-data-loader').fadeOut('slow');
-      $('#explore-error').fadeIn('slow');
+      $("#jumpto-loader").fadeOut("slow");
+      $("#explore-data-loader").fadeOut("slow");
+      $("#explore-error").fadeIn("slow");
     }else if ((json.results.analysis && json.results.analysis.length == 0) || (json.results.filtered_analysis && json.results.filtered_analysis.length == 0)){
-      $('#jumpto-loader').fadeOut('slow');
-      $('#explore-data-loader').fadeOut('slow');
-      $('#explore-no-results').fadeIn('slow');
+      $("#jumpto-loader").fadeOut("slow");
+      $("#explore-data-loader").fadeOut("slow");
+      $("#explore-no-results").fadeIn("slow");
     }else{
       // update content
       build_explore_time_series_page(json);
@@ -487,229 +423,291 @@ function get_explore_time_series (is_back_button){ // get data and load page
 }
 
 function reset_filter_form (){ // reset the filter forms and select a random variable for the row
-
-  $("select#filtered_by_code").val("");
+  $("select#filtered_by_code").val("").selectpicker("refresh");
   $("input#can_exclude").removeAttr("checked");
+}
 
-  // reload the lists
-  $("select#filtered_by_code").selectpicker("refresh");
+function update_available_weights () { // update the list of avilable weights based on questions that are selected
+  var select_weight = $("select#weighted_by_code"),
+    dropdown_weight = $(".form-explore-weight-by .bootstrap-select ul.dropdown-menu");
 
+  if (!select_weight.length) { return; }
+
+  var old_value = select_weight.val(),
+    matches=[],
+    items = [
+      $("select#question_code option:selected").data("weights"),
+      $("select#filtered_by_code option:selected").data("weights")
+    ].filter(function (d) { return typeof d !== "undefined"; });
+  if(items.length > 0) {
+    matches = items.shift().filter(function (v) {
+      return items.every(function (a) {
+        return a.indexOf(v) !== -1;
+      });
+    });
+  }
+  dropdown_weight.find("li:not(:last)").hide();   // hide all items except unweighted
+
+  if (matches.length) { // if there are matches, show the weights that match, and unweighted else hide weight option and set value to unweighted
+    var index;
+    matches.forEach(function (d) {
+      index = select_weight.find("option[value='" + d + "']").index();
+      if (index != -1){
+        dropdown_weight.find("li:eq(" + index + ")").show();
+      }
+    });
+    if (matches.indexOf(old_value) === -1) { // if the old value is no longer an option, select the first one
+      select_weight.selectpicker("val", select_weight.find("option:first").attr("value"));
+    }
+  }
+  else{
+    select_weight.selectpicker("val", "unweighted");
+  }
+}
+
+function set_can_exclude_visibility (){ // show or hide the can exclude checkbox
+  if ($("select#question_code option:selected").data("can-exclude") == true ||
+      $("select#filtered_by_code option:selected").data("can-exclude") == true){
+
+    $("div#can-exclude-container").css("visibility", "visible");
+  }else{
+    $("div#can-exclude-container").css("visibility", "hidden");
+  }
 }
 
 function jumpto (show) { // show/hide jumpto show - for main box and if chart is false then map
-  $jumpto.toggle(show);
-  $jumpto_chart.toggle(show);
+  js.jumpto.toggle(show);
+  js.jumpto_chart.toggle(show);
 }
 
 $(document).ready(function () {
-  $jumpto = $("#jumpto");
-  $jumpto_chart = $("#jumpto #jumpto-chart");
-  $jumpto_chart_select = $jumpto_chart.find("select");
-  $jumpto_chart_label = $jumpto_chart.find("label span");
-  $tab_content = $(".tab-content");
-  // set languaage text
-  Highcharts.setOptions({
-    chart: { spacingRight: 30 },
-    lang: {
-      contextButtonTitle: gon.highcharts_context_title
-    },
-    colors: ['#00adee', '#e88d42', '#9674a9', '#f3d952', '#6fa187', '#b2a440', '#d95d6a', '#737d91', '#d694e0', '#80b5bc', '#a6c449', '#1b74cc', '#4eccae']
-  });
 
+  var
+    bind = function () {
 
-  if (gon.explore_time_series){
-    // due to using tabs, chart and table cannot be properly drawn
-    // because they may be hidden.
-    // this event catches when a tab is being shown to make sure
-    // the item is properly drawn
-    $("a[data-toggle='tab']").on("shown.bs.tab", function () {
-      switch($(this).attr("href")) {
-      case "#tab-chart":
-        $("#container-chart .chart").each(function (){
-          $(this).highcharts().reflow();
-        });
-        break;
-      case "#tab-table":
-        var ttInstances = TableTools.fnGetMasters();
-        for (i in ttInstances) {
-          if (ttInstances[i].fnResizeRequired())
-            ttInstances[i].fnResizeButtons();
+      // due to using tabs, chart and table cannot be properly drawn
+      // because they may be hidden.
+      // this event catches when a tab is being shown to make sure
+      // the item is properly drawn
+      $("a[data-toggle='tab']").on("shown.bs.tab", function () {
+        switch($(this).attr("href")) {
+        case "#tab-chart":
+          $("#container-chart .chart").each(function (){
+            $(this).highcharts().reflow();
+          });
+          break;
+        case "#tab-table":
+          var ttInstances = TableTools.fnGetMasters();
+          for (i in ttInstances) {
+            if (ttInstances[i].fnResizeRequired())
+              ttInstances[i].fnResizeButtons();
+          }
+          break;
         }
-        break;
-      }
-    });
+      });
 
-    // catch the form submit and call the url with the
-    // form values in the url
-    $("form#form-explore-time-series").submit(function (){
-      if ($("select#question_code").val() == ""){
-        $(".instructions").show();//fadeIn("slow");
-        $(".tab-container").addClass("hide");
-      }else{
-        if ($(".instructions").is(":visible")){
-          $(".instructions").hide();//fadeOut("slow");
-          $(".tab-container").removeClass("hide");
+      // catch the form submit and call the url with the
+      // form values in the url
+      $("form#form-explore-time-series").submit(function (){
+        if ($("select#question_code").val() == ""){
+          $(".instructions").show();//fadeIn("slow");
+          $(".tab-container").addClass("hide");
+        }else{
+          if ($(".instructions").is(":visible")){
+            $(".instructions").hide();//fadeOut("slow");
+            $(".tab-container").removeClass("hide");
+          }
+          $("#jumpto-loader").fadeIn("slow");
+          $("#explore-error").fadeOut("slow");
+          $("#explore-no-results").fadeOut("slow");
+          $("#explore-data-loader").fadeIn("slow", function (){
+            get_explore_time_series();
+          });
         }
+        return false;
+      });
+      // reset the form fields
+      $("form#form-explore-time-series input#btn-reset").click(function (e){
+        e.preventDefault();
         $("#jumpto-loader").fadeIn("slow");
+        $("#explore-error").fadeOut("slow");
+        $("#explore-no-results").fadeOut("slow");
+        $("#explore-data-loader").fadeIn("slow", function (){
+          reset_filter_form();
+          get_explore_time_series();
+        });
+
+      });
+
+
+      // initalize the fancy select boxes
+      $("select.selectpicker").selectpicker();
+      $("select.selectpicker-filter").selectpicker();
+      $("select.selectpicker-weight").selectpicker();
+
+      // if an option has data-disabled when page loads, make sure it is hidden in the selectpicker
+      $("select#question_code option[data-disabled='disabled']").each(function (){
+        $(".form-explore-question-code .bootstrap-select ul.dropdown-menu li:eq(" + $(this).index() + ")").hide();
+      });
+      $("select#filtered_by_code option[data-disabled='disabled']").each(function (){
+        $(".form-explore-filter-by .bootstrap-select ul.dropdown-menu li:eq(" + $(this).index() + ")").hide();
+      });
+
+      // make sure the correct weights are being shown
+      update_available_weights();
+
+      // make sure the instructions start at the correct offset to align with the first drop down
+      $(".instructions p:first").css("margin-top", ($(".form-explore-question-code").offset().top - $(".content").offset().top) + 5);
+
+      // if option changes, make sure the select option is not available in the other lists
+      $("select.selectpicker").change(function (){
+        //index = $(this).find("option[value='" + $(this).val() + "']").index();
+
+        // update filter list
+        var q = $("select#question_code").val();
+        var q_index = $("select#question_code option[value='" + q + "']").index();
+        // if filter is one of these values, reset filter to no filter
+        if ($("select#filtered_by_code").val() == q && q != ""){
+          // reset value and hide filter answers
+          $("select#filtered_by_code").selectpicker("val", "");
+        }
+
+        // turn on all hidden items
+        $(".form-explore-filter-by .bootstrap-select ul.dropdown-menu li[style*='display: none']").show();
+
+        // turn off this item
+        if (q != "" && q_index != -1){
+          $(".form-explore-filter-by .bootstrap-select ul.dropdown-menu li:eq(" + (q_index) + ")").hide();
+        }
+
+        // update the list of weights
+        update_available_weights();
+
+        // update tooltip for selects
+        $("form button.dropdown-toggle").tooltip("fixTitle");
+
+        // if selected options have can_exclude, show the checkbox, else hide it
+        set_can_exclude_visibility();
+      });
+
+      // update tooltip when filter tooltip changes
+      $("select.selectpicker-filter").change(function (){
+        // if selected options have can_exclude, show the checkbox, else hide it
+        set_can_exclude_visibility();
+
+        // update the list of weights
+        update_available_weights();
+
+        $("form button.dropdown-toggle").tooltip("fixTitle");
+      });
+
+      // update tooltip when weight tooltip changes
+      $("select.selectpicker-weight").change(function (){
+        $("form button.dropdown-toggle").tooltip("fixTitle");
+      });
+
+      // get the initial data
+      if($("select#question_code").val() !== "")
+      {
+        // get the initial data
         $("#explore-error").fadeOut("slow");
         $("#explore-no-results").fadeOut("slow");
         $("#explore-data-loader").fadeIn("slow", function (){
           get_explore_time_series();
         });
       }
-      return false;
-    });
-    // reset the form fields
-    $("form#form-explore-time-series input#btn-reset").click(function (e){
-      e.preventDefault();
-      $("#jumpto-loader").fadeIn("slow");
-      $("#explore-error").fadeOut("slow");
-      $("#explore-no-results").fadeOut("slow");
-      $("#explore-data-loader").fadeIn("slow", function (){
-        reset_filter_form();
-        get_explore_time_series();
+
+
+      // jumpto scrolling
+      $("#jumpto").on("change", "select", function () {
+        $("#jumpto button.dropdown-toggle").tooltip("fixTitle");
+        js.tab_content.animate({
+          scrollTop: js.tab_content.scrollTop() + js.tab_content.find(".tab-pane.active > div > " + $(this).find("option:selected").data("href")).offset().top - js.tab_content.offset().top
+        }, 1500);
       });
 
-    });
-
-
-    // initalize the fancy select boxes
-    $("select.selectpicker").selectpicker();
-    $("select.selectpicker-filter").selectpicker();
-    $("select.selectpicker-weight").selectpicker();
-
-    // if an option has data-disabled when page loads, make sure it is hidden in the selectpicker
-    $("select#question_code option[data-disabled='disabled']").each(function (){
-      $(".form-explore-question-code .bootstrap-select ul.dropdown-menu li:eq(" + $(this).index() + ")").hide();
-    });
-    $("select#filtered_by_code option[data-disabled='disabled']").each(function (){
-      $(".form-explore-filter-by .bootstrap-select ul.dropdown-menu li:eq(" + $(this).index() + ")").hide();
-    });
-
-    // make sure the correct weights are being shown
-    update_available_weights();
-
-    // make sure the instructions start at the correct offset to align with the first drop down
-    $(".instructions p:first").css("margin-top", ($(".form-explore-question-code").offset().top - $(".content").offset().top) + 5);
-
-    // if option changes, make sure the select option is not available in the other lists
-    $("select.selectpicker").change(function (){
-      //index = $(this).find("option[value='" + $(this).val() + "']").index();
-
-      // update filter list
-      var q = $("select#question_code").val();
-      var q_index = $("select#question_code option[value='" + q + "']").index();
-      // if filter is one of these values, reset filter to no filter
-      if ($("select#filtered_by_code").val() == q && q != ""){
-        // reset value and hide filter answers
-        $("select#filtered_by_code").selectpicker("val", "");
-      }
-
-      // turn on all hidden items
-      $(".form-explore-filter-by .bootstrap-select ul.dropdown-menu li[style*='display: none']").show();
-
-      // turn off this item
-      if (q != "" && q_index != -1){
-        $(".form-explore-filter-by .bootstrap-select ul.dropdown-menu li:eq(" + (q_index) + ")").hide();
-      }
-
-      // update the list of weights
-      update_available_weights();
-
-      // update tooltip for selects
-      $("form button.dropdown-toggle").tooltip("fixTitle");
-
-      // if selected options have can_exclude, show the checkbox, else hide it
-      set_can_exclude_visibility();
-    });
-
-    // update tooltip when filter tooltip changes
-    $("select.selectpicker-filter").change(function (){
-      // if selected options have can_exclude, show the checkbox, else hide it
-      set_can_exclude_visibility();
-
-      // update the list of weights
-      update_available_weights();
-
-      $("form button.dropdown-toggle").tooltip("fixTitle");
-    });
-
-    // update tooltip when weight tooltip changes
-    $("select.selectpicker-weight").change(function (){
-      $("form button.dropdown-toggle").tooltip("fixTitle");
-    });
-
-    // get the initial data
-    if($("select#question_code").val() !== "")
-    {
-      // get the initial data
-      $("#explore-error").fadeOut("slow");
-      $("#explore-no-results").fadeOut("slow");
-      $("#explore-data-loader").fadeIn("slow", function (){
-        get_explore_time_series();
-      });
-    }
-
-
-    // jumpto scrolling
-    $("#jumpto").on("change", "select", function () {
-      $("#jumpto button.dropdown-toggle").tooltip("fixTitle");
-      $tab_content.animate({
-        scrollTop: $tab_content.scrollTop() + $tab_content.find(".tab-pane.active > div > " + $(this).find("option:selected").data("href")).offset().top - $tab_content.offset().top
-      }, 1500);
-    });
-
-    // when chart tab clicked on, make sure the jumpto block is showing, else, hide it
-    $("#explore-tabs li").click(function () {
-      var href = $(this).find("a").attr("href");
-      if (href == "#tab-chart" && $jumpto_chart_select.find("option").length > 0){
-        jumpto(true);
-      }else{
-        jumpto(false);
-      }
-    });
-
-    // the below code is to override back button to get the ajax content without page reload
-    $(window).bind("popstate", function () {
-
-      // pull out the querystring
-      params = queryStringToJSON(window.location.href);
-
-      // for each form field, reset if need to
-      // question code
-      if (params.question_code != $("select#question_code").val()){
-        if (params.question_code == undefined){
-          $("select#question_code").val("");
+      // when chart tab clicked on, make sure the jumpto block is showing, else, hide it
+      $("#explore-tabs li").click(function () {
+        var href = $(this).find("a").attr("href");
+        if (href == "#tab-chart" && js.jumpto_chart_select.find("option").length > 0){
+          jumpto(true);
         }else{
-          $("select#question_code").val(params.question_code);
+          jumpto(false);
         }
-        $("select#question_code").selectpicker("refresh");
-      }
-
-      // filtered by
-      if (params.filtered_by_code != $("select#filtered_by_code").val()){
-        if (params.filtered_by_code == undefined){
-          $("select#filtered_by_code").val("");
-        }else{
-          $("select#filtered_by_code").val(params.filtered_by_code);
-        }
-        $("select#filtered_by_code").selectpicker("refresh");
-      }
-
-      // can exclude
-      if (params.can_exclude == "true"){
-        $("input#can_exclude").attr("checked", "checked");
-      }else{
-        $("input#can_exclude").removeAttr("checked");
-      }
-
-      // reload the data
-      $("#jumpto-loader").fadeIn("slow");
-      $("#explore-error").fadeOut("slow");
-      $("#explore-no-results").fadeOut("slow");
-      $("#explore-data-loader").fadeIn("slow", function (){
-        get_explore_time_series(true);
       });
-    });
-  }
+
+      // the below code is to override back button to get the ajax content without page reload
+      $(window).bind("popstate", function () {
+
+        // pull out the querystring
+        params = queryStringToJSON(window.location.href);
+
+        // for each form field, reset if need to
+        // question code
+        if (params.question_code != $("select#question_code").val()){
+          if (params.question_code == undefined){
+            $("select#question_code").val("");
+          }else{
+            $("select#question_code").val(params.question_code);
+          }
+          $("select#question_code").selectpicker("refresh");
+        }
+
+        // filtered by
+        if (params.filtered_by_code != $("select#filtered_by_code").val()){
+          if (params.filtered_by_code == undefined){
+            $("select#filtered_by_code").val("");
+          }else{
+            $("select#filtered_by_code").val(params.filtered_by_code);
+          }
+          $("select#filtered_by_code").selectpicker("refresh");
+        }
+
+        // can exclude
+        if (params.can_exclude == "true"){
+          $("input#can_exclude").attr("checked", "checked");
+        }else{
+          $("input#can_exclude").removeAttr("checked");
+        }
+
+        // reload the data
+        $("#jumpto-loader").fadeIn("slow");
+        $("#explore-error").fadeOut("slow");
+        $("#explore-no-results").fadeOut("slow");
+        $("#explore-data-loader").fadeIn("slow", function (){
+          get_explore_time_series(true);
+        });
+      });
+    },
+    init = function () {
+      if(!gon.explore_time_series) { return; }
+      Highcharts.setOptions({ // set languaage text
+        chart: { spacingRight: 30 },
+        lang: {
+          contextButtonTitle: gon.highcharts_context_title
+        },
+        colors: ["#00adee", "#e88d42", "#9674a9", "#f3d952", "#6fa187", "#b2a440", "#d95d6a", "#737d91", "#d694e0", "#80b5bc", "#a6c449", "#1b74cc", "#4eccae"],
+        credits: { enabled: false }
+      });
+
+      js = {
+        isFox: /Firefox/.test(navigator.userAgent),
+        cache: {},
+        chart: $("#container-chart"),
+        jumpto: $("#jumpto"),
+        select_qc: $("select#question_code"),
+        select_fb: $("select#filtered_by_code"),
+        select_wb: $("select#weighted_by_code"),
+        type: 1,
+        tab_content: $(".tab-content")
+      };
+
+      js["jumpto_chart"] = js.jumpto.find("#jumpto-chart");
+      js["jumpto_chart_label"] = js.jumpto_chart.find("label span");
+      js["jumpto_chart_select"] = js.jumpto_chart.find("select");
+
+      bind();
+    };
+
+  init();
 });

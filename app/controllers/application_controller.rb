@@ -376,8 +376,9 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
   # generate the data needed for the embed_id
   # output: {type, title, dashboard_link, explore_link, error, visual_type, js}
   def get_highlight_data(embed_id, highlight_id=nil, use_admin_link=nil)
+    Rails.logger.info("------------------------------------------get_highlight_datastart")
     highlight_id ||= SecureRandom.urlsafe_base64
-    output = {highlight_id:highlight_id, id:nil, type:nil, title:nil, dashboard_link:nil, explore_link:nil, error:false, visual_type:nil, js:{}, has_data:false, chart_type: "bar"}
+    output = {highlight_id:highlight_id, id:nil, type:nil, title:nil, dashboard_link:nil, explore_link:nil, error:false, visual_type:nil, js:{}, has_data:false}
     options = nil
 
     begin
@@ -389,9 +390,8 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
     # options must be present with dataset or time series id and question code; all other options are not required
     if !output[:error] && options.present? && (options['dataset_id'].present? || options['time_series_id'].present?) && options['question_code'].present?
       options = clean_filtered_params(options)
-
       output[:visual_type] = options['visual_type']
-      output[:chart_type] = options['chart_type']
+       Rails.logger.info("------------------------------------------get_highlight_data--#{output[:visual_type]}")
       options["language"] = params["language"] if params["language"].present?
 
       if options['dataset_id'].present?
@@ -457,7 +457,7 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
 
         output[:js][:json_data] = data
         output[:js][:visual_type] = output[:visual_type]
-        output[:js][:chart_type] = output[:chart_type]
+        #output[:js][:chart_type] = output[:chart_type]
         # save values of filters so can choose correct chart/map to show
         output[:js][:broken_down_by_value] = options['broken_down_by_value'] if options['broken_down_by_value'].present? # only present if doing maps
         output[:js][:filtered_by_value] = options['filtered_by_value'] if options['filtered_by_value'].present?
@@ -485,21 +485,16 @@ logger.debug "======= output js = #{output[:js]}"
       end
     end
 
-    # if the visual is a chart, include the highcharts file
-    # if the visual is a map, include the highmaps file
-    if visual_types.index('chart').present?
-      @js.push('highcharts.js')
-    end
-    if visual_types.index('map').present?
+    if visual_types.index(Highlight::VISUAL_TYPES[:map]).present? # if the visual is a map, include the highmaps file
       @js.push('highcharts.js', 'highcharts-map.js')
-
       if dataset_ids.present?
-        # have to get the shape file url for this dataset
-        @shapes_url = []
+        @shapes_url = [] # have to get the shape file url for this dataset
         dataset_ids.uniq.each do |dataset_id|
           @shapes_url << Dataset.shape_file_url(dataset_id)
         end
       end
+    else # if the visual is a chart, include the highcharts file
+      @js.push('highcharts.js')
     end
     @js.push('highcharts-exporting.js')
 

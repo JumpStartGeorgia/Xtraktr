@@ -433,7 +433,6 @@ function build_bar_chart (json_chart, chart_height, weight_name) { // build pie 
     chart_id = opt[3];
 
   chart_height = opt[0];
-
   // create chart
   $(selector_path + " #" + chart_id).addClass("pie_or_bar");
   $(selector_path + " #" + chart_id).highcharts({
@@ -524,7 +523,7 @@ function build_bar_chart (json_chart, chart_height, weight_name) { // build pie 
 
   });
 
-  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id.bar_chart, weight_name, gon.visual_types.pie_chart);
+  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id.bar, weight_name, gon.visual_types.bar);
 }
 
 function build_histogramm_chart (json_chart, chart_height, weight_name) { // build pie chart
@@ -617,7 +616,7 @@ function build_histogramm_chart (json_chart, chart_height, weight_name) { // bui
     }
     return v;
   }
-  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id.bar_chart, weight_name, gon.visual_types.pie_chart);
+  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id, weight_name, gon.visual_types.histogramm);
 }
 
 function build_crosstab_chart (meta, json_chart, chart_height, weight_name){ // build crosstab chart
@@ -717,7 +716,7 @@ function build_crosstab_chart (meta, json_chart, chart_height, weight_name){ // 
     }
   });
 
-  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id, weight_name, gon.visual_types.crosstab_chart);
+  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id, weight_name, gon.visual_types.crosstab);
 }
 
 function build_scatter_chart (meta, json_chart, chart_height, weight_name){ // build crosstab chart
@@ -821,7 +820,7 @@ function build_scatter_chart (meta, json_chart, chart_height, weight_name){ // b
   });
 
 
-  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id, weight_name, gon.visual_types.crosstab_chart);
+  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id, weight_name, gon.visual_types.scatter);
 }
 
 function build_pie_chart (json_chart, chart_height, weight_name) { // build pie chart
@@ -940,7 +939,7 @@ function build_pie_chart (json_chart, chart_height, weight_name) { // build pie 
     }
 
   });  
-  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id.pie_chart, weight_name, gon.visual_types.pie_chart);
+  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id.pie, weight_name, gon.visual_types.pie);
 }
 
 function build_time_series_chart (json_chart, chart_height, weight_name) { // build time series line chart
@@ -1020,7 +1019,7 @@ function build_time_series_chart (json_chart, chart_height, weight_name) { // bu
     }
   });
 
-  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id, weight_name, gon.visual_types.line_chart);
+  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id, weight_name, gon.visual_types.time_series);
 }
 
 function prepareChart (chart_height, type) {
@@ -1094,25 +1093,22 @@ $(document).ready(function () {
   // record a chart as a highlight
   $("#tab-chart, #tab-map").on("click", "a.add-highlight", function (e){
     e.preventDefault();
-    var link = this;
+    var link = $(this),
+      embed_id = link.data("embed-id"),
+      type = link.data("visual-type");
 
     $.ajax({
       type: "POST",
-      url: $(link).attr("href"),
-      data: {embed_id: $(link).data("embed-id"), visual_type: $(link).data("visual-type")},
+      url: link.attr("href"),
+      data: { embed_id: embed_id, visual_type: type },
       dataType: "json"
     }).done(function (success){
       if (success){
-        // record embed id
-        gon.embed_ids.push($(link).data("embed-id"));
-
-        // show delete button
-        $(link).fadeOut(function (){
-          delete_highlight_button($(link).parent(), $(link).data("embed-id"), $(link).data("visual-type"));
+        gon.embed_ids.push(embed_id); // record embed id
+        link.fadeOut(function () { // show delete button
+          delete_highlight_button(link.parent(), embed_id, type);
         });
       }
-      // else {
-      // }
     });
 
   });
