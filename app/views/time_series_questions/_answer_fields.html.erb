@@ -44,7 +44,7 @@
                               <%= f_dataset_answer.input :dataset_id, as: :hidden %>
                               <%#= f_dataset_answer.input :text, as: :hidden, input_html: {class: 'dataset_question_answer_text'} %>
 
-                              <input class="dataset_question_answer_text" id="time_series_question_answers_attributes_<%= aindex %>_text_translations_<%= locale %>" name="time_series_question[answers_attributes][<%= aindex %>][text_translations][<%= locale %>]" type="hidden" value="<%= text %>">
+                              <input class="dataset_question_answer_text" id="time_series_question_answers_attributes_<%= aindex %>_dataset_answers_attributes_<%= dataset_index %>_text_translations_<%= locale %>" name="time_series_question[answers_attributes][<%= aindex %>][dataset_answers_attributes][<%= dataset_index %>][text_translations][<%= locale %>]" type="hidden" value="<%= dataset_answer.text_translations[locale] %>">
 
                               <div class="select input required form-group" id="time_series_question_answers_attributes_<%= aindex %>_value_input">
                                 <span class="form-wrapper">
