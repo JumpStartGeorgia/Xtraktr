@@ -427,6 +427,83 @@ function reset_filter_form (){ // reset the filter forms and select a random var
   $("input#can_exclude").removeAttr("checked");
 }
 
+function build_selects (skip_content) {
+  console.log(gon.questions);
+  var q = gon.questions,
+    html = "",
+    type_map = [],
+    type_map_index = 0;
+
+  skip_content = (typeof skip_content !== "boolean" ? false : skip_content);
+ //console.log(q.items);
+  build_options_partial(q.items, null, null);
+
+  function build_options_partial (items, level, parent_id) { // todo
+    var tmp = "";
+    items.forEach(function (item) {
+      if(item.hasOwnProperty("parent_id")) { // Group
+        tmp = build_selects_group_option(item);
+        html += tmp;
+        type_map.push([(level === null ? 0 : 1), 0, (level === null ? null : type_map_index)]);
+
+        if(item.hasOwnProperty("subitems") && item.subitems !== null) {
+          build_options_partial(item.subitems, (level !== null ? "subgroup" : "group"), type_map_index);
+        }
+      }
+      else if(item.hasOwnProperty("code")){ // Question
+        tmp = build_selects_question_option(item, level, skip_content);
+        html += tmp;
+        type_map.push([2, item.code, parent_id]);
+      }
+      ++type_map_index;
+    });
+  }
+  var counts = [0, 0], // group cat, num, subgroup cat, num
+    cur;
+  for(i = type_map.length-1; i >= 0; --i) {
+    cur = type_map[i];
+    if(cur[0] == 2) {
+      ++counts[0];
+      ++counts[1];
+    }
+    else if(cur[0] == 1) {
+      cur[1] = counts[1];
+      counts[1] = 0;
+    }
+    else if(cur[0] == 0) {
+      cur[1] = counts[0];
+      counts[0] = counts[1] = 0;
+    }
+  }
+  return [html, type_map];
+}
+function build_selects_group_option (group) {
+  var has_parent = group.parent_id !== null,
+    sub = (has_parent ? "sub" : ""),
+    g_text = group.title,
+    content = "data-content=\"<span>" + g_text + "</span><span class='right-icons'>" + "<img src='/assets/svg/"+sub+"group.svg' title='" + gon["is_" + sub + "group"] + "' />" + "</span>\"";
+  return "<option class='" + sub + "group' disabled='disabled' " + content + ">" + g_text + "</option>";
+}
+function build_selects_question_option (question, level, skip_content) {
+  var q_text = question.original_code + " - " + question.text,
+    selected = "",
+    disabled = "",
+    // selected = selected_code.present? && selected_code == question.code ? 'selected=selected ' : '',
+    // disabled = (disabled_code.present? && disabled_code == question.code) || (disabled_code2.present? && disabled_code2 == question.code) ? 'data-disabled=disabled ' : '',
+    can_exclude = question.has_can_exclude_answers ? "data-can-exclude=true " : "",
+    cls = (level === "group" ? "grouped" : (level === "subgroup" ? "grouped subgrouped" : "")),
+    weights = "",
+    content = "";
+
+  if(gon.questions.weights.length) {
+    var w = gon.questions.weights.filter(function (weight) { return (weight.is_default || weight.applies_to_all || weight.codes.indexOf(question.code) !== -1); });
+    if(w.length) {
+      weights = "data-weights=\'[\"" + w.map(function (x){ return x.code; }).join("\",\"") + "\"]\'";
+    }
+  }
+  return "<option class='"+cls+"' value='"+question.code+"' title='"+q_text+"' "+selected+" "+disabled+" "+content+" "+can_exclude+" "+weights+">"+q_text+"</option>";
+}
+
 function update_available_weights () { // update the list of avilable weights based on questions that are selected
   var select_weight = $("select#weighted_by_code"),
     dropdown_weight = $(".form-explore-weight-by .bootstrap-select ul.dropdown-menu");
@@ -705,6 +782,24 @@ $(document).ready(function () {
       js["jumpto_chart"] = js.jumpto.find("#jumpto-chart");
       js["jumpto_chart_label"] = js.jumpto_chart.find("label span");
       js["jumpto_chart_select"] = js.jumpto_chart.find("select");
+
+
+      var select_options = build_selects(true);
+      select_map = select_options[1];
+
+      js.select_qc.append(select_options[0]);
+      js.select_fb.append(select_options[0]);
+
+      function select_options_default (filters) {
+        var qc_option = js.select_qc.find("option[value='"+filters[0]+"']");
+        if(qc_option.length) {
+          qc_option.attr("selected", "selected");
+        }
+        set_can_exclude_visibility();
+        js.select_fb.find("option[value='"+filters[1]+"']").attr("selected", "selected");
+        js.select_fb.find("option[value='"+filters[0]+"']").attr("data-disabled", "disabled");
+      }
+      select_options_default(gon.questions.filters);
 
       bind();
     };

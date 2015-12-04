@@ -550,7 +550,6 @@ function reset_filter_form () { // reset the filter forms and select a random va
 function build_selects (skip_content) {
   //console.log(gon.questions);
   var q = gon.questions,
-    dataset = q.dataset,
     html = "",
     html_only_categorical = "",
     type_map = [],
@@ -585,22 +584,22 @@ function build_selects (skip_content) {
       ++type_map_index;
     });
   }
-  var counts = [0, 0, 0, 0]; // group cat, num, subgroup cat, num
-  var cat_count = 0, num_count = 0, cur;
+  var counts = [0, 0, 0, 0], // group cat, num, subgroup cat, num
+    cur;
   for(i = type_map.length-1; i >= 0; --i) {
     cur = type_map[i];
-    if(cur[0] == 2) {
-      if(cur[2] == 1) { ++counts[0]; ++counts[2]; }
-      if(cur[2] == 2) { ++counts[1]; ++counts[3]; }
+    if(cur[0] == 2) { // if question
+      if(cur[2] == 1) { ++counts[0]; ++counts[2]; } // if categorical
+      if(cur[2] == 2) { ++counts[1]; ++counts[3]; } // if numerical
     }
-    else if(cur[0] == 1) {
-      cur[1] = counts[2];
-      cur[2] = counts[3];
+    else if(cur[0] == 1) { // if subgroup
+      cur[1] = counts[2]; // categorical
+      cur[2] = counts[3]; // numerical
       counts[2] = counts[3] = 0;
     }
-    else if(cur[0] == 0) {
-      cur[1] = counts[0];
-      cur[2] = counts[1];
+    else if(cur[0] == 0) { // if group
+      cur[1] = counts[0]; // categorical
+      cur[2] = counts[1]; // numerical
       counts[0] = counts[1] = counts[2] = counts[3] = 0;
     }
   }
@@ -631,7 +630,7 @@ function build_selects_question_option (question, level, skip_content) {
     }
   }
   // if the question is mappable or is excluded, show the icons for this
-  if (!skip_content || question.data_type !== 0) {    
+  if (!skip_content && question.data_type !== 0) {    
     content += "data-content=\"<span class='outer-layer'><span class='inner-layer'><span>" + q_text + "</span><span class='right-icons'>";
 
     if(question.data_type !== 0) {

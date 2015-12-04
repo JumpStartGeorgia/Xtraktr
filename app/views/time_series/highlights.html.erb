@@ -62,7 +62,7 @@
                         :'data-href' => highlights_edit_description_path,
                         :'data-embed-id' => highlight.embed_id %>
             <%= link_to '',
-                        remove_highlight_time_series_path(id: highlight.time_series_id, embed_id: highlight.embed_id),
+                        remove_highlight_time_series_path(id: @time_series, embed_id: highlight.embed_id),
                         :title => t("helpers.links.destroy"),
                         :method => :post,
                         :data => { :confirm => I18n.t("helpers.links.confirm") },

@@ -152,7 +152,7 @@ class Dataset < CustomTranslation
     end
 
     def for_analysis_not_in_codes(codes)
-      nin(:code => codes).where(:exclude => false, :is_analysable => true)
+      nin(:code => codes).where(:exclude => false, :is_analysable => true, :data_type => 1)
     end
 
     def with_original_code(original_code)
@@ -1101,7 +1101,6 @@ class Dataset < CustomTranslation
       # - else get main groups
       groups = []
       if options[:group_id].present?
-
         groups << self.groups.sub_groups(options[:group_id])
       else
         groups << self.groups.main_groups
