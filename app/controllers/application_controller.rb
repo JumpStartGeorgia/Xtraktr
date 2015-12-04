@@ -347,7 +347,9 @@ class ApplicationController < ActionController::Base
 
     # the questions for cross tab can only be those that have code answers and are not excluded
     @questions = time_series.questions
-    @items = time_series.arranged_items(include_groups: true, include_subgroups: true, include_questions: true)
+    #@items = time_series.arranged_items(include_groups: true, include_subgroups: true, include_questions: true)
+    @tree = time_series.tree(include_groups: true, include_subgroups: true, include_questions: true)
+
 
     if @questions.present?
 
@@ -385,7 +387,7 @@ class ApplicationController < ActionController::Base
         gon.explore_time_series = true
         gon.time_series_id = params[:id]
         gon.api_time_series_analysis_path = api_v3_time_series_analysis_path
-
+        gon.questions = { items: @tree, weights: @time_series.weights, filters:[ @question_code, @filtered_by_code] }
       }
     end
   end
@@ -395,7 +397,6 @@ class ApplicationController < ActionController::Base
   # generate the data needed for the embed_id
   # output: {type, title, dashboard_link, explore_link, error, visual_type, js}
   def get_highlight_data(embed_id, highlight_id=nil, use_admin_link=nil)
-    Rails.logger.info("------------------------------------------get_highlight_datastart")
     highlight_id ||= SecureRandom.urlsafe_base64
     output = {highlight_id:highlight_id, id:nil, type:nil, title:nil, dashboard_link:nil, explore_link:nil, error:false, visual_type:nil, js:{}, has_data:false}
     options = nil
