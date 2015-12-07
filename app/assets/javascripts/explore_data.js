@@ -297,11 +297,8 @@ function build_datatable (json) { // build data table
 
   // if data is weighted, show footnote
   var tmp = $("#tab-table .table-weighted-footnote");
-  if (json.weighted_by){
-    tmp.find(" .footnote-weight-name").html(json.weighted_by.weight_name);
-  }else{
-    tmp.find(" .footnote-weight-name").empty();
-  }
+  if (json.weighted_by){ tmp.find(" .footnote-weight-name").html(json.weighted_by.weight_name); }
+  else { tmp.find(" .footnote-weight-name").empty(); }
   tmp.toggle(json.weighted_by);
   //}
   // else{
@@ -457,8 +454,9 @@ function get_explore_data (is_back_button) { // get data and load page
     });
   }
   else {
+    tmp = ["select_qc", "select_bd", "select_fb", "select_wb"];
     ["question_code", "broken_down_by_code", "filtered_by_code", "weighted_by_code"].forEach(function (d){
-      v = $("select#" + d).val();
+      v = js[tmp[i]].val();
       if (v !== null && v !== ""){
         ajax_data[d] = v;
         url_querystring.push(d + "=" + v);
@@ -552,13 +550,12 @@ function build_selects (skip_content) {
   var q = gon.questions,
     html = "",
     html_only_categorical = "",
-    type_map = [],
-    type_map_index = 0;
+    type_map = [-1],
+    type_map_index = 1;
 
   skip_content = (typeof skip_content !== "boolean" ? false : skip_content);
 
   build_options_partial(q.items, null, null);
-
   function build_options_partial (items, level, parent_id) { // todo
     var tmp = "";
     items.forEach(function (item) {
@@ -586,7 +583,7 @@ function build_selects (skip_content) {
   }
   var counts = [0, 0, 0, 0], // group cat, num, subgroup cat, num
     cur;
-  for(i = type_map.length-1; i >= 0; --i) {
+  for(i = type_map.length-1; i > 0; --i) {
     cur = type_map[i];
     if(cur[0] == 2) { // if question
       if(cur[2] == 1) { ++counts[0]; ++counts[2]; } // if categorical
@@ -654,17 +651,16 @@ function build_selects_question_option (question, level, skip_content) {
 
 function update_available_weights () { // update the list of avilable weights based on questions that are selected
   // update weight list if weights exist
-  var select_weight = $("select#weighted_by_code"),
-    dropdown_weight = $(".form-explore-weight-by .bootstrap-select ul.dropdown-menu");
+  var select_weight = $("select#weighted_by_code");
   if (js.type===1 && js.select_wb.length > 0) {
-    if (!select_weight.length) { return; }
+    if (!js.select_wb.length) { return; }
 
-    var old_value = select_weight.val(),
+    var old_value = js.select_wb.val(),
       matches=[],
       items = [
-        $("select#question_code option:selected").data("weights"),
-        $("select#broken_down_by_code option:selected").data("weights"),
-        $("select#filtered_by_code option:selected").data("weights")
+        js.select_qc.find("option:selected").data("weights"),
+        js.select_bd.find("option:selected").data("weights"),
+        js.select_fb.find("option:selected").data("weights")
       ].filter(function (d) { return typeof d !== "undefined"; });
 
     if(items.length > 0) {
@@ -675,37 +671,35 @@ function update_available_weights () { // update the list of avilable weights ba
       });
     }
 
-    dropdown_weight.find("li:not(:last)").hide();   // hide all items except unweighted
+    js.select_wb.find("option:not(:last)").hide(); // hide all items except unweighted
 
     if (matches.length) { // if there are matches, show the weights that match, and unweighted else hide weight option and set value to unweighted
       var index;
       matches.forEach(function (d, i) {
-        index = select_weight.find("option[value='" + d + "']").index();
-        if (index != -1){
-          dropdown_weight.find("li:eq(" + index + ")").show();
-        }
+        js.select_wb.find("option[value='" + d + "']").show();
       });
 
       if (matches.indexOf(old_value) === -1) { // if the old value is no longer an option, select the first one
-        select_weight.selectpicker("val", select_weight.find("option:first").attr("value"));
+        js.select_wb.selectpicker("val", js.select_wb.find("option:first").attr("value"));
       }
     }
     else{
       $(".form-explore-weight-by").hide();
-      select_weight.selectpicker("val", "unweighted");
+      js.select_wb.selectpicker("val", "unweighted");
     }
   }
   else {
     $(".form-explore-weight-by").hide();
-    select_weight.selectpicker("val", "unweighted");
+    js.select_wb.selectpicker("val", "unweighted");
   }
+  js.select_wb.selectpicker("refresh");
 }
 
 function set_can_exclude_visibility () { // show or hide the can exclude checkbox
   $("div#can-exclude-container").css("visibility",
-    (js.select_qc.find("option:selected").data("can-exclude") == true ||
-    js.select_bd.find("option:selected").data("can-exclude") == true ||
-    js.select_fb.find("option:selected").data("can-exclude") == true) ? "visible" : "hidden");
+    (js.select_qc.find("option:selected").data("can-exclude")+"" == "true" ||
+    js.select_bd.find("option:selected").data("can-exclude")+"" == "true" ||
+    js.select_fb.find("option:selected").data("can-exclude")+"" == "true") ? "visible" : "hidden");
 }
 function jumpto (show, chart) { // show/hide jumpto show - for main box and if chart is false then map
   if(typeof chart === "undefined") { chart = true; }
@@ -714,18 +708,19 @@ function jumpto (show, chart) { // show/hide jumpto show - for main box and if c
   js.jumpto_map.toggle(show && !chart);
 }
 function empty_groups (index) {
-  var tmp_index = select_map[index][3],
-    tmp_data_type = select_map[index][2],
+  var par_id = select_map[index][3],
+    q_data_type = select_map[index][2],
     also_to_hide = [];
 
-  if([1, 2].indexOf(tmp_data_type) !== -1)
+  console.log(index, par_id, q_data_type, select_map);
+  if([1, 2].indexOf(q_data_type) !== -1)
   {
-    while(tmp_index !== null){
-      var gr = select_map[tmp_index];
-      if(gr[tmp_data_type] <= 1) {
-        also_to_hide.push(tmp_index);
+    while(par_id !== null){
+      var gr = select_map[par_id];
+      if(gr[q_data_type] <= 1) {
+        also_to_hide.push(par_id);
       }
-      tmp_index = select_map[tmp_index][3];
+      par_id = select_map[par_id][3];
     }
   }
   return also_to_hide;
@@ -804,17 +799,6 @@ $(document).ready(function () {
       $("select.selectpicker-filter").selectpicker();
       $("select.selectpicker-weight").selectpicker();
 
-      // if an option has data-disabled when page loads, make sure it is hidden in the selectpicker
-      js.select_qc.find("option[data-disabled='disabled']").each(function () {
-        $(".form-explore-question-code .bootstrap-select ul.dropdown-menu li:eq(" + $(this).index() + ")").hide();
-      });
-      js.select_bd.find("option[data-disabled='disabled']").each(function () {
-        $(".form-explore-broken-by .bootstrap-select ul.dropdown-menu li:eq(" + $(this).index() + ")").hide();
-      });
-      js.select_fb.find("option[data-disabled='disabled']").each(function () {
-        $(".form-explore-filter-by .bootstrap-select ul.dropdown-menu li:eq(" + $(this).index() + ")").hide();
-      });
-
       // make sure the correct weights are being shown
       update_available_weights();
 
@@ -839,36 +823,37 @@ $(document).ready(function () {
           also_to_hide,
           old_type = js.type;
         js.type = type;
-        // if this is question, update broken down by else vice-versa
-        if(id == "question_code") { // update broken down by list
-          var broken_by_menu = $(".form-explore-broken-by .bootstrap-select ul.dropdown-menu");
-          broken_by_menu.find("li").hide();
+
+        if(id == "question_code") { // if this is question, update broken down by else vice-versa, update broken down by list
+          js.select_bd.find("option").hide();
 
           also_to_hide = empty_groups(q_index);
 
           select_map.forEach(function (d, i){
             if( ((d[0] === 2 && d[2] == type) ||
                 (d[0] == 1 && ((type == 1 && d[1] > 0)||(type == 2 && d[2] > 0))) ||
-                (d[0] == 0 && ((type == 1 && d[1] > 0)||(type == 2 && d[2] > 0)))) && 
+                (d[0] == 0 && ((type == 1 && d[1] > 0)||(type == 2 && d[2] > 0)))) &&
                 (also_to_hide.indexOf(i) === -1)) {
-              broken_by_menu.find("li[data-original-index='" + i + "']").show();
+              js.select_bd.find("option:eq(" + i + ")").show();
             }
           });
-          broken_by_menu.find("li[data-original-index='0']").show();
-          broken_by_menu.find("li:eq(" + index + ")").hide(); // turn on off this item
+          js.select_bd.find("option:eq(0)").show();
+          js.select_bd.find("option:eq(" + q_index + ")").hide();
           if(type !== old_type) { js.select_bd.selectpicker("val", ""); }
+          js.select_bd.selectpicker("refresh");
         }
         else if (id == "broken_down_by_code"){ // update question list
-          var question_code_menu = $(".form-explore-question-code .bootstrap-select ul.dropdown-menu");
-          question_code_menu.find("li[style*='display: none']").show(); // turn on all hidden items
-          question_code_menu.find("li:eq(" + index + ")").hide(); // turn on off this item
+          js.select_qc.find("option[style*='display: none']").show();
+          js.select_qc.find("option:eq(" + bdb_index + ")").hide();
+
           $("button#btn-swap-vars").fadeToggle(val !== ""); // if val != "" then turn on swap button
           if(bdb_index !== 0)
           {
             empty_groups(bdb_index).forEach(function (d){
-              question_code_menu.find("li:eq(" + (d) + ")").hide();
+              js.select_qc.find("option:eq(" + d + ")").hide();
             });
           }
+          js.select_qc.selectpicker("refresh");
         }
 
         // update filter list
@@ -876,17 +861,13 @@ $(document).ready(function () {
           select_filter_by.selectpicker("val", ""); // reset value and hide filter answers
         }
 
-        // turn on all hidden items
-        var filter_by_menu = $(".form-explore-filter-by .bootstrap-select ul.dropdown-menu");
-
-        filter_by_menu.find("li[style*='display: none']").show();
-
-        // turn off this item only if question type is categorical
-        if(type === 1) {
-          if (q !== "" && q_index !== -1){ filter_by_menu.find("li:eq(" + js.select_fb.find("option[value='"+q+"']").index() + ")").hide(); }
-          if (bdb !== "" && bdb_index !== -1 && bdb_index !== 0){ filter_by_menu.find("li:eq(" + js.select_fb.find("option[value='"+bdb+"']").index() + ")").hide(); }
+        js.select_fb.find("option[style*='display: none']").show();
+        
+        if(type === 1) { // turn off this item only if question type is categorical
+          if (q !== "" && q_index !== -1){ js.select_fb.find("option[value='"+q+"']").hide(); }
+          if (bdb !== "" && bdb_index !== -1 && bdb_index !== 0){ js.select_fb.find("option[value='"+bdb+"']").hide(); }
         }
-
+        js.select_fb.selectpicker("refresh");
         update_available_weights(); // update the list of weights
 
         $("form button.dropdown-toggle").tooltip("fixTitle"); // update tooltip for selects
@@ -1105,13 +1086,13 @@ $(document).ready(function () {
           var type = js.type;
 
           also_to_hide = empty_groups(q_index);
-          js.select_bd.find("option:eq("+(q_index)+")").attr("data-disabled", "disabled");
+          js.select_bd.find("option:eq("+(q_index)+")").hide();//.attr("data-disabled", "disabled");
           select_map.forEach(function (d, i){
             if(!(((d[0] === 2 && d[2] == type) ||
                 (d[0] == 1 && ((type == 1 && d[1] > 0)||(type == 2 && d[2] > 0))) ||
                 (d[0] == 0 && ((type == 1 && d[1] > 0)||(type == 2 && d[2] > 0)))) &&
                 (also_to_hide.indexOf(i) === -1))) {
-              js.select_bd.find("option:eq(" + i + ")").attr("data-disabled", "disabled");
+              js.select_bd.find("option:eq(" + i + ")").hide();//.attr("data-disabled", "disabled");
             }
           });
 
@@ -1119,18 +1100,18 @@ $(document).ready(function () {
             var bdb_index = bd_option.index();
             bd_option.attr("selected", "selected");
             if(bdb_index !== 0) {
-              js.select_qc.find("option:eq(" + bdb_index + ")").attr("data-disabled", "disabled");
+              js.select_qc.find("option:eq(" + bdb_index + ")").hide();//.attr("data-disabled", "disabled");
               $("button#btn-swap-vars").fadeToggle(true); // if val != "" then turn on swap button
 
               empty_groups(bdb_index-1).forEach(function (d){
-                js.select_qc.find("option:eq("+ d +")").attr("data-disabled", "disabled");
+                js.select_qc.find("option:eq(" + d + ")").hide();//.attr("data-disabled", "disabled");
               });
             }
           }
         }
         set_can_exclude_visibility();
         js.select_fb.find("option[value='"+filters[2]+"']").attr("selected", "selected");
-        js.select_fb.find("option[value='"+filters[0]+"'], option[value='"+filters[1]+"']").attr("data-disabled", "disabled");
+        js.select_fb.find("option[value='"+filters[0]+"'], option[value='"+filters[1]+"']").hide();//.attr("data-disabled", "disabled");
       }
       select_options_default(gon.questions.filters);
 

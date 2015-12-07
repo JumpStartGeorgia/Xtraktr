@@ -645,7 +645,7 @@ function build_crosstab_chart (meta, json_chart, chart_height, weight_name){ // 
     xAxis: {
       categories: json_chart.labels,
       title: {
-        text: "<span class='code-highlight'>" + meta.qtext + "</span>",
+        text: "<span class='code-highlight'>" + meta.qcode + "</span>",
         useHTML: true,
         style: { "fontSize": "14px", "fontWeight": "bold" }
       },

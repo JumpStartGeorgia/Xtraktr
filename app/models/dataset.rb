@@ -345,7 +345,7 @@ class Dataset < CustomTranslation
           where(group_id: group_id, can_download: true).to_a
         when 'analysis'
           where(group_id: group_id, exclude: false, is_analysable: true).to_a
-        when 'anlysis_with_exclude_questions'
+        when 'analysis_with_exclude_questions'
           where(group_id: group_id, is_analysable: true).to_a
         else
           where(group_id: group_id)
@@ -1061,7 +1061,7 @@ class Dataset < CustomTranslation
 
   # get the groups and questions in sorted order
   # options:
-  # - question_type - type of questions to get (download, analysis, anlysis_with_exclude_questions, or all)
+  # - question_type - type of questions to get (download, analysis, analysis_with_exclude_questions, or all)
   # - reload_items - if items already exist, reload them (default = false)
   # - group_id - arrange the groups/questions that are in this group_id
   # - include_groups - flag indicating if should get groups (default = false)
@@ -1081,7 +1081,7 @@ class Dataset < CustomTranslation
   
   # returnt an array of sorted gruops and questions, that match the provided options
   # options:
-  # - question_type - type of questions to get (download, analysis, anlysis_with_exclude_questions, or all)
+  # - question_type - type of questions to get (download, analysis, analysis_with_exclude_questions, or all)
   # - group_id - arrange the groups/questions that are in this group_id
   # - include_groups - flag indicating if should get groups (default = false)
   # - include_subgroups - flag indicating if subgroups should also be loaded (default = false)
@@ -1136,7 +1136,7 @@ class Dataset < CustomTranslation
           self.questions.where(:can_download => true, :group_id => options[:group_id])
         when 'analysis'
           self.questions.where(:exclude => false, :is_analysable => true, :group_id => options[:group_id])
-        when 'anlysis_with_exclude_questions'
+        when 'analysis_with_exclude_questions'
           self.questions.where(:is_analysable => true, :group_id => options[:group_id])
         else
           self.questions.where(:group_id => options[:group_id])
@@ -1193,7 +1193,6 @@ class Dataset < CustomTranslation
 
       end
     end
-
     if options[:include_questions] == true
       # get questions that are assigned to groups
       # - if group_id not provided, then getting questions that are not assigned to group
@@ -1203,7 +1202,7 @@ class Dataset < CustomTranslation
           self.questions.where(:can_download => true, :group_id => options[:group_id])
         when 'analysis'
           self.questions.where(:exclude => false, :is_analysable => true, :group_id => options[:group_id], :data_type.ne => Question::DATA_TYPE_VALUES[:unknown] )
-        when 'anlysis_with_exclude_questions'
+        when 'analysis_with_exclude_questions'
           self.questions.where(:is_analysable => true, :group_id => options[:group_id], :data_type.ne => Question::DATA_TYPE_VALUES[:unknown])
         else
           self.questions.where(:group_id => options[:group_id])

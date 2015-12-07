@@ -156,7 +156,7 @@ class TimeSeries < CustomTranslation
           where(group_id: group_id, can_download: true).to_a
         when 'analysis'
           where(group_id: group_id, exclude: false, has_code_answers: true).to_a
-        when 'anlysis_with_exclude_questions'
+        when 'analysis_with_exclude_questions'
           where(group_id: group_id, has_code_answers: true).to_a
         else
           where(group_id: group_id)
@@ -534,10 +534,8 @@ class TimeSeries < CustomTranslation
       groups = []
       if options[:group_id].present?
         groups << self.groups.sub_groups(options[:group_id])
-        #Rails.logger.info("----------------------------------------group second----#{groups.length}")
       else
         groups << self.groups.main_groups
-         #Rails.logger.info("----------------------------------------first----#{groups.length}")
       end
       groups.flatten!
 
@@ -550,10 +548,9 @@ class TimeSeries < CustomTranslation
         group.var_arranged_items = tree(group_options)
         # only add the group if it has content
         if group.var_arranged_items.present? #|| options[:include_group_with_no_items] == true
-           #Rails.logger.info("--------------------------------------------#{group.title} >#{options[:group_id]}< #{ self.questions.where(:group_id => options[:group_id]).length}")
-          if options[:include_questions] == true && self.questions.where(:group_id => options[:group_id]).length > 0
+          #if options[:include_questions] == true && self.questions.where(:group_id => options[:group_id]).length > 0
             items << group.as_json({only: [:title, :parent_id, :subitems, :sort_order]})
-          end
+          #end
         end
 
       end
@@ -564,7 +561,6 @@ class TimeSeries < CustomTranslation
       # - if group_id not provided, then getting questions that are not assigned to group
       tmp_items = self.questions.where(:group_id => options[:group_id])
 
-      #Rails.logger.info("----------------------------------------firstq----#{items.length}")
       items << (tmp_items.as_json(only: [:code, :original_code, :text, :data_type, :group_id, :exclude, :is_mappable, :has_can_exclude_answers, :is_analysable, :sort_order]))
     end
     items.flatten!
@@ -574,7 +570,6 @@ class TimeSeries < CustomTranslation
     items = items.select{|x| x["sort_order"].present? }.sort{|x,y| x["sort_order"] <=> y["sort_order"] } + 
       items.select{|x| x["parent_id"].present? && x["sort_order"].nil?} +
       items.select{|x| x["code"].present? && x["sort_order"].nil?}
-
     return items
   end
   #############################

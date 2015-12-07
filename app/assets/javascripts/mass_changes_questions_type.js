@@ -231,7 +231,9 @@ $(document).ready(function (){
         if(isset(cache, code + ".data")) { // if question code has data
           if(data_type === 2) { // is numerical
             if(!isset(cache[code], "data." + sub_id)) { // but no data for sub_id then get it
-              cache[code]["data"][sub_id] = get_frequency_data(code_meta, code);
+               console.log("here", cache[code], "data." + sub_id,isset(cache[code], "data." + sub_id));
+               //return;
+              cache[code]["data"][sub_id] = get_frequency_data(code, code_meta);
             }
             t.render_chart();
             return;
@@ -253,7 +255,7 @@ $(document).ready(function (){
           data: to_send,
           url: view_chart_path,
           success: function (d) {
-
+            console.log("remote");
             cache[code].general = { dataset: d.dataset, orig_data: d.data, formatted_data: d.data, question: d.question };
             if(d.frequency_data !== null) {
               cache[code].data[sub_id] = { fd: d.frequency_data };
@@ -266,7 +268,7 @@ $(document).ready(function (){
             }
             else {
               if(data_type === 2) {
-                cache[code]["data"][sub_id] = get_frequency_data(code_meta, code);
+                cache[code]["data"][sub_id] = get_frequency_data(code, code_meta);
               }
               else {
                 console.log("Categorical should have frequency data in it");
@@ -683,6 +685,7 @@ $(document).ready(function (){
         data: { dataset_id: dataset_id, question_code: code },
         url: view_chart_path,
         success: function (d) {
+           console.log("remote1");
           cache[code].general = { dataset: d.dataset, orig_data: d.data, formatted_data: d.data, question: d.question };
           prepare_numerical_fields_callback();
           callback();

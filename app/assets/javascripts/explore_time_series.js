@@ -1,6 +1,6 @@
 /*global  $, gon, Highcharts, params, console, queryStringToJSON, TableTools, time_series_chart_height, build_time_series_chart, build_page_title */
 /*eslint no-undef: 0, no-console: 0  */
-var datatables, i, j;
+var datatables, i, j, tmp;
 
 function build_time_series_charts (json){ // build time series line chart for each chart item in json
   if (json.chart){
@@ -8,7 +8,7 @@ function build_time_series_charts (json){ // build time series line chart for ea
     var chart_height = time_series_chart_height(json);
 
     // remove all existing charts
-    $("#container-chart").empty();
+    js.chart.empty();
     // remove all existing chart links
     js.jumpto_chart_select.empty();
 
@@ -40,173 +40,115 @@ function build_time_series_charts (json){ // build time series line chart for ea
   }
 }
 
-function build_datatable (json){ // build data table
-  // set the title
-  $("#container-table h3").html(json.results.title.html + json.results.subtitle.html);
+function build_datatable (json) { // build data table
+  $("#container-table h3").html(json.results.title.html + json.results.subtitle.html); // set the title
 
-  // if the datatable alread exists, kill it
-  if (datatables != undefined && datatables.length > 0){
-    for (var i=0;i<datatables.length;i++){
-      datatables[i].fnDestroy();
-    }
+  if (datatables != undefined && datatables.length > 0){ // if the datatable alread exists, kill it
+    for (var i=0;i<datatables.length;i++){ datatables[i].fnDestroy(); }
   }
 
-  var col_headers = ["count", "percent"];
+  var
+    $table = $("#container-table table"),
+    ln,
+    is_weighted = json.weighted_by != undefined, // test if data is weighted so can build table accordingly
+    col_headers = is_weighted ? ["unweighted-count", "weighted-count", "weighted-percent"] : ["count", "percent"],
+    col_header_count = col_headers.length,
+    table = "<thead>", // build the table
+    nofilter = json.filtered_by == undefined;
 
-  // test if data is weighted so can build table accordingly
-  if (json.weighted_by != undefined){
-    col_headers = ["unweighted-count", "weighted-count", "weighted-percent"];
-  }
-  var col_header_count = col_headers.length;
-
-  // build the table
-  var table = "", ln;
-
-  // test if the filter is being used and build the table accordingly
-  if (json.filtered_by == undefined){
+  if (nofilter) { // test if the filter is being used and build the table accordingly
     // build head
-    table += "<thead>";
-    // 2 headers of:
-    //                dataset label
-    // question   count percent count percent .....
-    table += "<tr class='th-center'>";
-    table += "<th class='var1-col-red'>" + gon.table_questions_header + "</th>";
+    // 2 headers of:  dataset label question   count percent count percent .....
+    table += "<tr class='th-center'>" +
+      "<th class='var1-col-red'>" + gon.table_questions_header + "</th>";
 
     ln = json.datasets.length;
     for(i=0; i<ln;i++){
-      table += "<th colspan='" + col_header_count + "' class='code-highlight color"+(i % 13 + 1)+"'>";
-      table += json.datasets[i].label;
-      table += "</th>";
+      table += "<th colspan='" + col_header_count + "' class='code-highlight color"+(i % 13 + 1)+"'>" +
+        json.datasets[i].label + "</th>";
     }
-    table += "</tr>";
-    table += "<tr>";
-    table += "<th class='var1-col code-highlight'>";
-    table += json.question.original_code;
-    table += "</th>";
+    table += "</tr><tr><th class='var1-col code-highlight'>" + json.question.original_code + "</th>";
     for(i=0; i<json.datasets.length;i++){
       for(j=0; j<col_header_count;j++){
-        table += "<th>";
-        table += $("#container-table table").data(col_headers[j]);
-        table += "</th>";
+        table += "<th>" + $table.data(col_headers[j]) + "</th>";
       }
     }
-    table += "</tr>";
-    table += "</thead>";
+    table += "</tr></thead><tbody>";
 
     // build body
-    table += "<tbody>";
-    // cells per row: row answer, count/percent for each col
-    for(i=0; i<json.results.analysis.length; i++){
-      table += "<tr>";
-      table += "<td class='var1-col' data-order='" + json.question.answers[i].sort_order + "'>";
-      table += json.results.analysis[i].answer_text;
-      table += "</td>";
-      for(j=0; j<json.results.analysis[i].dataset_results.length; j++){
+    json.results.analysis.forEach(function (an, an_i) { // cells per row: row answer, count/percent for each col
+      table += "<tr><td class='var1-col' data-order='" + json.question.answers[an_i].sort_order + "'>" +
+            an.answer_text + "</td>";
+      an.dataset_results.forEach(function (dr){
         for(var k=0; k<col_header_count;k++){
-          // key is written with "-" but for this part, it must be "_"
-          var key_text = col_headers[k].replace("-", "_");
-          // percent is the last item and all items before are percent
-          if (k < col_header_count-1){
-            table += "<td data-order='" + json.results.analysis[i].dataset_results[j][key_text] + "'>";
-            if (json.results.analysis[i].dataset_results[j][key_text]){
-              table += Highcharts.numberFormat(json.results.analysis[i].dataset_results[j][key_text], 0);
-            }
+          var key_text = dr[col_headers[k].replace("-", "_")]; // key is written with "-" but for this part, it must be "_"
+
+          if(k < col_header_count-1) { // percent is the last item and all items before are percent
+            table += "<td data-order='" + key_text + "'>";
+            if(key_text) { table += Highcharts.numberFormat(key_text, 0); }
             table += "</td>";
-          }else{
+          }
+          else{
             table += "<td>";
-            if (json.results.analysis[i].dataset_results[j][key_text]){
-              table += json.results.analysis[i].dataset_results[j][key_text].toFixed(2);
-              table += "%";
-            }
+            if (key_text){ table += key_text.toFixed(2) + "%"; }
             table += "</td>";
           }
         }
-      }
-    }
-
+      });
+    });
     table += "</tbody>";
 
   }else{
-
     // build head
-    table += "<thead>";
-    // 2 headers of:
-    //                dataset label
-    // filter   question   count percent count percent .....
-    table += "<tr class='th-center'>";
-    table += "<th class='var1-col-red' colspan='2'>" + gon.table_questions_header + "</th>";
+    // 2 headers of: dataset label filter   question   count percent count percent .....
+    table += "<tr class='th-center'><th class='var1-col-red' colspan='2'>" + gon.table_questions_header + "</th>";
     ln = json.datasets.length;
     for(i=0; i<ln;i++){
-      table += "<th colspan='" + col_header_count + "' class='code-highlight color"+(i % 13 + 1)+"'>";
-      table += json.datasets[i].label;
-      table += "</th>";
+      table += "<th colspan='" + col_header_count + "' class='code-highlight color"+(i % 13 + 1)+"'>" + json.datasets[i].label + "</th>";
     }
-    table += "</tr>";
-
-    table += "<tr>";
-    table += "<th class='var1-col code-highlight'>";
-    table += json.filtered_by.original_code;
-    table += "</th>";
-    table += "<th class='var1-col code-highlight'>";
-    table += json.question.original_code;
-    table += "</th>";
+    table += "</tr><tr><th class='var1-col code-highlight'>" + json.filtered_by.original_code + "</th><th class='var1-col code-highlight'>" + json.question.original_code + "</th>";
     for(i=0; i<json.datasets.length;i++){
       for(j=0; j<col_header_count;j++){
-        table += "<th>";
-        table += $("#container-table table").data(col_headers[j]);
-        table += "</th>";
+        table += "<th>" + $table.data(col_headers[j]) + "</th>";
       }
     }
-    table += "</tr>";
-    table += "</thead>";
+    table += "</tr></thead><tbody>";
 
     // build body
-    table += "<tbody>";
     // for each filter, show each question and the count/percents for each dataset
-    for(var h=0; h<json.results.filter_analysis.length; h++){
+    json.results.filter_analysis.forEach(function (an, an_i) {
+      an.filter_results.analysis.forEach(function (fan, fan_i) {
 
-      for(i=0; i<json.results.filter_analysis[h].filter_results.analysis.length; i++){
-        table += "<tr>";
-        table += "<td class='var1-col' data-order='" + json.filtered_by.answers[h].sort_order + "'>";
-        table += json.results.filter_analysis[h].filter_answer_text;
-        table += "</td>";
-        table += "<td class='var1-col' data-order='" + json.question.answers[i].sort_order + "'>";
-        table += json.results.filter_analysis[h].filter_results.analysis[i].answer_text;
-        table += "</td>";
-        for(j=0; j<json.results.filter_analysis[h].filter_results.analysis[i].dataset_results.length; j++){
+        table += "<tr><td class='var1-col' data-order='" + json.filtered_by.answers[an_i].sort_order + "'>" + an.filter_answer_text + "</td>" +
+          "<td class='var1-col' data-order='" + json.question.answers[fan_i].sort_order + "'>" +
+          fan.answer_text + "</td>";
+        fan.dataset_results.forEach(function (dr) {
           for(k=0; k<col_header_count;k++){
-            // key is written with '-' but for this part, it must be '_'
-            key_text = col_headers[k].replace("-", "_");
-            // percent is the last item and all items before are percent
-            if (k < col_header_count-1){
-              table += "<td data-order='" + json.results.filter_analysis[h].filter_results.analysis[i].dataset_results[j][key_text] + "'>";
-              if (json.results.filter_analysis[h].filter_results.analysis[i].dataset_results[j][key_text]){
-                table += Highcharts.numberFormat(json.results.filter_analysis[h].filter_results.analysis[i].dataset_results[j][key_text], 0);
-              }
+            key_text = col_headers[k].replace("-", "_"); // key is written with '-' but for this part, it must be '_'
+            if (k < col_header_count-1) { // percent is the last item and all items before are percent
+              table += "<td data-order='" + dr[key_text] + "'>";
+              if (dr[key_text]){ table += Highcharts.numberFormat(dr[key_text], 0); }
               table += "</td>";
             }else{
               table += "<td>";
-              if (json.results.filter_analysis[h].filter_results.analysis[i].dataset_results[j][key_text]){
-                table += json.results.filter_analysis[h].filter_results.analysis[i].dataset_results[j][key_text].toFixed(2);
-                table += "%";
-              }
+              if (dr[key_text]){ table += dr[key_text].toFixed(2) + "%"; }
               table += "</td>";
             }
           }
-        }
+        });
         table += "</tr>";
-      }
-    }
+      });
+    });
     table += "</tbody>";
   }
 
 
   // add the table to the page
-  $("#container-table table").html(table);
+  $table.html(table);
 
   //initalize the datatable
   datatables = [];
-  $("#container-table table").each(function (){
+  $table.each(function (){
     datatables.push($(this).dataTable({
       "dom": "<'top'fl>t<'bottom'p><'clear'>",
       "language": {
@@ -237,14 +179,14 @@ function build_datatable (json){ // build data table
     }));
   });
 
-  // if data is weighted, show footnote
+  tmp = $("#tab-table .table-weighted-footnote");
   if (json.weighted_by){
-    $("#tab-table .table-weighted-footnote .footnote-weight-name").html(json.weighted_by.weight_name);
-    $("#tab-table .table-weighted-footnote").show();
+    tmp.find(" .footnote-weight-name").html(json.weighted_by.weight_name);
   }else{
-    $("#tab-table .table-weighted-footnote .footnote-weight-name").empty();
-    $("#tab-table .table-weighted-footnote").hide();
+    tmp.find(" .footnote-weight-name").empty();
   }
+  tmp.toggle(json.weighted_by);
+
 }
 
 function build_details (json) { // build details (question and possible answers)
@@ -255,7 +197,7 @@ function build_details (json) { // build details (question and possible answers)
   build_details_item(json);
 
   function build_details_item (json) { // populat a details item block
-    var selector = "", json_question = undefined, t, exist, tmp, icon, is_categorical;
+    var selector = "", json_question = undefined, t, exist, icon, is_categorical;
     ["question", "filtered-by", "weighted-by"].forEach(function (d){
       selector = "#tab-details #details-"+ d +"-code";
       json_question = json[d.replace(/-/g, "_")];
@@ -315,11 +257,7 @@ function build_explore_time_series_page (json){ // build the visualizations for 
   build_details(json);
   build_page_title(json);
 
-  var explore_tabs = $("#explore-tabs");
-  // if no visible tab is marked as active, mark the first one active
-  explore_tabs.find("li" +
-    (explore_tabs.find("li.active:visible").length == 0 ? ":visible:first": ".active" )
-  ).trigger("click");
+  js.explore_tabs.find("li" + (js.explore_tabs.find("li.active:visible").length == 0 ? ":visible:first": ".active" )).trigger("click"); // if no visible tab is marked as active, mark the first one active
 }
 
 function get_explore_time_series (is_back_button){ // get data and load page
@@ -346,27 +284,17 @@ function get_explore_time_series (is_back_button){ // get data and load page
     });
 
   } else{
-
-    // question code
-    if ($("select#question_code").val() != null && $("select#question_code").val() != ""){
-      ajax_data.question_code = $("select#question_code").val();
-      url_querystring.push("question_code=" + ajax_data.question_code);
-    }
-
-    // filtered by
-    if ($("select#filtered_by_code").val() != null && $("select#filtered_by_code").val() != ""){
-      ajax_data.filtered_by_code = $("select#filtered_by_code").val();
-      url_querystring.push("filtered_by_code=" + ajax_data.filtered_by_code);
-    }
-
-    // weighted by
-    if ($("select#weighted_by_code").val() != null && $("select#weighted_by_code").val() != ""){
-      ajax_data.weighted_by_code = $("select#weighted_by_code").val();
-      url_querystring.push("weighted_by_code=" + ajax_data.weighted_by_code);
-    }
+    tmp = ["select_qc", "select_fb", "select_wb"];
+    ["question_code", "filtered_by_code", "weighted_by_code"].forEach(function (d, i){
+      v = js[tmp[i]].val();
+      if (v !== null && v !== ""){
+        ajax_data[d] = v;
+        url_querystring.push(d + "=" + v);
+      }
+    });
 
     // can exclude
-    if ($("input#can_exclude").is(":checked")){
+    if (js.input_can_exclude.is(":checked")){
       ajax_data.can_exclude = true;
       url_querystring.push("can_exclude=" + ajax_data.can_exclude);
     }
@@ -395,13 +323,13 @@ function get_explore_time_series (is_back_button){ // get data and load page
   })
   .success(function (json) {
     if (json.errors){
-      $("#jumpto-loader").fadeOut("slow");
-      $("#explore-data-loader").fadeOut("slow");
-      $("#explore-error").fadeIn("slow");
-    }else if ((json.results.analysis && json.results.analysis.length == 0) || (json.results.filtered_analysis && json.results.filtered_analysis.length == 0)){
-      $("#jumpto-loader").fadeOut("slow");
-      $("#explore-data-loader").fadeOut("slow");
-      $("#explore-no-results").fadeIn("slow");
+      js.jumpto_loader.fadeOut("slow");
+      js.explore_data_loader.fadeOut("slow");
+      js.explore_error.fadeIn("slow");
+    }else if ((json.results.analysis && json.results.analysis.length == 0) || (json.results.filtered_analysis && json.results.filtered_analysis.length == 0)){    
+      js.jumpto_loader.fadeOut("slow");
+      js.explore_data_loader.fadeOut("slow");
+      js.explore_no_results.fadeIn("slow");
     }else{
       // update content
       build_explore_time_series_page(json);
@@ -414,8 +342,8 @@ function get_explore_time_series (is_back_button){ // get data and load page
         window.history.pushState({path:new_url}, $("title").html(), new_url);
       }
 
-      $("#explore-data-loader").fadeOut("slow");
-      $("#jumpto-loader").fadeOut("slow");
+      js.explore_data_loader.fadeOut("slow");
+      js.jumpto_loader.fadeOut("slow");
     }
 
 
@@ -423,12 +351,11 @@ function get_explore_time_series (is_back_button){ // get data and load page
 }
 
 function reset_filter_form (){ // reset the filter forms and select a random variable for the row
-  $("select#filtered_by_code").val("").selectpicker("refresh");
-  $("input#can_exclude").removeAttr("checked");
+  js.select_fb.val("").selectpicker("refresh");
+  js.input_can_exclude.removeAttr("checked");
 }
 
 function build_selects (skip_content) {
-  console.log(gon.questions);
   var q = gon.questions,
     html = "",
     type_map = [],
@@ -439,7 +366,7 @@ function build_selects (skip_content) {
   build_options_partial(q.items, null, null);
 
   function build_options_partial (items, level, parent_id) { // todo
-    var tmp = "";
+    tmp = "";
     items.forEach(function (item) {
       if(item.hasOwnProperty("parent_id")) { // Group
         tmp = build_selects_group_option(item);
@@ -505,17 +432,16 @@ function build_selects_question_option (question, level, skip_content) {
 }
 
 function update_available_weights () { // update the list of avilable weights based on questions that are selected
-  var select_weight = $("select#weighted_by_code"),
-    dropdown_weight = $(".form-explore-weight-by .bootstrap-select ul.dropdown-menu");
 
-  if (!select_weight.length) { return; }
+  if (!js.select_wb.length) { return; }
 
-  var old_value = select_weight.val(),
+  var old_value = js.select_wb.val(),
     matches=[],
     items = [
-      $("select#question_code option:selected").data("weights"),
-      $("select#filtered_by_code option:selected").data("weights")
+      js.select_qc.find("option:selected").data("weights"),
+      js.select_bd.find("option:selected").data("weights")
     ].filter(function (d) { return typeof d !== "undefined"; });
+
   if(items.length > 0) {
     matches = items.shift().filter(function (v) {
       return items.every(function (a) {
@@ -523,33 +449,25 @@ function update_available_weights () { // update the list of avilable weights ba
       });
     });
   }
-  dropdown_weight.find("li:not(:last)").hide();   // hide all items except unweighted
+  js.select_wb.find("option:not(:last)").hide(); // hide all items except unweighted
 
   if (matches.length) { // if there are matches, show the weights that match, and unweighted else hide weight option and set value to unweighted
-    var index;
-    matches.forEach(function (d) {
-      index = select_weight.find("option[value='" + d + "']").index();
-      if (index != -1){
-        dropdown_weight.find("li:eq(" + index + ")").show();
-      }
-    });
+    matches.forEach(function (d) { js.select_wb.find("option[value='" + d + "']").show(); });
     if (matches.indexOf(old_value) === -1) { // if the old value is no longer an option, select the first one
-      select_weight.selectpicker("val", select_weight.find("option:first").attr("value"));
+      js.select_wb.selectpicker("val", js.select_wb.find("option:first").attr("value"));
     }
   }
   else{
-    select_weight.selectpicker("val", "unweighted");
+    js.select_wb.selectpicker("val", "unweighted");
   }
+
+  js.select_wb.selectpicker("refresh");
 }
 
 function set_can_exclude_visibility (){ // show or hide the can exclude checkbox
-  if ($("select#question_code option:selected").data("can-exclude") == true ||
-      $("select#filtered_by_code option:selected").data("can-exclude") == true){
-
-    $("div#can-exclude-container").css("visibility", "visible");
-  }else{
-    $("div#can-exclude-container").css("visibility", "hidden");
-  }
+  $("div#can-exclude-container").css("visibility",
+    js.select_qc.find("option:selected").data("can-exclude")+"" == "true" ||
+    js.select_fb.find("option:selected").data("can-exclude")+"" == "true" ? "visible" : "hidden");
 }
 
 function jumpto (show) { // show/hide jumpto show - for main box and if chart is false then map
@@ -586,7 +504,7 @@ $(document).ready(function () {
       // catch the form submit and call the url with the
       // form values in the url
       $("form#form-explore-time-series").submit(function (){
-        if ($("select#question_code").val() == ""){
+        if (js.select_qc.val() == ""){
           $(".instructions").show();//fadeIn("slow");
           $(".tab-container").addClass("hide");
         }else{
@@ -594,10 +512,10 @@ $(document).ready(function () {
             $(".instructions").hide();//fadeOut("slow");
             $(".tab-container").removeClass("hide");
           }
-          $("#jumpto-loader").fadeIn("slow");
-          $("#explore-error").fadeOut("slow");
-          $("#explore-no-results").fadeOut("slow");
-          $("#explore-data-loader").fadeIn("slow", function (){
+          js.jumpto_loader.fadeIn("slow");
+          js.explore_error.fadeOut("slow");
+          js.explore_no_results.fadeOut("slow");
+          js.explore_data_loader.fadeIn("slow", function (){
             get_explore_time_series();
           });
         }
@@ -606,10 +524,10 @@ $(document).ready(function () {
       // reset the form fields
       $("form#form-explore-time-series input#btn-reset").click(function (e){
         e.preventDefault();
-        $("#jumpto-loader").fadeIn("slow");
-        $("#explore-error").fadeOut("slow");
-        $("#explore-no-results").fadeOut("slow");
-        $("#explore-data-loader").fadeIn("slow", function (){
+        js.jumpto_loader.fadeIn("slow");
+        js.explore_error.fadeOut("slow");
+        js.explore_no_results.fadeOut("slow");
+        js.explore_data_loader.fadeIn("slow", function (){
           reset_filter_form();
           get_explore_time_series();
         });
@@ -622,14 +540,6 @@ $(document).ready(function () {
       $("select.selectpicker-filter").selectpicker();
       $("select.selectpicker-weight").selectpicker();
 
-      // if an option has data-disabled when page loads, make sure it is hidden in the selectpicker
-      $("select#question_code option[data-disabled='disabled']").each(function (){
-        $(".form-explore-question-code .bootstrap-select ul.dropdown-menu li:eq(" + $(this).index() + ")").hide();
-      });
-      $("select#filtered_by_code option[data-disabled='disabled']").each(function (){
-        $(".form-explore-filter-by .bootstrap-select ul.dropdown-menu li:eq(" + $(this).index() + ")").hide();
-      });
-
       // make sure the correct weights are being shown
       update_available_weights();
 
@@ -641,21 +551,24 @@ $(document).ready(function () {
         //index = $(this).find("option[value='" + $(this).val() + "']").index();
 
         // update filter list
-        var q = $("select#question_code").val();
-        var q_index = $("select#question_code option[value='" + q + "']").index();
+        var q = js.select_qc.val();
+        var q_index = js.select_qc.find("option[value='" + q + "']").index();
         // if filter is one of these values, reset filter to no filter
-        if ($("select#filtered_by_code").val() == q && q != ""){
+        if (js.select_fb.val() == q && q != ""){
           // reset value and hide filter answers
-          $("select#filtered_by_code").selectpicker("val", "");
+          js.select_fb.selectpicker("val", "");
         }
 
-        // turn on all hidden items
-        $(".form-explore-filter-by .bootstrap-select ul.dropdown-menu li[style*='display: none']").show();
-
-        // turn off this item
-        if (q != "" && q_index != -1){
-          $(".form-explore-filter-by .bootstrap-select ul.dropdown-menu li:eq(" + (q_index) + ")").hide();
+       // update filter list
+        if ((select_filter_by.val() == q && q != "") || (select_filter_by.val() == bdb && bdb != "")){ // if filter is one of these values, reset filter to no filter
+          select_filter_by.selectpicker("val", ""); // reset value and hide filter answers
         }
+
+        js.select_fb.find("option[style*='display: none']").show(); // turn on all hidden items
+
+        if (q !== "" && q_index !== -1){ js.select_fb.find("option[value='"+q+"']").hide(); }
+
+        js.select_fb.selectpicker("refresh");
 
         // update the list of weights
         update_available_weights();
@@ -684,27 +597,27 @@ $(document).ready(function () {
       });
 
       // get the initial data
-      if($("select#question_code").val() !== "")
+      if(js.select_qc.val() !== "")
       {
         // get the initial data
-        $("#explore-error").fadeOut("slow");
-        $("#explore-no-results").fadeOut("slow");
-        $("#explore-data-loader").fadeIn("slow", function (){
+        js.explore_error.fadeOut("slow");
+        js.explore_no_results.fadeOut("slow");
+        js.explore_data_loader.fadeIn("slow", function (){
           get_explore_time_series();
         });
       }
 
 
       // jumpto scrolling
-      $("#jumpto").on("change", "select", function () {
-        $("#jumpto button.dropdown-toggle").tooltip("fixTitle");
+      js.jumpto.on("change", "select", function () {
+        $js.jumpto.find("button.dropdown-toggle").tooltip("fixTitle");
         js.tab_content.animate({
           scrollTop: js.tab_content.scrollTop() + js.tab_content.find(".tab-pane.active > div > " + $(this).find("option:selected").data("href")).offset().top - js.tab_content.offset().top
         }, 1500);
       });
 
       // when chart tab clicked on, make sure the jumpto block is showing, else, hide it
-      $("#explore-tabs li").click(function () {
+      js.explore_tabs.find("li").click(function () {
         var href = $(this).find("a").attr("href");
         if (href == "#tab-chart" && js.jumpto_chart_select.find("option").length > 0){
           jumpto(true);
@@ -721,37 +634,37 @@ $(document).ready(function () {
 
         // for each form field, reset if need to
         // question code
-        if (params.question_code != $("select#question_code").val()){
+        if (params.question_code != js.select_qc.val()){
           if (params.question_code == undefined){
-            $("select#question_code").val("");
+            js.select_qc.val("");
           }else{
-            $("select#question_code").val(params.question_code);
+            js.select_qc.val(params.question_code);
           }
-          $("select#question_code").selectpicker("refresh");
+          js.select_qc.selectpicker("refresh");
         }
 
         // filtered by
-        if (params.filtered_by_code != $("select#filtered_by_code").val()){
+        if (params.filtered_by_code != js.select_fb.val()){
           if (params.filtered_by_code == undefined){
-            $("select#filtered_by_code").val("");
+            js.select_fb.val("");
           }else{
-            $("select#filtered_by_code").val(params.filtered_by_code);
+            js.select_fb.val(params.filtered_by_code);
           }
-          $("select#filtered_by_code").selectpicker("refresh");
+          js.select_fb.selectpicker("refresh");
         }
 
         // can exclude
         if (params.can_exclude == "true"){
-          $("input#can_exclude").attr("checked", "checked");
+          js.input_can_exclude.attr("checked", "checked");
         }else{
-          $("input#can_exclude").removeAttr("checked");
+          js.input_can_exclude.removeAttr("checked");
         }
 
         // reload the data
-        $("#jumpto-loader").fadeIn("slow");
-        $("#explore-error").fadeOut("slow");
-        $("#explore-no-results").fadeOut("slow");
-        $("#explore-data-loader").fadeIn("slow", function (){
+        js.jumpto_loader.fadeIn("slow");
+        js.explore_error.fadeOut("slow");
+        js.explore_no_results.fadeOut("slow");
+        js.explore_data_loader.fadeIn("slow", function (){
           get_explore_time_series(true);
         });
       });
@@ -776,7 +689,13 @@ $(document).ready(function () {
         select_fb: $("select#filtered_by_code"),
         select_wb: $("select#weighted_by_code"),
         type: 1,
-        tab_content: $(".tab-content")
+        tab_content: $(".tab-content"),
+        jumpto_loader: $("#jumpto-loader"),
+        explore_data_loader: $("#explore-data-loader"),
+        explore_error: $("#explore-error"),
+        explore_no_results: $("#explore-no-results"),
+        explore_tabs: $("#explore-tabs"),
+        input_can_exclude: $("input#can_exclude")
       };
 
       js["jumpto_chart"] = js.jumpto.find("#jumpto-chart");

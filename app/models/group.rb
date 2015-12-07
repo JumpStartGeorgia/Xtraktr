@@ -119,7 +119,7 @@ class Group < CustomTranslation
 
   # get the groups and questions in sorted order that are assigned to this group
   # options:
-  # - question_type - type of questions to get (download, analysis, anlysis_with_exclude_questions, or all)
+  # - question_type - type of questions to get (download, analysis, analysis_with_exclude_questions, or all)
   # - reload_items - if items already exist, reload them (default = false)
   # - include_groups - flag indicating if should get groups (default = false)
   # - include_subgroups - flag indicating if subgroups should also be loaded (default = false)
