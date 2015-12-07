@@ -16,7 +16,7 @@ class TimeSeriesGroup < CustomTranslation
   #############################
   attr_accessible :title, :description, :title_translations, :description_translations, :include_in_charts, :parent_id, :sort_order
   attr_accessor :var_arranged_items
-
+  alias :subitems :var_arranged_items
   #############################
   # Validations
   validate :validate_translations
@@ -24,11 +24,11 @@ class TimeSeriesGroup < CustomTranslation
   # validate the translation fields
   # text field needs to be validated for presence
   def validate_translations
-   logger.debug "***** validates group translations"
+   #logger.debug "***** validates group translations"
     if self.time_series.default_language.present?
-     logger.debug "***** - default is present; title = #{self.title_translations[self.time_series.default_language]}"
+     #logger.debug "***** - default is present; title = #{self.title_translations[self.time_series.default_language]}"
       if self.title_translations[self.time_series.default_language].blank?
-       logger.debug "***** -- title not present!"
+       #logger.debug "***** -- title not present!"
         errors.add(:base, I18n.t('errors.messages.translation_default_lang',
             field_name: self.class.human_attribute_name('title'),
             language: Language.get_name(self.time_series.default_language),
@@ -36,7 +36,7 @@ class TimeSeriesGroup < CustomTranslation
       end
 
       if self.include_in_charts? && self.description_translations[self.time_series.default_language].blank?
-       logger.debug "***** -- description not present and include in charts is true!"
+       #logger.debug "***** -- description not present and include in charts is true!"
         errors.add(:base, I18n.t('errors.messages.translation_default_lang',
             field_name: self.class.human_attribute_name('description'),
             language: Language.get_name(self.time_series.default_language),
@@ -59,7 +59,7 @@ class TimeSeriesGroup < CustomTranslation
   # - set question group id = parent id
   # - if this is a main group and it has sub groups, delete the sub-groups too
   def update_questions
-    Rails.logger.debug ">>>>> updating questions after destroying group"
+    #Rails.logger.debug ">>>>> updating questions after destroying group"
 
     group_items = self.arranged_items(reload_items: true, include_groups: true, include_subgroups: true, include_questions: true)
     sub_groups = group_items.select{|x| x.class == TimeSeriesGroup}
@@ -75,7 +75,7 @@ class TimeSeriesGroup < CustomTranslation
 
     questions.flatten!
 
-    Rails.logger.debug ">>>>> - need to update #{questions.length} questions in this group and all of its subgroups"
+    #Rails.logger.debug ">>>>> - need to update #{questions.length} questions in this group and all of its subgroups"
 
     if questions.length > 0
       self.time_series.questions.assign_group(questions.map{|x| x.id}, self.parent_id.present? ? self.parent_id : nil)
@@ -84,7 +84,7 @@ class TimeSeriesGroup < CustomTranslation
 
     # delete all of its sub-groups
     if sub_groups.present?
-      Rails.logger.debug ">>>>> - deleting all subgroups"
+      #Rails.logger.debug ">>>>> - deleting all subgroups"
       self.time_series.groups.in(id: sub_groups.map{|x| x.id}).delete_all
     end
 
@@ -125,15 +125,18 @@ class TimeSeriesGroup < CustomTranslation
   # - include_questions - flag indicating if should get questions (default = false)
   # - include_group_with_no_items - flag indicating if should include groups even if it has no items, possibly due to other flags (default = false)
   def arranged_items(options={})
-    #Rails.logger.debug "$$$$$$$$$$$$$ group arranged_items"
-    #Rails.logger.debug "---- var exists = #{self.var_arranged_items.nil?}"
     if self.var_arranged_items.nil? || self.var_arranged_items.empty? || options[:reload_items]
       options[:group_id] = self.id
-      #Rails.logger.debug "$$$$$$$$$$$$$ - building, options = #{options}"
       self.var_arranged_items = self.time_series.build_arranged_items(options)
     end
 
     return self.var_arranged_items
+  end
+
+  def as_json(options = { })
+    super((options || { }).merge({
+        :methods => [:subitems]
+    }))
   end
 
 

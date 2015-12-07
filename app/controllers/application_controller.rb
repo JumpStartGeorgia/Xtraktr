@@ -281,8 +281,6 @@ class ApplicationController < ActionController::Base
       # check for valid question value
       if params[:question_code].present? && @questions.index{|x| x.code == params[:question_code]}.present?
         @question_code = params[:question_code]
-      else
-        @question_code = @questions.map{|x| x.code}.sample # start with a random question
       end
 
       # check for valid broken down by value
