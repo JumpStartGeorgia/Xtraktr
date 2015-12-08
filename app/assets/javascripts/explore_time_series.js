@@ -411,10 +411,6 @@ function build_selects_group_option (group) {
 }
 function build_selects_question_option (question, level, skip_content) {
   var q_text = question.original_code + " - " + question.text,
-    selected = "",
-    disabled = "",
-    // selected = selected_code.present? && selected_code == question.code ? 'selected=selected ' : '',
-    // disabled = (disabled_code.present? && disabled_code == question.code) || (disabled_code2.present? && disabled_code2 == question.code) ? 'data-disabled=disabled ' : '',
     can_exclude = question.has_can_exclude_answers ? "data-can-exclude=true " : "",
     cls = (level === "group" ? "grouped" : (level === "subgroup" ? "grouped subgrouped" : "")),
     weights = "",
@@ -426,7 +422,7 @@ function build_selects_question_option (question, level, skip_content) {
       weights = "data-weights=\'[\"" + w.map(function (x){ return x.code; }).join("\",\"") + "\"]\'";
     }
   }
-  return "<option class='"+cls+"' value='"+question.code+"' title='"+q_text+"' "+selected+" "+disabled+" "+content+" "+can_exclude+" "+weights+">"+q_text+"</option>";
+  return "<option class='"+cls+"' value='"+question.code+"' title='"+q_text+"' "+content+" "+can_exclude+" "+weights+">"+q_text+"</option>";
 }
 
 function update_available_weights () { // update the list of avilable weights based on questions that are selected
@@ -437,7 +433,7 @@ function update_available_weights () { // update the list of avilable weights ba
     matches=[],
     items = [
       js.select_qc.find("option:selected").data("weights"),
-      js.select_bd.find("option:selected").data("weights")
+      js.select_fb.find("option:selected").data("weights")
     ].filter(function (d) { return typeof d !== "undefined"; });
 
   if(items.length > 0) {
@@ -542,7 +538,6 @@ $(document).ready(function () {
 
       // make sure the instructions start at the correct offset to align with the first drop down
       $(".instructions p:first").css("margin-top", ($(".form-explore-question-code").offset().top - $(".content").offset().top) + 5);
-
       // if option changes, make sure the select option is not available in the other lists
       $("select.selectpicker").change(function (){
         //index = $(this).find("option[value='" + $(this).val() + "']").index();
@@ -554,11 +549,6 @@ $(document).ready(function () {
         if (js.select_fb.val() == q && q != ""){
           // reset value and hide filter answers
           js.select_fb.selectpicker("val", "");
-        }
-
-       // update filter list
-        if ((select_filter_by.val() == q && q != "") || (select_filter_by.val() == bdb && bdb != "")){ // if filter is one of these values, reset filter to no filter
-          select_filter_by.selectpicker("val", ""); // reset value and hide filter answers
         }
 
         js.select_fb.find("option[style*='display: none']").show(); // turn on all hidden items
@@ -607,7 +597,7 @@ $(document).ready(function () {
 
       // jumpto scrolling
       js.jumpto.on("change", "select", function () {
-        $js.jumpto.find("button.dropdown-toggle").tooltip("fixTitle");
+        js.jumpto.find("button.dropdown-toggle").tooltip("fixTitle");
         js.tab_content.animate({
           scrollTop: js.tab_content.scrollTop() + js.tab_content.find(".tab-pane.active > div > " + $(this).find("option:selected").data("href")).offset().top - js.tab_content.offset().top
         }, 1500);
@@ -714,7 +704,7 @@ $(document).ready(function () {
         }
         set_can_exclude_visibility();
         js.select_fb.find("option[value='"+filters[1]+"']").attr("selected", "selected");
-        js.select_fb.find("option[value='"+filters[0]+"']").attr("data-disabled", "disabled");
+        js.select_fb.find("option[value='"+filters[0]+"']").hide();
       }
       select_options_default(gon.questions.filters);
 

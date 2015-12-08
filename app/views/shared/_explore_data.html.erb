@@ -47,17 +47,17 @@
 
           <% if @dataset.is_weighted? %>
             <% # determine if need to show weight when page loads %>
-            <div class="form-explore-weight-by">
+            <div class="form-explore-weight-by" style="display:none;">
               <%= label_tag 'weighted_by_code' do %>
                 <%= t('.form.weighted_by_code') %><i class="q" title="<%= t('.instructions.weight') %>"></i>
               <% end %>   
               <select data-live-search="true" data-width="100%" class="selectpicker-weight" data-container="body" id="weighted_by_code" name="weighted_by_code">
                 <% @dataset.weights.each do |weight| %>
                   <%
-                    is_default = weight.is_default? ? 'data-default=true' : ''
-                    selected = (params[:weighted_by_code].nil? && weight.is_default?) || params[:weighted_by_code] == weight.code ? 'selected=selected' : ''
+                    is_default = weight.is_default? ? ' data-default=true' : ''
+                    selected = (params[:weighted_by_code].nil? && weight.is_default?) || params[:weighted_by_code] == weight.code ? ' selected=selected' : ''
                   %>
-                  <option value="<%= weight.code %>" <%= is_default %> <%= selected %>><%= weight.text %></option>
+                  <option value="<%= weight.code %>"<%= is_default %><%= selected %>><%= weight.text %></option>
                 <% end %>
                 <option value="unweighted" data-unweighted="true"><%= t('.form.no_weight') %></option>
               </select>
@@ -90,8 +90,7 @@
         </div>
         <div id="jumpto-loader"></div>
       </div>
-    </div><div id="explore-data-content" class="tabs style2">
-    
+    </div><div id="explore-data-content" class="tabs style2">    
       <% tabs_display_css = '' %>
       <% if @question_code.nil? %>
         <% tabs_display_css = 'hide' %>

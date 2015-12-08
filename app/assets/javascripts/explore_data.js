@@ -1,6 +1,6 @@
 /*global  $, gon, Highcharts, params, js */
 /*eslint camelcase: 0, no-underscore-dangle: 0, no-unused-vars: 0, no-undef: 0*/
-var datatables, h, i, j, k, cacheId, select_map;
+var datatables, h, i, j, k, cacheId, select_map, tmp;
 
 function build_charts (data, type) {
   //console.log("build_charts", data, type);
@@ -16,7 +16,6 @@ function build_charts (data, type) {
       js.chart.append(js["chart_type_toggle_" + type]);
     }
     js.jumpto_chart_select.empty();  // remove all existing chart links
-
     // test if the filter is being used and build the chart(s) accordingly
     if (data.chart.constructor === Array) { // filters
       data.chart.forEach(function (d, i){
@@ -74,11 +73,10 @@ function build_highmaps (json) { // build highmap
       weight_name = json.weighted_by ? json.weighted_by.weight_name : undefined,
       jump_options = "",
       map_index = 1;
-
+ 
     $("#container-map").empty(); // remove all existing maps
-    //$("#tab-map").addClass("behind_the_scenes");
 
-    $jumpto_map_select.empty();
+    js.jumpto_map_select.empty();
 
     if (json.map.constructor === Array) { // filters // test if the filter is being used and build the chart(s) accordingly
       for(h=0; h<json.map.length; h++){
@@ -115,22 +113,21 @@ function build_highmaps (json) { // build highmap
       if(json.filtered_by) { lbl.push(json.filtered_by.original_code); }
       if(json.broken_down_by) { lbl.push(json.broken_down_by.original_code); }
 
-      $jumpto_map_label.html("(" + lbl.join(" -> ") + ")");
-      $jumpto_map_select.html(jump_options);
-      $jumpto_map_select.val($jumpto_map_select.find("option:first").attr("value"));
-      $jumpto_map_select.selectpicker("refresh");
-      $jumpto_map_select.selectpicker("render");
+      js.jumpto_map_label.html("(" + lbl.join(" -> ") + ")");
+      js.jumpto_map_select.html(jump_options);
+      js.jumpto_map_select.val(js.jumpto_map_select.find("option:first").attr("value"));
+      js.jumpto_map_select.selectpicker("refresh");
+      js.jumpto_map_select.selectpicker("render");
     }
-    $("#explore-tabs #nav-map").show(); // show map tabs
+    js.explore_tabs.find("#nav-map").show(); // show map tabs
   }
   else{
-    $("#explore-tabs #nav-map").hide(); // no map so hide tab
+    js.explore_tabs.find("#nav-map").hide(); // no map so hide tab
     $("#explore-tabs #nav-map, #explore-content #tab-map").removeClass("active"); // make sure these are not active
   }
-  var ititle = $("#jumpto #jumpto-map i");
+  var ititle = js.jumpto_map.find("i");
   ititle.attr("title", ititle.data("title-" + jumpto_title));
   ititle.tooltip("fixTitle");
-  //$("#tab-map").removeClass("behind_the_scenes");
 }
 
 function build_datatable (json) { // build data table
@@ -144,7 +141,7 @@ function build_datatable (json) { // build data table
 
   var
     $table = $("#container-table table"),
-    ln, key_text, 
+    ln, key_text,
     n = json.analysis_data_type == "numerical",
     is_weighted = json.weighted_by != undefined, // test if data is weighted so can build table accordingly
     col_headers = is_weighted ? ["unweighted-count", "weighted-count", "weighted-percent"] : ["count", "percent"],
@@ -296,17 +293,10 @@ function build_datatable (json) { // build data table
   });
 
   // if data is weighted, show footnote
-  var tmp = $("#tab-table .table-weighted-footnote");
+  tmp = $("#tab-table .table-weighted-footnote");
   if (json.weighted_by){ tmp.find(" .footnote-weight-name").html(json.weighted_by.weight_name); }
   else { tmp.find(" .footnote-weight-name").empty(); }
   tmp.toggle(json.weighted_by);
-  //}
-  // else{
-  //   // no map so hide tab !question
-  //   $("#explore-tabs #nav-table").hide();
-  //   // make sure these are not active
-  //   $("#explore-tabs #nav-table, #explore-content #tab-table").removeClass("active");
-  // }
 }
 
 function build_details (json) { // build details (question and possible answers)
@@ -316,7 +306,7 @@ function build_details (json) { // build details (question and possible answers)
   build_details_item(json);
 
   function build_details_item (json) { // populat a details item block
-    var selector = "", json_question = undefined, t, exist, tmp, icon, is_categorical;
+    var selector = "", json_question = undefined, t, exist, icon, is_categorical;
     ["question", "brokey-down-by", "filtered-by", "weighted-by"].forEach(function (d){
       selector = "#tab-details #details-"+ d +"-code";
       json_question = json[d.replace(/-/g, "_")];
@@ -407,17 +397,15 @@ function build_details (json) { // build details (question and possible answers)
 function build_explore_data_page (json) { // build the visualizations for the explore data page
   var type = null,
     is_categorical = json.analysis_data_type == "categorical";
-
   Object.keys(gon.visual_types).forEach(function (d) {
-    if(gon.visual_types[d] == json.chart.visual_type) {
-      if([gon.visual_types["bar"], gon.visual_types["pie"]].indexOf(json.chart.visual_type) !== -1)
+    if(gon.visual_types[d] == json.visual_type) {
+      if([gon.visual_types["bar"], gon.visual_types["pie"]].indexOf(json.visual_type) !== -1)
       {
         type = (typeof params.visual_type !== "undefined" && params.visual_type === gon.visual_types["pie"]) ? "pie" : "bar";
       }
       else { type = d; }
     }
   });
-
   if(type !== null) { build_charts(json, type); }
   if(is_categorical) { build_highmaps(json); }
   build_datatable(json);
@@ -425,12 +413,7 @@ function build_explore_data_page (json) { // build the visualizations for the ex
   build_page_title(json);
 
   // if no visible tab is marked as active, mark the first one active
-  var explore_tabs = $("#explore-tabs");
-
-  // turn on tab and its content || make sure correct jumptos are showing
-  explore_tabs.find("li" +
-    (explore_tabs.find("li.active:visible").length == 0 ? ":visible:first": ".active" )
-  ).trigger("click");
+  js.explore_tabs.find("li" + (js.explore_tabs.find("li.active:visible").length == 0 ? ":visible:first": ".active")).trigger("click");
 }
 
 function get_explore_data (is_back_button) { // get data and load page
@@ -455,7 +438,7 @@ function get_explore_data (is_back_button) { // get data and load page
   }
   else {
     tmp = ["select_qc", "select_bd", "select_fb", "select_wb"];
-    ["question_code", "broken_down_by_code", "filtered_by_code", "weighted_by_code"].forEach(function (d){
+    ["question_code", "broken_down_by_code", "filtered_by_code", "weighted_by_code"].forEach(function (d, i){
       v = js[tmp[i]].val();
       if (v !== null && v !== ""){
         ajax_data[d] = v;
@@ -464,7 +447,7 @@ function get_explore_data (is_back_button) { // get data and load page
     });
 
     // can exclude
-    if ($("input#can_exclude").is(":checked")){
+    if (js.explore_tabs.is(":checked")){
       ajax_data.can_exclude = true;
       url_querystring.push("can_exclude=" + ajax_data.can_exclude);
     }
@@ -503,14 +486,14 @@ function get_explore_data (is_back_button) { // get data and load page
     })
     .success(function ( json ) {       
       if (json.errors){
-        $("#jumpto-loader").fadeOut("slow");
-        $("#explore-data-loader").fadeOut("slow");
-        $("#explore-error").fadeIn("slow");
+        js.jumpto_loader.fadeOut("slow");
+        js.explore_data_loader.fadeOut("slow");
+        js.explore_error.fadeIn("slow");
       }
       else if ((json.results.analysis && json.results.analysis.length == 0) || (json.results.filtered_analysis && json.results.filtered_analysis.length == 0)){
-        $("#jumpto-loader").fadeOut("slow");
-        $("#explore-data-loader").fadeOut("slow");
-        $("#explore-no-results").fadeIn("slow");
+        js.jumpto_loader.fadeOut("slow");
+        js.explore_data_loader.fadeOut("slow");
+        js.explore_no_results.fadeIn("slow");
       }
       else {
         js.cache[cacheId] = json;
@@ -534,15 +517,16 @@ function get_explore_data (is_back_button) { // get data and load page
     if (!is_back_button && new_url != window.location.href){
       window.history.pushState({path:new_url}, $("title").html(), new_url);
     }
-    $("#explore-data-loader").fadeOut("slow");
-    $("#jumpto-loader").fadeOut("slow");
+    js.explore_data_loader.fadeOut("slow");
+    js.jumpto_loader.fadeOut("slow");
   }
 }
 
 function reset_filter_form () { // reset the filter forms and select a random variable for the row
-  $("select#broken_down_by_code, select#filtered_by_code").val("").selectpicker("refresh");
-  $("input#can_exclude").removeAttr("checked");
-  $("#btn-swap-vars").hide();
+  js.select_bd.val("").selectpicker("refresh");
+  js.select_fb.val("").selectpicker("refresh");
+  js.explore_tabs.removeAttr("checked");
+  js.button_swap_vars.hide();
 }
 
 function build_selects (skip_content) {
@@ -557,7 +541,7 @@ function build_selects (skip_content) {
 
   build_options_partial(q.items, null, null);
   function build_options_partial (items, level, parent_id) { // todo
-    var tmp = "";
+    tmp = "";
     items.forEach(function (item) {
       if(item.hasOwnProperty("parent_id")) { // Group
         tmp = build_selects_group_option(item);
@@ -630,17 +614,17 @@ function build_selects_question_option (question, level, skip_content) {
   if (!skip_content && question.data_type !== 0) {    
     content += "data-content=\"<span class='outer-layer'><span class='inner-layer'><span>" + q_text + "</span><span class='right-icons'>";
 
-    if(question.data_type !== 0) {
-      var type = question.data_type == 1 ? "categorical" : "numerical";
-      content += "<img src='/assets/svg/" + type + ".svg' title='"+ gon["question_type_" + type] + "'/>";
-    }
-
     if(question.is_mappable) {
       content += "<img src='/assets/svg/map.svg' title='" + gon.mappable_question + "' />";
     }
 
     if(question.exclude) {
       content += "<img src='/assets/svg/lock.svg' title='" + gon.private_question + "' />";
+    }
+
+    if(question.data_type !== 0) {
+      var type = question.data_type == 1 ? "categorical" : "numerical";
+      content += "<img src='/assets/svg/" + type + ".svg' title='"+ gon["question_type_" + type] + "'/>";
     }
 
     content += "</span></span></span>\"";
@@ -651,10 +635,9 @@ function build_selects_question_option (question, level, skip_content) {
 
 function update_available_weights () { // update the list of avilable weights based on questions that are selected
   // update weight list if weights exist
-  var select_weight = $("select#weighted_by_code");
+  var flag = false;
   if (js.type===1 && js.select_wb.length > 0) {
     if (!js.select_wb.length) { return; }
-
     var old_value = js.select_wb.val(),
       matches=[],
       items = [
@@ -662,7 +645,6 @@ function update_available_weights () { // update the list of avilable weights ba
         js.select_bd.find("option:selected").data("weights"),
         js.select_fb.find("option:selected").data("weights")
       ].filter(function (d) { return typeof d !== "undefined"; });
-
     if(items.length > 0) {
       matches = items.shift().filter(function (v) {
         return items.every(function (a) {
@@ -678,20 +660,15 @@ function update_available_weights () { // update the list of avilable weights ba
       matches.forEach(function (d, i) {
         js.select_wb.find("option[value='" + d + "']").show();
       });
-
       if (matches.indexOf(old_value) === -1) { // if the old value is no longer an option, select the first one
         js.select_wb.selectpicker("val", js.select_wb.find("option:first").attr("value"));
       }
-    }
-    else{
-      $(".form-explore-weight-by").hide();
-      js.select_wb.selectpicker("val", "unweighted");
+      flag = true;
     }
   }
-  else {
-    $(".form-explore-weight-by").hide();
-    js.select_wb.selectpicker("val", "unweighted");
-  }
+
+  if(!flag) { js.select_wb.selectpicker("val", "unweighted"); }
+  js.form_explore_weight_by.toggle(flag);
   js.select_wb.selectpicker("refresh");
 }
 
@@ -712,7 +689,6 @@ function empty_groups (index) {
     q_data_type = select_map[index][2],
     also_to_hide = [];
 
-  console.log(index, par_id, q_data_type, select_map);
   if([1, 2].indexOf(q_data_type) !== -1)
   {
     while(par_id !== null){
@@ -770,10 +746,10 @@ $(document).ready(function () {
             $(".instructions").hide();
             $(".tab-container").removeClass("hide");
           }
-          $("#jumpto-loader").fadeIn("slow");
-          $("#explore-error").fadeOut("slow");
-          $("#explore-no-results").fadeOut("slow");
-          $("#explore-data-loader").fadeIn("slow", function () {
+          js.jumpto_loader.fadeIn("slow");
+          js.explore_error.fadeOut("slow");
+          js.explore_no_results.fadeOut("slow");
+          js.explore_data_loader.fadeIn("slow", function () {
             get_explore_data();
           });
         }
@@ -783,10 +759,10 @@ $(document).ready(function () {
       // reset the form fields
       $("form#form-explore-data input#btn-reset").click(function (e){
         e.preventDefault();
-        $("#jumpto-loader").fadeIn("slow");
-        $("#explore-error").fadeOut("slow");
-        $("#explore-no-results").fadeOut("slow");
-        $("#explore-data-loader").fadeIn("slow", function () {
+        js.jumpto_loader.fadeIn("slow");
+        js.explore_error.fadeOut("slow");
+        js.explore_no_results.fadeOut("slow");
+        js.explore_data_loader.fadeIn("slow", function () {
           reset_filter_form();
           get_explore_data();
         });
@@ -819,7 +795,6 @@ $(document).ready(function () {
           bdb = js.select_bd.val(),
           bdb_index = js.select_bd.find("option[value='" + bdb + "']").index(),
           bdb_type = js.select_bd.find("option[value='" + bdb + "']").attr("data-type"),
-          select_filter_by = $("select#filtered_by_code"),
           also_to_hide,
           old_type = js.type;
         js.type = type;
@@ -846,7 +821,7 @@ $(document).ready(function () {
           js.select_qc.find("option[style*='display: none']").show();
           js.select_qc.find("option:eq(" + bdb_index + ")").hide();
 
-          $("button#btn-swap-vars").fadeToggle(val !== ""); // if val != "" then turn on swap button
+          js.button_swap_vars.fadeToggle(val !== ""); // if val != "" then turn on swap button
           if(bdb_index !== 0)
           {
             empty_groups(bdb_index).forEach(function (d){
@@ -857,8 +832,8 @@ $(document).ready(function () {
         }
 
         // update filter list
-        if ((select_filter_by.val() == q && q != "") || (select_filter_by.val() == bdb && bdb != "")){ // if filter is one of these values, reset filter to no filter
-          select_filter_by.selectpicker("val", ""); // reset value and hide filter answers
+        if ((js.select_fb.val() == q && q != "") || (js.select_fb.val() == bdb && bdb != "")){ // if filter is one of these values, reset filter to no filter
+          js.select_fb.selectpicker("val", ""); // reset value and hide filter answers
         }
 
         js.select_fb.find("option[style*='display: none']").show();
@@ -894,7 +869,7 @@ $(document).ready(function () {
 
       // swap vars button
       // - when clicked, swap the values and then submit the form
-      $("button#btn-swap-vars").click(function (){
+      js.button_swap_vars.click(function (){
         var var1 = js.select_qc.val(), // get the vals
           var2 = js.select_bd.val();
 
@@ -928,23 +903,23 @@ $(document).ready(function () {
 
       if(js.select_qc.val() !== "") {
         // get the initial data
-        $("#explore-error").fadeOut("slow");
-        $("#explore-no-results").fadeOut("slow");
-        $("#explore-data-loader").fadeIn("slow", function (){
+        js.explore_error.fadeOut("slow");
+        js.explore_no_results.fadeOut("slow");
+        js.explore_data_loader.fadeIn("slow", function (){
           get_explore_data();
         });
       }
 
       // jumpto scrolling
-      $("#jumpto").on("change", "select", function () {
-        $("#jumpto button.dropdown-toggle").tooltip("fixTitle");
-        $tab_content.animate({
-          scrollTop: $tab_content.scrollTop() + $tab_content.find(".tab-pane.active > div > " + $(this).find("option:selected").data("href")).offset().top - $tab_content.offset().top
+      js.jumpto.on("change", "select", function () {
+        js.jumpto.find("button.dropdown-toggle").tooltip("fixTitle");
+        js.tab_content.animate({
+          scrollTop: js.tab_content.scrollTop() + js.tab_content.find(".tab-pane.active > div > " + $(this).find("option:selected").data("href")).offset().top - js.tab_content.offset().top
         }, 1500);    
       });
 
       // when chart tab/map clicked on, make sure the jumpto block is showing, else, hide it
-      $("#explore-tabs li").click(function () {
+      js.explore_tabs.find("li").click(function () {
         var href = $(this).find("a").attr("href");
         if (href == "#tab-chart" && js.jumpto_chart_select.find("option").length > 0){
           jumpto(true, true);
@@ -961,53 +936,30 @@ $(document).ready(function () {
         params = queryStringToJSON(window.location.href);
 
         // for each form field, reset if need to
-        // question code
-        if (params.question_code != $("select#question_code").val()){
-          if (params.question_code == undefined){
-            $("select#question_code").val("");
-          }else{
-            $("select#question_code").val(params.question_code);
+        var p, select, tmp = ["select_qc", "select_bd", "select_fb"];
+        ["question_code", "broken_down_by_code", "filtered_by_code"].forEach(function (d, i) {
+          p = params[d];
+          select = js[tmp[i]];
+          if (p != select.val()) {
+            select.val(p == undefined ? "" : p);
+            select.selectpicker("refresh");
           }
-          $("select#question_code").selectpicker("refresh");
-        }
+        });
 
-        // broken down by code
-        if (params.broken_down_by_code != $("select#broken_down_by_code").val()){
-          if (params.broken_down_by_code == undefined){
-            $("select#broken_down_by_code").val("");
-          }else{
-            $("select#broken_down_by_code").val(params.broken_down_by_code);
-          }
-          $("select#broken_down_by_code").selectpicker("refresh");
-        }
-        if ($("select#broken_down_by_code").val() == ""){
-          $("#btn-swap-vars").hide();
-        }else{
-          $("#btn-swap-vars").show();
-        }
-
-        // filtered by
-        if (params.filtered_by_code != $("select#filtered_by_code").val()){
-          if (params.filtered_by_code == undefined){
-            $("select#filtered_by_code").val("");
-          }else{
-            $("select#filtered_by_code").val(params.filtered_by_code);
-          }
-          $("select#filtered_by_code").selectpicker("refresh");
-        }
-
+        js.toggle(button_swap_vars.toggle(!(js.select_bd.val() == "")));
+        
         // can exclude
         if (params.can_exclude == "true"){
-          $("input#can_exclude").attr("checked", "checked");
+          js.explore_tabs.attr("checked", "checked");
         }else{
-          $("input#can_exclude").removeAttr("checked");
+          js.explore_tabs.removeAttr("checked");
         }
 
         // reload the data
-        $("#jumpto-loader").fadeIn("slow");
-        $("#explore-error").fadeOut("slow");
-        $("#explore-no-results").fadeOut("slow");
-        $("#explore-data-loader").fadeIn("slow", function () {
+        js.jumpto_loader.fadeIn("slow");
+        js.explore_error.fadeOut("slow");
+        js.explore_no_results.fadeOut("slow");
+        js.explore_data_loader.fadeIn("slow", function () {
           get_explore_data(true);
         });
       });
@@ -1057,7 +1009,15 @@ $(document).ready(function () {
         select_fb: $("select#filtered_by_code"),
         select_wb: $("select#weighted_by_code"),
         type: 1,
-        tab_content: $(".tab-content")
+        tab_content: $(".tab-content"),
+        jumpto_loader: $("#jumpto-loader"),
+        explore_data_loader: $("#explore-data-loader"),
+        explore_error: $("#explore-error"),
+        explore_no_results: $("#explore-no-results"),
+        explore_tabs: $("#explore-tabs"),
+        input_can_exclude: $("input#can_exclude"),
+        button_swap_vars: $("button#btn-swap-vars"),
+        form_explore_weight_by: $(".form-explore-weight-by")
       };
 
       js["jumpto_chart"] = js.jumpto.find("#jumpto-chart");
@@ -1077,7 +1037,6 @@ $(document).ready(function () {
       function select_options_default (filters) {
         var qc_option = js.select_qc.find("option[value='"+filters[0]+"']"),
           bd_option = js.select_bd.find("option[value='"+filters[1]+"']");
-
         if(qc_option.length) {
           var q_index = qc_option.index();
 
@@ -1086,13 +1045,13 @@ $(document).ready(function () {
           var type = js.type;
 
           also_to_hide = empty_groups(q_index);
-          js.select_bd.find("option:eq("+(q_index)+")").hide();//.attr("data-disabled", "disabled");
+          js.select_bd.find("option:eq("+(q_index)+")").hide();
           select_map.forEach(function (d, i){
-            if(!(((d[0] === 2 && d[2] == type) ||
+            if(i !== 0 && !(((d[0] === 2 && d[2] == type) ||
                 (d[0] == 1 && ((type == 1 && d[1] > 0)||(type == 2 && d[2] > 0))) ||
                 (d[0] == 0 && ((type == 1 && d[1] > 0)||(type == 2 && d[2] > 0)))) &&
-                (also_to_hide.indexOf(i) === -1))) {
-              js.select_bd.find("option:eq(" + i + ")").hide();//.attr("data-disabled", "disabled");
+                (also_to_hide.indexOf(i) === -1))) {            
+              js.select_bd.find("option:eq(" + i + ")").hide();
             }
           });
 
@@ -1101,7 +1060,7 @@ $(document).ready(function () {
             bd_option.attr("selected", "selected");
             if(bdb_index !== 0) {
               js.select_qc.find("option:eq(" + bdb_index + ")").hide();//.attr("data-disabled", "disabled");
-              $("button#btn-swap-vars").fadeToggle(true); // if val != "" then turn on swap button
+              js.button_swap_vars.fadeToggle(true); // if val != "" then turn on swap button
 
               empty_groups(bdb_index-1).forEach(function (d){
                 js.select_qc.find("option:eq(" + d + ")").hide();//.attr("data-disabled", "disabled");
@@ -1110,7 +1069,7 @@ $(document).ready(function () {
           }
         }
         set_can_exclude_visibility();
-        js.select_fb.find("option[value='"+filters[2]+"']").attr("selected", "selected");
+        js.select_fb.find("option[value='"+filters[2]+"']").attr("selected", "selected");         
         js.select_fb.find("option[value='"+filters[0]+"'], option[value='"+filters[1]+"']").hide();//.attr("data-disabled", "disabled");
       }
       select_options_default(gon.questions.filters);
