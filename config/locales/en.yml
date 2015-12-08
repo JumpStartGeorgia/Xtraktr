@@ -1511,6 +1511,7 @@ en:
         can_exclude: Exclude Answers
         can_exclude_hint: At least one selected question has answers that can be excluded during analysis. Select this checkbox to remove these answers from the analysis.
         weighted_by_code: Weighted By
+        no_weight: No Weight
       jumpto:
         chart: Jump to Chart
         map: Jump to Map
@@ -1549,6 +1550,7 @@ en:
         no_filter: No Filter
         can_exclude: Exclude "Don't know" & "Refuse"
         can_exclude_hint: Remove answers like "Don't know" & "Refuse" from the analysis
+        no_weight: No Weight
       jumpto:
         chart: Jump to Chart
         hint:

@@ -292,18 +292,22 @@ class Api::V3
     # if there is no broken down by then do single analysis, else do comparative analysis
     # use the data[] for the parameter values to get answers that should be included in analysis
     data[:analysis_data_type] = question.data_type_s
+    is_categorical = data[:analysis_data_type] == ANALYSIS_DATA_TYPE[:categorical]
     if broken_down_by.present?
+      data[:visual_type] = is_categorical ? VISUAL_TYPES[:crosstab] : VISUAL_TYPES[:scatter]
       data[:analysis_type] = ANALYSIS_TYPE[:comparative]
       data[:results] = dataset_comparative_analysis(dataset, data, with_title)
       data[:chart] = dataset_comparative_chart(data, with_title, options) if with_chart_data
       data[:map] = dataset_comparative_map(question.answers, broken_down_by.answers, data, question.is_mappable?, with_title, options) if with_map_data && (question.is_mappable? || broken_down_by.is_mappable?)
     else
+      data[:visual_type] = is_categorical ? VISUAL_TYPES[:bar] : VISUAL_TYPES[:histogramm]
       data[:analysis_type] = ANALYSIS_TYPE[:single]
       data[:results] = dataset_single_analysis(dataset, data, with_title, weight_values)
       data[:chart] = dataset_single_chart(data, with_title, options) if with_chart_data
-      #data[:map] = dataset_single_map(question.answers, data, with_title, options) if with_map_data && question.is_mappable?
+      data[:map] = dataset_single_map(question.answers, data, with_title, options) if with_map_data && question.is_mappable?
       data[:tmp] = dataset.data_items.code_data_all(question[:code])
     end
+
     return data
   end
 

@@ -42,7 +42,7 @@ private
   # create option for codebook group jumpto
   def generate_codebook_dataset_group_option(group)
     cls = group.parent_id.present? ? 'subgroup' : 'group'
-    content = 'data-content=\'<span>' + group.title + '</span><span class="pull-right">'
+    content = 'data-content=\'<span>' + group.title + '</span><span class="right-icons">'
     desc = group.description.present? ? group.description : I18n.t('app.msgs.jumpto_group')
     if group.parent_id.present?
       content << subgroup_icon(desc)
