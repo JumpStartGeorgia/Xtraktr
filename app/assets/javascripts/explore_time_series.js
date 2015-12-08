@@ -664,7 +664,8 @@ $(document).ready(function () {
       Highcharts.setOptions({ // set languaage text
         chart: { spacingRight: 30 },
         lang: {
-          contextButtonTitle: gon.highcharts_context_title
+          contextButtonTitle: gon.highcharts_context_title,
+          thousandsSep: ','
         },
         colors: ["#00adee", "#e88d42", "#9674a9", "#f3d952", "#6fa187", "#b2a440", "#d95d6a", "#737d91", "#d694e0", "#80b5bc", "#a6c449", "#1b74cc", "#4eccae"],
         credits: { enabled: false }
