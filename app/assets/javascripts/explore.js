@@ -379,6 +379,12 @@ function build_highmap (shape_question_code, adjustable_max, json_map_set, chart
           borderWidth: 2
         }
       },
+      point: {
+        events: {
+          mouseOver: function () { $(this.dataLabel.element.firstChild).css("fill", "white"); },
+          mouseOut: function () { $(this.dataLabel.element.firstChild).css("fill", "#3C4352"); }
+        }
+      },
       dataLabels: {
         enabled: true,
         color: "#3C4352",

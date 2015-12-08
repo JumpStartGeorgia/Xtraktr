@@ -636,35 +636,33 @@ function build_selects_question_option (question, level, skip_content) {
 function update_available_weights () { // update the list of avilable weights based on questions that are selected
   // update weight list if weights exist
   var flag = false;
-  if (js.type===1 && js.select_wb.length > 0) {
-    if (!js.select_wb.length) { return; }
-    var old_value = js.select_wb.val(),
-      matches=[],
-      items = [
-        js.select_qc.find("option:selected").data("weights"),
-        js.select_bd.find("option:selected").data("weights"),
-        js.select_fb.find("option:selected").data("weights")
-      ].filter(function (d) { return typeof d !== "undefined"; });
-    if(items.length > 0) {
-      matches = items.shift().filter(function (v) {
-        return items.every(function (a) {
-          return a.indexOf(v) !== -1;
-        });
-      });
-    }
 
-    js.select_wb.find("option:not(:last)").hide(); // hide all items except unweighted
-
-    if (matches.length) { // if there are matches, show the weights that match, and unweighted else hide weight option and set value to unweighted
-      var index;
-      matches.forEach(function (d, i) {
-        js.select_wb.find("option[value='" + d + "']").show();
+  if (!js.select_wb.length) { return; }
+  var old_value = js.select_wb.val(),
+    matches=[],
+    items = [
+      js.select_qc.find("option:selected").data("weights"),
+      js.select_bd.find("option:selected").data("weights"),
+      js.select_fb.find("option:selected").data("weights")
+    ].filter(function (d) { return typeof d !== "undefined"; });
+  if(items.length > 0) {
+    matches = items.shift().filter(function (v) {
+      return items.every(function (a) {
+        return a.indexOf(v) !== -1;
       });
-      if (matches.indexOf(old_value) === -1) { // if the old value is no longer an option, select the first one
-        js.select_wb.selectpicker("val", js.select_wb.find("option:first").attr("value"));
-      }
-      flag = true;
+    });
+  }
+
+  js.select_wb.find("option:not(:last)").hide(); // hide all items except unweighted
+  if (matches.length) { // if there are matches, show the weights that match, and unweighted else hide weight option and set value to unweighted
+    var index;
+    matches.forEach(function (d, i) {
+      js.select_wb.find("option[value='" + d + "']").show();
+    });
+    if (matches.indexOf(old_value) === -1) { // if the old value is no longer an option, select the first one
+      js.select_wb.selectpicker("val", js.select_wb.find("option:first").attr("value"));
     }
+    flag = true;
   }
 
   if(!flag) { js.select_wb.selectpicker("val", "unweighted"); }
@@ -783,6 +781,7 @@ $(document).ready(function () {
 
       // if option changes, make sure the select option is not available in the other lists
       $("select.selectpicker").change(function (){
+
         var t = $(this),
           id = t.attr("id"),
           val = t.val(),
@@ -817,19 +816,20 @@ $(document).ready(function () {
           if(type !== old_type) { js.select_bd.selectpicker("val", ""); }
           js.select_bd.selectpicker("refresh");
         }
-        else if (id == "broken_down_by_code"){ // update question list
+        else if (id == "broken_down_by_code") { // update question list
           js.select_qc.find("option[style*='display: none']").show();
-          js.select_qc.find("option:eq(" + bdb_index + ")").hide();
 
-          js.button_swap_vars.fadeToggle(val !== ""); // if val != "" then turn on swap button
           if(bdb_index !== 0)
           {
+            js.select_qc.find("option:eq(" + bdb_index + ")").hide();
             empty_groups(bdb_index).forEach(function (d){
               js.select_qc.find("option:eq(" + d + ")").hide();
             });
           }
           js.select_qc.selectpicker("refresh");
         }
+
+        q_index !== 0 && bdb_index !== 0 ? js.button_swap_vars.fadeIn() : js.button_swap_vars.fadeOut();
 
         // update filter list
         if ((js.select_fb.val() == q && q != "") || (js.select_fb.val() == bdb && bdb != "")){ // if filter is one of these values, reset filter to no filter
@@ -838,11 +838,12 @@ $(document).ready(function () {
 
         js.select_fb.find("option[style*='display: none']").show();
         
-        if(type === 1) { // turn off this item only if question type is categorical
+        if(index == 0 || type === 1) { // turn off this item only if question type is categorical
           if (q !== "" && q_index !== -1){ js.select_fb.find("option[value='"+q+"']").hide(); }
           if (bdb !== "" && bdb_index !== -1 && bdb_index !== 0){ js.select_fb.find("option[value='"+bdb+"']").hide(); }
         }
         js.select_fb.selectpicker("refresh");
+
         update_available_weights(); // update the list of weights
 
         $("form button.dropdown-toggle").tooltip("fixTitle"); // update tooltip for selects
@@ -991,7 +992,8 @@ $(document).ready(function () {
       Highcharts.setOptions({ // set languaage text
         chart: { spacingRight: 30 },
         lang: {
-          contextButtonTitle: gon.highcharts_context_title
+          contextButtonTitle: gon.highcharts_context_title,
+          thousandsSep: ','
         },
         colors: ["#C6CA53", "#7DAA92", "#725752", "#E29A27", "#998746", "#A6D3A0", "#808782", "#B4656F", "#294739", "#1B998B", "#7DAA92", "#BE6E46", "#565264"],
         credits: { enabled: false }
