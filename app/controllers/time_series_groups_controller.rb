@@ -268,8 +268,7 @@ private
     @js.push("time_series_groups.js")
 
     if for_form
-      @css.push('tabbed_translation_form.css', 'select2.css')
-      @js.push('select2/select2.min.js')
+      @css.push('tabbed_translation_form.css')
 
       @languages = Language.sorted
 

@@ -21,6 +21,7 @@
 //= require dataTables/extras/dataTables.tableTools
 //= require modal
 //= require vendor
+
 var globalCallback = globalCallback || function () {},
   page_wrapper,
   js;
