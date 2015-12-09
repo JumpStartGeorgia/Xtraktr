@@ -242,6 +242,14 @@ module ProcessDataFile
                 # take out the [1] " at the beginning and the closing "
                 answer = clean_text(line).gsub('[1] "', '').gsub(/\"$/, '')
                 values = answer.split(' || ')
+                
+                # it is possible that the answer is nil so doing the split will only return a length of two
+                # - so if answer has two sets of || and values length is two, add a '' to values
+                if values.length == 2 && answer.scan(/\|\|/).count == 2
+                  puts "---> answer does not have text, adding ''"              
+                  values << ''
+                end
+
                 if values.length == 3
                   # save for writing to csv
                   answers_complete << [clean_text(values[0]), clean_text(values[1]), clean_text(values[2])]
@@ -279,7 +287,7 @@ module ProcessDataFile
                   puts "An error occurred on line #{line_number} of #{file_answers_complete} while parsing the answers."
                   puts "This line was not in the correct format of: [1] \"Question Code || Answer Value || Answer Text\""
                   puts "******************************"
-                  break
+                  return false
                 end
               end
             end
