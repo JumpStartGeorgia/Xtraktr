@@ -385,6 +385,12 @@ class DatasetsController < ApplicationController
         gon.locale_picker_data = { reset: I18n.t("app.buttons.reset") }
         gon.no_answer = I18n.t("datasets.mass_changes_questions_type.no_answer")
         gon.percent = I18n.t("datasets.mass_changes_questions_type.percent")
+        gon.integer = I18n.t("datasets.mass_changes_questions_type.integer")
+        gon.decimal = I18n.t("datasets.mass_changes_questions_type.decimal")
+        gon.view = I18n.t("helpers.links.view")
+        gon.view_active_title = I18n.t("datasets.mass_changes_questions_type.hints.view_active")
+        gon.view_disabled_title = I18n.t("datasets.mass_changes_questions_type.hints.view_disabled")
+        gon.no_preview = I18n.t("datasets.mass_changes_questions_type.no_preview")
         @dataset.languages_sorted.each do |locale|
           gon.locale_picker_data[locale] = [I18n.t("app.language." + locale),I18n.t("app.language." + locale)[0..1].downcase]
         end
@@ -393,7 +399,8 @@ class DatasetsController < ApplicationController
         # prepaire data for table if numerical fill fields else send reset values
         @dataset.questions.each do |q|
             data = {
-              code: q.original_code,
+              code: q.code,
+              ocode: q.original_code,
               question: q.text,
               data_type: q.data_type,
               has_answers: q.has_code_answers,              

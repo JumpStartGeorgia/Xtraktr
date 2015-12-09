@@ -61,8 +61,13 @@ $(document).ready(function (){
       show: function (code, only_if_opened) {
         if(typeof only_if_opened !== "boolean") { only_if_opened = false; }
         if(only_if_opened && this.closed) { return; }
-
-        this.prepaire_data(code);
+        if($("tr#" + code_format(code)).find("input.numerical:checked").val() !== undefined) {
+          this.prepaire_data(code);
+        }
+        else {
+          this.code = null;
+          this.selector.find(".chart").html("<div class='no_preview'>" + gon.no_preview + "</div>").show();
+        }
       },
 
       /**
@@ -80,7 +85,6 @@ $(document).ready(function (){
           nc = true;
           preview.code = code;
         }
-
         var cd = ch_code.data[sub_id].fd, // current data
           cm = cq.meta,             // current meta data
           cg = ch_code.general, // current general data
@@ -112,7 +116,7 @@ $(document).ready(function (){
               },
               xAxis: {
                 title: { text: cq.titles[$("html").attr("lang")] },
-                tickPositions: formatLabel(cm),
+                tickPositioner: function () { return formatLabel(cq.meta); },
                 startOnTick: true,
                 endOnTick: true
               },
@@ -138,7 +142,6 @@ $(document).ready(function (){
           }
           else {
             chart = $preview.find(".chart").highcharts();
-            chart.xAxis[0].tickPositions = formatLabel(cm);
             chart.series[0].setData(cd.map(function (d, i){ return { x:cm[5] +cm[2]*i, y: d[0], percent: d[1] }; }), false, true);
             chart.isDirtyBox = true;
             chart.redraw();
@@ -220,12 +223,13 @@ $(document).ready(function (){
       */
       prepaire_data: function (code) {
         var t = this,
-          meta = get_code_meta(code),
+          meta = get_code_meta(code);
           code_meta = meta.data,
           data_type = code_meta[0],
           sub_id = code_meta.join(";");
 
         cq = { code: code, sub_id: sub_id, type: data_type, meta: code_meta, titles: (data_type === 2 ? meta.titles : []) };
+        console.log(meta, code_meta, data_type, sub_id, cq);
 
         if(isset(cache, code + ".data")) { // if question code has data
           if(data_type === 2) { // is numerical
@@ -241,7 +245,7 @@ $(document).ready(function (){
             return;
           }
         }
-                
+
         cache[code] = { code: code, general: {}, data: {}}; // if there is no locale info then get it remotely
 
         var to_send = { dataset_id: dataset_id, question_code: code };
@@ -253,8 +257,10 @@ $(document).ready(function (){
           data: to_send,
           url: view_chart_path,
           success: function (d) {
+             console.log("remote",d);
             cache[code].general = { dataset: d.dataset, orig_data: d.data, formatted_data: d.data, question: d.question };
             if(d.frequency_data !== null) {
+               console.log("has fr");
               cache[code].data[sub_id] = { fd: d.frequency_data };
               if(data_type === 2) {
                 cache[code].data[sub_id]["dfm"] = d.frequency_data_meta;
@@ -307,15 +313,16 @@ $(document).ready(function (){
       "columns": [
         {"data":null,
           render: function (data, type, full) {
-            return "<div class='btn btn-default view-chart' "+(full.data_type === 0 ? " disabled" : "")+">View</div>";
+            var tmp = full.data_type === 0;
+            return "<div title='" + gon[tmp ? "view_disabled_title" : "view_active_title"] + "'><div class='btn btn-default view-chart' "+(tmp ? " disabled" : "")+">"+gon.view+"</div>";
           },
           "orderable": false
         },
-        {"data":"code" },
-        {"data":"question"},
+        {"data":"ocode" },
+        {"data":"question" },
         {"data":"data_type",
           render: function (data, type, full) {
-            return "<input class='numerical' type='radio' value='1' name='question["+full.code +"][data_type]'" + (data == 1 ? " checked": "") + " data-o='"+data+"' "+(full.has_answers ? "" : " disabled title='"+ gon.no_answer+"'") + ">";
+            return "<div"+(full.has_answers ? "" : " title='"+ gon.no_answer+"'")+"><input class='numerical' type='radio' value='1' name='question["+full.code +"][data_type]'" + (data == 1 ? " checked": "") + " data-o='"+data+"' "+(full.has_answers ? "" : " disabled") + "></div>";
           },
           class: "c",
           "orderDataType": "dom-radio",
@@ -323,7 +330,7 @@ $(document).ready(function (){
         },
         {"data":"data_type",
           render: function (data, type, full) {
-            return "<input class='numerical' type='radio' value='2' name='question["+full.code +"][data_type]'" + (data == 2 ? " checked": "") + " data-o='"+data+"'>";
+            return "<div><input class='numerical' type='radio' value='2' name='question["+full.code +"][data_type]'" + (data == 2 ? " checked": "") + " data-o='"+data+"'></div>";
           },
           class: "c",
           "orderDataType": "dom-radio",
@@ -344,28 +351,32 @@ $(document).ready(function (){
         },
         {"data":"num.type",
           render: function (data, type, full) {
-            return "<select class='conditional' name='question["+full.code +"][numerical][type]' data-o='"+data+"'" + (full.data_type !== 2 ? " disabled" : "") + "><option value='0'" + (data == 0 ? "selected": "") + ">Integer</option>" +
-              "<option value='1'" + (data == "1" ? "selected": "") + ">Float</option></select>";
+            return "<select class='conditional' name='question["+full.code +"][numerical][type]' data-o='"+data+"'" + (full.data_type !== 2 ? " disabled" : "") + "><option value='0'" + (data == 0 ? "selected": "") + ">"+gon.integer+"</option>" +
+              "<option value='1'" + (data == "1" ? "selected": "") + ">"+gon.decimal+"</option></select>";
           },
           class: "c",
+          "width": "90px",
           "orderable": false
         },
         {"data":"num.width",
           render: function (data, type, full) {
             return "<input class='conditional r' type='number' value='"+data+"' name='question["+full.code +"][numerical][width]' data-o='"+data+"'" + (full.data_type !== 2 ? " disabled" : "") + ">";
           },
+          "width": "90px",
           "orderable": false
         },
         {"data":"num.min",
           render: function (data, type, full){
             return "<input class='conditional r' type='number' value='"+data+"' name='question["+full.code +"][numerical][min]' data-o='"+data+"'" + (full.data_type !== 2 ? " disabled" : "") + ">";
           },
+          "width": "90px",
           "orderable": false
         },
         {"data":"num.max",
           render: function (data, type, full){
             return "<input class='conditional r' type='number' value='"+data+"' name='question["+full.code +"][numerical][max]' data-o='"+data+"'" + (full.data_type !== 2 ? " disabled" : "") + ">";
           },
+          "width": "90px",
           "orderable": false
         }
       ],
@@ -411,7 +422,7 @@ $(document).ready(function (){
       });
       var tr;
       function set_code_original_values (d) {
-        tr = mass_change.find("tr#" + d);
+        tr = mass_change.find("tr#" + code_format(d));
         var str = "[name='question["+d+"]",
           dao = "data-o";
 
@@ -429,6 +440,7 @@ $(document).ready(function (){
     $(datatable).on("click", "tr", function () { // callback on table row(tr) click
       var t = $(this),
         code = t.attr("id");
+         console.log("tr");
       if (!t.hasClass("selected")) {
         mass_change.find("tr.selected").removeClass("selected");
       }
@@ -449,12 +461,18 @@ $(document).ready(function (){
       t.parent().removeClass("row-loader");
     });
 
-    $(datatable).on("change", "input, select", function () { // callback for input fields change
+    $(datatable).on("change", "input, select", function (e, is_radio) { // callback for input fields change
       var t = $(this),
         td = t.closest("td"),
         tr = td.closest("tr"),
         code = tr.attr("id"), old_value, new_value;
 
+      // if(t.hasClass("numerical") && is_radio !== true) {  
+      //   e.preventDefault();
+      //    console.log("prevented");
+      //    return;
+      // }
+      
       if(t.hasClass("title")) { // if has title then it is locale picker and need different way to get value
         old_value = t.closest(".locale-box").find(".locale-picker ul li[data-key='"+t.attr("data-locale")+"']").attr("data-orig-value") ;
         new_value = t.val();
@@ -482,6 +500,34 @@ $(document).ready(function (){
           preview.show(code, true);
         }
       }
+    });
+
+    $(datatable).on("click", "input[type='radio']", function (e) {
+      //$("tr#a3 input[name='question[a3][data_type]']:checked").val()
+      //
+      var t = $(this),
+        checked = (t.attr("checked") === "checked"),
+        tr = t.closest("tr");
+
+      tr.find("input[type='radio']").removeAttr("checked").prop("checked", false);
+       
+      if(checked) { // so when radio is alreay checked 
+        var td = t.closest("td"),
+          code = tr.attr("id"),
+          old_value = t.attr("data-o"),
+          new_value = +t.val();
+
+        tr.find(".view-chart").attr("disabled", true);
+
+        update_dirty_rows(code, td.index(), old_value, new_value); // update dirty_rows tracking system for changes
+        if(new_value === 2) { // if numerical 
+          tr.find(".conditional, .conditional input").attr("disabled", "disabled");
+          tr.find(".locale-picker").attr("disabled", "disabled");
+        }
+        preview.show(code, true);
+      }
+        //$(this).trigger("change", [true]);
+      t.attr("checked", !checked).prop("checked", !checked);
     });
 
     $("a.btn-select-all").click(function (){ // callback on all checkbox click in header of table for categorical type it will switch all questions to be categorical
@@ -607,7 +653,7 @@ $(document).ready(function (){
   * @desc If question is categorical then return just {data: [data_type]}, else (numerical) { data: [data_type, type, width, min, max, min_range, max_range, size], titles: { lang_key: text}}
   */
   function get_code_meta (code) {
-    var tr = mass_change.find("tr#" + code),
+    var tr = mass_change.find("tr#" + code_format(code)),
       tmp = "[name='question["+code+"][numerical]",
       data_type = +tr.find("[name='question["+code+"][data_type]']:checked").val(),
       titles = {},
@@ -631,8 +677,7 @@ $(document).ready(function (){
         tr.find(tmp + "[type]']").val(),
         tr.find(tmp + "[width]']").val(),
         tr.find(tmp + "[min]']").val(),
-        tr.find(tmp + "[max]']").val() ].map(function (d){ return d=+d; });
-
+        tr.find(tmp + "[max]']").val() ].map(function (d){ return d=+d; });         
       out.push(Math.floor(out[3]/out[2]) * out[2]); // calculating  min_range = floor(min/width) * width
       out.push(Math.ceil(out[4]/out[2]) * out[2]);  // calculating  max_range = ceil(max/width) * width
       out.push((out[6]-out[5])/out[2]);             // calculating  size = (max_range-min_range)/width
@@ -647,7 +692,7 @@ $(document).ready(function (){
   * @param {array} meta - Meta data for this question code
   */
   function set_code_meta (code, meta) {
-    var tr = mass_change.find("tr#" + code),
+    var tr = mass_change.find("tr#" + code_format(code)),
       str = "[name='question["+code+"][numerical]";
 
     tr.find(str+"[type]']").val(meta[1]);
@@ -675,11 +720,14 @@ $(document).ready(function (){
       }
     }
     else {
+      var to_send = { dataset_id: dataset_id, question_code: code };
+      if (typeof gon.private_user !== "undefined"){ to_send["private_user_id"] = gon.private_user; }
+
       cache[code] = { code: code, general: {}, data: {}};
       $.ajax({
         type: "GET",
         dataType: "json",
-        data: { dataset_id: dataset_id, question_code: code },
+        data: to_send,
         url: view_chart_path,
         success: function (d) {
           cache[code].general = { dataset: d.dataset, orig_data: d.data, formatted_data: d.data, question: d.question };
@@ -701,7 +749,6 @@ $(document).ready(function (){
         predefined_answers = question.hasOwnProperty("answers") ? question.answers.map(function (d){ return d.value; }) : [],
         num = [2, 0, 10, 0, 0, 0, 0, 0, 0],
         predefinedData = [];
-
       formatted.forEach(function (d, i) {        
         if(isN(d) && predefined_answers.indexOf(d) === -1) { // only numbers and that are not predefined answer allowed
           formatted[i] = +d;
@@ -719,7 +766,7 @@ $(document).ready(function (){
 
       if(min === Number.MAX_VALUE) { min = 0; } // no min value then default to 0
       if(max === Number.MIN_VALUE) { max = min + 1; } // if no max then min + 1
-
+      if(max-min<10) { num[2] = 1; }
       num[3] = min;
       num[4] = max;
       num[5] = Math.floor(num[3] / num[2]) * num[2]; // min_range = floor(min/width) * width
@@ -845,7 +892,7 @@ $(document).ready(function (){
   * @param {boolean} start - State for loader if true then show else hiding
   */
   function row_loader (code, start) {
-    var tr = mass_change.find("tr#" + code);
+    var tr = mass_change.find("tr#" + code_format(code));
 
     if(start) {
       tr.attr("disabled", "disabled");
@@ -855,6 +902,8 @@ $(document).ready(function (){
     }
     tr.find(".view-chart").parent().toggleClass("row-loader", start); // show row loader
   }
-
+  function code_format (code) {
+    return code.replace(/\|/g, "\\|");
+  }
   init();
 });
