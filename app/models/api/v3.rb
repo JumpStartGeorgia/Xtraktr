@@ -61,21 +61,24 @@ class Api::V3
       begin # decode the id
         user_id = Base64.urlsafe_decode64(private_user_id)
       end
+          Rails.logger.info("-------------------------------------------2-#{}")
       # get the dataset
       dataset = Dataset.by_id_for_user(dataset_id, user_id) if user_id.present?
     else
       dataset = Dataset.is_public.find(dataset_id)
+       Rails.logger.info("-------------------------------------------5-#{dataset}")
     end
 
     if dataset.nil?
       return {errors: [{status: '404', detail: I18n.t('api.msgs.no_dataset') }]}    
     end
+        Rails.logger.info("-------------------------------------------3-#{}")
     question = dataset.questions.with_code(question_code)
-
+    Rails.logger.info("-------------------------------------------6-#{question_code} #{question.inspect}")
     if question.nil? 
       return {errors: [{status: '404', detail: I18n.t('api.msgs.no_question') }]}    
     end
-
+Rails.logger.info("-------------------------------------------7-")
     # if language provided, set it
     if language.present? && dataset.languages.include?(language)
       dataset.current_locale = language

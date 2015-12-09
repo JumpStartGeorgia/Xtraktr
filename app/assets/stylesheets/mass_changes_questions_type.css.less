@@ -13,6 +13,10 @@ td .r {
   display:none;
 }
 #mass_change {
+  thead > tr > th {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
   tbody tr td {
     background-color:transparent;
     vertical-align:middle;
@@ -76,9 +80,13 @@ td .r {
   left:10px;
   min-width:400px;
   min-height:400px;
-  // background-color:rgba(140, 140, 140, 0.45);
+  background-color: #fff;
   z-index:9999;
   border:1px solid #cecece;
+  font: 14px 'sourcesans_pro', 'sans-serif';
+}
+.preview .no_preview {
+  padding:50px 10px 0;
 }
 .preview.visible {
   display:block;
@@ -201,6 +209,7 @@ span.number {
   color: #d67456; 
 }
 .mass-change-submit {
+  margin: 10px 0;
   text-align:right;
 }
 .btn-select-all {
