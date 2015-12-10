@@ -443,7 +443,7 @@ class DatasetsController < ApplicationController
       return
     end
   end
-
+   
   # set questions data types [:categorical, :numerical or :unknown]
   def mass_changes_questions_type
     @dataset = Dataset.by_id_for_user(params[:id], current_user.id)

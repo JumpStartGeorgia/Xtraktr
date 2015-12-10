@@ -23,7 +23,12 @@ $(document).ready(function (){
       * Prepaire preview window and bind all parts
       */
       init: function () {
-        $("body").append("<div id='preview' class='preview'><div class='header'><div class='move'></div><div class='close'></div></div><div class='chart'></div></div>");
+        Highcharts.setOptions({
+          lang: { thousandsSep: ',' },
+          colors: ["#C6CA53"],
+          credits: { enabled: false }
+        });
+//        $("body").append("");
         this.selector = $("#preview");
         this.bind();
       },
@@ -33,24 +38,26 @@ $(document).ready(function (){
       */
       bind: function () {
         var _t = this;
-        _t.selector.draggable({ handle: ".header > .move", cursor: "move" }); // make draggable
+        if($( window ).width() > 992) {
+          _t.selector.draggable({ handle: ".header > .move", cursor: "move" }); // make draggable
 
-        _t.selector.find(".close" ).click(function () { // callback on close button click
-          var t = $(this),
-            p = t.closest("#preview");
-          p.hide();
-          p.find(".chart").highcharts().destroy();
-          _t.closed = true;
-        });
-
-        $(document).keyup(function (e) { // callback on ESC click if preview window is open
-          if (e.keyCode == 27 && !_t.closed) { // escape key maps to keycode `27`
-            _t.selector.hide();
-            _t.selector.find(".chart").highcharts().destroy();
+          _t.selector.find(".close" ).click(function () { // callback on close button click
+            var t = $(this),
+              p = t.closest("#preview");
+            p.hide();
+            p.find(".chart").highcharts().destroy();
             _t.closed = true;
-            e.preventDefault();
-          }
-        });
+          });
+
+          $(document).keyup(function (e) { // callback on ESC click if preview window is open
+            if (e.keyCode == 27 && !_t.closed) { // escape key maps to keycode `27`
+              _t.selector.hide();
+              _t.selector.find(".chart").highcharts().destroy();
+              _t.closed = true;
+              e.preventDefault();
+            }
+          });
+        }
       },
 
       /**
@@ -93,17 +100,16 @@ $(document).ready(function (){
           chart;
         $preview.show();
 
+
         var histogramm = function () {
           var sum = cd.reduce(function (a, b){return a+b;});
           if(t.closed || nc) {
             chart = new Highcharts.Chart({
-              colors: ["#C6CA53"],
               chart: {
                 renderTo: $("#preview .chart")[0],
                 type: "column",
                 spacingRight: 40
               },
-              credits: { enabled: false },
               title: {
                 text: "<span class='code-highlight'>" + cg.question.original_code + "</span> - " + cg.question.text,
                 useHTML: true,
@@ -131,8 +137,9 @@ $(document).ready(function (){
               },
               series: [{ data: cd.map(function (d, i){ return { x:cm[5] +cm[2]*i, y: d[0], percent: d[1] }; }) }],
               tooltip: {
+                backgroundColor: "#fff",
                 formatter: function () {
-                  return this.y + " (" + this.point.percent + "%)";
+                  return Highcharts.numberFormat(this.y, 0) + " (" + this.point.percent + "%)";
                 }
               },
               legend: { enabled: false }
@@ -159,7 +166,7 @@ $(document).ready(function (){
             });
             if(t.closed || nc) {
               chart = new Highcharts.Chart({
-                colors: ["#C6CA53"],
+           
                 chart: {
                   renderTo: $("#preview .chart")[0],
                   type: "column",
@@ -176,12 +183,10 @@ $(document).ready(function (){
                   useHTML: true,
                   style: t.style2
                 },
-                credits: { enabled: false },
                 xAxis: {
                   categories: cd_keys,
                   labels: {
                     style: { "color": "#3c4352", "fontSize": "14px", "fontFamily":"'sourcesans_pro', 'sans-serif'", "fontWeight": "normal", "textAlign": "right" },
-                    useHTML: true,
                     step: 1
                   }
                 },
@@ -192,8 +197,9 @@ $(document).ready(function (){
                   title: { text: gon.percent }
                 },
                 tooltip: {
+                  backgroundColor: "#fff",
                   formatter: function () {
-                    return this.point.options.count + " (" + this.y + "%)";
+                    return Highcharts.numberFormat(this.point.options.count, 0) + " (" + this.y + "%)";
                   }
                 },
                 legend: { enabled: false }
@@ -229,7 +235,7 @@ $(document).ready(function (){
           sub_id = code_meta.join(";");
 
         cq = { code: code, sub_id: sub_id, type: data_type, meta: code_meta, titles: (data_type === 2 ? meta.titles : []) };
-        console.log(meta, code_meta, data_type, sub_id, cq);
+        //console.log(meta, code_meta, data_type, sub_id, cq);
 
         if(isset(cache, code + ".data")) { // if question code has data
           if(data_type === 2) { // is numerical
@@ -257,10 +263,10 @@ $(document).ready(function (){
           data: to_send,
           url: view_chart_path,
           success: function (d) {
-             console.log("remote",d);
+             //console.log("remote",d);
             cache[code].general = { dataset: d.dataset, orig_data: d.data, formatted_data: d.data, question: d.question };
             if(d.frequency_data !== null) {
-               console.log("has fr");
+              // console.log("has fr");
               cache[code].data[sub_id] = { fd: d.frequency_data };
               if(data_type === 2) {
                 cache[code].data[sub_id]["dfm"] = d.frequency_data_meta;
@@ -306,6 +312,7 @@ $(document).ready(function (){
 
     datatable = $("#mass_change").dataTable({ // initialize datatable with all appropriate options data comes from server
       "dom": "<'top'fli>t<'bottom'p><'clear'>",
+      responsive: true,
       "data": gon.datatable_json,
       createdRow: function (row, data, index) {
         row.id = data.code;
@@ -339,8 +346,8 @@ $(document).ready(function (){
         {"data":"num.title",
           render: function (data, type, full) {
             return "<div class='conditional locale-box' name='question["+full.code +"][numerical][title]' data-o='' "+(full.data_type !== 2 ? " disabled" : "")+">"+
-            "<div class='locale-picker' "+(full.data_type !== 2 ? " disabled" : "")+"><div class='locale-toggle' title='"+gon.locale_picker_data[data[0][0]]+"'>"+data[0][0]+"</div><ul>" +
-            data.map(function (d, i) { return "<li class='"+[(i+1>6 ? "btop" : ""), (data.length > 5 && i+1 > data.length-data.length%6 ? "bbottom" : "")].join(" ") +"' data-key='"+d[0]+"' data-value='"+d[1]+"' data-orig-value='"+d[1]+"' title='"+gon.locale_picker_data[d[0]]+"'>" + d[0] + "</li>"; }).join("") +
+            "<div class='locale-picker' "+(full.data_type !== 2 ? " disabled" : "")+"><div class='locale-toggle' title='"+gon.locale_picker_data[data[0][0]][0]+"'>"+data[0][0]+"</div><ul>" +
+            data.map(function (d, i) { return "<li class='"+[(i+1>6 ? "btop" : ""), (data.length > 5 && i+1 > data.length-data.length%6 ? "bbottom" : "")].join(" ") +"' data-key='"+d[0]+"' data-value='"+d[1]+"' data-orig-value='"+d[1]+"' title='"+gon.locale_picker_data[d[0]][0]+"'>" + d[0] + "</li>"; }).join("") +
             "<li class='reset' title='"+gon.locale_picker_data.reset+"'></li></ul></div>" +
             "<input type='text' class='title' value='"+data[0][1]+
             "' data-locale='"+ data[0][0] +"'" + (full.data_type !== 2 ? " disabled" : "") + "></div>";
@@ -388,7 +395,11 @@ $(document).ready(function (){
         "searchPlaceholder": gon.datatable_search
       },
       "pagingType": "full_numbers",
-      "orderClasses": false
+      "orderClasses": false,
+      search: {
+        search: "age"
+      },
+      displayStart: 20
     });
   }
 
@@ -437,15 +448,14 @@ $(document).ready(function (){
       return false;
     });
 
-    $(datatable).on("click", "tr", function () { // callback on table row(tr) click
+    $(datatable).on("click", "tr", function (e) { // callback on table row(tr) click
       var t = $(this),
         code = t.attr("id");
-         console.log("tr");
+         //console.log("tr");
       if (!t.hasClass("selected")) {
         mass_change.find("tr.selected").removeClass("selected");
       }
       t.toggleClass("selected");
-
       preview.show(code, true);
     });
 
@@ -461,18 +471,13 @@ $(document).ready(function (){
       t.parent().removeClass("row-loader");
     });
 
-    $(datatable).on("change", "input, select", function (e, is_radio) { // callback for input fields change
+    $(datatable).on("change", "input, select", function (e) { // callback for input fields change
+      e.stopPropagation();
       var t = $(this),
         td = t.closest("td"),
         tr = td.closest("tr"),
         code = tr.attr("id"), old_value, new_value;
 
-      // if(t.hasClass("numerical") && is_radio !== true) {  
-      //   e.preventDefault();
-      //    console.log("prevented");
-      //    return;
-      // }
-      
       if(t.hasClass("title")) { // if has title then it is locale picker and need different way to get value
         old_value = t.closest(".locale-box").find(".locale-picker ul li[data-key='"+t.attr("data-locale")+"']").attr("data-orig-value") ;
         new_value = t.val();
@@ -488,30 +493,29 @@ $(document).ready(function (){
 
       update_dirty_rows(code, td.index(), old_value, new_value); // update dirty_rows tracking system for changes
       if(t.hasClass("numerical")) { // if input of data_type
-        if(new_value === 2) { // if numerical 
+        if(new_value === 2) { // if numerical
           tr.find(".conditional, .conditional input").removeAttr("disabled");
           tr.find(".locale-picker").removeAttr("disabled");
           prepare_numerical_fields(code, function () { // prepaire data and then preview if window is open
-            preview.show(code, true);
           });
         }
         else {
           tr.find(".conditional, .conditional input").attr("disabled", "disabled");
-          preview.show(code, true);
         }
       }
+      preview.show(code, true);
     });
 
     $(datatable).on("click", "input[type='radio']", function (e) {
       //$("tr#a3 input[name='question[a3][data_type]']:checked").val()
-      //
+
       var t = $(this),
         checked = (t.attr("checked") === "checked"),
         tr = t.closest("tr");
 
       tr.find("input[type='radio']").removeAttr("checked").prop("checked", false);
-       
-      if(checked) { // so when radio is alreay checked 
+
+      if(checked) { // so when radio is alreay checked
         var td = t.closest("td"),
           code = tr.attr("id"),
           old_value = t.attr("data-o"),
@@ -520,13 +524,13 @@ $(document).ready(function (){
         tr.find(".view-chart").attr("disabled", true);
 
         update_dirty_rows(code, td.index(), old_value, new_value); // update dirty_rows tracking system for changes
-        if(new_value === 2) { // if numerical 
+        if(new_value === 2) { // if numerical
           tr.find(".conditional, .conditional input").attr("disabled", "disabled");
           tr.find(".locale-picker").attr("disabled", "disabled");
         }
         preview.show(code, true);
       }
-        //$(this).trigger("change", [true]);
+      //$(this).trigger("change", [true]);
       t.attr("checked", !checked).prop("checked", !checked);
     });
 
@@ -546,25 +550,21 @@ $(document).ready(function (){
   */
   function init_locale_picker () {
     $(document).on("click", ".locale-picker:not([disabled]) .locale-toggle", function (){ // toggle to switch between language is first block with currently selected language
-      var to_deactivate = $(".locale-box.active"),
-        t = $(this),
+       
+      var t = $(this),
         key = t.text(),
         p = t.parent(),
         ul = p.find("ul"),
         box = p.parent(),
-        input = box.find("input");
+        input = box.find("input"),
+        has = box.hasClass("active");
 
-      if(to_deactivate.length) {
-        to_deactivate.removeClass("active");
-        to_deactivate.find("ul").removeClass("active");
-        to_deactivate.find("input").addClass("blur");
+      $(".locale-box.active").removeClass("active");
+      if(!has) {
+        ul.find("li").show();
+        ul.find("li[data-key='" + key + "']").hide(),
+        box.addClass("active");
       }
-
-      ul.find("li").show();
-      ul.find("li[data-key='" + key + "']").hide(),
-      box.toggleClass("active");
-      ul.toggleClass("active");
-      input.toggleClass("blur");
     });
     $(document).on("click", ".locale-picker ul li", function () { // on opened menu click event
       var t = $(this),
@@ -597,18 +597,10 @@ $(document).ready(function (){
         input.val(li.attr("data-orig-value"));
       }
       box.toggleClass("active");
-      ul.toggleClass("active");
-      input.toggleClass("blur");
     });
+
     $(document).on("click", function (e) { // if clicking outside when locale menu is opened close it
-      if($(e.target).closest(".locale-box").length === 0 && $(".locale-box.active").length) {
-        var to_deactivate = $(".locale-box.active");
-        if(to_deactivate.length) {
-          to_deactivate.removeClass("active");
-          to_deactivate.find("ul").removeClass("active");
-          to_deactivate.find("input").addClass("blur");
-        }
-      }
+      if(!$(e.target).closest(".locale-picker").length) { $(".locale-box.active").removeClass("active"); }
     });
   }
 
@@ -699,6 +691,10 @@ $(document).ready(function (){
     tr.find(str+"[width]']").val(meta[2]);
     tr.find(str+"[min]']").val(meta[3]);
     tr.find(str+"[max]']").val(meta[4]);
+
+    var ul = tr.find(str+"[title]'] .locale-picker ul");
+    ul.find("li:first-child").trigger("click");
+    ul.find("li:last-child").trigger("click");
   }
 
   /**
