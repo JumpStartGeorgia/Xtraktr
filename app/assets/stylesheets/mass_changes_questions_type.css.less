@@ -16,6 +16,7 @@ td .r {
   thead > tr > th {
     padding-left: 6px;
     padding-right: 6px;
+    vertical-align:middle;
   }
   tbody tr td {
     background-color:transparent;
@@ -75,16 +76,13 @@ td .r {
 }
 
 .preview {
-  display:none;
-  position:fixed;  
-  left:10px;
   min-width:400px;
   min-height:400px;
   background-color: #fff;
   z-index:9999;
-  border:1px solid #cecece;
+
   font: 14px 'sourcesans_pro', 'sans-serif';
-}
+
 .preview .no_preview {
   padding:50px 10px 0;
 }
@@ -105,6 +103,7 @@ td .r {
 
 }
 .preview .move {
+  display:none;
   right:35px;
   background:transparent url(svg/move.svg) no-repeat center;
   &:hover {
@@ -112,11 +111,22 @@ td .r {
   }
 }
 .preview .close {
+  display:none;
   right:10px;
   background:transparent url(svg/close.svg) no-repeat -45px center;
   &:hover {
     cursor:pointer;
   }
+}
+}
+@media (min-width: 992px) {
+  .preview {
+    display:none;
+    position:fixed;  
+    left:10px;
+    border:1px solid #cecece;
+  }
+  .preview .close, .preview .move { display:initial; }
 }
 .locale-box {
   position:relative;  
@@ -166,10 +176,7 @@ td .r {
         &.reset {
           background:#fff url(svg/widget_remove.svg) no-repeat center;
         }
-      }
-      &.active {
-        display:inline-block;
-      }
+      }  
     }
 
     &:hover {
@@ -189,6 +196,13 @@ td .r {
   &:disabled {
     .locale-toggle {
       background-color:#ebebe4;
+    }
+  }
+  &.active {
+    .locale-picker {
+      ul {
+        display:inline-block;  
+      }
     }
   }
 }

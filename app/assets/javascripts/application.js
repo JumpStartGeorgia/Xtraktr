@@ -18,6 +18,7 @@
 //= require bootstrap.tooltip.min
 //= require twitter/bootstrap/collapse
 //= require dataTables/jquery.dataTables
+//= require dataTables/extras/dataTables.responsive
 //= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
 //= require dataTables/extras/dataTables.tableTools
 //= require modal

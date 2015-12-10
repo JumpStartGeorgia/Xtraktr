@@ -371,7 +371,7 @@ class DatasetsController < ApplicationController
       }
     end
   end
-
+   
   # set questions data types [:categorical, :numerical or :unknown]
   def mass_changes_questions_type
     respond_to do |format|
