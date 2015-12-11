@@ -970,20 +970,36 @@ class Dataset < CustomTranslation
     only(:donor).nin(donor: nil).map{|x| x.donor}.select{|x| x.present?}.uniq.sort
   end
 
-  def questions_data_recalculate(data)#, type)   
-      #if type == "numerical"
+  def questions_data_recalculate(data)#, type)       
       if data.keys.length
         data.keys.each {|t| 
           code = t.downcase
           dt = data[code]["data"]
           dt[0] = dt[0].to_i
           items = data_items.with_code(code)
-
           question = questions.with_code(code)
+
           if dt[0] == 1 
+            total = 0
+            frequency_data = {}
+            data_length = items.data.count
+            question.answers.sorted.each {|answer|
+              frequency_data[answer.value] = [items.data.select{|x| x == answer.value }.count, 0]
+            }
+
+            question.answers.sorted.each {|answer|
+              total += frequency_data[answer][0];
+            }
+
+            question.answers.sorted.each {|answer|
+              frequency_data[answer][1] = (frequency_data[answer][0].to_f/total*100).round(2)
+            }
+
             items.formatted_data = nil
-            items.frequency_data = nil
+            items.frequency_data = frequency_data
+            items.frequency_data_count = total
             question.descriptive_statistics = nil
+            
           elsif dt[0] == 2
             predefined_answers = question.answers.map { |f| f.value }
             num = question.numerical  
@@ -1043,9 +1059,6 @@ class Dataset < CustomTranslation
           items.save
         }
       end 
-    # elsif type == "categorical"
-
-    # end      
   end
   def self.calculate_percentile(array=[],percentile=0.0)
     # multiply items in the array by the required percentile 

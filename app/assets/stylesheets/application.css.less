@@ -7,7 +7,7 @@
  *= require jquery.ui.core
  *= require jquery.ui.theme
  *= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
- *= require dataTables/extras/dataTables.responsive
+ * require dataTables/extras/dataTables.responsive
  *= require dataTables/extras/dataTables.tableTools
  *= require bootstrap_and_overrides
  *= require tooltip
@@ -609,7 +609,26 @@ div.message {
 .js-block { display:block; }
 .js-inline { display:inline-block; }
 
-
+table.dataTable {
+  thead {
+    .sorting, .sorting_asc, .sorting_desc {
+      background-image:none;
+      &:after { content:"" !important; }
+    }
+    .sorting:after{ background:transparent url(/assets/svg/sort.svg) no-repeat 0px; }
+    .sorting_asc:after { background:transparent url(/assets/svg/sort.svg) no-repeat -11px; }
+    .sorting_desc:after { background:transparent url(/assets/svg/sort.svg) no-repeat -22px; }
+    .sorting:after, .sorting_asc:after,.sorting_desc:after
+    {
+      content: "";
+      display:inline-block;
+      width:10px;
+      height:16px;
+      margin:2px 0px 0px 10px;
+      float: right;
+    }
+  }
+}
 .dataTables_wrapper { /* datatable styles */
   .dataTables_filter
   {
@@ -666,6 +685,7 @@ div.message {
     font:14px 'sourcesans_pro_l', 'sans-serif';
     color: @3c4352;
   }
+
   table tfoot {
     display: table-header-group;
     td{
