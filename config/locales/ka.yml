@@ -1197,7 +1197,9 @@ ka:
         ამ გვერდის საშუალებით შეგიძლიათ ჩამოტვირთოთ მთლიანი მონაცემები თქვენთვის სასურველ ფორმატში.
 
         მონაცემების გვერდისგან განსხვავებით, საიდანაც მხოლოდ საჯაროდ ხელმისაწვდომი მონაცემების ჩამოტვირთვა ხდება, ამ გვერდიდან შეგიძლიათ ჩამოტვირთოთ მთლიანი მონაცემები.
+      recent_changes: "The dataset settings have recently changed and the download files have not been updated yet to reflect these changes. If you want the latest download files now, <span class='generate-files'>click here to generate the files</span>."
       no_files: "ჩამოსატვირთვი ფაილები ჯერ ისევ დამუშავების პროცესშია. გთხოვთ, შეამოწმოთ რამდენიმე წუთში. "
+      no_files2: In the meantime, you can download the original data file below.
       generating_text: |
         ჩამოსატვირთი ფაილები გენერირდება.
 
