@@ -4,13 +4,12 @@
 
 <hr />
 
-<% if @dataset.urls.present? && @dataset.urls.admin_codebook.present? %>
+<% if !@dataset.urls.present? && @dataset.urls.admin_codebook.present? %>
   <% if @dataset.reset_download_files? %>
     <div class="notification wide info">
       <div class='figure'></div>
       <div class='text'>
-        The dataset settings have recently changed and the download files have not been updated yet to reflect these changes.
-        If you want the latest download files now, <span class="generate-files">click here to generate the files</span>.
+        <%= t('.recent_changes').html_safe %>
       </div>
     </div>
   <% end %>
@@ -28,6 +27,12 @@
 <% else %>
   <p>
     <%= t('.no_files') %>
+  </p>
+  <p>
+    <%= t('.no_files2') %>
+  </p>
+  <p>
+    <a href="<%= @dataset.datafile.url %>" class="btn btn-primary" target="_blank" title="<%= t('download_data_options.title.original') %>" data-placement="top"><%= t('download_data_options.text.original') %></a>
   </p>
 <% end %>
 
