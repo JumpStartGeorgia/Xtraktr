@@ -19,7 +19,9 @@ Dataset.each do |d|
       }
       items.update_attributes({ frequency_data: frequency_data, frequency_data_total: total })          
       q.is_analysable = q.answers.all_for_analysis.count > 0
+      q.has_data_without_answers = total < code_data.length 
     else 
+      q.has_data_without_answers = true
       q.data_type = Question::DATA_TYPE_VALUES[:unknown]
       q.is_analysable = false
     end

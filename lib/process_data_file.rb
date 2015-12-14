@@ -191,6 +191,8 @@ module ProcessDataFile
                   # update question to indciate it has answers
                   question.has_code_answers = true
                   question.is_analysable = true
+                  question.data_type = Question::DATA_TYPE_VALUES[:categorical]
+                  are_question_codes_categorical[question_codes.index(row[0])] = true
                   # include question in public download
                   # question.can_download = true
                 else
@@ -292,12 +294,13 @@ module ProcessDataFile
                 frequency_data[answer.value] = [cnt, (cnt.to_f/code_data.length*100).round(2)]
               }
             end
-
+            #question.has_data_without_answers = total < code_data.length 
             if code_data.present?
               self.data_items_attributes = [{code: clean_code,
                                             original_code: clean_text(code),
                                             data: code_data
                                           }.merge(frequency_data.present? ? { frequency_data: frequency_data, frequency_data_count: total } : {})]
+
             else
               puts "******************************"
               puts "Column #{code_index} (supposed to be #{code}) of #{file_questions} does not exist."
