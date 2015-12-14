@@ -24,6 +24,8 @@ class Question < CustomTranslation
   field :has_code_answers, type: Boolean, default: false
   # whether or not the questions has answers that can be analazyed previously - has_code_answers_for_analysis
   field :is_analysable, type: Boolean, default: false
+  # whether or not the questions has data that is not defined in answers
+  field :has_data_without_answers, type: Boolean, default: true  
   # whether or not the question should not be included in the analysis
   field :exclude, type: Boolean, default: false
   # whether or not the question is tied to a shapeset
@@ -155,6 +157,8 @@ class Question < CustomTranslation
     #logger.debug "******** updating question flags for #{self.code}"
     self.has_code_answers = self.answers.count > 0
     self.is_analysable = self.answers.all_for_analysis.count > 0 || self.numerical_type?
+    values = self.answers.map{|d| d.value }
+    self.has_data_without_answers = self.dataset.data_items.unique_code_data(self.code).select{|d| !values.include?(d)}.length > 0
     self.has_can_exclude_answers = self.answers.has_can_exclude?
 
     return true

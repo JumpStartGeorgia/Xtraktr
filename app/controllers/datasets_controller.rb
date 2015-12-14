@@ -384,6 +384,7 @@ class DatasetsController < ApplicationController
         gon.private_user = Base64.urlsafe_encode64(current_user.id.to_s)
         gon.locale_picker_data = { reset: I18n.t("app.buttons.reset") }
         gon.no_answer = I18n.t("datasets.mass_changes_questions_type.no_answer")
+        gon.no_data = I18n.t("datasets.mass_changes_questions_type.no_data")
         gon.percent = I18n.t("datasets.mass_changes_questions_type.percent")
         gon.integer = I18n.t("datasets.mass_changes_questions_type.integer")
         gon.decimal = I18n.t("datasets.mass_changes_questions_type.decimal")
@@ -403,7 +404,8 @@ class DatasetsController < ApplicationController
               ocode: q.original_code,
               question: q.text,
               data_type: q.data_type,
-              has_answers: q.has_code_answers,              
+              has_answers: q.has_code_answers,    
+              has_data_without_answers: q.has_data_without_answers,
               num: {
                 type: 0,
                 width: 0,

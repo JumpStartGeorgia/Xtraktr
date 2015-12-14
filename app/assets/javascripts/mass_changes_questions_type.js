@@ -82,13 +82,13 @@ $(document).ready(function (){
       * Build bar or histogramm based and prepaired data
       */
       render_chart: function () {
-        //console.log("render chart");
         var t = this,
           nc = false,
           code = cq.code,
           sub_id = cq.sub_id,
           type = cq.type,
           ch_code = cache[code];
+        console.log("render chart ", cache[code].general.orig_data.length);
 
         if(preview.code !== code) { // if code is new then chart should be rendered from scratch, else just update labels and data
           nc = true;
@@ -232,10 +232,11 @@ $(document).ready(function (){
       prepaire_data: function (code) {
         console.log("prepaire data");
         var t = this,
-          meta = get_code_meta(code);
+          meta = get_code_meta(code),
           code_meta = meta.data,
           data_type = code_meta[0],
           sub_id = code_meta.join(";");
+           console.log(meta, code_meta);
 
         cq = { code: code, sub_id: sub_id, type: data_type, meta: code_meta, titles: (data_type === 2 ? meta.titles : []) };
         //console.log(meta, code_meta, data_type, sub_id, cq);
@@ -262,7 +263,7 @@ $(document).ready(function (){
           url: view_chart_path,
           success: function (d) {
             console.log("remote",d);
-            cache[code].general = { dataset: d.dataset, orig_data: d.data, formatted_data: d.data, question: d.question };
+            cache[code].general = { dataset: d.dataset, orig_data: d.data.slice(), formatted_data: d.data.slice(), question: d.question };
             console.log(" blah", d.question, data_type, sub_id);
             if(data_type === d.question.data_type) {
               if(d.frequency_data !== null) {
@@ -337,7 +338,7 @@ $(document).ready(function (){
         },
         {"data":"data_type",
           render: function (data, type, full) {
-            return "<div><input class='numerical' type='radio' value='2' name='question["+full.code +"][data_type]'" + (data == 2 ? " checked": "") + " data-o='"+data+"'></div>";
+            return "<div"+(full.has_data_without_answers ? "" : " title='"+ gon.no_data+"'")+"><input class='numerical' type='radio' value='2' name='question["+full.code +"][data_type]'" + (data == 2 ? " checked": "") + " data-o='"+data+"' "+(full.has_data_without_answers ? "" : " disabled") +"></div>";
           },
           class: "c",
           "orderDataType": "dom-radio",
@@ -525,6 +526,7 @@ $(document).ready(function (){
           tr.find(".conditional, .conditional input").removeAttr("disabled");
           tr.find(".locale-picker").removeAttr("disabled");
           prepare_numerical_fields(code, function () { // prepaire data and then preview if window is open
+
           });
         }
         else {
@@ -703,6 +705,8 @@ $(document).ready(function (){
   * @param {callback} callback - function that is called when data is ready
   */
   function prepare_numerical_fields (code, callback) {
+    //console.log("prepare_numerical_fields data length ", cache[code].general.orig_data.length);
+
     row_loader(code, true);
 
     if(isset(cache, code + ".general.orig_data")) {
@@ -726,8 +730,7 @@ $(document).ready(function (){
         data: to_send,
         url: view_chart_path,
         success: function (d) {
-           console.log("prepaire numerical", d);
-          cache[code].general = { dataset: d.dataset, orig_data: d.data, formatted_data: d.data, question: d.question };
+          cache[code].general = { dataset: d.dataset, orig_data: d.data.slice(), formatted_data: d.data.slice(), question: d.question };
           prepare_numerical_fields_callback();
           callback();
         }
@@ -746,8 +749,11 @@ $(document).ready(function (){
         predefined_answers = question.hasOwnProperty("answers") ? question.answers.map(function (d){ return d.value; }) : [],
         num = [2, 0, 10, 0, 0, 0, 0, 0, 0],
         predefinedData = [];
+        console.log(predefined_answers);
       formatted.forEach(function (d, i) {
+        console.log(d);
         if(isN(d) && predefined_answers.indexOf(d) === -1) { // only numbers and that are not predefined answer allowed
+
           formatted[i] = +d;
           if(num[1] !== 1 && !isInteger(formatted[i])) { num[1] = 1; } // if any number is float then change type
           if(formatted[i] < min) { min = formatted[i]; }
@@ -760,7 +766,7 @@ $(document).ready(function (){
       predefinedData.forEach(function (d, i) { // delete data that is predefined or not number
         formatted.splice(d-i, 1); // minus i because formatted will be changed by splice, and it will be changed by minus one at a time or each i times
       });
-
+       console.log(formatted.length);
       if(min === Number.MAX_VALUE) { min = 0; } // no min value then default to 0
       if(max === Number.MIN_VALUE) { max = min + 1; } // if no max then min + 1
       if(max-min<10) { num[2] = 1; }
@@ -769,7 +775,6 @@ $(document).ready(function (){
       num[5] = Math.floor(num[3] / num[2]) * num[2]; // min_range = floor(min/width) * width
       num[6] = Math.ceil(num[4] / num[2]) * num[2];  // max_range = ceil(max/width) * width
       num[7] = (num[6] - num[5]) / num[2];           // size = (max_range - min_range) / width
-
       var sub_id = num.join(";");
       cache[code].data[sub_id] = { fd: replicate2(num[7], 0) }; // create empty arrays for fd(two dimensional [count,percent]) and fill with 0
       cache[code].data["default"] = { fd: replicate2(num[7], 0)}; // create empty arrays for fd(two dimensional [count,percent]) and fill with 0
@@ -782,6 +787,7 @@ $(document).ready(function (){
           var ind = d === num[5] ? 0 : Math.floor((d-num[5])/num[2]-0.00001); // index for group
           fd[ind][0] += 1; // count calculating, count is first
           fd2[ind][0] += 1; // same as above
+           console.log("ever goes here");
         }
       });
 
@@ -789,7 +795,6 @@ $(document).ready(function (){
       fd.forEach(function (d) { total+=d[0]; }); 
 
       num[8] = total;
-
       cache[code].data[sub_id]["fdm"] = num; // saving meta data
       cache[code].data["default"]["fdm"] = num;
 
@@ -799,10 +804,9 @@ $(document).ready(function (){
       fd.forEach(function (d, i) {
         fd[i][1] = Math.round10(d[0]/total*100, -2); // calculating percent for each group based on total
       });
-
       set_code_meta(code, num);
-
       row_loader(code, false);
+             console.log(fd);
     }
   }
 
@@ -836,7 +840,7 @@ $(document).ready(function (){
   * @returns {array} - array of ticks for the range
   */
   function get_frequency_data (code, meta, data_type) {
-
+     console.log(cache[code].general.orig_data.length , "size of orig_data");
     if(data_type === 1) {
       var total = 0,
         frequency_data = {},
