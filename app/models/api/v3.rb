@@ -706,7 +706,6 @@ private
     else
       results = {total_responses: 0, total_possible_responses: total_possible_responses, analysis: []}
     end
-
     if data.present?
       if weight_values.present?
         if @_question.categorical_type?
@@ -748,8 +747,9 @@ private
 
           num = @_question.numerical
           fd = Array.new(num.size, 0)
+          fdw = Array.new(num.size, 0)
           fd.each_with_index{|x, i| fd[i] = [0,0] }
-          fdw = fd.clone
+          fdw.each_with_index{|x, i| fdw[i] = [0,0] }
 
           #formatted and grouped data calculation
           data.each_with_index {|d,i|
@@ -770,9 +770,9 @@ private
           } 
           total = 0
           total_w = 0
-          fd.each {|x| total+=x[0]
-          }
+          fd.each {|x| total+=x[0] }
           fdw.each {|x| total_w+=x[0] }
+           Rails.logger.info("--------------------------------------------#{total} -- #{total_w}")
           results[:total_responses] = total
 
           fd.each_with_index {|x,i| 
