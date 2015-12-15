@@ -1,4 +1,4 @@
-<%= semantic_form_for @help_category do |f| %>
+<%= semantic_form_for @help_category, url: admin_help_categories_path do |f| %>
   <%= f.inputs do %>
     <%= f.input :name %>
   <% end %>

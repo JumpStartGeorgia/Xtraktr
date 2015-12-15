@@ -5,16 +5,16 @@ class Admin::HelpCategoriesController < ApplicationController
 
   def index
     @help_categories = HelpCategory.all
-    respond_with(@help_categories)
+    respond_with(:admin, @help_categories)
   end
 
   def show
-    respond_with(@help_category)
+    respond_with(:admin, @help_category)
   end
 
   def new
     @help_category = HelpCategory.new
-    respond_with(@help_category)
+    respond_with(:admin, @help_category)
   end
 
   def edit
@@ -23,17 +23,17 @@ class Admin::HelpCategoriesController < ApplicationController
   def create
     @help_category = HelpCategory.new(params[:help_category])
     flash[:notice] = 'HelpCategory was successfully created.' if @help_category.save
-    respond_with(@help_category)
+    respond_with(:admin, @help_category)
   end
 
   def update
     flash[:notice] = 'HelpCategory was successfully updated.' if @help_category.update_attributes(params[:help_category])
-    respond_with(@help_category)
+    respond_with(:admin, @help_category)
   end
 
   def destroy
     @help_category.destroy
-    respond_with(@help_category)
+    respond_with(:admin, @help_category)
   end
 
   private
