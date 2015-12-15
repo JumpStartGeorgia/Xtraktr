@@ -58,7 +58,7 @@ class Admin::HelpCategoriesController < ApplicationController
 
     respond_to do |format|
       format.html do
-        redirect_to admin_help_categories_url,
+        redirect_to admin_help_categories_path,
                     flash: {
                       success:  t('app.msgs.success_deleted',
                                   obj: t('mongoid.models.help_category.one'))
