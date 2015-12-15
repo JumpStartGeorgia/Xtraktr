@@ -20,3 +20,5 @@
 #ignore db config
 /config/mongoid.yml
 
+# Don't commit secrets and env variables set in .env
+.env

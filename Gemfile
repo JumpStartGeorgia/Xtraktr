@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+gem 'dotenv-rails', '~> 1.0.2'
+
 gem 'bundler'
 gem "rails", "3.2.18"
 gem "mongoid", "~> 3.1.6"
@@ -65,6 +67,8 @@ end
 group :development do
   gem 'thin' # webserver for development
  	gem "mailcatcher", "0.5.12" # small smtp server for dev, http://mailcatcher.me/
+  gem 'pry-byebug', '~> 3.3'
+
   # gem 'rb-inotify', '~> 0.8.8' # rails dev boost needs this
   # gem 'rails-dev-boost', :git => 'git://github.com/thedarkone/rails-dev-boost.git' # speed up loading page in dev mode
 end
