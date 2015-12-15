@@ -2,6 +2,9 @@ require 'robots_generator'
 
 BootstrapStarter::Application.routes.draw do
 
+  resources :help_categories
+
+
   # user robots generator to avoid non-production sites from being indexed
   match '/robots.txt' => RobotsGenerator
 
