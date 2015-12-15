@@ -382,6 +382,3 @@ DEPENDENCIES
   useragent!
   whenever
   zipruby-compat!
-
-BUNDLED WITH
-   1.10.6
