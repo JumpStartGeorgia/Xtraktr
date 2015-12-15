@@ -260,8 +260,10 @@ class Dataset < CustomTranslation
           dt = data[code]["data"]
           
           q["data_type"] = dt[0] = dt[0].to_i
-          if dt[0] == 1
-             q["numerical"] = nil
+          if dt[0] == 0
+            q["numerical"] = nil
+          elsif dt[0] == 1
+            q["numerical"] = nil
           elsif dt[0] == 2
             num = { 
               type: dt[1].to_i,
@@ -1061,7 +1063,12 @@ class Dataset < CustomTranslation
           items = data_items.with_code(code)
           question = questions.with_code(code)
 
-          if dt[0] == 1 
+          if dt[0] == 0
+            items.formatted_data = nil
+            items.frequency_data = nil
+            items.frequency_data_total = nil
+            question.descriptive_statistics = nil
+          elsif dt[0] == 1 
             total = 0
             frequency_data = {}
             data_length = items.data.count
@@ -1079,7 +1086,7 @@ class Dataset < CustomTranslation
 
             items.formatted_data = nil
             items.frequency_data = frequency_data
-            items.frequency_data_count = total
+            items.frequency_data_total = total
             question.descriptive_statistics = nil
             
           elsif dt[0] == 2

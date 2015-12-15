@@ -478,7 +478,7 @@ class DatasetsController < ApplicationController
             .exception_notification(request.env, e)
             .deliver
         end
-        render 'message.js'
+        render 'message', :formats => [:js]
       }
     end
   end

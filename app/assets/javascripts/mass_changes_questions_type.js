@@ -28,7 +28,6 @@ $(document).ready(function (){
           colors: ["#C6CA53"],
           credits: { enabled: false }
         });
-//        $("body").append("");
         this.selector = $("#preview");
         this.bind();
       },
@@ -396,7 +395,8 @@ $(document).ready(function (){
   * Initialize all binds
   */
   function init_binds () {
-    form.submit( function () { // callback on save button click
+    form.submit( function (e) { // callback on save button click
+      e.preventDefault();
       var keys = Object.keys(dirty_rows),
         current_data = {};
 
@@ -422,17 +422,25 @@ $(document).ready(function (){
       });
       var tr;
       function set_code_original_values (d) {
-        tr = mass_change.find("tr#" + code_format(d));
+        tr = datatable.find("tr#" + code_format(d));
         var str = "[name='question["+d+"]",
-          dao = "data-o";
+          dao = "data-o",
+          cd = current_data[d].data;
 
-        tr.find(str+"[data_type]']").attr("data-o", current_data[d][0]);
-        str += "[numerical]";
+        tr.find(str+"[data_type]']").attr("data-o", cd[0]);
 
-        tr.find(str+"[type]']").attr(dao, current_data[d][1]);
-        tr.find(str+"[width]']").attr(dao, current_data[d][2]).attr("value", current_data[d][2]);
-        tr.find(str+"[min]']").attr(dao, current_data[d][3]).attr("value", current_data[d][3]);
-        tr.find(str+"[max]']").attr(dao, current_data[d][4]).attr("value", current_data[d][4]);
+        if(cd[0] === 2) {
+          str += "[numerical]";
+          Object.keys(current_data[d].titles).forEach(function (k) {
+            tr.find(str+"[title]'] .locale-picker ul li[data-key='" + k + "']").attr("data-orig-value", current_data[d].titles[k]);
+          });
+
+          // titles should be fixed
+          tr.find(str+"[type]']").attr(dao, cd[1]);
+          tr.find(str+"[width]']").attr(dao, cd[2]).attr("value", cd[2]);
+          tr.find(str+"[min]']").attr(dao, cd[3]).attr("value", cd[3]);
+          tr.find(str+"[max]']").attr(dao, cd[4]).attr("value", cd[4]);
+        }
       }
       return false;
     });
@@ -444,7 +452,7 @@ $(document).ready(function (){
         t = $(e.target);
 
       if (!tr.hasClass("selected")) {
-        mass_change.find("tr.selected").removeClass("selected");
+        datatable.find("tr.selected").removeClass("selected");
         tr.toggleClass("selected");
       }
 
@@ -464,7 +472,7 @@ $(document).ready(function (){
         if(checked) { // so when radio is alreay checked
           var td = t.closest("td"),
             old_value = t.attr("data-o"),
-            new_value = +t.val();
+            new_value = 0;//+t.val();
 
           tr.find(".view-chart").attr("disabled", true);
 
@@ -538,7 +546,6 @@ $(document).ready(function (){
   */
   function init_locale_picker () {
     $(document).on("click", ".locale-picker:not([disabled]) .locale-toggle", function (){ // toggle to switch between language is first block with currently selected language
-       
       var t = $(this),
         key = t.text(),
         p = t.parent(),
@@ -633,14 +640,20 @@ $(document).ready(function (){
   * @desc If question is categorical then return just {data: [data_type]}, else (numerical) { data: [data_type, type, width, min, max, min_range, max_range, size], titles: { lang_key: text}}
   */
   function get_code_meta (code) {
-    var tr = mass_change.find("tr#" + code_format(code)),
+    var tr = datatable.find("tr#" + code_format(code)),
       tmp = "[name='question["+code+"][numerical]",
-      data_type = +tr.find("[name='question["+code+"][data_type]']:checked").val(),
+      data_type = tr.find("[name='question["+code+"][data_type]']:checked").val(),
       titles = {},
       out;
 
+    if(data_type === undefined) { data_type = 0; }
+    data_type = +data_type;
+
+    if(data_type === 0) { // unknown
+      return { data: [0] };
+    }
     if(data_type === 1) { // categorical
-      return { data: [data_type] };
+      return { data: [1] };
     }
     else if(data_type === 2) { // numerical
       var input = tr.find(".locale-box input"),
@@ -672,7 +685,7 @@ $(document).ready(function (){
   * @param {array} meta - Meta data for this question code
   */
   function set_code_meta (code, meta) {
-    var tr = mass_change.find("tr#" + code_format(code)),
+    var tr = datatable.find("tr#" + code_format(code)),
       str = "[name='question["+code+"][numerical]";
 
     tr.find(str+"[type]']").val(meta[1]);
@@ -887,7 +900,7 @@ $(document).ready(function (){
   * @param {boolean} start - State for loader if true then show else hiding
   */
   function row_loader (code, start) {
-    var tr = mass_change.find("tr#" + code_format(code));
+    var tr = datatable.find("tr#" + code_format(code));
 
     if(start) {
       tr.attr("disabled", "disabled");

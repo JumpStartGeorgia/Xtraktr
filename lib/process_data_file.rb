@@ -291,7 +291,7 @@ module ProcessDataFile
               self.data_items_attributes = [{code: clean_code,
                                             original_code: clean_text(code),
                                             data: code_data
-                                          }.merge(frequency_data.present? ? { frequency_data: frequency_data, frequency_data_count: total } : {})]
+                                          }.merge(frequency_data.present? ? { frequency_data: frequency_data, frequency_data_total: total } : {})]
 
             else
               puts "******************************"
