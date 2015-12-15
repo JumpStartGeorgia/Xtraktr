@@ -790,40 +790,41 @@ private
     dataset.questions.each_with_index do |question, index|
 
       tmp = dataset.data_items.code_data(question.code)
-      raw = tmp # raw data
-      text = tmp.dup # text data
-      # now replace data values with answer text
-      answers = question.answers.only(:value,:text).map{|x| [x.value, x.text]}
+      if tmp.present?
+        raw = tmp # raw data
+        text = tmp.dup # text data
+        # now replace data values with answer text
+        answers = question.answers.only(:value,:text).map{|x| [x.value, x.text]}
 
-      answers_values = answers.map{|x| x[0] }
-      answers_text = {}
-      answers.each{|x| answers_text[x[0]] = clean_text(x[1]) }
-      #.each do |answer|
-        text.map!{|x| answers_values.index(x).present? ? answers_text[x] : x } #select{ |x| x == answer.value }.each{ |x| x.replace( answer.text ) }
-      #end
-      text_ascii = text.dup #.select{ |x| x == answer.value }.each{ |x| x.replace(answer.text) }
-      # # clean the text
-      # text.each_with_index do |x,i|
-      #   if x.present?
-      #   # s = x #clean_text(x)
-      #     # x.replace(s)
-      #     text_ascii[i].replace(Unidecoder.decode(x, LANG_MAP_TO_ENG3))
-      #   end
-      # end
-      text_ascii.each do |x|
-        x.replace(Unidecoder.decode(x, LANG_MAP_TO_ENG3)) if x.present?
+        answers_values = answers.map{|x| x[0] }
+        answers_text = {}
+        answers.each{|x| answers_text[x[0]] = clean_text(x[1]) }
+        #.each do |answer|
+          text.map!{|x| answers_values.index(x).present? ? answers_text[x] : x } #select{ |x| x == answer.value }.each{ |x| x.replace( answer.text ) }
+        #end
+        text_ascii = text.dup #.select{ |x| x == answer.value }.each{ |x| x.replace(answer.text) }
+        # # clean the text
+        # text.each_with_index do |x,i|
+        #   if x.present?
+        #   # s = x #clean_text(x)
+        #     # x.replace(s)
+        #     text_ascii[i].replace(Unidecoder.decode(x, LANG_MAP_TO_ENG3))
+        #   end
+        # end
+        text_ascii.each do |x|
+          x.replace(Unidecoder.decode(x, LANG_MAP_TO_ENG3)) if x.present?
+        end
+        
+        csv_data[:raw][:admin]  << raw
+        csv_data[:text][:admin] << text # text data
+        csv_data[:text_ascii][:admin] << text_ascii # text ascii data
+
+        if question.can_download? # now add to public if needed
+          csv_data[:raw][:public] << raw
+          csv_data[:text][:public] << text
+          csv_data[:text_ascii][:public] << text_ascii
+        end
       end
-      
-      csv_data[:raw][:admin]  << raw
-      csv_data[:text][:admin] << text # text data
-      csv_data[:text_ascii][:admin] << text_ascii # text ascii data
-
-      if question.can_download? # now add to public if needed
-        csv_data[:raw][:public] << raw
-        csv_data[:text][:public] << text
-        csv_data[:text_ascii][:public] << text_ascii
-      end
-
     end
 
     #######
