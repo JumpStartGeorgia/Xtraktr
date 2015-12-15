@@ -35,8 +35,21 @@ class Admin::HelpCategoriesController < ApplicationController
   end
 
   def update
-    flash[:notice] = 'HelpCategory was successfully updated.' if @help_category.update_attributes(params[:help_category])
-    respond_with(:admin, @help_category)
+    @help_category = HelpCategory.find(params[:id])
+
+    respond_to do |format|
+      if @help_category.update_attributes(params[:help_category])
+        format.html do
+          redirect_to admin_help_categories_path,
+                      flash: {
+                        success: t('app.msgs.success_created',
+                                   obj: t('mongoid.models.help_category.one'))
+                      }
+        end
+      else
+        format.html { render action: 'edit' }
+      end
+    end
   end
 
   def destroy
