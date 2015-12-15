@@ -53,8 +53,18 @@ class Admin::HelpCategoriesController < ApplicationController
   end
 
   def destroy
+    @help_category = HelpCategory.find(params[:id])
     @help_category.destroy
-    respond_with(:admin, @help_category)
+
+    respond_to do |format|
+      format.html do
+        redirect_to admin_help_categories_url,
+                    flash: {
+                      success:  t('app.msgs.success_deleted',
+                                  obj: t('mongoid.models.help_category.one'))
+                    }
+      end
+    end
   end
 
   private
