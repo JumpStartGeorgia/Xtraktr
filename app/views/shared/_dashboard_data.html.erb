@@ -224,6 +224,17 @@
 
       <div class="col details">
         <div>
+          <div class="col k"><%= model_class.human_attribute_name(:categories) %>: </div>
+          <div class="col">
+           <% @dataset.categories.each {|x| %>
+                  <%= link_to explore_data_path(category: x.permalink) do %>
+                    <div class="text"><span><%= x.name %></span></div>
+                  <% end %>
+              <% } %>
+          </div>
+        </div>
+
+        <div>
           <div class="col k"><%= model_class.human_attribute_name(:gathered_at) %>: </div>
           <div class="col">
             <%= format_gathered_dates(@dataset.start_gathered_at, @dataset.end_gathered_at) %>

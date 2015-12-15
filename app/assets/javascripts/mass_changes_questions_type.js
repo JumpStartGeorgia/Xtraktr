@@ -24,7 +24,7 @@ $(document).ready(function (){
       */
       init: function () {
         Highcharts.setOptions({
-          lang: { thousandsSep: ',' },
+          lang: { thousandsSep: "," },
           colors: ["#C6CA53"],
           credits: { enabled: false }
         });
@@ -66,7 +66,6 @@ $(document).ready(function (){
       * @param {boolean} only_if_opened - with closed property allows to control when to shows preview
       */
       show: function (code, only_if_opened) {
-        console.log("show");
         if(typeof only_if_opened !== "boolean") { only_if_opened = false; }
         if(only_if_opened && this.closed) { return; }
         if($("tr#" + code_format(code)).find("input.numerical:checked").val() !== undefined) {
@@ -88,7 +87,6 @@ $(document).ready(function (){
           sub_id = cq.sub_id,
           type = cq.type,
           ch_code = cache[code];
-        console.log("render chart ", cache[code].general.orig_data.length);
 
         if(preview.code !== code) { // if code is new then chart should be rendered from scratch, else just update labels and data
           nc = true;
@@ -101,7 +99,6 @@ $(document).ready(function (){
           $preview = $("#preview"),
           chart;
         $preview.show();
-
 
         var histogramm = function () {
           var sum = cd.reduce(function (a, b){return a+b;});
@@ -151,6 +148,7 @@ $(document).ready(function (){
           }
           else {
             chart = $preview.find(".chart").highcharts();
+            chart.xAxis[0].setTitle({ text: cq.titles[$("html").attr("lang")] });
             chart.series[0].setData(cd.map(function (d, i){ return { x:cm[5] +cm[2]*i, y: d[0], percent: d[1] }; }), false, true);
             chart.isDirtyBox = true;
             chart.redraw();
@@ -230,27 +228,21 @@ $(document).ready(function (){
       * @param {string} code - Question code that was updated
       */
       prepaire_data: function (code) {
-        console.log("prepaire data");
         var t = this,
           meta = get_code_meta(code),
           code_meta = meta.data,
           data_type = code_meta[0],
           sub_id = code_meta.join(";");
-           console.log(meta, code_meta);
 
         cq = { code: code, sub_id: sub_id, type: data_type, meta: code_meta, titles: (data_type === 2 ? meta.titles : []) };
-        //console.log(meta, code_meta, data_type, sub_id, cq);
 
         if(isset(cache, code + ".data")) { // if question code has data
           if(!isset(cache[code], "data." + sub_id)) {
             cache[code]["data"][sub_id] = get_frequency_data(code, code_meta, data_type);
-            console.log("local1", sub_id, cache[code]["data"][sub_id], code, code_meta, data_type);
           }
           t.render_chart();
-          console.log("local2");
           return;
         }
-        console.log("remote start");
         cache[code] = { code: code, general: {}, data: {}}; // if there is no locale info then get it remotely
 
         var to_send = { dataset_id: dataset_id, question_code: code };
@@ -262,12 +254,9 @@ $(document).ready(function (){
           data: to_send,
           url: view_chart_path,
           success: function (d) {
-            console.log("remote",d);
             cache[code].general = { dataset: d.dataset, orig_data: d.data.slice(), formatted_data: d.data.slice(), question: d.question };
-            console.log(" blah", d.question, data_type, sub_id);
             if(data_type === d.question.data_type) {
               if(d.frequency_data !== null) {
-                // console.log("has fr");
                 cache[code].data[sub_id] = { fd: d.frequency_data };
                 if(data_type === 2) {
                   cache[code].data[sub_id]["dfm"] = d.frequency_data_meta;
@@ -281,7 +270,6 @@ $(document).ready(function (){
               }
             }
             else {
-               console.log("overHere");
               cache[code]["data"][sub_id] = get_frequency_data(code, code_meta, data_type);
             }
             t.render_chart();
@@ -451,7 +439,6 @@ $(document).ready(function (){
 
     $(datatable).on("click", "tr", function (e, programmatic) { // callback on table row(tr) click
       if(programmatic) { return; }
-      console.log("tr click", programmatic);
       var tr = $(this),
         code = tr.attr("id"),
         t = $(e.target);
@@ -462,7 +449,6 @@ $(document).ready(function (){
       }
 
       if(t.hasClass("view-chart")) { // callback on view button click that shows preview if possible
-        console.log("tr click view-chart");
         tr.attr("disabled", "disabled");
         t.parent().addClass("row-loader");
 
@@ -472,8 +458,6 @@ $(document).ready(function (){
         t.parent().removeClass("row-loader");
       }
       else if(t.hasClass("numerical")) {
-        console.log("tr click numerical");
-        
         var checked = (t.attr("checked") === "checked");
 
         tr.find("input[type='radio']").removeAttr("checked").prop("checked", false);
@@ -493,15 +477,14 @@ $(document).ready(function (){
         }
         t.attr("checked", !checked).prop("checked", !checked);
       }
-      else {
-        console.log("tr click general");
+      else if (t.get(0).nodeName !== "INPUT" && t.get(0).nodeName !== "SELECT") {
         preview.show(code, true);
       }
     });
 
     $(datatable).on("change", "input, select", function (e) { // callback for input fields change
-      console.log("input change");
       e.stopPropagation();
+      e.stopImmediatePropagation();
       var t = $(this),
         td = t.closest("td"),
         tr = td.closest("tr"),
@@ -526,14 +509,17 @@ $(document).ready(function (){
           tr.find(".conditional, .conditional input").removeAttr("disabled");
           tr.find(".locale-picker").removeAttr("disabled");
           prepare_numerical_fields(code, function () { // prepaire data and then preview if window is open
-
+            preview.show(code, true);
           });
         }
         else {
           tr.find(".conditional, .conditional input").attr("disabled", "disabled");
+          preview.show(code, true);
         }
       }
-      preview.show(code, true);
+      else {
+        preview.show(code, true);
+      }
     });
 
     $("a.btn-select-all").click(function (){ // callback on all checkbox click in header of table for categorical type it will switch all questions to be categorical
@@ -705,8 +691,6 @@ $(document).ready(function (){
   * @param {callback} callback - function that is called when data is ready
   */
   function prepare_numerical_fields (code, callback) {
-    //console.log("prepare_numerical_fields data length ", cache[code].general.orig_data.length);
-
     row_loader(code, true);
 
     if(isset(cache, code + ".general.orig_data")) {
@@ -747,11 +731,9 @@ $(document).ready(function (){
         isFloat,
         question = cache[code].general.question,
         predefined_answers = question.hasOwnProperty("answers") ? question.answers.map(function (d){ return d.value; }) : [],
-        num = [2, 0, 10, 0, 0, 0, 0, 0, 0],
+        num = [2, 0, 10, 0, 0, 0, 0, 0],
         predefinedData = [];
-        console.log(predefined_answers);
       formatted.forEach(function (d, i) {
-        console.log(d);
         if(isN(d) && predefined_answers.indexOf(d) === -1) { // only numbers and that are not predefined answer allowed
 
           formatted[i] = +d;
@@ -766,7 +748,6 @@ $(document).ready(function (){
       predefinedData.forEach(function (d, i) { // delete data that is predefined or not number
         formatted.splice(d-i, 1); // minus i because formatted will be changed by splice, and it will be changed by minus one at a time or each i times
       });
-       console.log(formatted.length);
       if(min === Number.MAX_VALUE) { min = 0; } // no min value then default to 0
       if(max === Number.MIN_VALUE) { max = min + 1; } // if no max then min + 1
       if(max-min<10) { num[2] = 1; }
@@ -781,20 +762,17 @@ $(document).ready(function (){
 
       var fd = cache[code].data[sub_id].fd,
         fd2 = cache[code].data["default"].fd;
-
       formatted.forEach(function (d){
         if(d >= num[3] && d <= num[4]) { // only greater min and less max are allowed
           var ind = d === num[5] ? 0 : Math.floor((d-num[5])/num[2]-0.00001); // index for group
           fd[ind][0] += 1; // count calculating, count is first
           fd2[ind][0] += 1; // same as above
-           console.log("ever goes here");
         }
       });
 
       var total = 0;
-      fd.forEach(function (d) { total+=d[0]; }); 
+      fd.forEach(function (d) { total+=d[0]; });
 
-      num[8] = total;
       cache[code].data[sub_id]["fdm"] = num; // saving meta data
       cache[code].data["default"]["fdm"] = num;
 
@@ -806,7 +784,6 @@ $(document).ready(function (){
       });
       set_code_meta(code, num);
       row_loader(code, false);
-             console.log(fd);
     }
   }
 
@@ -840,20 +817,20 @@ $(document).ready(function (){
   * @returns {array} - array of ticks for the range
   */
   function get_frequency_data (code, meta, data_type) {
-     console.log(cache[code].general.orig_data.length , "size of orig_data");
+    var raw_data = cache[code].general.orig_data,
+      frequency_data,
+      total = 0;
     if(data_type === 1) {
-      var total = 0,
-        frequency_data = {},
-        raw_data = cache[code].general.orig_data,
-        cnt,
+      var cnt,
         answers = isset(cache[code], "general.question.answers") ? cache[code].general.question.answers.map(function (d){ return d.value; }) : [];
-         console.log("raw_data", raw_data.length);
+
+      frequency_data = {};
+
       answers.forEach(function (answer) {
         frequency_data[answer] = [raw_data.filter(function (d) { return d === answer; }).length, 0];
       });
 
       answers.forEach(function (d) { total+=frequency_data[d][0]; });
-       console.log(total, "total" , raw_data, cache[code]);
       answers.forEach(function (d, i) {
         frequency_data[d][1] = Math.round10(parseFloat(frequency_data[d][0])/total*100, -2); // calculating percent for each group based on total
       });
@@ -862,10 +839,11 @@ $(document).ready(function (){
     }
     else if(data_type === 2) {
       var ind,
-        frequency_data = replicate2(meta[7], 0),
         predefined_answers = isset(cache[code], "general.question.answers") ? cache[code].general.question.answers.map(function (d){ return d.value; }) : [];
 
-      if (Array.isArray(raw_data)) { // if data is there
+      frequency_data = replicate2(meta[7], 0);
+
+      if(Array.isArray(raw_data)) { // if data is there
         raw_data.forEach(function (raw_d) { // calculate each groups count
           var d = raw_d;
           if(isN(d) && predefined_answers.indexOf(d) === -1) { // only numbers and that are not predefined answer allowed
@@ -878,17 +856,13 @@ $(document).ready(function (){
             }
           }
         });
-        var total = 0;
         frequency_data.forEach(function (d) { total+=d[0]; });
-
-        meta.push(total); // saving total in separate property
-
         frequency_data.forEach(function (d, i) {
           frequency_data[i][1] = Math.round10(d[0]/total*100, -2); // calculating percent for each group based on total
         });
       }
-      return { fd: frequency_data, fdm: meta, fdt: meta[8] };
-    }    
+      return { fd: frequency_data, fdm: meta, fdt: total };
+    }
   }
 
   /**

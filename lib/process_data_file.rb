@@ -294,7 +294,7 @@ module ProcessDataFile
                 frequency_data[answer.value] = [cnt, (cnt.to_f/code_data.length*100).round(2)]
               }
             end
-            #question.has_data_without_answers = total < code_data.length 
+            question.has_data_without_answers = total < code_data.select{|d| !d.nil? }.length 
             if code_data.present?
               self.data_items_attributes = [{code: clean_code,
                                             original_code: clean_text(code),

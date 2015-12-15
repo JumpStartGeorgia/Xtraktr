@@ -61,24 +61,19 @@ class Api::V3
       begin # decode the id
         user_id = Base64.urlsafe_decode64(private_user_id)
       end
-          Rails.logger.info("-------------------------------------------2-#{}")
       # get the dataset
       dataset = Dataset.by_id_for_user(dataset_id, user_id) if user_id.present?
     else
       dataset = Dataset.is_public.find(dataset_id)
-       Rails.logger.info("-------------------------------------------5-#{dataset}")
     end
 
     if dataset.nil?
       return {errors: [{status: '404', detail: I18n.t('api.msgs.no_dataset') }]}    
     end
-        Rails.logger.info("-------------------------------------------3-#{}")
     question = dataset.questions.with_code(question_code)
-    Rails.logger.info("-------------------------------------------6-#{question_code} #{question.inspect}")
     if question.nil? 
       return {errors: [{status: '404', detail: I18n.t('api.msgs.no_question') }]}    
     end
-Rails.logger.info("-------------------------------------------7-")
     # if language provided, set it
     if language.present? && dataset.languages.include?(language)
       dataset.current_locale = language
@@ -642,7 +637,7 @@ private
           # only keep the data that is in the list of question answers
           # - this is where can_exclude removes the unwanted answers
           answer_values = question[:answers].present? ? question[:answers].map{|x| x[:value]} : []
-
+          to_delete_indexes = []
           if question[:data_type] == DATA_TYPE_VALUES[:categorical]
             to_delete_indexes = merged_data.each_index.select{|i| !answer_values.include? merged_data[i][1] }            
           elsif question[:data_type] == DATA_TYPE_VALUES[:numerical]
@@ -682,7 +677,7 @@ private
         # - this is where can_exclude removes the unwanted answers
         
         answer_values = question[:answers].present? ? question[:answers].map{|x| x[:value]} : []
-        
+        to_delete_indexes = []
         if question[:data_type] == DATA_TYPE_VALUES[:categorical]
           to_delete_indexes = data.each_index.select{|i| !answer_values.include? data[i] }
         elsif question[:data_type] == DATA_TYPE_VALUES[:numerical]
@@ -1076,7 +1071,7 @@ private
 
         q_answer_values = question[:answers].present? ? question[:answers].map{|x| x[:value]} : []
         bdb_answer_values = broken_down_by[:answers].present? ? broken_down_by[:answers].map{|x| x[:value]} : []
-
+        to_delete_indexes = []
         if question[:data_type] == DATA_TYPE_VALUES[:categorical]
           to_delete_indexes = merged_data.each_index.select{|i| !q_answer_values.include?(merged_data[i][1][0]) && !bdb_answer_values.include?(merged_data[i][1][1]) }
         elsif question[:data_type] == DATA_TYPE_VALUES[:numerical]
@@ -1117,7 +1112,7 @@ private
       # - this is where can_exclude removes the unwanted answers              
       q_answer_values = question[:answers].present? ? question[:answers].map{|x| x[:value]} : []
       bdb_answer_values = broken_down_by[:answers].present? ? broken_down_by[:answers].map{|x| x[:value]} : []
-
+      to_delete_indexes = []
       if question[:data_type] == DATA_TYPE_VALUES[:categorical]
         to_delete_indexes = data.each_index.select{|i| !q_answer_values.include?(data[i][0]) && !bdb_answer_values.include?(data[i][1]) }
       elsif question[:data_type] == DATA_TYPE_VALUES[:numerical]
