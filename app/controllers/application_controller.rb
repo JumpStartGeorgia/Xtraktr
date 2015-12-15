@@ -409,7 +409,6 @@ class ApplicationController < ActionController::Base
     if !output[:error] && options.present? && (options['dataset_id'].present? || options['time_series_id'].present?) && options['question_code'].present?
       options = clean_filtered_params(options)
       output[:visual_type] = options['visual_type']
-       Rails.logger.info("------------------------------------------get_highlight_data--#{output[:visual_type]}")
       options["language"] = params["language"] if params["language"].present?
 
       if options['dataset_id'].present?

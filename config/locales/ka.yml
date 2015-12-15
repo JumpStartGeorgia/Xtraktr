@@ -1268,6 +1268,7 @@ ka:
         For numerical questions, a histogram chart will be used during analysis. You can set the histogram bar size and the min and max value of the chart.
       no_questions: There are no questions on file for this dataset.
       no_answer: Question does not have predefined answers and, therefore, cannot be selected as a categorical type.     
+      no_data: Question does not have answers that are not predefined answers and, therefore, cannot be selected as a numerical type.
       percent: Percent   
       integer: Integer
       decimal: Decimal

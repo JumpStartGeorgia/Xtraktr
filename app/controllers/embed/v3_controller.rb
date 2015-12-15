@@ -7,7 +7,6 @@ class Embed::V3Controller < ApplicationController
   # id - base64 encoded string of a hash of parameters
   def index
     @highlight_data = get_highlight_data(params[:id])
-    Rails.logger.info("--------------------------------------------highcharts-exporting1")
     if !@highlight_data[:error]
       # save the js data into gon
       gon.highlight_data = {}
@@ -21,11 +20,8 @@ class Embed::V3Controller < ApplicationController
       gon.powered_by_link = @xtraktr_url
       gon.powered_by_text = I18n.t('app.common.powered_by_xtraktr')
       gon.powered_by_title = I18n.t('app.common.powered_by_xtraktr_title')
-
-      
       
       gon.visual_type = @highlight_data[:visual_type]
-      Rails.logger.info("--------------------------------------------highcharts-exporting")
       if @highlight_data[:visual_type] != Highlight::VISUAL_TYPES[:map] # if the visual is a chart, include the highcharts file
         @js.push('highcharts.js')
       elsif @highlight_data[:visual_type] == Highlight::VISUAL_TYPES[:map] # if the visual is a map, include the highmaps file
