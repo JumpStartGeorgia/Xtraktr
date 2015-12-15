@@ -42,7 +42,7 @@ class Admin::HelpCategoriesController < ApplicationController
         format.html do
           redirect_to admin_help_categories_path,
                       flash: {
-                        success: t('app.msgs.success_created',
+                        success: t('app.msgs.success_updated',
                                    obj: t('mongoid.models.help_category.one'))
                       }
         end
