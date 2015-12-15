@@ -743,7 +743,11 @@ private
   end
 
   def self.shorten_text(text)
-    return text.length > 50 ? text[0..50] : text
+    if text.nil?
+      return ''
+    else
+      return text.length > 50 ? text[0..50] : text
+    end
   end
 
   #########################################
