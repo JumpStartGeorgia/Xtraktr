@@ -1,15 +1,11 @@
 class Admin::HelpCategoriesController < ApplicationController
-  before_filter :set_help_category, only: [:show, :edit, :update, :destroy]
+  before_filter :set_help_category, only: [:edit, :update, :destroy]
 
   respond_to :html
 
   def index
     @help_categories = HelpCategory.all
     respond_with(:admin, @help_categories)
-  end
-
-  def show
-    respond_with(:admin, @help_category)
   end
 
   def new
