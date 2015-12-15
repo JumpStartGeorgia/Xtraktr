@@ -18,8 +18,20 @@ class Admin::HelpCategoriesController < ApplicationController
 
   def create
     @help_category = HelpCategory.new(params[:help_category])
-    flash[:notice] = 'HelpCategory was successfully created.' if @help_category.save
-    respond_with(:admin, @help_category)
+
+    respond_to do |format|
+      if @help_category.save
+        format.html do
+          redirect_to admin_help_categories_path,
+                      flash: {
+                        success: t('app.msgs.success_created',
+                                   obj: t('mongoid.models.help_category.one'))
+                      }
+        end
+      else
+        format.html { render action: "new" }
+      end
+    end
   end
 
   def update

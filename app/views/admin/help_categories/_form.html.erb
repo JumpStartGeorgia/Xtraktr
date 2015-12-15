@@ -1,9 +1,11 @@
-<%= semantic_form_for @help_category, url: admin_help_categories_path do |f| %>
+<%= semantic_form_for [:admin, @help_category] do |f| %>
   <%= f.inputs do %>
     <%= f.input :name %>
   <% end %>
 
-  <%= f.actions do %>
-    <%= f.action :submit, :as => :input %>
-  <% end %>
+  <div class="form-group" style="margin-top: 20px;">
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= f.submit t('helpers.links.reset'), :class => 'btn btn-warning', :type => :reset, :name => :reset %>
+    <%= link_to t('helpers.links.cancel'), admin_help_categories_path, :class => 'btn btn-warning' %>
+  </div>
 <% end %>

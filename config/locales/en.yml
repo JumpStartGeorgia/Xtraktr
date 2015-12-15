@@ -44,6 +44,9 @@ en:
       category:
         one: Category
         other: Categories
+      help_category:
+        one: Help Category
+        other: Help Categories
       category_mapper:
         one: Categories
         other: Categories
