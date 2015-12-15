@@ -1,4 +1,4 @@
-class HelpCategoriesController < ApplicationController
+class Admin::HelpCategoriesController < ApplicationController
   before_filter :set_help_category, only: [:show, :edit, :update, :destroy]
 
   respond_to :html

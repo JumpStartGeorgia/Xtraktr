@@ -2,73 +2,73 @@
 en:
   mongoid:
     models:
-      user: 
+      user:
         one: User
         other: Users
-      organization: 
+      organization:
         one: Organization
         other: Organizations
-      member: 
+      member:
         one: Member
         other: Members
-      page_content: 
+      page_content:
         one: Text for Pages
         other: Text for Pages
-      dataset: 
+      dataset:
         one: Dataset
         other: Datasets
-      shapeset: 
+      shapeset:
         one: Shapeset
         other: Shapesets
-      question: 
+      question:
         one: Question
         other: Questions
-      time_series: 
+      time_series:
         one: Time Series
         other: Time Series
-      time_series_question: 
+      time_series_question:
         one: Question
         other: Questions
-      time_series_answer: 
+      time_series_answer:
         one: Answer
         other: Answers
-      api_version: 
+      api_version:
         one: API Version
         other: API Versions
-      api_method: 
+      api_method:
         one: API Method
         other: API Methods
-      api_key: 
+      api_key:
         one: API Access Token
         other: API Access Tokens
-      category: 
+      category:
         one: Category
         other: Categories
-      category_mapper: 
+      category_mapper:
         one: Categories
         other: Categories
-      country: 
+      country:
         one: Country
         other: Countries
-      country_mappery: 
+      country_mappery:
         one: Countries
         other: Countries
-      group: 
+      group:
         one: Group
         other: Groups
-      weight: 
+      weight:
         one: Weight
         other: Weights
-      time_series_group: 
+      time_series_group:
         one: Groups
         other: Groups
-      time_series_weight: 
+      time_series_weight:
         one: Weight
         other: Weights
-      time_series_weight_assignment: 
+      time_series_weight_assignment:
         one: Weight Assignment
         other: Weight Assignments
-      invitation: 
+      invitation:
         one: Invitation
         other: Invitations
     attributes:
@@ -982,6 +982,7 @@ en:
     index:
       title: Administration Section
       users: Users
+      help_categories: Help Categories
       page_contents: Edit Text on Site
       datasets: Datasets
       shapesets: Shapesets
@@ -1565,7 +1566,7 @@ en:
         questions: Question Text
         codes: Question Code
         answers: Answer Text
-      jumpto_group: Jump To Group      
+      jumpto_group: Jump To Group
     dashboard_time_series:
       tabs:
         highlights: Highlights
