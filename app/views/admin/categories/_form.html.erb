@@ -5,7 +5,7 @@
     <%= f.fields_for :name_translations, OpenStruct.new(f.object.name_translations) do |translation| %>
       <%= translation.input(
             locale,
-            hint: admin_translation_hint(Category, 'name'),
+            hint: admin_translation_hint('category', 'name'),
             label: admin_translation_label(
                      'category',
                      'name',
@@ -17,8 +17,8 @@
   <% end %>
 
   <%= f.inputs do %>
-    <%= f.input :permalink, hint: admin_translation_hint(Category, 'permalink'), input_html: {size: 25} %>
-    <%= f.input :sort_order, as: :number, hint: admin_translation_hint(Category, 'sort_order'), min: 1, step: 5 %>
+    <%= f.input :permalink, hint: admin_translation_hint('category', 'permalink'), input_html: {size: 25} %>
+    <%= f.input :sort_order, as: :number, hint: admin_translation_hint('category', 'sort_order'), min: 1, step: 5 %>
   <% end %>
 
 

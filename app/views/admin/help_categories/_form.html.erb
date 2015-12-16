@@ -4,7 +4,7 @@
     <%= f.fields_for :name_translations, OpenStruct.new(f.object.name_translations) do |translation| %>
       <%= translation.input(
             locale,
-            hint: admin_translation_hint(HelpCategory, 'name'),
+            hint: admin_translation_hint('help_category', 'name'),
             label: admin_translation_label(
                      'help_category',
                      'name',

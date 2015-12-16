@@ -1,6 +1,6 @@
 module AdminHelper
-  def admin_translation_hint(model, field)
-    t("mongoid.hints.#{model.model_name.i18n_key.to_s}.#{field}")
+  def admin_translation_hint(model_i18n_key, field)
+    t("mongoid.hints.#{model_i18n_key}.#{field}")
   end
 
   def admin_translation_label(model_i18n_key, field, tab_locale, default_locale_field_value='')
