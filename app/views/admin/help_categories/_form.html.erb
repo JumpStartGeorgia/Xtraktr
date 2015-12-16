@@ -9,7 +9,9 @@
           label << show_default_text(@help_category.name_translations[default_locale])
         end
       %>
-      <%= translation.input locale, hint: hint, label: label.html_safe %>
+      <%= translation.input locale,
+                            hint: hint,
+                            label: label.html_safe %>
     <% end %>
   <% end %>
 
