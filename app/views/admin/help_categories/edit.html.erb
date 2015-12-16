@@ -1,5 +1,15 @@
-<h1>Editing help_category</h1>
+<%- model_class = HelpCategory -%>
 
-<%= render 'form' %>
+<% title t '.title',
+         :default => t('helpers.titles.edit',
+         :model => model_class.model_name.human,
+         :default => "Edit #{model_class.model_name.human}") %>
 
-<%= link_to 'Back', admin_help_categories_path %>
+<div class="form-group form-group-admin-buttons">
+  <%= link_to t('helpers.links.list'), admin_help_categories_path,
+  :class => 'btn btn-default' %>
+  <%= link_to t('helpers.links.admin'), admin_path,
+  :class => 'btn btn-default' %>
+</div>
+
+<%= render partial: 'form' %>
