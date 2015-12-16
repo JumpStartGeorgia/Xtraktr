@@ -9,7 +9,7 @@
                                      'category',
                                      'name',
                                      tab_locale,
-                                     show_default_text(@category.name_translations[I18n.default_locale.to_s])
+                                     @category.name_translations[I18n.default_locale.to_s]
                                    ).html_safe %>
     <% end %>
   <% end %>
