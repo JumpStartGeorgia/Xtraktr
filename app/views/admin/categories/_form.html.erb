@@ -1,3 +1,5 @@
+<% model_i18n_key = Category.model_name.i18n_key %>
+
 <%= semantic_form_for([:admin, @category], html: {class: 'tabbed-translation-form'}) do |f| %>
   <%= f.error_messages %>
 
@@ -5,9 +7,9 @@
     <%= f.fields_for :name_translations, OpenStruct.new(f.object.name_translations) do |translation| %>
       <%= translation.input(
             locale,
-            hint: admin_translation_hint('category', 'name'),
+            hint: admin_translation_hint(model_i18n_key, 'name'),
             label: admin_translation_label(
-                     'category',
+                     model_i18n_key,
                      'name',
                      tab_locale,
                      @category.name_translations[I18n.default_locale.to_s]
@@ -17,8 +19,8 @@
   <% end %>
 
   <%= f.inputs do %>
-    <%= f.input :permalink, hint: admin_translation_hint('category', 'permalink'), input_html: {size: 25} %>
-    <%= f.input :sort_order, as: :number, hint: admin_translation_hint('category', 'sort_order'), min: 1, step: 5 %>
+    <%= f.input :permalink, hint: admin_translation_hint(model_i18n_key, 'permalink'), input_html: {size: 25} %>
+    <%= f.input :sort_order, as: :number, hint: admin_translation_hint(model_i18n_key, 'sort_order'), min: 1, step: 5 %>
   <% end %>
 
 
