@@ -5,7 +5,12 @@
 
   <div class="form-group" style="margin-top: 20px;">
     <%= f.submit nil, :class => 'btn btn-primary' %>
-    <%= f.submit t('helpers.links.reset'), :class => 'btn btn-warning', :type => :reset, :name => :reset %>
-    <%= link_to t('helpers.links.cancel'), admin_help_categories_path, :class => 'btn btn-warning' %>
+    <%= f.submit t('helpers.links.reset'),
+                 :class => 'btn btn-warning',
+                 :type => :reset,
+                 :name => :reset %>
+    <%= link_to t('helpers.links.cancel'),
+                admin_help_categories_path,
+                :class => 'btn btn-warning' %>
   </div>
 <% end %>
