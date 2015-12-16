@@ -5,12 +5,18 @@ class Admin::HelpCategoriesController < ApplicationController
 
   def index
     @help_categories = HelpCategory.all
-    respond_with(:admin, @help_categories)
+
+    respond_to do |format|
+      format.html # index.html.erb
+    end
   end
 
   def new
     @help_category = HelpCategory.new
-    respond_with(:admin, @help_category)
+
+    respond_to do |format|
+      format.html # new.html.erb
+    end
   end
 
   def edit
