@@ -1,6 +1,5 @@
 <%-
   label_key = "mongoid.attributes.category."
-  hint_key = "mongoid.hints.category."
 -%>
 
 <%= semantic_form_for([:admin, @category], html: {class: 'tabbed-translation-form'}) do |f| %>
@@ -10,20 +9,19 @@
     <%= f.fields_for :name_translations, OpenStruct.new(f.object.name_translations) do |translation| %>
       <%
         label = t(label_key + 'name')
-        hint = t(hint_key + 'name')
         if index > 0
           label << show_default_text(@category.name_translations[default_locale])
         end
       %>
       <%= translation.input locale,
-                            hint: hint,
+                            hint: admin_translation_hint(Category, 'name'),
                             label: label.html_safe %>
     <% end %>
   <% end %>
 
   <%= f.inputs do %>
-    <%= f.input :permalink, hint: t(hint_key + 'permalink'), input_html: {size: 25} %>
-    <%= f.input :sort_order, as: :number, hint: t(hint_key + 'sort_order'), min: 1, step: 5 %>
+    <%= f.input :permalink, hint: admin_translation_hint(Category, 'permalink'), input_html: {size: 25} %>
+    <%= f.input :sort_order, as: :number, hint: admin_translation_hint(Category, 'sort_order'), min: 1, step: 5 %>
   <% end %>
 
 
