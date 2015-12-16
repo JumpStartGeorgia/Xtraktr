@@ -960,6 +960,13 @@ ka:
       success_deleted: "%{obj} წაშლილია. "
       mass_change_question_saved: "შეკითხვის პარამეტრები შენახულია"
       mass_change_question_not_saved: "შეკითხვის პარამეტრების შენახვისას წარმოიშვა პრობლემა"
+      mass_change:
+        question_type:
+            saved: "Question data type settings were saved."
+            no_data_to_save: "Nothing to save."
+            not_saved: "An error occurred while saving the question type settings."
+            validation_error_for_all: "None of the questions were saved due to validation errors."      
+            validation_error_for_some: "All questions were saved except the following due to validation errors: %{codes}"                 
       mass_change_answer_saved: "პასუხის პარამეტრები შენახულია"
       mass_change_answer_not_saved: "პასუხების პარამეტრების შენახვისას წარმოიშვა პრობლემა"
       sort_saved: "დახარისხების წყობა შენახულია"

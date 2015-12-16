@@ -957,9 +957,14 @@ en:
       success_updated: "%{obj} was successfully updated."
       success_deleted: "%{obj} was successfully deleted."
       mass_change_question_saved: "Question settings were saved."
-      mass_change_question_type_saved: "Question data type settings were saved."
       mass_change_question_not_saved: "An error occurred while saving the question settings."
-      mass_change_question_type_not_saved: "An error occurred while saving the question type settings."
+      mass_change:
+        question_type:
+            saved: "Question data type settings were saved."
+            no_data_to_save: "Nothing to save."
+            not_saved: "An error occurred while saving the question type settings."
+            validation_error_for_all: "None of the questions were saved due to the validation errors."      
+            validation_error_for_some: "All questions were saved except the following due to validation errors: %{codes}"      
       mass_change_answer_saved: "Answer settings were saved."
       mass_change_answer_not_saved: "An error occurred while saving the answer settings."
       sort_saved: "Sort orders were saved."

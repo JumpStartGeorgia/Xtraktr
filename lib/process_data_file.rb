@@ -658,8 +658,11 @@ private
         # - if answers are all of same type, sort them, else do not
         items = data_items.map{|x| x[index]}.select{|x| x.present?}.uniq
         items.sort! if items.map{|x| x.class}.uniq.length == 1
-        items.each do |uniq_answer|
-          answers << [code, uniq_answer, uniq_answer]
+
+        if items.all?{|item| !is_number?(uniq_answer)}
+          items.each do |uniq_answer|
+            answers << [code, uniq_answer, uniq_answer]
+          end
         end
       end
 
@@ -713,6 +716,9 @@ private
       end
     end
     return nil
+  end
+  def is_number? string
+    true if Float(string) rescue false
   end
 
   #### OLD

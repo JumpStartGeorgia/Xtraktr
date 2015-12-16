@@ -456,23 +456,77 @@ class DatasetsController < ApplicationController
       format.js {
         begin
            
-          @msg = t('app.msgs.mass_change_question_type_saved')
-          @success = true
+          @msg = t('app.msgs.mass_change.question_type.saved')
+          @msg_type = 2 # error 0, info 1, 2 success
           if params[:mass_data].present? && params[:mass_data].keys.length > 0
-            @dataset.questions.reflag_questions_type(params[:mass_data])  
-            @dataset.questions_data_recalculate(params[:mass_data])
+            question_count = params[:mass_data].keys.length
+            unvalid_data = []
+            params[:mass_data].keys.each {|t| 
+
+              code = t.downcase
+              question_data = params[:mass_data][t]["data"]
+              flag = true
+
+              if question_data.is_a?(Array) && question_data.length == 8 && is_number?(question_data[0])
+                question_data_type = question_data[0].to_i
+                if question_data_type == 2
+                  begin
+                    num = { 
+                      type: question_data[1].to_i,
+                      width: question_data[2].to_f,
+                      min: question_data[3].to_f,
+                      max: question_data[4].to_f,
+                      title_translations: params[:mass_data][t]["titles"] }
+                    raise "type should be integer or decimal, and width should be greater then 0" if (num[:type] != 0 || num[:type] != 1) && num[:width] <= 0
+                    num[:min_range] = (num[:min] / num[:width]).floor * num[:width]
+                    num[:max_range] = (num[:max] / num[:width]).ceil * num[:width]
+                    num[:size] = (num[:max_range] - num[:min_range]) / num[:width]
+                  rescue Exception => e
+                    flag = false
+                  end
+                end
+                if flag 
+                  @dataset.update_question_type(code, question_data_type, num)                  
+                else
+                  unvalid_data.push(code)
+                end
+              end
+            }
+            # @dataset.questions.reflag_questions_type(params[:mass_data])  
+            # @dataset.questions_data_recalculate(params[:mass_data])
+            
             # force question callbacks
             @dataset.check_questions_for_changes_status = true
 
-            if !@dataset.save
-              @msg = @dataset.errors.full_messages
-              @success = false
+            if !unvalid_data.empty?
+              if question_count == unvalid_data.length # so all questions are not valid error message
+                @msg = t('app.msgs.mass_change.question_type.validation_error_for_all')
+                @msg_type = 0
+              else
+
+                if !@dataset.save # else do saving and show partial info message
+                  @msg = @dataset.errors.full_messages
+                  @msg_type = 0
+                else                  
+                  @msg = t('app.msgs.mass_change.question_type.validation_error_for_some', codes: unvalid_data.join(", "))
+                  @msg_type = 1
+                  @msg_fadeout = false
+                end
+              end
+            else
+              if !@dataset.save
+                @msg = @dataset.errors.full_messages
+                @msg_type = 0
+              end
             end
+
+          else # if data for update is missing at all then show error
+            @msg = t('app.msgs.mass_change.question_type.no_data_to_save')
+            @msg_type = 0
           end  
         rescue Exception => e
-          @msg = t('app.msgs.mass_change_question_not_saved')
-          @success = false
-
+          @msg = t('app.msgs.mass_change.question_type.not_saved')
+          @msg_type = 0
           # send the error notification
           ExceptionNotifier::Notifier
             .exception_notification(request.env, e)
@@ -777,5 +831,7 @@ class DatasetsController < ApplicationController
       }
     end
   end
-
+  def is_number? string
+    true if Float(string) rescue false
+  end
 end

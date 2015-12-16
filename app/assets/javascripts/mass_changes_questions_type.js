@@ -383,11 +383,11 @@ $(document).ready(function (){
         "searchPlaceholder": gon.datatable_search
       },
       "pagingType": "full_numbers",
-      "orderClasses": false,
-      search: {
-        search: "age"
-      },
-      displayStart: 20
+      "orderClasses": false
+      // ,search: {
+      //   search: "age"
+      // },
+      // displayStart: 20
     });
   }
 
