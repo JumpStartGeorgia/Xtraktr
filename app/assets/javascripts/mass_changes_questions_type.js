@@ -762,13 +762,14 @@ $(document).ready(function (){
         formatted.splice(d-i, 1); // minus i because formatted will be changed by splice, and it will be changed by minus one at a time or each i times
       });
       if(min === Number.MAX_VALUE) { min = 0; } // no min value then default to 0
-      if(max === Number.MIN_VALUE) { max = min + 1; } // if no max then min + 1
+      if(max === Number.MIN_VALUE || min === max) { max = min + 1; } // if no max then min + 1
       if(max-min<10) { num[2] = 1; }
       num[3] = min;
       num[4] = max;
       num[5] = Math.floor(num[3] / num[2]) * num[2]; // min_range = floor(min/width) * width
       num[6] = Math.ceil(num[4] / num[2]) * num[2];  // max_range = ceil(max/width) * width
       num[7] = (num[6] - num[5]) / num[2];           // size = (max_range - min_range) / width
+      // if(num[7] == 0) { num[7] = 1; }
       var sub_id = num.join(";");
       cache[code].data[sub_id] = { fd: replicate2(num[7], 0) }; // create empty arrays for fd(two dimensional [count,percent]) and fill with 0
       cache[code].data["default"] = { fd: replicate2(num[7], 0)}; // create empty arrays for fd(two dimensional [count,percent]) and fill with 0
