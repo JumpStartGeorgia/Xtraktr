@@ -19,6 +19,8 @@ class Admin::HelpCategoriesController < ApplicationController
   def new
     @help_category = HelpCategory.new
 
+    set_tabbed_translation_form_settings
+
     respond_to do |format|
       format.html # new.html.erb
     end
