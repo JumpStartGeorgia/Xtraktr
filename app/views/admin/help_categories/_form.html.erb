@@ -1,6 +1,5 @@
 <%-
   label_key = "mongoid.attributes.help_category."
-  hint_key = "mongoid.hints.help_category."
 -%>
 
 <%= semantic_form_for [:admin, @help_category] do |f| %>
@@ -9,13 +8,12 @@
     <%= f.fields_for :name_translations, OpenStruct.new(f.object.name_translations) do |translation| %>
       <%
         label = t(label_key + 'name')
-        hint = t(hint_key + 'name')
         if index > 0
           label << show_default_text(@help_category.name_translations[default_locale])
         end
       %>
       <%= translation.input locale,
-                            hint: hint,
+                            hint: admin_translation_hint(HelpCategory, 'name'),
                             label: label.html_safe %>
     <% end %>
   <% end %>
