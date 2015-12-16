@@ -332,6 +332,8 @@ en:
         name: Name
         permalink: URL to Category
         sort_order: Sort Order
+      help_category:
+        name: Name
     hints:
       dataset:
         title: The title of your dataset
@@ -463,6 +465,8 @@ en:
         name: Name of category
         permalink: This text needs to match the name of the icon image file
         sort_order: The order the categories should appear
+      help_category:
+        name: Name of help category
   errors:
     messages:
       required_field: "is a required field."
