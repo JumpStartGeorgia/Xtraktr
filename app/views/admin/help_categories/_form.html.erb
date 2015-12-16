@@ -2,14 +2,16 @@
 
   <%= render layout: 'shared/admin_tab_translations' do |index, tab_locale| %>
     <%= f.fields_for :name_translations, OpenStruct.new(f.object.name_translations) do |translation| %>
-      <%= translation.input locale,
-                            hint: admin_translation_hint(HelpCategory, 'name'),
-                            label: admin_translation_label(
-                                     'help_category',
-                                     'name',
-                                     tab_locale,
-                                     @help_category.name_translations[I18n.default_locale.to_s]
-                                   ).html_safe %>
+      <%= translation.input(
+            locale,
+            hint: admin_translation_hint(HelpCategory, 'name'),
+            label: admin_translation_label(
+                     'help_category',
+                     'name',
+                     tab_locale,
+                     @help_category.name_translations[I18n.default_locale.to_s]
+                   ).html_safe
+          ) %>
     <% end %>
   <% end %>
 
