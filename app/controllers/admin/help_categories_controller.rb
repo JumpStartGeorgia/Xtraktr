@@ -1,6 +1,11 @@
 class Admin::HelpCategoriesController < ApplicationController
   before_filter :set_help_category, only: [:edit, :update, :destroy]
 
+  before_filter :authenticate_user!
+  before_filter do |controller_instance|
+    controller_instance.send(:valid_role?, @site_admin_role)
+  end
+
   respond_to :html
 
   def index
