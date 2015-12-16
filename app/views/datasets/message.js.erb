@@ -1,12 +1,5 @@
- $(document).ready(function(){
-  var type=(<%= @success %> == false) ? "error" : "success",
-    msg = '<%= @msg %>',
-    html = notification(type, msg);
-  
-  $('.data-loader').fadeOut('fast');
+notification_show("<%= !@msg_type.nil? ? (["error", "info", "success"][@msg_type]) : (@success == false ? "error" : "success") %>",
+ '<%= @msg %>',
+  <%= (@msg_fadeout.nil? || (!@msg_fadeout.nil? && @msg_fadeout)) %>);
 
-  $('#page-wrapper > .content').prepend(html);
-  $('.content > .message').delay(3000).fadeOut(3000);
 
-  page_wrapper.animate({ scrollTop: 0 }, 1000); // scroll to the top
-});

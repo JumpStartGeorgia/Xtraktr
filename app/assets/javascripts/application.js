@@ -302,9 +302,21 @@ function debounce(func, wait, immediate) {
     }
   };
 }
-function notification(state, text, extra_class) {
-  state = ['success', 'error', 'info'].indexOf(state) !== -1 ? state : 'error';  
-  return "<div class='message notification " + state + " " + extra_class + "'><div class='figure'></div><div class='text'>" + text + "</div><div class='closeup'></div></div>";
+function notification (state, text, extra_class) {
+  state = ["success", "error", "info"].indexOf(state) !== -1 ? state : "error";
+  return "<div class='message notification " + state + (extra_class ? " " + extra_class : "") + "'><div class='figure'></div><div class='text'>" + text + "</div><div class='closeup'></div></div>";
+}
+function notification_show (state, text, fade) {
+  state = ["success", "error", "info"].indexOf(state) !== -1 ? state : "error";
+  fade = typeof fade !== "undefined" ? fade : true;
+
+  $(".data-loader").fadeOut("fast");
+  page_wrapper.find("> .content > .message").remove();
+  page_wrapper.find("> .content").prepend("<div class='message notification " + state + "'><div class='figure'></div><div class='text'>" + text + "</div><div class='closeup'></div></div>");
+
+  if(fade) { $(".content > .message").delay(3000).fadeOut(3000); }
+
+  page_wrapper.animate({ scrollTop: 0 }, 1000); // scroll to the top
 }
 function navbarToggle() {
   if (!$(".navbar-toggle").hasClass('collapsed')) {
