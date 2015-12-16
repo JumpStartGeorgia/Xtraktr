@@ -1,10 +1,10 @@
 <%= semantic_form_for([:admin, @category], html: {class: 'tabbed-translation-form'}) do |f| %>
   <%= f.error_messages %>
 
-  <%= render layout: 'shared/admin_tab_translations' do |index, default_locale, tab_locale| %>
+  <%= render layout: 'shared/admin_tab_translations' do |index, tab_locale| %>
     <%= f.fields_for :name_translations, OpenStruct.new(f.object.name_translations) do |translation| %>
       <%
-        label = admin_translation_label('category', 'name', tab_locale, show_default_text(@category.name_translations[default_locale.to_s]))
+        label = admin_translation_label('category', 'name', tab_locale, show_default_text(@category.name_translations[I18n.default_locale.to_s]))
       %>
       <%= translation.input locale,
                             hint: admin_translation_hint(Category, 'name'),

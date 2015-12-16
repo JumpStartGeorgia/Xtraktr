@@ -4,12 +4,12 @@
 
 <%= semantic_form_for [:admin, @help_category] do |f| %>
 
-  <%= render layout: 'shared/admin_tab_translations' do |index, default_locale, tab_locale| %>
+  <%= render layout: 'shared/admin_tab_translations' do |index, tab_locale| %>
     <%= f.fields_for :name_translations, OpenStruct.new(f.object.name_translations) do |translation| %>
       <%
         label = t(label_key + 'name')
         if index > 0
-          label << show_default_text(@help_category.name_translations[default_locale])
+          label << show_default_text(@help_category.name_translations[I18n.default_locale.to_s])
         end
       %>
       <%= translation.input locale,

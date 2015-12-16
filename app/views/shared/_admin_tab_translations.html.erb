@@ -34,7 +34,7 @@
         cls = 'in active' if index == 0
       %>
       <div role="tabpanel" class="tab-pane fade <%= cls %>" id="<%= locale %>" data-locale="<%= locale %>">
-        <%= yield index, default_locale, locale %>
+        <%= yield index, locale %>
       </div>
     <% end %>
   </div>
