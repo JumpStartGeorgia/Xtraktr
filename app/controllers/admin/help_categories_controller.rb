@@ -27,6 +27,7 @@ class Admin::HelpCategoriesController < ApplicationController
   end
 
   def edit
+    set_tabbed_translation_form_settings
   end
 
   def create
@@ -42,6 +43,8 @@ class Admin::HelpCategoriesController < ApplicationController
                       }
         end
       else
+        set_tabbed_translation_form_settings
+
         format.html { render action: 'new' }
       end
     end
@@ -60,6 +63,8 @@ class Admin::HelpCategoriesController < ApplicationController
                       }
         end
       else
+        set_tabbed_translation_form_settings
+        
         format.html { render action: 'edit' }
       end
     end
