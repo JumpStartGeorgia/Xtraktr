@@ -20,7 +20,7 @@
   <tbody>
     <% @help_categories.each do |help_category| %>
       <tr>
-        <td><#%= help_category.name %></td>
+        <td><%= help_category.name %></td>
         <td>
           <%= link_to '',
                       edit_admin_help_category_path(help_category),
