@@ -1,6 +1,7 @@
 <% model_i18n_key = HelpCategory.model_name.i18n_key %>
 
 <%= semantic_form_for([:admin, @help_category], html: {class: 'tabbed-translation-form'}) do |f| %>
+  <%= f.error_messages %>
 
   <%= render layout: 'shared/admin_tab_translations' do |index, tab_locale| %>
     <%= f.fields_for :name_translations, OpenStruct.new(f.object.name_translations) do |translation| %>
