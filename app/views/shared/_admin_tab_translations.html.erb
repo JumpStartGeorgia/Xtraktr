@@ -1,3 +1,8 @@
+<%-
+  label_key = "mongoid.attributes.category."
+  hint_key = "mongoid.hints.category."
+-%>
+
 <div role="tabpanel" class="tabbed-translation-fields">
   <%
     locales = I18n.available_locales
@@ -34,7 +39,7 @@
         cls = 'in active' if index == 0
       %>
       <div role="tabpanel" class="tab-pane fade <%= cls %>" id="<%= locale %>" data-locale="<%= locale %>">
-        <%= yield index, default_locale %>
+        <%= yield label_key, hint_key, index, default_locale %>
       </div>
     <% end %>
   </div>
