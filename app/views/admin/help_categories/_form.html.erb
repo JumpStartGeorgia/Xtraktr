@@ -4,7 +4,7 @@
 
 <%= semantic_form_for [:admin, @help_category] do |f| %>
 
-  <%= render layout: 'shared/admin_tab_translations' do |index, default_locale| %>
+  <%= render layout: 'shared/admin_tab_translations' do |index, default_locale, tab_locale| %>
     <%= f.fields_for :name_translations, OpenStruct.new(f.object.name_translations) do |translation| %>
       <%
         label = t(label_key + 'name')
