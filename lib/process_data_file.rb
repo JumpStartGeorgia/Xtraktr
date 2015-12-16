@@ -286,15 +286,17 @@ module ProcessDataFile
             code_data = data.map{|x| x[code_index]}
             total = 0
             frequency_data = {}
+            question = self.questions.with_code(clean_code)
             if are_question_codes_categorical[code_index]
-              question = self.questions.with_code(clean_code)
               question.answers.sorted.each {|answer|
                 cnt = code_data.select{|x| x == answer.value }.count
                 total += cnt
                 frequency_data[answer.value] = [cnt, (cnt.to_f/code_data.length*100).round(2)]
               }
+              question.has_data_without_answers = total < code_data.select{|d| !d.nil? }.length 
+            else
+              question.has_data_without_answers = code_data.select{|d| !d.nil? }.length > 0 
             end
-            question.has_data_without_answers = total < code_data.select{|d| !d.nil? }.length 
             if code_data.present?
               self.data_items_attributes = [{code: clean_code,
                                             original_code: clean_text(code),
@@ -667,7 +669,7 @@ private
         items = data_items.map{|x| x[index]}.select{|x| x.present?}.uniq
         items.sort! if items.map{|x| x.class}.uniq.length == 1
 
-        if items.all?{|item| !is_number?(uniq_answer)}
+        if items.all?{|item| !is_number?(item)}
           items.each do |uniq_answer|
             answers << [code, uniq_answer, uniq_answer]
           end
