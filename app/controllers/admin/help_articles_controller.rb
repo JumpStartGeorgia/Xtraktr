@@ -7,6 +7,14 @@ class Admin::HelpArticlesController < ApplicationController
     end
   end
 
+  def show
+    @help_article = HelpArticle.find(params[:id])
+
+    respond_to do |format|
+      format.html
+    end
+  end
+
   def new
     @help_article = HelpArticle.new
 
