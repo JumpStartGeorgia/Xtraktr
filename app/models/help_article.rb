@@ -10,6 +10,18 @@ class HelpArticle
   field :title, type: String, localize: true
   index(title: 1)
 
+  field :article_type, type: Integer, default: 1
+  index(article_type: 1)
+
+  ARTICLE_TYPES = {
+    how_to: 1,
+    tip: 2
+  }
+
+  def article_type_name
+    ARTICLE_TYPES.keys[ARTICLE_TYPES.values.index(article_type)]
+  end
+
   #############################
   # Validations
 
