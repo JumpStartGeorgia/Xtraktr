@@ -3,22 +3,24 @@
 <%= semantic_form_for([:admin, @help_category], html: {class: 'tabbed-translation-form'}) do |f| %>
   <%= f.error_messages %>
 
-  <%= render layout: 'shared/admin_tab_translations' do |_index, tab_locale| %>
-    <%= f.fields_for :name_translations, OpenStruct.new(f.object.name_translations) do |translation| %>
-      <%= translation.input(
-            tab_locale,
-            hint: admin_translation_hint(model_i18n_key, 'name'),
-            label: admin_translation_label(
-                     model_i18n_key,
-                     'name',
-                     tab_locale,
-                     @help_category.name_translations[I18n.default_locale.to_s]
-                   ).html_safe
-          ) %>
-    <% end %>
-  <% end %>
-
   <%= f.inputs do %>
+
+    <%= render layout: 'shared/admin_tab_translations' do |_index, tab_locale| %>
+
+      <%= f.fields_for :name_translations, OpenStruct.new(f.object.name_translations) do |translation| %>
+        <%= translation.input(
+              tab_locale,
+              hint: admin_translation_hint(model_i18n_key, 'name'),
+              label: admin_translation_label(
+                       model_i18n_key,
+                       'name',
+                       tab_locale,
+                       @help_category.name_translations[I18n.default_locale.to_s]
+                     ).html_safe
+            ) %>
+      <% end %>
+      
+    <% end %>
 
     <%= f.input :permalink,
                 hint: admin_translation_hint(model_i18n_key, 'permalink'),
