@@ -334,6 +334,8 @@ en:
         sort_order: Sort Order
       help_category:
         name: Name
+        permalink: URL to Help Category
+        sort_order: Sort Order
     hints:
       dataset:
         title: The title of your dataset
@@ -467,6 +469,8 @@ en:
         sort_order: The order the categories should appear
       help_category:
         name: Name of help category
+        permalink: "This text appears after the last slash in this help category's url"
+        sort_order: The order the help categories should appear
   errors:
     messages:
       required_field: "is a required field."
