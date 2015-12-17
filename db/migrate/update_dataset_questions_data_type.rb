@@ -2,14 +2,13 @@
 # update all questions to have categorical data_value where is_analysable is true
 
 puts "DATASETS - updating datasets questions data_type field, if question is categorical calculate frequency_data"
-[Dataset.all.last].each do |d|
+Dataset.each do |d|
   puts "updating #{d.title}"
   d.questions.each do |q|
     items = d.data_items.with_code(q.code)
     code_data = items.data
 
     if q.has_code_answers
-
       q.data_type = Question::DATA_TYPE_VALUES[:categorical]
       # items.unset(:grouped_data) if field was removed but document had it.
       frequency_data = {}
@@ -23,9 +22,6 @@ puts "DATASETS - updating datasets questions data_type field, if question is cat
       q.is_analysable = q.answers.all_for_analysis.count > 0
       q.has_data_without_answers = total < code_data.select{|d| !d.nil? }.length 
     else 
-                if q.code == 'age_a0_4'
-      puts code_data.uniq.join(">")
-    end
       q.has_data_without_answers = code_data.select{|d| !d.nil? }.length > 0
       q.data_type = Question::DATA_TYPE_VALUES[:unknown]
       q.is_analysable = false

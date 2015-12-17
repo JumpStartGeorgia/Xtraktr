@@ -416,8 +416,6 @@ class User
 
       users = User.any_of({first_name: /#{q}/i}, {last_name: /#{q}/i}, {email_no_domain: /#{q}/i}).limit(limit)
       if already_exists_ids.present? && already_exists_emails.present?
-        puts already_exists_ids.uniq.inspect
-        puts already_exists_emails.uniq.in
         users = users.not_in({id: already_exists_ids.uniq, email: already_exists_emails.uniq})
       elsif already_exists_ids.present?
         users = users.not_in({id: already_exists_ids.uniq})

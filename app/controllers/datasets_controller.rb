@@ -465,11 +465,13 @@ class DatasetsController < ApplicationController
 
               code = t.downcase
               question_data = params[:mass_data][t]["data"]
-              flag = true
+              flag = false
 
-              if question_data.is_a?(Array) && question_data.length == 8 && is_number?(question_data[0])
+              if question_data.is_a?(Array) && is_number?(question_data[0])
                 question_data_type = question_data[0].to_i
-                if question_data_type == 2
+                if question_data_type == 0 || question_data_type == 1
+                  flag = true
+                elsif question_data_type == 2 && question_data.length == 8
                   begin
                     num = { 
                       type: question_data[1].to_i,
@@ -481,15 +483,17 @@ class DatasetsController < ApplicationController
                     num[:min_range] = (num[:min] / num[:width]).floor * num[:width]
                     num[:max_range] = (num[:max] / num[:width]).ceil * num[:width]
                     num[:size] = (num[:max_range] - num[:min_range]) / num[:width]
+                    flag = true
                   rescue Exception => e
                     flag = false
                   end
                 end
-                if flag 
-                  @dataset.update_question_type(code, question_data_type, num)                  
-                else
-                  unvalid_data.push(code)
-                end
+              end
+
+              if flag 
+                @dataset.update_question_type(code, question_data_type, num)                  
+              else
+                unvalid_data.push(code)
               end
             }
             # @dataset.questions.reflag_questions_type(params[:mass_data])  
