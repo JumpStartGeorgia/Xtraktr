@@ -36,4 +36,19 @@ class Admin::HelpArticlesController < ApplicationController
       end
     end
   end
+
+  def destroy
+    @help_article = HelpArticle.find(params[:id])
+    @help_article.destroy
+
+    respond_to do |format|
+      format.html do
+        redirect_to admin_help_articles_path,
+                    flash: {
+                      success:  t('app.msgs.success_deleted',
+                                  obj: t('mongoid.models.help_article.one'))
+                    }
+      end
+    end
+  end
 end
