@@ -32,11 +32,11 @@ class HelpArticle
     tip: 2
   }
 
-  def article_type_name
+  def article_type_symbol
     ARTICLE_TYPES.keys[ARTICLE_TYPES.values.index(article_type_id)]
   end
 
   def article_type
-    I18n.t("mongoid.attributes.help_article.article_type_values.#{article_type_name}")
+    I18n.t("mongoid.attributes.help_article.article_type_values.#{article_type_symbol}")
   end
 end
