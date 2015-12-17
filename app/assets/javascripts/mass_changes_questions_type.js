@@ -265,7 +265,7 @@ $(document).ready(function (){
                 }
               }
               else {
-                 console.log("Frequency data should be ready on server, something went wrong");
+                console.log("Frequency data should be ready on server, something went wrong");
               }
             }
             else {
@@ -405,7 +405,6 @@ $(document).ready(function (){
       keys.forEach(function (d) {
         current_data[d.toLowerCase()] = get_code_meta(d);
       });
-
       $(".data-loader").fadeIn("fast", function (){
         $.ajax({
           type: "POST",
@@ -422,7 +421,7 @@ $(document).ready(function (){
       });
       var tr;
       function set_code_original_values (d) {
-        tr = datatable.find("tr#" + code_format(d));
+        tr = datatable.$("tr#" + code_format(d));
         var str = "[name='question["+d+"]",
           dao = "data-o",
           cd = current_data[d].data;
@@ -452,7 +451,7 @@ $(document).ready(function (){
         t = $(e.target);
 
       if (!tr.hasClass("selected")) {
-        datatable.find("tr.selected").removeClass("selected");
+        datatable.$("tr.selected").removeClass("selected");
         tr.toggleClass("selected");
       }
 
@@ -471,13 +470,12 @@ $(document).ready(function (){
         tr.find("input[type='radio']").removeAttr("checked").prop("checked", false);
         if(checked) { // so when radio is alreay checked
           var td = t.closest("td"),
-            old_value = t.attr("data-o"),
+            old_value = +t.attr("data-o"),
             new_value = 0;//+t.val();
-
           tr.find(".view-chart").attr("disabled", true);
 
           update_dirty_rows(code, td.index(), old_value, new_value); // update dirty_rows tracking system for changes
-          if(new_value === 2) { // if numerical
+          if(old_value === 2) { // if numerical
             tr.find(".conditional, .conditional input").attr("disabled", "disabled");
             tr.find(".locale-picker").attr("disabled", "disabled");
           }
@@ -640,12 +638,11 @@ $(document).ready(function (){
   * @desc If question is categorical then return just {data: [data_type]}, else (numerical) { data: [data_type, type, width, min, max, min_range, max_range, size], titles: { lang_key: text}}
   */
   function get_code_meta (code) {
-    var tr = datatable.find("tr#" + code_format(code)),
+    var tr = datatable.$("tr#" + code_format(code)),
       tmp = "[name='question["+code+"][numerical]",
       data_type = tr.find("[name='question["+code+"][data_type]']:checked").val(),
       titles = {},
       out;
-
     if(data_type === undefined) { data_type = 0; }
     data_type = +data_type;
 
@@ -685,7 +682,7 @@ $(document).ready(function (){
   * @param {array} meta - Meta data for this question code
   */
   function set_code_meta (code, meta) {
-    var tr = datatable.find("tr#" + code_format(code)),
+    var tr = datatable.$("tr#" + code_format(code)),
       str = "[name='question["+code+"][numerical]";
 
     tr.find(str+"[type]']").val(meta[1]);
@@ -901,7 +898,7 @@ $(document).ready(function (){
   * @param {boolean} start - State for loader if true then show else hiding
   */
   function row_loader (code, start) {
-    var tr = datatable.find("tr#" + code_format(code));
+    var tr = datatable.$("tr#" + code_format(code));
 
     if(start) {
       tr.attr("disabled", "disabled");
