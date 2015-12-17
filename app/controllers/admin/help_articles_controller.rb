@@ -17,6 +17,16 @@ class Admin::HelpArticlesController < ApplicationController
     end
   end
 
+  def edit
+    @help_article = HelpArticle.find(params[:id])
+
+    set_tabbed_translation_form_settings
+
+    respond_to do |format|
+      format.html
+    end
+  end
+
   def create
     @help_article = HelpArticle.new(params[:help_article])
 
