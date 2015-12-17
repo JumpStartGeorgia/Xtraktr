@@ -1,6 +1,4 @@
 class Admin::HelpCategoriesController < ApplicationController
-  before_filter :set_help_category, only: [:edit, :update, :destroy]
-
   before_filter :authenticate_user!
   before_filter do |controller_instance|
     controller_instance.send(:valid_role?, @site_admin_role)
@@ -27,7 +25,13 @@ class Admin::HelpCategoriesController < ApplicationController
   end
 
   def edit
+    @help_category = HelpCategory.find(params[:id])
+
     set_tabbed_translation_form_settings
+
+    respond_to do |format|
+      format.html
+    end
   end
 
   def create
@@ -84,9 +88,4 @@ class Admin::HelpCategoriesController < ApplicationController
       end
     end
   end
-
-  private
-    def set_help_category
-      @help_category = HelpCategory.find(params[:id])
-    end
 end
