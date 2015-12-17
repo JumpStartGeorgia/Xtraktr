@@ -24,7 +24,10 @@
   <tbody>
     <% @help_articles.each do |help_article| %>
       <tr>
-        <td><%= help_article.title %></td>
+        <td>
+          <%= link_to help_article.title,
+                      admin_help_article_path(help_article) %>
+        </td>
         <td>
           <%= link_to '',
                       edit_admin_help_article_path(help_article),
