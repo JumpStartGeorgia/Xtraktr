@@ -341,6 +341,10 @@ en:
         sort_order: Sort Order
       help_article:
         title: Title
+        article_type: Article Type
+        article_type_values:
+          how_to: How To
+          tip: Tip
     hints:
       dataset:
         title: The title of your dataset

@@ -24,8 +24,8 @@ class HelpArticle
   validate :validates_presence_of_title_for_default_language
 
   #############################
-  field :article_type, type: Integer, default: 1
-  index(article_type: 1)
+  field :article_type_id, type: Integer, default: 1
+  index(article_type_id: 1)
 
   ARTICLE_TYPES = {
     how_to: 1,
@@ -33,6 +33,10 @@ class HelpArticle
   }
 
   def article_type_name
-    ARTICLE_TYPES.keys[ARTICLE_TYPES.values.index(article_type)]
+    ARTICLE_TYPES.keys[ARTICLE_TYPES.values.index(article_type_id)]
+  end
+
+  def article_type
+    I18n.t("mongoid.attributes.help_article.article_type_values.#{article_type_name}")
   end
 end
