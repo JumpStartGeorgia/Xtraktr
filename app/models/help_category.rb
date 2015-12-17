@@ -19,6 +19,25 @@ class HelpCategory
   index ({ :sort_order => 1})
 
   #############################
+  # Validations
+
+  validates_presence_of :permalink, :sort_order
+  validates_uniqueness_of :permalink
+
+  def validates_presence_of_name_for_default_language
+    default_language = I18n.default_locale.to_s
+
+    return if name_translations[default_language].present?
+
+    errors.add(:base,
+               I18n.t('errors.messages.translation_default_lang',
+                      field_name: self.class.human_attribute_name('name'),
+                      language: Language.get_name(default_language),
+                      msg: I18n.t('errors.messages.blank')))
+  end
+  validate :validates_presence_of_name_for_default_language
+
+  #############################
   # Callbacks
 
   # if name or content are '', reset value to nil so fallback works
