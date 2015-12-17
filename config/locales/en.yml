@@ -465,11 +465,11 @@ en:
         sort_order: The order the API methods should appear
       category:
         name: Name of category
-        permalink: This text needs to match the name of the icon image file
+        permalink: Abbreviated Name Used in URL
         sort_order: The order the categories should appear
       help_category:
         name: Name of help category
-        permalink: "This text appears after the last slash in this help category's url"
+        permalink: Abbreviated Name Used in URL
         sort_order: The order the help categories should appear
   errors:
     messages:
