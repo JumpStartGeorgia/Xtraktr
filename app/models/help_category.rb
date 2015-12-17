@@ -1,5 +1,6 @@
 class HelpCategory
   include Mongoid::Document
+  include Mongoid::Timestamps
 
   #############################
   attr_accessible :name,
