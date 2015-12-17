@@ -29,4 +29,15 @@ class HelpCategory
   end
 
   before_save :set_to_nil
+
+  #############################
+  # Scopes
+
+  def self.sorted
+    order_by([[:sort_order, :asc], [:name, :asc]])
+  end
+
+  def self.by_permalink(permalink)
+    find_by(permalink: permalink)
+  end
 end
