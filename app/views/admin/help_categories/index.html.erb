@@ -2,11 +2,15 @@
 <% title t '.title', :default => model_class.model_name.human(:count => 2) %>
 
 <div class="form-group form-group-admin-buttons">
+
   <%= link_to t('.new', :default => t("helpers.links.new")),
               new_admin_help_category_path,
               :class => 'btn btn-primary' %>
-  <%= link_to t('helpers.links.admin'), admin_path,
-  :class => 'btn btn-default' %>
+
+  <%= link_to t('helpers.links.admin'),
+              admin_path,
+              :class => 'btn btn-default' %>
+
 </div>
 
 
