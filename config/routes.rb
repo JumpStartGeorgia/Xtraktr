@@ -31,6 +31,7 @@ BootstrapStarter::Application.routes.draw do
       resources :api_versions, :except => [:show] do
         resources :api_methods, :except => [:index]
       end
+      resources :help_articles
       resources :help_categories, except: :show
     end
 
