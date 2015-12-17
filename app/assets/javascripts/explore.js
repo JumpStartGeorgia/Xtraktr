@@ -574,7 +574,7 @@ function build_histogramm_chart (json_chart, chart_height, weight_name) { // bui
     series: [{ data:  json_chart.data.map(function (d, i){ return { x:nm.min_range + nm.width*i, y: d.count, percent: d.y }; }) }],
     legend: { enabled: false },
     tooltip: {
-      formatter: function () { return this.y + " (" + this.point.percent + "%)"; }
+      formatter: function () { return Highcharts.numberFormat(this.y, 0) + " (" + this.point.percent + "%)"; }
     },
     exporting: {
       sourceWidth: 1280,

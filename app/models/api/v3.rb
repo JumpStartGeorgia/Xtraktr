@@ -303,7 +303,6 @@ class Api::V3
       data[:results] = dataset_single_analysis(dataset, data, with_title, weight_values)
       data[:chart] = dataset_single_chart(data, with_title, options) if with_chart_data
       data[:map] = dataset_single_map(question.answers, data, with_title, options) if with_map_data && question.is_mappable?
-      data[:tmp] = dataset.data_items.code_data_all(question[:code])
     end
 
     return data
@@ -792,7 +791,7 @@ private
             endd = start + num.width - minus
             endd = num.type == 0 ? endd.to_i : endd.to_f
             results[:analysis] << { answer_value: i, answer_text: "#{start} - #{endd}",
-           unweighted_count: x[0], weighted_count: fdw[i][0], weighted_percent: fdw[i][1] } }
+           unweighted_count: x[0], weighted_count: fdw[i][0].round, weighted_percent: fdw[i][1] } }
         end
       else
         if @_question.categorical_type?

@@ -984,7 +984,6 @@ class Dataset < CustomTranslation
       items.formatted_data = nil
       items.frequency_data = nil
       items.frequency_data_total = nil
-
     elsif data_type == 1
 
       question.numerical = nil
@@ -993,35 +992,33 @@ class Dataset < CustomTranslation
       
       total = 0
       frequency_data = {}
-      data_length = items.data.count
+      keys = []
       question.answers.sorted.each {|answer|
         frequency_data[answer.value] = [items.data.select{|x| x == answer.value }.count, 0]
+        total += frequency_data[answer.value][0];
+        keys.push(answer.value)
       }
 
-      question.answers.sorted.each {|answer|
-        total += frequency_data[answer][0];
-      }
-
-      question.answers.sorted.each {|answer|
-        frequency_data[answer][1] = (frequency_data[answer][0].to_f/total*100).round(2)
+      keys.each {|ans_value|
+        frequency_data[ans_value][1] = (frequency_data[ans_value][0].to_f/total*100).round(2)
       }
 
       items.frequency_data = frequency_data
       items.frequency_data_total = total
 
     elsif data_type == 2
-
-      if question.numerical.nil?
-        question.build_numerical(meta)
-      else
-        question.numerical.update_attributes(meta)
+      if meta.class != Numerical
+        if question.numerical.nil?
+          question.build_numerical(meta)
+        else
+          question.numerical.update_attributes(meta)
+        end
       end
-
+      
       predefined_answers = question.answers.map { |f| f.value }
       num = question.numerical  
       items.formatted_data = []
       vfd = [] # only valid formatted data for calculating stats
-
       fd = Array.new(num.size, 0)
       fd.each_with_index{|x, i| fd[i] = [0,0] }
 
@@ -1054,7 +1051,6 @@ class Dataset < CustomTranslation
          fd[i][1] = (x[0].to_f/total*100).round(2) }
 
       items.frequency_data = fd;
-
       vfd.extend(DescriptiveStatistics) # descriptive statistics
       
       question.descriptive_statistics = {
@@ -1071,6 +1067,7 @@ class Dataset < CustomTranslation
         :standard_deviation => vfd.standard_deviation
       }
     end
+    items.save
         
   end
   # def questions_data_recalculate(data)#, type)       
