@@ -16,4 +16,24 @@ class Admin::HelpArticlesController < ApplicationController
       format.html
     end
   end
+
+  def create
+    @help_article = HelpArticle.new(params[:help_article])
+
+    respond_to do |format|
+      if @help_article.save
+        format.html do
+          redirect_to admin_help_articles_path,
+                      flash: {
+                        success: t('app.msgs.success_created',
+                                   obj: t('mongoid.models.help_article.one'))
+                      }
+        end
+      else
+        set_tabbed_translation_form_settings
+
+        format.html { render action: 'new' }
+      end
+    end
+  end
 end
