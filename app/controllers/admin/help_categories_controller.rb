@@ -9,7 +9,7 @@ class Admin::HelpCategoriesController < ApplicationController
   respond_to :html
 
   def index
-    @help_categories = HelpCategory.all
+    @help_categories = HelpCategory.sorted
 
     respond_to do |format|
       format.html # index.html.erb
@@ -64,7 +64,7 @@ class Admin::HelpCategoriesController < ApplicationController
         end
       else
         set_tabbed_translation_form_settings
-        
+
         format.html { render action: 'edit' }
       end
     end
