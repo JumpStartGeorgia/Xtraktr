@@ -47,6 +47,9 @@ en:
       help_category:
         one: Help Category
         other: Help Categories
+      help_article:
+        one: Help Article
+        other: Help Articles
       category_mapper:
         one: Categories
         other: Categories
@@ -336,6 +339,8 @@ en:
         name: Name
         permalink: URL to Help Category
         sort_order: Sort Order
+      help_article:
+        title: Title
     hints:
       dataset:
         title: The title of your dataset
@@ -471,6 +476,8 @@ en:
         name: Name of help category
         permalink: Abbreviated Name Used in URL
         sort_order: The order the help categories should appear
+      help_article:
+        title: Title of article
   errors:
     messages:
       required_field: "is a required field."
