@@ -28,7 +28,6 @@ class HelpArticle
       title_translations[key] = nil if title_translations[key].empty?
     end
   end
-
   before_save :set_empty_title_to_nil
 
   #############################
