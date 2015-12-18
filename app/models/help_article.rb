@@ -50,5 +50,7 @@ class HelpArticle
   index(sort_order: 1)
 
   attr_accessible :sort_order
+
+  validates_presence_of :sort_order
   
 end
