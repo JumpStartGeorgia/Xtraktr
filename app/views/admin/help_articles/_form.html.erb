@@ -33,6 +33,10 @@
                 min: 1,
                 step: 5 %>
 
+    <%= f.input :public,
+                as: :radio,
+                hint: admin_translation_hint(model_i18n_key, 'sort_order') %>
+
   <% end %>
 
   <div class="form-group" style="margin-top: 20px;">
