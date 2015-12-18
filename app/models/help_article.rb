@@ -75,4 +75,8 @@ class HelpArticle
   def self.sorted
     order_by([[:sort_order, :asc], [:title, :asc]])
   end
+
+  def self.is_public
+    where(public: true)
+  end
 end
