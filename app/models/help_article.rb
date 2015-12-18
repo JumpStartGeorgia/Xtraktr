@@ -41,4 +41,6 @@ class HelpArticle
   def article_type
     I18n.t("mongoid.attributes.help_article.article_type_values.#{article_type_symbol}")
   end
+
+  validates_presence_of :article_type_id
 end
