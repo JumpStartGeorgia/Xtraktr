@@ -75,6 +75,17 @@ class HelpArticle
 
   attr_accessible :public_at
 
+  def update_public_at
+    return unless public_changed?
+
+    if public
+      self[:public_at] = Date.today
+    else
+      self[:public_at] = nil
+    end
+  end
+  before_save :update_public_at
+
   #############################
   # Scopes
 
