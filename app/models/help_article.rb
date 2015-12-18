@@ -60,6 +60,10 @@ class HelpArticle
     I18n.t("mongoid.attributes.help_article.article_type_values.#{article_type_symbol}")
   end
 
+  def self.article_types_and_ids
+    [['how_to', 1], ['tip', 2]]
+  end
+
   validates_presence_of :article_type_id
   validates :article_type_id, inclusion: { in: ARTICLE_TYPES.values }
 
