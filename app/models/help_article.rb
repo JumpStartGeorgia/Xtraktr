@@ -43,4 +43,5 @@ class HelpArticle
   end
 
   validates_presence_of :article_type_id
+  validates :article_type_id, inclusion: { in: ARTICLE_TYPES.values }
 end
