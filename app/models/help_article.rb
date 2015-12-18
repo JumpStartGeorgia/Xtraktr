@@ -52,5 +52,11 @@ class HelpArticle
   attr_accessible :sort_order
 
   validates_presence_of :sort_order
-  
+
+  #############################
+  # Scopes
+
+  def self.sorted
+    order_by([[:sort_order, :asc], [:title, :asc]])
+  end
 end

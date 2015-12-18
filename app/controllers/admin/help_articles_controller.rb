@@ -1,6 +1,6 @@
 class Admin::HelpArticlesController < ApplicationController
   def index
-    @help_articles = HelpArticle.all
+    @help_articles = HelpArticle.sorted
 
     respond_to do |format|
       format.html
