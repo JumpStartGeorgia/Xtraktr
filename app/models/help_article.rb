@@ -61,7 +61,14 @@ class HelpArticle
   end
 
   def self.article_types_and_ids
-    [['how_to', 1], ['tip', 2]]
+    types_and_ids = []
+    ARTICLE_TYPES.keys.each do |article_type_key|
+      type_id = ARTICLE_TYPES[article_type_key]
+      translated_type_key = I18n.t("mongoid.attributes.help_article.article_type_values.#{article_type_key}")
+      types_and_ids << [translated_type_key, type_id]
+    end
+
+    types_and_ids
   end
 
   validates_presence_of :article_type_id
