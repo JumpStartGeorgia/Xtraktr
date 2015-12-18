@@ -24,8 +24,8 @@ class HelpArticle
   validate :validates_presence_of_title_for_default_language
 
   def set_empty_title_to_nil
-    self.title_translations.keys.each do |key|
-      self.title_translations[key] = nil if self.title_translations[key].empty?
+    title_translations.keys.each do |key|
+      title_translations[key] = nil if title_translations[key].empty?
     end
   end
 
