@@ -62,6 +62,12 @@ class HelpArticle
   validates_presence_of :sort_order
 
   #############################
+  field :public, type: Boolean, default: false
+  index(public: 1)
+
+  attr_accessible :public
+
+  #############################
   # Scopes
 
   def self.sorted
