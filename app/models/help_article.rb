@@ -78,4 +78,9 @@ class HelpArticle
   def self.is_public
     where(public: true)
   end
+
+  def self.by_article_type(article_type)
+    desired_article_type_id = ARTICLE_TYPES[article_type]
+    where(article_type_id: desired_article_type_id)
+  end
 end
