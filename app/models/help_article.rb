@@ -23,6 +23,14 @@ class HelpArticle
   end
   validate :validates_presence_of_title_for_default_language
 
+  def set_empty_title_to_nil
+    self.title_translations.keys.each do |key|
+      self.title_translations[key] = nil if self.title_translations[key].empty?
+    end
+  end
+
+  before_save :set_empty_title_to_nil
+
   #############################
   field :article_type_id, type: Integer, default: 1
   index(article_type_id: 1)
