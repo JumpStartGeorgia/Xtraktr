@@ -4,6 +4,15 @@ class HelpArticle
   include Mongoid::Timestamps
 
   #############################
+  # Note: The code in this model is organized slightly differently.
+  # The fields are presented with their related code one at a time,
+  # including callbacks, validations, index, etc. All scopes are at
+  # the bottom.
+  #############################
+
+  #############################
+  # title: The title of the help article
+
   field :title, type: String, localize: true
   index(title: 1)
 
@@ -31,6 +40,8 @@ class HelpArticle
   before_save :set_empty_title_to_nil
 
   #############################
+  # article_type : General categorization of the article
+
   field :article_type_id, type: Integer, default: 1
   index(article_type_id: 1)
 
@@ -53,6 +64,8 @@ class HelpArticle
   validates :article_type_id, inclusion: { in: ARTICLE_TYPES.values }
 
   #############################
+  # sort_order : Determines the primary order of the articles
+
   field :sort_order, type: Integer, default: 1
   index(sort_order: 1)
 
@@ -61,6 +74,8 @@ class HelpArticle
   validates_presence_of :sort_order
 
   #############################
+  # public : Whether the article is accessible to the public
+
   field :public, type: Boolean, default: false
   index(public: 1)
 
@@ -69,7 +84,8 @@ class HelpArticle
   validates_presence_of :public
 
   #############################
-  # Date that article was made public
+  # public_at : The date the article was made public
+
   field :public_at, type: Date
   index(public: 1)
 
