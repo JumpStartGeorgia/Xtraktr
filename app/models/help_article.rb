@@ -67,6 +67,8 @@ class HelpArticle
 
   attr_accessible :public
 
+  validates_presence_of :public
+
   #############################
   # Scopes
 
