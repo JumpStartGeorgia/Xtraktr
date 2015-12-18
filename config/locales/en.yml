@@ -482,6 +482,7 @@ en:
         sort_order: The order the help categories should appear
       help_article:
         title: Title of article
+        article_type: The type of the article
   errors:
     messages:
       required_field: "is a required field."

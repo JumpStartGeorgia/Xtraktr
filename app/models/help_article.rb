@@ -27,6 +27,8 @@ class HelpArticle
   field :article_type_id, type: Integer, default: 1
   index(article_type_id: 1)
 
+  attr_accessible :article_type_id
+
   ARTICLE_TYPES = {
     how_to: 1,
     tip: 2
