@@ -28,6 +28,13 @@
   <%= @help_article.public %>
 </p>
 
+<% if @help_article.public %>
+  <p>
+    <strong><%= model_class.human_attribute_name(:public_at) %>:</strong>
+    <%= @help_article.public_at %>
+  </p>
+<% end %>
+
 <p>
   <strong><%= model_class.human_attribute_name(:article_type) %>:</strong>
   <%= @help_article.article_type %>

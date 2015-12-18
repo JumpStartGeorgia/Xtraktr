@@ -69,6 +69,13 @@ class HelpArticle
   validates_presence_of :public
 
   #############################
+  # Date that article was made public
+  field :public_at, type: Date
+  index(public: 1)
+
+  attr_accessible :public_at
+
+  #############################
   # Scopes
 
   def self.sorted
