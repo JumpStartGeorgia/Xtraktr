@@ -307,7 +307,7 @@ function build_details (json) { // build details (question and possible answers)
 
   function build_details_item (json) { // populat a details item block
     var selector = "", json_question = undefined, t, exist, icon, is_categorical;
-    ["question", "brokey-down-by", "filtered-by", "weighted-by"].forEach(function (d){
+    ["question", "broken-down-by", "filtered-by", "weighted-by"].forEach(function (d){
       selector = "#tab-details #details-"+ d +"-code";
       json_question = json[d.replace(/-/g, "_")];
       if (json_question && json_question.text){
@@ -351,12 +351,12 @@ function build_details (json) { // build details (question and possible answers)
             t.show();
           }
           else { t.hide(); }
-
+          var dd;
           ["notes", "weight"].forEach(function (d, i){
             t = tmp.find(".details-" + d);
-            d = (d === "weight" ? "weight_name" : d);
-            exist = !!json_question[d];
-            if(exist) { t.find("." + d).html(json_question[d]); }
+            dd = (d === "weight" ? "weight_name" : d);
+            exist = !!json_question[dd];
+            if(exist) { t.find("." + d).html(json_question[dd]); }
             t.toggle(exist);
           });
 
