@@ -44,4 +44,11 @@ class HelpArticle
 
   validates_presence_of :article_type_id
   validates :article_type_id, inclusion: { in: ARTICLE_TYPES.values }
+
+  #############################
+  field :sort_order, type: Integer, default: 1
+  index(sort_order: 1)
+
+  attr_accessible :sort_order
+  
 end

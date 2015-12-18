@@ -345,6 +345,7 @@ en:
         article_type_values:
           how_to: How To
           tip: Tip
+        sort_order: Sort Order
     hints:
       dataset:
         title: The title of your dataset
@@ -483,6 +484,7 @@ en:
       help_article:
         title: Title of article
         article_type: The type of the article
+        sort_order: "The order the articles should appear; lower numbers appear first. (Example: 1 will appear before 2)"
   errors:
     messages:
       required_field: "is a required field."
