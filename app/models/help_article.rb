@@ -56,15 +56,19 @@ class HelpArticle
     ARTICLE_TYPES.keys[ARTICLE_TYPES.values.index(article_type_id)]
   end
 
-  def article_type
+  def self.translate_article_type(article_type_symbol)
     I18n.t("mongoid.attributes.help_article.article_type_values.#{article_type_symbol}")
+  end
+
+  def article_type
+    HelpArticle.translate_article_type(article_type_symbol)
   end
 
   def self.article_types_and_ids
     types_and_ids = []
     ARTICLE_TYPES.keys.each do |article_type_key|
       type_id = ARTICLE_TYPES[article_type_key]
-      translated_type_key = I18n.t("mongoid.attributes.help_article.article_type_values.#{article_type_key}")
+      translated_type_key = translate_article_type(article_type_key)
       types_and_ids << [translated_type_key, type_id]
     end
 
