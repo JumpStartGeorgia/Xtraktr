@@ -46,14 +46,6 @@ is_numeric_list <- sapply(data, is.numeric)
 
 
 ##########
-## CREATE DATA csv
-##########
-# convert factor data to numeric before writing out csv
-data[is_factor_list] <- lapply(data[is_factor_list], as.numeric)
-write.csv(data, args[2], row.names = F, na = "")
-
-
-##########
 ## CREATE QUESTION AND ANSWER TEXT CSV
 ##########
 
@@ -114,6 +106,22 @@ colnames(answer_array) <- c('Question Code', 'Answer Value', 'Answer Text')
 # create csv
 write.csv(question_array, args[3], row.names = F)
 write.csv(answer_array, args[4], row.names = F)
+
+
+
+##########
+## CREATE DATA CSV
+##########
+# read in the data without factors so data csv is using correct codes
+# - tried doing it with the data with factors and then converting factors to numeric
+#   but R starts numbers at 1 for factors and does not pay attention to original values
+#   so this does not work for it will not match the answer csv values.
+#      # convert factor data to numeric before writing out csv
+#      data[is_factor_list] <- lapply(data[is_factor_list], as.numeric)
+#      write.csv(data, args[2], row.names = F, na = "")
+write.csv(read.spss(args[1], use.value.labels=F, to.data.frame=F), args[2], row.names = F, na = "")
+
+
 
 # quit
 q()

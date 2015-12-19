@@ -34,7 +34,7 @@ clean_text <- function(text){
 }
 
 # read in the data with factors so know which as factors and which are not
-data <- read.dta(args[0], convert.factors = T)
+data <- read.dta(args[1], convert.factors = T)
 
 # pull out the questions/answers to variables to be used soon
 # - variable codes is needed because in stata you can create a variable that defines answers and then
@@ -53,13 +53,6 @@ variable_codes <- attr(data, 'val.labels')
 #          defined the least answer and best answer, but nothing in between
 is_factor_list <- sapply(data, is.factor)
 is_numeric_list <- sapply(data, is.numeric)
-
-##########
-## CREATE DATA csv
-##########
-# convert factor data to numeric before writing out csv
-data[is_factor_list] <- lapply(data[is_factor_list], as.numeric)
-write.csv(data, args[1], row.names = F, na = "")
 
 ##########
 ## CREATE QUESTION AND ANSWER TEXT CSV
@@ -86,8 +79,8 @@ for (i in 1:length(question_labels)){
   }else if (is_numeric_list[i] == TRUE){
     data_type <- 'n'
   }
-  # - format is: question code, question text, variable code, data type
-  questions <- c(questions, c(names(data[i]), clean_text(question_labels[i]), variable_codes[i], data_type))
+  # - format is: question code, question text, data type, variable code
+  questions <- c(questions, c(names(data[i]), clean_text(question_labels[i]), data_type, variable_codes[i]))
 }
 
 # build the answers
@@ -116,11 +109,25 @@ question_array <- matrix(questions, nrow=length(question_labels), ncol=4, byrow 
 answer_array <- matrix(answers, nrow=num_answers, ncol=3, byrow = TRUE)
 
 # add variable names so they appear as col headers in csv
-colnames(question_array) <- c('Question Code', 'Question Text', 'Question Variable', 'Question Data Type')
+colnames(question_array) <- c('Question Code', 'Question Text', 'Question Data Type', 'Question Variable')
 colnames(answer_array) <- c('Question Code', 'Answer Value', 'Answer Text')
 
 # create csv
-write.csv(question_array, args[2], row.names = F)
-write.csv(answer_array, args[3], row.names = F)
+write.csv(question_array, args[3], row.names = F)
+write.csv(answer_array, gsub('.csv$','_temp.csv',args[4]), row.names = F)
+
+
+##########
+## CREATE DATA CSV
+##########
+# read in the data without factors so data csv is using correct codes
+# - tried doing it with the data with factors and then converting factors to numeric
+#   but R starts numbers at 1 for factors and does not pay attention to original values
+#   so this does not work for it will not match the answer csv values.
+#     # convert factor data to numeric before writing out csv
+#     data[is_factor_list] <- lapply(data[is_factor_list], as.numeric)
+#     write.csv(data, args[2], row.names = F, na = "")
+write.csv(read.dta(args[1], convert.factors = F), args[2], row.names = F, na = "")
+
 
 q()
