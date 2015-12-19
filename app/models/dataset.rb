@@ -888,20 +888,22 @@ class Dataset < CustomTranslation
   def self.donors
     only(:donor).nin(donor: nil).map{|x| x.donor}.select{|x| x.present?}.uniq.sort
   end
+
   def update_question_type(code, data_type, meta)
     question = questions.with_code(code)
     items = data_items.with_code(code)
           
     question["data_type"] = data_type
 
-    if data_type == 0
+    if data_type == Question::DATA_TYPE_VALUES[:unknown]
       question.numerical = nil
       question.descriptive_statistics = nil
 
       items.formatted_data = nil
       items.frequency_data = nil
       items.frequency_data_total = nil
-    elsif data_type == 1
+
+    elsif data_type == Question::DATA_TYPE_VALUES[:categorical]
 
       question.numerical = nil
       question.descriptive_statistics = nil
@@ -923,7 +925,7 @@ class Dataset < CustomTranslation
       items.frequency_data = frequency_data
       items.frequency_data_total = total
 
-    elsif data_type == 2
+    elsif data_type == Question::DATA_TYPE_VALUES[:numerical]
       if meta.class != Numerical
         if question.numerical.nil?
           question.build_numerical(meta)
