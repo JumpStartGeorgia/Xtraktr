@@ -1054,105 +1054,112 @@ class Dataset < CustomTranslation
     only(:donor).nin(donor: nil).map{|x| x.donor}.select{|x| x.present?}.uniq.sort
   end
 
+  # update the data type for a question
+  # and set the related meta data associated with it
+  # - if type = categorical, then set frequency data
+  # - if type = numerical, then set bar width, min, max, ranges, and descriptive stats
+  # meta is only needed when setting numerical and should be a hash of the following:
+  # - type, bar width, min, max, title, min_range, max_range, size
   def update_question_type(code, data_type, meta)
     question = questions.with_code(code)
     items = data_items.with_code(code)
           
-    question["data_type"] = data_type
+    if question.present? && items.present?          
+      question.data_type = data_type
 
-    if data_type == Question::DATA_TYPE_VALUES[:unknown]
-      question.numerical = nil
-      question.descriptive_statistics = nil
+      if data_type == Question::DATA_TYPE_VALUES[:unknown]
+        question.numerical = nil
+        question.descriptive_statistics = nil
 
-      items.formatted_data = nil
-      items.frequency_data = nil
-      items.frequency_data_total = nil
+        items.formatted_data = nil
+        items.frequency_data = nil
+        items.frequency_data_total = nil
 
-    elsif data_type == Question::DATA_TYPE_VALUES[:categorical]
+      elsif data_type == Question::DATA_TYPE_VALUES[:categorical]
 
-      question.numerical = nil
-      question.descriptive_statistics = nil
-      items.formatted_data = nil
-      
-      total = 0
-      frequency_data = {}
-      keys = []
-      question.answers.sorted.each {|answer|
-        frequency_data[answer.value] = [items.data.select{|x| x == answer.value }.count, 0]
-        total += frequency_data[answer.value][0];
-        keys.push(answer.value)
-      }
-
-      keys.each {|ans_value|
-        frequency_data[ans_value][1] = (frequency_data[ans_value][0].to_f/total*100).round(2)
-      }
-
-      items.frequency_data = frequency_data
-      items.frequency_data_total = total
-
-    elsif data_type == Question::DATA_TYPE_VALUES[:numerical]
-      if meta.class != Numerical
-        if question.numerical.nil?
-          question.build_numerical(meta)
-        else
-          question.numerical.update_attributes(meta)
-        end
-      end
-      
-      predefined_answers = question.answers.map { |f| f.value }
-      num = question.numerical  
-      items.formatted_data = []
-      vfd = [] # only valid formatted data for calculating stats
-      fd = Array.new(num.size, 0)
-      fd.each_with_index{|x, i| fd[i] = [0,0] }
-
-      #formatted and grouped data calculation
-      items.data.each {|d|
-        if is_numeric?(d) && !predefined_answers.include?(d)
-          if num.type == 0 
-            tmpD = d.to_i
-          elsif num.type == 1
-            tmpD = d.to_f
-          end
-
-          if tmpD >= num.min && tmpD <= num.max
-            items.formatted_data.push(tmpD);
-            vfd.push(tmpD);
-
-            index = tmpD == num.min_range ? 0 : ((tmpD-num.min_range)/num.width-0.00001).floor
-            fd[index][0] += 1
-          else 
-            items.formatted_data.push(nil);
-          end
-        else 
-          items.formatted_data.push(nil)
-        end
-
-      }
-      total = 0
-      fd.each {|x| total+=x[0]}
-      fd.each_with_index {|x,i| 
-         fd[i][1] = (x[0].to_f/total*100).round(2) }
-
-      items.frequency_data = fd;
-      vfd.extend(DescriptiveStatistics) # descriptive statistics
-      
-      question.descriptive_statistics = {
-        :number => vfd.number.to_i,
-        :min => num.integer? ? vfd.min.to_i : vfd.min,
-        :max => num.integer? ? vfd.max.to_i : vfd.max,
-        :mean => vfd.mean,
-        :median => num.integer? ? vfd.median.to_i : vfd.median,
-        :mode => num.integer? ? vfd.mode.to_i : vfd.mode,
-        :q1 => num.integer? ? vfd.percentile(25).to_i : vfd.percentile(25),
-        :q2 => num.integer? ? vfd.percentile(50).to_i : vfd.percentile(50),
-        :q3 => num.integer? ? vfd.percentile(75).to_i : vfd.percentile(75),
-        :variance => vfd.variance,
-        :standard_deviation => vfd.standard_deviation
-      }
-    end
-    items.save
+        question.numerical = nil
+        question.descriptive_statistics = nil
+        items.formatted_data = nil
         
+        total = 0
+        frequency_data = {}
+        keys = []
+        question.answers.sorted.each {|answer|
+          frequency_data[answer.value] = [items.data.select{|x| x == answer.value }.count, 0]
+          total += frequency_data[answer.value][0];
+          keys.push(answer.value)
+        }
+
+        keys.each {|ans_value|
+          frequency_data[ans_value][1] = (frequency_data[ans_value][0].to_f/total*100).round(2)
+        }
+
+        items.frequency_data = frequency_data
+        items.frequency_data_total = total
+
+      elsif data_type == Question::DATA_TYPE_VALUES[:numerical]
+        if meta.class != Numerical
+          # build the numerical object
+          if question.numerical.nil?
+            question.build_numerical(meta)
+          else
+            question.numerical.update_attributes(meta)
+          end
+        end
+        
+        predefined_answers = question.answers.map { |f| f.value }
+        num = question.numerical  
+        items.formatted_data = []
+        vfd = [] # only valid formatted data for calculating stats
+        fd = Array.new(num.size, [0,0])
+
+        #formatted and grouped data calculation
+        items.data.each {|d|
+          if is_numeric?(d) && !predefined_answers.include?(d)
+            if num.type == Numerical::TYPE_VALUES[:integer]
+              tmpD = d.to_i
+            elsif num.type == Numerical::TYPE_VALUES[:float]
+              tmpD = d.to_f
+            end
+
+            if tmpD.present? && tmpD >= num.min && tmpD <= num.max
+              items.formatted_data.push(tmpD);
+              vfd.push(tmpD);
+
+              index = tmpD == num.min_range ? 0 : ((tmpD-num.min_range)/num.width-0.00001).floor
+              fd[index][0] += 1
+            else 
+              items.formatted_data.push(nil);
+            end
+          else 
+            items.formatted_data.push(nil)
+          end
+
+        }
+        total = 0
+        fd.each {|x| total+=x[0]}
+        fd.each_with_index {|x,i| 
+           fd[i][1] = (x[0].to_f/total*100).round(2) }
+
+        items.frequency_data = fd;
+        vfd.extend(DescriptiveStatistics) # descriptive statistics
+        
+        question.descriptive_statistics = {
+          :number => vfd.number.to_i,
+          :min => num.integer? ? vfd.min.to_i : vfd.min,
+          :max => num.integer? ? vfd.max.to_i : vfd.max,
+          :mean => vfd.mean,
+          :median => num.integer? ? vfd.median.to_i : vfd.median,
+          :mode => num.integer? ? vfd.mode.to_i : vfd.mode,
+          :q1 => num.integer? ? vfd.percentile(25).to_i : vfd.percentile(25),
+          :q2 => num.integer? ? vfd.percentile(50).to_i : vfd.percentile(50),
+          :q3 => num.integer? ? vfd.percentile(75).to_i : vfd.percentile(75),
+          :variance => vfd.variance,
+          :standard_deviation => vfd.standard_deviation
+        }
+      end
+      items.save
+    end
   end
   # def questions_data_recalculate(data)#, type)       
   #     if data.keys.length
