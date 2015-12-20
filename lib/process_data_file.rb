@@ -214,14 +214,17 @@ module ProcessDataFile
         # only conintue if the # of cols match the # of quesiton codes
         if data.first.length == question_codes.length
           question_codes.each_with_index do |code, code_index|
+            puts "@@@@@@@@@@@ code index = #{code_index}, code = #{code}"
             clean_code = clean_text(code, format_code: true)
             code_data = data.map{|x| x[code_index]}
             total = 0
             frequency_data = {}
+            formatted_data = nil
             question = self.questions.with_code(clean_code)
             if code_data.present? && question.present?
               # build frequency/stats for question if needed
               if are_question_codes_categorical[code_index] # build basic frequency info for categorical questions
+                puts "@@@@@@@@@@@ - question is categorical"
                 question.answers.sorted.each {|answer|
                   cnt = code_data.select{|x| x == answer.value }.count
                   total += cnt
@@ -229,8 +232,117 @@ module ProcessDataFile
                 }
                 question.has_data_without_answers = total < code_data.select{|d| !d.nil? }.length 
 
-              elsif are_question_codes_numerical[code_index] # build numerical descriptive stats if numerical
-#### TODO                
+              elsif are_question_codes_numerical[code_index] # build numerical descriptive stats for numerical questions
+                puts "@@@@@@@@@@@ - question is numerical"
+
+                # flag that is set to false if:
+                # - data has no numeric data
+                # - there is no repeating values in the data (most likely an ID field)
+                #   - computing stats on ID field can take a long time so lets skip it until the user asks for it
+                has_numeric_data = code_data.length != code_data.uniq.length
+
+                if has_numeric_data
+                  unique_answer_values = question.answers.unique_values
+
+                  # first have to determine if data is int or float
+                  int_data = []
+                  float_data = []
+                  # get uniq data items and remove ones that are predefined answers
+                  unique_data = code_data.uniq - unique_answer_values
+                  # if item is int or float, add it to array
+                  unique_data.each do |x|
+                    if (x =~ /\A[-+]?\d+\z/) != nil # int
+                      int_data << x.to_i
+                    elsif (x =~ /\A[-+]?\d*\.?\d+\z/) != nil # float
+                      float_data << x.to_f
+                    end
+                  end  
+
+                  # make sure at least some numeric data was found
+                  has_numeric_data = int_data.present? || float_data.present?
+                end
+
+                if has_numeric_data
+                  num = Numerical.new
+                  
+                  # if float_data has any values then it is float
+                  # else int
+                  num.type = float_data.present? ? Numerical::TYPE_VALUES[:float] : Numerical::TYPE_VALUES[:integer]
+
+                  # get min and max values
+                  # - merge the two data arrays and then get min/max
+                  #   (if data is float, it still might have int values too)
+                  merge_data = int_data + float_data
+                  num.min = merge_data.min.to_f
+                  num.max = merge_data.max.to_f
+                  num.max += 1 if num.min == num.max # if min and max are the same increase max by 1
+
+                  # set bar width
+                  # - if the difference between max and min is less than default width, use 1
+                  #   else use default width
+                  num.width = (num.max - num.min) > Numerical::NUMERIC_DEFAULT_WIDTH ? Numerical::NUMERIC_DEFAULT_WIDTH : 1
+
+                  # set ranges and size
+                  num.min_range = (num.min / num.width).floor * num.width
+                  num.max_range = (num.max / num.width).ceil * num.width
+                  num.size = (num.max_range - num.min_range) / num.width
+
+                  # set teh numerical object
+                  question.numerical = num
+
+                  formatted_data = []
+                  vfd = [] # only valid formatted data for calculating stats
+                  fd = Array.new(num.size, [0,0])
+
+                  #formatted and grouped data calculation
+                  code_data.each {|d|
+                    if is_numeric?(d) && !unique_answer_values.include?(d)
+                      if num.type == Numerical::TYPE_VALUES[:integer]
+                        tmpD = d.to_i
+                      elsif num.type == Numerical::TYPE_VALUES[:float]
+                        tmpD = d.to_f
+                      end
+
+                      if tmpD.present? && tmpD >= num.min && tmpD <= num.max
+                        formatted_data.push(tmpD);
+                        vfd.push(tmpD);
+
+                        index = tmpD == num.min_range ? 0 : ((tmpD-num.min_range)/num.width-0.00001).floor
+                        fd[index][0] += 1
+                      else 
+                        formatted_data.push(nil);
+                      end
+                    else 
+                      formatted_data.push(nil)
+                    end
+
+                  }
+                  total = 0
+                  fd.each {|x| total+=x[0]}
+                  fd.each_with_index {|x,i| 
+                     fd[i][1] = (x[0].to_f/total*100).round(2) }
+
+                  frequency_data = fd;
+
+                  vfd.extend(DescriptiveStatistics) # descriptive statistics
+                  
+                  question.descriptive_statistics = {
+                    :number => vfd.number.to_i,
+                    :min => num.integer? ? vfd.min.to_i : vfd.min,
+                    :max => num.integer? ? vfd.max.to_i : vfd.max,
+                    :mean => vfd.mean,
+                    :median => num.integer? ? vfd.median.to_i : vfd.median,
+                    :mode => num.integer? ? vfd.mode.to_i : vfd.mode,
+                    :q1 => num.integer? ? vfd.percentile(25).to_i : vfd.percentile(25),
+                    :q2 => num.integer? ? vfd.percentile(50).to_i : vfd.percentile(50),
+                    :q3 => num.integer? ? vfd.percentile(75).to_i : vfd.percentile(75),
+                    :variance => vfd.variance,
+                    :standard_deviation => vfd.standard_deviation
+                  }
+
+                  # mark the question as being analyzable
+                  question.is_analysable = true
+                end
 
 
                 question.has_data_without_answers = code_data.select{|d| !d.nil? }.length > 0 
@@ -242,7 +354,28 @@ module ProcessDataFile
               self.data_items_attributes = [{code: clean_code,
                                             original_code: clean_text(code),
                                             data: code_data
-                                          }.merge(frequency_data.present? ? { frequency_data: frequency_data, frequency_data_total: total } : {})]
+                                          }.merge(frequency_data.present? ? { frequency_data: frequency_data, frequency_data_total: total, formatted_data: formatted_data } : {})]
+
+
+
+
+              # # add the data for this question
+              # self.data_items_attributes = [{code: clean_code,
+              #                               original_code: clean_text(code),
+              #                               data: code_data
+              #                              }]
+
+
+              # # build appropriate frequency/stats for question based on type
+              # #self.update_question_type(code, question.data_type) if question.data_type != Question::DATA_TYPE_VALUES[:unknown]
+
+              # # indicate whether question has data that is not part of predefined answers 
+              # if are_question_codes_categorical[code_index] 
+              #   question.has_data_without_answers = total < code_data.select{|d| !d.nil? }.length 
+              # else
+              #   question.has_data_without_answers = code_data.select{|d| !d.nil? }.length > 0 
+              # end
+
 
             else
               puts "******************************"

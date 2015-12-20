@@ -1,13 +1,13 @@
 class Numerical
 
-  #NUMERIC_DEFAULT_NUMBER_GROUP = 8
+  NUMERIC_DEFAULT_WIDTH = 10
   TYPE_VALUES = { integer: 0, float: 1}
   include Mongoid::Document
 
   #############################
   field :title, type: String, localize: true
   field :type, type: Integer #, default: 0 # [0: Integer, 1: Decimal]
-  field :width, type: Float #, default: NUMERIC_DEFAULT_NUMBER_GROUP
+  field :width, type: Float#, default: NUMERIC_DEFAULT_WIDTH
   field :min, type: Float
   field :max, type: Float
   field :min_range, type: Float

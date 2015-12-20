@@ -515,9 +515,9 @@ class DatasetsController < ApplicationController
 
                 if question_data.is_a?(Array) && is_number?(question_data[0])
                   question_data_type = question_data[0].to_i
-                  if question_data_type == 0 || question_data_type == 1
+                  if question_data_type == Question::DATA_TYPE_VALUES[:unknown] || question_data_type == Question::DATA_TYPE_VALUES[:categorical]
                     flag = true
-                  elsif question_data_type == 2 && question_data.length == 8
+                  elsif question_data_type == Question::DATA_TYPE_VALUES[:numerical] && question_data.length == 8
                     begin
                       num = { 
                         type: question_data[1].to_i,
@@ -584,7 +584,7 @@ class DatasetsController < ApplicationController
           end
           render 'message', :formats => [:js]
         }
-      end    
+      end  
     else
       flash[:info] =  t('app.msgs.does_not_exist')
       redirect_to datasets_path(:locale => I18n.locale)
