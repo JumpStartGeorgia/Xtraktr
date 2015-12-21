@@ -118,6 +118,28 @@ class HelpArticle
   before_save :update_public_at
 
   #############################
+  # content : The main content of the article
+
+  field :content, type: String, localize: true
+  index(content: 1)
+
+  attr_accessible :content,
+                  :content_translations
+
+  def validates_presence_of_content_for_default_language
+    default_language = I18n.default_locale.to_s
+
+    return if content_translations[default_language].present?
+
+    errors.add(:base,
+               I18n.t('errors.messages.translation_default_lang',
+                      field_name: self.class.human_attribute_name('content'),
+                      language: Language.get_name(default_language),
+                      msg: I18n.t('errors.messages.blank')))
+  end
+  validate :validates_presence_of_content_for_default_language
+
+  #############################
   # Scopes
 
   def self.sorted

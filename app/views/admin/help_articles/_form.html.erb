@@ -19,6 +19,19 @@
                      ).html_safe
             ) %>
       <% end %>
+
+      <%= f.fields_for :content_translations, OpenStruct.new(f.object.content_translations) do |translation| %>
+        <%= translation.input(
+              tab_locale,
+              hint: admin_translation_hint(model_i18n_key, 'content'),
+              label: admin_translation_label(
+                       model_i18n_key,
+                       'content',
+                       tab_locale,
+                       @help_article.content_translations[I18n.default_locale.to_s]
+                     ).html_safe
+            ) %>
+      <% end %>
     <% end %>
 
     <%= f.input :article_type_id,
