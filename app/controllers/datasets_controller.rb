@@ -446,105 +446,112 @@ class DatasetsController < ApplicationController
 
   # set questions data types [:categorical, :numerical or :unknown]
   def mass_changes_questions_type
-    respond_to do |format|
-      format.html {
-        @js.push("mass_changes_questions_type.js", "highcharts.js")
-        @css.push("mass_changes_questions_type.css")
+    @dataset = Dataset.by_id_for_user(params[:id], current_user.id)
 
-        # create data for datatables (faster to load this way)
-        gon.datatable_json = []
-        gon.private_user = Base64.urlsafe_encode64(current_user.id.to_s)
-        gon.locale_picker_data = { reset: I18n.t("app.buttons.reset") }
-        gon.no_answer = I18n.t("datasets.mass_changes_questions_type.no_answer")
-        gon.percent = I18n.t("datasets.mass_changes_questions_type.percent")
-        @dataset.languages_sorted.each do |locale|
-          gon.locale_picker_data[locale] = [I18n.t("app.language." + locale),I18n.t("app.language." + locale)[0..1].downcase]
-        end
-        gon.total_responses_out_of = I18n.t("app.common.total_responses_out_of")
+    if @dataset.present?
+      respond_to do |format|
+        format.html {
+          @js.push("mass_changes_questions_type.js", "highcharts.js")
+          @css.push("mass_changes_questions_type.css")
 
-        # prepaire data for table if numerical fill fields else send reset values
-        @dataset.questions.each do |q|
-            data = {
-              code: q.original_code,
-              question: q.text,
-              data_type: q.data_type,
-              has_answers: q.has_code_answers,              
-              num: {
-                type: 0,
-                width: 0,
-                min: 0,
-                max: 0,
-                title: nil
+          # create data for datatables (faster to load this way)
+          gon.datatable_json = []
+          gon.private_user = Base64.urlsafe_encode64(current_user.id.to_s)
+          gon.locale_picker_data = { reset: I18n.t("app.buttons.reset") }
+          gon.no_answer = I18n.t("datasets.mass_changes_questions_type.no_answer")
+          gon.percent = I18n.t("datasets.mass_changes_questions_type.percent")
+          @dataset.languages_sorted.each do |locale|
+            gon.locale_picker_data[locale] = [I18n.t("app.language." + locale),I18n.t("app.language." + locale)[0..1].downcase]
+          end
+          gon.total_responses_out_of = I18n.t("app.common.total_responses_out_of")
+
+          # prepaire data for table if numerical fill fields else send reset values
+          @dataset.questions.each do |q|
+              data = {
+                code: q.original_code,
+                question: q.text,
+                data_type: q.data_type,
+                has_answers: q.has_code_answers,              
+                num: {
+                  type: 0,
+                  width: 0,
+                  min: 0,
+                  max: 0,
+                  title: nil
+                }
               }
-            }
-            num = data[:num]
+              num = data[:num]
 
-            orig_locale = I18n.locale.to_s
-            orig_title = []
-            titles = []
+              orig_locale = I18n.locale.to_s
+              orig_title = []
+              titles = []
 
-            if q.numerical?
-              @dataset.languages_sorted.each do |locale|
-                value = q.numerical.title_translations[locale].blank? ? "" : q.numerical.title_translations[locale]
-                if locale == orig_locale
-                  orig_title = [locale, value]
-                else
-                  titles.push([locale, value])
+              if q.numerical?
+                @dataset.languages_sorted.each do |locale|
+                  value = q.numerical.title_translations[locale].blank? ? "" : q.numerical.title_translations[locale]
+                  if locale == orig_locale
+                    orig_title = [locale, value]
+                  else
+                    titles.push([locale, value])
+                  end
                 end
-              end
-              titles.unshift(orig_title)
-              
-              num[:type] = q.numerical.type
-              num[:width] = q.numerical.width
-              num[:min] = q.numerical.min
-              num[:max] = q.numerical.max
-            else
+                titles.unshift(orig_title)
+                
+                num[:type] = q.numerical.type
+                num[:width] = q.numerical.width
+                num[:min] = q.numerical.min
+                num[:max] = q.numerical.max
+              else
 
-              @dataset.languages_sorted.each do |locale|
-                if locale == orig_locale
-                  orig_title = [locale, ""]
-                else
-                  titles.push([locale, ""])
+                @dataset.languages_sorted.each do |locale|
+                  if locale == orig_locale
+                    orig_title = [locale, ""]
+                  else
+                    titles.push([locale, ""])
+                  end
                 end
+                titles.unshift(orig_title)
               end
-              titles.unshift(orig_title)
-            end
 
-            num[:title] = titles
-            gon.datatable_json << data
-        end
+              num[:title] = titles
+              gon.datatable_json << data
+          end
 
-        add_dataset_nav_options()
-      }
-      format.js {
-        begin
-           
-          @msg = t('app.msgs.mass_change_question_type_saved')
-          @success = true
-          if params[:mass_data].present? && params[:mass_data].keys.length > 0
-            @dataset.questions.reflag_questions_type(params[:mass_data])  
-            @dataset.questions_data_recalculate(params[:mass_data])
-            # force question callbacks
-            @dataset.check_questions_for_changes_status = true
+          add_dataset_nav_options()
+        }
+        format.js {
+          begin
+             
+            @msg = t('app.msgs.mass_change_question_type_saved')
+            @success = true
+            if params[:mass_data].present? && params[:mass_data].keys.length > 0
+              @dataset.questions.reflag_questions_type(params[:mass_data])  
+              @dataset.questions_data_recalculate(params[:mass_data])
+              # force question callbacks
+              @dataset.check_questions_for_changes_status = true
 
-            if !@dataset.save
-              @msg = @dataset.errors.full_messages
-              @success = false
-            end
-          end  
-        rescue Exception => e
-          @msg = t('app.msgs.mass_change_question_not_saved')
-          @success = false
+              if !@dataset.save
+                @msg = @dataset.errors.full_messages
+                @success = false
+              end
+            end  
+          rescue Exception => e
+            @msg = t('app.msgs.mass_change_question_not_saved')
+            @success = false
 
-          # send the error notification
-          ExceptionNotifier::Notifier
-            .exception_notification(request.env, e)
-            .deliver
-        end
-        render 'message.js'
-      }
->>>>>>> 75ffb1e... Merge with histogramm branch
-    end
+            # send the error notification
+            ExceptionNotifier::Notifier
+              .exception_notification(request.env, e)
+              .deliver
+          end
+          render 'message.js'
+        }
+      end
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to datasets_path(:locale => I18n.locale)
+      return
+    end      
   end
 
   # # mark which answers users can select to not include in the analysis
