@@ -40,6 +40,11 @@
   <%= @help_article.article_type %>
 </p>
 
+<p>
+  <strong><%= model_class.human_attribute_name(:help_category_ids) %>:</strong>
+  <%= @help_article.help_category_names %>
+</p>
+
 <div>
   <p>
     <strong><%= model_class.human_attribute_name(:content) %>:</strong>
