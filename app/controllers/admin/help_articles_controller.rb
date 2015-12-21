@@ -38,6 +38,14 @@ class Admin::HelpArticlesController < ApplicationController
   def create
     @help_article = HelpArticle.new(params[:help_article])
 
+    # if there are help_category_ids, create mapper objects with them
+    params[:help_article][:help_category_ids].delete('')
+    params[:help_article][:help_category_ids].each do |help_category_id|
+      @help_article.help_category_mappers.build(
+        help_category_id: help_category_id
+      )
+    end
+
     respond_to do |format|
       if @help_article.save
         format.html do
