@@ -18,7 +18,7 @@ class Admin::HelpArticlesController < ApplicationController
   def new
     @help_article = HelpArticle.new
 
-    set_tabbed_translation_form_settings
+    prepare_form
 
     respond_to do |format|
       format.html
@@ -27,9 +27,8 @@ class Admin::HelpArticlesController < ApplicationController
 
   def edit
     @help_article = HelpArticle.find(params[:id])
-    @js.push('help_articles.js')
 
-    set_tabbed_translation_form_settings
+    prepare_form
 
     respond_to do |format|
       format.html
@@ -49,7 +48,7 @@ class Admin::HelpArticlesController < ApplicationController
                       }
         end
       else
-        set_tabbed_translation_form_settings
+        prepare_form
 
         format.html { render action: 'new' }
       end
@@ -69,7 +68,7 @@ class Admin::HelpArticlesController < ApplicationController
                       }
         end
       else
-        set_tabbed_translation_form_settings
+        prepare_form
 
         format.html { render action: 'edit' }
       end
@@ -89,5 +88,16 @@ class Admin::HelpArticlesController < ApplicationController
                     }
       end
     end
+  end
+
+  private
+
+  def initiate_form_js
+    @js.push('help_articles.js')
+  end
+
+  def prepare_form
+    initiate_form_js
+    set_tabbed_translation_form_settings
   end
 end
