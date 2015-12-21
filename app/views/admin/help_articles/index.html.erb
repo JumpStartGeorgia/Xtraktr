@@ -19,6 +19,7 @@
     <tr>
       <th><%= model_class.human_attribute_name(:title) %></th>
       <th><%= model_class.human_attribute_name(:article_type) %></th>
+      <th><%= model_class.human_attribute_name(:help_category_ids) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
@@ -31,6 +32,9 @@
         </td>
         <td>
           <%= help_article.article_type %>
+        </td>
+        <td>
+          <%= help_article.help_category_names %>
         </td>
         <td>
           <%= link_to '',

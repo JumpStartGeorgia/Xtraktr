@@ -162,6 +162,14 @@ class HelpArticle
   end
   after_initialize :set_help_category_ids
 
+  def help_categories
+    HelpCategory.find(help_category_ids)
+  end
+
+  def help_category_names
+    help_categories.map(&:name).join(', ')
+  end
+
   #############################
   # Scopes
 
