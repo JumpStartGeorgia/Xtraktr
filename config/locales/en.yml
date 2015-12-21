@@ -348,6 +348,7 @@ en:
         sort_order: Sort Order
         public: Public
         content: Content
+        help_category_ids: Help Categories
     hints:
       dataset:
         title: The title of your dataset
@@ -489,6 +490,7 @@ en:
         sort_order: "The order the articles should appear; lower numbers appear first. (Example: 1 will appear before 2)"
         public: Choose whether the article should be accessible to the public.
         content: The main body of the article.
+        help_category_ids: Choose the categories that apply to this article.
   errors:
     messages:
       required_field: "is a required field."

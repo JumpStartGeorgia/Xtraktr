@@ -12,6 +12,7 @@ class HelpCategory
   field :name, type: String, localize: true
   field :permalink, type: String
   field :sort_order, type: Integer, default: 1
+  has_many :help_category_mappers
 
   #############################
   index ({ :permalink => 1})

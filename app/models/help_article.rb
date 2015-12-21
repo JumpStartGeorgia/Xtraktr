@@ -140,6 +140,29 @@ class HelpArticle
   validate :validates_presence_of_content_for_default_language
 
   #############################
+  # Has many help categories through help_category_mappers
+
+  attr_accessible :help_category_ids
+  attr_accessor :help_category_ids
+
+  has_many :help_category_mappers, dependent: :destroy do
+    def help_category_ids
+      pluck(:help_category_id)
+    end
+  end
+
+  accepts_nested_attributes_for :help_category_mappers,
+                                reject_if: :all_blank,
+                                allow_destroy: true
+
+  # this is used in the form to set the categories
+  def set_help_category_ids
+    self.help_category_ids = help_category_mappers.help_category_ids
+    true
+  end
+  after_initialize :set_help_category_ids
+
+  #############################
   # Scopes
 
   def self.sorted

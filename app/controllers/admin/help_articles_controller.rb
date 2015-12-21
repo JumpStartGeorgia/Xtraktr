@@ -27,6 +27,7 @@ class Admin::HelpArticlesController < ApplicationController
 
   def edit
     @help_article = HelpArticle.find(params[:id])
+    @js.push('help_articles.js')
 
     set_tabbed_translation_form_settings
 
