@@ -66,6 +66,33 @@ class Admin::HelpArticlesController < ApplicationController
   def update
     @help_article = HelpArticle.find(params[:id])
 
+    # update help_category_mappers
+    params[:help_article][:help_category_ids].delete('')
+    cat_ids = @help_article.help_category_mappers.help_category_ids.map{|x| x.to_s}
+    mappers_to_delete = []
+    if params[:help_article][:help_category_ids].present?
+      # if mapper help_category is not in list, mark for deletion
+      @help_article.help_category_mappers.each do |mapper|
+        if !params[:help_article][:help_category_ids].include?(mapper.help_category_id.to_s)
+          mappers_to_delete << mapper.id
+        end
+      end
+      # if cateogry id not in mapper, add id
+      params[:help_article][:help_category_ids].each do |help_category_id|
+        if !cat_ids.include?(help_category_id)
+          @help_article.help_category_mappers.build(help_category_id: help_category_id)
+        end
+      end
+    else
+      # no categories so make sure mapper is nil
+      @help_article.help_category_mappers.each do |mapper|
+        mappers_to_delete << mapper.id
+      end
+    end
+
+    # if any mappers are marked as destroy, destroy them
+    HelpCategoryMapper.in(id: mappers_to_delete).destroy_all
+
     respond_to do |format|
       if @help_article.update_attributes(params[:help_article])
         format.html do
