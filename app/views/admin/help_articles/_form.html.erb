@@ -23,16 +23,18 @@
       <%= f.fields_for :content_translations, OpenStruct.new(f.object.content_translations) do |translation| %>
         <%= translation.input(
               tab_locale,
+              as: :text,
               hint: admin_translation_hint(model_i18n_key, 'content'),
               label: admin_translation_label(
                        model_i18n_key,
                        'content',
                        tab_locale,
                        @help_article.content_translations[I18n.default_locale.to_s]
-                     ).html_safe
+                     ).html_safe,
+              input_html: { class: 'tinymce' }
             ) %>
       <% end %>
-      
+
     <% end %>
 
     <%= f.input :article_type_id,
@@ -65,3 +67,5 @@
                 :class => 'btn btn-warning' %>
   </div>
 <% end %>
+
+<%= tinymce_assets %>
