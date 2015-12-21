@@ -238,8 +238,12 @@ module ProcessDataFile
                 # flag that is set to false if:
                 # - data has no numeric data
                 # - there is no repeating values in the data (most likely an ID field)
-                #   - computing stats on ID field can take a long time so lets skip it until the user asks for it
-                has_numeric_data = code_data.length != code_data.uniq.length
+                #   - computing stats on ID field can take a long time and possibly crash the system 
+                #     so lets skip it until the user asks for it
+                #   - have found that ID field can have repeating values, so using a 90% threshold
+                #     to determine whether or not to compute the numerical info
+                #     - if unique data is less than 90% in length from full list -> compute
+                has_numeric_data = (code_data.uniq.length / code_data.length.to_f) < 0.9
 
                 if has_numeric_data
                   unique_answer_values = question.answers.unique_values

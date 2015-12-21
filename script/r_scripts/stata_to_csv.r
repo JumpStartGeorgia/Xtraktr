@@ -93,12 +93,16 @@ for (i in 1:length(answer_labels)){
     for (j in 1:answer_length){
       # record the number of rows
       num_answers <- num_answers + 1
+
+      question_code <- names(answer_labels[i])
+      answer_text <- unlist(answer_labels[i])[j]
+      
       # the answer text has the question code appended to it, so take it off using sub
       # make sure the answer text is properly encoded as utf8
-      answer_text <- clean_text(iconv(sub(paste(c(names(answer_labels[i]), '.'), collapse=''), '', names(unlist(answer_labels[i])[j])), 'CP1252', 'UTF-8', sub="byte"))
+      answer_text_clean <- clean_text(iconv(sub(paste(c(question_code, '.'), collapse=''), '', names(answer_text)), 'CP1252', 'UTF-8', sub="byte"))
 
       # - format is: question code, answer value, answer text
-      answers <- c(answers, c(names(answer_labels[i]), unlist(answer_labels[i])[j], answer_text))
+      answers <- c(answers, c(question_code, answer_text, answer_text_clean))
     }
   }
 }
