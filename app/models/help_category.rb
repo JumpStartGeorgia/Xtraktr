@@ -14,8 +14,8 @@ class HelpCategory
   has_many :help_category_mappers
 
   #############################
-  index ({ :name => 1})
-  index ({ :sort_order => 1})
+  index(name: 1)
+  index(sort_order: 1)
 
   #############################
   slug :name, history: true do |help_category|
