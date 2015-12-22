@@ -14,4 +14,8 @@ class HelpCategoryMapper
   index(help_article_id: 1)
   validates_presence_of :help_article_id
 
+  # No two help category mappers should have the same
+  # article id and the same category id
+  validates_uniqueness_of :help_article_id, scope: [:help_category_id]
+
 end
