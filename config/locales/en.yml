@@ -497,6 +497,7 @@ en:
       already_exists: 'already exists in the database.'
       translation_default_lang: "%{field_name} for Default Language '%{language}' %{msg}"
       translation_any_lang: "%{field_name} for Language '%{language}' %{msg}"
+      translation_already_exists: '%{model_name} already exists with %{field_name} "%{translation_value}" in %{language}. Please choose a different translation'
       invalid_language: "'%{lang_locale}' is not a valid language locale"
       dataset_length: "At least two datasets are needed for a time series to be saved."
       missing_questions: "At least one questions must be selected for a group to be saved."

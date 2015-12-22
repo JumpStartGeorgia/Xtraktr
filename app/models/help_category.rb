@@ -40,6 +40,20 @@ class HelpCategory
   end
   validate :validates_presence_of_name_for_default_language
 
+  def validates_uniqueness_of_name_in_all_translations
+    name_translations.keys.each do |name_lang|
+      errors.add(
+        :base,
+        I18n.t('errors.messages.translation_already_exists',
+               model_name: I18n.t('mongoid.models.help_category.one'),
+               field_name: self.class.human_attribute_name('name'),
+               translation_value: name_translations[name_lang],
+               language: Language.get_name(name_lang))
+      )
+    end
+  end
+  validate :validates_uniqueness_of_name_in_all_translations
+
   #############################
   # Callbacks
 
