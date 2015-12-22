@@ -5,25 +5,21 @@ class HelpCategory
   #############################
   attr_accessible :name,
                   :name_translations,
-                  :permalink,
                   :sort_order
 
   #############################
   field :name, type: String, localize: true
-  field :permalink, type: String
   field :sort_order, type: Integer, default: 1
   has_many :help_category_mappers
 
   #############################
-  index ({ :permalink => 1})
   index ({ :name => 1})
   index ({ :sort_order => 1})
 
   #############################
   # Validations
 
-  validates_presence_of :permalink, :sort_order
-  validates_uniqueness_of :permalink
+  validates_presence_of :sort_order
 
   def validates_presence_of_name_for_default_language
     default_language = I18n.default_locale.to_s
@@ -55,10 +51,6 @@ class HelpCategory
 
   def self.sorted
     order_by([[:sort_order, :asc], [:name, :asc]])
-  end
-
-  def self.by_permalink(permalink)
-    find_by(permalink: permalink)
   end
 
   def self.used_in_help_article

@@ -19,12 +19,8 @@
                      ).html_safe
             ) %>
       <% end %>
-      
-    <% end %>
 
-    <%= f.input :permalink,
-                hint: admin_translation_hint(model_i18n_key, 'permalink'),
-                      input_html: {size: 25} %>
+    <% end %>
 
     <%= f.input :sort_order,
                 as: :number,
