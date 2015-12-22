@@ -45,8 +45,8 @@ class HelpCategory
 
   # if name or content are '', reset value to nil so fallback works
   def set_to_nil
-    self.name_translations.keys.each do |key|
-      self.name_translations[key] = nil if self.name_translations[key].empty?
+    name_translations.keys.each do |key|
+      name_translations[key] = nil if name_translations[key].empty?
     end
   end
 
