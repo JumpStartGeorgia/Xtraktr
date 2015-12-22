@@ -47,9 +47,9 @@ class HelpCategory
   def validates_uniqueness_of_name_in_all_translations
     name_translations.keys.each do |name_lang|
       next if HelpCategory
-             .with_name_translation(name_translations[name_lang], name_lang)
-             .not_in(_id: [id])
-             .empty?
+              .with_name_translation(name_translations[name_lang], name_lang)
+              .not_in(_id: [id])
+              .empty?
 
       errors.add(
         :base,
