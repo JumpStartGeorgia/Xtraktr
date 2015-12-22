@@ -137,6 +137,14 @@ function load_highlights (highlight_data){
     }
   });
 }
+function is_touch_device () {
+  return (("ontouchstart" in window)
+      || (navigator.MaxTouchPoints > 0)
+      || (navigator.msMaxTouchPoints > 0));
+}
+var is_touch = is_touch_device();
+
+
 
 /**
 * Script Initialization

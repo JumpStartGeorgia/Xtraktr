@@ -146,11 +146,9 @@ class Api::V3
   # }
   def self.dataset_analysis(dataset_id, question_code, options={})
     data = {}
-
     if dataset_id.nil? || question_code.nil?
       return {errors: [{status: '404', detail: I18n.t('api.msgs.missing_required_params') }]}
     end
-
     # get options
     private_user_id = options['private_user_id']
     can_exclude = options['can_exclude'].present? && options['can_exclude'].to_s.to_bool == true

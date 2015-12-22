@@ -7,7 +7,9 @@ class Embed::V3Controller < ApplicationController
   # id - base64 encoded string of a hash of parameters
   def index
     @highlight_data = get_highlight_data(params[:id])
+    puts @highlight_data.inspect
     if !@highlight_data[:error]
+    puts "here"
       # save the js data into gon
       gon.highlight_data = {}
       gon.highlight_data[@highlight_data[:highlight_id].to_s] = @highlight_data[:js]
@@ -33,6 +35,7 @@ class Embed::V3Controller < ApplicationController
       end
       @js.push('highcharts-exporting.js')
     end
+    puts "here1"
     respond_to do |format|
       format.html # index.html.erb
     end

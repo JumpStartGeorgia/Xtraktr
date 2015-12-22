@@ -391,12 +391,11 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
       options = clean_filtered_params(options)
       output[:visual_type] = options['visual_type']
       options["language"] = params["language"] if params["language"].present?
-
       if options['dataset_id'].present?
         output[:type] = 'dataset'
-
+        
+        options["private_user_id"] = Base64.urlsafe_encode64(current_user.id.to_s) if use_admin_link.to_s == 'true'
         data = Api::V3.dataset_analysis(options['dataset_id'], options['question_code'], options)
-
          if data.present? && data[:dataset].present?
           # save dataset title
           output[:title] = data[:dataset][:title]
@@ -462,8 +461,6 @@ logger.debug "////////////////////////// BROWSER = #{@user_agent}"
       end
 
     end
-logger.debug "======= output js = #{output[:js]}"
-
     return output
   end
 
