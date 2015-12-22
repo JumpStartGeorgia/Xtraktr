@@ -1328,3 +1328,9 @@ function hex2rgb (hex) {
   }
   return [255, 255, 255];
 }
+function is_touch_device() {
+  return (('ontouchstart' in window)
+      || (navigator.MaxTouchPoints > 0)
+      || (navigator.msMaxTouchPoints > 0));
+}
+var is_touch = is_touch_device();
