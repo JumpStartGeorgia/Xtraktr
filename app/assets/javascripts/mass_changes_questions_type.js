@@ -244,7 +244,7 @@ $(document).ready(function (){
         }
         cache[code] = { code: code, general: {}, data: {}}; // if there is no locale info then get it remotely
 
-        var to_send = { dataset_id: dataset_id, question_code: code };
+        var to_send = { dataset_id: dataset_id, question_code: code, access_token: gon.app_api_key };
         if (typeof gon.private_user !== "undefined"){ to_send["private_user_id"] = gon.private_user; }
 
         $.ajax({
@@ -714,7 +714,7 @@ $(document).ready(function (){
       }
     }
     else {
-      var to_send = { dataset_id: dataset_id, question_code: code };
+      var to_send = { dataset_id: dataset_id, question_code: code, access_token: gon.app_api_key };
       if (typeof gon.private_user !== "undefined"){ to_send["private_user_id"] = gon.private_user; }
 
       cache[code] = { code: code, general: {}, data: {}};
