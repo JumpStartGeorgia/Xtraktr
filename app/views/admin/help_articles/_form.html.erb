@@ -39,22 +39,39 @@
 
     <!-- Creating article_type_id field by hand because formtastic does not add hints for radio inputs -->
     <div class="radio_buttons input required form-group" id="help_article_article_type_id_input">
+
       <label class="  control-label" for="help_article_article_type_id">
-        <%= t 'mongoid.attributes.help_article.article_type_id' %><abbr title="required">*</abbr>
-        <div class="help-inline" title="<%= admin_translation_hint(model_i18n_key, 'article_type') %>"><div>?</div></div>
+
+        <%= t 'mongoid.attributes.help_article.article_type_id' %>
+
+        <abbr title="required">*</abbr>
+
+        <div class="help-inline" title="<%= admin_translation_hint(model_i18n_key, 'article_type') %>">
+          <div>?</div>
+        </div>
+
       </label>
+
       <div class="radio">
         <label class="choice" for="help_article_article_type_id_1">
+
           <input checked="checked" id="help_article_article_type_id_1" name="help_article[article_type_id]" size="25" type="radio" value="1" />
+
           <%= t 'mongoid.attributes.help_article.article_type_values.how_to' %>
+
         </label>
       </div>
+
       <div class="radio">
         <label class="choice" for="help_article_article_type_id_2">
+
           <input id="help_article_article_type_id_2" name="help_article[article_type_id]" size="25" type="radio" value="2" />
+
           <%= t 'mongoid.attributes.help_article.article_type_values.tip' %>
+
         </label>
       </div>
+
     </div>
 
     <%= f.input :help_category_ids,
