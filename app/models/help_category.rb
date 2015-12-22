@@ -60,4 +60,8 @@ class HelpCategory
   def self.by_permalink(permalink)
     find_by(permalink: permalink)
   end
+
+  def self.used_in_help_article
+    where(:id.in => HelpCategoryMapper.pluck(:help_category_id).uniq)
+  end
 end
