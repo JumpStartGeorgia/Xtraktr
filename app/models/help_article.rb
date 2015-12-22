@@ -2,6 +2,7 @@
 class HelpArticle
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Slug
 
   #############################
   # Note: The code in this model is organized slightly differently.
@@ -38,6 +39,11 @@ class HelpArticle
     end
   end
   before_save :set_empty_title_to_nil
+
+  # if the dataset is public, use the permalink field value if it exists, else the default lang title
+  slug :title, history: true do |help_article|
+    help_article.title_translations[I18n.default_locale.to_s].to_url
+  end
 
   #############################
   # article_type : General categorization of the article
