@@ -1,19 +1,3 @@
-Skip to content
-This repository  
-Search
-Pull requests
-Issues
-Gist
- @antarya
- Unwatch 5
-  Star 1
- Fork 0 JumpStartGeorgia/Xtraktr
- Code  Issues 0  Pull requests 0  Wiki  Pulse  Graphs
-Branch: master-histogr… Find file Copy pathXtraktr/app/models/answer.rb
-0d65ef5  on Sep 22
-@antarya antarya Signup system refactored
-2 contributors @jasonaddie @antarya
-RawBlameHistory    82 lines (70 sloc)  2.72 KB
 class Answer < CustomTranslation
   include Mongoid::Document
 
@@ -95,5 +79,3 @@ class Answer < CustomTranslation
   end
 
 end
-Status API Training Shop Blog About Pricing
-© 2015 GitHub, Inc. Terms Privacy Security Contact Help
