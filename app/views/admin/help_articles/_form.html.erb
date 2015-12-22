@@ -93,9 +93,43 @@
                 min: 1,
                 step: 5 %>
 
-    <%= f.input :public,
-                as: :radio,
-                hint: admin_translation_hint(model_i18n_key, 'public') %>
+    <!-- Creating public field by hand because formtastic does not add hints for radio inputs -->
+    <div class="radio_buttons input required form-group" id="help_article_public_input">
+
+      <label class="  control-label" for="help_article_public">
+
+        <%= t 'mongoid.attributes.help_article.public' %>
+
+        <abbr title="required">*</abbr>
+
+        <div class="help-inline" title="<%= admin_translation_hint(model_i18n_key, 'public') %>">
+          <div>?</div>
+        </div>
+
+      </label>
+
+      <div class="radio">
+        <label class="choice" for="help_article_public_true">
+
+          <input id="help_article_public_true" name="help_article[public]" type="radio" value="true" />
+
+          <%= t 'formtastic.yes' %>
+
+        </label>
+      </div>
+
+
+      <div class="radio">
+        <label class="choice" for="help_article_public_false">
+
+          <input checked="checked" id="help_article_public_false" name="help_article[public]" type="radio" value="false" />
+
+          <%= t 'formtastic.no' %>
+
+        </label>
+      </div>
+
+    </div>
 
   <% end %>
 
