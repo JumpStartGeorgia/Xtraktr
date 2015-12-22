@@ -1,6 +1,7 @@
 class HelpCategory
   include Mongoid::Document
   include Mongoid::Timestamps
+  include Mongoid::Slug
 
   #############################
   attr_accessible :name,
@@ -15,6 +16,11 @@ class HelpCategory
   #############################
   index ({ :name => 1})
   index ({ :sort_order => 1})
+
+  #############################
+  slug :name, history: true do |help_category|
+    help_category.name_translations[I18n.default_locale.to_s].to_url
+  end
 
   #############################
   # Validations
