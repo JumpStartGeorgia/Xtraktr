@@ -121,12 +121,11 @@ class Highlight < CustomTranslation
 
   # get the dataset/time series languages
   def languages
-    # if self.dataset_id.present?
-    #   self.dataset.languages_sorted
-    # elsif self.time_series_id.present?
-    #   self.time_series.languages_sorted
-    # end
-    []
+    if self.dataset_id.present?
+      self.dataset.languages_sorted
+    elsif self.time_series_id.present?
+      self.time_series.languages_sorted
+    end
   end
 
 
