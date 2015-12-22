@@ -40,7 +40,6 @@ class HelpArticle
   end
   before_save :set_empty_title_to_nil
 
-  # if the dataset is public, use the permalink field value if it exists, else the default lang title
   slug :title, history: true do |help_article|
     help_article.title_translations[I18n.default_locale.to_s].to_url
   end
