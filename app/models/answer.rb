@@ -25,7 +25,7 @@ class Answer < CustomTranslation
   #############################
   # Validations
   validates_presence_of :value
-  validate :validate_translations
+  #validate :validate_translations
 
   # validate the translation fields
   # text field needs to be validated for presence
