@@ -234,7 +234,6 @@ module ProcessDataFile
 
               elsif are_question_codes_numerical[code_index] # build numerical descriptive stats for numerical questions
                 puts "@@@@@@@@@@@ - question is numerical"
-
                 # flag that is set to false if:
                 # - data has no numeric data
                 # - there is no repeating values in the data (most likely an ID field)
@@ -265,7 +264,7 @@ module ProcessDataFile
                   # make sure at least some numeric data was found
                   has_numeric_data = int_data.present? || float_data.present?
                 end
-
+                
                 if has_numeric_data
                   num = Numerical.new
                   
@@ -284,8 +283,10 @@ module ProcessDataFile
                   # set bar width
                   # - if the difference between max and min is less than default width, use 1
                   #   else use default width
-                  num.width = (num.max - num.min) > Numerical::NUMERIC_DEFAULT_WIDTH ? Numerical::NUMERIC_DEFAULT_WIDTH : 1
-
+                  #num.width = (num.max - num.min) > Numerical::NUMERIC_DEFAULT_WIDTH ? Numerical::NUMERIC_DEFAULT_WIDTH : 1
+                  range = num.max - num.min
+                  num.width = range > Numerical::NUMERIC_DEFAULT_WIDTH ? (range/Numerical::NUMERIC_DEFAULT_WIDTH).ceil : 1                   
+                  
                   # set ranges and size
                   num.min_range = (num.min / num.width).floor * num.width
                   num.max_range = (num.max / num.width).ceil * num.width
@@ -343,23 +344,21 @@ module ProcessDataFile
                     :variance => vfd.variance,
                     :standard_deviation => vfd.standard_deviation
                   }
-
                   # mark the question as being analyzable
                   question.is_analysable = true
                 end
+                
 
 
                 question.has_data_without_answers = code_data.select{|d| !d.nil? }.length > 0 
               else
                 question.has_data_without_answers = code_data.select{|d| !d.nil? }.length > 0 
               end
-
               # add the data for this question
               self.data_items_attributes = [{code: clean_code,
                                             original_code: clean_text(code),
                                             data: code_data
                                           }.merge(frequency_data.present? ? { frequency_data: frequency_data, frequency_data_total: total, formatted_data: formatted_data } : {})]
-
 
 
 
@@ -379,8 +378,7 @@ module ProcessDataFile
               # else
               #   question.has_data_without_answers = code_data.select{|d| !d.nil? }.length > 0 
               # end
-
-
+              
             else
               puts "******************************"
               puts "Column #{code_index} (supposed to be #{code}) of #{file_questions} does not exist."

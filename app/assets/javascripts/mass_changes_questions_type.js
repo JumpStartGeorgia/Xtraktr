@@ -738,10 +738,11 @@ $(document).ready(function (){
       var formatted = cache[code].general.formatted_data, // formatted formatted_data
         min = Number.MAX_VALUE,
         max = Number.MIN_VALUE,
+        DEFAULT_WIDTH = 10,
         isFloat,
         question = cache[code].general.question,
         predefined_answers = question.hasOwnProperty("answers") ? question.answers.map(function (d){ return d.value; }) : [],
-        num = [2, 0, 10, 0, 0, 0, 0, 0],
+        num = [2, 0, DEFAULT_WIDTH, 0, 0, 0, 0, 0],
         predefinedData = [];
       formatted.forEach(function (d, i) {
         if(isN(d) && predefined_answers.indexOf(d) === -1) { // only numbers and that are not predefined answer allowed
@@ -763,6 +764,10 @@ $(document).ready(function (){
       if(max-min<10) { num[2] = 1; }
       num[3] = min;
       num[4] = max;
+
+      var range = num[4] - num[3];
+      num[2] = range > DEFAULT_WIDTH ? Math.ceil(range/DEFAULT_WIDTH) : 1;
+
       num[5] = Math.floor(num[3] / num[2]) * num[2]; // min_range = floor(min/width) * width
       num[6] = Math.ceil(num[4] / num[2]) * num[2];  // max_range = ceil(max/width) * width
       num[7] = (num[6] - num[5]) / num[2];           // size = (max_range - min_range) / width
