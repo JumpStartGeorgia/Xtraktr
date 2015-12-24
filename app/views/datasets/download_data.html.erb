@@ -4,7 +4,7 @@
 
 <hr />
 
-<% if !@dataset.urls.present? && @dataset.urls.admin_codebook.present? %>
+<% if @dataset.urls.present? && @dataset.urls.admin_codebook.present? %>
   <% if @dataset.reset_download_files? %>
     <div class="notification wide info">
       <div class='figure'></div>
