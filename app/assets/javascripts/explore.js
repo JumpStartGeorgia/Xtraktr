@@ -541,7 +541,7 @@ function build_histogramm_chart (json_chart, chart_height, weight_name) { // bui
 
   chart_height = opt[0];  
   $(selector_path + " #" + chart_id).highcharts({
-    colors: ["#C6CA53"],
+    colors: ["#00adee"],
     chart: {
       type: "column"
     },
@@ -778,7 +778,7 @@ function build_scatter_chart (meta, json_chart, chart_height, weight_name){ // b
       enabled: meta.filtered,
       title: {
         text: null,// meta.bcode,
-        style: { "color": "#d67456", "fontSize": "18px", "fontFamily":"'sourcesans_pro_sb', 'sans-serif'", "fontWeight": "normal" }
+        style: { "color": "#00adee", "fontSize": "18px", "fontFamily":"'sourcesans_pro_sb', 'sans-serif'", "fontWeight": "normal" }
       },
       useHTML: true,
       layout: "vertical",

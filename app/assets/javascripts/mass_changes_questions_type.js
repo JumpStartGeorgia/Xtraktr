@@ -25,7 +25,7 @@ $(document).ready(function (){
       init: function () {
         Highcharts.setOptions({
           lang: { thousandsSep: "," },
-          colors: ["#C6CA53"],
+          colors: ["#00adee"],
           credits: { enabled: false }
         });
         this.selector = $("#preview");
