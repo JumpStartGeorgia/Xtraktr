@@ -316,7 +316,9 @@ class Dataset < CustomTranslation
     def available_to_have_unique_ids
       where(has_code_answers: false)
     end
-
+    def codes_with_unknown_datatype
+      where(data_type: Question::DATA_TYPE_VALUES[:unknown]).only(:code).map{|x| x.code }
+    end
   end
   accepts_nested_attributes_for :questions
 
@@ -657,9 +659,18 @@ class Dataset < CustomTranslation
   # process the datafile and save all of the information from it
   def process_file
     process_data_file
-
     # udpate meta data
     update_flags
+
+    return true
+  end
+
+  # process the datafile and save all of the information from it
+  def reprocess_file    
+    reprocess_data_file
+
+    # udpate meta data
+    #update_flags
 
     return true
   end

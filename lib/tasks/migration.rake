@@ -132,4 +132,9 @@ namespace :migration do
     require "./db/migrate/update_highlight_visual_type.rb"
   end
 
+  desc "reprocess all datasets (fixed data_items, reprocessed data_type, numerical, statistics)"
+  task :reprocess_all_datasets => :environment do
+    require "./db/migrate/reprocess_all_datasets.rb"
+  end
+
 end
