@@ -60,18 +60,27 @@ num_answers <- 0
 
 # for each question
 for (i in 1:length(question_labels)){
+  # get question and variable code
+  question_code <- names(question_labels[i])
+  # see if this question has answers
+  question_answers_length <- length(answer_labels[[question_code]])
+
   # determine the question data type
   # - use the is_factor_list / is_numeric_list to check type
   # - c = categorical / factor
   # - n = numerical
+  # read.spss will mark a question as numeric if the question data does not match predefined answers
+  # (which can be caused by bad data entry or missing answers)
+  # we feel it is better to default to categorical question instead of numeric, 
+  # so if question is numeric but has categorical questions, save it as categorical to be safe
   data_type <- ''
-  if (is_factor_list[i] == TRUE){
+  if (is_factor_list[i] == TRUE || (is_numeric_list[i] == TRUE && question_answers_length > 0)){
     data_type <- 'c'
   }else if (is_numeric_list[i] == TRUE){
     data_type <- 'n'
   }
   # - format is: question code, question text, data type
-  questions <- c(questions, c(names(question_labels[i]), clean_text(question_labels[i])), data_type)
+  questions <- c(questions, c(question_code, clean_text(question_labels[i])), data_type)
 }
 
 # build the answers
