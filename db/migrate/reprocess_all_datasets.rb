@@ -6,7 +6,6 @@ Dataset.each do |d|
   puts "updating #{d.title}"
 
   d.reprocess_file  
-  d.check_questions_for_changes_status = true
   d.save
 
 end
