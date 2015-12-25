@@ -674,10 +674,8 @@ class Dataset < CustomTranslation
   # process the datafile and save all of the information from it
   def reprocess_file    
     reprocess_data_file
-
-    # udpate meta data
-    #update_flags
-
+    update_flags
+    self.check_questions_for_changes_status = true
     return true
   end
 
