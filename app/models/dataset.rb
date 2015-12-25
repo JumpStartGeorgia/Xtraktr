@@ -620,20 +620,24 @@ class Dataset < CustomTranslation
   after_save :update_stats
   before_save :set_public_at
   before_save :check_if_dirty
-  before_save :check_questions_for_changes
+  after_save :check_questions_for_changes
 
 
   # when saving the dataset, question callbacks might not be triggered
   # so this will check for questions that chnaged and then call the callbacks
   def check_questions_for_changes
     if self.check_questions_for_changes_status == true
-      logger.debug ">>>>> dataset check_questions_for_changes callback"
+      puts ">>>>> dataset check_questions_for_changes callback >>>>>>>"
       self.questions.each do |q|
         if q.changed?
-          logger.debug ">>>>> ---- #{q.text} changed!"
+          puts ">>>>> ---- #{q.text} changed!"
           q.trigger_all_callbacks
         end
       end
+      # make sure this does not run again
+      self.check_questions_for_changes_status = false
+      
+      self.save
     end
     return true
   end
@@ -661,6 +665,8 @@ class Dataset < CustomTranslation
     process_data_file
     # udpate meta data
     update_flags
+    # update quesiton flags
+    self.check_questions_for_changes_status = true
 
     return true
   end
