@@ -616,7 +616,6 @@ module ProcessDataFile
                     :standard_deviation => vfd.standard_deviation
                   }
                   # mark the question as being analyzable
-                  question.is_analysable = true
                 else
                   question.data_type = DATA_TYPE_VALUES[:unknown]
                 end

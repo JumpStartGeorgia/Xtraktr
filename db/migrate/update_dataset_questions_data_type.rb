@@ -18,6 +18,7 @@ Dataset.each do |d|
       end
     end
   end
+  d.check_questions_for_changes_status = true
   d.save
   puts "it took #{Time.now-start} seconds to add the questions"  
 end
