@@ -67,6 +67,7 @@ group :development do
  	gem "mailcatcher", "0.5.12" # small smtp server for dev, http://mailcatcher.me/
   gem 'rb-inotify', '~> 0.8.8' # rails dev boost needs this
   gem 'rails-dev-boost', :git => 'git://github.com/thedarkone/rails-dev-boost.git' # speed up loading page in dev mode
+  gem 'exception_notification_extension', :git => 'git@github.com:JumpStartGeorgia/exception_notification_extension.git' # speed up loading page in dev mode
 end
 
 group :staging, :production do
