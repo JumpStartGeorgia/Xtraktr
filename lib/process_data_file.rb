@@ -198,11 +198,11 @@ module ProcessDataFile
         puts "=============================="
         puts "saving data from #{file_data} and to data_items attribute"
         # if this is a spreadsheet do not use the quote char setting
-        if is_spreadsheet
+        #if is_spreadsheet
           data = CSV.read(file_data, headers: true)
-        else
-          data = CSV.read(file_data, quote_char: "\0", headers: true)
-        end
+        #else
+          #data = CSV.read(file_data, quote_char: "\0", headers: true)
+        #end
         # only conintue if the # of cols match the # of quesiton codes
         if data.first.length == question_codes.length
           question_codes.each_with_index do |code, code_index|
@@ -440,6 +440,7 @@ module ProcessDataFile
 
         t.start("process questions")
 
+ 
         question_codes = [] # record the question codes from the questions file
 
         if File.exists?(file_questions)
@@ -474,14 +475,27 @@ module ProcessDataFile
 
         t.start("process data_items")
         # if this is a spreadsheet do not use the quote char setting
-        data = is_spreadsheet ? CSV.read(file_data, headers: true) : CSV.read(file_data, quote_char: "\0", headers: true)
+        #data = is_spreadsheet ? CSV.read(file_data, headers: true) : CSV.read(file_data, quote_char: "\0", headers: true)
+        data = CSV.read(file_data, headers: true)
 
         # only conintue if the # of cols match the # of quesiton codes
         if data.first.length == question_codes.length
 
           question_codes.each_with_index do |code, code_index|
+            #next if code[0] != "q1013"
+            #t.msg(code[0])
             code_data = data.map{|x| x[code_index]}
 
+
+            # a = Hash.new(0)
+            # data["Q1013"].each{|d| a[d] += 1}
+            # t.msg(a.inspect)
+            # t.msg(data["Q1013"].length.to_s)
+
+            # a1 = Hash.new(0)
+            # code_data.each{|d| a1[d] += 1}
+            # t.msg(a1.inspect)
+            # t.msg(code_data.length.to_s)
             total = nil
             frequency_data = nil
             formatted_data = nil  
@@ -501,7 +515,6 @@ module ProcessDataFile
                   total += cnt
                   frequency_data[answer.value] = [cnt, (cnt.to_f/code_data.length*100).round(2)]
                 }
- 
               elsif question.data_type == DATA_TYPE_VALUES[:numerical] # build numerical descriptive stats for numerical questions
                 # flag that is set to false if:
                 # - data has no numeric data
@@ -627,15 +640,21 @@ module ProcessDataFile
               end
 
               
-              data_items = self.data_items.with_code(code[0]) # add the data for this question
-              if data_items.present?
-                data_items.update_attributes({
+              dd = self.data_items.with_code(code[0]) # add the data for this question
+              if dd.present?
+                #t.msg("updating")
+                if(dd.update_attributes({
                   data: code_data,
                   frequency_data: frequency_data,
                   frequency_data_total: total,
                   formatted_data: formatted_data
-                })
+                }))
+                #t.msg("ok")
               else
+                t.msg(dd.errors.full_messages.inspect)
+              end
+              else
+                #t.msg("creating")
                 self.data_items_attributes = [{
                                             code: code[0],
                                             original_code: code[1],

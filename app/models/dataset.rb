@@ -627,10 +627,10 @@ class Dataset < CustomTranslation
   # so this will check for questions that chnaged and then call the callbacks
   def check_questions_for_changes
     if self.check_questions_for_changes_status == true
-      puts ">>>>> dataset check_questions_for_changes callback >>>>>>>"
+      #puts ">>>>> dataset check_questions_for_changes callback >>>>>>>"
       self.questions.each do |q|
         if q.changed?
-          puts ">>>>> ---- #{q.text} changed!"
+          #puts ">>>>> ---- #{q.text} changed!"
           q.trigger_all_callbacks
         end
       end
