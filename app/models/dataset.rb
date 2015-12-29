@@ -577,7 +577,7 @@ class Dataset < CustomTranslation
       puts ">>>>> -- checking for changes! >>>>>>>"
       self.questions.each do |q|
         if q.changed?
-          puts ">>>>> ---- #{q.text} changed!"
+          puts ">>>>> ---- #{q.code} changed!"
           q.trigger_all_callbacks
         end
       end
