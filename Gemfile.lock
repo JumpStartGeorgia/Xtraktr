@@ -26,7 +26,7 @@ GIT
 
 GIT
   remote: git@github.com:JumpStartGeorgia/exception_notification_extension.git
-  revision: e8f0aa478256a00157880ce926d575299e2837e1
+  revision: aea00ad103cd1e11fcdf5659f684018b0e362c0b
   specs:
     exception_notification_extension (0.1.0)
       exception_notification (~> 2.5, >= 2.5.2)
