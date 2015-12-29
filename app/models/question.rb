@@ -102,7 +102,8 @@ class Question < CustomTranslation
 
   #############################
   attr_accessible :code, :text, :original_code, :has_code_answers, :is_analysable, :is_mappable, :has_can_exclude_answers, :has_map_adjustable_max_range,
-      :answers_attributes, :exclude, :text_translations, :notes, :notes_translations, :group_id, :sort_order, :is_weight, :numerical_attributes
+      :answers_attributes, :exclude, :text_translations, :notes, :notes_translations, :group_id, :sort_order, :is_weight, :numerical_attributes, 
+      :data_type, :descriptive_statistics
 
   #############################
   # Validations
