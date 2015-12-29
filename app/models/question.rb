@@ -158,7 +158,8 @@ class Question < CustomTranslation
     self.has_code_answers = self.answers.count > 0
     self.is_analysable = (self.categorical_type? && self.answers.all_for_analysis.count > 0) || self.numerical_type?
     values = self.answers.map{|d| d.value }.push(nil)
-    self.has_data_without_answers = self.dataset.data_items.unique_code_data(self.code).select{|d| !values.include?(d) && !d.nil? }.length > 0
+    unique_code_data = self.dataset.data_items.unique_code_data(self.code)
+    self.has_data_without_answers = unique_code_data.present? && unique_code_data.select{|d| !values.include?(d) && !d.nil? }.length > 0
     self.has_can_exclude_answers = !self.numerical_type? && self.answers.has_can_exclude?
     return true
   end
