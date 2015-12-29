@@ -1,5 +1,4 @@
-# data_type field was added to questions
-# update all questions to have categorical data_value where is_analysable is true
+# reload the data for each dataset
 
 start = Time.now
 
