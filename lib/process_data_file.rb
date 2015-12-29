@@ -483,20 +483,8 @@ module ProcessDataFile
         if data.first.length == question_codes.length
 
           question_codes.each_with_index do |code, code_index|
-            #next if code[0] != "q1013"
-            #t.msg(code[0])
             code_data = data.map{|x| x[code_index]}
 
-
-            # a = Hash.new(0)
-            # data["Q1013"].each{|d| a[d] += 1}
-            # t.msg(a.inspect)
-            # t.msg(data["Q1013"].length.to_s)
-
-            # a1 = Hash.new(0)
-            # code_data.each{|d| a1[d] += 1}
-            # t.msg(a1.inspect)
-            # t.msg(code_data.length.to_s)
             total = nil
             frequency_data = nil
             formatted_data = nil  
@@ -647,19 +635,16 @@ module ProcessDataFile
               # if this is a spreadsheet and the question was not found, try using the old question code
               dd = self.data_items.with_code(code[0].downcase.gsub(@@spreadsheet_question_code.downcase, @@spreadsheet_question_code_orig.downcase)) if dd.nil? && is_spreadsheet
               if dd.present?
-                #t.msg("updating")
                 if(dd.update_attributes({
                   data: code_data,
                   frequency_data: frequency_data,
                   frequency_data_total: total,
                   formatted_data: formatted_data
                 }))
-                #t.msg("ok")
               else
                 t.msg(dd.errors.full_messages.inspect)
               end
               else
-                #t.msg("creating")
                 self.data_items_attributes = [{
                                             code: code[0],
                                             original_code: code[1],
