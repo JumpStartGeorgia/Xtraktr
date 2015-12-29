@@ -1,9 +1,12 @@
 # data_type field was added to questions
 # update all questions to have categorical data_value where is_analysable is true
 
+start = Time.now
+
 puts "DATASETS - updating datasets questions data_type field, if question is categorical calculate frequency_data"
-Dataset.each do |d|
+Dataset.all.no_timeout.each do |d|
   start = Time.now
+  puts "-----------------------"
   puts "updating #{d.title}"
   d.questions.each do |q|
     if q.data_type == Question::DATA_TYPE_VALUES[:categorical]
@@ -22,3 +25,9 @@ Dataset.each do |d|
   d.save
   puts "it took #{Time.now-start} seconds to add the questions"  
 end
+
+puts ""
+puts "-----------------------"
+puts "UPDATING QUESTION TYPE TOOK #{(Time.now - start).round(2)} seconds"
+puts "-----------------------"
+puts ""

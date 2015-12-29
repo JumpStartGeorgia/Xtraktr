@@ -25,6 +25,14 @@ GIT
       railties (>= 3.0)
 
 GIT
+  remote: git@github.com:JumpStartGeorgia/exception_notification_extension.git
+  revision: e8f0aa478256a00157880ce926d575299e2837e1
+  specs:
+    exception_notification_extension (0.1.0)
+      exception_notification (~> 2.5, >= 2.5.2)
+      notifier (~> 0)
+
+GIT
   remote: git@github.com:jawspeak/zipruby-compatibility-with-rubyzip-fork.git
   revision: f0e0668599cd95adb5d5024773a7b9eb16869a79
   tag: v0.3.7
@@ -207,6 +215,7 @@ GEM
       net-ssh (>= 2.6.5)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
+    notifier (0.5.1)
     oauth2 (1.0.0)
       faraday (>= 0.8, < 0.10)
       jwt (~> 1.0)
@@ -346,6 +355,7 @@ DEPENDENCIES
   devise (~> 3.4.1)
   dynamic_form (~> 1.1.4)
   exception_notification (~> 2.5.2)
+  exception_notification_extension!
   formtastic (~> 2.2.1)
   formtastic-bootstrap!
   globalize (~> 3.1.0)

@@ -24,6 +24,7 @@ module ProcessDataFile
     'dta' => 'stata_to_csv.r'
   }
   @@spreadsheet_question_code = 'Q'
+  @@spreadsheet_question_code_orig = 'VAR'
 
 
   #######################
@@ -501,6 +502,8 @@ module ProcessDataFile
             formatted_data = nil  
 
             question = self.questions.with_code(code[0])
+            # if this is a spreadsheet and the question was not found, try using the old question code
+            question = self.questions.with_code(code[0].downcase.gsub(@@spreadsheet_question_code.downcase, @@spreadsheet_question_code_orig.downcase)) if question.nil? && is_spreadsheet
 
             if code_data.present? && question.present?
               # build frequency/stats for question if needed
@@ -641,6 +644,8 @@ module ProcessDataFile
 
               
               dd = self.data_items.with_code(code[0]) # add the data for this question
+              # if this is a spreadsheet and the question was not found, try using the old question code
+              dd = self.data_items.with_code(code[0].downcase.gsub(@@spreadsheet_question_code.downcase, @@spreadsheet_question_code_orig.downcase)) if dd.nil? && is_spreadsheet
               if dd.present?
                 #t.msg("updating")
                 if(dd.update_attributes({
