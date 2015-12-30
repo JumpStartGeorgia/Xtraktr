@@ -5,7 +5,6 @@ start = Time.now
 
 puts "DATASETS - updating datasets questions data_type field, if question is categorical calculate frequency_data"
 Dataset.all.no_timeout.each do |d|
-  start = Time.now
   puts "-----------------------"
   puts "updating #{d.title}"
   d.questions.each do |q|
