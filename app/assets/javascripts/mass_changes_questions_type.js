@@ -96,7 +96,8 @@ $(document).ready(function (){
           cg = ch_code.general, // current general data
           ct = ch_code.data[sub_id].fdt, // current data total
           $preview = $("#preview"),
-          chart;
+          chart,
+          range = type == 1 ? null : getRanges(cm);
         $preview.show();
 
         var histogramm = function () {
@@ -133,11 +134,11 @@ $(document).ready(function (){
                   pointPlacement: "between"
                 }
               },
-              series: [{ data: cd.map(function (d, i){ return { x:cm[5] +cm[2]*i, y: d[0], percent: d[1] }; }) }],
+              series: [{ data: cd.map(function (d, i){ return { x:cm[5] +cm[2]*i, y: d[0], percent: d[1], tip: range[i] }; }) }],
               tooltip: {
                 backgroundColor: "#fff",
                 formatter: function () {
-                  return Highcharts.numberFormat(this.y, 0) + " (" + this.point.percent + "%)";
+                  return "<b>" + this.point.tip + ":</b><br/>" + Highcharts.numberFormat(this.y, 0) + " (" + this.point.percent + "%)";
                 }
               },
               legend: { enabled: false }
@@ -216,7 +217,20 @@ $(document).ready(function (){
           }
           return v;
         }
+        function getRanges (m) { // numerical meta
+          var rng = [], start, endd, minus, isInt;
+          cd.forEach(function (d, i) {
+            start = m[5] + m[2] * i;
+            isInt = m[1] == 0;
+            start = isInt ? parseInt(start) : parseFloat(start);
+            minus = isInt ? 1 : (m[2].toString().indexOf(".") !== -1 ? parseFloat("0." + "0"*(m[2].toString().split(".")[1].length-1) + "1") : 0.1);
 
+            if(cd.length-1 == i) { minus = 0; }
+            endd = start + m[2] - minus;
+            rng.push(start + " - " + (isInt ? parseInt(endd) : parseFloat(endd)));
+          });
+          return rng;
+        }
         if(type === 1) { bar(); }
         else if(type === 2) { histogramm(); }
         if(t.closed) { t.closed = false; }
