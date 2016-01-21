@@ -122,7 +122,9 @@ module ProcessDataFile
                                             text_translations: {self.default_language => clean_text(row[1])},
                                             sort_order: i+1,
                                             data_type: data_type
-                                          }]
+                                          }.merge(is_spreadsheet && data_type == DATA_TYPE_VALUES[:numerical] ? { exclude: true } : {})]
+
+
             end
           end
         end
