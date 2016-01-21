@@ -4,12 +4,10 @@
   model_class = Dataset
   s_model_class = Stats
 -%>
-<%- with_pagination = with_pagination.nil? ? true : with_pagination%>
-<%- with_time_series_link = with_time_series_link.nil? ? true : with_time_series_link%>
-<%- model_class = Dataset -%>
 <ul>
   <% if @datasets.present? %>
-    <% @datasets.each do |dataset| %>
+    <% records = params[:q].present? ? @datasets : @datasets.to_a # need to_a so sorting by title is applied %>
+    <% records.__send__(params[:q].present? ? :each_with_hit : :each) do |dataset, hit| %>
       <li>
         <div class="caption">
           <div class="title"><%= link_to dataset.title, explore_data_dashboard_path(dataset.owner, dataset) %></div>
@@ -49,7 +47,21 @@
 
         <% if dataset.description.present? %>
           <div class="description">
-            <%= strip_tags_nbsp(dataset.description).html_safe %>
+            <% if hit.try(:highlight) %>
+              <% if hit.highlight.try(:description_no_html) %>
+                ...
+                <%= strip_tags_nbsp(hit.highlight.description_no_html.join(' &hellip; ')).gsub('[[highlight]]','<em class="highlight">').gsub('[[/highlight]]','</em>').html_safe %>
+                ...
+              <% elsif hit.try(:highlight).try(:methodology_no_html) %>
+                ...
+                <%= strip_tags_nbsp(hit.highlight.methodology_no_html.join(' &hellip; ')).gsub('[[highlight]]','<em class="highlight">').gsub('[[/highlight]]','</em>').html_safe %>
+                ...
+              <% else %>
+                <%= strip_tags_nbsp(dataset.description).html_safe %>
+              <% end %>
+            <% else %>
+              <%= strip_tags_nbsp(dataset.description).html_safe %>
+            <% end %>
           </div>
         <% end %>
       </li>

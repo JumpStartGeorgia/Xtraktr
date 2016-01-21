@@ -26,9 +26,9 @@ GIT
 
 GIT
   remote: git@github.com:JumpStartGeorgia/exception_notification_extension.git
-  revision: aea00ad103cd1e11fcdf5659f684018b0e362c0b
+  revision: ec623350bf5427170c69b33b3b08f6184ba2c2a5
   specs:
-    exception_notification_extension (0.1.0)
+    exception_notification_extension (0.1.2)
       exception_notification (~> 2.5, >= 2.5.2)
       notifier (~> 0)
 
@@ -44,15 +44,6 @@ GIT
   revision: 742f29d8643f378773a933b3c0a37ce1bc52a7aa
   specs:
     useragent (0.2.3)
-
-GIT
-  remote: https://github.com/mauriciozaffari/mongoid_search.git
-  revision: dfc7c45157a9339862f140a5641a5ea249d6f48a
-  branch: master
-  specs:
-    mongoid_search (0.3.2)
-      fast-stemmer (~> 1.0.0)
-      mongoid (>= 3.0.0)
 
 GIT
   remote: https://github.com/mjbellantoni/formtastic-bootstrap.git
@@ -133,6 +124,19 @@ GEM
       thread_safe (~> 0.1)
       warden (~> 1.2.3)
     dynamic_form (1.1.4)
+    elasticsearch (1.0.15)
+      elasticsearch-api (= 1.0.15)
+      elasticsearch-transport (= 1.0.15)
+    elasticsearch-api (1.0.15)
+      multi_json
+    elasticsearch-model (0.1.8)
+      activesupport (> 3)
+      elasticsearch (> 0.4)
+      hashie
+    elasticsearch-rails (0.1.8)
+    elasticsearch-transport (1.0.15)
+      faraday
+      multi_json
     erubis (2.7.0)
     eventmachine (1.0.3)
     exception_notification (2.5.2)
@@ -140,7 +144,6 @@ GEM
     execjs (2.2.1)
     faraday (0.9.0)
       multipart-post (>= 1.2, < 3)
-    fast-stemmer (1.0.2)
     ffi (1.9.3)
     formtastic (2.2.1)
       actionpack (>= 3.0)
@@ -354,6 +357,8 @@ DEPENDENCIES
   descriptive_statistics (~> 2.4.0)
   devise (~> 3.4.1)
   dynamic_form (~> 1.1.4)
+  elasticsearch-model (~> 0.1.8)
+  elasticsearch-rails (~> 0.1.8)
   exception_notification (~> 2.5.2)
   exception_notification_extension!
   formtastic (~> 2.2.1)
@@ -371,7 +376,6 @@ DEPENDENCIES
   mongoid (~> 3.1.7)
   mongoid-paperclip
   mongoid-slug (~> 4.0.0)
-  mongoid_search!
   omniauth
   omniauth-facebook
   psych (~> 2.0.5)

@@ -1,11 +1,15 @@
+require 'process_data_file'
+
 class Dataset < CustomTranslation
-  require 'process_data_file'
+  include ProcessDataFile # script in lib folder that will convert datafile to csv and then load into appropriate fields
+
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::Paperclip
-  include Mongoid::Search
   include Mongoid::Slug
-  include ProcessDataFile # script in lib folder that will convert datafile to csv and then load into appropriate fields
+  # include Mongoid::Search
+  include Elasticsearch::Model
+  include Elasticsearch::Model::Callbacks
 
   #############################
 
@@ -19,6 +23,8 @@ class Dataset < CustomTranslation
   field :title, type: String, localize: true
   field :description, type: String, localize: true
   field :methodology, type: String, localize: true
+  field :description_no_html, type: String, localize: true
+  field :methodology_no_html, type: String, localize: true
   field :source, type: String, localize: true
   field :source_url, type: String, localize: true
   field :donor, type: String, localize: true
@@ -406,13 +412,14 @@ class Dataset < CustomTranslation
 
   #############################
 
-  attr_accessible :title, :description, :methodology, :user_id, :has_warnings,
+  attr_accessible :title, :description, :methodology, :description_no_html, :methodology_no_html, :user_id, :has_warnings,
       :data_items_attributes, :questions_attributes, :reports_attributes, :questions_with_bad_answers,
       :weights_attributes,
       :datafile, :public, :private_share_key, #:codebook,
       :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at,
       :languages, :default_language, :stats_attributes, :urls_attributes,
-      :title_translations, :description_translations, :methodology_translations, :source_translations, :source_url_translations,
+      :title_translations, :description_translations, :methodology_translations, :description_no_html_translations, :methodology_no_html_translations, 
+      :source_translations, :source_url_translations,
       :reset_download_files, :force_reset_download_files, :category_mappers_attributes, :category_ids, :permalink, :groups_attributes,
       :donor, :license_title, :license_description, :license_url, :country_mappers_attributes, :country_ids,
       :donor_translations, :license_title_translations, :license_description_translations, :license_url_translations
@@ -463,8 +470,39 @@ class Dataset < CustomTranslation
 
   #############################
   # Full text search
-  search_in :title, :description, :methodology, :source, :donor, :questions => [:original_code, :text, :notes, :answers => [:text]]
+  # search_in :title, :description, :methodology, :source, :donor, :questions => [:original_code, :text, :notes, :answers => [:text]]
 
+  index_name "datasets-#{Rails.env}"
+
+  # define how the fields are indexed
+  # - create custom analyzer so search ingoring case
+  settings analysis: {
+    analyzer: {
+      case_insensitive: {
+        tokenizer: "keyword",    
+        filter:  [ "lowercase" ] 
+      }      
+    }
+  } do 
+    mappings do
+      # create index that ignors case for sorting
+      indexes :title, type: 'string', :fields => { :lower_case_sort => { :type => 'string', analyzer: "case_insensitive", term_vector: 'with_positions_offsets' } }
+      indexes :description_no_html, type: 'string', :fields => { :lower_case_sort => { :type => 'string', analyzer: "case_insensitive", term_vector: 'with_positions_offsets' } }
+      indexes :methodology_no_html, type: 'string', :fields => { :lower_case_sort => { :type => 'string', analyzer: "case_insensitive", term_vector: 'with_positions_offsets' } }
+      indexes :source, type: 'string', :fields => { :raw =>  { :type => "string", :index => "not_analyzed" } }
+      indexes :donor, type: 'string', :fields => { :raw =>  { :type => "string", :index => "not_analyzed" } }
+    end
+  end
+
+  def as_indexed_json(options={})
+    as_json(
+      only: [:title, :description_no_html, :methodology_no_html, :source, :donor, :public],
+      include: {
+        category_mappers: {only: [:category_id]},
+        country_mappers: {only: [:country_id]}
+      }
+    )
+  end
 
   #############################
   # permalink slug
@@ -586,6 +624,12 @@ class Dataset < CustomTranslation
   def methodology
     get_translation(self.methodology_translations)
   end
+  def description_no_html
+    get_translation(self.description_no_html_translations)
+  end
+  def methodology_no_html
+    get_translation(self.methodology_no_html_translations)
+  end
   def source
     get_translation(self.source_translations)
   end
@@ -621,6 +665,7 @@ class Dataset < CustomTranslation
   before_save :set_public_at
   before_save :check_if_dirty
   after_save :check_questions_for_changes
+  before_save :strip_html_from_text
 
 
   # when saving the dataset, question callbacks might not be triggered
@@ -640,6 +685,28 @@ class Dataset < CustomTranslation
       
       self.save
     end
+    return true
+  end
+
+  # to help search through text only, remove html tags
+  def strip_html_from_text
+    puts ">>> strip_html_from_text"
+    orig_locale = I18n.locale
+    self.languages.each do |locale|
+      I18n.locale = locale.to_sym
+      if self.description.present?
+        self.description_no_html = ActionController::Base.helpers.strip_tags(self.description).gsub('&nbsp;', ' ') 
+      else
+        self.description_no_html = nil
+      end      
+      
+      if self.methodology.present?
+        self.methodology_no_html = ActionController::Base.helpers.strip_tags(self.methodology).gsub('&nbsp;', ' ') 
+      else
+        self.methodology_no_html = nil
+      end
+    end
+    I18n.locale = orig_locale
     return true
   end
 
@@ -824,7 +891,7 @@ class Dataset < CustomTranslation
     logger.debug "======= languages changed? #{self.languages_changed?}; change: #{self.languages_change}"
     logger.debug "======= reset_download_files changed? #{self.reset_download_files_changed?} change: #{self.reset_download_files_change}"
     if self.changed? && !(self.changed.include?('reset_download_files') && self.reset_download_files == false)
-      logger.debug "========== dataset changed!, setting reset_download_files = true"
+      puts "========== dataset changed!, setting reset_download_files = true"
       self.reset_download_files = true
     end     
     return true
@@ -834,9 +901,9 @@ class Dataset < CustomTranslation
   #############################
   # Scopes
 
-  def self.search(q)
-    full_text_search(q)
-  end
+  # def self.search(q)
+  #   full_text_search(q)
+  # end
 
   def self.sorted_title
     order_by([[:title, :asc]])

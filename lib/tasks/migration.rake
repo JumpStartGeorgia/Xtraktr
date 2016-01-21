@@ -137,4 +137,9 @@ namespace :migration do
     require "./db/migrate/reprocess_all_datasets.rb"
   end
 
+  desc "add new fields for description/methodology that will have no html so search results are better"
+  task :add_no_html_fields => :environment do
+    require "./db/migrate/add_no_html_fields.rb"
+  end
+
 end

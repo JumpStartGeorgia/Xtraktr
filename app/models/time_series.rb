@@ -1,8 +1,10 @@
 class TimeSeries < CustomTranslation
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongoid::Search
   include Mongoid::Slug
+  # include Mongoid::Search
+  include Elasticsearch::Model
+  include Elasticsearch::Model::Callbacks
 
   #############################
 
@@ -12,6 +14,7 @@ class TimeSeries < CustomTranslation
 
   field :title, type: String, localize: true
   field :description, type: String, localize: true
+  field :description_no_html, type: String, localize: true
   field :license_title, type: String, localize: true
   field :license_description, type: String, localize: true
   field :license_url, type: String, localize: true
@@ -236,11 +239,11 @@ class TimeSeries < CustomTranslation
   accepts_nested_attributes_for :questions, reject_if: :all_blank, :allow_destroy => true
   accepts_nested_attributes_for :category_mappers, reject_if: :all_blank, :allow_destroy => true
 
-  attr_accessible :title, :description, :user_id,
+  attr_accessible :title, :description, :description_no_html, :user_id,
       :public, :private_share_key,
       :datasets_attributes, :questions_attributes,
       :languages, :default_language,
-      :title_translations, :description_translations,
+      :title_translations, :description_translations, :description_no_html_translations,
       :category_mappers_attributes, :category_ids, :permalink,
       :country_mappers_attributes, :country_ids,
       :weights_attributes, :groups_attributes,
@@ -272,7 +275,13 @@ class TimeSeries < CustomTranslation
 
   #############################
   # Full text search
-  search_in :title, :description, :questions => [:original_code, :text, :notes, :answers => [:text]]
+  # search_in :title, :description, :questions => [:original_code, :text, :notes, :answers => [:text]]
+
+  index_name "timeseries-#{Rails.env}"
+
+  def as_indexed_json(options={})
+    as_json(only: [:title, :description])
+  end
 
   #############################
   # permalink slug
@@ -374,6 +383,9 @@ class TimeSeries < CustomTranslation
   def description
     get_translation(self.description_translations)
   end
+  def description_no_html
+    get_translation(self.description_no_html_translations)
+  end
 
 
   #############################
@@ -383,6 +395,7 @@ class TimeSeries < CustomTranslation
   before_create :create_private_share_key
   before_save :set_public_at
   before_save :check_questions_for_changes
+  before_save :strip_html_from_text
 
   # when saving the time series, question callbacks might not be triggered
   # so this will check for questions that chnaged and then call the callbacks
@@ -399,6 +412,21 @@ class TimeSeries < CustomTranslation
     return true
   end
 
+  # to help search through text only, remove html tags
+  def strip_html_from_text
+    puts ">>> strip_html_from_text"
+    orig_locale = I18n.locale
+    self.languages.each do |locale|
+      I18n.locale = locale.to_sym
+      if self.description.present?
+        self.description_no_html = ActionController::Base.helpers.strip_tags(self.description).gsub('&nbsp;', ' ') 
+      else
+        self.description_no_html = nil
+      end      
+    end
+    I18n.locale = orig_locale
+    return true
+  end
 
   # this is used in the form to set the categories
   def set_category_ids
@@ -462,9 +490,9 @@ class TimeSeries < CustomTranslation
     x.present? ? x.owner : nil
   end
 
-  def self.search(q)
-    full_text_search(q)
-  end
+  # def self.search(q)
+  #   full_text_search(q)
+  # end
 
   def self.sorted_title
     order_by([[:title, :asc]])

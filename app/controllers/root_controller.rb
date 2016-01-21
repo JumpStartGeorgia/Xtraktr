@@ -94,32 +94,123 @@ class RootController < ApplicationController
 
 
   def explore_data
-    @datasets = Dataset.meta_only.is_public
 
-    # add search
+    # build elastic search query/filter based on query params
+    # if no query params, then just filter by public
+
+    # create basic query
+    query = {
+      query: {
+        filtered: {
+          query: {
+            match_all: {
+            }
+          }
+        }
+      },
+      filter:{
+        bool:{
+          must:[
+            {term: {public: true}}
+          ]
+        }  
+      }
+    }
+
+    # if search exists, update query to use search and add highlights to query
     if params[:q].present?
-      @datasets = @datasets.search(params[:q])
-    end
-    # add sort
-    if params[:sort].present?
-      case params[:sort].downcase
-        when 'publish'
-          @datasets = @datasets.sorted_public_at
-        when 'release'
-          @datasets = @datasets.sorted_released_at
-        else #when 'title'
-          @datasets = @datasets.sorted_title
-      end
-    else
-      @datasets = @datasets.sorted_title
-    end    
-    # add category
-    @datasets = @datasets.categorize(params[:category]) if params[:category].present? 
-    @datasets = @datasets.with_country(params[:country]) if params[:country].present?
-    @datasets = @datasets.with_donor(params[:donor]) if params[:donor].present?
-    #@datasets = @datasets.with_owner(params[:owner]) if params[:owner].present?
+      query[:query][:filtered][:query] = {
+        query_string: {
+          query: params[:q],
+          fields: ['title^10', 'description_no_html', 'methodology_no_html', 'description_no_html.lower_case_sort', 'methodology_no_html.lower_case_sort', 'title.lower_case_sort^10']
+        }
+      }
 
-    @datasets = Kaminari.paginate_array(@datasets).page(params[:page]).per(per_page)
+      # add highlighting to query
+      query[:highlight] = {
+        pre_tags: ['[[highlight]]'],
+        post_tags: ['[[/highlight]]'],
+        order: 'score',
+        fields: {
+          title:   { number_of_fragments: 0, matched_fields: ['title', 'title.lower_case_sort'] },
+          :'description_no_html' => { fragment_size: 150, matched_fields: ['description', 'description.lower_case_sort'] },
+          :'methodology_no_html' => { fragment_size: 150, matched_fields: ['methodology', 'methodology.lower_case_sort'] }
+        }
+      }
+    else
+      # no search, so apply default sort by title 
+      query[:sort] = [
+        {:'title.lower_case_sort' => {order: 'asc'}}
+      ]
+    end
+
+    # add needed filters
+    if params[:category].present?
+      query[:filter][:bool][:must] << {term: {:'category_mappers.category_id' => params[:category]}}
+    end
+    if params[:country].present?
+      query[:filter][:bool][:must] << {term: {:'country_mappers.country_id' => params[:country]}}
+    end
+    if params[:donor].present?
+      query[:filter][:bool][:must] << {term: {donor: params[:donor]}}
+    end
+
+    logger.debug "@@@@@@@@@@@@@@@@@@@@@"
+    logger.debug query.to_json
+
+    @datasets = Dataset.search(query).page(params[:page]).per(per_page).records
+    #@datasets = Dataset.search(query).page(params[:page]).per(per_page).records.meta_only # meta not working with pagination
+    
+
+    # # add search
+    # if params[:q].present?
+
+    #   query = {
+    #     query: {
+    #       multi_match: {
+    #         query: params[:q],
+    #         fields: ['title^10', 'description', 'methodology']
+    #       }
+    #     },
+    #     highlight: {
+    #       pre_tags: ['<em class="label label-highlight">'],
+    #       post_tags: ['</em>'],
+    #       fields: {
+    #         title:   { number_of_fragments: 0 },
+    #         description: { fragment_size: 100 },
+    #         methodology: { fragment_size: 100 }
+    #       }
+    #     }
+    #   }
+
+    #   @datasets = Dataset.search(query).records.meta_only.is_public
+    # else
+    #   @datasets = Dataset.meta_only.is_public
+    # end
+
+    # # add sort
+    # if params[:q].nil?
+    #   if params[:sort].present?
+    #     case params[:sort].downcase
+    #       when 'publish'
+    #         @datasets = @datasets.sorted_public_at
+    #       when 'release'
+    #         @datasets = @datasets.sorted_released_at
+    #       else #when 'title'
+    #         @datasets = @datasets.sorted_title
+    #     end
+    #   else
+    #     @datasets = @datasets.sorted_title
+    #   end    
+    # end
+
+    # # add category
+    # @datasets = @datasets.categorize(params[:category]) if params[:category].present? 
+    # @datasets = @datasets.with_country(params[:country]) if params[:country].present?
+    # @datasets = @datasets.with_donor(params[:donor]) if params[:donor].present?
+    # #@datasets = @datasets.with_owner(params[:owner]) if params[:owner].present?
+
+#    @datasets = Kaminari.paginate_array(@datasets).page(params[:page]).per(per_page)
 
     @show_title = false
     if !request.xhr?
