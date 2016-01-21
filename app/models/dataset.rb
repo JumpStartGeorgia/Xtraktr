@@ -962,9 +962,9 @@ class Dataset < CustomTranslation
         num = question.numerical  
         items.formatted_data = []
         vfd = [] # only valid formatted data for calculating stats
-        fd = Array.new(num.size, [0,0])
+        fd = Array.new(num.size) { Array.new(2, 0) } #Array.new(num.size, [0,0])
 
-        #formatted and grouped data calculation
+        #formatted and grouped data calculationz
         items.data.each {|d|
           if is_numeric?(d) && !predefined_answers.include?(d)
             if num.type == Numerical::TYPE_VALUES[:integer]

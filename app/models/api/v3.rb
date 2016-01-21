@@ -81,6 +81,7 @@ class Api::V3
 
     data_items = dataset.data_items.with_code(question_code)
     num = question.numerical
+     Rails.logger.info("--------------------------------------------#{data_items.id} #{num}")
     return {
       dataset: { id: dataset.id, title: dataset.title },
       question: create_dataset_question_hash(question, private_user_id: private_user_id),
@@ -743,10 +744,8 @@ private
         elsif @_question.numerical_type?
 
           num = @_question.numerical
-          fd = Array.new(num.size, 0)
-          fdw = Array.new(num.size, 0)
-          fd.each_with_index{|x, i| fd[i] = [0,0] }
-          fdw.each_with_index{|x, i| fdw[i] = [0,0] }
+          fd = Array.new(num.size) { Array.new(2, 0) }
+          fdw = Array.new(num.size) { Array.new(2, 0) }
 
           #formatted and grouped data calculation
           data.each_with_index {|d,i|
@@ -814,8 +813,7 @@ private
         elsif @_question.numerical_type?
 
           num = @_question.numerical
-          fd = Array.new(num.size, 0)
-          fd.each_with_index{|x, i| fd[i] = [0,0] }
+          fd = Array.new(num.size) { Array.new(2, 0) }
 
           #formatted and grouped data calculation
           data.each {|d|
