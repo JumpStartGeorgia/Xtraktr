@@ -559,7 +559,7 @@ function build_histogramm_chart (json_chart, chart_height, weight_name) { // bui
       title: { text: nm.title },
       tickPositions: formatLabel(),
       startOnTick: true,
-      endOnTick: true,
+      endOnTick: true
     },
     yAxis: { title: null },
 
@@ -571,10 +571,10 @@ function build_histogramm_chart (json_chart, chart_height, weight_name) { // bui
         pointPlacement: "between"
       }
     },
-    series: [{ data:  json_chart.data.map(function (d, i){ return { x:nm.min_range + nm.width*i, y: d.count, percent: d.y }; }) }],
+    series: [{ data:  json_chart.data.map(function (d, i){ return { x:nm.min_range + nm.width*i, y: d.count, percent: d.y, tip: d.name }; }) }],
     legend: { enabled: false },
     tooltip: {
-      formatter: function () { return Highcharts.numberFormat(this.y, 0) + " (" + this.point.percent + "%)"; }
+      formatter: function (y) { return "<b>" + this.point.tip + ":</b><br/>" + Highcharts.numberFormat(this.y, 0) + " (" + this.point.percent + "%)"; }
     },
     exporting: {
       sourceWidth: 1280,

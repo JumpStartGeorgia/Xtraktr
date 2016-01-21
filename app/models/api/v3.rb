@@ -81,7 +81,6 @@ class Api::V3
 
     data_items = dataset.data_items.with_code(question_code)
     num = question.numerical
-     Rails.logger.info("--------------------------------------------#{data_items.id} #{num}")
     return {
       dataset: { id: dataset.id, title: dataset.title },
       question: create_dataset_question_hash(question, private_user_id: private_user_id),
@@ -768,7 +767,6 @@ private
           total_w = 0
           fd.each {|x| total+=x[0] }
           fdw.each {|x| total_w+=x[0] }
-           Rails.logger.info("--------------------------------------------#{total} -- #{total_w}")
           results[:total_responses] = total
 
           fd.each_with_index {|x,i| 
