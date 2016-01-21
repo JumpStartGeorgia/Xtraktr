@@ -291,7 +291,7 @@ module ProcessDataFile
 
                   formatted_data = []
                   vfd = [] # only valid formatted data for calculating stats
-                  fd = Array.new(num.size, [0,0])
+                  fd = Array.new(num.size) { Array.new(2, 0) }
 
                   #formatted and grouped data calculation
                   code_data.each {|d|
@@ -572,7 +572,7 @@ module ProcessDataFile
 
                   formatted_data = []
                   vfd = [] # only valid formatted data for calculating stats
-                  fd = Array.new(num.size, [0,0])
+                  fd = Array.new(num.size) { Array.new(2, 0) }
 
                   #formatted and grouped data calculation
                   code_data.each {|d|
