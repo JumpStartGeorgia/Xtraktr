@@ -227,7 +227,7 @@ $(document).ready(function (){
 
             if(cd.length-1 == i) { minus = 0; }
             endd = start + m[2] - minus;
-            rng.push(start + " - " + (isInt ? parseInt(endd) : parseFloat(endd)));
+            rng.push(start == endd ? start : (start + " - " + (isInt ? parseInt(endd) : parseFloat(endd))));
           });
           return rng;
         }
