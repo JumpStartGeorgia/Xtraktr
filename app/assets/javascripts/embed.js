@@ -103,7 +103,8 @@ function load_highlights (highlight_data){
   Highcharts.setOptions({
     chart: { spacingRight: 30 },
     lang: {
-      contextButtonTitle: gon.highcharts_context_title
+      contextButtonTitle: gon.highcharts_context_title,
+      thousandsSep: ','
     },
     colors: ["#C6CA53", "#7DAA92", "#725752", "#E29A27", "#998746", "#A6D3A0", "#808782", "#B4656F", "#294739", "#1B998B", "#7DAA92", "#BE6E46", "#565264"]
   });
