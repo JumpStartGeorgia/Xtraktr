@@ -785,7 +785,7 @@ private
             
             endd = start + num.width - minus
             endd = num.type == 0 ? endd.to_i : endd.to_f
-            results[:analysis] << { answer_value: i, answer_text: "#{start} - #{endd}",
+            results[:analysis] << { answer_value: i, answer_text: (start == endd ? "#{start}" : "#{start} - #{endd}"),
            unweighted_count: x[0], weighted_count: fdw[i][0].round, weighted_percent: fdw[i][1] } }
         end
       else
@@ -847,7 +847,7 @@ private
             
             endd = start + num.width - minus
             endd = num.type == 0 ? endd.to_i : endd.to_f
-            results[:analysis] << { answer_value: i, answer_text: "#{start} - #{endd}", count: x[0], percent: x[1] } }
+            results[:analysis] << { answer_value: i, answer_text: (start == endd ? "#{start}" : "#{start} - #{endd}"), count: x[0], percent: x[1] } }
         end
       end
 
