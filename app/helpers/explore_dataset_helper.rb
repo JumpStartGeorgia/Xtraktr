@@ -7,6 +7,7 @@ module ExploreDatasetHelper
     disabled_code = options[:disabled_code].nil? ? nil : options[:disabled_code]
     disabled_code2 = options[:disabled_code2].nil? ? nil : options[:disabled_code2]
     group_type = options[:group_type].nil? ? nil : options[:group_type]
+    only_categorical = options[:only_categorical].nil? ? false : options[:only_categorical]
 
     html = ''
 
@@ -14,7 +15,7 @@ module ExploreDatasetHelper
 
       if item.class == Group
         # add group
-        html << generate_explore_group_option(item)
+        html << generate_explore_dataset_group_option(item)
 
         # if have items, add them
         options[:group_type] = group_type.present? ? 'subgroup' : 'group'
@@ -22,7 +23,9 @@ module ExploreDatasetHelper
 
       elsif item.class == Question && item.has_code_answers_for_analysis?
         # add question
-        html << generate_explore_question_option(item, dataset, skip_content, selected_code, disabled_code, disabled_code2, group_type)
+        if item.is_analysable? && !(only_categorical && item.data_type != Question::DATA_TYPE_VALUES[:categorical])
+          html << generate_explore_dataset_question_option(item, dataset, skip_content, selected_code, disabled_code, disabled_code2, group_type)
+        end
       end
     end
 
@@ -43,8 +46,7 @@ module ExploreDatasetHelper
   end
 
 private
-
-  def generate_explore_group_option(group)
+  def generate_explore_dataset_group_option(group)
     html = ''
     content = ''
     cls = group.parent_id.present? ? 'subgroup' : 'group'
@@ -66,7 +68,7 @@ private
     return html
   end
 
-  def generate_explore_question_option(question, dataset, skip_content, selected_code, disabled_code, disabled_code2, group_type=nil)
+  def generate_explore_dataset_question_option(question, dataset, skip_content, selected_code, disabled_code, disabled_code2, group_type=nil)
     html = ''
     q_text = h question.code_with_text
     selected = selected_code.present? && selected_code == question.code ? 'selected=selected ' : ''
@@ -83,11 +85,13 @@ private
         weights << '"]\''
       end
     end
-
     # if the question is mappable or is excluded, show the icons for this
     content = ''
-    if !skip_content #&& (question.is_mappable? || question.exclude?)
+    if !skip_content || question.has_type? #&& (question.is_mappable? || question.exclude?)
       content << 'data-content=\'<span class="outer-layer"><span class="inner-layer"><span>' + q_text + '</span><span class="right-icons">'
+      if question.has_type?
+        content << question_data_type_icon(question.data_type)
+      end
 
       if question.is_mappable?
         content << mappable_question_icon
@@ -100,7 +104,7 @@ private
       content << '</span></span></span>\''
 
     end
-    html << "<option class='#{cls}' value='#{question.code}' title='#{q_text}' #{selected} #{disabled} #{content.html_safe} #{can_exclude} #{weights}>#{q_text}</option>"
+    html << "<option class='#{cls}' value='#{question.code}' title='#{q_text}' #{selected} #{disabled} #{content.html_safe} #{can_exclude} #{weights} data-type='#{question.data_type}'>#{q_text}</option>"
 
     return html
   end

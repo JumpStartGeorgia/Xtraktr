@@ -1,92 +1,141 @@
 #! /usr/bin/env Rscript
 
 #######
-## this script will generate 4 files
+## this script will generate 3 files
 # 1: csv file of data
-# 2: spss code file that contains question codes and answers
 # 3: csv file of question codes and text
-# 4: text file of question answers
+# 3: csv file of answer values and text
 
-## notes
-# - the 2nd file contains a list of answers for each question,
-#   but does not work properly if the data has values that are not in the specified list of answers.
-#   when this occurs, the answers are dropped.
-#   that is why the 4th file is needed.
-# - currently I cannot figure out how to properly write out to csv in R, so this file is a hack.
-#   each line is formatted as: [1] "Question Code || Answer Value || Answer Text"
-#   code will be needed to convert this to csv format
-
-
-# five required arguments:
+## four required arguments:
 # - 1: spss file to read in
 # - 2: csv file to save raw data to
-# - 3: spss file to save variable codes to
-# - 4: csv file containing variable code and question
-# - 5: text file containing answers for questions in a special format
+# - 3: csv file containing variable code and question
+# - 4: csv file containing answers for questions
 
 # take in the arguments
 args <- commandArgs(TRUE)
 
 print(paste('spss file to read in = ', args[1]))
 print(paste('csv file for data = ', args[2]))
-print(paste('spss file for codes = ', args[3]))
-print(paste('csv file for questions labels = ', args[4]))
-print(paste('text file for answers labels = ', args[5]))
+print(paste('csv file for questions labels = ', args[3]))
+print(paste('csv file for answers labels = ', args[4]))
 
-#############################
-# first, read in the data using value labels so can generate sps file with answers in them
-#############################
-# read in spss
-# - need value.label to be true so that label values are available on export
+
+# function to clean bad characters in text
+clean_text <- function(text){
+  return(gsub("\x85", '...', gsub("\x91", "'", gsub("\x92", "'", gsub("\x93", '"', gsub("\x94", '"', text))))))
+}
+
+# read in the data with labels so can test if each variable is factor
 data <- read.spss(args[1], use.value.labels=T, to.data.frame=F)
 
-# basic spss export
-# canont use: write.foreign(data, 'out.csv', 'code.sps', package="SPSS")
-# for may get error: cannot abbreviate the variable names to eight or fewer letters
-# so use the following instead:
-foreign:::writeForeignSPSS(data, gsub('.csv$','_bad.csv',args[2]), args[3], varnames=names(data))
-#foreign:::writeForeignSPSS(data, args[2], args[3], varnames=attr(data, 'variable.labels'))
+
+# pull out the questions/answers to variables to be used soon
+answer_labels <- attr(data, 'label.table')
+question_labels <- attr(data, 'variable.labels')
+
+# record which questions are numeric and which are categorical (factors)
+# - is used to convert factor data to numeric
+# - and to set the question data type value in the csv
+# note - due to the way read.spss works, if the unique list of data answers > the list of possible answers, 
+#        the question will be marked as numeric
+#        - this could happen if the question is a range of x..y (least .. best) and the data file only
+#          defined the least answer and best answer, but nothing in between
+is_factor_list <- sapply(data, is.factor)
+is_numeric_list <- sapply(data, is.numeric)
 
 
-#############################
-# now, read in the data not using value labels so can generate all other files without the code values being changed
-#############################
-# read in spss
-# - need value.label to be true so that label values are available on export
-data <- read.spss(args[1], use.value.labels=F, to.data.frame=F)
+##########
+## CREATE QUESTION AND ANSWER TEXT CSV
+##########
 
-# basic spss export
-# canont use: write.foreign(data, 'out.csv', 'code.sps', package="SPSS")
-# for may get error: cannot abbreviate the variable names to eight or fewer letters
-# so use the following instead:
-foreign:::writeForeignSPSS(data, args[2], gsub('.sps$','_bad.sps',args[3]), varnames=names(data))
-#foreign:::writeForeignSPSS(data, args[2], args[3], varnames=attr(data, 'variable.labels'))
+# vector to store all questions
+# - format is: question code, question text, data type
+questions <- c()
+# vector to store all questions/answers
+# - format is: question code, answer value, answer, text
+answers <- c()
+# record the number of answers found so can use to tell matrix how many rows are needed
+num_answers <- 0
 
-table <- attr(data, 'label.table')
-
-# write out the question labels
-# - remove bad characters from questions
-for (i in 1:length(table)){
-  attr(data, 'variable.labels')[i] <- gsub("\x85", '...', gsub("\x91", "'", gsub("\x92", "'", gsub("\x93", '"', gsub("\x94", '"', attr(data, 'variable.labels')[i])))))
-}
-write.csv(attr(data, 'variable.labels'), args[4])
-
-# write out the full list of questions that have answers
-sink(args[5])
 # for each question
-for (i in 1:length(table)){
+for (i in 1:length(question_labels)){
+  # get question and variable code
+  question_code <- names(question_labels[i])
+  # see if this question has answers
+  question_answers_length <- length(answer_labels[[question_code]])
+
+  # determine the question data type
+  # - use the is_factor_list / is_numeric_list to check type
+  # - c = categorical / factor
+  # - n = numerical
+  # read.spss will mark a question as numeric if the question data does not match predefined answers
+  # (which can be caused by bad data entry or missing answers)
+  # we feel it is better to default to categorical question instead of numeric, 
+  # so if question is numeric but has categorical questions, save it as categorical to be safe
+  data_type <- ''
+  if (is_factor_list[i] == TRUE || (is_numeric_list[i] == TRUE && question_answers_length > 0)){
+    data_type <- 'c'
+  }else if (is_numeric_list[i] == TRUE){
+    data_type <- 'n'
+  }
+  # - format is: question code, question text, data type
+  questions <- c(questions, c(question_code, clean_text(question_labels[i])), data_type)
+}
+
+# build the answers
+# - have to do this separate from the questions for the answer and question length might not match
+for (i in 1:length(answer_labels)){
   # only continue if the question has answers
-  if (length(unlist(table[i])) != 0){
+  answer_length <- length(unlist(answer_labels[i]))
+  if (answer_length > 0){
     # for each answer in this question
     # the answers are ordered backwards,
     # so go through the answers backwards to get them in the correct order
-    for (j in length(unlist(table[i])):1){
+    for (j in answer_length:1){
+      # record the number of rows
+      num_answers <- num_answers + 1
+
+      question_code <- names(answer_labels[i])
+      answer_text <- unlist(answer_labels[i])[j]
+      
       # the answer text has the question code appended to it, so take it off using sub
-      print(paste(c(names(table[i]), unlist(table[i])[j], sub(paste(c(names(table[i]), '.'), collapse=''), '', names(unlist(table[i])[j]))), collapse=" || "))
+      # make sure the answer text is properly encoded as utf8
+      answer_text_clean <- clean_text(sub(paste(c(question_code, '.'), collapse=''), '', names(answer_text)))
+
+      # - format is: question code, answer value, answer text
+      answers <- c(answers, c(question_code, answer_text, answer_text_clean))
+
     }
   }
 }
-sink()
+
+# create the array of questions/answers
+question_array <- matrix(questions, nrow=length(question_labels), ncol=3, byrow = TRUE)
+answer_array <- matrix(answers, nrow=num_answers, ncol=3, byrow = TRUE)
+
+# add variable names so they appear as col headers in csv
+colnames(question_array) <- c('Question Code', 'Question Text', 'Question Data Type')
+colnames(answer_array) <- c('Question Code', 'Answer Value', 'Answer Text')
+
+# create csv
+write.csv(question_array, args[3], row.names = F)
+write.csv(answer_array, args[4], row.names = F)
+
+
+
+##########
+## CREATE DATA CSV
+##########
+# read in the data without factors so data csv is using correct codes
+# - tried doing it with the data with factors and then converting factors to numeric
+#   but R starts numbers at 1 for factors and does not pay attention to original values
+#   so this does not work for it will not match the answer csv values.
+#      # convert factor data to numeric before writing out csv
+#      data[is_factor_list] <- lapply(data[is_factor_list], as.numeric)
+#      write.csv(data, args[2], row.names = F, na = "")
+write.csv(read.spss(args[1], use.value.labels=F, to.data.frame=F), args[2], row.names = F, na = "")
+
 
 
 # quit

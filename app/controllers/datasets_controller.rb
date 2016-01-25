@@ -71,7 +71,7 @@ class DatasetsController < ApplicationController
       add_dataset_nav_options(show_title: false)
 
       gon.explore_data = true
-      gon.api_dataset_analysis_path = api_v2_dataset_analysis_path
+      gon.api_dataset_analysis_path = api_v3_dataset_analysis_path
       gon.embed_ids = @dataset.highlights.embed_ids
       gon.private_user = Base64.urlsafe_encode64(current_user.id.to_s)
 
@@ -300,7 +300,6 @@ class DatasetsController < ApplicationController
     @dataset = Dataset.by_id_for_user(params[:id], current_user.id)
 
     if @dataset.present?
-
       respond_to do |format|
         format.html {
           @js.push("mass_changes_questions.js")
@@ -315,32 +314,20 @@ class DatasetsController < ApplicationController
             gon.datatable_json << {
               code: question.original_code,
               text: question.text,
-              exclude: "<input id='dataset_questions_attributes_#{question_index}_id' name='dataset[questions_attributes][#{question_index}][id]' type='hidden' value='#{question.id}'><input class='exclude-input' name='dataset[questions_attributes][#{question_index}][exclude]' type='checkbox' value='true' #{question.exclude? ? 'checked=\'checked\'' : ''} #{disabled}>#{warning_exclude}",
-              download: "<input class='download-input' name='dataset[questions_attributes][#{question_index}][can_download]' type='checkbox' value='true' #{question.can_download? ? 'checked=\'checked\'' : ''} #{disabled}>#{warning_download}"
+              exclude: "<input class='exclude-input' type='checkbox' #{question.exclude? ? 'checked=\'checked\'' : ''} #{disabled} data-id='#{question.id}' data-orig='#{question.exclude?}'>#{warning_exclude}",
+              download: "<input class='download-input' type='checkbox' #{question.can_download? ? 'checked=\'checked\'' : ''} #{disabled} data-id='#{question.id}' data-orig='#{question.can_download?}'>#{warning_download}"
             }
           end
 
           add_dataset_nav_options()
-
         }
         format.js {
           begin
-            # cannot use simple update_attributes for if value was checked but is not now,
-            # no value exists in params and so no changes take place
-            # -> get ids that are true and set them to true
-            # -> set rest to false
-            exclude_true_ids = params[:dataset][:questions_attributes].select{|k,v| v[:exclude] == 'true'}.map{|k,v| v[:id]}
-            exclude_false_ids = params[:dataset][:questions_attributes].select{|k,v| v[:exclude] != 'true'}.map{|k,v| v[:id]}
-            @dataset.questions.add_exclude(exclude_true_ids)
-            @dataset.questions.remove_exclude(exclude_false_ids)
-
-            download_true_ids = params[:dataset][:questions_attributes].select{|k,v| v[:can_download] == 'true'}.map{|k,v| v[:id]}
-            download_false_ids = params[:dataset][:questions_attributes].select{|k,v| v[:can_download] != 'true'}.map{|k,v| v[:id]}
-            @dataset.questions.add_can_download(download_true_ids)
-            @dataset.questions.remove_can_download(download_false_ids)
+            @dataset.questions.reflag_questions(:exclude, params[:exclude]) if params[:exclude].present? && params[:exclude].is_a?(Array)
+            @dataset.questions.reflag_questions(:can_download, params[:download]) if params[:download].present? && params[:download].is_a?(Array)
 
             # force question callbacks
-            @dataset.check_question_exclude_status = true
+            @dataset.check_questions_for_changes_status = true
 
             @msg = t('app.msgs.mass_change_question_saved')
             @success = true
@@ -357,9 +344,10 @@ class DatasetsController < ApplicationController
               .exception_notification(request.env, e)
               .deliver
           end
-
+          render 'message', :formats => [:js]
         }
       end
+      
     else
       flash[:info] =  t('app.msgs.does_not_exist')
       redirect_to datasets_path(:locale => I18n.locale)
@@ -373,7 +361,6 @@ class DatasetsController < ApplicationController
     @dataset = Dataset.by_id_for_user(params[:id], current_user.id)
 
     if @dataset.present?
-
       respond_to do |format|
         format.html {
           @js.push("mass_changes_answers.js")
@@ -387,39 +374,23 @@ class DatasetsController < ApplicationController
                 code: question.original_code,
                 question: question.text,
                 answer: answer.text,
-                exclude: "<input id='dataset_questions_attributes_#{question_index}_answers_attributes_#{answer_index}_id' name='dataset[questions_attributes][#{question_index}][answers_attributes][#{answer_index}][id]' type='hidden' value='#{answer.id}'><input class='exclude-input' name='dataset[questions_attributes][#{question_index}][answers_attributes][#{answer_index}][exclude]' type='checkbox' value='true' #{answer.exclude? ? 'checked=\'checked\'' : ''}>",
-                can_exclude: "<input class='can-exclude-input' name='dataset[questions_attributes][#{question_index}][answers_attributes][#{answer_index}][can_exclude]' type='checkbox' value='true' #{answer.can_exclude? ? 'checked=\'checked\'' : ''}>"
+                exclude: "<input class='exclude-input' type='checkbox' #{answer.exclude? ? 'checked=\'checked\'' : ''} data-id='#{answer.id}' data-orig='#{answer.exclude?}'>",
+                can_exclude: "<input class='can-exclude-input' type='checkbox' #{answer.can_exclude? ? 'checked=\'checked\'' : ''} data-id='#{answer.id}' data-orig='#{answer.can_exclude?}'>"
               }
             end
           end
 
-
-
           add_dataset_nav_options()
-
         }
         format.js {
           @msg = t('app.msgs.mass_change_answer_saved')
           @success = true
           begin
-            # cannot use simple update_attributes for if value was checked but is not now,
-            # no value exists in params and so no changes take place
-            # -> get ids that are true and set them to true
-            # -> set rest to false
-            answers = params[:dataset][:questions_attributes].map{|kq,vq| vq[:answers_attributes]}
-
-            exclude_true_ids = answers.map{|x| x.values}.flatten.select{|x| x[:exclude] == 'true'}.map{|x| x[:id]}
-            exclude_false_ids = answers.map{|x| x.values}.flatten.select{|x| x[:exclude] != 'true'}.map{|x| x[:id]}
-            @dataset.questions.add_answer_exclude(exclude_true_ids)
-            @dataset.questions.remove_answer_exclude(exclude_false_ids)
-
-            can_exclude_true_ids = answers.map{|x| x.values}.flatten.select{|x| x[:can_exclude] == 'true'}.map{|x| x[:id]}
-            can_exclude_false_ids = answers.map{|x| x.values}.flatten.select{|x| x[:can_exclude] != 'true'}.map{|x| x[:id]}
-            @dataset.questions.add_answer_can_exclude(can_exclude_true_ids)
-            @dataset.questions.remove_answer_can_exclude(can_exclude_false_ids)
+            @dataset.questions.reflag_answers(:exclude, params[:exclude]) if params[:exclude].present? && params[:exclude].is_a?(Array)
+            @dataset.questions.reflag_answers(:can_exclude, params["can-exclude"]) if params["can-exclude"].present? && params["can-exclude"].is_a?(Array)
 
             # force question callbacks
-            @dataset.check_question_exclude_status = true
+            @dataset.check_questions_for_changes_status = true
 
             if !@dataset.save
               @msg = @dataset.errors.full_messages
@@ -434,68 +405,192 @@ class DatasetsController < ApplicationController
               .exception_notification(request.env, e)
               .deliver
           end
-
+          render 'message', :formats => [:js]
         }
-      end
+      end      
     else
       flash[:info] =  t('app.msgs.does_not_exist')
       redirect_to datasets_path(:locale => I18n.locale)
       return
     end
   end
+   
+  # set questions data types [:categorical, :numerical or :unknown]
+  def mass_changes_questions_type
+    @dataset = Dataset.by_id_for_user(params[:id], current_user.id)
 
-  # # mark which answers users can select to not include in the analysis
-  # # during analysis
-  # def can_exclude_answers
-  #   @dataset = Dataset.by_id_for_user(params[:id], current_user.id)
+    if @dataset.present?
+      respond_to do |format|
+        format.html {
+          @js.push("mass_changes_questions_type.js", "highcharts.js")
+          @css.push("mass_changes_questions_type.css")
 
-  #   if @dataset.present?
+          # create data for datatables (faster to load this way)
+          gon.datatable_json = []
+          gon.private_user = Base64.urlsafe_encode64(current_user.id.to_s)
+          gon.locale_picker_data = { reset: I18n.t("app.buttons.reset") }
+          gon.no_answer = I18n.t("datasets.mass_changes_questions_type.no_answer")
+          gon.no_data = I18n.t("datasets.mass_changes_questions_type.no_data")
+          gon.percent = I18n.t("datasets.mass_changes_questions_type.percent")
+          gon.integer = I18n.t("datasets.mass_changes_questions_type.integer")
+          gon.decimal = I18n.t("datasets.mass_changes_questions_type.decimal")
+          gon.view = I18n.t("helpers.links.view")
+          gon.view_active_title = I18n.t("datasets.mass_changes_questions_type.hints.view_active")
+          gon.view_disabled_title = I18n.t("datasets.mass_changes_questions_type.hints.view_disabled")
+          gon.no_preview = I18n.t("datasets.mass_changes_questions_type.no_preview")
+          @dataset.languages_sorted.each do |locale|
+            gon.locale_picker_data[locale] = [I18n.t("app.language." + locale),I18n.t("app.language." + locale)[0..1].downcase]
+          end
+          gon.total_responses_out_of = I18n.t("app.common.total_responses_out_of")
 
-  #     respond_to do |format|
-  #       format.html {
-  #         @js.push("exclude_answers.js")
-  #         @css.push("exclude_answers.css")
+          # prepaire data for table if numerical fill fields else send reset values
+          @dataset.questions.each do |q|
+              data = {
+                code: q.code,
+                ocode: q.original_code,
+                question: q.text,
+                data_type: q.data_type,
+                has_answers: q.has_code_answers,    
+                has_data_without_answers: q.has_data_without_answers,
+                num: {
+                  type: 0,
+                  width: 0,
+                  min: 0,
+                  max: 0,
+                  title: nil
+                }
+              }
+              num = data[:num]
 
-  #         add_dataset_nav_options()
+              orig_locale = I18n.locale.to_s
+              orig_title = []
+              titles = []
 
-  #       }
-  #       format.js {
-  #         @msg = t('app.msgs.answer_can_exclude_saved')
-  #         @success = true
-  #         begin
-  #           # cannot use simple update_attributes for if value was checked but is not now,
-  #           # no value exists in params and so no changes take place
-  #           # -> get ids that are true and set them to true
-  #           # -> set rest to false
-  #           answers = params[:dataset][:questions_attributes].map{|kq,vq| vq[:answers_attributes]}
-  #           true_ids = answers.map{|x| x.values}.flatten.select{|x| x[:can_exclude] == 'true'}.map{|x| x[:id]}
-  #           false_ids = answers.map{|x| x.values}.flatten.select{|x| x[:can_exclude] != 'true'}.map{|x| x[:id]}
+              if q.numerical?
+                @dataset.languages_sorted.each do |locale|
+                  value = q.numerical.title_translations[locale].blank? ? "" : q.numerical.title_translations[locale]
+                  if locale == orig_locale
+                    orig_title = [locale, value]
+                  else
+                    titles.push([locale, value])
+                  end
+                end
+                titles.unshift(orig_title)
+                
+                num[:type] = q.numerical.type
+                num[:width] = q.numerical.width
+                num[:min] = q.numerical.min
+                num[:max] = q.numerical.max
+              else
 
-  #           @dataset.questions.add_answer_can_exclude(true_ids)
-  #           @dataset.questions.remove_answer_can_exclude(false_ids)
+                @dataset.languages_sorted.each do |locale|
+                  if locale == orig_locale
+                    orig_title = [locale, ""]
+                  else
+                    titles.push([locale, ""])
+                  end
+                end
+                titles.unshift(orig_title)
+              end
 
-  #           if !@dataset.save
-  #             @msg = @dataset.errors.full_messages
-  #             @success = false
-  #           end
-  #         rescue Exception => e
-  #           @msg = t('app.msgs.question_can_exclude_not_saved')
-  #           @success = false
+              num[:title] = titles
+              gon.datatable_json << data
+          end
 
-  #           # send the error notification
-  #           ExceptionNotifier::Notifier
-  #             .exception_notification(request.env, e)
-  #             .deliver
-  #         end
+          add_dataset_nav_options()
+        }
+        format.js {
+          begin
+             
+            @msg = t('app.msgs.mass_change.question_type.saved')
+            @msg_type = 2 # error 0, info 1, 2 success
+            if params[:mass_data].present? && params[:mass_data].keys.length > 0
+              question_count = params[:mass_data].keys.length
+              unvalid_data = []
+              params[:mass_data].keys.each {|t| 
 
-  #       }
-  #     end
-  #   else
-  #     flash[:info] =  t('app.msgs.does_not_exist')
-  #     redirect_to datasets_path(:locale => I18n.locale)
-  #     return
-  #   end
-  # end
+                code = t.downcase
+                question_data = params[:mass_data][t]["data"]
+                flag = false
+
+                if question_data.is_a?(Array) && is_number?(question_data[0])
+                  question_data_type = question_data[0].to_i
+                  if question_data_type == Question::DATA_TYPE_VALUES[:unknown] || question_data_type == Question::DATA_TYPE_VALUES[:categorical]
+                    flag = true
+                  elsif question_data_type == Question::DATA_TYPE_VALUES[:numerical] && question_data.length == 8
+                    begin
+                      num = { 
+                        type: question_data[1].to_i,
+                        width: question_data[2].to_f,
+                        min: question_data[3].to_f,
+                        max: question_data[4].to_f,
+                        title_translations: params[:mass_data][t]["titles"] }
+                      raise "type should be integer or decimal, and width should be greater then 0" if (num[:type] != 0 || num[:type] != 1) && num[:width] <= 0
+                      num[:min_range] = (num[:min] / num[:width]).floor * num[:width]
+                      num[:max_range] = (num[:max] / num[:width]).ceil * num[:width]
+                      num[:size] = (num[:max_range] - num[:min_range]) / num[:width]
+                      flag = true
+                    rescue Exception => e
+                      flag = false
+                    end
+                  end
+                end
+
+                if flag 
+                  @dataset.update_question_type(code, question_data_type, num)                  
+                else
+                  unvalid_data.push(code)
+                end
+              }
+              # @dataset.questions.reflag_questions_type(params[:mass_data])  
+              # @dataset.questions_data_recalculate(params[:mass_data])
+              
+              # force question callbacks
+              @dataset.check_questions_for_changes_status = true
+
+              if !unvalid_data.empty?
+                if question_count == unvalid_data.length # so all questions are not valid error message
+                  @msg = t('app.msgs.mass_change.question_type.validation_error_for_all')
+                  @msg_type = 0
+                else
+
+                  if !@dataset.save # else do saving and show partial info message
+                    @msg = @dataset.errors.full_messages
+                    @msg_type = 0
+                  else                  
+                    @msg = t('app.msgs.mass_change.question_type.validation_error_for_some', codes: unvalid_data.join(", "))
+                    @msg_type = 1
+                    @msg_fadeout = false
+                  end
+                end
+              else
+                if !@dataset.save
+                  @msg = @dataset.errors.full_messages
+                  @msg_type = 0
+                end
+              end
+
+            else # if data for update is missing at all then show error
+              @msg = t('app.msgs.mass_change.question_type.no_data_to_save')
+              @msg_type = 0
+            end  
+          rescue Exception => e
+            @msg = t('app.msgs.mass_change.question_type.not_saved')
+            @msg_type = 0
+            # send the error notification
+            ExceptionNotifier::Notifier
+              .exception_notification(request.env, e)
+              .deliver
+          end
+          render 'message', :formats => [:js]
+        }
+      end  
+    else
+      flash[:info] =  t('app.msgs.does_not_exist')
+      redirect_to datasets_path(:locale => I18n.locale)
+      return
+    end      
+  end
 
   # show which questions are assign to shape sets
   def mappable
@@ -869,5 +964,7 @@ class DatasetsController < ApplicationController
       return
     end
   end
-
+  def is_number? string
+    true if Float(string) rescue false
+  end
 end

@@ -7,6 +7,7 @@
  *= require jquery.ui.core
  *= require jquery.ui.theme
  *= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
+ * require dataTables/extras/dataTables.responsive
  *= require dataTables/extras/dataTables.tableTools
  *= require bootstrap_and_overrides
  *= require tooltip
@@ -608,7 +609,26 @@ div.message {
 .js-block { display:block; }
 .js-inline { display:inline-block; }
 
-
+table.dataTable {
+  thead {
+    .sorting, .sorting_asc, .sorting_desc {
+      background-image:none;
+      &:after { content:"" !important; }
+    }
+    .sorting:after{ background:transparent url(/assets/svg/sort.svg) no-repeat 0px; }
+    .sorting_asc:after { background:transparent url(/assets/svg/sort.svg) no-repeat -11px; }
+    .sorting_desc:after { background:transparent url(/assets/svg/sort.svg) no-repeat -22px; }
+    .sorting:after, .sorting_asc:after,.sorting_desc:after
+    {
+      content: "";
+      display:inline-block;
+      width:10px;
+      height:16px;
+      margin:2px 0px 0px 10px;
+      float: right;
+    }
+  }
+}
 .dataTables_wrapper { /* datatable styles */
   .dataTables_filter
   {
@@ -665,6 +685,7 @@ div.message {
     font:14px 'sourcesans_pro_l', 'sans-serif';
     color: @3c4352;
   }
+
   table tfoot {
     display: table-header-group;
     td{
@@ -914,6 +935,7 @@ g.highcharts-button{
     width: 100%;
     height: 100%;
     display: none;
+    z-index: 809;
     .loader-text {
       background: #efefef;
       position: fixed;
@@ -928,6 +950,7 @@ g.highcharts-button{
       -webkit-border-radius: 20px;
       border-radius: 20px;
       -khtml-border-radius: 20px;
+      z-index: 810;
     }
   }
 }
@@ -940,7 +963,7 @@ g.highcharts-button{
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 9999;
+  z-index: 809;
   display: none;
 
   .loader-text {
@@ -957,6 +980,7 @@ g.highcharts-button{
     -webkit-border-radius: 20px;
     border-radius: 20px;
     -khtml-border-radius: 20px;
+    z-index:810;
   }
 }
 

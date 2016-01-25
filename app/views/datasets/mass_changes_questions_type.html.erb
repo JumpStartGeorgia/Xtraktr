@@ -1,0 +1,40 @@
+<%- model_class = Question -%>
+<% title t('.title') %>
+
+<% if @dataset.questions.with_code_answers.present? %>
+  <%= form_tag mass_changes_questions_type_dataset_path(@dataset), id: 'mass_change_form', class: 'form-data-loader', :"data-view-chart-path" => api_v3_dataset_question_data_path, :"data-id" => @dataset.id, :novalidate => true do %>
+    <p><%= simple_format(t('.explanation')) %></p>
+    <div class="data-loader-container">
+      <div class="mass-change-submit"><%= submit_tag t('app.buttons.save_settings'), class: 'btn btn-success' %></div>
+      <table id='mass_change' class="table table-striped table-hover responsive no-wrap">
+        <thead>
+          <tr>
+            <th><%= t("helpers.links.view") %></th>
+            <th><%= model_class.human_attribute_name(:code) %></th>
+            <th><%= model_class.human_attribute_name(:text) %></th>
+            <th class="center">
+              <%= link_to '#', class: 'btn btn-default btn-xs btn-select-all', :'data-state' => 'all' do %>
+                <span class="glyphicon glyphicon-ok" title="<%= t('helpers.links.select_all') %>"></span>
+              <% end %>
+              <%= model_class.human_attribute_name(:data_type_categorical) %>
+            </th>
+            <th class="center"><%= model_class.human_attribute_name(:data_type_numerical) %></th>
+            <th><%= Numerical.human_attribute_name(:title) %><span class="hint-tooltip" title="<%= t('.hints.title') %>"></span></th>
+            <th><%= Numerical.human_attribute_name(:type) %></th>
+            <th><%= Numerical.human_attribute_name(:width) %><span class="hint-tooltip" title="<%= t('.hints.width') %>"></span></th>
+            <th><%= Numerical.human_attribute_name(:min) %><span class="hint-tooltip" title="<%= t('.hints.min') %>"></span></th>
+            <th><%= Numerical.human_attribute_name(:max) %><span class="hint-tooltip" title="<%= t('.hints.max') %>"></span></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div class="mass-change-submit"><%= submit_tag t('app.buttons.save_settings'), class: 'btn btn-success' %></div>
+      <div id='preview' class='preview'><div class='header'><div class='move'></div><div class='close'></div></div><div class='chart'></div></div>
+      <div class="data-loader"></div>
+    </div>
+  <% end %>
+<% else %>
+  <p>
+    <%= t('.no_questions') %>
+  </p>
+<% end %>

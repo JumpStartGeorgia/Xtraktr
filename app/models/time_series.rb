@@ -156,7 +156,7 @@ class TimeSeries < CustomTranslation
           where(group_id: group_id, can_download: true).to_a
         when 'analysis'
           where(group_id: group_id, exclude: false, has_code_answers: true).to_a
-        when 'anlysis_with_exclude_questions'
+        when 'analysis_with_exclude_questions'
           where(group_id: group_id, has_code_answers: true).to_a
         else
           where(group_id: group_id)
@@ -195,23 +195,12 @@ class TimeSeries < CustomTranslation
     def available_to_be_weights(current_code=nil)
       nin(:code => base.weights.weight_codes(current_code)).where(has_code_answers: false)
     end
-
-    # mark the answer can_exclude flag as true for the ids provided
-    def add_answer_can_exclude(ids)
-      map{|x| x.answers}.flatten.select{|x| ids.index(x.id.to_s).present?}.each do |a|
-        a.can_exclude = true
+    def reflag_answers(flag_name, flags)
+      map{|x| x.answers}.flatten.select{|x| flags.index(x.id.to_s).present?}.each do |a|
+        a[flag_name] = !a[flag_name]
       end
       return nil
     end
-
-    # mark the answer can_exclude flag as false for the ids provided
-    def remove_answer_can_exclude(ids)
-      map{|x| x.answers}.flatten.select{|x| ids.index(x.id.to_s).present?}.each do |a|
-        a.can_exclude = false
-      end
-      return nil
-    end
-
 
   end
 
@@ -229,7 +218,7 @@ class TimeSeries < CustomTranslation
       :category_mappers_attributes, :category_ids, :permalink,
       :weights_attributes, :groups_attributes
 
-  attr_accessor :category_ids, :var_arranged_items
+  attr_accessor :category_ids, :var_arranged_items, :check_questions_for_changes_status
 
   #############################
   # indexes
@@ -334,6 +323,23 @@ class TimeSeries < CustomTranslation
   after_initialize :set_category_ids
   before_create :create_private_share_key
   before_save :set_public_at
+  before_save :check_questions_for_changes
+
+  # when saving the time series, question callbacks might not be triggered
+  # so this will check for questions that chnaged and then call the callbacks
+  def check_questions_for_changes
+    if self.check_questions_for_changes_status == true
+      #logger.debug ">>>>> time series check_questions_for_changes callback"
+      self.questions.each do |q|
+        if q.changed?
+          #logger.debug ">>>>> ---- #{q.text} changed!"
+          q.trigger_all_callbacks
+        end
+      end
+    end
+    return true
+  end
+
 
   # this is used in the form to set the categories
   def set_category_ids
@@ -461,9 +467,7 @@ class TimeSeries < CustomTranslation
   # - include_questions - flag indicating if should get questions (default = false)
   # - include_group_with_no_items - flag indicating if should include groups even if it has no items, possibly due to other flags (default = false)
   def arranged_items(options={})
-    Rails.logger.debug "@@@@@@@@@@@@@@ dataset arranged_items"
     if self.var_arranged_items.nil? || self.var_arranged_items.empty? || options[:reload_items]
-      Rails.logger.debug "@@@@@@@@@@@@@@ - building, options = #{options}"
       self.var_arranged_items = build_arranged_items(options)
     end
 
@@ -478,14 +482,10 @@ class TimeSeries < CustomTranslation
   # - include_questions - flag indicating if should get questions (default = false)
   # - include_group_with_no_items - flag indicating if should include groups even if it has no items, possibly due to other flags (default = false)
   def build_arranged_items(options={})
-    Rails.logger.debug "=============== build start; options = #{options}"
     indent = options[:group_id].present? ? '    ' : ''
-    Rails.logger.debug "#{indent}^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
-    Rails.logger.debug "#{indent}=============== build start; options = #{options}"
     items = []
 
     if options[:include_groups] == true
-      Rails.logger.debug "#{indent}=============== -- include groups"
       # get the groups
       # - if group id provided, get subgroups in that group
       # - else get main groups
@@ -501,31 +501,24 @@ class TimeSeries < CustomTranslation
       group_options = options.dup
       group_options[:include_groups] = options[:include_subgroups] == true
       groups.each do |group|
-        Rails.logger.debug "#{indent}>>>>>>>>>>>>>>> #{group.title}"
-        Rails.logger.debug "#{indent}=============== checking #{group.title} for subgroups"
-
         # get all items for this group (subgroup/questions)
         group_options[:group_id] = group.id
         group.var_arranged_items = build_arranged_items(group_options)
         # only add the group if it has content
         if group.var_arranged_items.present? || options[:include_group_with_no_items] == true
           items << group
-          Rails.logger.debug "#{indent}>>>>>>>>>>>>>> ----- added #{group.var_arranged_items.length} items for #{group.title}"
         end
 
       end
     end
 
     if options[:include_questions] == true
-      Rails.logger.debug "#{indent}=============== -- include questions"
       # get questions that are assigned to groups
       # - if group_id not provided, then getting questions that are not assigned to group
       items << self.questions.where(:group_id => options[:group_id])
     end
 
     items.flatten!
-
-    Rails.logger.debug "#{indent}=============== there are a total of #{items.length} items added"
 
     # sort these items
     # way to sort: sort only items that have sort_order, then add groups with no sort_order, then add questions with no sort_order
@@ -537,7 +530,54 @@ class TimeSeries < CustomTranslation
     return items
   end
 
+  def tree(options={})
+    items = []
+     if options[:include_groups] == true
 
+      # get the groups
+      # - if group id provided, get subgroups in that group
+      # - else get main groups
+      groups = []
+      if options[:group_id].present?
+        groups << self.groups.sub_groups(options[:group_id])
+      else
+        groups << self.groups.main_groups
+      end
+      groups.flatten!
+
+      # if a group has items, add it
+      group_options = options.dup
+      group_options[:include_groups] = options[:include_subgroups] == true
+      groups.each do |group|
+        # get all items for this group (subgroup/questions)
+        group_options[:group_id] = group.id
+        group.var_arranged_items = tree(group_options)
+        # only add the group if it has content
+        if group.var_arranged_items.present? #|| options[:include_group_with_no_items] == true
+          #if options[:include_questions] == true && self.questions.where(:group_id => options[:group_id]).length > 0
+            items << group.as_json({only: [:title, :parent_id, :subitems, :sort_order]})
+          #end
+        end
+
+      end
+    end
+
+    if options[:include_questions] == true
+      # get questions that are assigned to groups
+      # - if group_id not provided, then getting questions that are not assigned to group
+      tmp_items = self.questions.where(:group_id => options[:group_id])
+
+      items << (tmp_items.as_json(only: [:code, :original_code, :text, :data_type, :group_id, :exclude, :is_mappable, :has_can_exclude_answers, :is_analysable, :sort_order]))
+    end
+    items.flatten!
+
+    # sort these items
+    # way to sort: sort only items that have sort_order, then add groups with no sort_order, then add questions with no sort_order
+    items = items.select{|x| x["sort_order"].present? }.sort{|x,y| x["sort_order"] <=> y["sort_order"] } + 
+      items.select{|x| x["parent_id"].present? && x["sort_order"].nil?} +
+      items.select{|x| x["code"].present? && x["sort_order"].nil?}
+    return items
+  end
   #############################
 
   # automatically assign match questions from all the datasets

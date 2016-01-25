@@ -554,6 +554,7 @@
           padding: 3px 20px;
           font-weight: bold;
           white-space: normal;
+          background-color: #fff;
           &.group{
             color: @db8042;
           }
@@ -562,6 +563,9 @@
             margin-left: 20px;
             color: @af5213;
             border-left: solid 1px @db8042;
+          }
+          &:hover {
+            background-color: #f7f8f8;
           }
           span.pull-right img{
             margin-right: 5px;
@@ -769,7 +773,12 @@
     {
        color:@00adee;
        min-width:100px;
+       width:100px;
        font: 16px 'sourcesans_pro_sb', 'sans-serif'
+    }
+    a {
+      color:@3c4352;
+      text-decoration: underline;
     }
     &:before
     {
@@ -860,6 +869,25 @@
         }
       }
     }
+    .data-type {
+      img {
+        margin-right:4px;
+        width:16px;
+        height:16px;
+      }
+      .stats {
+        ul {
+          display:inline-block;
+          li {
+            padding:5px;
+            display:inline-block;
+          }
+        }
+      }
+    }
+    // .descriptive-statistics {
+    //   padding-left: 30px;
+    // }
   }
 }
 #meta .details .k{

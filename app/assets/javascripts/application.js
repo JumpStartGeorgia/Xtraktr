@@ -17,11 +17,16 @@
 //= require bootstrap.tooltip.min
 //= require twitter/bootstrap/collapse
 //= require dataTables/jquery.dataTables
+// require dataTables/extras/dataTables.responsive
 //= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
 //= require dataTables/extras/dataTables.tableTools
 //= require modal
 //= require vendor
-var page_wrapper;
+
+var globalCallback = globalCallback || function () {},
+  page_wrapper,
+  js;
+
 $(document).ready(function () {
   page_wrapper = $("#page-wrapper");
    // set focus to first text box on page
@@ -297,9 +302,21 @@ function debounce(func, wait, immediate) {
     }
   };
 }
-function notification(state, text, extra_class) {
-  state = ['success', 'error', 'info'].indexOf(state) !== -1 ? state : 'error';  
-  return "<div class='message notification " + state + " " + extra_class + "'><div class='figure'></div><div class='text'>" + text + "</div><div class='closeup'></div></div>";
+function notification (state, text, extra_class) {
+  state = ["success", "error", "info"].indexOf(state) !== -1 ? state : "error";
+  return "<div class='message notification " + state + (extra_class ? " " + extra_class : "") + "'><div class='figure'></div><div class='text'>" + text + "</div><div class='closeup'></div></div>";
+}
+function notification_show (state, text, fade) {
+  state = ["success", "error", "info"].indexOf(state) !== -1 ? state : "error";
+  fade = typeof fade !== "undefined" ? fade : true;
+
+  $(".data-loader").fadeOut("fast");
+  page_wrapper.find("> .content > .message").remove();
+  page_wrapper.find("> .content").prepend("<div class='message notification " + state + "'><div class='figure'></div><div class='text'>" + text + "</div><div class='closeup'></div></div>");
+
+  if(fade) { $(".content > .message").delay(3000).fadeOut(3000); }
+
+  page_wrapper.animate({ scrollTop: 0 }, 1000); // scroll to the top
 }
 function navbarToggle() {
   if (!$(".navbar-toggle").hasClass('collapsed')) {
@@ -317,3 +334,73 @@ function is_touch_device() {
       || (navigator.msMaxTouchPoints > 0));
 }
 var is_touch = is_touch_device();
+
+
+
+// Closure
+(function () {
+  /**
+   * Decimal adjustment of a number.
+   *
+   * @param {String}  type  The type of adjustment.
+   * @param {Number}  value The number.
+   * @param {Integer} exp   The exponent (the 10 logarithm of the adjustment base).
+   * @returns {Number} The adjusted value.
+   */
+  function decimalAdjust (type, value, exp) {
+    // If the exp is undefined or zero...
+    if (typeof exp === "undefined" || +exp === 0) {
+      return Math[type](value);
+    }
+    value = +value;
+    exp = +exp;
+    // If the value is not a number or the exp is not an integer...
+    if (isNaN(value) || !(typeof exp === "number" && exp % 1 === 0)) {
+      return NaN;
+    }
+    // Shift
+    value = value.toString().split("e");
+    value = Math[type](+(value[0] + "e" + (value[1] ? (+value[1] - exp) : -exp)));
+    // Shift back
+    value = value.toString().split("e");
+    return +(value[0] + "e" + (value[1] ? (+value[1] + exp) : exp));
+  }
+
+  // Decimal round
+  if (!Math.round10) {
+    Math.round10 = function (value, exp) {
+      return decimalAdjust("round", value, exp);
+    };
+  }
+  // Decimal floor
+  if (!Math.floor10) {
+    Math.floor10 = function (value, exp) {
+      return decimalAdjust("floor", value, exp);
+    };
+  }
+  // Decimal ceil
+  if (!Math.ceil10) {
+    Math.ceil10 = function (value, exp) {
+      return decimalAdjust("ceil", value, exp);
+    };
+  }
+
+})();
+  function isN (obj) {
+    return !jQuery.isArray( obj ) && (obj - parseFloat( obj ) + 1) >= 0;
+  }
+  function replicate (n, x) {
+    for (var i = 0, xs = []; i < n; ++i) {
+      xs.push (x);
+    }
+    return xs;
+  }
+  function replicate2 (n, x) {
+    for (var i = 0, xs = []; i < n; ++i) {
+      xs.push ([x, x]);
+    }
+    return xs;
+  }
+function isInteger (x) {
+  return Math.round(x) === +x;
+}

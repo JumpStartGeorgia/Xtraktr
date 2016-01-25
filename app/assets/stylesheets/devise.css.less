@@ -8,6 +8,7 @@
 
  #login-form
   {
+
     .form-group
     {    
       &.email
@@ -141,7 +142,7 @@
   .red-box-neighbor
   {
     position: absolute;
-    right: 50px;
+    right: 20px;
     top: 5px;
     line-height: 15px;
     span
@@ -154,6 +155,9 @@
       font:12px 'sourcesans_pro_sb', 'sans-serif';
       color:@00adee; 
     }
+  }
+  .red-box-neighbor:lang(ka) {
+    right: 5px;
   }
 }
 
@@ -438,5 +442,22 @@ label > abbr {
      {
         color:@d95d6a !important;
      }
+  }
+}
+
+#login-form, #reset-password-form {
+  max-width: 340px;
+  margin:0px auto;
+  position:relative;
+}
+.popup #login-form, .popup #reset-password-form {
+  max-width:initial;
+  .red-box-neighbor
+  {
+    right: 50px;
+  }
+  .red-box-neighbor:lang(ka)
+  {
+    right: 35px;
   }
 }

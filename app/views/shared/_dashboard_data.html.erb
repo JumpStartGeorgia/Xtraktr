@@ -146,7 +146,7 @@
     <div role="tabpanel" class="tab-pane fade <%= codebook_active[:panel] %>" id="codebook">
       <%
         question_type = show_private_questions == true ? 'analysis_with_exclude_questions' : 'analysis'
-        items = @dataset.arranged_items(question_type: question_type, include_groups: true, include_subgroups: true, include_questions: true)
+        items = @dataset.arranged_items(question_type: question_type, include_groups: true, include_subgroups: true, include_questions: true, exclude_unknown_data_type: !show_private_questions)
       %>
       <div id="codebook-search">
         <input type="search" class="codebook-search" id="filter" value="" placeholder="<%= t('helpers.search') %>" />
@@ -223,6 +223,17 @@
     <div role="tabpanel" class="tab-pane fade" id="meta">
 
       <div class="col details">
+        <div>
+          <div class="col k"><%= model_class.human_attribute_name(:categories) %>: </div>
+          <div class="col">
+           <% @dataset.categories.each {|x| %>
+                  <%= link_to explore_data_path(category: x.permalink) do %>
+                    <div class="text"><span><%= x.name %></span></div>
+                  <% end %>
+              <% } %>
+          </div>
+        </div>
+
         <div>
           <div class="col k"><%= model_class.human_attribute_name(:gathered_at) %>: </div>
           <div class="col">

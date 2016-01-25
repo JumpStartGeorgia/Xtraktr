@@ -72,11 +72,12 @@ function map_chart_height (json) { // determine heights of chart based on number
 
   return chart_height;
 }
-
 function pie_chart_height (json) {
-  var chart_height = 501; // need the 1 for the border bottom line
-  if (json.question.answers.length >= 5){
-    chart_height = 425 + json.question.answers.length*21 + 1;
+  var chart_height = 501, // need the 1 for the border bottom line
+    q_ans_len = json.question.hasOwnProperty("answers") ? json.question.answers.length : 0;
+
+  if (q_ans_len >= 5){
+    chart_height = 425 + q_ans_len*21 + 1;
   }
   // if showing group, add space for it
   if (json.question.group && json.question.group.include_in_charts){
@@ -88,11 +89,17 @@ function pie_chart_height (json) {
 
   return chart_height;
 }
+var bar_chart_height = pie_chart_height,
+  histogramm_chart_height = pie_chart_height,
+  scatter_chart_height = crosstab_chart_height;
 
 function crosstab_chart_height (json) {
-  var chart_height = 501; // need the 1 for the border bottom line
-  if (json.question.answers.length + json.broken_down_by.answers.length >= 10){
-    chart_height = 330 + json.question.answers.length*26.125 + json.broken_down_by.answers.length*21 + 1;
+  var chart_height = 501, // need the 1 for the border bottom line
+    q_ans_len = json.question.hasOwnProperty("answers") ? json.question.answers.length : 0,
+    bd_ans_len = json.broken_down_by.hasOwnProperty("answers") ? json.broken_down_by.answers.length : 0;
+
+  if(q_ans_len + bd_ans_len >= 10){
+    chart_height = 330 + q_ans_len*26.125 + bd_ans_len*21 + 1;
   }
   // if showing group, add space for it
   if (json.question.group && json.question.group.include_in_charts){
@@ -246,7 +253,6 @@ function build_highmap (shape_question_code, adjustable_max, json_map_set, chart
   }
 
   $(selector_path + " #" + map_id).highcharts("Map", {
-    credits: { enabled: false },
     chart:{
       events: {
         load: function () {
@@ -373,6 +379,12 @@ function build_highmap (shape_question_code, adjustable_max, json_map_set, chart
           borderWidth: 2
         }
       },
+      point: {
+        events: {
+          mouseOver: function () { $(this.dataLabel.element.firstChild).css("fill", "white"); },
+          mouseOut: function () { $(this.dataLabel.element.firstChild).css("fill", "#3C4352"); }
+        }
+      },
       dataLabels: {
         enabled: true,
         color: "#3C4352",
@@ -421,17 +433,15 @@ function build_highmap (shape_question_code, adjustable_max, json_map_set, chart
 }
 
 function build_bar_chart (json_chart, chart_height, weight_name) { // build pie chart
-
   var opt = prepareChart(chart_height, "chart"),
     selector_path = opt[1],
     highlight_path = opt[2],
     chart_id = opt[3];
 
   chart_height = opt[0];
-
   // create chart
+  $(selector_path + " #" + chart_id).addClass("pie_or_bar");
   $(selector_path + " #" + chart_id).highcharts({
-    credits: { enabled: false },
     chart: {
       type: "column",
       inverted: true
@@ -471,9 +481,7 @@ function build_bar_chart (json_chart, chart_height, weight_name) { // build pie 
         return "<b>" + this.key + ":</b> " + Highcharts.numberFormat(this.point.options.count, 0) + " (" + this.y + "%)";
       }
     },
-    legend: {
-      enabled: false
-    },
+    legend: { enabled: false },
     series: [{ data: json_chart.data }],
     exporting: {
       sourceWidth: 1280,
@@ -521,11 +529,103 @@ function build_bar_chart (json_chart, chart_height, weight_name) { // build pie 
 
   });
 
-  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id.bar_chart, weight_name, gon.visual_types.pie_chart);
+  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id.bar, weight_name, gon.visual_types.bar);
 }
 
-function build_crosstab_chart (question_text, broken_down_by_code, broken_down_by_text, json_chart, chart_height, weight_name){ // build crosstab chart
+function build_histogramm_chart (json_chart, chart_height, weight_name) { // build pie chart
+  var opt = prepareChart(chart_height, "chart"),
+    selector_path = opt[1],
+    highlight_path = opt[2],
+    chart_id = opt[3],
+    nm = json_chart.numerical; // numerical meta data
 
+  chart_height = opt[0];  
+  $(selector_path + " #" + chart_id).highcharts({
+    colors: ["#00adee"],
+    chart: {
+      type: "column"
+    },
+    title: {
+      text: build_visual_title(highlight_path, json_chart.title.html),
+      useHTML: true,
+      style: style1
+    },
+    subtitle: {
+      text: json_chart.subtitle.html,
+      useHTML: true,
+      style: {"text-align": "center"}
+    },
+    xAxis: {
+      title: { text: nm.title },
+      tickPositions: formatLabel(),
+      startOnTick: true,
+      endOnTick: true
+    },
+    yAxis: { title: null },
+
+    plotOptions: {
+      column: {
+        groupPadding: 0,
+        pointPadding: 0,
+        borderWidth: 0,
+        pointPlacement: "between"
+      }
+    },
+    series: [{ data:  json_chart.data.map(function (d, i){ return { x:nm.min_range + nm.width*i, y: d.count, percent: d.y, tip: d.name }; }) }],
+    legend: { enabled: false },
+    tooltip: {
+      formatter: function (y) { return "<b>" + this.point.tip + ":</b><br/>" + Highcharts.numberFormat(this.y, 0) + " (" + this.point.percent + "%)"; }
+    },
+    exporting: {
+      sourceWidth: 1280,
+      sourceHeight: chart_height,
+      filename: json_chart.title.text.replace(/[\|&;\$%@"\'<>\(\)\+,]/g, ""),
+      chartOptions:{
+        title: {
+          text: json_chart.title.text
+        },
+        subtitle: {
+          text: json_chart.subtitle.text
+        },
+        legend: {
+          enabled: false
+        }
+      },
+      buttons: buttons_options
+    },
+    navigation: {
+      buttonOptions: {
+        theme: {
+          "stroke-width": 0,
+          r: 0,
+          states: {
+            hover: {
+              fill: "#fff",
+              stroke: "#eaeaea",
+              "stroke-width": 1
+            },
+            select: {
+              fill: "#fff",
+              stroke: "#eaeaea",
+              "stroke-width": 1
+            }
+          }
+        }
+      }
+    }
+  });
+
+  function formatLabel () {
+    var v = [], i;
+    for(i = 0; i <= nm.size; ++i) {
+      v.push(nm.min_range+i*nm.width);
+    }
+    return v;
+  }
+  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id, weight_name, gon.visual_types.histogramm);
+}
+
+function build_crosstab_chart (meta, json_chart, chart_height, weight_name){ // build crosstab chart
   var opt = prepareChart(chart_height, "chart"),
     selector_path = opt[1],
     highlight_path = opt[2],
@@ -535,7 +635,6 @@ function build_crosstab_chart (question_text, broken_down_by_code, broken_down_b
 
   // create chart
   $(selector_path + " #" + chart_id).highcharts({
-    credits: { enabled: false },
     chart: {
       type: "bar"
     },
@@ -552,7 +651,7 @@ function build_crosstab_chart (question_text, broken_down_by_code, broken_down_b
     xAxis: {
       categories: json_chart.labels,
       title: {
-        text: "<span class='code-highlight'>" + question_text + "</span>",
+        text: "<span class='code-highlight'>" + meta.qcode + "</span>",
         useHTML: true,
         style: { "fontSize": "14px", "fontWeight": "bold" }
       },
@@ -578,7 +677,7 @@ function build_crosstab_chart (question_text, broken_down_by_code, broken_down_b
     },
     legend: {
       title: {
-        text: broken_down_by_code,
+        text: meta.bcode,
         style: { "color": "#00adee", "fontSize": "18px", "fontFamily":"'sourcesans_pro_sb', 'sans-serif'", "fontWeight": "normal" }
       },
       useHTML: true,
@@ -623,7 +722,111 @@ function build_crosstab_chart (question_text, broken_down_by_code, broken_down_b
     }
   });
 
-  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id, weight_name, gon.visual_types.crosstab_chart);
+  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id, weight_name, gon.visual_types.crosstab);
+}
+
+function build_scatter_chart (meta, json_chart, chart_height, weight_name){ // build crosstab chart
+  var opt = prepareChart(chart_height, "chart"),
+    selector_path = opt[1],
+    highlight_path = opt[2],
+    chart_id = opt[3],
+    colors = Highcharts.getOptions().colors;
+
+  chart_height = opt[0];
+
+  // create chart
+  $(selector_path + " #" + chart_id).highcharts({
+    chart: {
+      type: "scatter",
+      zoomType: "xy"
+    },
+    title: {
+      text: build_visual_title(highlight_path, json_chart.title.html),
+      useHTML: true,
+      style: style1
+    },
+    subtitle: {
+      text: json_chart.subtitle.html,
+      useHTML: true,
+      style: {"text-align": "center"}
+    },
+    xAxis: {
+      title: {
+        text: "<span class='code-highlight'>" + meta.qcode + "</span>",
+        useHTML: true,
+        style: { "fontSize": "14px", "fontWeight": "bold" }
+      },
+      labels:
+      {
+        style: { "color": "#777c86", "fontSize": "14px", "fontFamily":"'sourcesans_pro', 'sans-serif'", "fontWeight": "normal", "textAlign": "right" },
+        useHTML: true,
+      }
+    },
+    yAxis: {      
+      title: {
+        text: "<span class='code-highlight'>" + meta.bcode + "</span>",
+        useHTML: true,
+        style: { "fontSize": "14px", "fontWeight": "bold" }
+      },
+      labels:
+      {
+        style: { "color": "#777c86", "fontSize": "14px", "fontFamily":"'sourcesans_pro', 'sans-serif'", "fontWeight": "normal" },
+        useHTML: true
+      }
+    },
+    legend: {
+      enabled: meta.filtered,
+      title: {
+        text: null,// meta.bcode,
+        style: { "color": "#00adee", "fontSize": "18px", "fontFamily":"'sourcesans_pro_sb', 'sans-serif'", "fontWeight": "normal" }
+      },
+      useHTML: true,
+      layout: "vertical",
+      symbolWidth: 14,
+      symbolHeight: 14,
+      itemMarginBottom: 5,
+      itemStyle: style2,
+      symbolRadius: 100
+    },
+    tooltip: {
+      useHTML: true,
+      formatter: function () {
+        return (meta.filtered ? "<div class='title'>" + this.series.name + "</div>" : "") + 
+          "<span class='tooltip-code-highlight'>" + meta.qcode + "</span>: " + this.x + "<br/>" +
+          "<span class='tooltip-code-highlight'>" + meta.bcode + "</span>: " + this.y + "<br/>";
+      },
+      // pointFormat: "<span style='color:{series.color}'>{series.name}</span>: <b>{point.y:,.0f}</b> ({point.percentage:.2f}%)<br/>",
+      // //shared: true,
+      // backgroundColor: "rgba(255, 255, 255, 0.95)",
+      followPointer: true
+    },
+    plotOptions: {
+      scatter: {
+        marker: {
+          radius: 3,
+          symbol: "circle"
+        }
+      }
+    },  
+    series: meta.filtered ? json_chart.data.map(function (d, i) { return {name: d.name, data: d.data, color: rgba(colors[i%colors.length]) }; }) : [{ data: json_chart.data, color: rgba(colors[0]) }],
+    exporting: {
+      sourceWidth: 1280,
+      sourceHeight: chart_height,
+      filename: json_chart.title.text.replace(/[\|&;\$%@"\'<>\(\)\+,]/g, ""),
+      chartOptions:{
+        title: {
+          text: json_chart.title.text
+        },
+        subtitle: {
+          text: json_chart.subtitle.text
+        }
+      },
+      buttons: buttons_options
+    }
+  });
+
+
+  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id, weight_name, gon.visual_types.scatter);
 }
 
 function build_pie_chart (json_chart, chart_height, weight_name) { // build pie chart
@@ -637,7 +840,6 @@ function build_pie_chart (json_chart, chart_height, weight_name) { // build pie 
 
   // create chart
   $(selector_path + " #" + chart_id).highcharts({
-    credits: { enabled: false },
     chart:{
       plotBackgroundColor: null,
       plotBorderWidth: null,
@@ -743,7 +945,7 @@ function build_pie_chart (json_chart, chart_height, weight_name) { // build pie 
     }
 
   });  
-  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id.pie_chart, weight_name, gon.visual_types.pie_chart);
+  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id.pie, weight_name, gon.visual_types.pie);
 }
 
 function build_time_series_chart (json_chart, chart_height, weight_name) { // build time series line chart
@@ -757,7 +959,6 @@ function build_time_series_chart (json_chart, chart_height, weight_name) { // bu
 
   // create chart
   $(selector_path + " #" + chart_id).highcharts({
-    credits: { enabled: false },
     chart: {
       plotBackgroundColor: null,
       plotBorderWidth: null,
@@ -824,7 +1025,7 @@ function build_time_series_chart (json_chart, chart_height, weight_name) { // bu
     }
   });
 
-  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id, weight_name, gon.visual_types.line_chart);
+  finalizeChart($(selector_path + " #" + chart_id), json_chart.embed_id, weight_name, gon.visual_types.time_series);
 }
 
 function prepareChart (chart_height, type) {
@@ -898,25 +1099,22 @@ $(document).ready(function () {
   // record a chart as a highlight
   $("#tab-chart, #tab-map").on("click", "a.add-highlight", function (e){
     e.preventDefault();
-    var link = this;
+    var link = $(this),
+      embed_id = link.data("embed-id"),
+      type = link.data("visual-type");
 
     $.ajax({
       type: "POST",
-      url: $(link).attr("href"),
-      data: {embed_id: $(link).data("embed-id"), visual_type: $(link).data("visual-type")},
+      url: link.attr("href"),
+      data: { embed_id: embed_id, visual_type: type },
       dataType: "json"
     }).done(function (success){
       if (success){
-        // record embed id
-        gon.embed_ids.push($(link).data("embed-id"));
-
-        // show delete button
-        $(link).fadeOut(function (){
-          delete_highlight_button($(link).parent(), $(link).data("embed-id"), $(link).data("visual-type"));
+        gon.embed_ids.push(embed_id); // record embed id
+        link.fadeOut(function () { // show delete button
+          delete_highlight_button(link.parent(), embed_id, type);
         });
       }
-      // else {
-      // }
     });
 
   });
@@ -1120,3 +1318,19 @@ function share_toggle (state, t) {
   }
   t.attr("data-state", state);
 }
+function rgba (hex) {
+  return "rgba(" + hex2rgb(hex).join(",") + ", .4)";
+}
+function hex2rgb (hex) {
+  var r = hex.match(/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i);
+  if (r) {
+    return r.slice(1, 4).map(function (x) { return parseInt(x, 16); });
+  }
+  return [255, 255, 255];
+}
+function is_touch_device() {
+  return (('ontouchstart' in window)
+      || (navigator.MaxTouchPoints > 0)
+      || (navigator.msMaxTouchPoints > 0));
+}
+var is_touch = is_touch_device();
