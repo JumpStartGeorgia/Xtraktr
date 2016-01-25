@@ -58,7 +58,7 @@ class ApiVersion
   # if title are '', reset value to nil so fallback works
   def set_to_nil
     self.title_translations.keys.each do |key|
-      self.title_translations[key] = nil if self.title_translations[key].empty?
+      self.title_translations[key] = nil if !self.title_translations[key].nil? && self.title_translations[key].empty?
     end
   end 
 
