@@ -14,7 +14,7 @@ module ExploreTimeSeriesHelper
 
       if item.class == TimeSeriesGroup
         # add group
-        html << generate_explore_group_option(item)
+        html << generate_explore_time_series_group_option(item)
 
         # if have items, add them
         options[:group_type] = group_type.present? ? 'subgroup' : 'group'
@@ -22,7 +22,7 @@ module ExploreTimeSeriesHelper
 
       elsif item.class == TimeSeriesQuestion
         # add question
-        html << generate_explore_question_option(item, time_series, skip_content, selected_code, disabled_code, disabled_code2, group_type)
+        html << generate_explore_time_series_question_option(item, time_series, skip_content, selected_code, disabled_code, disabled_code2, group_type)
       end
     end
 
@@ -43,8 +43,7 @@ module ExploreTimeSeriesHelper
   end
 
 private
-
-  def generate_explore_group_option(group)
+  def generate_explore_time_series_group_option(group)
     html = ''
     content = ''
     cls = group.parent_id.present? ? 'subgroup' : 'group'
@@ -66,7 +65,7 @@ private
     return html
   end
 
-  def generate_explore_question_option(question, time_series, skip_content, selected_code, disabled_code, disabled_code2, group_type=nil)
+  def generate_explore_time_series_question_option(question, time_series, skip_content, selected_code, disabled_code, disabled_code2, group_type=nil)
     html = ''
     q_text = h question.code_with_text
     selected = selected_code.present? && selected_code == question.code ? 'selected=selected ' : ''
@@ -89,6 +88,10 @@ private
     if !skip_content #&& (question.is_mappable? || question.exclude?)
       content << 'data-content=\'<span class="outer-layer"><span class="inner-layer"><span>' + q_text + '</span><span class="right-icons">'
 
+      if question.has_type?
+        content << question_data_type_icon(question.data_type)
+      end
+      
       if question.is_mappable?
         content << mappable_question_icon
       end

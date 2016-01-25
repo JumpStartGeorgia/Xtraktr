@@ -1,0 +1,5 @@
+notification_show("<%= !@msg_type.nil? ? (["error", "info", "success"][@msg_type]) : (@success == false ? "error" : "success") %>",
+ '<%= @msg %>',
+  <%= (@msg_fadeout.nil? || (!@msg_fadeout.nil? && @msg_fadeout)) %>);
+
+

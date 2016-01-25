@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
 
 gem 'bundler'
-gem "rails", "3.2.18"
-gem "mongoid", "~> 3.1.6"
+gem "rails", "3.2.22"
+gem "mongoid", "~> 3.1.7"
 
 #gem 'smarter_csv' # format csv into array of hashes
 
@@ -47,7 +47,7 @@ gem 'roadie', '~> 2.4.3' # apply easy styling to html emails
 gem 'mongoid-slug', '~> 4.0.0' # permalink urls with mongoid
 gem "autoprefixer-rails" # no need to prefix css, it will automatically do it
 gem "rubyXL"
-
+gem 'descriptive_statistics', '~> 2.4.0', :require => 'descriptive_statistics/safe'
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
@@ -57,7 +57,7 @@ group :assets do
   gem "therubyracer"
   gem 'less-rails', git: 'git://github.com/metaskills/less-rails.git'
   gem 'twitter-bootstrap-rails', :git => 'git://github.com/seyhunak/twitter-bootstrap-rails.git'  , branch: 'bootstrap3'
-  gem 'jquery-datatables-rails', '~> 3.1.1'
+  gem 'jquery-datatables-rails', '~> 3.3.0'
   gem "jquery-ui-rails" , "~> 4.1.2"
 end
 
@@ -67,6 +67,7 @@ group :development do
  	gem "mailcatcher", "0.5.12" # small smtp server for dev, http://mailcatcher.me/
   gem 'rb-inotify', '~> 0.8.8' # rails dev boost needs this
   gem 'rails-dev-boost', :git => 'git://github.com/thedarkone/rails-dev-boost.git' # speed up loading page in dev mode
+  gem 'exception_notification_extension', :git => 'git@github.com:JumpStartGeorgia/exception_notification_extension.git' # show where error occurred in code and notification window
 end
 
 group :staging, :production do

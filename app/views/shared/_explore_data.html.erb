@@ -5,7 +5,6 @@
 <%-
   subnav_left render(partial: 'shared/language_switcher', locals: {langs: @dataset.language_objects, current_locale: @dataset.current_locale, redirect: true })
 -%>
-
 <div class="article explore-data">
   <% if @questions.present? %>
     <div id="explore-form">
@@ -16,7 +15,7 @@
             <select data-live-search="true" data-width="100%" class="selectpicker" data-container="body" id="question_code" name="question_code">
               <% selected = @question_code.nil? ? 'selected=selected' : '' %>
               <option value="" <%= selected %>><%= t('.form.no_question') %></option>
-              <%= generate_explore_dataset_options(@items, @dataset, selected_code: @question_code, disabled_code: @broken_down_by_code) %>
+              <% #generate_explore_dataset_options(@items, @dataset, selected_code: @question_code, disabled_code: @broken_down_by_code) %>
             </select>
         </div>
         <div class="form-explore-broken-by">
@@ -33,7 +32,7 @@
             <select data-live-search="true" data-width="100%" class="selectpicker" data-container="body" id="broken_down_by_code" name="broken_down_by_code">
               <% selected = @broken_down_by_code.blank? ? 'selected=selected': '' %>
               <option value="" <%= selected %>><%= t('.form.no_comparison') %></option>
-              <%= generate_explore_dataset_options(@items, @dataset, selected_code: @broken_down_by_code, disabled_code: @question_code) %>
+              <% #generate_explore_dataset_options(@items, @dataset, selected_code: @broken_down_by_code, disabled_code: @question_code) %>
             </select>
           </div>
           <div class="form-explore-filter-by">
@@ -42,23 +41,23 @@
             <% end %>
             <select data-live-search="true" data-width="100%" class="selectpicker-filter" data-container="body" id="filtered_by_code" name="filtered_by_code">
               <option value=""><%= t('.form.no_filter') %></option>
-              <%= generate_explore_dataset_options(@items, @dataset, selected_code: @filtered_by_code, disabled_code: @question_code, disabled_code2: @broken_down_by_code) %>
+              <% #generate_explore_dataset_options(@items, @dataset, selected_code: @filtered_by_code, disabled_code: @question_code, disabled_code2: @broken_down_by_code, only_categorical: true) %>
             </select>
           </div>
 
           <% if @dataset.is_weighted? %>
             <% # determine if need to show weight when page loads %>
-            <div class="form-explore-weight-by">
+            <div class="form-explore-weight-by" style="display:none;">
               <%= label_tag 'weighted_by_code' do %>
                 <%= t('.form.weighted_by_code') %><i class="q" title="<%= t('.instructions.weight') %>"></i>
               <% end %>   
               <select data-live-search="true" data-width="100%" class="selectpicker-weight" data-container="body" id="weighted_by_code" name="weighted_by_code">
                 <% @dataset.weights.each do |weight| %>
                   <%
-                    is_default = weight.is_default? ? 'data-default=true' : ''
-                    selected = (params[:weighted_by_code].nil? && weight.is_default?) || params[:weighted_by_code] == weight.code ? 'selected=selected' : ''
+                    is_default = weight.is_default? ? ' data-default=true' : ''
+                    selected = (params[:weighted_by_code].nil? && weight.is_default?) || params[:weighted_by_code] == weight.code ? ' selected=selected' : ''
                   %>
-                  <option value="<%= weight.code %>" <%= is_default %> <%= selected %>><%= weight.text %></option>
+                  <option value="<%= weight.code %>"<%= is_default %><%= selected %>><%= weight.text %></option>
                 <% end %>
                 <option value="unweighted" data-unweighted="true"><%= t('.form.no_weight') %></option>
               </select>
@@ -91,8 +90,7 @@
         </div>
         <div id="jumpto-loader"></div>
       </div>
-    </div><div id="explore-data-content" class="tabs style2">
-    
+    </div><div id="explore-data-content" class="tabs style2">    
       <% tabs_display_css = '' %>
       <% if @question_code.nil? %>
         <% tabs_display_css = 'hide' %>
@@ -148,7 +146,6 @@
             </div>
           </div>
 
-
           <div class="tab-pane fade" id="tab-details">
             <div class="details-item" id="details-question-code">
               <h3><%= t('.form.question_code') %></h3>
@@ -168,11 +165,13 @@
             </div>
 
             <div class="details-icons" style="display:none;">
-              <span id="detail-icon-exclude-question" class="icon-item"><%= exclude_question_icon.html_safe %></span>
-              <span id="detail-icon-exclude-answer" class="icon-item"><%= exclude_answer_icon.html_safe %></span>
-              <span id="detail-icon-mappable-question" class="icon-item"><%= mappable_question_icon.html_safe %></span>
-              <span id="detail-icon-group" class="icon-item"><%= group_icon.html_safe %></span>
-              <span id="detail-icon-subgroup" class="icon-item"><%= subgroup_icon.html_safe %></span>
+              <span class="icon-item exclude-question"><%= exclude_question_icon.html_safe %></span>
+              <span class="icon-item exclude-answer"><%= exclude_answer_icon.html_safe %></span>
+              <span class="icon-item mappable-question"><%= mappable_question_icon.html_safe %></span>
+              <span class="icon-item group"><%= group_icon.html_safe %></span>
+              <span class="icon-item subgroup"><%= subgroup_icon.html_safe %></span>
+              <span class="icon-item categorical"><%= question_data_type_icon(1).html_safe %></span>
+              <span class="icon-item numerical"><%= question_data_type_icon(2).html_safe %></span>
             </div>
           </div>
           <div class="tab-pane" id="tab-download">
