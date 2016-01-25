@@ -12,6 +12,7 @@ Dataset.all.no_timeout.each do |d|
       d.update_question_type(q.code, q.data_type, nil)
     elsif q.data_type == Question::DATA_TYPE_VALUES[:numerical]
       d.update_question_type(q.code, q.data_type, q.numerical)
+      q.exclude = true
     else
       if q.has_code_answers
         d.update_question_type(q.code, Question::DATA_TYPE_VALUES[:categorical], nil)       
