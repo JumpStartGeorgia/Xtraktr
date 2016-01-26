@@ -1089,11 +1089,6 @@ class Dataset < CustomTranslation
         num = question.numerical  
         items.formatted_data = []
         vfd = [] # only valid formatted data for calculating stats
-        if question.code == "c5_1_3"
-          v = items.data.select{|x| !x.nil?}
-          puts v.inspect
-          puts "#{question.inspect}#{question.numerical.inspect}"# #{items.inspect}"
-        end
         fd = Array.new(num.size) { Array.new(2, 0) } #Array.new(num.size, [0,0])
 
         #formatted and grouped data calculationz
