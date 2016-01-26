@@ -40,7 +40,7 @@ data <- read.dta(args[1], convert.factors = T)
 # - variable codes is needed because in stata you can create a variable that defines answers and then
 #    reuse the answers on questions. 
 #    answer_labels uses the variable code and not the question code so need variable code to be able to switch to question code
-answer_labels <- iconv(attr(data, 'label.table'), 'CP1252', 'UTF-8', sub="byte")
+answer_labels <- attr(data, 'label.table')
 question_labels <- iconv(attr(data, 'var.labels'), 'CP1252', 'UTF-8', sub="byte")
 variable_codes <- iconv(attr(data, 'val.labels'), 'CP1252', 'UTF-8', sub="byte")
 

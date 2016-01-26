@@ -31,7 +31,7 @@ data <- read.spss(args[1], use.value.labels=T, to.data.frame=F)
 
 
 # pull out the questions/answers to variables to be used soon
-answer_labels <- iconv(attr(data, 'label.table'), 'CP1252', 'UTF-8', sub="byte")
+answer_labels <- attr(data, 'label.table')
 question_labels <- iconv(attr(data, 'variable.labels'), 'CP1252', 'UTF-8', sub="byte")
 
 # record which questions are numeric and which are categorical (factors)
