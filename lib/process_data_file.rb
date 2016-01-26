@@ -202,7 +202,7 @@ module ProcessDataFile
         puts "saving data from #{file_data} and to data_items attribute"
         # if this is a spreadsheet do not use the quote char setting
         #if is_spreadsheet
-          data = CSV.read(file_data, headers: true)
+          data = CSV.read(file_data, headers: is_spreadsheet)
         #else
           #data = CSV.read(file_data, quote_char: "\0", headers: true)
         #end
@@ -479,7 +479,7 @@ module ProcessDataFile
         t.start("process data_items")
         # if this is a spreadsheet do not use the quote char setting
         #data = is_spreadsheet ? CSV.read(file_data, headers: true) : CSV.read(file_data, quote_char: "\0", headers: true)
-        data = CSV.read(file_data, headers: true)
+        data = CSV.read(file_data, headers: is_spreadsheet)
 
         # only conintue if the # of cols match the # of quesiton codes
         if data.first.length == question_codes.length
@@ -711,7 +711,7 @@ private
       # Need to create the answers file using the correct question code values.
       #puts "=============================="
       #puts "reading in questions from #{file_questions}"
-      questions = CSV.read(file_questions, headers: true)
+      questions = CSV.read(file_questions, headers: true, encoding: "UTF-8")
       answers = CSV.read(file_answers.gsub(/.csv$/, '_temp.csv'), headers: true)
 
       if questions.present? && answers.present?
