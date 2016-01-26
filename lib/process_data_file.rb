@@ -711,7 +711,7 @@ private
       # Need to create the answers file using the correct question code values.
       #puts "=============================="
       #puts "reading in questions from #{file_questions}"
-      questions = CSV.read(file_questions, headers: true, encoding: "UTF-8")
+      questions = CSV.read(file_questions, headers: true)
       answers = CSV.read(file_answers.gsub(/.csv$/, '_temp.csv'), headers: true)
 
       if questions.present? && answers.present?
