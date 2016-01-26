@@ -31,8 +31,8 @@ data <- read.spss(args[1], use.value.labels=T, to.data.frame=F)
 
 
 # pull out the questions/answers to variables to be used soon
-answer_labels <- attr(data, 'label.table')
-question_labels <- attr(data, 'variable.labels')
+answer_labels <- iconv(attr(data, 'label.table'), 'CP1252', 'UTF-8', sub="byte")
+question_labels <- iconv(attr(data, 'variable.labels'), 'CP1252', 'UTF-8', sub="byte")
 
 # record which questions are numeric and which are categorical (factors)
 # - is used to convert factor data to numeric
@@ -134,8 +134,8 @@ write.csv(answer_array, args[4], row.names = F)
 #      # convert factor data to numeric before writing out csv
 #      data[is_factor_list] <- lapply(data[is_factor_list], as.numeric)
 #      write.csv(data, args[2], row.names = F, na = "")
-write.csv(read.spss(args[1], use.value.labels=F, to.data.frame=F), args[2], row.names = F, na = "")
-
+#write.csv(read.spss(args[1], use.value.labels=F, to.data.frame=F), args[2], row.names = F, na = "")
+write.table(read.spss(args[1], use.value.labels=F, to.data.frame=F), args[2], row.names = F, col.names = FALSE, na = "", fileEncoding = 'UTF-8', qmethod = "double", sep=",", dec=".", quote = TRUE)
 
 
 # quit

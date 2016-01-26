@@ -40,9 +40,9 @@ data <- read.dta(args[1], convert.factors = T)
 # - variable codes is needed because in stata you can create a variable that defines answers and then
 #    reuse the answers on questions. 
 #    answer_labels uses the variable code and not the question code so need variable code to be able to switch to question code
-answer_labels <- attr(data, 'label.table')
+answer_labels <- iconv(attr(data, 'label.table'), 'CP1252', 'UTF-8', sub="byte")
 question_labels <- iconv(attr(data, 'var.labels'), 'CP1252', 'UTF-8', sub="byte")
-variable_codes <- attr(data, 'val.labels')
+variable_codes <- iconv(attr(data, 'val.labels'), 'CP1252', 'UTF-8', sub="byte")
 
 # record with questions are numeric and which are categorical (factors)
 # is used to convert factor data to numeric
@@ -70,7 +70,7 @@ num_answers <- 0
 # build the questions
 for (i in 1:length(question_labels)){
   # get question and variable code
-  question_code <- names(data[i])
+  question_code <- iconv(names(data[i]), 'CP1252', 'UTF-8', sub="byte")
   variable_code <- variable_codes[i]
   # choose the correct code to get the answers for this question
   # - if variable code exists, use it, else question code
@@ -147,7 +147,7 @@ write.csv(answer_array, gsub('.csv$','_temp.csv',args[4]), row.names = F)
 #     # convert factor data to numeric before writing out csv
 #     data[is_factor_list] <- lapply(data[is_factor_list], as.numeric)
 #     write.csv(data, args[2], row.names = F, na = "")
-write.csv(read.dta(args[1], convert.factors = F), args[2], row.names = F, na = "")
-
+#write.csv(read.dta(args[1], convert.factors = F), args[2], row.names = F, na = "")
+write.table(read.dta(args[1], convert.factors = F), args[2], row.names = F, col.names = FALSE, na = "", fileEncoding = 'UTF-8', qmethod = "double", sep=",", dec=".", quote = TRUE)
 
 q()
