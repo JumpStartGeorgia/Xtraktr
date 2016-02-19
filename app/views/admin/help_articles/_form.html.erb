@@ -55,7 +55,7 @@
       <div class="radio">
         <label class="choice" for="help_article_article_type_id_1">
 
-          <input checked="checked" id="help_article_article_type_id_1" name="help_article[article_type_id]" size="25" type="radio" value="1" />
+          <%= radio_button_tag 'help_article[article_type_id]', '1', @help_article.article_type_id == 1, size: '25'  %>
 
           <%= t 'mongoid.attributes.help_article.article_type_values.how_to' %>
 
@@ -65,7 +65,7 @@
       <div class="radio">
         <label class="choice" for="help_article_article_type_id_2">
 
-          <input id="help_article_article_type_id_2" name="help_article[article_type_id]" size="25" type="radio" value="2" />
+          <%= radio_button_tag 'help_article[article_type_id]', '2', @help_article.article_type_id == 2, size: '25'  %>
 
           <%= t 'mongoid.attributes.help_article.article_type_values.tip' %>
 
