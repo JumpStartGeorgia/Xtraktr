@@ -52,25 +52,21 @@
 
       </label>
 
-      <div class="radio">
-        <label class="choice" for="help_article_article_type_id_1">
 
-          <%= radio_button_tag 'help_article[article_type_id]', '1', @help_article.article_type_id == 1, size: '25'  %>
 
-          <%= t 'mongoid.attributes.help_article.article_type_values.how_to' %>
+      <% HelpArticle.article_type_ids.each do |article_type_id| %>
 
-        </label>
-      </div>
+        <div class="radio">
+          <label class="choice" for="help_article_article_type_id_<%= article_type_id %>">
 
-      <div class="radio">
-        <label class="choice" for="help_article_article_type_id_2">
+            <%= radio_button_tag 'help_article[article_type_id]', article_type_id, @help_article.article_type_id == article_type_id, size: '25'  %>
 
-          <%= radio_button_tag 'help_article[article_type_id]', '2', @help_article.article_type_id == 2, size: '25'  %>
+            <%= t "mongoid.attributes.help_article.article_type_values.#{HelpArticle.convert_article_type_id_to_symbol(article_type_id)}" %>
 
-          <%= t 'mongoid.attributes.help_article.article_type_values.tip' %>
+          </label>
+        </div>
 
-        </label>
-      </div>
+      <% end %>
 
     </div>
 

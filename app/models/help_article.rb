@@ -58,11 +58,15 @@ class HelpArticle
   }
 
   def article_type_symbol
-    ARTICLE_TYPES.keys[ARTICLE_TYPES.values.index(article_type_id)]
+    HelpArticle.convert_article_type_id_to_symbol(article_type_id)
   end
 
   def self.translate_article_type(article_type_symbol)
     I18n.t("mongoid.attributes.help_article.article_type_values.#{article_type_symbol}")
+  end
+
+  def self.convert_article_type_id_to_symbol(id)
+    ARTICLE_TYPES.keys[ARTICLE_TYPES.values.index(id)]
   end
 
   def article_type
@@ -78,6 +82,10 @@ class HelpArticle
     end
 
     types_and_ids
+  end
+
+  def self.article_type_ids
+    article_types_and_ids.map { |article_type_and_id| article_type_and_id[1] }
   end
 
   validates_presence_of :article_type_id
