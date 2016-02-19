@@ -16,7 +16,7 @@ class Group < CustomTranslation
   #############################
   attr_accessible :title, :description, :title_translations, :description_translations, :include_in_charts, :parent_id, :sort_order
   attr_accessor :var_arranged_items
-
+  alias :subitems :var_arranged_items
   #############################
   # Validations
   validate :validate_translations
@@ -119,23 +119,23 @@ class Group < CustomTranslation
 
   # get the groups and questions in sorted order that are assigned to this group
   # options:
-  # - question_type - type of questions to get (download, analysis, anlysis_with_exclude_questions, or all)
+  # - question_type - type of questions to get (download, analysis, analysis_with_exclude_questions, or all)
   # - reload_items - if items already exist, reload them (default = false)
   # - include_groups - flag indicating if should get groups (default = false)
   # - include_subgroups - flag indicating if subgroups should also be loaded (default = false)
   # - include_questions - flag indicating if should get questions (default = false)
   # - include_group_with_no_items - flag indicating if should include groups even if it has no items, possibly due to other flags (default = false)
   def arranged_items(options={})
-    #Rails.logger.debug "$$$$$$$$$$$$$ group arranged_items"
-    #Rails.logger.debug "---- var exists = #{self.var_arranged_items.nil?}"
     if self.var_arranged_items.nil? || self.var_arranged_items.empty? || options[:reload_items]
       options[:group_id] = self.id
-      #Rails.logger.debug "$$$$$$$$$$$$$ - building, options = #{options}"
       self.var_arranged_items = self.dataset.build_arranged_items(options)
     end
-
     return self.var_arranged_items
   end
-
+  def as_json(options = { })
+    super((options || { }).merge({
+        :methods => [:subitems]
+    }))
+  end
 
 end

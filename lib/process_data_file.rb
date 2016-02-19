@@ -1,7 +1,7 @@
 # encoding: utf-8
 module ProcessDataFile
   require 'csv'
-
+  DATA_TYPE_VALUES = Question::DATA_TYPE_VALUES
   #######################
   #######################
   ##
@@ -18,13 +18,13 @@ module ProcessDataFile
   @@path = "#{Rails.public_path}/system/datasets/[dataset_id]/processed/"
   @@file_data = 'data.csv'
   @@file_questions = 'questions.csv'
-  @@file_answers_complete = 'answers_complete.csv'
-  @@file_answers_incomplete = 'answers_incomplete.csv'
+  @@file_answers = 'answers.csv'
   @@r_file = {
     'sav' => 'spss_to_csv.r',
     'dta' => 'stata_to_csv.r'
   }
-  @@spreadsheet_question_code = 'VAR'
+  @@spreadsheet_question_code = 'Q'
+  @@spreadsheet_question_code_orig = 'VAR'
 
 
   #######################
@@ -53,12 +53,11 @@ module ProcessDataFile
     if !File.exists?(file_to_process) && self.datafile.queued_for_write[:original].present?
       file_to_process = self.datafile.queued_for_write[:original].path
     end
+
     file_r = "#{Rails.root}/script/r_scripts/#{@@r_file[self.file_extension]}" if !is_spreadsheet
-    file_sps = path + "spss_code.sps"
     file_data = path + @@file_data
     file_questions = path + @@file_questions
-    file_answers_complete = path + @@file_answers_complete
-    file_answers_incomplete = path + @@file_answers_incomplete
+    file_answers = path + @@file_answers
 
     # make sure files exists
     if (is_spreadsheet || (!is_spreadsheet && File.exists?(file_r))) && File.exists?(file_to_process)
@@ -71,11 +70,11 @@ module ProcessDataFile
       start_task = Time.now
       case self.file_extension
         when 'sav'
-          results = process_spss(file_to_process, file_r, file_sps, file_data, file_questions, file_answers_complete)
+          results = process_spss(file_to_process, file_r, file_data, file_questions, file_answers)
         when 'dta'
-          results = process_stata(file_to_process, file_r, file_sps, file_data, file_questions, file_answers_complete)
+          results = process_stata(file_to_process, file_r, file_data, file_questions, file_answers)
         when 'csv', 'xls', 'xlsx', 'ods'
-          results = process_spreadsheet(file_to_process, file_data, file_questions, file_answers_complete)
+          results = process_spreadsheet(file_to_process, file_data, file_questions, file_answers)
       end
       puts "=============================="
       puts ">>>>>>> it took #{Time.now-start_task} seconds to process the data file"
@@ -86,40 +85,46 @@ module ProcessDataFile
         errors.add(:datafile, "bad datafile!")
         return false
       elsif results
-        puts "You made it!"
+        puts "DATA FILE WAS PROCESSED!"
 
         puts "=============================="
         puts "reading in questions from #{file_questions} and saving to questions attribute"
         question_codes = [] # record the question codes from the questions file
         start_task = Time.now
+
         if File.exists?(file_questions)
           line_number = 0
-          CSV.foreach(file_questions).each_with_index do |row, i|
+          CSV.foreach(file_questions, headers: true).each_with_index do |row, i|
+            # row format: question code, question text, 
             line_number += 1
 
-            # record the question code even if it is missing text
-            # - need this for when pulling in data in the next section
+            # only add if the code is present
             if row[0].present? && row[0].strip.present?
-              question_codes << row[0].strip
-            end
 
-            # only add if the code is presetn ## and text are present
-            if row[0].present? && row[0].strip.present?# && row[1].present? && row[1].strip.present?
+              question_codes << [clean_text(row[0], format_code: true), clean_text(row[0])]
+              ln = question_codes.length-1
+
+              # determine the data type
+              # - we only know the data type here if data file is not spreadsheet and data type column (col 2) exists
+              data_type = DATA_TYPE_VALUES[:unknown]
+              if !is_spreadsheet && row.length > 2 && row[2].present?
+                case row[2].downcase
+                  when 'c'
+                    data_type = DATA_TYPE_VALUES[:categorical]
+                  when 'n'
+                    data_type = DATA_TYPE_VALUES[:numerical]
+                end
+
+              end
               # mongo does not allow '.' in key names, so replace with '|'
-              self.questions_attributes = [{code: clean_text(row[0], format_code: true),
-                                            original_code: clean_text(row[0]),
+              self.questions_attributes = [{code: question_codes[ln][0],
+                                            original_code: question_codes[ln][1],
                                             text_translations: {self.default_language => clean_text(row[1])},
-                                            sort_order: i+1
-                                          }]
-            # else
-            #   # if there is question code but no question text, save this
-            #   if row[0].present? && row[0].strip.present? && !(row[1].present? && row[1].strip.present?)
-            #     self.questions_with_no_text = [] if self.questions_with_no_text.nil?
-            #     self.questions_with_no_text << clean_text(row[0])
-            #   end
-            #   puts "******************************"
-            #   puts "Line #{line_number} of #{file_questions} is missing the code or text."
-            #   puts "******************************"
+                                            sort_order: i+1,
+                                            data_type: data_type
+                                          }.merge(!is_spreadsheet && data_type == DATA_TYPE_VALUES[:numerical] ? { exclude: true } : {})]
+
+
             end
           end
         end
@@ -129,26 +134,228 @@ module ProcessDataFile
         puts "=============================="
 
 
+        puts "=============================="
+        puts "reading in answers from #{file_answers} and adding to questions"
+        start_task = Time.now
+        if File.exists?(file_answers)
+          line_number = 0
+          last_key = nil
+          sort_order = 0
+          CSV.foreach(file_answers, headers: true) do |row|
+            line_number += 1
+
+            # it is possible that the answer is nil so it will have a length of two
+            # - when this happens, add a '' to row so there are 3 values
+            if row.length == 2
+              puts "---> answer does not have text, adding ''"              
+              row << ''
+            end
+
+            if row.length == 3
+              # add the answer to the appropriate question
+              # save to answers attribute
+              key = clean_text(row[0], format_code: true)
+              question = self.questions.with_code(key)
+              if question.present?
+                # if this is a new key (question code), reset sort variables
+                if last_key != key
+                  last_key = key.dup
+                  sort_order = 0
+                end
+                # create sort order that is based on order they are listed in data file
+                sort_order += 1
+                # - add the answer to the question
+                question.answers_attributes  = [{value: clean_text(row[1]),
+                                                text_translations: { self.default_language => clean_text(row[2]) },
+                                                sort_order: sort_order
+                                              }]
+                # update question to indciate it has answers
+                question.has_code_answers = true
+                question.is_analysable = true
+                # set the data type if it is not set yet
+                # - will not be set if this is spreadsheet
+                if question.data_type.nil?
+                  question.data_type = DATA_TYPE_VALUES[:categorical]
+                end
+
+              else
+                puts "******************************"
+                puts "Line #{line_number} of #{file_answers} has a question code #{key} that could not be found in the list of questions."
+                puts "******************************"
+              end
+            else
+              puts "******************************"
+              puts "ERROR"
+              puts "An error occurred on line #{line_number} of #{file_answers} while parsing the answers."
+              puts "This line was not in the correct format of: Question Code, Answer Value, Answer Text"
+              puts "******************************"
+              return false
+            end
+          end
+        end
+        puts "=============================="
+        puts ">>>>>>> it took #{Time.now-start_task} seconds to add question answers"
+        puts "=============================="
+
 
         puts "=============================="
-        puts "saving data from #{file_data} and saving to data_items attribute"
-        start_task = Time.now
+        puts "saving data from #{file_data} and to data_items attribute"
         # if this is a spreadsheet do not use the quote char setting
-        if is_spreadsheet
-          data = CSV.read(file_data)
-        else
-          data = CSV.read(file_data, :quote_char => "\0")
-        end
+        #if is_spreadsheet
+          data = CSV.read(file_data, headers: true)
+        #else
+          #data = CSV.read(file_data, quote_char: "\0", headers: true)
+        #end
         # only conintue if the # of cols match the # of quesiton codes
-        # - have to subtract 1 from cols because csv file has ',' after last item
-        if (is_spreadsheet && data.first.length == question_codes.length) || (!is_spreadsheet && data.first.length-1 == question_codes.length)
+        if data.first.length == question_codes.length
           question_codes.each_with_index do |code, code_index|
+            puts "@@@@@@@@@@@ code index = #{code_index}, code = #{code}"
+            clean_code = code[0]
+
             code_data = data.map{|x| x[code_index]}
-            if code_data.present?
-              self.data_items_attributes = [{code: clean_text(code, format_code: true),
-                                            original_code: clean_text(code),
-                                            data: clean_data_item_array(code_data)
-                                          }]
+            total = 0
+            frequency_data = {}
+            formatted_data = nil
+            question = self.questions.with_code(clean_code)
+            if code_data.present? && question.present?
+              # build frequency/stats for question if needed
+              if question.data_type == DATA_TYPE_VALUES[:categorical] # build basic frequency info for categorical questions
+                puts "@@@@@@@@@@@ - question is categorical"
+                question.answers.sorted.each {|answer|
+                  cnt = code_data.select{|x| x == answer.value }.count
+                  total += cnt
+                  frequency_data[answer.value] = [cnt, (cnt.to_f/code_data.length*100).round(2)]
+                }
+                question.has_data_without_answers = total < code_data.select{|d| !d.nil? }.length 
+
+              elsif question.data_type == DATA_TYPE_VALUES[:numerical] # build numerical descriptive stats for numerical questions
+                puts "@@@@@@@@@@@ - question is numerical"
+                # flag that is set to false if:
+                # - data has no numeric data
+                # - there is no repeating values in the data (most likely an ID field)
+                #   - computing stats on ID field can take a long time and possibly crash the system 
+                #     so lets skip it until the user asks for it
+                #   - have found that ID field can have repeating values, so using a 90% threshold
+                #     to determine whether or not to compute the numerical info
+                #     - if unique data is less than 90% in length from full list -> compute
+                has_numeric_data = (code_data.uniq.length / code_data.length.to_f) < 0.9
+
+                if has_numeric_data
+                  unique_answer_values = question.answers.unique_values
+
+                  # first have to determine if data is int or float
+                  int_data = []
+                  float_data = []
+                  # get uniq data items and remove ones that are predefined answers
+                  unique_data = code_data.uniq - unique_answer_values
+                  # if item is int or float, add it to array
+                  unique_data.each do |x|
+                    if (x =~ /\A[-+]?\d+\z/) != nil # int
+                      int_data << x.to_i
+                    elsif (x =~ /\A[-+]?\d*\.?\d+\z/) != nil # float
+                      float_data << x.to_f
+                    end
+                  end  
+
+                  # make sure at least some numeric data was found
+                  has_numeric_data = int_data.present? || float_data.present?
+                end
+                
+                if has_numeric_data
+                  num = Numerical.new
+                  
+                  # if float_data has any values then it is float
+                  # else int
+                  num.type = float_data.present? ? Numerical::TYPE_VALUES[:float] : Numerical::TYPE_VALUES[:integer]
+
+                  # get min and max values
+                  # - merge the two data arrays and then get min/max
+                  #   (if data is float, it still might have int values too)
+                  merge_data = int_data + float_data
+                  num.min = merge_data.min.to_f
+                  num.max = merge_data.max.to_f
+                  num.max += 1 if num.min == num.max # if min and max are the same increase max by 1
+
+                  # set bar width
+                  # - if the difference between max and min is less than default width, use 1
+                  #   else use default width
+                  #num.width = (num.max - num.min) > Numerical::NUMERIC_DEFAULT_WIDTH ? Numerical::NUMERIC_DEFAULT_WIDTH : 1
+                  range = num.max - num.min
+                  num.width = range > Numerical::NUMERIC_DEFAULT_WIDTH ? (range/Numerical::NUMERIC_DEFAULT_WIDTH).ceil : 1                   
+                  
+                  # set ranges and size
+                  num.min_range = (num.min / num.width).floor * num.width
+                  num.max_range = (num.max / num.width).ceil * num.width
+                  num.size = (num.max_range - num.min_range) / num.width
+
+                  # set teh numerical object
+                  question.numerical = num
+
+                  formatted_data = []
+                  vfd = [] # only valid formatted data for calculating stats
+                  fd = Array.new(num.size) { Array.new(2, 0) }
+
+                  #formatted and grouped data calculation
+                  code_data.each {|d|
+                    if is_numeric?(d) && !unique_answer_values.include?(d)
+                      if num.type == Numerical::TYPE_VALUES[:integer]
+                        tmpD = d.to_i
+                      elsif num.type == Numerical::TYPE_VALUES[:float]
+                        tmpD = d.to_f
+                      end
+
+                      if tmpD.present? && tmpD >= num.min && tmpD <= num.max
+                        formatted_data.push(tmpD);
+                        vfd.push(tmpD);
+
+                        index = tmpD == num.min_range ? 0 : ((tmpD-num.min_range)/num.width-0.00001).floor
+                        fd[index][0] += 1
+                      else 
+                        formatted_data.push(nil);
+                      end
+                    else 
+                      formatted_data.push(nil)
+                    end
+
+                  }
+                  total = 0
+                  fd.each {|x| total+=x[0]}
+                  fd.each_with_index {|x,i| 
+                     fd[i][1] = (x[0].to_f/total*100).round(2) }
+
+                  frequency_data = fd;
+
+                  vfd.extend(DescriptiveStatistics) # descriptive statistics
+                  
+                  question.descriptive_statistics = {
+                    :number => vfd.number.to_i,
+                    :min => num.integer? ? vfd.min.to_i : vfd.min,
+                    :max => num.integer? ? vfd.max.to_i : vfd.max,
+                    :mean => vfd.mean,
+                    :median => num.integer? ? vfd.median.to_i : vfd.median,
+                    :mode => num.integer? ? vfd.mode.to_i : vfd.mode,
+                    :q1 => num.integer? ? vfd.percentile(25).to_i : vfd.percentile(25),
+                    :q2 => num.integer? ? vfd.percentile(50).to_i : vfd.percentile(50),
+                    :q3 => num.integer? ? vfd.percentile(75).to_i : vfd.percentile(75),
+                    :variance => vfd.variance,
+                    :standard_deviation => vfd.standard_deviation
+                  }
+                  # mark the question as being analyzable
+                  question.is_analysable = true
+                end
+                
+
+
+                question.has_data_without_answers = code_data.select{|d| !d.nil? }.length > 0 
+              else
+                question.has_data_without_answers = code_data.select{|d| !d.nil? }.length > 0 
+              end
+              # add the data for this question
+              self.data_items_attributes = [{code: clean_code,
+                                            original_code: code[1],
+                                            data: code_data
+                                          }.merge(frequency_data.present? ? { frequency_data: frequency_data, frequency_data_total: total, formatted_data: formatted_data } : {})]
+              
             else
               puts "******************************"
               puts "Column #{code_index} (supposed to be #{code}) of #{file_questions} does not exist."
@@ -158,263 +365,13 @@ module ProcessDataFile
         else
           puts "******************************"
           puts "ERROR"
-          puts "The number of columns in #{file_data} (#{data.first.length} does not match the number of question codes #{self.questions.unique_codes.length}"
+          puts "The number of columns in #{file_data} (#{data.first.length}) does not match the number of question codes #{self.questions.unique_codes.length}"
           puts "******************************"
         end
         puts "added #{self.data_items.length} columns worth of data"
         puts "=============================="
         puts ">>>>>>> it took #{Time.now-start_task} seconds to add the data items"
         puts "=============================="
-
-=begin
-        # before can read in data, we have to add a header row to it
-        # so the SmaterCSV library that reads in the csv has the correct keys for the values
-        puts "=============================="
-        puts "adding header to data csv"
-        # read in data file and create new file with header
-        # - need to use the quote char of \0 (null)
-        #   - R does not put data in quotes so any quotes in file cause illegal quote error
-        data = CSV.read(file_data, :quote_char => "\0")
-        CSV.open(file_data, 'w', write_headers: true, headers: self.questions.unique_codes) do |csv|
-          data.each do |row|
-            csv << row
-          end
-        end
-
-
-        puts "=============================="
-        puts "reading in data from #{file_data} and saving to data attribute"
-        if File.exists?(file_data)
-          self.data = SmarterCSV.process(file_data, {downcase_header: false, strings_as_keys: true})        end
-        puts "added #{self.data.length} records"
-
-=end
-
-        puts "=============================="
-        puts "reading in answers from #{file_answers_complete} and converting to csv"
-        start_task = Time.now
-        # format for non-spreadsheet data files for each line is: [1] "Question Code || Answer Value || Answer Text"
-        # spreadsheet data files are already in proper format
-        answers_complete = []
-        if File.exists?(file_answers_complete)
-          line_number = 0
-          if is_spreadsheet
-            last_key = nil
-            sort_order = 0
-            CSV.foreach(file_answers_complete) do |row|
-              line_number += 1
-              if row.length == 3
-                # add the answer to the appropriate question
-                # save to answers attribute
-                key = clean_text(row[0], format_code: true)
-                question = self.questions.with_code(key)
-                if question.present?
-                  # if this is a new key (question code), reset sort variables
-                  if last_key != key
-                    last_key = key.dup
-                    sort_order = 0
-                  end
-                  # create sort order that is based on order they are listed in data file
-                  sort_order += 1
-                  # - if this is the first answer for this question, initialize the array
-                  question.answers_attributes  = [{value: clean_text(row[1]),
-                                                  text_translations: { self.default_language => clean_text(row[2]) },
-                                                  sort_order: sort_order
-                                                }]
-                  # update question to indciate it has answers
-                  question.has_code_answers = true
-                  question.has_code_answers_for_analysis = true
-                  # include question in public download
-                  # question.can_download = true
-                else
-                  puts "******************************"
-                  puts "Line #{line_number} of #{file_answers_complete} has a question code #{key} that could not be found in the list of questions."
-                  puts "******************************"
-                end
-              end
-            end
-          else
-            File.open(file_answers_complete, "r") do |f|
-              last_key = nil
-              sort_order = 0
-              f.each_line do |line|
-                line_number += 1
-                # take out the [1] " at the beginning and the closing "
-                answer = clean_text(line).gsub('[1] "', '').gsub(/\"$/, '')
-                values = answer.split(' || ')
-                
-                # it is possible that the answer is nil so doing the split will only return a length of two
-                # - so if answer has two sets of || and values length is two, add a '' to values
-                if values.length == 2 && answer.scan(/\|\|/).count == 2
-                  puts "---> answer does not have text, adding ''"              
-                  values << ''
-                end
-
-                if values.length == 3
-                  # save for writing to csv
-                  answers_complete << [clean_text(values[0]), clean_text(values[1]), clean_text(values[2])]
-
-                  # add the answer to the appropriate question
-                  # save to answers attribute
-                  key = clean_text(values[0], format_code: true)
-                  question = self.questions.with_code(key)
-                  if question.present?
-                    # if this is a new key (question code), reset sort variables
-                    if last_key != key
-                      last_key = key.dup
-                      sort_order = 0
-                    end
-                    # create sort order that is based on order they are listed in data file
-                    sort_order += 1
-                    # - if this is the first answer for this question, initialize the array
-                    question.answers_attributes  = [{value: clean_text(values[1]),
-                                                    text_translations: { self.default_language => clean_text(values[2]) },
-                                                    sort_order: sort_order
-                                                  }]
-                    # update question to indciate it has answers
-                    question.has_code_answers = true
-                    question.has_code_answers_for_analysis = true
-                    # include question in public download
-                    # question.can_download = true
-                  else
-                    puts "******************************"
-                    puts "Line #{line_number} of #{file_answers_complete} has a question code #{key} that could not be found in the list of questions."
-                    puts "******************************"
-                  end
-                else
-                  puts "******************************"
-                  puts "ERROR"
-                  puts "An error occurred on line #{line_number} of #{file_answers_complete} while parsing the answers."
-                  puts "This line was not in the correct format of: [1] \"Question Code || Answer Value || Answer Text\""
-                  puts "******************************"
-                  return false
-                end
-              end
-            end
-          end
-        end
-        puts "=============================="
-        puts ">>>>>>> it took #{Time.now-start_task} seconds to add question answers"
-        puts "=============================="
-
-        if !is_spreadsheet
-          # if answers exists, write to csv file
-          start_task = Time.now
-          if answers_complete.length > 0
-            puts "saving complete answers to csv"
-            puts "++ - there were #{answers_complete.length} total answers recorded for #{answers_complete.map{|x| x[0]}.uniq.length} questions"
-            CSV.open(file_answers_complete, 'w') do |csv|
-              answers_complete.each do |answer|
-                csv << answer
-              end
-            end
-          end
-          puts "=============================="
-          puts ">>>>>>> it took #{Time.now-start_task} seconds to write the answers out to csv"
-          puts "=============================="
-
-
-          puts "=============================="
-          puts "reading in incomplete answers from sps file #{file_sps}"
-          start_task = Time.now
-          # open the sps file and convert the list of answers into a csv file
-          # row format: question_code, answer code, answer text
-          answers_incomplete = []
-          found_labels = false
-          next_line_question = false
-          question_code = nil
-          line_number = 0
-          File.open(file_sps, "r") do |f|
-            f.each_line do |line|
-              line_number += 1
-        #      puts "++ line #{line_number}"
-              if found_labels
-                if clean_text(line) == '.'
-        #          puts "++ - found '.', stopping parsing of answers"
-                  # this is the end of the list of answers so stop
-                  break
-                elsif clean_text(line) == '/'
-        #          puts "++ - found /"
-                  # this is the end of a set of answers for a question
-                  question_code = nil
-                  next_line_question = true
-                else
-                  # if this line is a question, start a new row array and save the question
-                  # else this is an answer
-                  if next_line_question
-        #            puts "++ - found question: #{line}"
-                    next_line_question = false
-                    question_code = clean_text(line)
-                  else
-                    # this is an answer, record row in format: [question_code, value, text]
-                    # line is in format of: value "text"
-
-                    # strip space at beginning and end of line
-                    answer = clean_text(line)
-                    # get index of space between value and text
-                    # index will be used to pull out the answer code and answer text
-        #            puts "++ -- found answer: #{line}"
-
-                    index = answer.index(' "')
-                    if index.nil?
-                      puts "******************************"
-                      puts "ERROR"
-                      puts "An error occurred on line #{line_number} of #{file_sps} while parsing the answers."
-                      puts "This line was not in the correct format of: value 'answer text'"
-                      puts "******************************"
-                      break
-                    else
-                      answers_incomplete << [question_code, answer[0..index-1], answer[index+2..-2]]
-                    end
-
-                  end
-                end
-              elsif clean_text(line) == 'VALUE LABELS'
-                # found beginning of list of answers
-        #        puts "++++++++++++++ found value labels on line #{line_number}"
-                found_labels = true
-              end
-            end
-          end
-          puts "=============================="
-          puts ">>>>>>> it took #{Time.now-start_task} seconds to read in the incomplete answers"
-          puts "=============================="
-
-          puts "=============================="
-
-          # if answers exists, write to csv file
-          if answers_incomplete.length > 0
-            start_task = Time.now
-            puts "saving incomplete answers to csv"
-            puts "++ - there were #{answers_incomplete.length} total answers recorded for #{answers_incomplete.map{|x| x[0]}.uniq.length} questions"
-            CSV.open(file_answers_incomplete, 'w') do |csv|
-              answers_incomplete.each do |answer|
-                csv << answer
-              end
-            end
-            puts "=============================="
-            puts ">>>>>>> it took #{Time.now-start_task} seconds to create the answers incomplete csv"
-            puts "=============================="
-          end
-
-          puts "=============================="
-          # if complete answers length != bad answers length, show error message
-          # this will happen if the data contains values that are not in the defined list of answers
-          if answers_complete.length != answers_incomplete.length
-            complete_questions = answers_complete.map{|x| x[0]}.uniq
-            incomplete_questions = answers_incomplete.map{|x| x[0]}.uniq
-            # record question codes to questions_with_bad_answers attribute
-            self.questions_with_bad_answers = complete_questions - incomplete_questions
-            puts "******************************"
-            puts "WARNING"
-            puts "When parsing your file, we found that there are #{complete_questions.length - incomplete_questions.length} questions "
-            puts "that contain values that are not listed as one of the possible answers."
-            puts "We suggest you review the values for these questions and fix accordingly."
-  #          puts "Here are the questions that had this issue:"
-  #          puts (complete_questions - incomplete_questions).map{|x| "#{x}\n"}
-            puts "******************************"
-          end
-        end
       end
     else
       puts "******************************"
@@ -431,21 +388,306 @@ module ProcessDataFile
     return true
   end
 
+
+ # process a data file
+  def reprocess_data_file
+    t = Timer.new
+    t.start("process_data_file started")
+
+    self.file_extension = File.extname(self.datafile.url).gsub('.', '').downcase if self.file_extension.blank? # if file extension does not exist, get it
+
+    is_spreadsheet = ['csv', 'ods', 'xls', 'xlsx'].include?(self.file_extension) # set flag on whether or not this is a spreadsheet
+    
+    t.msg("file_extension = #{self.file_extension}; is_spreadsheet = #{is_spreadsheet}")
+
+    path = @@path.sub('[dataset_id]', self.id.to_s)
+
+    # check if file has been saved yet
+    # if file has not be saved to proper place yet, have to get queued file path
+    file_to_process = "#{Rails.public_path}#{self.datafile.url}"
+    if !File.exists?(file_to_process) && self.datafile.queued_for_write[:original].present?      
+      file_to_process = self.datafile.queued_for_write[:original].path
+    end
+
+    file_r = "#{Rails.root}/script/r_scripts/#{@@r_file[self.file_extension]}" if !is_spreadsheet
+    file_data = path + @@file_data
+    file_questions = path + @@file_questions
+    file_answers = path + @@file_answers
+
+    # make sure files exists
+    if (is_spreadsheet || (!is_spreadsheet && File.exists?(file_r))) && File.exists?(file_to_process)
+
+      # create dataset directory if not exist
+      FileUtils.mkdir_p(File.dirname(file_data))
+
+      # process the file and populate the data, questions and answers csv spreadsheet files
+      results = nil
+
+      t.start("processing data file #{self.file_extension}")
+      case self.file_extension
+        when 'sav'
+          results = process_spss(file_to_process, file_r, file_data, file_questions, file_answers)
+        when 'dta'
+          results = process_stata(file_to_process, file_r, file_data, file_questions, file_answers)
+        when 'csv', 'xls', 'xlsx', 'ods'
+          results = process_spreadsheet(file_to_process, file_data, file_questions, file_answers)
+      end
+      t.end("to process data file")
+
+      if results.nil? || results == false
+        t.msg("Error was #{$?}")
+        errors.add(:datafile, "bad datafile!")
+        return false
+      elsif results
+
+
+        t.start("process questions")
+
+ 
+        question_codes = [] # record the question codes from the questions file
+
+        if File.exists?(file_questions)
+
+          # only add if the code is present
+          unknown_codes = self.questions.codes_with_unknown_datatype
+
+
+          CSV.foreach(file_questions, headers: true).each_with_index do |row, i| # row format: question code, question text, data_type(c|n) 
+            
+            code = clean_text(row[0], format_code: true)
+
+            if code.present? # only add if the code is present and unknown
+              question_codes << [code, clean_text(row[0])]
+              if unknown_codes.include?(code)
+                data_type = DATA_TYPE_VALUES[:unknown] # determine the data type
+                if !is_spreadsheet && row.length > 2 && row[2].present?
+                  case row[2].downcase
+                    when 'c'
+                      data_type = DATA_TYPE_VALUES[:categorical]
+                    when 'n'
+                      data_type = DATA_TYPE_VALUES[:numerical]
+                  end
+                end              
+                self.questions.with_code(code).data_type = data_type if data_type != DATA_TYPE_VALUES[:unknown]
+              end
+            end
+          end
+        end
+        t.end("to add #{self.questions.length} questions")
+
+
+        t.start("process data_items")
+        # if this is a spreadsheet do not use the quote char setting
+        #data = is_spreadsheet ? CSV.read(file_data, headers: true) : CSV.read(file_data, quote_char: "\0", headers: true)
+        data = CSV.read(file_data, headers: true)
+
+        # only conintue if the # of cols match the # of quesiton codes
+        if data.first.length == question_codes.length
+
+          question_codes.each_with_index do |code, code_index|
+            code_data = data.map{|x| x[code_index]}
+
+            total = nil
+            frequency_data = nil
+            formatted_data = nil  
+
+            question = self.questions.with_code(code[0])
+            # if this is a spreadsheet and the question was not found, try using the old question code
+            question = self.questions.with_code(code[0].downcase.gsub(@@spreadsheet_question_code.downcase, @@spreadsheet_question_code_orig.downcase)) if question.nil? && is_spreadsheet
+
+            if code_data.present? && question.present?
+              # build frequency/stats for question if needed
+              if question.data_type == DATA_TYPE_VALUES[:categorical]# build basic frequency info for categorical questions
+
+                question.numerical = nil
+                question.descriptive_statistics = nil
+                total = 0
+                frequency_data = {}
+                question.answers.sorted.each {|answer|
+                  cnt = code_data.select{|x| x == answer.value }.count
+                  total += cnt
+                  frequency_data[answer.value] = [cnt, (cnt.to_f/code_data.length*100).round(2)]
+                }
+              elsif question.data_type == DATA_TYPE_VALUES[:numerical] # build numerical descriptive stats for numerical questions
+                # flag that is set to false if:
+                # - data has no numeric data
+                # - there is no repeating values in the data (most likely an ID field)
+                #   - computing stats on ID field can take a long time and possibly crash the system 
+                #     so lets skip it until the user asks for it
+                #   - have found that ID field can have repeating values, so using a 90% threshold
+                #     to determine whether or not to compute the numerical info
+                #     - if unique data is less than 90% in length from full list -> compute
+                has_numeric_data = (code_data.uniq.length / code_data.length.to_f) < 0.9
+
+                if has_numeric_data
+                  unique_answer_values = question.answers.unique_values
+
+                  # first have to determine if data is int or float
+                  int_data = []
+                  float_data = []
+                  # get uniq data items and remove ones that are predefined answers
+                  unique_data = code_data.uniq - unique_answer_values
+                  # if item is int or float, add it to array
+                  unique_data.each do |x|
+                    if (x =~ /\A[-+]?\d+\z/) != nil # int
+                      int_data << x.to_i
+                    elsif (x =~ /\A[-+]?\d*\.?\d+\z/) != nil # float
+                      float_data << x.to_f
+                    end
+                  end  
+
+                  # make sure at least some numeric data was found
+                  has_numeric_data = int_data.present? || float_data.present?
+     
+                end
+
+                if has_numeric_data
+
+                  num = Numerical.new
+                  
+                  # if float_data has any values then it is float
+                  # else int
+                  num.type = float_data.present? ? Numerical::TYPE_VALUES[:float] : Numerical::TYPE_VALUES[:integer]
+
+                  # get min and max values
+                  # - merge the two data arrays and then get min/max
+                  #   (if data is float, it still might have int values too)
+                  merge_data = int_data + float_data
+                  num.min = merge_data.min.to_f
+                  num.max = merge_data.max.to_f
+                  num.max += 1 if num.min == num.max # if min and max are the same increase max by 1
+
+                  # set bar width
+                  # - if the difference between max and min is less than default width, use 1
+                  #   else use default width
+                  #num.width = (num.max - num.min) > Numerical::NUMERIC_DEFAULT_WIDTH ? Numerical::NUMERIC_DEFAULT_WIDTH : 1
+                  range = num.max - num.min
+                  num.width = range > Numerical::NUMERIC_DEFAULT_WIDTH ? (range/Numerical::NUMERIC_DEFAULT_WIDTH).ceil : 1                   
+                  
+                  # set ranges and size
+                  num.min_range = (num.min / num.width).floor * num.width
+                  num.max_range = (num.max / num.width).ceil * num.width
+                  num.size = (num.max_range - num.min_range) / num.width
+
+                  # set teh numerical object
+                  question.numerical = num
+
+                  formatted_data = []
+                  vfd = [] # only valid formatted data for calculating stats
+                  fd = Array.new(num.size) { Array.new(2, 0) }
+
+                  #formatted and grouped data calculation
+                  code_data.each {|d|
+                    if is_numeric?(d) && !unique_answer_values.include?(d)
+                      if num.type == Numerical::TYPE_VALUES[:integer]
+                        tmpD = d.to_i
+                      elsif num.type == Numerical::TYPE_VALUES[:float]
+                        tmpD = d.to_f
+                      end
+
+                      if tmpD.present? && tmpD >= num.min && tmpD <= num.max
+                        formatted_data.push(tmpD);
+                        vfd.push(tmpD);
+
+                        index = tmpD == num.min_range ? 0 : ((tmpD-num.min_range)/num.width-0.00001).floor
+                        fd[index][0] += 1
+                      else 
+                        formatted_data.push(nil);
+                      end
+                    else 
+                      formatted_data.push(nil)
+                    end
+
+                  }
+                  total = 0
+                  fd.each {|x| total+=x[0]}
+                  fd.each_with_index {|x,i| 
+                     fd[i][1] = (x[0].to_f/total*100).round(2) }
+
+                  frequency_data = fd;
+
+                  vfd.extend(DescriptiveStatistics) # descriptive statistics
+                  
+                  question.descriptive_statistics = {
+                    :number => vfd.number.to_i,
+                    :min => num.integer? ? vfd.min.to_i : vfd.min,
+                    :max => num.integer? ? vfd.max.to_i : vfd.max,
+                    :mean => vfd.mean,
+                    :median => num.integer? ? vfd.median.to_i : vfd.median,
+                    :mode => num.integer? ? vfd.mode.to_i : vfd.mode,
+                    :q1 => num.integer? ? vfd.percentile(25).to_i : vfd.percentile(25),
+                    :q2 => num.integer? ? vfd.percentile(50).to_i : vfd.percentile(50),
+                    :q3 => num.integer? ? vfd.percentile(75).to_i : vfd.percentile(75),
+                    :variance => vfd.variance,
+                    :standard_deviation => vfd.standard_deviation
+                  }
+                  # mark the question as being analyzable
+                else
+                  question.data_type = DATA_TYPE_VALUES[:unknown]
+                end
+              end
+
+              if question.data_type == DATA_TYPE_VALUES[:unknown]
+                question.numerical = nil
+                question.descriptive_statistics = nil
+              end
+
+              
+              dd = self.data_items.with_code(code[0]) # add the data for this question
+              # if this is a spreadsheet and the question was not found, try using the old question code
+              dd = self.data_items.with_code(code[0].downcase.gsub(@@spreadsheet_question_code.downcase, @@spreadsheet_question_code_orig.downcase)) if dd.nil? && is_spreadsheet
+              if dd.present?
+                if(dd.update_attributes({
+                  data: code_data,
+                  frequency_data: frequency_data,
+                  frequency_data_total: total,
+                  formatted_data: formatted_data
+                }))
+              else
+                t.msg(dd.errors.full_messages.inspect)
+              end
+              else
+                self.data_items_attributes = [{
+                                            code: code[0],
+                                            original_code: code[1],
+                                            data: code_data,
+                                            frequency_data: frequency_data,
+                                            frequency_data_total: total,
+                                            formatted_data: formatted_data }]
+              end
+            else
+              t.msg("[Error] Column #{code_index} (supposed to be #{code}) of #{file_questions} does not exist.")
+            end
+            
+            t.msg("[index, code, data_type] = [#{code_index}, #{code[0]}, #{question.data_type}]")
+          end
+        else
+          t.msg("[ERROR] The number of columns in #{file_data} (#{data.first.length}) does not match the number of question codes #{self.questions.unique_codes.length}")
+        end
+        t.end("to add #{self.data_items.length} data items");
+      end
+    else
+      t.msg("[WARNING] The required R script file or the data file to process do not exist")      
+    end
+    t.end("to finish processing the data file")
+    return true
+  end
+
 private
 
 
 
   #######################
   # run r-script for spss file
-  def process_spss(file_to_process, file_r, file_sps, file_data, file_questions, file_answers_complete)
-    puts "=============================="
-    puts "$$$$$$ process_spss"
-    puts "=============================="
-    start = Time.now
-    # run the R script
-    result = system 'Rscript', '--default-packages=foreign,MASS', file_r, file_to_process, file_data, file_sps, file_questions, file_answers_complete
+  def process_spss(file_to_process, file_r, file_data, file_questions, file_answers)
+    begin # run the R script
+      result = system 'Rscript', '--default-packages=foreign,MASS', file_r, file_to_process, file_data, file_questions, file_answers
+    rescue => e
+      puts "!!!!!!!!!!!!!!!! an error occurred - #{e.inspect}"
+      result = nil
+    end
 
-    puts ">>>>>>> it took #{Time.now-start} seconds to process the spss file"
+    puts "Error was #{$?}"
 
     return result
   end
@@ -453,143 +695,61 @@ private
 
   #######################
   # run r-script for stata file
-  def process_stata(file_to_process, file_r, file_sps, file_data, file_questions, file_answers_complete)
-    puts "=============================="
-    puts "$$$$$$ process_stata"
-    puts "=============================="
-    start = Time.now
-    # run the R script
-    begin
-      result = system 'Rscript', '--default-packages=foreign,MASS', file_r, file_to_process, file_data, file_sps, file_questions, file_answers_complete
+  def process_stata(file_to_process, file_r, file_data, file_questions, file_answers)
+
+    begin     # run the R script
+      result = system 'Rscript', '--default-packages=foreign,MASS', file_r, file_to_process, file_data, file_questions, file_answers
     rescue => e
       puts "!!!!!!!!!!!!!!!! an error occurred - #{e.inspect}"
       result = nil
     end
-    puts ">>>>>>> it took #{Time.now-start} seconds to process the stata file"
-
     puts "Error was #{$?}"
 
-    puts "@@@@@@@ result = #{result}"
-
     if result == true
-      # the questions need to be put into a csv format like is returned from spss so can use the common processing code above
+      # STATA files might use variables to define the answers so the variable answer set can easily be re-used.
+      # If this file is using variables, then the answers csv file uses the variable code instead of the question code.
+      # Need to create the answers file using the correct question code values.
+      #puts "=============================="
+      #puts "reading in questions from #{file_questions}"
+      questions = CSV.read(file_questions, headers: true)
+      answers = CSV.read(file_answers.gsub(/.csv$/, '_temp.csv'), headers: true)
 
-      puts "=============================="
-      puts "reading in questions from #{file_questions} and converting to csv"
-      # format of each line of file is: [1] "Question Code || Question Text || Variable Code"
-      questions_formatted = []
-      has_var_questions = false
-      if File.exists?(file_questions)
-        line_number = 0
-        File.open(file_questions, "r") do |f|
-          f.each_line do |line|
-            # take out the [1] " at the beginning and the closing "
-            question = clean_text(line).gsub('[1] "', '').gsub(/\"$/, '')
-            values = question.split(' || ')
-            if values.length.between?(1,3)
-              # record that there are variables being used in this dataset
-              has_var_questions = true if values.length == 3 && has_var_questions == false
+      if questions.present? && answers.present?
+        # build correct answer file by going through each question and seeing if it has answers
+        # if so, add to array that will be used to write out to file
+        # correct format is: Question Code, Answer Value, Answer Text
+        # - question format is: question code, question text, data type, variable code
+        answers_formatted = []
+        questions.each do |question|
+          code = question[0]
+          code = question[3] if question[3].present?
 
-              # save for writing to csv
-              questions_formatted << [clean_text(values[0]), values[1].present? ? clean_text(values[1]) : nil, values[2].present? ? clean_text(values[2]) : nil]
-            else
-              puts "******************************"
-              puts "ERROR"
-              puts "An error occurred on line #{line_number} of #{file_questions} while parsing the questions."
-              puts "This line was not in the correct format of: [1] \"Question Code || Question Text\""
-              puts "******************************"
-              break
+          matches = answers.select{|x| x[0].downcase == code.downcase}
+
+          if matches.present?
+            # found answers for this question
+            answers_formatted << matches.map{|match| [question[0], match[1], match[2]] }
+          end
+        end
+
+        # get rid of the nested arrays
+        answers_formatted.flatten!(1)
+
+        # write the re-formatted answers to csv file
+        if answers_formatted.present?
+          #puts "saving re-formatted answers with correct question code to csv"
+          #puts "++ - there were #{answers_formatted.length} total answers recorded"
+          # correct format is: Question Code, Answer Value, Answer Text
+          CSV.open(file_answers, 'w') do |csv|
+            # header
+            csv << ['Question Code', 'Answer Value', 'Answer Text']
+
+            answers_formatted.each do |answer|
+              csv << answer
             end
           end
         end
       end
-
-      # write the re-formatted questions to csv file
-      if questions_formatted.present?
-        puts "saving re-formatted questions to csv"
-        puts "++ - there were #{questions_formatted.length} total questions recorded"
-        CSV.open(file_questions, 'w') do |csv|
-          questions_formatted.each do |question|
-            csv << question
-          end
-        end
-      end
-
-      puts "=============================="
-      # STATA files might use variables to define the answers so the variable answer set can easily be re-used
-      # if this file is using variables, then create the answers file using the correct code values
-      # if not, make a copy of the answer file with the proper name
-      temp_file = file_answers_complete.gsub(/.csv$/, '_temp.csv')
-
-      if has_var_questions
-        puts "--- the file IS using variables for the answers so NEED to re-process the answer file"
-
-        puts "reading in answers with variables from #{temp_file} and re-creating using correct question codes"
-        # format of each line of file is: [1] "Variable Code || Answer Value || Answer Text"
-        # need format to be: [1] "Question Code || Answer Value || Answer Text"
-        temp_answers_formatted = []
-        if File.exists?(temp_file)
-          line_number = 0
-          File.open(temp_file, "r") do |f|
-            f.each_line do |line|
-              # take out the [1] " at the beginning and the closing "
-              answer = clean_text(line).gsub('[1] "', '').gsub(/\"$/, '')
-              values = answer.split(' || ')
-              if values.length == 3
-                temp_answers_formatted << [clean_text(values[0]), clean_text(values[1]), clean_text(values[2])]
-              else
-                puts "******************************"
-                puts "ERROR"
-                puts "An error occurred on line #{line_number} of #{temp_file} while parsing the questions."
-                puts "This line was not in the correct format of: [1] \"Question Code || Answer Value || Answer Text\""
-                puts "******************************"
-                break
-              end
-            end
-          end
-        end
-
-        if temp_answers_formatted.present?
-          # now have answers
-          # build correct answer file by going through each question and seeing if it has answers
-          # if so, add to array that will be used to write out to file
-          # correct format is: [1] "Question Code || Answer Value || Answer Text"
-          # - this format is needed so common processing code above will read it and process it properly
-          answers_formatted = []
-          questions_formatted.each do |question|
-            code = question[0]
-            code = question[2] if question[2].present?
-
-            matches = temp_answers_formatted.select{|x| x[0].downcase == code.downcase}
-
-            if matches.present?
-              # found answers for this question
-              answers_formatted << matches.map{|match| "#{question[0]} || #{match[1]} || #{match[2]}"}
-            end
-          end
-
-          # get rid of the nested arrays
-          answers_formatted.flatten!
-
-          # write the re-formatted answers to csv file
-          if answers_formatted.present?
-            puts "saving re-formatted answers with correct question code to csv"
-            puts "++ - there were #{answers_formatted.length} total answers recorded"
-            # correct format is: [1] "Question Code || Answer Value || Answer Text"
-            File.open(file_answers_complete, 'w') do |f|
-              answers_formatted.each do |answer|
-                f << %Q{[1] "#{answer}"}
-                f << "\n"
-              end
-            end
-          end
-        end
-      else
-        puts "--- the file is not using variables for the answers so no need to re-process the answer file"
-        # just make a copy of the file using the correct name
-        #FileUtils.cp temp_file file_answers_complete
-      end
-
     end
 
     return result
@@ -598,10 +758,8 @@ private
 
   #######################
   # pull data out of spreadsheet and into new files
-  def process_spreadsheet(file_to_process, file_data, file_questions, file_answers_complete)
-    puts "=============================="
-    puts "$$$$$$ process_spreadsheet"
-    puts "=============================="
+  def process_spreadsheet(file_to_process, file_data, file_questions, file_answers)
+
     result = nil
 
     data = nil
@@ -623,7 +781,7 @@ private
 
       # remove \N from data
       # if field is '', replace with nil
-      puts "- cleaning data"
+      #puts "- cleaning data"
       (1..data.last_row).each do |index|
         data_items << data.row(index).map{|cell| cell == '\\N' ? nil : clean_data_item(cell)}
       end
@@ -632,45 +790,54 @@ private
       headers = data_items.shift
 
       # get the questions
-      puts "- getting questions"
+      #puts "- getting questions"
       headers.each_with_index{|x, i| questions << ["#{@@spreadsheet_question_code}#{i+1}", x]}
 
       # get the answers
-      puts "- getting answers"
+      #puts "- getting answers"
       (0..headers.length-1).each do |index|
         code = questions[index][0]
-        # only add answer if it exists
+        # only add answer if it exists and all answers are text (categorical)
         # - if answers are all of same type, sort them, else do not
         items = data_items.map{|x| x[index]}.select{|x| x.present?}.uniq
         items.sort! if items.map{|x| x.class}.uniq.length == 1
-        items.each do |uniq_answer|
-          answers << [code, uniq_answer, uniq_answer]
+
+        if items.all?{|item| !is_number?(item)}
+          items.each do |uniq_answer|
+            answers << [code, uniq_answer, uniq_answer]
+          end
         end
       end
 
 
       # now save the files
       # questions
-      puts "- writing question file"
+      #puts "- writing question file"
       CSV.open(file_questions, 'w') do |csv|
+        # header
+        csv << ['Question Code', 'Question Text']
+
         questions.each do |row|
           csv << row
         end
       end
 
       # answers
-      puts "- writing answer file"
-      CSV.open(file_answers_complete, 'w') do |csv|
+      #puts "- writing answer file"
+      CSV.open(file_answers, 'w') do |csv|
+        # header
+        csv << ['Question Code', 'Answer Value', 'Answer Text']
+
         answers.each do |row|
           csv << row
         end
       end
 
       # data
-      puts "- writing data file"
+      #puts "- writing data file"
       CSV.open(file_data, 'w') do |csv|
-        (2..data.last_row).each do |index|
-          csv << data.row(index)
+        data.each do |row|
+          csv << row
         end
       end
 
@@ -700,64 +867,33 @@ private
     return nil
   end
 
-  #### OLD
+  # determine if item is number
+  def is_number? string
+    true if Float(string) rescue false
+  end
 
-  # #######################
-  # # pull data out of csv and into new files
-  # def process_csv(file_to_process, file_data, file_questions, file_answers_complete)
-  #   puts "=============================="
-  #   puts "$$$$$$ process_csv"
-  #   puts "=============================="
-  #   result = nil
 
-  #   data = CSV.read(File.open(file_to_process))
-  #   if data.present?
-  #     # get headers and remove from csv data
-  #     headers = data.shift
-  #     questions = [] # array of [code, question]
-  #     answers = [] # array of [code, answer value, answer text]
+end
 
-  #     # clean up data and remove \N
-  #     data.select{|row| row.select{|cell| cell.include?('\N')}.each{|x| x.replace('')}}
-
-  #     # get the questions
-  #     headers.each_with_index{|x, i| questions << ["#{@@spreadsheet_question_code}#{i+1}", x]}
-  #     # get the answers
-  #     (0..headers.length-1).each do |index|
-  #       code = questions[index][0]
-  #       data.map{|x| x[index]}.uniq.sort.each do |uniq_answer|
-  #         # only add answer if it exists
-  #         if uniq_answer.strip.present?
-  #           answers << [code, uniq_answer, uniq_answer]
-  #         end
-  #       end
-  #     end
-
-  #     # now save the files
-  #     # questions
-  #     CSV.open(file_questions, 'w') do |csv|
-  #       questions.each do |row|
-  #         csv << row
-  #       end
-  #     end
-
-  #     # answers
-  #     CSV.open(file_answers_complete, 'w') do |csv|
-  #       answers.each do |row|
-  #         csv << row
-  #       end
-  #     end
-
-  #     # data
-  #     CSV.open(file_data, 'w') do |csv|
-  #       data.each do |row|
-  #         csv << row
-  #       end
-  #     end
-
-  #     result = true
-  #   end
-  #   return result
-  # end
-
+class Timer
+   def initialize()  
+    # Instance variables  
+    @stack = [] 
+    #@sep = "==============================\n" 
+  end  
+  def start(msg)
+    @stack.push(Time.now)
+    p(msg, false) if msg.present?
+  end
+  def end(msg)
+    if @stack.any?
+      p("it took #{Time.now-@stack.pop} seconds #{msg}", true)
+    end    
+  end
+  def msg(msg)
+    puts ">  #{"  "*(@stack.length - 1)} " + msg
+  end
+  def p(msg, is_end)
+    puts "> #{"  "*(@stack.length - (is_end ? 0 : 1))} " + msg
+  end
 end

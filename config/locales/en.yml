@@ -190,6 +190,9 @@ en:
         can_download: Include Question in Download for Public
         has_map_adjustable_max_range: Max Range of Choropleth Map is Adjustable
         is_weight: This question is a weight
+        data_type: Data Type
+        data_type_categorical: Categorical Data Type
+        data_type_numerical: Numerical Data Type
       answer:
         value: Value
         text: Answer
@@ -200,6 +203,12 @@ en:
         no_questions: There are no questions on file for this dataset.
         sort_order: Sort Order
         shape_name: Name of Shape
+      numerical:
+        title: X-axis Title
+        type: Number Type
+        width: Bar Width
+        min: Min Value
+        max: Max Value
       group:
         title: Name
         description: Description
@@ -394,7 +403,7 @@ en:
         exclude: "If selected, this answer will not be available during analysis."
         can_exclude: "If selected, this answer will be available during analysis, but can be turned off if desired by the user."
         sort_order: "The order the answers should appear"
-        default_text: "This is the answer text from the default language which is provided to make it easier to complete the translation"
+        default_text: "This is the answer text from the default language which is provided to make it easier to complete the translation"      
       group:
         title: The group name will appear in the codebook and on the explore page in the question drop-down lists
         description: "The group description will appear in the codebook, on the explore page in the question drop-down lists and the chart titles, if desired."
@@ -571,6 +580,41 @@ en:
           title_filter: "Total Responses: %{nums}"
           title_weighted: "Unweighted Total Responses*: %{x_of_y}"
           title_filter_weighted: "Unweighted Total Responses* (out of a possible: %{totals}): %{nums}"
+    v3:
+      na: N/A
+      percent: Percent (%)
+      group:
+        html:
+          title: "<span class='group-highlight'>%{text}</span> "
+        text:
+          title: "%{text}"
+      subgroup:
+        html:
+          title: "<span class='subgroup-highlight'>%{text}</span> "
+        text:
+          title: "%{text}"
+      single:
+        html:
+          title: "'<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
+          title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
+          title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable} = <span class='code-highlight'>%{value}</span>'"
+        text:
+          title: "'%{code} - %{group} %{variable}'"
+          title_filter: ", filtered by: '%{code} - %{group} %{variable}'"
+          title_filter_value: ", filtered by: '%{code} - %{group} %{variable} = %{value}'"
+      subtitle:
+        html:
+          title: "Total Responses: <br />%{x_of_y}"
+          title_x_of_y: "%{dataset}: <span class='number'>%{num}</span> out of %{total}"
+          title_filter: "Total Responses <br />(out of a possible: %{totals}): <br />%{nums}"
+          title_weighted: "Unweighted Total Responses<span class='footnote-flag'>*</span>: <br />%{x_of_y}"
+          title_filter_weighted: "Unweighted Total Responses<span class='footnote-flag'>*</span> <br />(out of a possible: %{totals}): <br />%{nums}"
+        text:
+          title: "Total Responses: %{x_of_y}"
+          title_x_of_y: "%{dataset}: %{num} out of %{total}"
+          title_filter: "Total Responses: %{nums}"
+          title_weighted: "Unweighted Total Responses*: %{x_of_y}"
+          title_filter_weighted: "Unweighted Total Responses* (out of a possible: %{totals}): %{nums}"          
   explore_data:
     chart_type_bar: View data using a bar chart
     chart_type_pie: View data using a pie chart
@@ -668,6 +712,59 @@ en:
           title_filter: "Total Responses out of %{total}: %{nums}"
           title_weighted: "Unweighted Total Responses*: %{num} out of %{total}"
           title_filter_weighted: "Unweighted Total Responses out of %{total}*: %{nums}"
+    v3:
+      hover_region: Hover over a Region
+      na: N/A
+      percent: Percent
+      group:
+        html:
+          title: "<span class='group-highlight'>%{text}</span> "
+        text:
+          title: "%{text}"
+      subgroup:
+        html:
+          title: "<span class='subgroup-highlight'>%{text}</span> "
+        text:
+          title: "%{text}"
+      comparative:
+        html:
+          title: "'<span class='code-highlight'>%{question_code}</span> - %{group}%{variable}' <br /> <span class='title-highlight'>broken down by:</span> <br /> '<span class='code-highlight'>%{broken_down_by_code}</span> - %{group2}%{broken_down_by}'"
+          title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
+          title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable} = <span class='code-highlight'>%{value}</span>'"
+          map:
+            title: "'<span class='code-highlight'>%{code}</span> - %{group}%{variable}' "
+            title_broken_down_by: "<br /> <span class='title-highlight'>broken down by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{broken_down_by} = <span class='code-highlight'>%{broken_down_by_answer}</span>' "
+            title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
+            title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable} = <span class='code-highlight'>%{value}</span>'"
+        text:
+          title: "'%{question_code} - %{group} %{variable}', broken down by: '%{broken_down_by_code} - %{group2} %{broken_down_by}'"
+          title_filter: ", filtered by: '%{code} - %{group} %{variable}'"
+          title_filter_value: ", filtered by: '%{code} - %{group} %{variable} = %{value}'"
+          map:
+            title: "'%{code} - %{group} %{variable}'"
+            title_broken_down_by: " broken down by: '%{code} - %{group} %{broken_down_by} = %{broken_down_by_answer}'"
+            title_filter: ", filtered by: '%{code} - %{group} %{variable}'"
+            title_filter_value: ", filtered by: '%{code} - %{group} %{variable} = %{value}'"
+      single:
+        html:
+          title: "'<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
+          title_filter: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable}'"
+          title_filter_value: "<br /> <span class='title-highlight'>filtered by:</span> <br /> '<span class='code-highlight'>%{code}</span> - %{group}%{variable} = <span class='code-highlight'>%{value}</span>'"
+        text:
+          title: "'%{code} - %{group} %{variable}'"
+          title_filter: ", filtered by: '%{code} - %{group} %{variable}'"
+          title_filter_value: ", filtered by: '%{code} - %{group} %{variable} = %{value}'"
+      subtitle:
+        html:
+          title: "Total Responses: <span class='number'>%{num}</span> out of %{total}"
+          title_filter: "Total Responses out of %{total}: <br />%{nums}"
+          title_weighted: "Unweighted Total Responses<span class='footnote-flag'>*</span>: <span class='number'>%{num}</span> out of %{total}"
+          title_filter_weighted: "Unweighted Total Responses out of %{total}<span class='footnote-flag'>*</span>: <br />%{nums}"
+        text:
+          title: "Total Responses: %{num} out of %{total}"
+          title_filter: "Total Responses out of %{total}: %{nums}"
+          title_weighted: "Unweighted Total Responses*: %{num} out of %{total}"
+          title_filter_weighted: "Unweighted Total Responses out of %{total}*: %{nums}"          
   datatable:
     search: Search
     search_footer: 'Search %{name}'
@@ -867,6 +964,23 @@ en:
       download_data_explanation: 'For more in-depth analysis, you can download this dataset in one of the following formats.'
       show_more: Show More
       show_less: Show Less
+      data_type: Data Type
+      categorical: Categorical
+      numerical: Numerical
+      descriptive_statistics:
+        title: Descriptive Statistics
+        number: Total Responses
+        min: Min
+        max: Max
+        mean: Mean
+        median: Median
+        mode: Mode
+        q1: 25th Percentile
+        q2: 50th Percentile
+        q3: 75th Percentile
+        standard_deviation: Standard Deviation
+        variance: Variance
+      total_responses_out_of: "Total Responses: <span class='number'>X</span> out of <span class='number'>XX</span>"   
     msgs:
       does_not_exist: You tried to access a page that does not exist.
       not_authorized: You are not authorized to view that page.
@@ -876,6 +990,13 @@ en:
       success_deleted: "%{obj} was successfully deleted."
       mass_change_question_saved: "Question settings were saved."
       mass_change_question_not_saved: "An error occurred while saving the question settings."
+      mass_change:
+        question_type:
+            saved: "Question data type settings were saved."
+            no_data_to_save: "Nothing to save."
+            not_saved: "An error occurred while saving the question type settings."
+            validation_error_for_all: "None of the questions were saved due to the validation errors."      
+            validation_error_for_some: "All questions were saved except the following due to validation errors: %{codes}"      
       mass_change_answer_saved: "Answer settings were saved."
       mass_change_answer_not_saved: "An error occurred while saving the answer settings."
       sort_saved: "Sort orders were saved."
@@ -957,6 +1078,7 @@ en:
         private_share: Share Private Dataset
         mass_changes: Mass Changes Via Spreadsheet
         mass_changes_questions: Question Mass Changes
+        mass_changes_questions_type: Question Data Type Mass Changes
         mass_changes_answers: Answer Mass Changes
         download_data: Download Data
         groups: Group Questions
@@ -1160,7 +1282,14 @@ en:
       tab_no_answers: Questions with No Answers
       tab_no_text: Questions with No Text
       bad_answers: 'The following %{number} questions contain values that were not listed as one of the possible answers. For example, the list of possible answers was 1, 2, 3 or 4 and one record had a value of 5. The records with the extra values will not be used during analysis.'
-      no_answers: "The following %{number} questions do not have a list of possible answers. For example, a question 'What is your age?' could come with answers like <20, 20-40, 40-60, >60 and each of these answers would represent a certain value like 1, 2, 3, 4 that is stored in the data. These questions will not be available for analysis unless a list of possible answers are provided."
+      no_answers: |
+        The following %{number} questions do not have a list of possible answers. If your data file is a from a statistical package (SPSS, STATA, etc), this happens because the question is numerical or because a categorical question did not have a predefined list of answers. If your data file is a spreadsheet (CSV, XLSX, etc), this happens because you need to define which questions are numerical and which are categorical.
+
+        To define which questions are numerical or categorical, use the <a href="%{link}">Data Type form</a>.
+
+        To define answers for a categorical question, use the 'Add Answers' button below.
+
+        These questions will not be available for analysis unless the data type is set to numerical or answers are defined to categorical questions.
       no_text: "The following %{number} questions do not have text. For example a code of 'A1' was given, but no text describing what 'A1' represents was provided. These questions will not be available for analysis unless text is provided."
       no_bad_answers: Congratulations! All of the data file data contains valid answers.
       no_no_answers: Congratulations! All of the data file questions have answers.
@@ -1170,6 +1299,26 @@ en:
       title: "Question Mass Changes"
       explanation: "Use this page to indicate which questions should not be included during analysis and which should be included when the public download's the data."
       no_questions: There are no questions on file for this dataset.
+    mass_changes_questions_type:
+      title: "Question Data Type Mass Changes"
+      explanation: |
+        Use this page to indicate the data type of each question. A question that does not have a data type selected cannot be analyzed. If a question does not have pre-defined answers it cannot be selected as Categorical.
+
+        For numerical questions, a histogram chart will be used during analysis. You can set the histogram bar size and the min and max value of the chart.
+      no_questions: There are no questions on file for this dataset.
+      no_answer: Question does not have predefined answers and, therefore, cannot be selected as a categorical type.     
+      no_data: Question does not have answers that are not predefined answers and, therefore, cannot be selected as a numerical type.
+      percent: Percent
+      integer: Integer
+      decimal: Decimal
+      hints:
+        title: Click the language abbreviation to switch to the language you want to enter the x-axis title for. If you leave this field blank, no x-axis title will be shown.
+        width: The bar width is how many values you want to contain in each histgram bar. Default value is 10.
+        min: The value you want to start with on the histogram chart. Default value is the minimum value in the data.
+        max: The value you want to end with on the histogram chart. Default value is the maximum value in the data.
+        view_active: View the question results in a chart
+        view_disabled: You must select a data type in order to view the chart
+      no_preview: You must select a data type in order to view a chart of this question.        
     mass_changes_answers:
       title: "Answer Mass Changes"
       explanation: "Use this page to indicate which answers should not be included during analysis and which answers can be included during analysis, but have the ability to be excluded (e.g., answers like: Don't Know, Refuse to Answer, etc)."
@@ -1528,6 +1677,7 @@ en:
         can_exclude: Exclude Answers
         can_exclude_hint: At least one selected question has answers that can be excluded during analysis. Select this checkbox to remove these answers from the analysis.
         weighted_by_code: Weighted By
+        no_weight: No Weight
       jumpto:
         chart: Jump to Chart
         map: Jump to Map
@@ -1566,6 +1716,7 @@ en:
         no_filter: No Filter
         can_exclude: Exclude "Don't know" & "Refuse"
         can_exclude_hint: Remove answers like "Don't know" & "Refuse" from the analysis
+        no_weight: No Weight
       jumpto:
         chart: Jump to Chart
         hint:
@@ -1638,6 +1789,9 @@ en:
       v2:
         title_site: Go to %{app_name}
         title_datalist: View All Datasets
+      v3:
+        title_site: Go to %{app_name}
+        title_datalist: View All Datasets        
   export_data:
     dataset: 'Dataset: %{title}'
     download_from: 'Downloaded From: %{app_name} at %{url}.'

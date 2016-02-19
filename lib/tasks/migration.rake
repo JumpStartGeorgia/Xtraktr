@@ -106,6 +106,10 @@ namespace :migration do
     require "./db/migrate/update_download_file_extensions.rb"
   end
 
+  desc "populate the new data_type for all questions"
+  task :update_dataset_questions_data_type => :environment do
+    require "./db/migrate/update_dataset_questions_data_type.rb"
+  end
 
   desc "make question can_download true for all questions"
   task :set_questions_download_true => :environment do
@@ -121,6 +125,16 @@ namespace :migration do
   desc "add missing time series question dataset records"
   task :add_missing_time_series_question_datasets => :environment do
     require "./db/migrate/add_missing_time_series_question_datasets.rb"
+  end
+
+  desc "update highlights to have correct visual_type in url and as field"
+  task :update_highlight_visual_type => :environment do
+    require "./db/migrate/update_highlight_visual_type.rb"
+  end
+
+  desc "reprocess all datasets (fixed data_items, reprocessed data_type, numerical, statistics)"
+  task :reprocess_all_datasets => :environment do
+    require "./db/migrate/reprocess_all_datasets.rb"
   end
 
 end

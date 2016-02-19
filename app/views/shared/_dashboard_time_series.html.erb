@@ -175,6 +175,17 @@
             </div>
           </div>
 
+        <div>
+          <div class="col k"><%= model_class.human_attribute_name(:categories) %>: </div>
+          <div class="col">
+           <% @time_series.categories.each {|x| %>
+                  <%= link_to explore_data_path(category: x.permalink) do %>
+                    <div class="text"><span><%= x.name %></span></div>
+                  <% end %>
+              <% } %>
+          </div>
+        </div>
+        
           <div>
             <div class="col k"><%= model_class_d.human_attribute_name(:gathered_at) %>: </div>
             <div class="col">

@@ -1,4 +1,11 @@
 class Question < CustomTranslation
+
+  #############################  Constants
+  
+  DATA_TYPE_VALUES = { :unknown => 0, :categorical => 1, :numerical => 2 }
+
+  #############################
+
   include Mongoid::Document
 
   #############################
@@ -15,8 +22,10 @@ class Question < CustomTranslation
   field :notes, type: String, localize: true
   # whether or not the questions has answers
   field :has_code_answers, type: Boolean, default: false
-  # whether or not the questions has answers that can be analzyed
-  field :has_code_answers_for_analysis, type: Boolean, default: false
+  # whether or not the questions has answers that can be analazyed previously - has_code_answers_for_analysis
+  field :is_analysable, type: Boolean, default: false
+  # whether or not the questions has data that is not defined in answers
+  field :has_data_without_answers, type: Boolean, default: true  
   # whether or not the question should not be included in the analysis
   field :exclude, type: Boolean, default: false
   # whether or not the question is tied to a shapeset
@@ -33,6 +42,10 @@ class Question < CustomTranslation
   field :sort_order, type: Integer
   # indicate that this question is a weight
   field :is_weight, type: Boolean, default: false
+  # question type, possible values = [nil, categorical, numerical]
+  field :data_type, type: Integer, default: 0
+  # statistics on numerical data_type
+  field :descriptive_statistics, type: Object  
 
   embedded_in :dataset
 
@@ -75,6 +88,11 @@ class Question < CustomTranslation
     (x[:text_translations].blank? || x[:text_translations].keys.length == 0 || x[:text_translations][x[:text_translations].keys.first].blank?) && x[:value].blank?
     }, :allow_destroy => true
 
+  embeds_one :numerical, class_name: "Numerical", cascade_callbacks: true
+  accepts_nested_attributes_for :numerical, :allow_destroy => true
+  # , :reject_if => lambda { |x|
+  #   (x[:data_type].blank? || x[:data_type] != 2)
+  #   }, :allow_destroy => true
   #############################
   # indexes
   # index ({ :code => 1})
@@ -83,8 +101,9 @@ class Question < CustomTranslation
   # index ({ :is_mappable => 1})
 
   #############################
-  attr_accessible :code, :text, :original_code, :has_code_answers, :has_code_answers_for_analysis, :is_mappable, :has_can_exclude_answers, :has_map_adjustable_max_range,
-      :answers_attributes, :exclude, :text_translations, :notes, :notes_translations, :group_id, :sort_order, :is_weight
+  attr_accessible :code, :text, :original_code, :has_code_answers, :is_analysable, :is_mappable, :has_can_exclude_answers, :has_map_adjustable_max_range,
+      :answers_attributes, :exclude, :text_translations, :notes, :notes_translations, :group_id, :sort_order, :is_weight, :numerical_attributes, 
+      :data_type, :descriptive_statistics
 
   #############################
   # Validations
@@ -136,11 +155,12 @@ class Question < CustomTranslation
   end
 
   def update_flags
-   logger.debug "******** updating question flags for #{self.code}"
     self.has_code_answers = self.answers.count > 0
-    self.has_code_answers_for_analysis = self.answers.all_for_analysis.count > 0
-    self.has_can_exclude_answers = self.answers.has_can_exclude?
-
+    self.is_analysable = (self.categorical_type? && self.answers.all_for_analysis.count > 0) || self.numerical_type?
+    values = self.answers.map{|d| d.value }.push(nil)
+    unique_code_data = self.dataset.data_items.unique_code_data(self.code)
+    self.has_data_without_answers = unique_code_data.present? && unique_code_data.select{|d| !values.include?(d) && !d.nil? }.length > 0
+    self.has_can_exclude_answers = !self.numerical_type? && self.answers.has_can_exclude?
     return true
   end
 
@@ -158,7 +178,7 @@ class Question < CustomTranslation
 
   # if the exclude flag changes, update the dataset stats
   def update_stats
-    logger.debug "@@@@@@@ question update stats"
+    #logger.debug "@@@@@@@ question update stats"
     if self.exclude_changed?
       self.dataset.update_stats
     end
@@ -168,15 +188,15 @@ class Question < CustomTranslation
   # if the question changed, make sure the dataset.reset_download_files flag is set to true
   # if the only change is to the flags, the donwload does not need to be updated
   def check_if_dirty(save_dataset=true)
-    puts "======= question changed? #{self.changed?}; changed: #{self.changed}"
-    ignore = [:has_can_exclude_answers, :has_code_answers, :has_code_answers_for_analysis]
+    #puts "======= question changed? #{self.changed?}; changed: #{self.changed}"
+    ignore = [:has_can_exclude_answers, :has_code_answers, :is_analysable]
     changed = self.changed
     if changed.present?
       # delete the keys we do not care about
       ignore.each{|x| changed.delete(x)}
     end
     if self.changed? && changed.present?
-      puts "========== question changed!, setting reset_download_files = true"
+      #puts "========== question changed!, setting reset_download_files = true"
       self.dataset.reset_download_files = true
       self.dataset.save if save_dataset
     end
@@ -204,7 +224,7 @@ class Question < CustomTranslation
   def group
     self.dataset.groups.find(self.group_id) if self.group_id.present?
   end
-
+  
   # create json for groups
   def json_for_groups(selected=false)
     {
@@ -224,6 +244,38 @@ class Question < CustomTranslation
   # get the weight titles for this question
   def weight_titles(ignore_id=nil)
     return weights(ignore_id).map{|x| x.text}
+  end
+  def unknown_type?
+    return data_type == DATA_TYPE_VALUES[:unknown]
+  end
+  def categorical_type?
+    return data_type == DATA_TYPE_VALUES[:categorical]
+  end
+  def numerical_type?
+    return data_type == DATA_TYPE_VALUES[:numerical]
+  end
+  def has_type?
+    return data_type != DATA_TYPE_VALUES[:unknown]
+  end
+  def data_type_s
+    vals = DATA_TYPE_VALUES
+    if data_type.is_a? Integer 
+      vals.keys.each {|x|
+        return x.to_s if vals[x] == data_type
+      }
+    end
+    nil
+  end
+  def self.type(t)
+    vals = Question::DATA_TYPE_VALUES
+    if t.is_a? Integer 
+      vals.keys.each {|x|
+        return x if vals[x] == t 
+      }
+    elsif t.is_a? Symbol
+      return vals[t] if vals.has_key?(t) 
+    end
+    nil
   end
 
 end

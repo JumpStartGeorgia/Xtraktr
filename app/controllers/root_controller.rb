@@ -395,7 +395,7 @@ class RootController < ApplicationController
       @is_admin = false
       @dataset_url = private_share_path(@dataset.private_share_key)
       gon.explore_data = true
-      gon.api_dataset_analysis_path = api_v2_dataset_analysis_path
+      gon.api_dataset_analysis_path = api_v3_dataset_analysis_path
 
       # this method is in application_controller
       # and gets all of the required information
@@ -454,7 +454,6 @@ class RootController < ApplicationController
     # get the highlights
     highlights = Highlight.in(id: params[:ids].split(','))
     data = {}
-
     if highlights.present?
       @highlight_data = []
       highlights.each do |highlight|

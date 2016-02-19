@@ -14,7 +14,7 @@
           <select data-live-search="true" data-width="100%" class="selectpicker" data-container="body" id="question_code" name="question_code">
             <% selected = @question_code.nil? ? 'selected=selected' : '' %>
             <option value="" <%= selected %>><%= t('.form.no_question') %></option>
-            <%= generate_explore_time_series_options(@items, @time_series, selected_code: @question_code, skip_content: true) %>
+            <%# generate_explore_time_series_options(@items, @time_series, selected_code: @question_code, skip_content: true) %>
           </select>
         </div>
 
@@ -24,7 +24,7 @@
           <% end %>  
           <select data-live-search="true" data-width="100%" class="selectpicker-filter" data-container="body"  id="filtered_by_code" name="filtered_by_code">
             <option value=""><%= t('.form.no_filter') %></option>
-            <%= generate_explore_time_series_options(@items, @time_series, selected_code: @filtered_by_code, disabled_code: @question_code, skip_content: true) %>
+            <%# generate_explore_time_series_options(@items, @time_series, selected_code: @filtered_by_code, disabled_code: @question_code, skip_content: true) %>
           </select>
         </div>
 
@@ -95,13 +95,13 @@
         <% end %>
         <div class="tab-content" id="explore-content">
 
+          <%
+            data_attr = ''
+            if @is_time_series_admin
+              data_attr = "data-add-highlight=#{add_highlight_time_series_path(@time_series.owner, id: @time_series)} data-delete-highlight=#{remove_highlight_time_series_path(@time_series.owner, id: @time_series)} data-description=#{highlights_edit_description_path}"
+            end
+          %>
           <div class="tab-pane fade in active" id="tab-chart">
-            <%
-              data_attr = ''
-              if @is_time_series_admin
-                data_attr = "data-add-highlight=#{add_highlight_time_series_path(@time_series.owner, id: @time_series)} data-delete-highlight=#{remove_highlight_time_series_path(@time_series.owner, id: @time_series)} data-description=#{highlights_edit_description_path}"
-              end
-            %>
             <div id="container-chart" <%= data_attr %> ></div>
           </div>
 
@@ -118,24 +118,23 @@
             </div>
           </div>
 
-
           <div class="tab-pane fade" id="tab-details">
             <div class="details-item" id="details-question-code">
               <h3><%= t('.form.question_code') %></h3>
-              <%= render partial: 'shared/explore_details_block' %>
+              <%= render partial: 'shared/explore_details_block', locals: { is_dataset: false} %>
             </div>
             <div class="details-item" id="details-filtered-by-code">
               <h3><%= t('.form.filtered_by_code') %></h3>
-              <%= render partial: 'shared/explore_details_block' %>
+              <%= render partial: 'shared/explore_details_block', locals: { is_dataset: false} %>
             </div>
             <div class="details-item" id="details-weighted-by-code">
               <h3><%= t('.form.weighted_by_code') %></h3>
-              <%= render partial: 'shared/explore_details_block' %>
+              <%= render partial: 'shared/explore_details_block', locals: { is_dataset: false} %>
             </div>
 
             <div class="details-icons" style="display:none;">
-              <span id="detail-icon-group" class="icon-item"><%= group_icon.html_safe %></span>
-              <span id="detail-icon-subgroup" class="icon-item"><%= subgroup_icon.html_safe %></span>
+              <span class="icon-item group"><%= group_icon.html_safe %></span>
+              <span class="icon-item subgroup"><%= subgroup_icon.html_safe %></span>
             </div>
           </div>
         </div>

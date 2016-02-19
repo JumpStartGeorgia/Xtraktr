@@ -10,7 +10,7 @@
               <div class="col question-link" data-group="<%= current_group.present? ? current_group.id : '' %>" data-subgroup="<%= current_subgroup.present? ? current_subgroup.id : '' %>">
                 <%
                   cls = question.exclude? ? 'exclude-question' : ''
-                  disable_link = !question.has_code_answers?
+                  disable_link = (question.categorical_type? && !question.has_code_answers?) || !question.has_type?
                 %>
                 <% if disable_link %>
                   <div class="no-answers">
@@ -35,14 +35,14 @@
                       </li>
                     <% end %>
                   </ul>
-                <% end %>
+                <% end %>              
               </div>
 
               <div class="col details">
               <div>
                 <div class="col k"><%= t('app.common.question') %>: </div>
                 <div class="col question default-search">
-                  <% if !question.has_code_answers? %>
+                  <% if disable_link %>
                     <span class="item-icons">
                       <%= no_answers_icon.html_safe %>
                     </span>
@@ -66,44 +66,75 @@
                   <%= question.original_code %>
                 </div>
               </div>
+              <div>
+                <div class="col k"><%= t('app.common.data_type') %>: </div>
+                <div class="col data-type default-search">
+                  <% if question.data_type == Question::DATA_TYPE_VALUES[:categorical] %>
+                    <img src="/assets/svg/categorical.svg" alt="<%= t('app.common.categorical') %>" title="<%= t('app.common.categorical') %>"/>
+                    <span><%= t("app.common.categorical") %></span>
+                  <% elsif question.data_type == Question::DATA_TYPE_VALUES[:numerical] %>
+                    <img src="/assets/svg/numerical.svg" alt="<%= t('app.common.numerical') %>" title="<%= t('app.common.numerical') %>"/>                  
+                    <span><%= t("app.common.numerical") %></span>
+                  <% end %>                  
+                </div>
+              </div>
+              <% if question.descriptive_statistics.present? %>
+                <div>
+                  <div class="col k"><%= t("app.common.descriptive_statistics.title") %>:</div>
+                  <div class="col descriptive-statistics default-search">
+                    <ul class="list-unstyled">
+                      <% question.descriptive_statistics.keys.each {|st| %>
+                      <% v = question.descriptive_statistics[st] %>
+                      <% if v.present? %>
+                        <li>
+                          <span><%= t("app.common.descriptive_statistics." + st) %>:</span>
+                          <%= number_with_delimiter(v % 1 == 0  ? v : v.round(2), :delimiter => ',') %>
+                        </li>
+                      <% end %>
+                      <% } %>                    
+                    </ul>         
+                  </div>
+                </div>
+              <% end %>
               <% if question.notes.present? %>
                 <div>
                   <div class="col k"><%= t('app.common.notes') %>: </div>
                   <div class="col default-search"><%= question.notes %></div>
                 </div>
               <% end %>
-              <div>
-                <div class="col k"><%= t('app.common.answers') %>: </div>
-                <div class="col answers default-search">
-                  <%- answers = show_private_questions == true ? question.answers.sorted : question.answers.all_for_analysis
-                    if answers.present?
-                  -%>
-                    <ul>
-                      <%- view_all = "<li class='view-all'><ul>" 
-                          view_all_show = false
-                      -%>
-                      <%- answers.each_with_index do |answer, answer_index| -%>
-                        <% if answer_index < 10 %>
-                          <li>
-                            <% if answer.exclude? %>
-                              <span class="item-icons">
-                                <%= exclude_answer_icon.html_safe %>
-                              </span>
-                            <% end %>
-                            <%= answer.text %>
-                          </li>
-                        <%- else 
-                          view_all_show = true
-                          view_all << "<li>"
-                          view_all << "<span class='item-icons'>#{exclude_answer_icon.html_safe}</span>" if answer.exclude?
-                          view_all << "#{answer.text}</li>"
-                        end -%>
-                      <%- end -%>
-                      <%= "#{view_all}</ul><label data-show-more='#{t('app.common.show_more')}' data-show-less='#{t('app.common.show_less')}' >#{t('app.common.show_more')}</label></li>".html_safe if view_all_show %>
-                    </ul>
-                  <% end %>
+              <% if question.data_type == Question::DATA_TYPE_VALUES[:categorical] %> 
+                <div>
+                  <div class="col k"><%= t('app.common.answers') %>: </div>
+                  <div class="col answers default-search">
+                    <%- answers = show_private_questions == true ? question.answers.sorted : question.answers.all_for_analysis
+                      if answers.present?
+                    -%>
+                      <ul>
+                        <%- view_all = "<li class='view-all'><ul>" 
+                            view_all_show = false
+                        -%>
+                        <%- answers.each_with_index do |answer, answer_index| -%>
+                          <% if answer_index < 10 %>
+                            <li>
+                              <% if answer.exclude? %>
+                                <span class="item-icons">
+                                  <%= exclude_answer_icon.html_safe %>
+                                </span>
+                              <% end %>
+                              <%= answer.text %>
+                            </li>
+                          <%- else 
+                            view_all_show = true
+                            view_all << "<li>"
+                            view_all << "<span class='item-icons'>#{exclude_answer_icon.html_safe}</span>" if answer.exclude?
+                            view_all << "#{answer.text}</li>"
+                          end -%>
+                        <%- end -%>
+                        <%= "#{view_all}</ul><label data-show-more='#{t('app.common.show_more')}' data-show-less='#{t('app.common.show_less')}' >#{t('app.common.show_more')}</label></li>".html_safe if view_all_show %>
+                      </ul>
+                    <% end %>
+                  </div>
                 </div>
-              </div>
+              <% end %>
             </li>
-
 <% end %>
