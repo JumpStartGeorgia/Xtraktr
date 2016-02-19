@@ -107,7 +107,7 @@
       <div class="radio">
         <label class="choice" for="help_article_public_true">
 
-          <input id="help_article_public_true" name="help_article[public]" type="radio" value="true" />
+          <%= radio_button_tag 'help_article[public]', 'true', @help_article.public %>
 
           <%= t 'formtastic.yes' %>
 
@@ -118,7 +118,7 @@
       <div class="radio">
         <label class="choice" for="help_article_public_false">
 
-          <input checked="checked" id="help_article_public_false" name="help_article[public]" type="radio" value="false" />
+          <%= radio_button_tag 'help_article[public]', 'false', !@help_article.public %>
 
           <%= t 'formtastic.no' %>
 
