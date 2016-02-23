@@ -28,6 +28,7 @@ class RootController < ApplicationController
   end
   
   def help
+    @css.push('help.css')
     @help_articles = HelpArticle.published
 
     respond_to do |format|
