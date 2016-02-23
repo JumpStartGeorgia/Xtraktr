@@ -103,6 +103,8 @@ BootstrapStarter::Application.routes.draw do
     match '/time_series', :to => 'root#explore_time_series', :as => :explore_time, :via => :get
     match '/settings_from_notification', :to => 'settings#settings_from_notification', :as => :settings_from_notification, :via => :get
     match '/accept_invitation_from_notification/:key', :to => 'settings#accept_invitation_from_notification', :as => :settings_accept_invitation_from_notification, :via => :get
+    
+    resources :help_articles, only: [:show]
 
     # user managed pages scoped by the user/group id
     scope :path => ":owner_id" do
