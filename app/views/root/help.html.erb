@@ -4,6 +4,23 @@
   <% @help_articles.each do |help_article| %>
     <li>
       <h3><%= link_to help_article.title, help_article_path(help_article) %></h3>
+      <ul>
+        <li>
+          <%= help_article.public_at %>
+        </li>
+        <li>
+          <%= help_article.article_type %>
+        </li>
+        <li>
+          <%= help_article.help_categories.map(&:name).join(', ') %>
+        </li>
+      </ul>
     </li>
+    <div>
+      <%= truncate(
+            strip_tags(help_article.content), 
+            length: 50
+          ).html_safe %>
+    </div>
   <% end %>
 </ul>
