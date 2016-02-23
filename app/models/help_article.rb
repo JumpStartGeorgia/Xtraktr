@@ -190,7 +190,7 @@ class HelpArticle
     order_by([[:sort_order, :asc], [:title, :asc]])
   end
 
-  def self.is_public
+  def self.published
     where(public: true)
   end
 

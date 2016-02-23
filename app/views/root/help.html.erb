@@ -1,0 +1,9 @@
+<% title t('.title').html_safe %>
+
+<ul>
+  <% @help_articles.each do |help_article| %>
+    <li>
+      <h3><%= help_article.title %></h3>
+    </li>
+  <% end %>
+</ul>

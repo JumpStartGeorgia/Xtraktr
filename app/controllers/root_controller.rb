@@ -26,6 +26,14 @@ class RootController < ApplicationController
       format.html # index.html.erb
     end
   end
+  
+  def help
+    @help_articles = HelpArticle.published
+
+    respond_to do |format|
+      format.html
+    end
+  end
 
   def contact
     @page_content = PageContent.by_name('contact')
