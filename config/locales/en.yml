@@ -1219,6 +1219,10 @@ en:
       title: Instructions
     help:
       title: Help Section
+      article_detail:
+        published_on: Published On
+        type: Type
+        categories: Categories
     notes:
       title: Notes
     explore_data:

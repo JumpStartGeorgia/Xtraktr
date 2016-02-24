@@ -14,7 +14,7 @@
         
         <li class='help-section-article-detail'>
           <span class='help-section-article-detail-label'>
-            Published On:
+            <%= t '.article_detail.published_on' %>:
           </span> 
           <span class='help-section-article-detail-value'>
             <%= help_article.public_at %>
@@ -23,7 +23,7 @@
         
         <li class='help-section-article-detail'>
           <span class='help-section-article-detail-label'>
-            Type: 
+            <%= t '.article_detail.type' %>:
           </span> 
           <span class='help-section-article-detail-value'>
             <%= help_article.article_type %>
@@ -32,7 +32,7 @@
         
         <li class='help-section-article-detail'>
           <span class='help-section-article-detail-label'>
-            Categories: 
+            <%= t '.article_detail.categories' %>:
           </span> 
           <span class='help-section-article-detail-value'>
             <%= help_article.help_categories.map(&:name).join(', ') %>
