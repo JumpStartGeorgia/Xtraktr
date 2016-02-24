@@ -42,10 +42,7 @@
       </ul>
       
       <div class='help-section-article-description'>
-        <%= truncate(
-              strip_tags(help_article.content), 
-              length: 50
-            ).html_safe %>
+        <%= display_truncated_content(help_article.content) %>
       </div>
       
     </li>
