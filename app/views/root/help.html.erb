@@ -1,50 +1,60 @@
 <% title t('.title').html_safe %>
 
-<ul class='help-section-articles'>
-  <% @help_articles.each do |help_article| %>
-    <li class='help-section-article'>
-      
-      <h3 class='help-section-article-title'>
-        <%= link_to help_article.title, 
-                    help_article_path(help_article), 
-                    class: 'help-section-article-title-link' %>
-      </h3>
-      
-      <ul class='help-section-article-details'>
-        
-        <li class='help-section-article-detail'>
-          <span class='help-section-article-detail-label'>
-            <%= t '.article_detail.published_on' %>:
-          </span> 
-          <span class='help-section-article-detail-value'>
-            <%= help_article.public_at %>
-          </span>
-        </li>
-        
-        <li class='help-section-article-detail'>
-          <span class='help-section-article-detail-label'>
-            <%= t '.article_detail.type' %>:
-          </span> 
-          <span class='help-section-article-detail-value'>
-            <%= help_article.article_type %>
-          </span>
-        </li>
-        
-        <li class='help-section-article-detail'>
-          <span class='help-section-article-detail-label'>
-            <%= t '.article_detail.categories' %>:
-          </span> 
-          <span class='help-section-article-detail-value'>
-            <%= help_article.help_categories.map(&:name).join(', ') %>
-          </span>
-        </li>
-        
-      </ul>
-      
-      <div class='help-section-article-description'>
-        <%= display_truncated_content(help_article.content) %>
-      </div>
-      
-    </li>
-  <% end %>
-</ul>
+
+<section>
+
+  <h2 class='title mod-hidden'>
+    <%= t '.article_section_heading' %>  
+  </h2>
+
+  <ul class='help-section-articles'>
+    <% @help_articles.each do |help_article| %>
+      <li class='help-section-article'>
+
+        <h3 class='help-section-article-title'>
+          <%= link_to help_article.title, 
+                      help_article_path(help_article), 
+                      class: 'help-section-article-title-link' %>
+        </h3>
+
+        <ul class='help-section-article-details'>
+          
+          <li class='help-section-article-detail'>
+            <span class='help-section-article-detail-label'>
+              <%= t '.article_detail.published_on' %>:
+            </span> 
+            <span class='help-section-article-detail-value'>
+              <%= help_article.public_at %>
+            </span>
+          </li>
+
+          <li class='help-section-article-detail'>
+            <span class='help-section-article-detail-label'>
+              <%= t '.article_detail.type' %>:
+            </span> 
+            <span class='help-section-article-detail-value'>
+              <%= help_article.article_type %>
+            </span>
+          </li>
+
+          <li class='help-section-article-detail'>
+            <span class='help-section-article-detail-label'>
+              <%= t '.article_detail.categories' %>:
+            </span> 
+            <span class='help-section-article-detail-value'>
+              <%= help_article.help_categories.map(&:name).join(', ') %>
+            </span>
+          </li>
+
+        </ul>
+
+        <div class='help-section-article-description'>
+          <%= display_truncated_content(help_article.content) %>
+        </div>
+
+      </li>
+    <% end %>
+  </ul>
+
+</section>
+

@@ -1187,6 +1187,7 @@ ka:
       title: "ინსტრუქცია"
     help:
       title: Help Section
+      article_section_heading: Help Articles
       article_detail:
         published_on: Published On
         type: Type
