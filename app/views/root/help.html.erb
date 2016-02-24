@@ -2,25 +2,52 @@
 
 <ul>
   <% @help_articles.each do |help_article| %>
-    <li>
-      <h3><%= link_to help_article.title, help_article_path(help_article), class: 'help-section-item-title-link' %></h3>
-      <ul>
-        <li>
-          <%= help_article.public_at %>
+    <li class='help-section-item'>
+      
+      <h3 class='help-section-item-title'>
+        <%= link_to help_article.title, 
+                    help_article_path(help_article), 
+                    class: 'help-section-item-title-link' %>
+      </h3>
+      
+      <ul class='help-section-item-details'>
+        
+        <li class='help-section-item-detail'>
+          <span class='help-section-item-detail-label'>
+            Published On:
+          </span> 
+          <span class='help-section-item-detail-value'>
+            <%= help_article.public_at %>
+          </span>
         </li>
-        <li>
-          <%= help_article.article_type %>
+        
+        <li class='help-section-item-detail'>
+          <span class='help-section-item-detail-label'>
+            Type: 
+          </span> 
+          <span class='help-section-item-detail-value'>
+            <%= help_article.article_type %>
+          </span>
         </li>
-        <li>
-          <%= help_article.help_categories.map(&:name).join(', ') %>
+        
+        <li class='help-section-item-detail'>
+          <span class='help-section-item-detail-label'>
+            Categories: 
+          </span> 
+          <span class='help-section-item-detail-value'>
+            <%= help_article.help_categories.map(&:name).join(', ') %>
+          </span>
         </li>
+        
       </ul>
+      
+      <div>
+        <%= truncate(
+              strip_tags(help_article.content), 
+              length: 50
+            ).html_safe %>
+      </div>
+      
     </li>
-    <div>
-      <%= truncate(
-            strip_tags(help_article.content), 
-            length: 50
-          ).html_safe %>
-    </div>
   <% end %>
 </ul>

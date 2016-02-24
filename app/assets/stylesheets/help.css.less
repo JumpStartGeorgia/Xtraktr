@@ -1,9 +1,45 @@
-.help-section-item-title-link {
-  font: 16px 'prime_en','sans-serif';
-  color: #d67456;
-  text-transform: uppercase;
-  margin: 10px 0 5px;
-  padding-right: 70px;
-  display: table-cell;
-  width: 100%;
+.help-section-item {
+  list-style: none;
 }
+
+.help-section-item::after {
+  border-top: 1px solid #e8e8e8;
+  border-bottom: 1px solid #fff;
+  content: '';
+  display: block;
+  margin: 24px 0px 18px;
+}
+
+  .help-section-item-title {
+    margin: 0;
+    margin-top: 30px;
+    margin-bottom: 16px;
+  }
+
+    .help-section-item-title-link {
+      font: 16px 'prime_en','sans-serif';
+      color: #d67456;
+      text-transform: uppercase;
+      display: table-cell;
+      width: 100%;
+    }
+  
+  .help-section-item-details {
+    padding: 0;
+    margin-bottom: 16px;
+  }
+
+    .help-section-item-detail {
+      line-height: 18px;
+      color: #d1af24;
+      display: inline-block;
+      margin-right: 10px;
+    }
+
+      .help-section-item-detail-label {
+        font: 16px 'sourcesans_pro_sbi_en','sans-serif';
+      }
+
+      .help-section-item-detail-value {
+        font: 16px 'sourcesans_pro_li_en','sans-serif';  
+      }
