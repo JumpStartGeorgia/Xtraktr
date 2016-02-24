@@ -1,5 +1,23 @@
 <% title t('.title').html_safe %>
 
+<section class='help-section-filters'>
+  
+  <h2 class='title mod-hidden'>
+    Filter Help Articles
+  </h2>
+  
+  <section class='help-section-filters-search' data-filter='search'>
+
+    <input type='search' placeholder="<%= t('helpers.search') %>" value="<%=params[:q]%>" class='help-section-filters-search-input'>
+    
+    <div class='help-section-filters-search-go'>
+      <%= t('app.common.go') %>
+    </div>
+    
+  </section>
+  
+  
+</section>
 
 <section>
 
