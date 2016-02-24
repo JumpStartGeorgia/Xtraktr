@@ -29,7 +29,7 @@ class RootController < ApplicationController
   
   def help
     @css.push('help.css')
-    @help_articles = HelpArticle.published
+    @help_articles = HelpArticle.published.sorted
 
     respond_to do |format|
       format.html
