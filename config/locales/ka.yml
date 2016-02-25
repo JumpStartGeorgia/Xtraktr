@@ -338,6 +338,21 @@ ka:
         name: "სახელი"
         permalink: "ბმული"
         sort_order: "დახარისხების წყობა"
+      help_category:
+        name: Name
+        permalink: URL to Help Category
+        sort_order: Sort Order
+      help_article:
+        title: Title
+        article_type: Type
+        article_type_values:
+          how_to: How To
+          tip: Tip
+        sort_order: Sort Order
+        public: Public
+        content: Content
+        help_category_ids: Categories
+        public_at: Published On
     hints:
       dataset:
         title: "თქვენი მონაცემების სახელწოდება"
@@ -1188,10 +1203,6 @@ ka:
     help:
       title: Help Section
       article_section_heading: Help Articles
-      article_detail:
-        published_on: Published On
-        type: Type
-        categories: Categories
     notes:
       title: "შენიშვნები"
     explore_data:
