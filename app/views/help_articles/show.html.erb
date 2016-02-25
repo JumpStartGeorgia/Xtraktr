@@ -2,4 +2,33 @@
   <%= @help_article.title %>
 </h1>
 
+<ul class='help-article-details'>
+  
+  <li class='help-article-detail'>
+    <span class='help-article-detail-label'>
+      <%= t '.article_detail.published_on' %>:
+    </span> 
+    <span class='help-article-detail-value'>
+      <%= @help_article.public_at %>
+    </span>
+  </li>
 
+  <li class='help-article-detail'>
+    <span class='help-article-detail-label'>
+      <%= t '.article_detail.type' %>:
+    </span> 
+    <span class='help-article-detail-value'>
+      <%= @help_article.article_type %>
+    </span>
+  </li>
+
+  <li class='help-article-detail'>
+    <span class='help-article-detail-label'>
+      <%= t '.article_detail.categories' %>:
+    </span> 
+    <span class='help-article-detail-value'>
+      <%= @help_article.help_categories.map(&:name).join(', ') %>
+    </span>
+  </li>
+
+</ul>
