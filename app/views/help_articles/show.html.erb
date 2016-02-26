@@ -1,33 +1,37 @@
-<h1 class='help-article-title'>
-  <%= @help_article.title %>
-</h1>
-
-<ul class='help-article-details'>
+<article class='help-article'>
   
+  <h1 class='help-article-title'>
+    <%= @help_article.title %>
+  </h1>
+
   <ul class='help-article-details'>
     
-    <li class='help-article-detail'>
-      <%= create_help_article_detail(
-            t('mongoid.attributes.help_article.public_at'), 
-            @help_article.public_at).html_safe %>
-    </li>
+    <ul class='help-article-details'>
+      
+      <li class='help-article-detail'>
+        <%= create_help_article_detail(
+              t('mongoid.attributes.help_article.public_at'), 
+              @help_article.public_at).html_safe %>
+      </li>
 
-    <li class='help-article-detail'>
-      <%= create_help_article_detail(
-            t('mongoid.attributes.help_article.article_type'), 
-            @help_article.article_type).html_safe %>
-    </li>
+      <li class='help-article-detail'>
+        <%= create_help_article_detail(
+              t('mongoid.attributes.help_article.article_type'), 
+              @help_article.article_type).html_safe %>
+      </li>
 
-    <li class='help-article-detail'>
-      <%= create_help_article_detail(
-            t('mongoid.attributes.help_article.help_category_ids'), 
-            @help_article.help_categories.map(&:name).join(', ')).html_safe %>
-    </li>
+      <li class='help-article-detail'>
+        <%= create_help_article_detail(
+              t('mongoid.attributes.help_article.help_category_ids'), 
+              @help_article.help_categories.map(&:name).join(', ')).html_safe %>
+      </li>
+
+    </ul>
 
   </ul>
 
-</ul>
-
-<section>
-  <%= @help_article.content.html_safe %>
-</section>
+  <section>
+    <%= @help_article.content.html_safe %>
+  </section>
+  
+</article>
