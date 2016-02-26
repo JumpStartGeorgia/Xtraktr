@@ -41,5 +41,8 @@
     Help Article Sidebar
   </h2>
   
-  <%= link_to t('.sidebar.back_link'), help_path, class: 'help-article-sidebar-back-link' %>
+  <%= link_to help_path, class: 'help-article-sidebar-back-link' do %>
+    <span class='help-article-sidebar-back-link-icon'></span>
+    <%= t('.sidebar.back_link') %>
+  <% end %>
 </aside>
