@@ -707,6 +707,7 @@ class Dataset < CustomTranslation
       end
     end
     I18n.locale = orig_locale
+    puts ">>> strip_html_from_text END"
     return true
   end
 

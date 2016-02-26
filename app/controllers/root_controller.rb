@@ -132,9 +132,9 @@ class RootController < ApplicationController
         post_tags: ['[[/highlight]]'],
         order: 'score',
         fields: {
-          title:   { number_of_fragments: 0, matched_fields: ['title', 'title.lower_case_sort'] },
-          :'description_no_html' => { fragment_size: 150, matched_fields: ['description', 'description.lower_case_sort'] },
-          :'methodology_no_html' => { fragment_size: 150, matched_fields: ['methodology', 'methodology.lower_case_sort'] }
+          title:   { number_of_fragments: 1, matched_fields: ['title', 'title.lower_case_sort'] },
+          :'description_no_html' => { number_of_fragments: 0, fragment_size: 150, matched_fields: ['description', 'description.lower_case_sort'] },
+          :'methodology_no_html' => { number_of_fragments: 1, fragment_size: 150, matched_fields: ['methodology', 'methodology.lower_case_sort'] }
         }
       }
     else
@@ -144,15 +144,16 @@ class RootController < ApplicationController
       ]
     end
 
+      
     # add needed filters
     if params[:category].present?
-      query[:filter][:bool][:must] << {term: {:'category_mappers.category_id' => params[:category]}}
+      query[:filter][:bool][:must] << {term: {:'category_mappers.category_id' => Category.by_permalink(params[:category]).id}}
     end
     if params[:country].present?
       query[:filter][:bool][:must] << {term: {:'country_mappers.country_id' => params[:country]}}
     end
     if params[:donor].present?
-      query[:filter][:bool][:must] << {term: {donor: params[:donor]}}
+      query[:filter][:bool][:must] << {match: {donor: params[:donor]}}
     end
 
     logger.debug "@@@@@@@@@@@@@@@@@@@@@"
