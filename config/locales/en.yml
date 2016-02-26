@@ -1259,6 +1259,10 @@ en:
       title: Highlights
       explanation: Below is a collection of data highlights from all datasets and time series. The most recently generated highlights are shown first.
       no_highlights: Sorry, no highglights have been created yet.
+  help_articles:
+    show:
+      sidebar:
+        back_link: Return to Help Section
   api:
     msgs:
       no_key: 'You must provide an API Access Token in order to use the API. You can quickly get a API Access Token by going to %{url}.'
