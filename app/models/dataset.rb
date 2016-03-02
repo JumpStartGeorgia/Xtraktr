@@ -23,8 +23,8 @@ class Dataset < CustomTranslation
   field :title, type: String, localize: true
   field :description, type: String, localize: true
   field :methodology, type: String, localize: true
-  field :description_no_html, type: String, localize: true
-  field :methodology_no_html, type: String, localize: true
+  #field :description_no_html, type: String, localize: true
+  #field :methodology_no_html, type: String, localize: true
   field :source, type: String, localize: true
   field :source_url, type: String, localize: true
   field :donor, type: String, localize: true
@@ -412,17 +412,20 @@ class Dataset < CustomTranslation
 
   #############################
 
-  attr_accessible :title, :description, :methodology, :description_no_html, :methodology_no_html, :user_id, :has_warnings,
-      :data_items_attributes, :questions_attributes, :reports_attributes, :questions_with_bad_answers,
-      :weights_attributes,
-      :datafile, :public, :private_share_key, #:codebook,
-      :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at,
-      :languages, :default_language, :stats_attributes, :urls_attributes,
-      :title_translations, :description_translations, :methodology_translations, :description_no_html_translations, :methodology_no_html_translations, 
-      :source_translations, :source_url_translations,
-      :reset_download_files, :force_reset_download_files, :category_mappers_attributes, :category_ids, :permalink, :groups_attributes,
-      :donor, :license_title, :license_description, :license_url, :country_mappers_attributes, :country_ids,
-      :donor_translations, :license_title_translations, :license_description_translations, :license_url_translations
+  attr_accessible :title, :description, :methodology, 
+    #:description_no_html, :methodology_no_html, 
+    :user_id, :has_warnings,
+    :data_items_attributes, :questions_attributes, :reports_attributes, :questions_with_bad_answers,
+    :weights_attributes,
+    :datafile, :public, :private_share_key, #:codebook,
+    :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at,
+    :languages, :default_language, :stats_attributes, :urls_attributes,
+    :title_translations, :description_translations, :methodology_translations,
+    #:description_no_html_translations, :methodology_no_html_translations, 
+    :source_translations, :source_url_translations,
+    :reset_download_files, :force_reset_download_files, :category_mappers_attributes, :category_ids, :permalink, :groups_attributes,
+    :donor, :license_title, :license_description, :license_url, :country_mappers_attributes, :country_ids,
+    :donor_translations, :license_title_translations, :license_description_translations, :license_url_translations
 
 
   attr_accessor :category_ids, :country_ids, :var_arranged_items, :check_questions_for_changes_status
@@ -478,25 +481,35 @@ class Dataset < CustomTranslation
   # - create custom analyzer so search ingoring case
   settings analysis: {
     analyzer: {
-      case_insensitive: {
-        tokenizer: "keyword",    
+      # case_insensitive: {
+      #   tokenizer: "standard",   
+      #   filter:  [ "lowercase" ] 
+      # },
+      standard_without_html: {
+        tokenizer: "standard",   
+        char_filter:  "html_strip",
         filter:  [ "lowercase" ] 
-      }      
+      }          
     }
   } do 
     mappings do
       # create index that ignors case for sorting
-      indexes :title, type: 'string', :fields => { :lower_case_sort => { :type => 'string', analyzer: "case_insensitive", term_vector: 'with_positions_offsets' } }
-      indexes :description_no_html, type: 'string', :fields => { :lower_case_sort => { :type => 'string', analyzer: "case_insensitive", term_vector: 'with_positions_offsets' } }
-      indexes :methodology_no_html, type: 'string', :fields => { :lower_case_sort => { :type => 'string', analyzer: "case_insensitive", term_vector: 'with_positions_offsets' } }
-      indexes :source, type: 'string', :fields => { :raw =>  { :type => "string", :index => "not_analyzed" } }
-      indexes :donor, type: 'string', :fields => { :raw =>  { :type => "string", :index => "not_analyzed" } }
+      indexes :title, type: 'string', analyzer: "standard", :fields => { :raw => { :type => 'string', :index => "not_analyzed" } }
+      indexes :description, type: 'string', analyzer: "standard_without_html"#, term_vector: 'with_positions_offsets' #:fields => { :lower_case_sort => { :type => 'string', analyzer: "case_insensitive_no_html", term_vector: 'with_positions_offsets' } }
+      indexes :methodology, type: 'string', analyzer: "standard_without_html"
+      #indexes :description_no_html, type: 'string', :fields => { :lower_case_sort => { :type => 'string', analyzer: "case_insensitive", term_vector: 'with_positions_offsets' } }
+      #indexes :methodology_no_html, type: 'string', :fields => { :lower_case_sort => { :type => 'string', analyzer: "case_insensitive", term_vector: 'with_positions_offsets' } }
+      indexes :source, type: 'string', :index => "not_analyzed"#, :fields => { :raw =>  { :type => "string", :index => "not_analyzed" } }
+      indexes :donor, type: 'string', :index => "not_analyzed"#,  :fields => { :raw =>  { :type => "string", :index => "not_analyzed" } }
+      indexes :public_at, type: 'date', :index => "not_analyzed"
+      indexes :released_at, type: 'date', :index => "not_analyzed"
+      
     end
   end
 
   def as_indexed_json(options={})
     as_json(
-      only: [:title, :description_no_html, :methodology_no_html, :source, :donor, :public],
+      only: [:title, :description, :methodology, :source, :donor, :public, :public_at, :released_at],
       include: {
         category_mappers: {only: [:category_id]},
         country_mappers: {only: [:country_id]}
@@ -624,12 +637,12 @@ class Dataset < CustomTranslation
   def methodology
     get_translation(self.methodology_translations)
   end
-  def description_no_html
-    get_translation(self.description_no_html_translations)
-  end
-  def methodology_no_html
-    get_translation(self.methodology_no_html_translations)
-  end
+  # def description_no_html
+  #   get_translation(self.description_no_html_translations)
+  # end
+  # def methodology_no_html
+  #   get_translation(self.methodology_no_html_translations)
+  # end
   def source
     get_translation(self.source_translations)
   end
@@ -694,17 +707,17 @@ class Dataset < CustomTranslation
     orig_locale = I18n.locale
     self.languages.each do |locale|
       I18n.locale = locale.to_sym
-      if self.description.present?
-        self.description_no_html = ActionController::Base.helpers.strip_tags(self.description).gsub('&nbsp;', ' ') 
-      else
-        self.description_no_html = nil
-      end      
+      # if self.description.present?
+      #   self.description_no_html = ActionController::Base.helpers.strip_tags(self.description).gsub('&nbsp;', ' ') 
+      # else
+      #   self.description_no_html = nil
+      # end      
       
-      if self.methodology.present?
-        self.methodology_no_html = ActionController::Base.helpers.strip_tags(self.methodology).gsub('&nbsp;', ' ') 
-      else
-        self.methodology_no_html = nil
-      end
+      # if self.methodology.present?
+      #   self.methodology_no_html = ActionController::Base.helpers.strip_tags(self.methodology).gsub('&nbsp;', ' ') 
+      # else
+      #   self.methodology_no_html = nil
+      # end
     end
     I18n.locale = orig_locale
     puts ">>> strip_html_from_text END"

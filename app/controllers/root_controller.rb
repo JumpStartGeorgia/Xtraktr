@@ -120,31 +120,35 @@ class RootController < ApplicationController
     # if search exists, update query to use search and add highlights to query
     if params[:q].present?
       query[:query][:filtered][:query] = {
-        query_string: {
+        multi_match: {
           query: params[:q],
-          fields: ['title^10', 'description_no_html', 'methodology_no_html', 'description_no_html.lower_case_sort', 'methodology_no_html.lower_case_sort', 'title.lower_case_sort^10']
+          fields: ['title^10', 'description', 'methodology'],
+          type: "phrase"
         }
-      }
-
+      }        
       # add highlighting to query
       query[:highlight] = {
-        pre_tags: ['[[highlight]]'],
-        post_tags: ['[[/highlight]]'],
+        pre_tags: ['<em class="highlight">'],
+        post_tags: ['</em>'],
         order: 'score',
         fields: {
-          title:   { number_of_fragments: 1, matched_fields: ['title', 'title.lower_case_sort'] },
-          :'description_no_html' => { number_of_fragments: 0, fragment_size: 150, matched_fields: ['description', 'description.lower_case_sort'] },
-          :'methodology_no_html' => { number_of_fragments: 1, fragment_size: 150, matched_fields: ['methodology', 'methodology.lower_case_sort'] }
+          title: { number_of_fragments: 1, fragment_size: 150},#, matched_fields: ['title', 'title.lower_case_sort'] },
+          description: { number_of_fragments: 0, fragment_size: 150 }, #, matched_fields: ['description', 'description.lower_case_sort'] },
+          methodology: { number_of_fragments: 0, fragment_size: 150 }#, matched_fields: ['methodology', 'methodology.lower_case_sort'] }
         }
       }
-    else
-      # no search, so apply default sort by title 
-      query[:sort] = [
-        {:'title.lower_case_sort' => {order: 'asc'}}
-      ]
     end
 
-      
+    # no search, so apply default sort by title 
+    query[:sort] = [ {:'title.raw' => {order: 'asc'}} ]
+    #query[:sort] = [ {:'_score' => {order: 'desc'}} ]
+    if params[:sort].present?
+      sort_by =  params[:sort].downcase
+      query[:sort].unshift({:'public_at' => {order: 'desc'}}) if sort_by == 'publish'
+      query[:sort].unshift({:'released_at' => {order: 'desc'}}) if sort_by == 'release'
+    end
+
+
     # add needed filters
     if params[:category].present?
       query[:filter][:bool][:must] << {term: {:'category_mappers.category_id' => Category.by_permalink(params[:category]).id}}
@@ -153,13 +157,12 @@ class RootController < ApplicationController
       query[:filter][:bool][:must] << {term: {:'country_mappers.country_id' => params[:country]}}
     end
     if params[:donor].present?
-      query[:filter][:bool][:must] << {match: {donor: params[:donor]}}
+      query[:filter][:bool][:must] << {term: {:'donor' => params[:donor]}}
     end
 
-    logger.debug "@@@@@@@@@@@@@@@@@@@@@"
     logger.debug query.to_json
 
-    @datasets = Dataset.search(query).page(params[:page]).per(per_page).records
+    @datasets = Dataset.search(query).page(params[:page]).per(per_page)
     #@datasets = Dataset.search(query).page(params[:page]).per(per_page).records.meta_only # meta not working with pagination
     
 
