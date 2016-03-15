@@ -1,15 +1,22 @@
 @import 'help_article_details.less';
 
+@min-width-become-sidebar: 992px;
+
 .content-wrapper {
   background-color: white;
 }
 
 .help-article {
+  display: flex;
+  flex-direction: column-reverse;
+
+  @media (min-width: @min-width-become-sidebar) {
+    flex-direction: row;
+  }
 }
 
   .help-article-main {
     display: table-cell;
-    // max-width: 50em;
     background-color: white;
   }
 
@@ -26,10 +33,13 @@
 
   .help-article-sidebar {
     display: table-cell;
-    border-left: 1px solid #d6d6d6;
     min-width: 300px;
     padding: 1em;
-    background-color: #f6f7f7;
+
+    @media (min-width: @min-width-become-sidebar) {
+      border-left: 1px solid #d6d6d6;
+      background-color: #f6f7f7;
+    }
   }
 
     .help-article-sidebar-back-link {
