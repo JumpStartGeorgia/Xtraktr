@@ -1,7 +1,7 @@
 <% title t('.title').html_safe %>
 
 <section class='help-section-filters'>
-  
+
   <h2 class='title mod-hidden'>
     Filter Help Articles
   </h2>
@@ -9,19 +9,19 @@
   <section class='help-section-filters-search' data-filter='search'>
 
     <input type='search' placeholder="<%= t('helpers.search') %>" value="<%=params[:q]%>" class='help-section-filters-search-input'>
-    
+
     <div class='help-section-filters-search-go'>
       <%= t('app.common.go') %>
     </div>
-    
+
   </section>
-  
+
 </section>
 
 <section>
 
   <h2 class='title mod-hidden'>
-    <%= t '.article_section_heading' %>  
+    <%= t '.article_section_heading' %>
   </h2>
 
   <ul class='help-section-articles'>
@@ -29,28 +29,28 @@
       <li class='help-section-article'>
 
         <h3 class='help-section-article-title'>
-          <%= link_to help_article.title, 
-                      help_article_path(help_article), 
+          <%= link_to help_article.title,
+                      help_article_path(help_article),
                       class: 'help-section-article-title-link' %>
         </h3>
 
         <ul class='help-article-details'>
-          
+
           <li class='help-article-detail'>
             <%= create_help_article_detail(
-                  t('mongoid.attributes.help_article.public_at'), 
+                  t('mongoid.attributes.help_article.public_at'),
                   help_article.public_at).html_safe %>
           </li>
 
           <li class='help-article-detail'>
             <%= create_help_article_detail(
-                  t('mongoid.attributes.help_article.article_type'), 
+                  t('mongoid.attributes.help_article.article_type'),
                   help_article.article_type).html_safe %>
           </li>
 
           <li class='help-article-detail'>
             <%= create_help_article_detail(
-                  t('mongoid.attributes.help_article.help_category_ids'), 
+                  t('mongoid.attributes.help_article.help_category_ids'),
                   help_article.help_categories.map(&:name).join(', ')).html_safe %>
           </li>
 
@@ -65,4 +65,3 @@
   </ul>
 
 </section>
-
