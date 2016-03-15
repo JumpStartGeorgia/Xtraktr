@@ -9,7 +9,6 @@ class Dataset < CustomTranslation
   include Mongoid::Slug
   # include Mongoid::Search
   include Elasticsearch::Model
-  include Elasticsearch::Model::Callbacks
 
   #############################
 
@@ -23,8 +22,6 @@ class Dataset < CustomTranslation
   field :title, type: String, localize: true
   field :description, type: String, localize: true
   field :methodology, type: String, localize: true
-  #field :description_no_html, type: String, localize: true
-  #field :methodology_no_html, type: String, localize: true
   field :source, type: String, localize: true
   field :source_url, type: String, localize: true
   field :donor, type: String, localize: true
@@ -58,6 +55,9 @@ class Dataset < CustomTranslation
   field :force_reset_download_files, type: Boolean, default: false
   field :permalink, type: String
 
+  after_create  { __elasticsearch__.index_document }
+  after_update  { __elasticsearch__.index_document }
+  after_destroy { __elasticsearch__.delete_document }
 
   has_many :category_mappers, dependent: :destroy do
     def category_ids
@@ -413,7 +413,6 @@ class Dataset < CustomTranslation
   #############################
 
   attr_accessible :title, :description, :methodology, 
-    #:description_no_html, :methodology_no_html, 
     :user_id, :has_warnings,
     :data_items_attributes, :questions_attributes, :reports_attributes, :questions_with_bad_answers,
     :weights_attributes,
@@ -421,7 +420,6 @@ class Dataset < CustomTranslation
     :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at,
     :languages, :default_language, :stats_attributes, :urls_attributes,
     :title_translations, :description_translations, :methodology_translations,
-    #:description_no_html_translations, :methodology_no_html_translations, 
     :source_translations, :source_url_translations,
     :reset_download_files, :force_reset_download_files, :category_mappers_attributes, :category_ids, :permalink, :groups_attributes,
     :donor, :license_title, :license_description, :license_url, :country_mappers_attributes, :country_ids,
@@ -477,39 +475,10 @@ class Dataset < CustomTranslation
 
   index_name "datasets-#{Rails.env}"
 
-  # define how the fields are indexed
-  # - create custom analyzer so search ingoring case
-  settings analysis: {
-    analyzer: {
-      # case_insensitive: {
-      #   tokenizer: "standard",   
-      #   filter:  [ "lowercase" ] 
-      # },
-      standard_without_html: {
-        tokenizer: "standard",   
-        char_filter:  "html_strip",
-        filter:  [ "lowercase" ] 
-      }          
-    }
-  } do 
-    mappings do
-      # create index that ignors case for sorting
-      indexes :title, type: 'string', analyzer: "standard", :fields => { :raw => { :type => 'string', :index => "not_analyzed" } }
-      indexes :description, type: 'string', analyzer: "standard_without_html"#, term_vector: 'with_positions_offsets' #:fields => { :lower_case_sort => { :type => 'string', analyzer: "case_insensitive_no_html", term_vector: 'with_positions_offsets' } }
-      indexes :methodology, type: 'string', analyzer: "standard_without_html"
-      #indexes :description_no_html, type: 'string', :fields => { :lower_case_sort => { :type => 'string', analyzer: "case_insensitive", term_vector: 'with_positions_offsets' } }
-      #indexes :methodology_no_html, type: 'string', :fields => { :lower_case_sort => { :type => 'string', analyzer: "case_insensitive", term_vector: 'with_positions_offsets' } }
-      indexes :source, type: 'string', :index => "not_analyzed"#, :fields => { :raw =>  { :type => "string", :index => "not_analyzed" } }
-      indexes :donor, type: 'string', :index => "not_analyzed"#,  :fields => { :raw =>  { :type => "string", :index => "not_analyzed" } }
-      indexes :public_at, type: 'date', :index => "not_analyzed"
-      indexes :released_at, type: 'date', :index => "not_analyzed"
-      
-    end
-  end
-
   def as_indexed_json(options={})
     as_json(
-      only: [:title, :description, :methodology, :source, :donor, :public, :public_at, :released_at],
+      methods: [:title_translations, :description_translations, :methodology_translations, :source_translations, :donor_translations],
+      only: [:public, :public_at, :released_at],
       include: {
         category_mappers: {only: [:category_id]},
         country_mappers: {only: [:country_id]}
@@ -637,12 +606,6 @@ class Dataset < CustomTranslation
   def methodology
     get_translation(self.methodology_translations)
   end
-  # def description_no_html
-  #   get_translation(self.description_no_html_translations)
-  # end
-  # def methodology_no_html
-  #   get_translation(self.methodology_no_html_translations)
-  # end
   def source
     get_translation(self.source_translations)
   end
@@ -678,7 +641,7 @@ class Dataset < CustomTranslation
   before_save :set_public_at
   before_save :check_if_dirty
   after_save :check_questions_for_changes
-  before_save :strip_html_from_text
+#  before_save :strip_html_from_text
 
 
   # when saving the dataset, question callbacks might not be triggered
@@ -702,27 +665,27 @@ class Dataset < CustomTranslation
   end
 
   # to help search through text only, remove html tags
-  def strip_html_from_text
-    puts ">>> strip_html_from_text"
-    orig_locale = I18n.locale
-    self.languages.each do |locale|
-      I18n.locale = locale.to_sym
-      # if self.description.present?
-      #   self.description_no_html = ActionController::Base.helpers.strip_tags(self.description).gsub('&nbsp;', ' ') 
-      # else
-      #   self.description_no_html = nil
-      # end      
+  # def strip_html_from_text
+  #   puts ">>> strip_html_from_text"
+  #   orig_locale = I18n.locale
+  #   self.languages.each do |locale|
+  #     I18n.locale = locale.to_sym
+  #     # if self.description.present?
+  #     #   self.description_no_html = ActionController::Base.helpers.strip_tags(self.description).gsub('&nbsp;', ' ') 
+  #     # else
+  #     #   self.description_no_html = nil
+  #     # end      
       
-      # if self.methodology.present?
-      #   self.methodology_no_html = ActionController::Base.helpers.strip_tags(self.methodology).gsub('&nbsp;', ' ') 
-      # else
-      #   self.methodology_no_html = nil
-      # end
-    end
-    I18n.locale = orig_locale
-    puts ">>> strip_html_from_text END"
-    return true
-  end
+  #     # if self.methodology.present?
+  #     #   self.methodology_no_html = ActionController::Base.helpers.strip_tags(self.methodology).gsub('&nbsp;', ' ') 
+  #     # else
+  #     #   self.methodology_no_html = nil
+  #     # end
+  #   end
+  #   I18n.locale = orig_locale
+  #   puts ">>> strip_html_from_text END"
+  #   return true
+  # end
 
 
   # this is used in the form to set the categories

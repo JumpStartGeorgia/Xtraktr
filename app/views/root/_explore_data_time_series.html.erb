@@ -4,11 +4,19 @@
 -%>
 <ul>
   <% if @time_series.present? %>
-    <% @time_series.each do |time_series| %>
+    <%# @time_series.each do |time_series| %>
+    <% @time_series.records.each_with_hit do |time_series, hit| %>
       <li>
         <div class="caption">
-          <div class="title"><%= link_to time_series.title, explore_time_series_dashboard_path(time_series.owner, time_series) %></div>
+          <div class="title">
+             <% if hit.highlight? && hit.highlight.key?("title_translations.#{@lang}") %>
+              <%= link_to hit.highlight["title_translations.#{@lang}"].first.html_safe, explore_time_series_dashboard_path(time_series.owner, time_series) %>
+            <% else %>
+              <%= link_to time_series.title, explore_time_series_dashboard_path(time_series.owner, time_series) %>
+            <% end %>
+          </div>
         </div>
+
         <div class="info">
           <div class="timestamps">
             <div class="timestamp meta">
@@ -22,7 +30,11 @@
 
         <% if time_series.description.present? %>
           <div class="description">
-            <%= strip_tags_nbsp(time_series.description) %>
+            <% if hit.highlight? && hit.highlight.key?("description_translations.#{@lang}") %>
+                <%= hit.highlight["description_translations.#{@lang}"].join(' &hellip; ').html_safe %>
+            <% else %>
+              <%= strip_tags_nbsp(time_series.description).html_safe %>
+            <% end %>
           </div>
         <% end %>
       </li>

@@ -94,10 +94,12 @@ class RootController < ApplicationController
 
 
   def explore_data
+    # render :text => "Message goes here"
+    # Kernel::exit()
 
+    @lang = I18n.locale.to_s
     # build elastic search query/filter based on query params
     # if no query params, then just filter by public
-
     # create basic query
     query = {
       query: {
@@ -122,25 +124,26 @@ class RootController < ApplicationController
       query[:query][:filtered][:query] = {
         multi_match: {
           query: params[:q],
-          fields: ['title^10', 'description', 'methodology'],
+          fields: ["title_translations.#{@lang}^10", "description_translations.#{@lang}", "methodology_translations.#{@lang}"],
           type: "phrase"
         }
-      }        
+      }    
+       Rails.logger.debug("--------------------------------------------#{@lang}")    
       # add highlighting to query
       query[:highlight] = {
         pre_tags: ['<em class="highlight">'],
         post_tags: ['</em>'],
         order: 'score',
         fields: {
-          title: { number_of_fragments: 1, fragment_size: 150},#, matched_fields: ['title', 'title.lower_case_sort'] },
-          description: { number_of_fragments: 0, fragment_size: 150 }, #, matched_fields: ['description', 'description.lower_case_sort'] },
-          methodology: { number_of_fragments: 0, fragment_size: 150 }#, matched_fields: ['methodology', 'methodology.lower_case_sort'] }
+          "title_translations.#{@lang}" => { number_of_fragments: 1, fragment_size: 150},
+          "description_translations.#{@lang}" => { number_of_fragments: 0, fragment_size: 150 },
+          "methodology_translations.#{@lang}" => { number_of_fragments: 0, fragment_size: 150 }
         }
       }
     end
 
     # no search, so apply default sort by title 
-    query[:sort] = [ {:'title.raw' => {order: 'asc'}} ]
+    query[:sort] = [ {"title_translations.#{@lang}.raw" => {order: 'asc'}} ]
     #query[:sort] = [ {:'_score' => {order: 'desc'}} ]
     if params[:sort].present?
       sort_by =  params[:sort].downcase
@@ -151,76 +154,23 @@ class RootController < ApplicationController
 
     # add needed filters
     if params[:category].present?
-      query[:filter][:bool][:must] << {term: {:'category_mappers.category_id' => Category.by_permalink(params[:category]).id}}
+      query[:filter][:bool][:must] << {term: {"category_mappers.category_id" => Category.by_permalink(params[:category]).id}}
     end
     if params[:country].present?
-      query[:filter][:bool][:must] << {term: {:'country_mappers.country_id' => params[:country]}}
+      query[:filter][:bool][:must] << {term: {"country_mappers.country_id" => params[:country]}}
     end
     if params[:donor].present?
-      query[:filter][:bool][:must] << {term: {:'donor' => params[:donor]}}
+      query[:filter][:bool][:must] << {term: { "donor_translations.#{@lang}" => params[:donor]}}
     end
 
     logger.debug query.to_json
 
     @datasets = Dataset.search(query).page(params[:page]).per(per_page)
-    #@datasets = Dataset.search(query).page(params[:page]).per(per_page).records.meta_only # meta not working with pagination
-    
-
-    # # add search
-    # if params[:q].present?
-
-    #   query = {
-    #     query: {
-    #       multi_match: {
-    #         query: params[:q],
-    #         fields: ['title^10', 'description', 'methodology']
-    #       }
-    #     },
-    #     highlight: {
-    #       pre_tags: ['<em class="label label-highlight">'],
-    #       post_tags: ['</em>'],
-    #       fields: {
-    #         title:   { number_of_fragments: 0 },
-    #         description: { fragment_size: 100 },
-    #         methodology: { fragment_size: 100 }
-    #       }
-    #     }
-    #   }
-
-    #   @datasets = Dataset.search(query).records.meta_only.is_public
-    # else
-    #   @datasets = Dataset.meta_only.is_public
-    # end
-
-    # # add sort
-    # if params[:q].nil?
-    #   if params[:sort].present?
-    #     case params[:sort].downcase
-    #       when 'publish'
-    #         @datasets = @datasets.sorted_public_at
-    #       when 'release'
-    #         @datasets = @datasets.sorted_released_at
-    #       else #when 'title'
-    #         @datasets = @datasets.sorted_title
-    #     end
-    #   else
-    #     @datasets = @datasets.sorted_title
-    #   end    
-    # end
-
-    # # add category
-    # @datasets = @datasets.categorize(params[:category]) if params[:category].present? 
-    # @datasets = @datasets.with_country(params[:country]) if params[:country].present?
-    # @datasets = @datasets.with_donor(params[:donor]) if params[:donor].present?
-    # #@datasets = @datasets.with_owner(params[:owner]) if params[:owner].present?
-
-#    @datasets = Kaminari.paginate_array(@datasets).page(params[:page]).per(per_page)
 
     @show_title = false
     if !request.xhr?
       @categories = Category.sorted.in_datasets
       @countries = Country.not_excluded.sorted.in_datasets
-      #@owners = User.in_datasets
       @donors = Dataset.donors
     end 
 
@@ -343,35 +293,75 @@ class RootController < ApplicationController
 
 
   def explore_time_series
-    @time_series = TimeSeries.meta_only.is_public
+    @lang = I18n.locale.to_s
+    # build elastic search query/filter based on query params
+    # if no query params, then just filter by public
+    # create basic query
+    query = {
+      query: {
+        filtered: {
+          query: {
+            match_all: {
+            }
+          }
+        }
+      },
+      filter:{
+        bool:{
+          must:[
+            {term: {public: true}}
+          ]
+        }  
+      }
+    }
 
-    # add search
+    # if search exists, update query to use search and add highlights to query
     if params[:q].present?
-      @time_series = @time_series.search(params[:q])
+      query[:query][:filtered][:query] = {
+        multi_match: {
+          query: params[:q],
+          fields: ["title_translations.#{@lang}^10", "description_translations.#{@lang}"],
+          type: "phrase"
+        }
+      }        
+      # add highlighting to query
+      query[:highlight] = {
+        pre_tags: ['<em class="highlight">'],
+        post_tags: ['</em>'],
+        order: 'score',
+        fields: {
+          "title_translations.#{@lang}" => { number_of_fragments: 1, fragment_size: 150},
+          "description_translations.#{@lang}" => { number_of_fragments: 0, fragment_size: 150 } 
+        }
+      }
     end
-    # add sort
-    if params[:sort].present?
-      case params[:sort].downcase
-        when 'publish'
-          @time_series = @time_series.sorted_public_at
-        else #when 'title'
-          @time_series = @time_series.sorted_title
-      end
-    else
-      @time_series = @time_series.sorted_title
-    end
-    
-    @time_series = @time_series.categorize(params[:category]) if params[:category].present?
-    @time_series = @time_series.with_country(params[:country]) if params[:country].present?
-    #@time_series = @time_series.with_owner(params[:owner]) if params[:owner].present?
 
-    @time_series = Kaminari.paginate_array(@time_series).page(params[:page]).per(per_page)
+    # no search, so apply default sort by title 
+    query[:sort] = [ {"title_translations.#{@lang}.raw" => {order: 'asc'}} ]
+    #query[:sort] = [ {:'_score' => {order: 'desc'}} ]
+    if params[:sort].present?
+      sort_by =  params[:sort].downcase
+      query[:sort].unshift({:'public_at' => {order: 'desc'}}) if sort_by == 'publish'
+    end
+
+
+    # add needed filters
+    if params[:category].present?
+      query[:filter][:bool][:must] << {term: {"category_mappers.category_id" => Category.by_permalink(params[:category]).id}}
+    end
+    if params[:country].present?
+      query[:filter][:bool][:must] << {term: {"country_mappers.country_id" => params[:country]}}
+    end
+
+    logger.debug query.to_json
+
+    @time_series = TimeSeries.search(query).page(params[:page]).per(per_page)
+    # TODO do we need meta_only here    
 
     @show_title = false
     if !request.xhr?
       @categories = Category.sorted.in_time_series
       @countries = Country.not_excluded.sorted.in_time_series
-      #@owners = User.in_time_series
     end
 
     @css.push('list.css')

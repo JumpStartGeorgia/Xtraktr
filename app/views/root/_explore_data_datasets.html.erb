@@ -12,17 +12,15 @@
       <li>
         <div class="caption">
           <div class="title">
-             <% if hit.highlight? %>
-              <% if hit.highlight.title? %>
-                <%= link_to hit.highlight.title.first.html_safe, explore_data_dashboard_path(dataset.owner, dataset) %>
-              <% else %>
-                <%= link_to dataset.title, explore_data_dashboard_path(dataset.owner, dataset) %>
-              <% end %>
+             <% if hit.highlight? && hit.highlight.key?("title_translations.#{@lang}") %>
+              <%= link_to hit.highlight["title_translations.#{@lang}"].first.html_safe, explore_data_dashboard_path(dataset.owner, dataset) %>
+            <% else %>
+              <%= link_to dataset.title, explore_data_dashboard_path(dataset.owner, dataset) %>
             <% end %>
           </div>
           <% if dataset.urls.present? && dataset.urls.codebook.present? %>
             <div class="download-wrapper" >
-              <div class="download" data-id="<%= dataset.id.to_s %>" data-lang="<%= dataset.current_locale %>" title="<%= t('helpers.links.download_data') %>" data-placement="top" data-class="tooltip-download" data-download-type="public">
+              <div class="download" data-id="<%= dataset.id.to_s %>" data-@lang="<%= dataset.current_locale %>" title="<%= t('helpers.links.download_data') %>" data-placement="top" data-class="tooltip-download" data-download-type="public">
                 <ul>
                   <li><div class="type" data-type='csv' title="<%= t('download_data_options.title.csv') %>" data-placement="left"><%= t('download_data_options.text.csv') %></div></li>
                   <li><div class="type" data-type='r' title="<%= t('download_data_options.title.r') %>" data-placement="left"><%= t('download_data_options.text.r') %></div></li>
@@ -54,15 +52,15 @@
         </div>
         
         <% if dataset.description.present? %>
-          <div class="description">
+          <div class="description">          
             <% if hit.highlight? %>
-              <% if hit.highlight.description? %>
+              <% if hit.highlight.key?("description_translations.#{@lang}") %>
                 ...
-                <%= hit.highlight.description.join(' &hellip; ').html_safe %>
+                <%= hit.highlight["description_translations.#{@lang}"].join(' &hellip; ').html_safe %>
                 ...
-              <% elsif hit.highlight.methodology? %>
+              <% elsif hit.highlight.key?("methodology_translations.#{@lang}") %>
                 ...
-                <%= hit.highlight.methodology.join(' &hellip; ').html_safe %>
+                <%= hit.highlight["methodology_translations.#{@lang}"].join(' &hellip; ').html_safe %>
                 ...
               <% else %>
                 <%= strip_tags_nbsp(dataset.description).html_safe %>
