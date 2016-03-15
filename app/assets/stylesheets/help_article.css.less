@@ -1,33 +1,45 @@
 @import 'help_article_details.less';
 
-.help-article-main {
-  max-width: 50em;
+.content-wrapper {
+  background-color: white;
 }
 
-  .help-article-main-title {
-    font-size: 16px;
-    text-transform: uppercase;
-    font-family: 'sourcesans_pro','sans-serif';
-    color: #d67456;
-  }
-  
-  .help-article-main-description {
-    font: 16px 'sourcesans_pro_l','sans-serif';
+.help-article {
+}
+
+  .help-article-main {
+    display: table-cell;
+    // max-width: 50em;
+    background-color: white;
   }
 
-.help-article-sidebar {
-  
-}
-  
-  .help-article-sidebar-back-link {
+    .help-article-main-title {
+      font-size: 16px;
+      text-transform: uppercase;
+      font-family: 'sourcesans_pro','sans-serif';
+      color: #d67456;
+    }
     
+    .help-article-main-description {
+      font: 16px 'sourcesans_pro_l','sans-serif';
+    }
+
+  .help-article-sidebar {
+    display: table-cell;
+    border-left: 1px solid #d6d6d6;
+    min-width: 300px;
+    padding: 1em;
   }
-  
-  .help-article-sidebar-back-link-icon {
-    display: inline-block;
-    background: transparent url(/assets/svg/back_home.svg) no-repeat;
-    width: 13px;
-    height: 8px;
-    vertical-align: middle;
-    margin-right: 5px;
-  }
+    
+    .help-article-sidebar-back-link {
+      
+    }
+    
+    .help-article-sidebar-back-link-icon {
+      display: inline-block;
+      background: transparent url(/assets/svg/back_home.svg) no-repeat;
+      width: 13px;
+      height: 8px;
+      vertical-align: middle;
+      margin-right: 5px;
+    }
