@@ -115,7 +115,7 @@ class RootController < ApplicationController
           must:[
             {term: {public: true}}
           ]
-        }  
+        }
       }
     }
 
@@ -124,31 +124,32 @@ class RootController < ApplicationController
       query[:query][:filtered][:query] = {
         multi_match: {
           query: params[:q],
-          fields: ["title_translations.#{@lang}^10", "description_translations.#{@lang}", "methodology_translations.#{@lang}"],
-          type: "phrase"
+          fields: ["title_translations.#{@lang}^10", "description_translations.#{@lang}^5", "methodology_translations.#{@lang}"],
+          type: "phrase_prefix"
         }
-      }    
-       Rails.logger.debug("--------------------------------------------#{@lang}")    
+      }
       # add highlighting to query
       query[:highlight] = {
-        pre_tags: ['<em class="highlight">'],
-        post_tags: ['</em>'],
+        pre_tags: ["[[highlight]]"],#['<em class="highlight">'],
+        post_tags: ["[[/highlight]]"],#['</em>'],
         order: 'score',
+        # encoder: "html",
         fields: {
-          "title_translations.#{@lang}" => { number_of_fragments: 1, fragment_size: 150},
-          "description_translations.#{@lang}" => { number_of_fragments: 0, fragment_size: 150 },
-          "methodology_translations.#{@lang}" => { number_of_fragments: 0, fragment_size: 150 }
+          "title_translations.#{@lang}" => { number_of_fragments: 0 },
+          "description_translations.#{@lang}" => { number_of_fragments: 3, fragment_size: 150 },
+          "methodology_translations.#{@lang}" => { number_of_fragments: 3, fragment_size: 150 }
         }
       }
     end
 
-    # no search, so apply default sort by title 
+    # no search, so apply default sort by title
     query[:sort] = [ {"title_translations.#{@lang}.raw" => {order: 'asc'}} ]
     #query[:sort] = [ {:'_score' => {order: 'desc'}} ]
     if params[:sort].present?
       sort_by =  params[:sort].downcase
-      query[:sort].unshift({:'public_at' => {order: 'desc'}}) if sort_by == 'publish'
-      query[:sort].unshift({:'released_at' => {order: 'desc'}}) if sort_by == 'release'
+      #query[:sort].unshift({:'public_at' => {order: 'desc'}}) if sort_by == 'publish'
+      query[:sort].unshift({"_score" => {order: 'desc'}}) if sort_by == 'relevant'
+      query[:sort].unshift({"released_at" => {order: 'desc'}}) if sort_by == 'release'
     end
 
 
@@ -172,7 +173,7 @@ class RootController < ApplicationController
       @categories = Category.sorted.in_datasets
       @countries = Country.not_excluded.sorted.in_datasets
       @donors = Dataset.donors
-    end 
+    end
 
     @css.push('list.css')
     @js.push('list.js')
@@ -224,7 +225,7 @@ class RootController < ApplicationController
       @dataset_url = explore_data_show_path(@dataset.owner, @dataset)
       gon.chart_type_bar = t('explore_data.chart_type_bar')
       gon.chart_type_pie = t('explore_data.chart_type_pie')
-      
+
       # generate defualt page title based off of params
       # - doing this so social media has a better title
       @default_page_title = @dataset.title.dup
@@ -248,7 +249,7 @@ class RootController < ApplicationController
             bdb = @dataset.questions.with_code(params[:broken_down_by_code])
           end
 
-          # build the title          
+          # build the title
           if bdb.present?
             # comparing questions
             @default_page_title << I18n.t("explore_data.v2.comparative.text.title", :question_code => q.original_code, :variable => q.text,
@@ -311,7 +312,7 @@ class RootController < ApplicationController
           must:[
             {term: {public: true}}
           ]
-        }  
+        }
       }
     }
 
@@ -320,28 +321,27 @@ class RootController < ApplicationController
       query[:query][:filtered][:query] = {
         multi_match: {
           query: params[:q],
-          fields: ["title_translations.#{@lang}^10", "description_translations.#{@lang}"],
-          type: "phrase"
+          fields: ["title_translations.#{@lang}^10", "description_translations.#{@lang}^5"],
+          type: "phrase_prefix"
         }
-      }        
+      }
       # add highlighting to query
       query[:highlight] = {
-        pre_tags: ['<em class="highlight">'],
-        post_tags: ['</em>'],
+        pre_tags: ["[[highlight]]"],
+        post_tags: ["[[/highlight]]"],
         order: 'score',
         fields: {
-          "title_translations.#{@lang}" => { number_of_fragments: 1, fragment_size: 150},
-          "description_translations.#{@lang}" => { number_of_fragments: 0, fragment_size: 150 } 
+          "title_translations.#{@lang}" => { number_of_fragments: 0},
+          "description_translations.#{@lang}" => { number_of_fragments: 3, fragment_size: 150 }
         }
       }
     end
 
-    # no search, so apply default sort by title 
+    # no search, so apply default sort by title
     query[:sort] = [ {"title_translations.#{@lang}.raw" => {order: 'asc'}} ]
-    #query[:sort] = [ {:'_score' => {order: 'desc'}} ]
     if params[:sort].present?
       sort_by =  params[:sort].downcase
-      query[:sort].unshift({:'public_at' => {order: 'desc'}}) if sort_by == 'publish'
+      query[:sort].unshift({"_score" => {order: 'desc'}}) if sort_by == 'relevant'
     end
 
 
@@ -356,7 +356,7 @@ class RootController < ApplicationController
     logger.debug query.to_json
 
     @time_series = TimeSeries.search(query).page(params[:page]).per(per_page)
-    # TODO do we need meta_only here    
+    # TODO do we need meta_only here
 
     @show_title = false
     if !request.xhr?
@@ -437,7 +437,7 @@ class RootController < ApplicationController
             f = @time_series.questions.with_code(params[:filtered_by_code])
           end
 
-          # build the title          
+          # build the title
           # single question
           @default_page_title << I18n.t("explore_time_series.v2.single.text.title", :code => q.original_code, :variable => q.text, :group => '', locale: language)
           if f.present?
@@ -496,12 +496,12 @@ class RootController < ApplicationController
     @dataset_type = params[:type]
     @dataset_locale = params[:lang]
     @download_type = params[:download_type]
-    if sign_in 
-      if current_user.valid? 
+    if sign_in
+      if current_user.valid?
         current_user.agreement(@dataset_id, @dataset_type, @dataset_locale, @download_type)
         mapper = FileMapper.create({ dataset_id: @dataset_id, dataset_type: @dataset_type, dataset_locale: @dataset_locale, download_type: @download_type })
         data[:url] = "/#{I18n.locale}/download/#{mapper.key}"
-      else 
+      else
         @mod = Agreement.new({ dataset_id: @dataset_id, dataset_type: @dataset_type, dataset_locale: @dataset_locale, download_type: @download_type  })
         data[:agreement] = false
         @user = current_user

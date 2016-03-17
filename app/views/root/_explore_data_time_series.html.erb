@@ -10,7 +10,7 @@
         <div class="caption">
           <div class="title">
              <% if hit.highlight? && hit.highlight.key?("title_translations.#{@lang}") %>
-              <%= link_to hit.highlight["title_translations.#{@lang}"].first.html_safe, explore_time_series_dashboard_path(time_series.owner, time_series) %>
+              <%= link_to prepare_highlight(hit.highlight["title_translations.#{@lang}"]), explore_time_series_dashboard_path(time_series.owner, time_series) %>
             <% else %>
               <%= link_to time_series.title, explore_time_series_dashboard_path(time_series.owner, time_series) %>
             <% end %>
@@ -31,7 +31,7 @@
         <% if time_series.description.present? %>
           <div class="description">
             <% if hit.highlight? && hit.highlight.key?("description_translations.#{@lang}") %>
-                <%= hit.highlight["description_translations.#{@lang}"].join(' &hellip; ').html_safe %>
+                <%= prepare_highlight(hit.highlight["description_translations.#{@lang}"]) %>
             <% else %>
               <%= strip_tags_nbsp(time_series.description).html_safe %>
             <% end %>

@@ -11,77 +11,77 @@ unless Dataset.__elasticsearch__.index_exists?
     body: {
       settings: {
         analysis: {
-          analyzer: {       
+          analyzer: {
             standard_without_html: {
-              tokenizer: "standard",   
+              tokenizer: "standard",
               char_filter:  "html_strip",
-              filter:  [ "lowercase" ] 
-            }          
-          }    
+              filter:  [ "lowercase" ]
+            }
+          }
         }
       },
       mappings: {
         Dataset.document_type => {
-          dynamic_templates: 
-          [ 
-            { 
-              localize_fields_title: 
-              { 
+          dynamic_templates:
+          [
+            {
+              localize_fields_title:
+              {
                 match_mapping_type: "string|date|boolean|double|long|integer",
                 match_pattern: "regex",
                 path_match: "title_translations.*",
-                mapping: 
-                { 
+                mapping:
+                {
                   type: "multi_field",
-                  fields: { 
+                  fields: {
                     "{name}" => { type: 'string', analyzer: "standard" },
                     raw: { type: 'string', index: "not_analyzed" }
                   }
                 }
-              } 
+              }
             },
-            { 
-              localize_fields_without_html: 
-              { 
+            {
+              localize_fields_without_html:
+              {
                 match_mapping_type: "string|date|boolean|double|long|integer",
                 match_pattern: "regex",
                 path_match: "(description|methodology)_translations.*",
-                mapping: 
-                { 
+                mapping:
+                {
                   type: "string",
                   analyzer: "standard_without_html"
                 }
-              } 
+              }
             },
-            { 
-              localize_fields: 
-              { 
+            {
+              localize_fields:
+              {
                 match_mapping_type: "string|date|boolean|double|long|integer",
                 match_pattern: "regex",
                 path_match: "(source|donor)_translations.*",
-                mapping: 
-                { 
+                mapping:
+                {
                   type: "string",
                   index: "not_analyzed"
                 }
-              } 
+              }
             }
           ],
           properties: {
-            title_translations: { 
-              type: "object" 
+            title_translations: {
+              type: "object"
             },
-            description_translations: { 
-              type: "object" 
+            description_translations: {
+              type: "object"
             },
-            methodology_translations: { 
-              type: "object" 
+            methodology_translations: {
+              type: "object"
             },
-            source_translations: { 
-              type: "object" 
+            source_translations: {
+              type: "object"
             },
-            donor_translations: { 
-              type: "object" 
+            donor_translations: {
+              type: "object"
             },
             "public" => {
               type: "boolean",
@@ -109,61 +109,61 @@ unless TimeSeries.__elasticsearch__.index_exists?
     body: {
       settings: {
         analysis: {
-          analyzer: {       
+          analyzer: {
             standard_without_html: {
-              tokenizer: "standard",   
+              tokenizer: "standard",
               char_filter:  "html_strip",
-              filter:  [ "lowercase" ] 
-            }          
-          }    
+              filter:  [ "lowercase" ]
+            }
+          }
         }
       },
       mappings: {
         TimeSeries.document_type => {
-          dynamic_templates: 
-          [ 
-            { 
-              localize_fields_title: 
-              { 
+          dynamic_templates:
+          [
+            {
+              localize_fields_title:
+              {
                 match_mapping_type: "string|date|boolean|double|long|integer",
                 match_pattern: "regex",
                 path_match: "title_translations.*",
-                mapping: 
-                { 
+                mapping:
+                {
                   type: "multi_field",
-                  fields: { 
+                  fields: {
                     "{name}" => { type: 'string', analyzer: "standard" },
                     raw: { type: 'string', index: "not_analyzed" }
                   }
                 }
-              } 
+              }
             },
-            { 
-              localize_fields_without_html: 
-              { 
+            {
+              localize_fields_without_html:
+              {
                 match_mapping_type: "string|date|boolean|double|long|integer",
                 match_pattern: "regex",
                 path_match: "description_translations.*",
-                mapping: 
-                { 
+                mapping:
+                {
                   type: "string",
                   analyzer: "standard_without_html"
                 }
-              } 
+              }
             }
           ],
           properties: {
-            title_translations: { 
-              type: "object" 
+            title_translations: {
+              type: "object"
             },
-            description_translations: { 
-              type: "object" 
+            description_translations: {
+              type: "object"
             },
-            source_translations: { 
-              type: "object" 
+            source_translations: {
+              type: "object"
             },
-            donor_translations: { 
-              type: "object" 
+            donor_translations: {
+              type: "object"
             },
             "public" => {
               type: "boolean",

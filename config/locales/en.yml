@@ -2,73 +2,73 @@
 en:
   mongoid:
     models:
-      user: 
+      user:
         one: User
         other: Users
-      organization: 
+      organization:
         one: Organization
         other: Organizations
-      member: 
+      member:
         one: Member
         other: Members
-      page_content: 
+      page_content:
         one: Text for Pages
         other: Text for Pages
-      dataset: 
+      dataset:
         one: Dataset
         other: Datasets
-      shapeset: 
+      shapeset:
         one: Shapeset
         other: Shapesets
-      question: 
+      question:
         one: Question
         other: Questions
-      time_series: 
+      time_series:
         one: Time Series
         other: Time Series
-      time_series_question: 
+      time_series_question:
         one: Question
         other: Questions
-      time_series_answer: 
+      time_series_answer:
         one: Answer
         other: Answers
-      api_version: 
+      api_version:
         one: API Version
         other: API Versions
-      api_method: 
+      api_method:
         one: API Method
         other: API Methods
-      api_key: 
+      api_key:
         one: API Access Token
         other: API Access Tokens
-      category: 
+      category:
         one: Category
         other: Categories
-      category_mapper: 
+      category_mapper:
         one: Categories
         other: Categories
-      country: 
+      country:
         one: Country
         other: Countries
-      country_mappery: 
+      country_mappery:
         one: Countries
         other: Countries
-      group: 
+      group:
         one: Group
         other: Groups
-      weight: 
+      weight:
         one: Weight
         other: Weights
-      time_series_group: 
+      time_series_group:
         one: Groups
         other: Groups
-      time_series_weight: 
+      time_series_weight:
         one: Weight
         other: Weights
-      time_series_weight_assignment: 
+      time_series_weight_assignment:
         one: Weight Assignment
         other: Weight Assignments
-      invitation: 
+      invitation:
         one: Invitation
         other: Invitations
     attributes:
@@ -383,7 +383,7 @@ en:
         exclude: "If selected, this answer will not be available during analysis."
         can_exclude: "If selected, this answer will be available during analysis, but can be turned off if desired by the user."
         sort_order: "The order the answers should appear"
-        default_text: "This is the answer text from the default language which is provided to make it easier to complete the translation"      
+        default_text: "This is the answer text from the default language which is provided to make it easier to complete the translation"
       group:
         title: The group name will appear in the codebook and on the explore page in the question drop-down lists
         description: "The group description will appear in the codebook, on the explore page in the question drop-down lists and the chart titles, if desired."
@@ -582,7 +582,7 @@ en:
           title_x_of_y: "%{dataset}: %{num} out of %{total}"
           title_filter: "Total Responses: %{nums}"
           title_weighted: "Unweighted Total Responses*: %{x_of_y}"
-          title_filter_weighted: "Unweighted Total Responses* (out of a possible: %{totals}): %{nums}"          
+          title_filter_weighted: "Unweighted Total Responses* (out of a possible: %{totals}): %{nums}"
   explore_data:
     chart_type_bar: View data using a bar chart
     chart_type_pie: View data using a pie chart
@@ -732,7 +732,7 @@ en:
           title: "Total Responses: %{num} out of %{total}"
           title_filter: "Total Responses out of %{total}: %{nums}"
           title_weighted: "Unweighted Total Responses*: %{num} out of %{total}"
-          title_filter_weighted: "Unweighted Total Responses out of %{total}*: %{nums}"          
+          title_filter_weighted: "Unweighted Total Responses out of %{total}*: %{nums}"
   datatable:
     search: Search
     search_footer: 'Search %{name}'
@@ -948,7 +948,7 @@ en:
         q3: 75th Percentile
         standard_deviation: Standard Deviation
         variance: Variance
-      total_responses_out_of: "Total Responses: <span class='number'>X</span> out of <span class='number'>XX</span>"   
+      total_responses_out_of: "Total Responses: <span class='number'>X</span> out of <span class='number'>XX</span>"
     msgs:
       does_not_exist: You tried to access a page that does not exist.
       not_authorized: You are not authorized to view that page.
@@ -963,8 +963,8 @@ en:
             saved: "Question data type settings were saved."
             no_data_to_save: "Nothing to save."
             not_saved: "An error occurred while saving the question type settings."
-            validation_error_for_all: "None of the questions were saved due to the validation errors."      
-            validation_error_for_some: "All questions were saved except the following due to validation errors: %{codes}"      
+            validation_error_for_all: "None of the questions were saved due to the validation errors."
+            validation_error_for_some: "All questions were saved except the following due to validation errors: %{codes}"
       mass_change_answer_saved: "Answer settings were saved."
       mass_change_answer_not_saved: "An error occurred while saving the answer settings."
       sort_saved: "Sort orders were saved."
@@ -1193,6 +1193,7 @@ en:
         title: Title
         release: Date Released
         publish: Date Published Here
+        relevant: Relevance
       no_data: 'At this time, no datasets have been loaded into the site.'
       no_match: 'Sorry, no datasets match your search request.'
       filter_by_country: Country
@@ -1272,7 +1273,7 @@ en:
 
         For numerical questions, a histogram chart will be used during analysis. You can set the histogram bar size and the min and max value of the chart.
       no_questions: There are no questions on file for this dataset.
-      no_answer: Question does not have predefined answers and, therefore, cannot be selected as a categorical type.     
+      no_answer: Question does not have predefined answers and, therefore, cannot be selected as a categorical type.
       no_data: Question does not have answers that are not predefined answers and, therefore, cannot be selected as a numerical type.
       percent: Percent
       integer: Integer
@@ -1284,7 +1285,7 @@ en:
         max: The value you want to end with on the histogram chart. Default value is the maximum value in the data.
         view_active: View the question results in a chart
         view_disabled: You must select a data type in order to view the chart
-      no_preview: You must select a data type in order to view a chart of this question.        
+      no_preview: You must select a data type in order to view a chart of this question.
     mass_changes_answers:
       title: "Answer Mass Changes"
       explanation: "Use this page to indicate which answers should not be included during analysis and which answers can be included during analysis, but have the ability to be excluded (e.g., answers like: Don't Know, Refuse to Answer, etc)."
@@ -1714,7 +1715,7 @@ en:
         questions: Question Text
         codes: Question Code
         answers: Answer Text
-      jumpto_group: Jump To Group      
+      jumpto_group: Jump To Group
     dashboard_time_series:
       tabs:
         highlights: Highlights
@@ -1755,7 +1756,7 @@ en:
         title_datalist: View All Datasets
       v3:
         title_site: Go to %{app_name}
-        title_datalist: View All Datasets        
+        title_datalist: View All Datasets
   export_data:
     dataset: 'Dataset: %{title}'
     download_from: 'Downloaded From: %{app_name} at %{url}.'

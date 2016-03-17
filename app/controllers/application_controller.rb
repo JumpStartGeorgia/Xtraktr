@@ -57,7 +57,7 @@ class ApplicationController < ActionController::Base
   # get the user record for the current owner_id
   # - @owner is used to put the owner permalink in the url
   # - @acting_as_user is used to know which user to show in the admin menu (could be current user or owner)
-  def set_owner_id 
+  def set_owner_id
     # if the user is signed in and this is an admin section, the user must be the owner or in a group of the owner
     # else, the user is the owner
     if user_signed_in? # user is logged in
@@ -274,7 +274,7 @@ class ApplicationController < ActionController::Base
     if @questions.present?
 
       # initialize variables
-      @question_code = nil #@questions.map{|x| x.code}.sample 
+      @question_code = nil #@questions.map{|x| x.code}.sample
       @broken_down_by_code = nil
       @filtered_by_code = nil
 
@@ -412,7 +412,7 @@ class ApplicationController < ActionController::Base
       options["language"] = params["language"] if params["language"].present?
       if options['dataset_id'].present?
         output[:type] = 'dataset'
-        
+
         options["private_user_id"] = Base64.urlsafe_encode64(current_user.id.to_s) if use_admin_link.to_s == 'true'
         data = Api::V3.dataset_analysis(options['dataset_id'], options['question_code'], options)
          if data.present? && data[:dataset].present?
@@ -660,5 +660,4 @@ class ApplicationController < ActionController::Base
 		  .deliver
 		render :file => "#{Rails.root}/public/500.html", :status => 500
 	end
-
 end
