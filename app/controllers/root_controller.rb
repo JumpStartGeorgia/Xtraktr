@@ -124,7 +124,7 @@ class RootController < ApplicationController
       query[:query][:filtered][:query] = {
         multi_match: {
           query: params[:q],
-          fields: ["title_translations.#{@lang}^10", "description_translations.#{@lang}^5", "methodology_translations.#{@lang}"],
+          fields: ["titles.#{@lang}^10", "descriptions.#{@lang}^5", "methodologies.#{@lang}"],
           type: "phrase_prefix"
         }
       }
@@ -133,17 +133,18 @@ class RootController < ApplicationController
         pre_tags: ["[[highlight]]"],#['<em class="highlight">'],
         post_tags: ["[[/highlight]]"],#['</em>'],
         order: 'score',
-        # encoder: "html",
+        encoder: "html",
         fields: {
-          "title_translations.#{@lang}" => { number_of_fragments: 0 },
-          "description_translations.#{@lang}" => { number_of_fragments: 3, fragment_size: 150 },
-          "methodology_translations.#{@lang}" => { number_of_fragments: 3, fragment_size: 150 }
+
+          "titles.#{@lang}" => { number_of_fragments: 0 },
+          "descriptions.#{@lang}" => { number_of_fragments: 3, fragment_size: 150 },
+          "methodologies.#{@lang}" => { number_of_fragments: 3, fragment_size: 150 }
         }
       }
     end
 
     # no search, so apply default sort by title
-    query[:sort] = [ {"title_translations.#{@lang}.raw" => {order: 'asc'}} ]
+    query[:sort] = [ {"titles.#{@lang}.raw" => {order: 'asc'}} ]
     #query[:sort] = [ {:'_score' => {order: 'desc'}} ]
     if params[:sort].present?
       sort_by =  params[:sort].downcase
@@ -161,7 +162,7 @@ class RootController < ApplicationController
       query[:filter][:bool][:must] << {term: {"country_mappers.country_id" => params[:country]}}
     end
     if params[:donor].present?
-      query[:filter][:bool][:must] << {term: { "donor_translations.#{@lang}" => params[:donor]}}
+      query[:filter][:bool][:must] << {term: { "donors.#{@lang}" => params[:donor]}}
     end
 
     logger.debug query.to_json
@@ -321,7 +322,7 @@ class RootController < ApplicationController
       query[:query][:filtered][:query] = {
         multi_match: {
           query: params[:q],
-          fields: ["title_translations.#{@lang}^10", "description_translations.#{@lang}^5"],
+          fields: ["titles.#{@lang}^10", "descriptions.#{@lang}^5"],
           type: "phrase_prefix"
         }
       }
@@ -331,14 +332,14 @@ class RootController < ApplicationController
         post_tags: ["[[/highlight]]"],
         order: 'score',
         fields: {
-          "title_translations.#{@lang}" => { number_of_fragments: 0},
-          "description_translations.#{@lang}" => { number_of_fragments: 3, fragment_size: 150 }
+          "titles.#{@lang}" => { number_of_fragments: 0},
+          "descriptions.#{@lang}" => { number_of_fragments: 3, fragment_size: 150 }
         }
       }
     end
 
     # no search, so apply default sort by title
-    query[:sort] = [ {"title_translations.#{@lang}.raw" => {order: 'asc'}} ]
+    query[:sort] = [ {"titles.#{@lang}.raw" => {order: 'asc'}} ]
     if params[:sort].present?
       sort_by =  params[:sort].downcase
       query[:sort].unshift({"_score" => {order: 'desc'}}) if sort_by == 'relevant'

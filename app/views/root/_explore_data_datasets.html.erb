@@ -12,8 +12,8 @@
       <li>
         <div class="caption">
           <div class="title">
-             <% if hit.highlight? && hit.highlight.key?("title_translations.#{@lang}") %>
-              <%= link_to prepare_highlight(hit.highlight["title_translations.#{@lang}"]), explore_data_dashboard_path(dataset.owner, dataset) %>
+             <% if hit.highlight? && hit.highlight.key?("titles.#{@lang}") %>
+              <%= link_to prepare_highlight(hit.highlight["titles.#{@lang}"]), explore_data_dashboard_path(dataset.owner, dataset) %>
             <% else %>
               <%= link_to dataset.title, explore_data_dashboard_path(dataset.owner, dataset) %>
             <% end %>
@@ -54,13 +54,13 @@
         <% if dataset.description.present? %>
           <div class="description">
             <% if hit.highlight? %>
-              <% if hit.highlight.key?("description_translations.#{@lang}") %>
+              <% if hit.highlight.key?("descriptions.#{@lang}") %>
                 ...
-                <%= prepare_highlight(hit.highlight["description_translations.#{@lang}"]) %>
+                <%= prepare_highlight(hit.highlight["descriptions.#{@lang}"]) %>
                 ...
-              <% elsif hit.highlight.key?("methodology_translations.#{@lang}") %>
+              <% elsif hit.highlight.key?("methodologies.#{@lang}") %>
                 ...
-                <%= prepare_highlight(hit.highlight["methodology_translations.#{@lang}"]) %>
+                <%= prepare_highlight(hit.highlight["methodologies.#{@lang}"]) %>
                 ...
               <% else %>
                 <%= strip_tags_nbsp(dataset.description).html_safe %>

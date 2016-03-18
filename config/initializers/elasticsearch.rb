@@ -29,7 +29,7 @@ unless Dataset.__elasticsearch__.index_exists?
               {
                 match_mapping_type: "string|date|boolean|double|long|integer",
                 match_pattern: "regex",
-                path_match: "title_translations.*",
+                path_match: "titles.*",
                 mapping:
                 {
                   type: "multi_field",
@@ -45,7 +45,7 @@ unless Dataset.__elasticsearch__.index_exists?
               {
                 match_mapping_type: "string|date|boolean|double|long|integer",
                 match_pattern: "regex",
-                path_match: "(description|methodology)_translations.*",
+                path_match: "(descriptions|methodologies).*",
                 mapping:
                 {
                   type: "string",
@@ -58,7 +58,7 @@ unless Dataset.__elasticsearch__.index_exists?
               {
                 match_mapping_type: "string|date|boolean|double|long|integer",
                 match_pattern: "regex",
-                path_match: "(source|donor)_translations.*",
+                path_match: "(sources|donors).*",
                 mapping:
                 {
                   type: "string",
@@ -68,19 +68,19 @@ unless Dataset.__elasticsearch__.index_exists?
             }
           ],
           properties: {
-            title_translations: {
+            titles: {
               type: "object"
             },
-            description_translations: {
+            descriptions: {
               type: "object"
             },
-            methodology_translations: {
+            methodologies: {
               type: "object"
             },
-            source_translations: {
+            sources: {
               type: "object"
             },
-            donor_translations: {
+            donors: {
               type: "object"
             },
             "public" => {
@@ -127,7 +127,7 @@ unless TimeSeries.__elasticsearch__.index_exists?
               {
                 match_mapping_type: "string|date|boolean|double|long|integer",
                 match_pattern: "regex",
-                path_match: "title_translations.*",
+                path_match: "titles.*",
                 mapping:
                 {
                   type: "multi_field",
@@ -143,7 +143,7 @@ unless TimeSeries.__elasticsearch__.index_exists?
               {
                 match_mapping_type: "string|date|boolean|double|long|integer",
                 match_pattern: "regex",
-                path_match: "description_translations.*",
+                path_match: "descriptions.*",
                 mapping:
                 {
                   type: "string",
@@ -153,16 +153,16 @@ unless TimeSeries.__elasticsearch__.index_exists?
             }
           ],
           properties: {
-            title_translations: {
+            titles: {
               type: "object"
             },
-            description_translations: {
+            descriptions: {
               type: "object"
             },
-            source_translations: {
+            sources: {
               type: "object"
             },
-            donor_translations: {
+            donors: {
               type: "object"
             },
             "public" => {

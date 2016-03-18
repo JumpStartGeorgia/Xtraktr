@@ -282,7 +282,7 @@ class TimeSeries < CustomTranslation
   index_name "timeseries-#{Rails.env}"
   def as_indexed_json(options={})
     as_json(
-      methods: [:title_translations, :description_translations],
+      methods: [:titles, :descriptions],
       only: [:public, :public_at],
       include: {
         category_mappers: {only: [:category_id]},
@@ -290,7 +290,20 @@ class TimeSeries < CustomTranslation
       }
     )
   end
-
+  def titles
+    title_translations
+  end
+  def descriptions
+    elastic_no_html(description_translations)
+  end
+  def elastic_no_html(trans)
+    res = {}
+    trans.each{|k,v|
+      #res["orig.#{k}"] = v
+      res[k] = ActionController::Base.helpers.strip_tags(v).gsub('&nbsp;', ' ')
+    }
+    return res
+  end
   #############################
   # permalink slug
   # if the dataset is public, use the permalink field value if it exists, else the default lang title

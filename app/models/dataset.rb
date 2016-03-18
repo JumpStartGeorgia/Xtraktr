@@ -477,7 +477,7 @@ class Dataset < CustomTranslation
 
   def as_indexed_json(options={})
     as_json(
-      methods: [:title_translations, :description_translations, :methodology_translations, :source_translations, :donor_translations],
+      methods: [:titles, :descriptions, :methodologies, :sources, :donors],
       only: [:public, :public_at, :released_at],
       include: {
         category_mappers: {only: [:category_id]},
@@ -485,7 +485,29 @@ class Dataset < CustomTranslation
       }
     )
   end
-
+  def titles
+    title_translations
+  end
+  def descriptions
+    elastic_no_html(description_translations)
+  end
+  def methodologies
+    elastic_no_html(methodology_translations)
+  end
+  def sources
+    source_translations
+  end
+  def donors
+    donor_translations
+  end
+  def elastic_no_html(trans)
+    res = {}
+    trans.each{|k,v|
+      #res["orig_#{k}"] = v
+      res[k] = ActionController::Base.helpers.strip_tags(v).gsub('&nbsp;', ' ')
+    }
+    return res
+  end
   #############################
   # permalink slug
   # if the dataset is public, use the permalink field value if it exists, else the default lang title
