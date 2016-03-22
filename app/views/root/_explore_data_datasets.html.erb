@@ -55,11 +55,11 @@
           <div class="description">
             <% if hit.highlight? %>
               <% if hit.highlight.key?("descriptions.#{@lang}") %>
-                ...
+                ...desc
                 <%= prepare_highlight(hit.highlight["descriptions.#{@lang}"]) %>
                 ...
               <% elsif hit.highlight.key?("methodologies.#{@lang}") %>
-                ...
+                ...meth
                 <%= prepare_highlight(hit.highlight["methodologies.#{@lang}"]) %>
                 ...
               <% else %>

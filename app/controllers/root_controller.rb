@@ -124,8 +124,8 @@ class RootController < ApplicationController
       query[:query][:filtered][:query] = {
         multi_match: {
           query: params[:q],
-          fields: ["titles.#{@lang}^10", "descriptions.#{@lang}^5", "methodologies.#{@lang}"],
-          type: "phrase_prefix"
+          fields: ["titles.#{@lang}^10", "descriptions.#{@lang}^5", "methodologies.#{@lang}"]
+          #type: "phrase_prefix"
         }
       }
       # add highlighting to query
