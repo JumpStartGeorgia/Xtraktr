@@ -144,13 +144,13 @@ class RootController < ApplicationController
     end
 
     # no search, so apply default sort by title
-    query[:sort] = [ {"titles.#{@lang}.raw" => {order: 'asc'}} ]
+    query[:sort] = [ {"titles.#{@lang}.raw" => {order: 'asc', ignore_unmapped: true}} ]
     #query[:sort] = [ {:'_score' => {order: 'desc'}} ]
     if params[:sort].present?
       sort_by =  params[:sort].downcase
-      #query[:sort].unshift({:'public_at' => {order: 'desc'}}) if sort_by == 'publish'
-      query[:sort].unshift({"_score" => {order: 'desc'}}) if sort_by == 'relevant'
-      query[:sort].unshift({"released_at" => {order: 'desc'}}) if sort_by == 'release'
+      #query[:sort].unshift({:'public_at' => {order: 'desc', ignore_unmapped: true}}) if sort_by == 'publish'
+      query[:sort].unshift({"_score" => {order: 'desc', ignore_unmapped: true}}) if sort_by == 'relevant'
+      query[:sort].unshift({"released_at" => {order: 'desc', ignore_unmapped: true}}) if sort_by == 'release'
     end
 
 
@@ -339,10 +339,10 @@ class RootController < ApplicationController
     end
 
     # no search, so apply default sort by title
-    query[:sort] = [ {"titles.#{@lang}.raw" => {order: 'asc'}} ]
+    query[:sort] = [ {"titles.#{@lang}.raw" => {order: 'asc', ignore_unmapped: true}} ]
     if params[:sort].present?
       sort_by =  params[:sort].downcase
-      query[:sort].unshift({"_score" => {order: 'desc'}}) if sort_by == 'relevant'
+      query[:sort].unshift({"_score" => {order: 'desc', ignore_unmapped: true }}) if sort_by == 'relevant'
     end
 
 
@@ -357,6 +357,7 @@ class RootController < ApplicationController
     logger.debug query.to_json
 
     @time_series = TimeSeries.search(query).page(params[:page]).per(per_page)
+
     # TODO do we need meta_only here
 
     @show_title = false
