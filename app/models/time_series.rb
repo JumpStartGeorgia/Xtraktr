@@ -1,8 +1,9 @@
 class TimeSeries < CustomTranslation
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongoid::Search
   include Mongoid::Slug
+  # include Mongoid::Search
+  include Elasticsearch::Model
 
   #############################
 
@@ -24,6 +25,10 @@ class TimeSeries < CustomTranslation
   field :languages, type: Array
   field :default_language, type: String
   field :permalink, type: String
+
+  after_create  { __elasticsearch__.index_document }
+  after_update  { __elasticsearch__.index_document }
+  after_destroy { __elasticsearch__.delete_document }
 
   has_many :category_mappers, dependent: :destroy do
     def category_ids
@@ -272,8 +277,33 @@ class TimeSeries < CustomTranslation
 
   #############################
   # Full text search
-  search_in :title, :description, :questions => [:original_code, :text, :notes, :answers => [:text]]
+  # search_in :title, :description, :questions => [:original_code, :text, :notes, :answers => [:text]]
 
+  index_name "timeseries-#{Rails.env}"
+  def as_indexed_json(options={})
+    as_json(
+      methods: [:titles, :descriptions],
+      only: [:public, :public_at],
+      include: {
+        category_mappers: {only: [:category_id]},
+        country_mappers: {only: [:country_id]}
+      }
+    )
+  end
+  def titles
+    title_translations
+  end
+  def descriptions
+    elastic_no_html(description_translations)
+  end
+  def elastic_no_html(trans)
+    res = {}
+    trans.each{|k,v|
+      #res["orig.#{k}"] = v
+      res[k] = ActionController::Base.helpers.strip_tags(v).gsub('&nbsp;', ' ')
+    }
+    return res
+  end
   #############################
   # permalink slug
   # if the dataset is public, use the permalink field value if it exists, else the default lang title
@@ -383,6 +413,7 @@ class TimeSeries < CustomTranslation
   before_create :create_private_share_key
   before_save :set_public_at
   before_save :check_questions_for_changes
+  #before_save :strip_html_from_text
 
   # when saving the time series, question callbacks might not be triggered
   # so this will check for questions that chnaged and then call the callbacks
@@ -398,7 +429,6 @@ class TimeSeries < CustomTranslation
     end
     return true
   end
-
 
   # this is used in the form to set the categories
   def set_category_ids
@@ -462,9 +492,9 @@ class TimeSeries < CustomTranslation
     x.present? ? x.owner : nil
   end
 
-  def self.search(q)
-    full_text_search(q)
-  end
+  # def self.search(q)
+  #   full_text_search(q)
+  # end
 
   def self.sorted_title
     order_by([[:title, :asc]])

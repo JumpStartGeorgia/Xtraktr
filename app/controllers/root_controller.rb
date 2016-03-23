@@ -94,40 +94,87 @@ class RootController < ApplicationController
 
 
   def explore_data
-    @datasets = Dataset.meta_only.is_public
+    # render :text => "Message goes here"
+    # Kernel::exit()
 
-    # add search
+    @lang = I18n.locale.to_s
+    # build elastic search query/filter based on query params
+    # if no query params, then just filter by public
+    # create basic query
+    query = {
+      query: {
+        filtered: {
+          query: {
+            match_all: {
+            }
+          }
+        }
+      },
+      filter:{
+        bool:{
+          must:[
+            {term: {public: true}}
+          ]
+        }
+      }
+    }
+
+    # if search exists, update query to use search and add highlights to query
     if params[:q].present?
-      @datasets = @datasets.search(params[:q])
-    end
-    # add sort
-    if params[:sort].present?
-      case params[:sort].downcase
-        when 'publish'
-          @datasets = @datasets.sorted_public_at
-        when 'release'
-          @datasets = @datasets.sorted_released_at
-        else #when 'title'
-          @datasets = @datasets.sorted_title
-      end
-    else
-      @datasets = @datasets.sorted_title
-    end    
-    # add category
-    @datasets = @datasets.categorize(params[:category]) if params[:category].present? 
-    @datasets = @datasets.with_country(params[:country]) if params[:country].present?
-    @datasets = @datasets.with_donor(params[:donor]) if params[:donor].present?
-    #@datasets = @datasets.with_owner(params[:owner]) if params[:owner].present?
+      query[:query][:filtered][:query] = {
+        multi_match: {
+          query: params[:q],
+          fields: ["titles.#{@lang}^10", "descriptions.#{@lang}^5", "methodologies.#{@lang}"]
+          #type: "phrase_prefix"
+        }
+      }
+      # add highlighting to query
+      query[:highlight] = {
+        pre_tags: ["[[highlight]]"],#['<em class="highlight">'],
+        post_tags: ["[[/highlight]]"],#['</em>'],
+        order: 'score',
+        encoder: "html",
+        fields: {
 
-    @datasets = Kaminari.paginate_array(@datasets).page(params[:page]).per(per_page)
+          "titles.#{@lang}" => { number_of_fragments: 0 },
+          "descriptions.#{@lang}" => { number_of_fragments: 3, fragment_size: 150 },
+          "methodologies.#{@lang}" => { number_of_fragments: 3, fragment_size: 150 }
+        }
+      }
+    end
+
+    # no search, so apply default sort by title
+    query[:sort] = [ {"titles.#{@lang}.raw" => {order: 'asc', ignore_unmapped: true}} ]
+    #query[:sort] = [ {:'_score' => {order: 'desc'}} ]
+    if params[:sort].present?
+      sort_by =  params[:sort].downcase
+      #query[:sort].unshift({:'public_at' => {order: 'desc', ignore_unmapped: true}}) if sort_by == 'publish'
+      query[:sort].unshift({"_score" => {order: 'desc', ignore_unmapped: true}}) if sort_by == 'relevant'
+      query[:sort].unshift({"released_at" => {order: 'desc', ignore_unmapped: true}}) if sort_by == 'release'
+    end
+
+
+    # add needed filters
+    if params[:category].present?
+      query[:filter][:bool][:must] << {term: {"category_mappers.category_id" => Category.by_permalink(params[:category]).id}}
+    end
+    if params[:country].present?
+      query[:filter][:bool][:must] << {term: {"country_mappers.country_id" => params[:country]}}
+    end
+    if params[:donor].present?
+      query[:filter][:bool][:must] << {term: { "donors.#{@lang}" => params[:donor]}}
+    end
+
+    logger.debug query.to_json
+
+    @datasets = Dataset.search(query).page(params[:page]).per(per_page)
 
     @show_title = false
     if !request.xhr?
       @categories = Category.sorted.in_datasets
       @countries = Country.not_excluded.sorted.in_datasets
-      #@owners = User.in_datasets
       @donors = Dataset.donors
-    end 
+    end
 
     @css.push('list.css')
     @js.push('list.js')
@@ -179,7 +226,7 @@ class RootController < ApplicationController
       @dataset_url = explore_data_show_path(@dataset.owner, @dataset)
       gon.chart_type_bar = t('explore_data.chart_type_bar')
       gon.chart_type_pie = t('explore_data.chart_type_pie')
-      
+
       # generate defualt page title based off of params
       # - doing this so social media has a better title
       @default_page_title = @dataset.title.dup
@@ -203,7 +250,7 @@ class RootController < ApplicationController
             bdb = @dataset.questions.with_code(params[:broken_down_by_code])
           end
 
-          # build the title          
+          # build the title
           if bdb.present?
             # comparing questions
             @default_page_title << I18n.t("explore_data.v2.comparative.text.title", :question_code => q.original_code, :variable => q.text,
@@ -248,35 +295,75 @@ class RootController < ApplicationController
 
 
   def explore_time_series
-    @time_series = TimeSeries.meta_only.is_public
+    @lang = I18n.locale.to_s
+    # build elastic search query/filter based on query params
+    # if no query params, then just filter by public
+    # create basic query
+    query = {
+      query: {
+        filtered: {
+          query: {
+            match_all: {
+            }
+          }
+        }
+      },
+      filter:{
+        bool:{
+          must:[
+            {term: {public: true}}
+          ]
+        }
+      }
+    }
 
-    # add search
+    # if search exists, update query to use search and add highlights to query
     if params[:q].present?
-      @time_series = @time_series.search(params[:q])
+      query[:query][:filtered][:query] = {
+        multi_match: {
+          query: params[:q],
+          fields: ["titles.#{@lang}^10", "descriptions.#{@lang}^5"],
+          type: "phrase_prefix"
+        }
+      }
+      # add highlighting to query
+      query[:highlight] = {
+        pre_tags: ["[[highlight]]"],
+        post_tags: ["[[/highlight]]"],
+        order: 'score',
+        fields: {
+          "titles.#{@lang}" => { number_of_fragments: 0},
+          "descriptions.#{@lang}" => { number_of_fragments: 3, fragment_size: 150 }
+        }
+      }
     end
-    # add sort
-    if params[:sort].present?
-      case params[:sort].downcase
-        when 'publish'
-          @time_series = @time_series.sorted_public_at
-        else #when 'title'
-          @time_series = @time_series.sorted_title
-      end
-    else
-      @time_series = @time_series.sorted_title
-    end
-    
-    @time_series = @time_series.categorize(params[:category]) if params[:category].present?
-    @time_series = @time_series.with_country(params[:country]) if params[:country].present?
-    #@time_series = @time_series.with_owner(params[:owner]) if params[:owner].present?
 
-    @time_series = Kaminari.paginate_array(@time_series).page(params[:page]).per(per_page)
+    # no search, so apply default sort by title
+    query[:sort] = [ {"titles.#{@lang}.raw" => {order: 'asc', ignore_unmapped: true}} ]
+    if params[:sort].present?
+      sort_by =  params[:sort].downcase
+      query[:sort].unshift({"_score" => {order: 'desc', ignore_unmapped: true }}) if sort_by == 'relevant'
+    end
+
+
+    # add needed filters
+    if params[:category].present?
+      query[:filter][:bool][:must] << {term: {"category_mappers.category_id" => Category.by_permalink(params[:category]).id}}
+    end
+    if params[:country].present?
+      query[:filter][:bool][:must] << {term: {"country_mappers.country_id" => params[:country]}}
+    end
+
+    logger.debug query.to_json
+
+    @time_series = TimeSeries.search(query).page(params[:page]).per(per_page)
+
+    # TODO do we need meta_only here
 
     @show_title = false
     if !request.xhr?
       @categories = Category.sorted.in_time_series
       @countries = Country.not_excluded.sorted.in_time_series
-      #@owners = User.in_time_series
     end
 
     @css.push('list.css')
@@ -352,7 +439,7 @@ class RootController < ApplicationController
             f = @time_series.questions.with_code(params[:filtered_by_code])
           end
 
-          # build the title          
+          # build the title
           # single question
           @default_page_title << I18n.t("explore_time_series.v2.single.text.title", :code => q.original_code, :variable => q.text, :group => '', locale: language)
           if f.present?
@@ -411,12 +498,12 @@ class RootController < ApplicationController
     @dataset_type = params[:type]
     @dataset_locale = params[:lang]
     @download_type = params[:download_type]
-    if sign_in 
-      if current_user.valid? 
+    if sign_in
+      if current_user.valid?
         current_user.agreement(@dataset_id, @dataset_type, @dataset_locale, @download_type)
         mapper = FileMapper.create({ dataset_id: @dataset_id, dataset_type: @dataset_type, dataset_locale: @dataset_locale, download_type: @download_type })
         data[:url] = "/#{I18n.locale}/download/#{mapper.key}"
-      else 
+      else
         @mod = Agreement.new({ dataset_id: @dataset_id, dataset_type: @dataset_type, dataset_locale: @dataset_locale, download_type: @download_type  })
         data[:agreement] = false
         @user = current_user

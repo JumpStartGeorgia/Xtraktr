@@ -9,12 +9,12 @@
           <label><%= t('.sort_by.this') %>:</label>
           <div class="dropdown">
           <%-
-            current_sort = params[:sort].present? ? params[:sort] : 'title'
+            current_sort = params[:sort].present? ? params[:sort] : 'relevant'
             current_sort_label = t(".sort_by.#{current_sort}")
           -%>
             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= current_sort_label %></a>
             <ul class="dropdown-menu" role="menu">
-              <%- ["title", "release", "publish"].each {|opt| -%>
+              <%- ["title", "release", "relevant"].each {|opt| -%>
                 <li role="menuitem" data-value="<%= opt %>"<%= " class='selected'" if current_sort == opt %>><a href="#"><%= t(".sort_by.#{opt}") %></a></li>
               <%- } -%>
             </ul>

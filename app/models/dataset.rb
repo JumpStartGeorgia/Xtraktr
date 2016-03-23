@@ -1,11 +1,14 @@
+require 'process_data_file'
+
 class Dataset < CustomTranslation
-  require 'process_data_file'
+  include ProcessDataFile # script in lib folder that will convert datafile to csv and then load into appropriate fields
+
   include Mongoid::Document
   include Mongoid::Timestamps
   include Mongoid::Paperclip
-  include Mongoid::Search
   include Mongoid::Slug
-  include ProcessDataFile # script in lib folder that will convert datafile to csv and then load into appropriate fields
+  # include Mongoid::Search
+  include Elasticsearch::Model
 
   #############################
 
@@ -52,6 +55,9 @@ class Dataset < CustomTranslation
   field :force_reset_download_files, type: Boolean, default: false
   field :permalink, type: String
 
+  after_create  { __elasticsearch__.index_document }
+  after_update  { __elasticsearch__.index_document }
+  after_destroy { __elasticsearch__.delete_document }
 
   has_many :category_mappers, dependent: :destroy do
     def category_ids
@@ -406,16 +412,18 @@ class Dataset < CustomTranslation
 
   #############################
 
-  attr_accessible :title, :description, :methodology, :user_id, :has_warnings,
-      :data_items_attributes, :questions_attributes, :reports_attributes, :questions_with_bad_answers,
-      :weights_attributes,
-      :datafile, :public, :private_share_key, #:codebook,
-      :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at,
-      :languages, :default_language, :stats_attributes, :urls_attributes,
-      :title_translations, :description_translations, :methodology_translations, :source_translations, :source_url_translations,
-      :reset_download_files, :force_reset_download_files, :category_mappers_attributes, :category_ids, :permalink, :groups_attributes,
-      :donor, :license_title, :license_description, :license_url, :country_mappers_attributes, :country_ids,
-      :donor_translations, :license_title_translations, :license_description_translations, :license_url_translations
+  attr_accessible :title, :description, :methodology, 
+    :user_id, :has_warnings,
+    :data_items_attributes, :questions_attributes, :reports_attributes, :questions_with_bad_answers,
+    :weights_attributes,
+    :datafile, :public, :private_share_key, #:codebook,
+    :source, :source_url, :start_gathered_at, :end_gathered_at, :released_at,
+    :languages, :default_language, :stats_attributes, :urls_attributes,
+    :title_translations, :description_translations, :methodology_translations,
+    :source_translations, :source_url_translations,
+    :reset_download_files, :force_reset_download_files, :category_mappers_attributes, :category_ids, :permalink, :groups_attributes,
+    :donor, :license_title, :license_description, :license_url, :country_mappers_attributes, :country_ids,
+    :donor_translations, :license_title_translations, :license_description_translations, :license_url_translations
 
 
   attr_accessor :category_ids, :country_ids, :var_arranged_items, :check_questions_for_changes_status
@@ -463,9 +471,43 @@ class Dataset < CustomTranslation
 
   #############################
   # Full text search
-  search_in :title, :description, :methodology, :source, :donor, :questions => [:original_code, :text, :notes, :answers => [:text]]
+  # search_in :title, :description, :methodology, :source, :donor, :questions => [:original_code, :text, :notes, :answers => [:text]]
 
+  index_name "datasets-#{Rails.env}"
 
+  def as_indexed_json(options={})
+    as_json(
+      methods: [:titles, :descriptions, :methodologies, :sources, :donors],
+      only: [:public, :public_at, :released_at],
+      include: {
+        category_mappers: {only: [:category_id]},
+        country_mappers: {only: [:country_id]}
+      }
+    )
+  end
+  def titles
+    title_translations
+  end
+  def descriptions
+    elastic_no_html(description_translations)
+  end
+  def methodologies
+    elastic_no_html(methodology_translations)
+  end
+  def sources
+    source_translations
+  end
+  def donors
+    donor_translations
+  end
+  def elastic_no_html(trans)
+    res = {}
+    trans.each{|k,v|
+      #res["orig_#{k}"] = v
+      res[k] = ActionController::Base.helpers.strip_tags(v).gsub('&nbsp;', ' ')
+    }
+    return res
+  end
   #############################
   # permalink slug
   # if the dataset is public, use the permalink field value if it exists, else the default lang title
@@ -621,6 +663,7 @@ class Dataset < CustomTranslation
   before_save :set_public_at
   before_save :check_if_dirty
   after_save :check_questions_for_changes
+#  before_save :strip_html_from_text
 
 
   # when saving the dataset, question callbacks might not be triggered
@@ -642,6 +685,29 @@ class Dataset < CustomTranslation
     end
     return true
   end
+
+  # to help search through text only, remove html tags
+  # def strip_html_from_text
+  #   puts ">>> strip_html_from_text"
+  #   orig_locale = I18n.locale
+  #   self.languages.each do |locale|
+  #     I18n.locale = locale.to_sym
+  #     # if self.description.present?
+  #     #   self.description_no_html = ActionController::Base.helpers.strip_tags(self.description).gsub('&nbsp;', ' ') 
+  #     # else
+  #     #   self.description_no_html = nil
+  #     # end      
+      
+  #     # if self.methodology.present?
+  #     #   self.methodology_no_html = ActionController::Base.helpers.strip_tags(self.methodology).gsub('&nbsp;', ' ') 
+  #     # else
+  #     #   self.methodology_no_html = nil
+  #     # end
+  #   end
+  #   I18n.locale = orig_locale
+  #   puts ">>> strip_html_from_text END"
+  #   return true
+  # end
 
 
   # this is used in the form to set the categories
@@ -824,7 +890,7 @@ class Dataset < CustomTranslation
     logger.debug "======= languages changed? #{self.languages_changed?}; change: #{self.languages_change}"
     logger.debug "======= reset_download_files changed? #{self.reset_download_files_changed?} change: #{self.reset_download_files_change}"
     if self.changed? && !(self.changed.include?('reset_download_files') && self.reset_download_files == false)
-      logger.debug "========== dataset changed!, setting reset_download_files = true"
+      puts "========== dataset changed!, setting reset_download_files = true"
       self.reset_download_files = true
     end     
     return true
@@ -834,9 +900,9 @@ class Dataset < CustomTranslation
   #############################
   # Scopes
 
-  def self.search(q)
-    full_text_search(q)
-  end
+  # def self.search(q)
+  #   full_text_search(q)
+  # end
 
   def self.sorted_title
     order_by([[:title, :asc]])

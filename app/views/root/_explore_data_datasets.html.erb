@@ -4,18 +4,23 @@
   model_class = Dataset
   s_model_class = Stats
 -%>
-<%- with_pagination = with_pagination.nil? ? true : with_pagination%>
-<%- with_time_series_link = with_time_series_link.nil? ? true : with_time_series_link%>
-<%- model_class = Dataset -%>
 <ul>
   <% if @datasets.present? %>
-    <% @datasets.each do |dataset| %>
+    <%# records = params[:q].present? ? @datasets : @datasets.to_a # need to_a so sorting by title is applied %>
+    <% @datasets.records.each_with_hit do |dataset, hit| %>
+     <%# @datasets.each do |dataset| %>
       <li>
         <div class="caption">
-          <div class="title"><%= link_to dataset.title, explore_data_dashboard_path(dataset.owner, dataset) %></div>
+          <div class="title">
+             <% if hit.highlight? && hit.highlight.key?("titles.#{@lang}") %>
+              <%= link_to prepare_highlight(hit.highlight["titles.#{@lang}"]), explore_data_dashboard_path(dataset.owner, dataset) %>
+            <% else %>
+              <%= link_to dataset.title, explore_data_dashboard_path(dataset.owner, dataset) %>
+            <% end %>
+          </div>
           <% if dataset.urls.present? && dataset.urls.codebook.present? %>
             <div class="download-wrapper" >
-              <div class="download" data-id="<%= dataset.id.to_s %>" data-lang="<%= dataset.current_locale %>" title="<%= t('helpers.links.download_data') %>" data-placement="top" data-class="tooltip-download" data-download-type="public">
+              <div class="download" data-id="<%= dataset.id.to_s %>" data-@lang="<%= dataset.current_locale %>" title="<%= t('helpers.links.download_data') %>" data-placement="top" data-class="tooltip-download" data-download-type="public">
                 <ul>
                   <li><div class="type" data-type='csv' title="<%= t('download_data_options.title.csv') %>" data-placement="left"><%= t('download_data_options.text.csv') %></div></li>
                   <li><div class="type" data-type='r' title="<%= t('download_data_options.title.r') %>" data-placement="left"><%= t('download_data_options.text.r') %></div></li>
@@ -46,10 +51,23 @@
           <% end %>
         </div>
 
-
         <% if dataset.description.present? %>
           <div class="description">
-            <%= strip_tags_nbsp(dataset.description).html_safe %>
+            <% if hit.highlight? %>
+              <% if hit.highlight.key?("descriptions.#{@lang}") %>
+                ...
+                <%= prepare_highlight(hit.highlight["descriptions.#{@lang}"]) %>
+                ...
+              <% elsif hit.highlight.key?("methodologies.#{@lang}") %>
+                ...
+                <%= prepare_highlight(hit.highlight["methodologies.#{@lang}"]) %>
+                ...
+              <% else %>
+                <%= strip_tags_nbsp(dataset.description).html_safe %>
+              <% end %>
+            <% else %>
+              <%= strip_tags_nbsp(dataset.description).html_safe %>
+            <% end %>
           </div>
         <% end %>
       </li>
@@ -58,7 +76,6 @@
     <li><div class="no-data-found"><%= t('.no_match') %></div></li>
   <% end %>
 </ul>
-
 <% if with_pagination %>
   <%= paginate @datasets %>
 <% end %>

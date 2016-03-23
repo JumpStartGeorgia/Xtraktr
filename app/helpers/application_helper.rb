@@ -145,4 +145,10 @@ module ApplicationHelper
     '<img src="/assets/svg/' + type + '.svg" title="'+ I18n.t("app.common." + type) + '"/>'
   end
 
+  def prepare_highlight(highlights)
+    highlights.each_with_index{|d,i|
+      highlights[i] = strip_tags_nbsp(d).gsub('[[highlight]]','<em class="highlight">').gsub('[[/highlight]]','</em>')
+    }
+    highlights.join(' &hellip; ').html_safe
+  end
 end
