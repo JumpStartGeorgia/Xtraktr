@@ -133,7 +133,7 @@ class RootController < ApplicationController
         pre_tags: ["[[highlight]]"],#['<em class="highlight">'],
         post_tags: ["[[/highlight]]"],#['</em>'],
         order: 'score',
-        encoder: "html",
+        # encoder: "html",
         fields: {
 
           "titles.#{@lang}" => { number_of_fragments: 0 },

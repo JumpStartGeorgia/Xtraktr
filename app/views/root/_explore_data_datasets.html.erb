@@ -20,7 +20,7 @@
           </div>
           <% if dataset.urls.present? && dataset.urls.codebook.present? %>
             <div class="download-wrapper" >
-              <div class="download" data-id="<%= dataset.id.to_s %>" data-@lang="<%= dataset.current_locale %>" title="<%= t('helpers.links.download_data') %>" data-placement="top" data-class="tooltip-download" data-download-type="public">
+              <div class="download" data-id="<%= dataset.id.to_s %>" data-lang="<%= dataset.current_locale %>" title="<%= t('helpers.links.download_data') %>" data-placement="top" data-class="tooltip-download" data-download-type="public">
                 <ul>
                   <li><div class="type" data-type='csv' title="<%= t('download_data_options.title.csv') %>" data-placement="left"><%= t('download_data_options.text.csv') %></div></li>
                   <li><div class="type" data-type='r' title="<%= t('download_data_options.title.r') %>" data-placement="left"><%= t('download_data_options.text.r') %></div></li>
