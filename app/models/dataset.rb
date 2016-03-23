@@ -456,7 +456,7 @@ class Dataset < CustomTranslation
   # Full text search
   #search_in :title, :description, :methodology, :source, :questions => [:original_code, :text, :notes, :answers => [:text]]
 
-  index_name "datasets-#{Rails.env}"
+  index_name "unicef-datasets-#{Rails.env}"
 
   def as_indexed_json(options={})
     as_json(

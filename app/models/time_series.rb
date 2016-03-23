@@ -251,7 +251,7 @@ class TimeSeries < CustomTranslation
   #search_in :title, :description, :questions => [:original_code, :text, :notes, :answers => [:text]]
 
 
-  index_name "timeseries-#{Rails.env}"
+  index_name "unicef-timeseries-#{Rails.env}"
   def as_indexed_json(options={})
     as_json(
       methods: [:titles, :descriptions],
