@@ -22,6 +22,8 @@ Look at the Gemfile for a complete list.
 * nginx - for staging/production server
 * mongo db - for document database (install instructions [here](https://www.digitalocean.com/community/tutorials/how-to-install-mongodb-on-ubuntu-14-04))
 * R - for processing data files (sudo apt-get install r-base)
+* ElasticSearch - is a search server based on Lucene (install instructions [here](https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-repositories.html))
+* JRE - elasticsearch require java to be installed (install instructions [here](https://www.digitalocean.com/community/tutorials/how-to-manually-install-oracle-java-on-a-debian-or-ubuntu-vps), [here2](http://docs.oracle.com/javase/8/docs/technotes/guides/install/linux_server_jre.html#CACJHCDD))
 
 Environment variables
 You will need the following [Environment Variables](https://help.ubuntu.com/community/EnvironmentVariables) set. 
@@ -196,3 +198,4 @@ This is a short description on how to use this repo as the start of a new projec
     * bootstrap-select.min.js
         * default for showIcon to false = !1
         * find check-mark and comment whole span tag that wraps it
+
