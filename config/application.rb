@@ -14,6 +14,9 @@ if defined?(Bundler)
   # Bundler.require(:default, :assets, Rails.env)
 end
 
+# add logging for elastic search
+require 'elasticsearch/rails/instrumentation'
+
 module BootstrapStarter
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.

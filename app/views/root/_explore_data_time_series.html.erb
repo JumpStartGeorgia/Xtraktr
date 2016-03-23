@@ -1,9 +1,15 @@
 <%- model_class = TimeSeries -%>
 <ul>
   <% if @time_series.present? %>
-    <% @time_series.each do |time_series| %>
+   <% @time_series.records.each_with_hit do |time_series, hit| %>
       <li>
-        <h2><%= link_to time_series.title, explore_time_series_dashboard_path(time_series) %></h2>
+        <h2>
+          <% if hit.highlight? && hit.highlight.key?("titles.#{@lang}") %>
+          <%= link_to prepare_highlight(hit.highlight["titles.#{@lang}"]), explore_time_series_dashboard_path(time_series) %>
+          <% else %>
+          <%= link_to time_series.title, explore_time_series_dashboard_path(time_series) %>
+          <% end %>
+        </h2>
         <div class="info">
           <div class="calendar"></div>
           <div class="timestamps">
@@ -13,12 +19,15 @@
             </div>
           </div>
         </div>
-
         <% if time_series.description.present? %>
           <div class="description">
-            <%= strip_tags_nbsp(time_series.description) %> 
+            <% if hit.highlight? && hit.highlight.key?("descriptions.#{@lang}") %>
+                <%= prepare_highlight(hit.highlight["descriptions.#{@lang}"]) %>
+            <% else %>
+              <%= strip_tags_nbsp(time_series.description).html_safe %>
+            <% end %>
           </div>
-        <% end %>
+        <% end %>        
       </li>
     <% end %>  
   <% else %>

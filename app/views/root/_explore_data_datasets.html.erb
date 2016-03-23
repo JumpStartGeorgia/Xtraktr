@@ -6,10 +6,17 @@
 -%>
 <ul>
   <% if @datasets.present? %>
-    <% @datasets.each do |dataset| %>
+    <% @datasets.records.each_with_hit do |dataset, hit| %>
       <li>
         <div class="caption">
-          <div class="title"><%= link_to dataset.title, explore_data_dashboard_path(dataset) %></div>
+          <div class="title">
+          <% if hit.highlight? && hit.highlight.key?("titles.#{@lang}") %>
+              <%= link_to prepare_highlight(hit.highlight["titles.#{@lang}"]), explore_data_dashboard_path(dataset) %>
+            <% else %>
+              <%= link_to dataset.title, explore_data_dashboard_path(dataset) %>
+            <% end %>
+          </div>
+
           <% if dataset.urls.present? && dataset.urls.codebook.present? %>
             <div class="download-wrapper" >
               <div class="download" data-id="<%= dataset.id.to_s %>" data-lang="<%= dataset.current_locale %>" title="<%= t('helpers.links.download_data') %>" data-placement="top" data-class="tooltip-download" data-download-type="public">
@@ -50,7 +57,21 @@
 
         <% if dataset.description.present? %>
           <div class="description">
-            <%= strip_tags_nbsp(dataset.description).html_safe %>
+            <% if hit.highlight? %>
+              <% if hit.highlight.key?("descriptions.#{@lang}") %>
+                ...
+                <%= prepare_highlight(hit.highlight["descriptions.#{@lang}"]) %>
+                ...
+              <% elsif hit.highlight.key?("methodologies.#{@lang}") %>
+                ...
+                <%= prepare_highlight(hit.highlight["methodologies.#{@lang}"]) %>
+                ...
+              <% else %>
+                <%= strip_tags_nbsp(dataset.description).html_safe %>
+              <% end %>
+            <% else %>
+              <%= strip_tags_nbsp(dataset.description).html_safe %>
+            <% end %>
           </div>
         <% end %>
       </li>

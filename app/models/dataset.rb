@@ -1,13 +1,14 @@
+require 'process_data_file'
+
 class Dataset < CustomTranslation
-  require 'process_data_file'
-  include Mongoid::Document
-  include Mongoid::Timestamps
-  include Mongoid::Paperclip
-  include Mongoid::Search
-  include Mongoid::Slug
   include ProcessDataFile # script in lib folder that will convert datafile to csv and then load into appropriate fields
 
+  include Mongoid::Document
+  include Mongoid::Timestamps
+  include Mongoid::Paperclip  
+  include Mongoid::Slug
 
+  include Elasticsearch::Model
   #############################
 
   belongs_to :user
@@ -48,6 +49,10 @@ class Dataset < CustomTranslation
   field :reset_download_files, type: Boolean, default: true
   field :force_reset_download_files, type: Boolean, default: false
   field :permalink, type: String
+
+  after_create  { __elasticsearch__.index_document }
+  after_update  { __elasticsearch__.index_document }
+  after_destroy { __elasticsearch__.delete_document }
 
   has_many :category_mappers, dependent: :destroy do
     def category_ids
@@ -449,8 +454,39 @@ class Dataset < CustomTranslation
 
   #############################
   # Full text search
-  search_in :title, :description, :methodology, :source, :questions => [:original_code, :text, :notes, :answers => [:text]]
+  #search_in :title, :description, :methodology, :source, :questions => [:original_code, :text, :notes, :answers => [:text]]
 
+  index_name "datasets-#{Rails.env}"
+
+  def as_indexed_json(options={})
+    as_json(
+      methods: [:titles, :descriptions, :methodologies, :sources],
+      only: [:public, :public_at, :released_at],
+      include: {
+        category_mappers: {only: [:category_id]}
+      }
+    )
+  end
+  def titles
+    title_translations
+  end
+  def descriptions
+    elastic_no_html(description_translations)
+  end
+  def methodologies
+    elastic_no_html(methodology_translations)
+  end
+  def sources
+    source_translations
+  end
+  def elastic_no_html(trans)
+    res = {}
+    trans.each{|k,v|
+      #res["orig_#{k}"] = v
+      res[k] = ActionController::Base.helpers.strip_tags(v).gsub('&nbsp;', ' ')
+    }
+    return res
+  end
 
   #############################
   # permalink slug
@@ -772,9 +808,9 @@ class Dataset < CustomTranslation
   #############################
   # Scopes
 
-  def self.search(q)
-    full_text_search(q)
-  end
+  # def self.search(q)
+  #   full_text_search(q)
+  # end
 
   def self.sorted_title
     order_by([[:title, :asc]])

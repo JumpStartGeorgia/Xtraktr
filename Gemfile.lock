@@ -46,15 +46,6 @@ GIT
     useragent (0.2.3)
 
 GIT
-  remote: https://github.com/mauriciozaffari/mongoid_search.git
-  revision: dfc7c45157a9339862f140a5641a5ea249d6f48a
-  branch: master
-  specs:
-    mongoid_search (0.3.2)
-      fast-stemmer (~> 1.0.0)
-      mongoid (>= 3.0.0)
-
-GIT
   remote: https://github.com/mjbellantoni/formtastic-bootstrap.git
   revision: d185a2d646624fb4f910a80cfca9d42a959166fe
   branch: bootstrap3_and_rails4
@@ -133,6 +124,19 @@ GEM
       thread_safe (~> 0.1)
       warden (~> 1.2.3)
     dynamic_form (1.1.4)
+    elasticsearch (1.0.15)
+      elasticsearch-api (= 1.0.15)
+      elasticsearch-transport (= 1.0.15)
+    elasticsearch-api (1.0.15)
+      multi_json
+    elasticsearch-model (0.1.8)
+      activesupport (> 3)
+      elasticsearch (> 0.4)
+      hashie
+    elasticsearch-rails (0.1.8)
+    elasticsearch-transport (1.0.15)
+      faraday
+      multi_json
     erubis (2.7.0)
     eventmachine (1.0.3)
     exception_notification (2.5.2)
@@ -140,7 +144,6 @@ GEM
     execjs (2.2.1)
     faraday (0.9.0)
       multipart-post (>= 1.2, < 3)
-    fast-stemmer (1.0.2)
     ffi (1.9.3)
     formtastic (2.2.1)
       actionpack (>= 3.0)
@@ -354,6 +357,8 @@ DEPENDENCIES
   descriptive_statistics (~> 2.4.0)
   devise (~> 3.4.1)
   dynamic_form (~> 1.1.4)
+  elasticsearch-model (~> 0.1.8)
+  elasticsearch-rails (~> 0.1.8)
   exception_notification (~> 2.5.2)
   exception_notification_extension!
   formtastic (~> 2.2.1)
@@ -371,7 +376,6 @@ DEPENDENCIES
   mongoid (~> 3.1.7)
   mongoid-paperclip
   mongoid-slug (~> 4.0.0)
-  mongoid_search!
   omniauth
   omniauth-facebook
   psych (~> 2.0.5)

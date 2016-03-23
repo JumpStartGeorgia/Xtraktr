@@ -12,13 +12,17 @@ Look at the Gemfile for a complete list.
 * Devise 2.0.4
 * Paperclip 3.4.0
 * Unicorn 4.8.3
-
+* Mongoid 3.1.6
 
 ## Requirements
 * git
 * Ruby 2.1.x
 * [rvm](http://rvm.io/) - share gems between applications
 * nginx - for staging/production server
+* mongo db - for document database (install instructions [here](https://www.digitalocean.com/community/tutorials/how-to-install-mongodb-on-ubuntu-14-04))
+* R - for processing data files (sudo apt-get install r-base)
+* ElasticSearch - is a search server based on Lucene (install instructions [here](https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-repositories.html))
+* JRE - elasticsearch require java to be installed (install instructions [here](https://www.digitalocean.com/community/tutorials/how-to-manually-install-oracle-java-on-a-debian-or-ubuntu-vps), [here2](http://docs.oracle.com/javase/8/docs/technotes/guides/install/linux_server_jre.html#CACJHCDD))
 
 Environment variables
 You will need the following [Environment Variables](https://help.ubuntu.com/community/EnvironmentVariables) set. 

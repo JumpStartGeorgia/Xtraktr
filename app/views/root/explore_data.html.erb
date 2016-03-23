@@ -9,8 +9,8 @@
         <label><%= t('.sort_by.this') %>:</label>
         <select>
         <%-
-          current_sort = params[:sort].present? ? params[:sort] : 'release'
-          ["title", "release", "publish"].each {|opt| -%>
+          current_sort = params[:sort].present? ? params[:sort] : 'relevant'
+          ["title", "release", "relevant"].each {|opt| -%>
             <option value="<%= opt %>"<%= " selected" if current_sort == opt %>><%= t(".sort_by.#{opt}") %></option>
         <%- } -%>
         </select>

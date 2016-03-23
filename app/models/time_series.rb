@@ -1,8 +1,9 @@
 class TimeSeries < CustomTranslation
   include Mongoid::Document
   include Mongoid::Timestamps
-  include Mongoid::Search
+  #include Mongoid::Search
   include Mongoid::Slug
+  include Elasticsearch::Model
 
   #############################
 
@@ -21,6 +22,10 @@ class TimeSeries < CustomTranslation
   field :languages, type: Array
   field :default_language, type: String
   field :permalink, type: String
+
+  after_create  { __elasticsearch__.index_document }
+  after_update  { __elasticsearch__.index_document }
+  after_destroy { __elasticsearch__.delete_document }
 
   has_many :category_mappers, dependent: :destroy do
     def category_ids
@@ -243,7 +248,33 @@ class TimeSeries < CustomTranslation
 
   #############################
   # Full text search
-  search_in :title, :description, :questions => [:original_code, :text, :notes, :answers => [:text]]
+  #search_in :title, :description, :questions => [:original_code, :text, :notes, :answers => [:text]]
+
+
+  index_name "timeseries-#{Rails.env}"
+  def as_indexed_json(options={})
+    as_json(
+      methods: [:titles, :descriptions],
+      only: [:public, :public_at],
+      include: {
+        category_mappers: {only: [:category_id]}
+      }
+    )
+  end
+  def titles
+    title_translations
+  end
+  def descriptions
+    elastic_no_html(description_translations)
+  end
+  def elastic_no_html(trans)
+    res = {}
+    trans.each{|k,v|
+      #res["orig.#{k}"] = v
+      res[k] = ActionController::Base.helpers.strip_tags(v).gsub('&nbsp;', ' ')
+    }
+    return res
+  end
 
   #############################
   # permalink slug
@@ -393,9 +424,9 @@ class TimeSeries < CustomTranslation
     x.present? ? x.default_language : nil
   end
 
-  def self.search(q)
-    full_text_search(q)
-  end
+  # def self.search(q)
+  #   full_text_search(q)
+  # end
 
   def self.sorted_title
     order_by([[:title, :asc]])

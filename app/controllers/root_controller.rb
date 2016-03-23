@@ -60,31 +60,70 @@ class RootController < ApplicationController
 
 
   def explore_data
-    @datasets = Dataset.meta_only.is_public
 
-    # add search
+    @lang = I18n.locale.to_s
+    # build elastic search query/filter based on query params
+    # if no query params, then just filter by public
+    # create basic query
+    query = {
+      query: {
+        filtered: {
+          query: {
+            match_all: {
+            }
+          }
+        }
+      },
+      filter:{
+        bool:{
+          must:[
+            {term: {public: true}}
+          ]
+        }
+      }
+    }
+
+    # if search exists, update query to use search and add highlights to query
     if params[:q].present?
-      @datasets = @datasets.search(params[:q])
-    end
-    # add sort
-    if params[:sort].present?
-      case params[:sort].downcase
-        when 'publish'
-          @datasets = @datasets.sorted_public_at
-        when 'title'
-          @datasets = @datasets.sorted_title
-        else #when 'release'
-          @datasets = @datasets.sorted_released_at
-      end
-    else
-      @datasets = @datasets.sorted_released_at
-    end
-    # add category
-    if params[:category].present?
-      @datasets = @datasets.categorize(params[:category])
+      query[:query][:filtered][:query] = {
+        multi_match: {
+          query: params[:q],
+          fields: ["titles.#{@lang}^10", "descriptions.#{@lang}^5", "methodologies.#{@lang}"]
+          #type: "phrase_prefix"
+        }
+      }
+      # add highlighting to query
+      query[:highlight] = {
+        pre_tags: ["[[highlight]]"],#['<em class="highlight">'],
+        post_tags: ["[[/highlight]]"],#['</em>'],
+        order: 'score',
+        fields: {
+          "titles.#{@lang}" => { number_of_fragments: 0 },
+          "descriptions.#{@lang}" => { number_of_fragments: 3, fragment_size: 150 },
+          "methodologies.#{@lang}" => { number_of_fragments: 3, fragment_size: 150 }
+        }
+      }
     end
 
-    @datasets = Kaminari.paginate_array(@datasets).page(params[:page]).per(per_page)
+    # no search, so apply default sort by title
+    query[:sort] = [ {"released_at" => {order: 'desc', ignore_unmapped: true}} ]
+    #query[:sort] = [ {:'_score' => {order: 'desc'}} ]
+    if params[:sort].present?
+      sort_by =  params[:sort].downcase
+      #query[:sort].unshift({:'public_at' => {order: 'desc', ignore_unmapped: true}}) if sort_by == 'publish'
+      query[:sort].unshift({"_score" => {order: 'desc', ignore_unmapped: true}}) if sort_by == 'relevant'
+      query[:sort].unshift({"titles.#{@lang}.raw" => {order: 'asc', ignore_unmapped: true}}) if sort_by == 'title'
+    end
+
+
+    # add needed filters
+    if params[:category].present?
+      query[:filter][:bool][:must] << {term: {"category_mappers.category_id" => Category.by_permalink(params[:category]).id}}
+    end
+
+    logger.debug query.to_json
+
+    @datasets = Dataset.search(query).page(params[:page]).per(per_page)
 
     @show_title = false
 
@@ -211,29 +250,66 @@ class RootController < ApplicationController
   def explore_time_series
     @klass=' white'
     @klass_footer=''
-    @time_series = TimeSeries.meta_only.is_public
 
-    # add search
+    @lang = I18n.locale.to_s
+    # build elastic search query/filter based on query params
+    # if no query params, then just filter by public
+    # create basic query
+    query = {
+      query: {
+        filtered: {
+          query: {
+            match_all: {
+            }
+          }
+        }
+      },
+      filter:{
+        bool:{
+          must:[
+            {term: {public: true}}
+          ]
+        }
+      }
+    }
+
+    # if search exists, update query to use search and add highlights to query
     if params[:q].present?
-      @time_series = @time_series.search(params[:q])
-    end
-    # add sort
-    if params[:sort].present?
-      case params[:sort].downcase
-        when 'publish'
-          @time_series = @time_series.sorted_public_at
-        else #when 'title'
-          @time_series = @time_series.sorted_title
-      end
-    else
-      @time_series = @time_series.sorted_title
-    end
-    # add category
-    if params[:category].present?
-      @time_series = @time_series.categorize(params[:category])
+      query[:query][:filtered][:query] = {
+        multi_match: {
+          query: params[:q],
+          fields: ["titles.#{@lang}^10", "descriptions.#{@lang}^5"],
+          type: "phrase_prefix"
+        }
+      }
+      # add highlighting to query
+      query[:highlight] = {
+        pre_tags: ["[[highlight]]"],
+        post_tags: ["[[/highlight]]"],
+        order: 'score',
+        fields: {
+          "titles.#{@lang}" => { number_of_fragments: 0},
+          "descriptions.#{@lang}" => { number_of_fragments: 3, fragment_size: 150 }
+        }
+      }
     end
 
-    @time_series = Kaminari.paginate_array(@time_series).page(params[:page]).per(per_page)
+    # no search, so apply default sort by title
+    query[:sort] = [ {"titles.#{@lang}.raw" => {order: 'asc', ignore_unmapped: true}} ]
+    if params[:sort].present?
+      sort_by =  params[:sort].downcase
+      query[:sort].unshift({"_score" => {order: 'desc', ignore_unmapped: true }}) if sort_by == 'relevant'
+    end
+
+
+    # add needed filters
+    if params[:category].present?
+      query[:filter][:bool][:must] << {term: {"category_mappers.category_id" => Category.by_permalink(params[:category]).id}}
+    end
+
+    logger.debug query.to_json
+
+    @time_series = TimeSeries.search(query).page(params[:page]).per(per_page)
 
     @show_title = false
 

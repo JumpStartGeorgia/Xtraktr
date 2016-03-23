@@ -49,16 +49,19 @@
             <% end %>
           </div>
       </div>
-    </div><div class="banner banner2">
-      <div class="boxic">
-        <%= link_to explore_time_series_dashboard_path(id: @wms_id), class: 'wms' do %>
-          <div class="figure">
-            <span class="title"><%= t('.wms_title').html_safe %></span>
-            <span class="slogan"><%= t('.wms_slogan').html_safe %></span>
-          </div>
-        <% end %>
-      </div>
     </div>
+    <% if @wms_id.present? %>
+      <div class="banner banner2">
+        <div class="boxic">
+          <%= link_to explore_time_series_dashboard_path(id: @wms_id), class: 'wms' do %>
+            <div class="figure">
+              <span class="title"><%= t('.wms_title').html_safe %></span>
+              <span class="slogan"><%= t('.wms_slogan').html_safe %></span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
     <div class="recents">
       <div class="boxic">
         <div class="header">
@@ -120,12 +123,14 @@
               </p>
             <% end %>
         <% else %>
+          <% if @wms_id.present? %>
             <%= link_to explore_time_series_dashboard_path(id: @wms_id), class: 'wms' do %>
               <div class="figure">
                 <span class="title"><%= t('.wms_title').html_safe %></span>
                 <span class="slogan"><%= t('.wms_slogan').html_safe %></span>
               </div>
             <% end %>
+          <% end %>
         <% end %>
       </div>
     </div>

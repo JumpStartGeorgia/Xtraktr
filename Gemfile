@@ -38,7 +38,9 @@ gem 'spreadsheet', '~> 1.0.1' # read in spreadsheet format
 gem 'roo', '~> 1.13.2' # read in spreadsheet format
 gem "unidecoder", :branch => "v2.0" #convert utf8 to ascii for permalinks
 gem 'active_model_serializers', '~> 0.9.3' # easily create json serialized model data
-gem 'mongoid_search', :git => 'https://github.com/mauriciozaffari/mongoid_search.git', :branch => "master" # search mongo collections
+#gem 'mongoid_search', :git => 'https://github.com/mauriciozaffari/mongoid_search.git', :branch => "master" # search mongo collections
+gem 'elasticsearch-rails', '~> 0.1.8' # rails integration of elasticsearch (full text search)
+gem 'elasticsearch-model', '~> 0.1.8' # rails model integration of elasticsearch (full text search)
 gem 'whenever' # schedule cron jobs
 # gem 'zipruby', '~> 0.3.6' # create zip files
 # have to use this because zipruby and rubyzip use the same class names
