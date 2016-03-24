@@ -93,10 +93,8 @@ class RootController < ApplicationController
   end
 
 
-  def explore_data
-    # render :text => "Message goes here"
-    # Kernel::exit()
-
+  def explore_data    
+    @elastic = true
     @lang = I18n.locale.to_s
     # build elastic search query/filter based on query params
     # if no query params, then just filter by public
@@ -295,6 +293,7 @@ class RootController < ApplicationController
 
 
   def explore_time_series
+    @elastic = true
     @lang = I18n.locale.to_s
     # build elastic search query/filter based on query params
     # if no query params, then just filter by public
