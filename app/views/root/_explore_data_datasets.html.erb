@@ -5,12 +5,15 @@
   s_model_class = Stats
 -%>
 <ul>
-  <% if @datasets.present? %>
-    <% @datasets.records.each_with_hit do |dataset, hit| %>
+  <% if @datasets.present?
+      each_name = @elastic ? :each_with_hit : :each
+      records =  @elastic ? @datasets.records : @datasets
+      records.__send__(each_name) do |dataset, hit| 
+  %>
       <li>
         <div class="caption">
           <div class="title">
-          <% if hit.highlight? && hit.highlight.key?("titles.#{@lang}") %>
+          <% if hit.present? && hit.highlight? && hit.highlight.key?("titles.#{@lang}") %>
               <%= link_to prepare_highlight(hit.highlight["titles.#{@lang}"]), explore_data_dashboard_path(dataset) %>
             <% else %>
               <%= link_to dataset.title, explore_data_dashboard_path(dataset) %>
@@ -57,7 +60,7 @@
 
         <% if dataset.description.present? %>
           <div class="description">
-            <% if hit.highlight? %>
+            <% if hit.present? && hit.highlight? %>
               <% if hit.highlight.key?("descriptions.#{@lang}") %>
                 ...
                 <%= prepare_highlight(hit.highlight["descriptions.#{@lang}"]) %>

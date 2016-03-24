@@ -60,7 +60,7 @@ class RootController < ApplicationController
 
 
   def explore_data
-
+    @elastic = true
     @lang = I18n.locale.to_s
     # build elastic search query/filter based on query params
     # if no query params, then just filter by public
@@ -250,7 +250,7 @@ class RootController < ApplicationController
   def explore_time_series
     @klass=' white'
     @klass_footer=''
-
+    @elastic = true
     @lang = I18n.locale.to_s
     # build elastic search query/filter based on query params
     # if no query params, then just filter by public
