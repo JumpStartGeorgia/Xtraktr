@@ -18,7 +18,7 @@ if (Language.count == 0)
     ["sq", "shqipe"],
     ["ar", "العربية‏"],
     ["hy", "Հայերեն"],
-    ["az", "Azərbaycan­ılı"],
+    ["az", "Azərbaycan"],
     ["eu", "euskara"],
     ["be", "Беларускі"],
     ["bg", "български"],
