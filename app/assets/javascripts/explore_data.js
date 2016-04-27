@@ -73,7 +73,7 @@ function build_highmaps (json) { // build highmap
       weight_name = json.weighted_by ? json.weighted_by.weight_name : undefined,
       jump_options = "",
       map_index = 1;
- 
+
     $("#container-map").empty(); // remove all existing maps
 
     js.jumpto_map_select.empty();
@@ -132,7 +132,7 @@ function build_highmaps (json) { // build highmap
 
 function build_datatable (json) { // build data table
   $("#container-table h3").html(json.results.title.html + json.results.subtitle.html); // set the title
-  
+
   if (datatables != undefined && datatables.length > 0) { // if the datatable alread exists, kill it
     for (i=0;i<datatables.length;i++){
       datatables[i].fnDestroy();
@@ -149,7 +149,7 @@ function build_datatable (json) { // build data table
     table = "<thead>", // build the table
     nofilter = json.filtered_by == undefined,
     is_comparative = json.analysis_type == "comparative";
-      
+
   // build head --------------
   // test if the filter is being used and build the table accordingly
   table += "<tr>";
@@ -245,16 +245,16 @@ function build_datatable (json) { // build data table
         fa.filter_results.analysis.forEach(function (an, an_i) {
           table += "<tr><td class='var1-col' data-order='" + json.filtered_by.answers[fa_i].sort_order + "'>" + fa.filter_answer_text + "</td>" +
             "<td class='var1-col' data-order='" + (n ? an_i : json.question.answers[an_i].sort_order) + "'>" + an.answer_text + "</td>";
-          
+
           if(is_comparative) { an.broken_down_results.forEach(function (bd) { fill(bd); }); }
           else { fill(an); }
 
           table += "</tr>";
         });
       });
-    }  
+    }
   }
-  
+
   table += "</tbody>";
 
   $table.html(table);
@@ -447,7 +447,7 @@ function get_explore_data (is_back_button) { // get data and load page
     });
 
     // can exclude
-    if (js.explore_tabs.is(":checked")){
+    if (js.input_can_exclude.is(":checked")){
       ajax_data.can_exclude = true;
       url_querystring.push("can_exclude=" + ajax_data.can_exclude);
     }
@@ -484,7 +484,7 @@ function get_explore_data (is_back_button) { // get data and load page
     .error(function ( jqXHR, textStatus, errorThrown ) {
       //console.log( "Request failed: " + textStatus  + ". Error thrown: " + errorThrown);
     })
-    .success(function ( json ) {       
+    .success(function ( json ) {
       if (json.errors){
         js.jumpto_loader.fadeOut("slow");
         js.explore_data_loader.fadeOut("slow");
@@ -611,7 +611,7 @@ function build_selects_question_option (question, level, skip_content) {
     }
   }
   // if the question is mappable or is excluded, show the icons for this
-  if (!skip_content && question.data_type !== 0) {    
+  if (!skip_content && question.data_type !== 0) {
     content += "data-content=\"<span class='outer-layer'><span class='inner-layer'><span>" + q_text + "</span><span class='right-icons'>";
 
     if(question.is_mappable) {
@@ -837,7 +837,7 @@ $(document).ready(function () {
         }
 
         js.select_fb.find("option[style*='display: none']").show();
-        
+
         if(index == 0 || type === 1) { // turn off this item only if question type is categorical
           if (q !== "" && q_index !== -1){ js.select_fb.find("option[value='"+q+"']").hide(); }
           if (bdb !== "" && bdb_index !== -1 && bdb_index !== 0){ js.select_fb.find("option[value='"+bdb+"']").hide(); }
@@ -916,7 +916,7 @@ $(document).ready(function () {
         js.jumpto.find("button.dropdown-toggle").tooltip("fixTitle");
         js.tab_content.animate({
           scrollTop: js.tab_content.scrollTop() + js.tab_content.find(".tab-pane.active > div > " + $(this).find("option:selected").data("href")).offset().top - js.tab_content.offset().top
-        }, 1500);    
+        }, 1500);
       });
 
       // when chart tab/map clicked on, make sure the jumpto block is showing, else, hide it
@@ -948,7 +948,7 @@ $(document).ready(function () {
         });
 
         js.toggle(button_swap_vars.toggle(!(js.select_bd.val() == "")));
-        
+
         // can exclude
         if (params.can_exclude == "true"){
           js.explore_tabs.attr("checked", "checked");
@@ -976,7 +976,7 @@ $(document).ready(function () {
 
         var new_url = [location.protocol, "//", location.host, location.pathname, "?", paramsA.join("&")].join("");
         // // change the browser URL to the given link location
-        if (new_url != window.location.href){ // !is_back_button && 
+        if (new_url != window.location.href){ // !is_back_button &&
           window.history.pushState({path:new_url}, $("title").html(), new_url);
         }
         $(this).tooltip("hide");
@@ -1052,7 +1052,7 @@ $(document).ready(function () {
             if(i !== 0 && !(((d[0] === 2 && d[2] == type) ||
                 (d[0] == 1 && ((type == 1 && d[1] > 0)||(type == 2 && d[2] > 0))) ||
                 (d[0] == 0 && ((type == 1 && d[1] > 0)||(type == 2 && d[2] > 0)))) &&
-                (also_to_hide.indexOf(i) === -1))) {            
+                (also_to_hide.indexOf(i) === -1))) {
               js.select_bd.find("option:eq(" + i + ")").hide();
             }
           });
@@ -1071,7 +1071,7 @@ $(document).ready(function () {
           }
         }
         set_can_exclude_visibility();
-        js.select_fb.find("option[value='"+filters[2]+"']").attr("selected", "selected");         
+        js.select_fb.find("option[value='"+filters[2]+"']").attr("selected", "selected");
         js.select_fb.find("option[value='"+filters[0]+"'], option[value='"+filters[1]+"']").hide();//.attr("data-disabled", "disabled");
       }
       select_options_default(gon.questions.filters);
