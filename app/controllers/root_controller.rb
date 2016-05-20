@@ -118,7 +118,10 @@ class RootController < ApplicationController
 
     # add needed filters
     if params[:category].present?
-      query[:filter][:bool][:must] << {term: {"category_mappers.category_id" => Category.by_permalink(params[:category]).id}}
+      cat = Category.by_permalink(params[:category])
+      if cat.present?
+        query[:filter][:bool][:must] << {term: {"category_mappers.category_id" => cat.id}}
+      end
     end
 
     logger.debug query.to_json
@@ -179,7 +182,7 @@ class RootController < ApplicationController
       @dataset_url = explore_data_show_path(@dataset)
       gon.chart_type_bar = t('explore_data.chart_type_bar')
       gon.chart_type_pie = t('explore_data.chart_type_pie')
-      
+
       # generate defualt page title based off of params
       # - doing this so social media has a better title
       @default_page_title = @dataset.title.dup
@@ -203,7 +206,7 @@ class RootController < ApplicationController
             bdb = @dataset.questions.with_code(params[:broken_down_by_code])
           end
 
-          # build the title          
+          # build the title
           if bdb.present?
             # comparing questions
             @default_page_title << I18n.t("explore_data.v2.comparative.text.title", :question_code => q.original_code, :variable => q.text,
@@ -388,7 +391,7 @@ class RootController < ApplicationController
             f = @time_series.questions.with_code(params[:filtered_by_code])
           end
 
-          # build the title          
+          # build the title
           # single question
           @default_page_title << I18n.t("explore_time_series.v2.single.text.title", :code => q.original_code, :variable => q.text, :group => '', locale: language)
           if f.present?
