@@ -93,7 +93,7 @@ class RootController < ApplicationController
   end
 
 
-  def explore_data    
+  def explore_data
     @elastic = true
     @lang = I18n.locale.to_s
     # build elastic search query/filter based on query params
@@ -154,7 +154,10 @@ class RootController < ApplicationController
 
     # add needed filters
     if params[:category].present?
-      query[:filter][:bool][:must] << {term: {"category_mappers.category_id" => Category.by_permalink(params[:category]).id}}
+      cat = Category.by_permalink(params[:category])
+      if cat.present?
+        query[:filter][:bool][:must] << {term: {"category_mappers.category_id" => cat.id}}
+      end
     end
     if params[:country].present?
       query[:filter][:bool][:must] << {term: {"country_mappers.country_id" => params[:country]}}
