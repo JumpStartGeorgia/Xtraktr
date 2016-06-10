@@ -11,6 +11,6 @@ class ReportSerializer < ActiveModel::Serializer
 
   # hack - use root url to get base url, but have to remove locale
   def url
-    Rails.application.routes.url_helpers.root_url(locale: I18n.locale).gsub("/#{I18n.locale}", '') + object.file.url
+    Rails.application.routes.url_helpers.root_url(locale: I18n.locale, protocol: "https").gsub("/#{I18n.locale}", '') + object.file.url
   end
 end
