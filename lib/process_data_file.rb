@@ -95,7 +95,7 @@ module ProcessDataFile
         if File.exists?(file_questions)
           line_number = 0
           CSV.foreach(file_questions, headers: true).each_with_index do |row, i|
-            # row format: question code, question text, 
+            # row format: question code, question text,
             line_number += 1
 
             # only add if the code is present
@@ -147,7 +147,7 @@ module ProcessDataFile
             # it is possible that the answer is nil so it will have a length of two
             # - when this happens, add a '' to row so there are 3 values
             if row.length == 2
-              puts "---> answer does not have text, adding ''"              
+              puts "---> answer does not have text, adding ''"
               row << ''
             end
 
@@ -226,14 +226,14 @@ module ProcessDataFile
                   total += cnt
                   frequency_data[answer.value] = [cnt, (cnt.to_f/code_data.length*100).round(2)]
                 }
-                question.has_data_without_answers = total < code_data.select{|d| !d.nil? }.length 
+                question.has_data_without_answers = total < code_data.select{|d| !d.nil? }.length
 
               elsif question.data_type == DATA_TYPE_VALUES[:numerical] # build numerical descriptive stats for numerical questions
                 puts "@@@@@@@@@@@ - question is numerical"
                 # flag that is set to false if:
                 # - data has no numeric data
                 # - there is no repeating values in the data (most likely an ID field)
-                #   - computing stats on ID field can take a long time and possibly crash the system 
+                #   - computing stats on ID field can take a long time and possibly crash the system
                 #     so lets skip it until the user asks for it
                 #   - have found that ID field can have repeating values, so using a 90% threshold
                 #     to determine whether or not to compute the numerical info
@@ -255,15 +255,15 @@ module ProcessDataFile
                     elsif (x =~ /\A[-+]?\d*\.?\d+\z/) != nil # float
                       float_data << x.to_f
                     end
-                  end  
+                  end
 
                   # make sure at least some numeric data was found
                   has_numeric_data = int_data.present? || float_data.present?
                 end
-                
+
                 if has_numeric_data
                   num = Numerical.new
-                  
+
                   # if float_data has any values then it is float
                   # else int
                   num.type = float_data.present? ? Numerical::TYPE_VALUES[:float] : Numerical::TYPE_VALUES[:integer]
@@ -281,8 +281,8 @@ module ProcessDataFile
                   #   else use default width
                   #num.width = (num.max - num.min) > Numerical::NUMERIC_DEFAULT_WIDTH ? Numerical::NUMERIC_DEFAULT_WIDTH : 1
                   range = num.max - num.min
-                  num.width = range > Numerical::NUMERIC_DEFAULT_WIDTH ? (range/Numerical::NUMERIC_DEFAULT_WIDTH).ceil : 1                   
-                  
+                  num.width = range > Numerical::NUMERIC_DEFAULT_WIDTH ? (range/Numerical::NUMERIC_DEFAULT_WIDTH).ceil : 1
+
                   # set ranges and size
                   num.min_range = (num.min / num.width).floor * num.width
                   num.max_range = (num.max / num.width).ceil * num.width
@@ -310,23 +310,23 @@ module ProcessDataFile
 
                         index = tmpD == num.min_range ? 0 : ((tmpD-num.min_range)/num.width-0.00001).floor
                         fd[index][0] += 1
-                      else 
+                      else
                         formatted_data.push(nil);
                       end
-                    else 
+                    else
                       formatted_data.push(nil)
                     end
 
                   }
                   total = 0
                   fd.each {|x| total+=x[0]}
-                  fd.each_with_index {|x,i| 
+                  fd.each_with_index {|x,i|
                      fd[i][1] = (x[0].to_f/total*100).round(2) }
 
                   frequency_data = fd;
 
                   vfd.extend(DescriptiveStatistics) # descriptive statistics
-                  
+
                   question.descriptive_statistics = {
                     :number => vfd.number.to_i,
                     :min => num.integer? ? vfd.min.to_i : vfd.min,
@@ -343,19 +343,19 @@ module ProcessDataFile
                   # mark the question as being analyzable
                   question.is_analysable = true
                 end
-                
 
 
-                question.has_data_without_answers = code_data.select{|d| !d.nil? }.length > 0 
+
+                question.has_data_without_answers = code_data.select{|d| !d.nil? }.length > 0
               else
-                question.has_data_without_answers = code_data.select{|d| !d.nil? }.length > 0 
+                question.has_data_without_answers = code_data.select{|d| !d.nil? }.length > 0
               end
               # add the data for this question
               self.data_items_attributes = [{code: clean_code,
                                             original_code: code[1],
                                             data: code_data
                                           }.merge(frequency_data.present? ? { frequency_data: frequency_data, frequency_data_total: total, formatted_data: formatted_data } : {})]
-              
+
             else
               puts "******************************"
               puts "Column #{code_index} (supposed to be #{code}) of #{file_questions} does not exist."
@@ -397,7 +397,7 @@ module ProcessDataFile
     self.file_extension = File.extname(self.datafile.url).gsub('.', '').downcase if self.file_extension.blank? # if file extension does not exist, get it
 
     is_spreadsheet = ['csv', 'ods', 'xls', 'xlsx'].include?(self.file_extension) # set flag on whether or not this is a spreadsheet
-    
+
     t.msg("file_extension = #{self.file_extension}; is_spreadsheet = #{is_spreadsheet}")
 
     path = @@path.sub('[dataset_id]', self.id.to_s)
@@ -405,7 +405,7 @@ module ProcessDataFile
     # check if file has been saved yet
     # if file has not be saved to proper place yet, have to get queued file path
     file_to_process = "#{Rails.public_path}#{self.datafile.url}"
-    if !File.exists?(file_to_process) && self.datafile.queued_for_write[:original].present?      
+    if !File.exists?(file_to_process) && self.datafile.queued_for_write[:original].present?
       file_to_process = self.datafile.queued_for_write[:original].path
     end
 
@@ -443,7 +443,7 @@ module ProcessDataFile
 
         t.start("process questions")
 
- 
+
         question_codes = [] # record the question codes from the questions file
 
         if File.exists?(file_questions)
@@ -452,8 +452,8 @@ module ProcessDataFile
           unknown_codes = self.questions.codes_with_unknown_datatype
 
 
-          CSV.foreach(file_questions, headers: true).each_with_index do |row, i| # row format: question code, question text, data_type(c|n) 
-            
+          CSV.foreach(file_questions, headers: true).each_with_index do |row, i| # row format: question code, question text, data_type(c|n)
+
             code = clean_text(row[0], format_code: true)
 
             if code.present? # only add if the code is present and unknown
@@ -467,7 +467,7 @@ module ProcessDataFile
                     when 'n'
                       data_type = DATA_TYPE_VALUES[:numerical]
                   end
-                end              
+                end
                 self.questions.with_code(code).data_type = data_type if data_type != DATA_TYPE_VALUES[:unknown]
               end
             end
@@ -489,7 +489,7 @@ module ProcessDataFile
 
             total = nil
             frequency_data = nil
-            formatted_data = nil  
+            formatted_data = nil
 
             question = self.questions.with_code(code[0])
             # if this is a spreadsheet and the question was not found, try using the old question code
@@ -512,7 +512,7 @@ module ProcessDataFile
                 # flag that is set to false if:
                 # - data has no numeric data
                 # - there is no repeating values in the data (most likely an ID field)
-                #   - computing stats on ID field can take a long time and possibly crash the system 
+                #   - computing stats on ID field can take a long time and possibly crash the system
                 #     so lets skip it until the user asks for it
                 #   - have found that ID field can have repeating values, so using a 90% threshold
                 #     to determine whether or not to compute the numerical info
@@ -534,17 +534,17 @@ module ProcessDataFile
                     elsif (x =~ /\A[-+]?\d*\.?\d+\z/) != nil # float
                       float_data << x.to_f
                     end
-                  end  
+                  end
 
                   # make sure at least some numeric data was found
                   has_numeric_data = int_data.present? || float_data.present?
-     
+
                 end
 
                 if has_numeric_data
 
                   num = Numerical.new
-                  
+
                   # if float_data has any values then it is float
                   # else int
                   num.type = float_data.present? ? Numerical::TYPE_VALUES[:float] : Numerical::TYPE_VALUES[:integer]
@@ -562,8 +562,8 @@ module ProcessDataFile
                   #   else use default width
                   #num.width = (num.max - num.min) > Numerical::NUMERIC_DEFAULT_WIDTH ? Numerical::NUMERIC_DEFAULT_WIDTH : 1
                   range = num.max - num.min
-                  num.width = range > Numerical::NUMERIC_DEFAULT_WIDTH ? (range/Numerical::NUMERIC_DEFAULT_WIDTH).ceil : 1                   
-                  
+                  num.width = range > Numerical::NUMERIC_DEFAULT_WIDTH ? (range/Numerical::NUMERIC_DEFAULT_WIDTH).ceil : 1
+
                   # set ranges and size
                   num.min_range = (num.min / num.width).floor * num.width
                   num.max_range = (num.max / num.width).ceil * num.width
@@ -591,23 +591,23 @@ module ProcessDataFile
 
                         index = tmpD == num.min_range ? 0 : ((tmpD-num.min_range)/num.width-0.00001).floor
                         fd[index][0] += 1
-                      else 
+                      else
                         formatted_data.push(nil);
                       end
-                    else 
+                    else
                       formatted_data.push(nil)
                     end
 
                   }
                   total = 0
                   fd.each {|x| total+=x[0]}
-                  fd.each_with_index {|x,i| 
+                  fd.each_with_index {|x,i|
                      fd[i][1] = (x[0].to_f/total*100).round(2) }
 
                   frequency_data = fd;
 
                   vfd.extend(DescriptiveStatistics) # descriptive statistics
-                  
+
                   question.descriptive_statistics = {
                     :number => vfd.number.to_i,
                     :min => num.integer? ? vfd.min.to_i : vfd.min,
@@ -632,7 +632,7 @@ module ProcessDataFile
                 question.descriptive_statistics = nil
               end
 
-              
+
               dd = self.data_items.with_code(code[0]) # add the data for this question
               # if this is a spreadsheet and the question was not found, try using the old question code
               dd = self.data_items.with_code(code[0].downcase.gsub(@@spreadsheet_question_code.downcase, @@spreadsheet_question_code_orig.downcase)) if dd.nil? && is_spreadsheet
@@ -658,7 +658,7 @@ module ProcessDataFile
             else
               t.msg("[Error] Column #{code_index} (supposed to be #{code}) of #{file_questions} does not exist.")
             end
-            
+
             t.msg("[index, code, data_type] = [#{code_index}, #{code[0]}, #{question.data_type}]")
           end
         else
@@ -667,7 +667,7 @@ module ProcessDataFile
         t.end("to add #{self.data_items.length} data items");
       end
     else
-      t.msg("[WARNING] The required R script file or the data file to process do not exist")      
+      t.msg("[WARNING] The required R script file or the data file to process do not exist")
     end
     t.end("to finish processing the data file")
     return true
@@ -859,7 +859,7 @@ private
 
   def clean_data_item(text)
     if !text.nil?
-      x = text.gsub('\\n', ' ').gsub('\\r', ' ').strip
+      x = text.to_s.gsub('\\n', ' ').gsub('\\r', ' ').strip
       if x.present?
         return x
       end
@@ -876,11 +876,11 @@ private
 end
 
 class Timer
-   def initialize()  
-    # Instance variables  
-    @stack = [] 
-    #@sep = "==============================\n" 
-  end  
+   def initialize()
+    # Instance variables
+    @stack = []
+    #@sep = "==============================\n"
+  end
   def start(msg)
     @stack.push(Time.now)
     p(msg, false) if msg.present?
@@ -888,7 +888,7 @@ class Timer
   def end(msg)
     if @stack.any?
       p("it took #{Time.now-@stack.pop} seconds #{msg}", true)
-    end    
+    end
   end
   def msg(msg)
     puts ">  #{"  "*(@stack.length - 1)} " + msg
