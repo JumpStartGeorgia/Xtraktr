@@ -1225,7 +1225,7 @@ en:
       no_highlights: Sorry, no highglights have been created yet.
   api:
     msgs:
-      no_key: 'You must provide an API Access Token in order to use the API. You can quickly get a API Access Token by going to %{url}.'
+      no_key: 'You must provide an API Access Token in order to use the API. You can quickly get a API Access Token by logging in at %{url} and going to the Settings section.'
       no_dataset: "The Dataset could not be found."
       no_question: "The Question could not be found."
       no_broken_down_by: "The Broken Down By Question could not be found."
